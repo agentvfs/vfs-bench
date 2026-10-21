@@ -1959,7 +1959,7 @@ wheels = [
 
 [[package]]
 name = "mirage-ai"
-version = "0.0.7a3"
+version = "0.0.8a1"
 source = { editable = "submodule/mirage/python" }
 dependencies = [
     { name = "aiofiles" },
@@ -1970,7 +1970,6 @@ dependencies = [
     { name = "jq" },
     { name = "jsonschema" },
     { name = "mcp" },
-    { name = "mirage-rs" },
     { name = "multidict" },
     { name = "orjson" },
     { name = "pyjwt", extra = ["crypto"] },
@@ -2078,7 +2077,6 @@ requires-dist = [
     { name = "mirage-ai", extras = ["s3"], marker = "extra == 'sandbox'" },
     { name = "mirage-ai", extras = ["ssh"], marker = "extra == 'all'" },
     { name = "mirage-ai", extras = ["ssh"], marker = "extra == 'sandbox'" },
-    { name = "mirage-rs", directory = "submodule/mirage/rust/python" },
     { name = "multidict", specifier = ">=6.0" },
     { name = "onepassword-sdk", marker = "extra == '1password'", specifier = ">=0.4.1" },
     { name = "openai", marker = "extra == 'openai'", specifier = ">=3.13.0" },
@@ -2095,7 +2093,7 @@ requires-dist = [
     { name = "python-dotenv", marker = "extra == 'dotenv'", specifier = ">=1.2.2" },
     { name = "python-multipart", specifier = ">=0.0.27" },
     { name = "pyyaml", specifier = ">=6.0.3" },
-    { name = "qdrant-client", extras = ["fastembed"], marker = "extra == 'qdrant'", specifier = ">=1.18.0" },
+    { name = "qdrant-client", marker = "extra == 'qdrant'", specifier = ">=1.18.0" },
     { name = "redis", extras = ["hiredis"], marker = "extra == 'redis'", specifier = ">=5.0" },
     { name = "regex", specifier = ">=2026.4.4" },
     { name = "tenacity", specifier = ">=9.1.4" },
@@ -2125,10 +2123,6 @@ dev = [
     { name = "python-dotenv", specifier = ">=1.2.2" },
     { name = "websockets", specifier = ">=15.0.1" },
 ]
-
-[[package]]
-name = "mirage-rs"
-source = { directory = "submodule/mirage/rust/python" }
 
 [[package]]
 name = "multidict"
