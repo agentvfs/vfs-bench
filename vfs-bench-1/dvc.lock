@@ -9935,8 +9935,8 @@ stages:
     deps:
     - path: cli/mcpatlas/tool.mjs
       hash: md5
-      md5: 28c27ce0d867786aac2856e66bd9080d
-      size: 3761
+      md5: b4088a20ccfd6de07b1a71c9bbdb05a7
+      size: 4124
     - path: cli/mcpatlas/tools.mjs
       hash: md5
       md5: 5e0bd402803e0c36df7b179152fc0f61
@@ -9960,144 +9960,144 @@ stages:
       size: 6765
     - path: task/mcpatlas/__init__.py
       hash: md5
-      md5: 23d5dfbae6326870e6d9ae24614bd75d
-      size: 64917
+      md5: 92b42a1b69cd63cedbf07f1c17efa49c
+      size: 65079
     - path: task/mcpatlas/age-group-consumption-boss-email/shared/atlas.json
       hash: md5
       md5: c7d3494fc4dd55d20b4d0d9a4391a382
       size: 1450
     - path: task/mcpatlas/age-group-consumption-boss-email/vfs/workspace.yaml
       hash: md5
-      md5: 29ec6d215e480dd6334df23f1f723b47
-      size: 1852
+      md5: 921b4bb8ad0275df8049bb2005b56f8b
+      size: 2021
     - path: task/mcpatlas/amlo-year-new-clients/shared/atlas.json
       hash: md5
       md5: 06b14d5d1104060a9d994c3edd52c260
       size: 767
     - path: task/mcpatlas/amlo-year-new-clients/vfs/workspace.yaml
       hash: md5
-      md5: 2d70b5d843ba4f2fa448b623970472e5
-      size: 3291
+      md5: 881bddac0e2d07f2a428bb5ac640040e
+      size: 3460
     - path: task/mcpatlas/animal-business-sarmiento-week/shared/atlas.json
       hash: md5
       md5: 62a443f622ee990a1c8c4a38db8c5fcd
       size: 926
     - path: task/mcpatlas/animal-business-sarmiento-week/vfs/workspace.yaml
       hash: md5
-      md5: cc7ab3d3ef27b612c3c0a468d8904fb6
-      size: 1830
+      md5: 857a0576fbebdf9fad5767630804bac8
+      size: 1999
     - path: task/mcpatlas/apartment-117-paris-temperature/shared/atlas.json
       hash: md5
       md5: 9068228d21a4aec87f488f9ac2e0e85c
       size: 870
     - path: task/mcpatlas/apartment-117-paris-temperature/vfs/workspace.yaml
       hash: md5
-      md5: d6564eb1afc566d97e7be544d4361d1e
-      size: 2804
+      md5: b35e60ea7a7b1951872b6cb11d61b398
+      size: 2973
     - path: task/mcpatlas/arson-may-service-requests/shared/atlas.json
       hash: md5
       md5: a1d096d687335c717ef503e86605abb1
       size: 1076
     - path: task/mcpatlas/arson-may-service-requests/vfs/workspace.yaml
       hash: md5
-      md5: 37c1fc23c3b36bca42726f33bf6827ad
-      size: 2571
+      md5: 63808ac364cf6af87e7c66da0b4154d0
+      size: 2740
     - path: task/mcpatlas/bachman-award-year-crimes/shared/atlas.json
       hash: md5
       md5: ba186c591244016805789c80bf4a3c70
       size: 943
     - path: task/mcpatlas/bachman-award-year-crimes/vfs/workspace.yaml
       hash: md5
-      md5: 64e5697f000d0ade3b45b65c9ea58e43
-      size: 2450
+      md5: d0360a79791e259ade5532ea72664592
+      size: 2619
     - path: task/mcpatlas/barber-shop-female-clients/shared/atlas.json
       hash: md5
       md5: 1077610a444e156637d96b0b039c3aa5
       size: 844
     - path: task/mcpatlas/barber-shop-female-clients/vfs/workspace.yaml
       hash: md5
-      md5: 078bbb9feb2abae50159f82dda46f47d
-      size: 1799
+      md5: 491cb3bf7300e94cfcbc49fe1d9e2f98
+      size: 1968
     - path: task/mcpatlas/bennington-year-worst-department/shared/atlas.json
       hash: md5
       md5: 1293dcb783317bb38efb2f4d997c730c
       size: 1063
     - path: task/mcpatlas/bennington-year-worst-department/vfs/workspace.yaml
       hash: md5
-      md5: a14fd9492b5fd234edada31e62aa1d4e
-      size: 2680
+      md5: 08e483450c40619a5bffe61c1ea61f75
+      size: 2849
     - path: task/mcpatlas/binance-day-resolved-services/shared/atlas.json
       hash: md5
       md5: 87e815b5a00693db377803ffed0c22d7
       size: 758
     - path: task/mcpatlas/binance-day-resolved-services/vfs/workspace.yaml
       hash: md5
-      md5: f2de125cf03798a5fa2bce57dd302eb7
-      size: 2020
+      md5: 1eb09a2c17e7053a9ee209adb77ed868
+      size: 2189
     - path: task/mcpatlas/brazil-tokyo-high-severity-month/shared/atlas.json
       hash: md5
       md5: cbe39e369836f080892d93d46456ffae
       size: 1024
     - path: task/mcpatlas/brazil-tokyo-high-severity-month/vfs/workspace.yaml
       hash: md5
-      md5: 7c93e6b3feb3b96f1ff8b2b63ef35187
-      size: 2370
+      md5: 7907bca479e3b204c306265d2cc8e990
+      size: 2539
     - path: task/mcpatlas/bronco-turnover-lowest-eth/shared/atlas.json
       hash: md5
       md5: 2a236b0169ae26e409b6e52a338edf6e
       size: 937
     - path: task/mcpatlas/bronco-turnover-lowest-eth/vfs/workspace.yaml
       hash: md5
-      md5: 75402abefaa83c2efa901f34d001f400
-      size: 2770
+      md5: ddc737bd050667abbcd4628d3c97ea2e
+      size: 2939
     - path: task/mcpatlas/california-city-shipping-time/shared/atlas.json
       hash: md5
       md5: e718396555ddba417973b6ea04929b7f
       size: 1592
     - path: task/mcpatlas/california-city-shipping-time/vfs/workspace.yaml
       hash: md5
-      md5: 5ac3c7e70238accc4fff1bb9185b9c6c
-      size: 2675
+      md5: 7d8f9b678319db23994c2ca06712780f
+      size: 2844
     - path: task/mcpatlas/castleman-ad-paper-campaign-date/shared/atlas.json
       hash: md5
       md5: f4ceee182db07379ca3cbd55addbd6ca
       size: 3285
     - path: task/mcpatlas/castleman-ad-paper-campaign-date/vfs/workspace.yaml
       hash: md5
-      md5: 3ba36e236b229df9096db9bfc82bdf32
-      size: 2415
+      md5: e12ca12ad7587bd78988d95ef64b15b8
+      size: 2584
     - path: task/mcpatlas/celtics-game-seven-weekly-profit/shared/atlas.json
       hash: md5
       md5: 5116cd85ce00859f4fc6b31e9a8e1694
       size: 803
     - path: task/mcpatlas/celtics-game-seven-weekly-profit/vfs/workspace.yaml
       hash: md5
-      md5: e01cfc98b4c345e6044f354042f361ce
-      size: 2753
+      md5: 59217e353d5774b78d4fbf4fbd5b0974
+      size: 2922
     - path: task/mcpatlas/clasico-sports-spending-change/shared/atlas.json
       hash: md5
       md5: 90a681feaa246a8d3c12475bf7b6e42d
       size: 952
     - path: task/mcpatlas/clasico-sports-spending-change/vfs/workspace.yaml
       hash: md5
-      md5: 39017d2c106f5d3146a01731ec254b97
-      size: 2194
+      md5: 8c7589916e24dda0ad64a202fdf02cd2
+      size: 2363
     - path: task/mcpatlas/colombia-road-trip-distance/shared/atlas.json
       hash: md5
       md5: a7adc3c95b312a7983620719cbee424c
       size: 955
     - path: task/mcpatlas/colombia-road-trip-distance/vfs/workspace.yaml
       hash: md5
-      md5: 9a3c54b32a599d9f1daa24942eb8a61d
-      size: 3368
+      md5: 72e68e3931db7ce18cac87debfbc005a
+      size: 3537
     - path: task/mcpatlas/cookie-day-genre-article/shared/atlas.json
       hash: md5
       md5: a4e452666c68f8b16ffadd2878b5aade
       size: 1466
     - path: task/mcpatlas/cookie-day-genre-article/vfs/workspace.yaml
       hash: md5
-      md5: 4325fbe82e0aea3bc97bb209e4c51c43
-      size: 2270
+      md5: 0e87c22e06a27e76ff6829570d597f7c
+      size: 2439
     - path: task/mcpatlas/courbet-bequest-best-selling-vehicle/shared/atlas.json
       hash: md5
       md5: 9333ee79843d761c2f1f12f0bc0f299d
@@ -10105,48 +10105,48 @@ stages:
     - path: 
         task/mcpatlas/courbet-bequest-best-selling-vehicle/vfs/workspace.yaml
       hash: md5
-      md5: 2a83e6a3169205538b072b1481377c0e
-      size: 3509
+      md5: 8264e1a1981f6dc54b4550fcd92f81f9
+      size: 3678
     - path: task/mcpatlas/covid-year-top-spender-age-group/shared/atlas.json
       hash: md5
       md5: fa546033671021745ff801bbccc64dd1
       size: 939
     - path: task/mcpatlas/covid-year-top-spender-age-group/vfs/workspace.yaml
       hash: md5
-      md5: 8164507c88a26602bb51c8d464ddf87c
-      size: 2360
+      md5: 620afd3cb79fc021c96972074f6da36a
+      size: 2529
     - path: task/mcpatlas/customer-ten-sales-turnover/shared/atlas.json
       hash: md5
       md5: 5377e5ff8a2072b07f80e6c913af64a6
       size: 1070
     - path: task/mcpatlas/customer-ten-sales-turnover/vfs/workspace.yaml
       hash: md5
-      md5: b64a5d2cf667c2cbd5c5e264cb53008d
-      size: 2881
+      md5: 7ff94c9a79498781c7636c1a34999e6f
+      size: 3050
     - path: task/mcpatlas/december-2023-game-stock/shared/atlas.json
       hash: md5
       md5: 84565fc32376004684ab1ae2712a4978
       size: 1467
     - path: task/mcpatlas/december-2023-game-stock/vfs/workspace.yaml
       hash: md5
-      md5: 6b0c2cd84a4d6726ad6844208760cc30
-      size: 4043
+      md5: c75845a6446464e923cd9432ae0526ad
+      size: 4212
     - path: task/mcpatlas/december-2023-mobile-cpc/shared/atlas.json
       hash: md5
       md5: 1f1c6ba039dd35414f01e216ea0ca6f2
       size: 704
     - path: task/mcpatlas/december-2023-mobile-cpc/vfs/workspace.yaml
       hash: md5
-      md5: 5c1fa152376ae806cde3581f967f08ba
-      size: 2043
+      md5: 19ed17a8fe9a82a18d4e5a99f0270b63
+      size: 2212
     - path: task/mcpatlas/donovan-birthplace-biggest-stadium/shared/atlas.json
       hash: md5
       md5: a4e0abb25f908aa70f086331e3889935
       size: 1121
     - path: task/mcpatlas/donovan-birthplace-biggest-stadium/vfs/workspace.yaml
       hash: md5
-      md5: 7e608da8276e41b5a97fd44b3fd5f963
-      size: 3730
+      md5: 146d247c52a22bbeb6f98c6885889064
+      size: 3899
     - path: 
         task/mcpatlas/eight-transactions-anniversary-events/shared/atlas.json
       hash: md5
@@ -10155,280 +10155,280 @@ stages:
     - path: 
         task/mcpatlas/eight-transactions-anniversary-events/vfs/workspace.yaml
       hash: md5
-      md5: e2a238fdb0ac0df688f08689b0e09b74
-      size: 2632
+      md5: 22162795ce206f998b16068ced96c05b
+      size: 2801
     - path: task/mcpatlas/eldson-june-movie-genre/shared/atlas.json
       hash: md5
       md5: 1e94acf75e86fe9fff20fd1f065e8b93
       size: 860
     - path: task/mcpatlas/eldson-june-movie-genre/vfs/workspace.yaml
       hash: md5
-      md5: dc0a0faba7dc983a5df1bfd7e53195d2
-      size: 2275
+      md5: dc1423e33776604133843c64c7e9df25
+      size: 2444
     - path: task/mcpatlas/employee-expense-crime-suspect/shared/atlas.json
       hash: md5
       md5: 4151531ca90f857dee421e9104131baa
       size: 1050
     - path: task/mcpatlas/employee-expense-crime-suspect/vfs/workspace.yaml
       hash: md5
-      md5: 8dc45a4652afd422620ffc4ae12ace92
-      size: 2315
+      md5: 70ccfb0ee6fb7c35aedb90f478197e6c
+      size: 2484
     - path: task/mcpatlas/employee-fourth-service-meal/shared/atlas.json
       hash: md5
       md5: f68e2be03e98fb56f418bcc167135cf8
       size: 719
     - path: task/mcpatlas/employee-fourth-service-meal/vfs/workspace.yaml
       hash: md5
-      md5: 2e5b92abd14383a31b63133ac52d27ca
-      size: 3152
+      md5: 8e00ab6580124a05f33e6980b1509a3a
+      size: 3321
     - path: task/mcpatlas/f150-attrition-page-time/shared/atlas.json
       hash: md5
       md5: a62402d68f7b3178c184698cdbfef0b5
       size: 855
     - path: task/mcpatlas/f150-attrition-page-time/vfs/workspace.yaml
       hash: md5
-      md5: 580fb935b930d3757496f0260ce51ace
-      size: 2623
+      md5: 2b35d5eb61c1f5b066cfe8842ae6aa19
+      size: 2792
     - path: task/mcpatlas/family-reunion-lake-festival/shared/atlas.json
       hash: md5
       md5: 5f7542c94f3c4ce73b99c088c97c1557
       size: 801
     - path: task/mcpatlas/family-reunion-lake-festival/vfs/workspace.yaml
       hash: md5
-      md5: e663050386c061e7528bbc33bbfabc97
-      size: 3031
+      md5: 9082f9f619007dd24fedc0f88da74f6f
+      size: 3200
     - path: task/mcpatlas/first-fps-action-purchases/shared/atlas.json
       hash: md5
       md5: 01233b020cbf6831c7d0d617e4da91a2
       size: 1085
     - path: task/mcpatlas/first-fps-action-purchases/vfs/workspace.yaml
       hash: md5
-      md5: 038fc710ba7d7919c7aad83defd89e8d
-      size: 3819
+      md5: 85747bc83ba074c5d50241dba296628f
+      size: 3988
     - path: task/mcpatlas/florida-keys-meal-spending/shared/atlas.json
       hash: md5
       md5: 89f61854d51f22948502c3c09bf883c4
       size: 868
     - path: task/mcpatlas/florida-keys-meal-spending/vfs/workspace.yaml
       hash: md5
-      md5: 871db6561e96cefc3edf2f02340efe7b
-      size: 2472
+      md5: d8d850e9684226a584b95320f3c0d8da
+      size: 2641
     - path: task/mcpatlas/friend-movie-recommendation-scores/shared/atlas.json
       hash: md5
       md5: 4925b903aba4ad41e5ab04a748065e58
       size: 1025
     - path: task/mcpatlas/friend-movie-recommendation-scores/vfs/workspace.yaml
       hash: md5
-      md5: c6478169d4a48a5f095a3549c08688ea
-      size: 2952
+      md5: 90330d279c5015f4e5b27995657e8197
+      size: 3121
     - path: task/mcpatlas/furnished-four-bedroom-rent/shared/atlas.json
       hash: md5
       md5: 37ed672f056aaf083641aac96ff4cf0b
       size: 1178
     - path: task/mcpatlas/furnished-four-bedroom-rent/vfs/workspace.yaml
       hash: md5
-      md5: 6d1c46a174174c2261868e56288859d0
-      size: 2177
+      md5: a89cebd50f9cc70be2c1063cef4a2a27
+      size: 2346
     - path: task/mcpatlas/game-sold-137-newsletter/shared/atlas.json
       hash: md5
       md5: 459ee5000bb45373d93635ad8250500a
       size: 654
     - path: task/mcpatlas/game-sold-137-newsletter/vfs/workspace.yaml
       hash: md5
-      md5: 2f58f2f71c0902b142ac155d45f5e2b8
-      size: 2195
+      md5: 95e3f4ab6a7aa772dbb6d27290ec836c
+      size: 2364
     - path: task/mcpatlas/game-title-142-stock/shared/atlas.json
       hash: md5
       md5: 2db86466cb9eb520e3626d98f33736e8
       size: 986
     - path: task/mcpatlas/game-title-142-stock/vfs/workspace.yaml
       hash: md5
-      md5: 2f58f2f71c0902b142ac155d45f5e2b8
-      size: 2195
+      md5: 95e3f4ab6a7aa772dbb6d27290ec836c
+      size: 2364
     - path: task/mcpatlas/great-recession-apartments-built/shared/atlas.json
       hash: md5
       md5: 73c31f085a22f0954fe18128e60dd40e
       size: 1130
     - path: task/mcpatlas/great-recession-apartments-built/vfs/workspace.yaml
       hash: md5
-      md5: abeed95a52bda74962e1fe05b095c9f7
-      size: 2582
+      md5: 2c389bdddd56fbf1eaabf99f562f8864
+      size: 2751
     - path: task/mcpatlas/hand-of-god-coach-days/shared/atlas.json
       hash: md5
       md5: 2ce1712b45e068b8be090b9b6ef9c609
       size: 1375
     - path: task/mcpatlas/hand-of-god-coach-days/vfs/workspace.yaml
       hash: md5
-      md5: bfc096cfe4806bbdbaa9e2d4f582f40e
-      size: 2922
+      md5: a65b87c4db91e56e3c8320dfd95bf324
+      size: 3091
     - path: task/mcpatlas/innovative-department-sunrise-trip/shared/atlas.json
       hash: md5
       md5: 96e16dbf4b89c220a7a9f434bca038a4
       size: 933
     - path: task/mcpatlas/innovative-department-sunrise-trip/vfs/workspace.yaml
       hash: md5
-      md5: 85b6db1f9f9ed539a9d403c9c184fbdb
-      size: 2867
+      md5: 7b399d2e86069c42377401b561eca23c
+      size: 3036
     - path: task/mcpatlas/italian-settler-cohan-distance/shared/atlas.json
       hash: md5
       md5: 17708499e4e5a5126313f7dadc9870be
       size: 1083
     - path: task/mcpatlas/italian-settler-cohan-distance/vfs/workspace.yaml
       hash: md5
-      md5: fd8db26169a773e5abbc0011e5ad6a2c
-      size: 1994
+      md5: 357d4a469f471a170a077f2f2e4b4c49
+      size: 2163
     - path: task/mcpatlas/joyce-cadmus-customer-interaction/shared/atlas.json
       hash: md5
       md5: fa3c4be9e69c8d07a74399b5fb069636
       size: 1558
     - path: task/mcpatlas/joyce-cadmus-customer-interaction/vfs/workspace.yaml
       hash: md5
-      md5: 287c704a49feae31463c760e15534cd6
-      size: 3220
+      md5: 2809f332294759137eece82f1bdbc409
+      size: 3389
     - path: task/mcpatlas/july-13-movie-watchlist/shared/atlas.json
       hash: md5
       md5: b8f683cf6ea983207de3d8fa6a6609dc
       size: 938
     - path: task/mcpatlas/july-13-movie-watchlist/vfs/workspace.yaml
       hash: md5
-      md5: 457e838647e439a9110d6870a0d5548a
-      size: 2669
+      md5: ee6b260a2cc9452494388adb0c10d4bb
+      size: 2838
     - path: task/mcpatlas/june-units-met-artwork/shared/atlas.json
       hash: md5
       md5: 4795b8a6de5436383d46845fa8012160
       size: 877
     - path: task/mcpatlas/june-units-met-artwork/vfs/workspace.yaml
       hash: md5
-      md5: deefa54e319561a5ee81b2ec7d5be0b1
-      size: 3342
+      md5: 98278de7c205b917b566c098fd6436c9
+      size: 3511
     - path: task/mcpatlas/k12-education-free-time/shared/atlas.json
       hash: md5
       md5: 02068867aa123a7199af576b11ddf9d7
       size: 940
     - path: task/mcpatlas/k12-education-free-time/vfs/workspace.yaml
       hash: md5
-      md5: 402c98545c8c5390815a1b14d4c6076e
-      size: 2214
+      md5: 5d52a1d8ae5ba2094a419ba5d8c0b7b0
+      size: 2383
     - path: task/mcpatlas/kcpfan46-movie-watched/shared/atlas.json
       hash: md5
       md5: 9727b3b73c1ee4c456dc85dde99fd2a8
       size: 832
     - path: task/mcpatlas/kcpfan46-movie-watched/vfs/workspace.yaml
       hash: md5
-      md5: e8db8bcf19cb30c3e0424ab21df49686
-      size: 2382
+      md5: 81f080491515a4aad8fcadbe3b88fd8c
+      size: 2551
     - path: task/mcpatlas/king-michael-month-audience/shared/atlas.json
       hash: md5
       md5: f407520498fd493167bca0ef8320904e
       size: 897
     - path: task/mcpatlas/king-michael-month-audience/vfs/workspace.yaml
       hash: md5
-      md5: 0cd2d68f2e878c5a285ac0e58b759d5f
-      size: 2682
+      md5: 64dbeebdeda0e628dcd86afe205bce0b
+      size: 2851
     - path: task/mcpatlas/kobe-year-twitter-posts/shared/atlas.json
       hash: md5
       md5: d8d97d3c6b97717be5e3aad797d2dddb
       size: 802
     - path: task/mcpatlas/kobe-year-twitter-posts/vfs/workspace.yaml
       hash: md5
-      md5: d808c2b59c70b23948578fc85fd87a9d
-      size: 2601
+      md5: a2bd1bf500e047343a08dbfbb231b635
+      size: 2770
     - path: task/mcpatlas/leading-product-2020-quantity/shared/atlas.json
       hash: md5
       md5: 3ef08e128a4f63286fc70f9591fbfbe0
       size: 1111
     - path: task/mcpatlas/leading-product-2020-quantity/vfs/workspace.yaml
       hash: md5
-      md5: 0a27b29568edf75acee4cf4f1e4f66db
-      size: 3754
+      md5: 955c5e8ad0932198b49cba649e15e559
+      size: 3923
     - path: task/mcpatlas/least-liked-strategy-game/shared/atlas.json
       hash: md5
       md5: 1daef4fb913b8f3e0088b42764ceabbe
       size: 1042
     - path: task/mcpatlas/least-liked-strategy-game/vfs/workspace.yaml
       hash: md5
-      md5: 0cf5b40027cf531de1b5964bc4138cdc
-      size: 2736
+      md5: 052adcdca8e34976217d9acf9926e1c1
+      size: 2905
     - path: task/mcpatlas/least-viewed-month-flights/shared/atlas.json
       hash: md5
       md5: 4a078eaf0bf8fe2ef710a05b6898562c
       size: 1322
     - path: task/mcpatlas/least-viewed-month-flights/vfs/workspace.yaml
       hash: md5
-      md5: 3557ea7a631173921304ce2e27be11b1
-      size: 2702
+      md5: 5bc00b70dd184cbf2fab1c0726f10f77
+      size: 2871
     - path: task/mcpatlas/lithuania-centennial-staff-turnover/shared/atlas.json
       hash: md5
       md5: adcf1684b2fb5641597d513dcb1bc746
       size: 2938
     - path: task/mcpatlas/lithuania-centennial-staff-turnover/vfs/workspace.yaml
       hash: md5
-      md5: 195828d7bb62e0c38ad9f39097cd0bbe
-      size: 2956
+      md5: 3e1ed65742381ac1c17facd683935d82
+      size: 3125
     - path: task/mcpatlas/maldoff-paper-lowest-salary/shared/atlas.json
       hash: md5
       md5: 007ae198e2e24490bbae4e9579823ae9
       size: 859
     - path: task/mcpatlas/maldoff-paper-lowest-salary/vfs/workspace.yaml
       hash: md5
-      md5: 98d395f92b15f97bf3158126748915ad
-      size: 2461
+      md5: 0eac907c5a30377e4d356db70863b77b
+      size: 2630
     - path: task/mcpatlas/mario-cuomo-sales-workers/shared/atlas.json
       hash: md5
       md5: 87ee5f91c646f640fa8c493d6562c2d9
       size: 718
     - path: task/mcpatlas/mario-cuomo-sales-workers/vfs/workspace.yaml
       hash: md5
-      md5: a54624b7badeeca40a76d9bfefcdcdfa
-      size: 2613
+      md5: c2ef983b4f72f96b9f26c30b19c75dd5
+      size: 2782
     - path: task/mcpatlas/mario-wonder-lowest-rating/shared/atlas.json
       hash: md5
       md5: 01a59e1ec8521ee76592f8e466b00759
       size: 799
     - path: task/mcpatlas/mario-wonder-lowest-rating/vfs/workspace.yaml
       hash: md5
-      md5: c6913bec1ee516e4d0e6fbb454796553
-      size: 2938
+      md5: 0314c742f05f80ff021d8d64d938dbd8
+      size: 3107
     - path: task/mcpatlas/merida-petcare-best-start-day/shared/atlas.json
       hash: md5
       md5: a5a9de4533074204b103ee88db0c33b3
       size: 1090
     - path: task/mcpatlas/merida-petcare-best-start-day/vfs/workspace.yaml
       hash: md5
-      md5: bdadb838590ed60185b72ba5cee522dc
-      size: 2886
+      md5: 75d4950bb40ec56f969611c53fd3de55
+      size: 3055
     - path: task/mcpatlas/messi-world-cup-sports-sales/shared/atlas.json
       hash: md5
       md5: 768192911b7df238a2ff633084b0ec3e
       size: 709
     - path: task/mcpatlas/messi-world-cup-sports-sales/vfs/workspace.yaml
       hash: md5
-      md5: f770a94c0ac98edccdde0ff11fa6b89f
-      size: 3883
+      md5: ce1ea4e1c5a3db0e4fea63b75cf387e5
+      size: 4052
     - path: task/mcpatlas/mueller-star-phase-transition-paper/shared/atlas.json
       hash: md5
       md5: 2081991e747d1d4ff14cd0d44ee6d974
       size: 924
     - path: task/mcpatlas/mueller-star-phase-transition-paper/vfs/workspace.yaml
       hash: md5
-      md5: d9810066760265613dbc6ee0af0fe5c8
-      size: 2194
+      md5: e987d4d1f0996491c794b4419c36be0b
+      size: 2363
     - path: task/mcpatlas/mustang-claim-customer-details/shared/atlas.json
       hash: md5
       md5: 51b540b592e6318efa8e3f867289d74c
       size: 997
     - path: task/mcpatlas/mustang-claim-customer-details/vfs/workspace.yaml
       hash: md5
-      md5: b508258938670ce8786a39fc9c65db48
-      size: 2119
+      md5: 65ec8f28ee174ccc9600a0d26d9ac34d
+      size: 2288
     - path: task/mcpatlas/new-horizons-pluto-satisfaction/shared/atlas.json
       hash: md5
       md5: 82fab35402d6c9adf60c47e36374d0e1
       size: 1476
     - path: task/mcpatlas/new-horizons-pluto-satisfaction/vfs/workspace.yaml
       hash: md5
-      md5: 68193b7bfb3c1c32155241ca38ed9b91
-      size: 4869
+      md5: d7e083c02b7cd1db292e0d475cee4499
+      size: 5038
     - path: 
         task/mcpatlas/nightingale-author-vehicles-delivered/shared/atlas.json
       hash: md5
@@ -10437,152 +10437,152 @@ stages:
     - path: 
         task/mcpatlas/nightingale-author-vehicles-delivered/vfs/workspace.yaml
       hash: md5
-      md5: 45aef53301aca8d334e0c7669f8e6b7e
-      size: 3788
+      md5: 49cefdacebd249df8dee38e0904379fb
+      size: 3957
     - path: task/mcpatlas/old-faithful-park-headquarters/shared/atlas.json
       hash: md5
       md5: 676c9e39ac4077b3e81fb35d345699b4
       size: 915
     - path: task/mcpatlas/old-faithful-park-headquarters/vfs/workspace.yaml
       hash: md5
-      md5: 010047b61f23a5cab46637864a469554
-      size: 3440
+      md5: 1c0d5b6db27c06ca5863ade0801b46a3
+      size: 3609
     - path: task/mcpatlas/one-piece-city-sunset-difference/shared/atlas.json
       hash: md5
       md5: b27e8bf694fbd22ed48d8a289a0de5cb
       size: 1203
     - path: task/mcpatlas/one-piece-city-sunset-difference/vfs/workspace.yaml
       hash: md5
-      md5: d0472903225d374575bd78fc5f75db17
-      size: 2123
+      md5: efca4541aab2928f665739730ed3601f
+      size: 2292
     - path: task/mcpatlas/park-event-family-crimes/shared/atlas.json
       hash: md5
       md5: de4814b4a9e6ad2a54d43d904f7e0c0e
       size: 898
     - path: task/mcpatlas/park-event-family-crimes/vfs/workspace.yaml
       hash: md5
-      md5: 52736227034e2d10d204f170670bba79
-      size: 2811
+      md5: 0c57c15c18ca01daa11e58d95c908392
+      size: 2980
     - path: task/mcpatlas/periodic-table-year-expenses/shared/atlas.json
       hash: md5
       md5: 31dc917dd6768c4f47100b45c8f362b1
       size: 889
     - path: task/mcpatlas/periodic-table-year-expenses/vfs/workspace.yaml
       hash: md5
-      md5: e462c4ea34ff8d534d4e5b142f0eb5a8
-      size: 2610
+      md5: b44ffd16f39c2ca16f99bbdf33d691f2
+      size: 2779
     - path: task/mcpatlas/phone-crime-oldest-woman-suspect/shared/atlas.json
       hash: md5
       md5: ab3f3ec7bf5f70de7bd6081902cec75b
       size: 951
     - path: task/mcpatlas/phone-crime-oldest-woman-suspect/vfs/workspace.yaml
       hash: md5
-      md5: a504aee453fded501eee9d7fd381fda4
-      size: 2353
+      md5: a2a7bc0cbe6873eb7ff915fe59b0b72c
+      size: 2522
     - path: task/mcpatlas/photographer-sister-3d-dataset/shared/atlas.json
       hash: md5
       md5: 39038e7d30a64acb3f76c5d1fe902d55
       size: 903
     - path: task/mcpatlas/photographer-sister-3d-dataset/vfs/workspace.yaml
       hash: md5
-      md5: ccce1d6eed3170f28c92d52b209bbfe3
-      size: 2388
+      md5: 5549985a002d50821c9f47566769fc72
+      size: 2557
     - path: task/mcpatlas/political-summit-top-post/shared/atlas.json
       hash: md5
       md5: 3e5cd6c7f337d51311d4b0aa0d69889d
       size: 996
     - path: task/mcpatlas/political-summit-top-post/vfs/workspace.yaml
       hash: md5
-      md5: b799fa73174e38d4735f11a3ba220971
-      size: 3580
+      md5: c6774fbc33581ca37a40be8a0859a633
+      size: 3749
     - path: task/mcpatlas/pre-katrina-premium-apartments/shared/atlas.json
       hash: md5
       md5: 8866941e5ad785b56abdf5593bc4f9c6
       size: 1287
     - path: task/mcpatlas/pre-katrina-premium-apartments/vfs/workspace.yaml
       hash: md5
-      md5: cc2a4e3cc05166489e9e873bd10520b3
-      size: 2658
+      md5: 7174763a8d7625265ced3da1e722e67e
+      size: 2827
     - path: task/mcpatlas/princess-director-movie-recommender/shared/atlas.json
       hash: md5
       md5: 8d1bc73ba162f6fe160ab7f64acb7853
       size: 971
     - path: task/mcpatlas/princess-director-movie-recommender/vfs/workspace.yaml
       hash: md5
-      md5: 0b6ed5560a34b1f8de388ec9a1d83630
-      size: 2149
+      md5: 82792d893a543b07e18cfe806d085efa
+      size: 2318
     - path: task/mcpatlas/q4-2023-department-performance/shared/atlas.json
       hash: md5
       md5: 75e8edb9ea68fccec613a6cf3a358285
       size: 1297
     - path: task/mcpatlas/q4-2023-department-performance/vfs/workspace.yaml
       hash: md5
-      md5: 988f0743a6d6d9539589ef1508cf952d
-      size: 2316
+      md5: 02718d0e5a977a9e74f2fc18e8f00336
+      size: 2485
     - path: task/mcpatlas/qtwatcher-movie-watched/shared/atlas.json
       hash: md5
       md5: 57a6360335b6a17ba098606d3b8d332e
       size: 850
     - path: task/mcpatlas/qtwatcher-movie-watched/vfs/workspace.yaml
       hash: md5
-      md5: 75c9c7e48db64ffda3f769ccd7994e5b
-      size: 2277
+      md5: efeee9428f4e22ffdda7e19fd6bb4b81
+      size: 2446
     - path: task/mcpatlas/real-estate-parking-channel/shared/atlas.json
       hash: md5
       md5: 5b51bb5ca4ee0e1003d669ed99d08f0f
       size: 792
     - path: task/mcpatlas/real-estate-parking-channel/vfs/workspace.yaml
       hash: md5
-      md5: 221bbdd4ef0dda3ae2445c7009873541
-      size: 2142
+      md5: d36780690a145bc0410e3a399bc267e4
+      size: 2311
     - path: task/mcpatlas/real-madrid-12th-top-month/shared/atlas.json
       hash: md5
       md5: 7c6904f1033bf7e8df64d3bb4233d72b
       size: 769
     - path: task/mcpatlas/real-madrid-12th-top-month/vfs/workspace.yaml
       hash: md5
-      md5: 29bd3f78468b478e44c71535f733e477
-      size: 3606
+      md5: 89a7723903374df038f3a5f3e64d9e83
+      size: 3775
     - path: task/mcpatlas/recommended-movies-top-list/shared/atlas.json
       hash: md5
       md5: 7083fd2d9619499dbcfdc2558cc69362
       size: 1263
     - path: task/mcpatlas/recommended-movies-top-list/vfs/workspace.yaml
       hash: md5
-      md5: e27e36025bc8fdecb14adbcd71d96f46
-      size: 2784
+      md5: 98b39647287d2ab55c211673b2317fc6
+      size: 2953
     - path: task/mcpatlas/reyes-family-post-game-menu/shared/atlas.json
       hash: md5
       md5: 0462c04a9c45c5977b8a8fc7a3bb58d6
       size: 926
     - path: task/mcpatlas/reyes-family-post-game-menu/vfs/workspace.yaml
       hash: md5
-      md5: 4d9db5d3d472d1284beeb7b4b53c4699
-      size: 2341
+      md5: 4c5eaedff9b98d544772b26b43a2897b
+      size: 2510
     - path: task/mcpatlas/riverside-park-family-apartments/shared/atlas.json
       hash: md5
       md5: 0e874eed7741e1654530529d62b39844
       size: 1096
     - path: task/mcpatlas/riverside-park-family-apartments/vfs/workspace.yaml
       hash: md5
-      md5: 0c0ce3e5848cac9ae8d55658e040702e
-      size: 2302
+      md5: 48786e17e01a8b927c86ab4e5ed4ecfb
+      size: 2471
     - path: task/mcpatlas/royal-wedding-louvre-walk/shared/atlas.json
       hash: md5
       md5: 1e26e601cc7c3316b3f881493eee532e
       size: 1573
     - path: task/mcpatlas/royal-wedding-louvre-walk/vfs/workspace.yaml
       hash: md5
-      md5: d571d032234014d9a79df76f237b3f8b
-      size: 2361
+      md5: 0eb9e452eac62583cf3a3095ae668581
+      size: 2530
     - path: task/mcpatlas/sales-hr-2017-performance/shared/atlas.json
       hash: md5
       md5: f240bcd4a66163a78d63bdda96d1cd1b
       size: 755
     - path: task/mcpatlas/sales-hr-2017-performance/vfs/workspace.yaml
       hash: md5
-      md5: 8eb659f0e69452a26512a81da04ed49d
-      size: 2473
+      md5: 0343462d52d8bf0305f3e4dbbd4d1995
+      size: 2642
     - path: task/mcpatlas/script/capture_cli_tools.py
       hash: md5
       md5: 0e953c464267befc4805691efc46f6f2
@@ -10593,160 +10593,160 @@ stages:
       size: 1053
     - path: task/mcpatlas/seventh-floor-studio-rent/vfs/workspace.yaml
       hash: md5
-      md5: d20d1d7d669b1fc4a8cf2bac3faa2cf1
-      size: 2050
+      md5: e12635c135297eadc1dd1c54482dcb1a
+      size: 2219
     - path: task/mcpatlas/snake-repo-commit-count/shared/atlas.json
       hash: md5
       md5: 5fe718b634a69f3bbffe71e20745133d
       size: 852
     - path: task/mcpatlas/snake-repo-commit-count/vfs/workspace.yaml
       hash: md5
-      md5: 107aa0f316f6e7e7a61352d82b3a8b8a
-      size: 1758
+      md5: 00ccc9d4083541553a660d1d92b175ce
+      size: 1927
     - path: task/mcpatlas/spacex-car-leading-product/shared/atlas.json
       hash: md5
       md5: 75332d4efbe85183d1fff7e0924042bb
       size: 1063
     - path: task/mcpatlas/spacex-car-leading-product/vfs/workspace.yaml
       hash: md5
-      md5: b499ee391ad371afb6f47af8e2efb73a
-      size: 4034
+      md5: 9b722a7dcfa852e3ba33666eb95e7376
+      size: 4203
     - path: task/mcpatlas/spain-world-cup-apartment-rent/shared/atlas.json
       hash: md5
       md5: e7e453b3aca506114587b3d8bed656a1
       size: 987
     - path: task/mcpatlas/spain-world-cup-apartment-rent/vfs/workspace.yaml
       hash: md5
-      md5: d187c9bc03f5cb57b244072d2a0dd745
-      size: 2459
+      md5: 1cf2f9b4282ea3bc8c75d93c901b6fe3
+      size: 2628
     - path: task/mcpatlas/sports-drinks-article-site-metric/shared/atlas.json
       hash: md5
       md5: 9228c6ab1cd465e64faade20dbae2105
       size: 837
     - path: task/mcpatlas/sports-drinks-article-site-metric/vfs/workspace.yaml
       hash: md5
-      md5: 1094f249bd8defaa2d1c5f2cb1cbfc52
-      size: 2617
+      md5: 9049bd4a6333779e0fa62db464f2ebe2
+      size: 2786
     - path: task/mcpatlas/sports-repo-farrell-day-commit/shared/atlas.json
       hash: md5
       md5: 0d5aaac22892f2ed4cb584fbf7d9cf03
       size: 893
     - path: task/mcpatlas/sports-repo-farrell-day-commit/vfs/workspace.yaml
       hash: md5
-      md5: 9762f7b95563cf5f65b84f6c07431b48
-      size: 2313
+      md5: 918d105827b70d7fd3980f1cdfcfb195
+      size: 2482
     - path: task/mcpatlas/steve-game-draft-salary/shared/atlas.json
       hash: md5
       md5: d892bf42a357a67a3c2fc51703c3629c
       size: 1046
     - path: task/mcpatlas/steve-game-draft-salary/vfs/workspace.yaml
       hash: md5
-      md5: eeacf93a5f2c8c8badb3de2b43c457d1
-      size: 2108
+      md5: 208f71fcdf987b02b468253d11e24b3d
+      size: 2277
     - path: task/mcpatlas/storyteller-creator-first-commit/shared/atlas.json
       hash: md5
       md5: cf05c74b78125b82a8c80f1608d144d4
       size: 860
     - path: task/mcpatlas/storyteller-creator-first-commit/vfs/workspace.yaml
       hash: md5
-      md5: c710ee675b9625b05d8e216ddf242dd3
-      size: 2561
+      md5: 5108610932f79a175c842ab186e62406
+      size: 2730
     - path: task/mcpatlas/suggested-genres-top-rated/shared/atlas.json
       hash: md5
       md5: 943b1129f0e5b99f15221e66deed9684
       size: 1657
     - path: task/mcpatlas/suggested-genres-top-rated/vfs/workspace.yaml
       hash: md5
-      md5: 8150243193f8a27770ea17d4c427db09
-      size: 2419
+      md5: 998c6f4d8fde696d0f674c4ae115ab99
+      size: 2588
     - path: task/mcpatlas/sultana-study-sports-customers/shared/atlas.json
       hash: md5
       md5: 8d4fb7dea70e04e65678173d581d188e
       size: 905
     - path: task/mcpatlas/sultana-study-sports-customers/vfs/workspace.yaml
       hash: md5
-      md5: 3c644ad3fae983042823649b35268bde
-      size: 2173
+      md5: 8b955458654a3a707d42afb9a0af8bf0
+      size: 2342
     - path: task/mcpatlas/tina-turner-fewest-leavings/shared/atlas.json
       hash: md5
       md5: fa9d738001174221f22a30a8aebf510b
       size: 783
     - path: task/mcpatlas/tina-turner-fewest-leavings/vfs/workspace.yaml
       hash: md5
-      md5: 45b2ac59a791fa8da89015c6bd926c57
-      size: 2384
+      md5: dc6137df33727b51a88cf48e2a81b445
+      size: 2553
     - path: task/mcpatlas/tokyo-premiere-temperature-root/shared/atlas.json
       hash: md5
       md5: 86db00935c45518533225ea1fb958fde
       size: 820
     - path: task/mcpatlas/tokyo-premiere-temperature-root/vfs/workspace.yaml
       hash: md5
-      md5: 71b17d76ff9045719164fa96bd5be11d
-      size: 3119
+      md5: 5e9bcc5393836abd666b8173f2b263f3
+      size: 3288
     - path: task/mcpatlas/tomas-villa-game-member/shared/atlas.json
       hash: md5
       md5: 4c0bc298f892f1b8a6e7b5178fa6cea3
       size: 986
     - path: task/mcpatlas/tomas-villa-game-member/vfs/workspace.yaml
       hash: md5
-      md5: c9f61064845656c613d1e286e589294d
-      size: 2335
+      md5: 097d9b34f1bf1a614f3372516f2ae908
+      size: 2504
     - path: task/mcpatlas/top-three-genres-wiki-links/shared/atlas.json
       hash: md5
       md5: 5d2bc883b5984c5f7e95c407c7e7f628
       size: 1260
     - path: task/mcpatlas/top-three-genres-wiki-links/vfs/workspace.yaml
       hash: md5
-      md5: efe5cb0aa52cc9c235ec58d7b08cfe55
-      size: 2158
+      md5: 2a794fc0901a02717a81c7952169223b
+      size: 2327
     - path: task/mcpatlas/un-75th-staff-effectiveness/shared/atlas.json
       hash: md5
       md5: 7da446731daaf0df20eab5e8a5bb9359
       size: 954
     - path: task/mcpatlas/un-75th-staff-effectiveness/vfs/workspace.yaml
       hash: md5
-      md5: 670c59e94bb7dfaf318229b582cb8745
-      size: 2613
+      md5: 50f31200db0692f3169f6de3402c51c5
+      size: 2782
     - path: task/mcpatlas/under-800-ad-type-reach/shared/atlas.json
       hash: md5
       md5: aeee212c39050b063f21aec905ca9d75
       size: 1031
     - path: task/mcpatlas/under-800-ad-type-reach/vfs/workspace.yaml
       hash: md5
-      md5: 8a462e1704ea5a9f63714716e385bf81
-      size: 2031
+      md5: 136228c31582f80a2b924459f07ccbc3
+      size: 2200
     - path: task/mcpatlas/unwatched-imdb-movie-night/shared/atlas.json
       hash: md5
       md5: a63487728073d46cf3c4c8246aa064a6
       size: 857
     - path: task/mcpatlas/unwatched-imdb-movie-night/vfs/workspace.yaml
       hash: md5
-      md5: e005c7c3b7da00a22a58c663959327da
-      size: 2025
+      md5: ae9a9bf8a6d5d56e5a327a64056088ac
+      size: 2194
     - path: task/mcpatlas/wings-gaming-top-supplier/shared/atlas.json
       hash: md5
       md5: 9303c3438ecceb096c9c778bb00d2a9c
       size: 987
     - path: task/mcpatlas/wings-gaming-top-supplier/vfs/workspace.yaml
       hash: md5
-      md5: 5b46b15b83487d3ae7c48f3abeaefb83
-      size: 2945
+      md5: 3f4fda89a135eff139d6d212bbe296e1
+      size: 3114
     - path: task/mcpatlas/youtuber-100m-video-ad-reach/shared/atlas.json
       hash: md5
       md5: 1ff13c38ba5f11e91939e3a382a2f9d3
       size: 933
     - path: task/mcpatlas/youtuber-100m-video-ad-reach/vfs/workspace.yaml
       hash: md5
-      md5: cd1bf56cb9ededd96e4445e8682a40ae
-      size: 2317
+      md5: 869ea62e8a0fab1fe269d2888aa46876
+      size: 2486
     - path: task/mcpatlas/zhang-health-speaker-name/shared/atlas.json
       hash: md5
       md5: 02b09ab689448397d30f023ae67ff2fe
       size: 819
     - path: task/mcpatlas/zhang-health-speaker-name/vfs/workspace.yaml
       hash: md5
-      md5: c9218b3f6332c1df7f56eb39e4954777
-      size: 2223
+      md5: 73cfe6b67efc3cef1b8994f1a77f20b3
+      size: 2392
     - path: vendor/mcpatlas-mcp
       hash: md5
       md5: 46cbbdd5f7e0c941e8763cbd7596a55d.dir
