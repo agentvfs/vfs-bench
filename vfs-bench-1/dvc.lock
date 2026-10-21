@@ -1268,7 +1268,7 @@ stages:
       size: 16638
     - path: agent/workspace.py
       hash: md5
-      md5: edd9287ccd0ce826a68d8feced0da57b
+      md5: cd805bb2550e3b18dbd35ce1c821da76
       size: 29209
     - path: cli/processes.mjs
       hash: md5
@@ -1276,7 +1276,7 @@ stages:
       size: 553
     - path: pyproject.toml
       hash: md5
-      md5: fdbbd6637bf75899d5343756a0beba1d
+      md5: d57ba617edc55509062197e23d824784
       size: 3396
     - path: server/execution.py
       hash: md5
@@ -1300,7 +1300,7 @@ stages:
       size: 73650
     - path: server/seed/papers.py
       hash: md5
-      md5: 738b598fd375b9c9d1bd2c4edb1ff11f
+      md5: efa8f354ab5f782c9d3d25b105be88c5
       size: 7987
     - path: submodule/Toolathlon/configs/mcp_servers/wandb.yaml
       hash: md5
@@ -1337,25 +1337,25 @@ stages:
       nfiles: 6
     - path: submodule/mirage/python/mirage/policy/builtin/output_cap.py
       hash: md5
-      md5: fe0b6fe409826026e9564879d73de314
+      md5: 2604fa301605ea96330bbaf40910d7f4
       size: 5519
     - path: submodule/mirage/typescript/packages/core/src/core/wandb
       hash: md5
-      md5: 92608839b0faecfe74aebb747e6eb94d.dir
+      md5: 4ad91f014871ca565062ee79c106040f.dir
       size: 36321
       nfiles: 15
     - path: submodule/mirage/typescript/packages/core/src/vfs/wandb
       hash: md5
-      md5: 1800894cdf8b1fbd22313f95b96c0b1d.dir
+      md5: eae294faf9c633e73572b408d25595b8.dir
       size: 4846
       nfiles: 3
     - path: submodule/mirage/typescript/pnpm-lock.yaml
       hash: md5
-      md5: 90b33242acdc1b0074263ee34e1acf7f
+      md5: 96f74486957757fcfdfa219e03190bd0
       size: 470197
     - path: task/toolathlon/__init__.py
       hash: md5
-      md5: 5856710c27115697a3b9a7dee7fa9c8c
+      md5: 81423f5f5a5d4a5034be6f490d0fc60f
       size: 50231
     - path: task/toolathlon/script/capture_wandb.py
       hash: md5
@@ -1371,21 +1371,21 @@ stages:
       size: 29559239
     - path: task/toolathlon/wandb-best-score
       hash: md5
-      md5: b198b53c5916bb6356256a4a0df14605.dir
+      md5: c898b47152b28ddc48c061755817f3d9.dir
       size: 62053
       nfiles: 8
     - path: task/toolathlon/wandb-shortest-length
       hash: md5
-      md5: 3434c9c5d0d452731b60c765722caa3a.dir
+      md5: ac35ebd711e035cf703d4fc2e069a76c.dir
       size: 65070
       nfiles: 8
     - path: tests/lineage.py
       hash: md5
-      md5: 56d1419105f7c75ecfaa3dd07ed8d40a
+      md5: 5a93c3f737565b0755cdca7a53e769f1
       size: 7069
     - path: uv.lock
       hash: md5
-      md5: a06caf31e1f6d5bba67fa3d05e88cb0a
+      md5: 3fd4bf64726dfcb123c4e820fe4b995d
       size: 746859
     - path: vendor/wandb-mcp/pyproject.toml
       hash: md5
@@ -8265,7 +8265,7 @@ stages:
       size: 3741
     - path: cli/toolathlon/tool.mjs
       hash: md5
-      md5: 2a0ecdc956398f1710317af805092d1d
+      md5: f1c7d9245ffd697e21f9a892cd34482e
       size: 1165
     - path: task/toolathlon/script/capture_cli_tools.py
       hash: md5

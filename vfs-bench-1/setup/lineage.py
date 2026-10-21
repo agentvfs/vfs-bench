@@ -1,4 +1,5 @@
 """Verify every DVC lock edge, including frozen directory dependencies."""
+import subprocess
 import tempfile
 from pathlib import Path
 
@@ -9,6 +10,17 @@ from dvc_data.hashfile.db import HashFileDB
 from dvc_objects.fs.local import LocalFileSystem
 
 REPO = Path(__file__).resolve().parents[1]
+
+
+def ignored(root, relative):
+    """Whether git carries no bytes for the path, so none can be checked."""
+    # check-ignore matches a directory-only pattern only for a query that
+    # names a directory, which a path repro has not built yet does not.
+    return any(
+        subprocess.run(['git', 'check-ignore', '-q', '--', probe],
+                       cwd=root,
+                       check=False).returncode == 0
+        for probe in (relative, relative.rstrip('/') + '/'))
 
 
 def drift(root=REPO):
@@ -25,7 +37,11 @@ def drift(root=REPO):
                 if relative not in checked:
                     path = root / relative
                     if not path.exists():
-                        checked[relative] = None
+                        # A gitignored entry is a generated out that `dvc
+                        # repro` materializes; a fresh checkout has no bytes
+                        # of it to hash, so the recorded hash stands.
+                        checked[relative] = entry['md5'] if ignored(
+                            root, relative) else None
                     else:
                         _, _, obj = build(odb,
                                           str(path),
