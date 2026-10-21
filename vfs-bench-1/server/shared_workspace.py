@@ -7,14 +7,12 @@ import gzip
 import io
 import json
 import os
-import re
 import shlex
 import shutil
 import subprocess
 import tarfile
 import tempfile
 import time
-import tomllib
 import uuid
 from contextlib import ExitStack, contextmanager
 from pathlib import Path
@@ -544,34 +542,33 @@ def install_mysql(box):
 MATURIN = 'ghcr.io/pyo3/maturin:v1.9.6'
 
 
-def rust_wheel():
-    """mirage-rs for the sandbox, built from the pinned crate.
+def mirage_wheel():
+    """mirage-ai for the sandbox, built from the pinned source.
 
-    mirage-ai requires mirage-rs, a Rust extension that `uv export` names
-    only by its path in the checkout and that upstream publishes no wheel
-    of. It is built as upstream's CI builds it
-    (`.github/workflows/build_wheels.yml`): maturin's manylinux container,
-    abi3, `--release --locked`, for E2B's x86_64. One wheel per pinned
-    `rust/` tree, kept under state/.
+    mirage-ai carries its Rust streams as `mirage._rs`, so a wheel is per
+    platform and upstream publishes none for a commit. It is built as
+    upstream's CI builds it (`.github/workflows/build_wheels.yml`): maturin's
+    manylinux container in `python/`, abi3, `--release --locked`, for E2B's
+    x86_64. One wheel per pinned commit, kept under state/.
 
     Returns:
         Path: the wheel.
     """
-    tree = subprocess.check_output(
-        ['git', '-C', str(MIRAGE), 'rev-parse', 'HEAD:rust'],
-        text=True).strip()
-    out = REPO / 'state/mirage-rs' / tree
+    commit = subprocess.check_output(
+        ['git', '-C', str(MIRAGE), 'rev-parse', 'HEAD'], text=True).strip()
+    out = REPO / 'state/mirage-wheel' / commit
     wheels = sorted(out.glob('*.whl'))
     if wheels:
         return wheels[0]
-    with tempfile.TemporaryDirectory(prefix='mirage-rs-') as scratch:
+    with tempfile.TemporaryDirectory(prefix='mirage-wheel-') as scratch:
         source = subprocess.check_output(
-            ['git', '-C', str(MIRAGE), 'archive', 'HEAD', 'rust'])
+            ['git', '-C',
+             str(MIRAGE), 'archive', 'HEAD', 'python', 'rust'])
         tarfile.open(fileobj=io.BytesIO(source)).extractall(scratch,
                                                             filter='data')
         subprocess.run([
             'docker', 'run', '--rm', '--platform', 'linux/amd64', '-v',
-            f'{scratch}:/io', '-w', '/io/rust/python', MATURIN, 'build',
+            f'{scratch}:/io', '-w', '/io/python', MATURIN, 'build',
             '--release', '--locked', '--out', '/io/dist'
         ],
                        check=True)
@@ -581,40 +578,19 @@ def rust_wheel():
     return out / built[0].name
 
 
-def source_bundle():
-    """Ship the pinned Mirage package and its frozen dependency closure."""
+def requirements_bundle():
+    """The pinned Mirage package's frozen dependency closure, hashed."""
     for name in ('pyproject.toml', 'uv.lock'):
         pinned = subprocess.check_output(
             ['git', '-C',
              str(MIRAGE), 'show', f'HEAD:python/{name}'])
         if (MIRAGE / 'python' / name).read_bytes() != pinned:
             raise RuntimeError(f'Mirage {name} differs from the pinned source')
-    archive = subprocess.check_output([
-        'git', '-C',
-        str(MIRAGE), 'archive', 'HEAD', 'python/mirage',
-        'python/pyproject.toml', 'python/README.md', 'python/LICENSE'
-    ])
-    requirements = subprocess.check_output([
+    return subprocess.check_output([
         'uv', 'export', '--frozen', '--no-dev', '--extra', 's3', '--extra',
         'fuse', '--no-emit-project', '--format', 'requirements-txt'
     ],
-                                           cwd=MIRAGE / 'python')
-    # The path line has no hash to require; rust_wheel() stands in for it.
-    requirements = re.sub(rb'(?m)^\.\./rust/python\n(?:    #.*\n)*', b'',
-                          requirements)
-    lock = tomllib.loads(
-        subprocess.check_output(
-            ['git', '-C',
-             str(MIRAGE), 'show', 'HEAD:python/uv.lock'],
-            text=True))
-    if b'\nsetuptools==' not in requirements:
-        build = next(p for p in lock['package'] if p['name'] == 'setuptools')
-        hashes = [
-            f"--hash={p['hash']}" for p in [build['sdist'], *build['wheels']]
-        ]
-        requirements += (f"\nsetuptools=={build['version']} " +
-                         ' '.join(hashes) + '\n').encode()
-    return gzip.compress(archive, mtime=0), requirements
+                                   cwd=MIRAGE / 'python')
 
 
 def run(box, command, timeout=180):
@@ -654,24 +630,19 @@ def mounted(box, config):
         box, f'install -d -m 700 {REMOTE} && mkdir -p /work && '
         '! mountpoint -q /work && test -z "$(ls -A /work)" && '
         'test -c /dev/fuse')
-    package, requirements = source_bundle()
-    wheel = rust_wheel()
+    wheel = mirage_wheel()
     for name, content in (
-        ('mirage.tar.gz', package),
-        ('requirements.txt', requirements),
+        ('requirements.txt', requirements_bundle()),
         (wheel.name, wheel.read_bytes()),
         ('config.json', json.dumps(config)),
         ('mount.py', Path(__file__).read_text()),
     ):
         box.files.write(f'{REMOTE}/{name}', content, user='root')
-    run(box, f'cd {REMOTE} && tar -xzf mirage.tar.gz && '
-        'uv venv --python 3.12 env && '
+    run(box, f'cd {REMOTE} && uv venv --python 3.12 env && '
         'uv pip install --python env/bin/python --require-hashes '
         '-r requirements.txt && '
         'uv pip install --python env/bin/python --no-deps '
-        f'./{wheel.name} && '
-        'uv pip install --python env/bin/python --no-deps '
-        '--no-build-isolation ./python',
+        f'./{wheel.name}',
         timeout=300)
     # allow_other exposes files to native commands without exposing the root
     # mount daemon's S3 credentials. The embedding harness removes sudo and
