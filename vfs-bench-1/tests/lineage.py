@@ -17,6 +17,10 @@ def file_drift(root: Path) -> list[str]:
     """Check locked file inputs and outputs even when a stage is frozen.
 
     DVC itself checks directory output hashes; do not invent its tree hash.
+    A gitignored entry names bytes no commit carries -- a capture or a
+    generated package tree that `dvc repro` materializes. A fresh checkout
+    has nothing to hash them against, so their absence is not drift, and
+    the recorded hash stands until repro runs.
     """
     stages = yaml.safe_load((root / "dvc.lock").read_text())["stages"]
     drift = []
@@ -28,7 +32,8 @@ def file_drift(root: Path) -> list[str]:
             path = root / entry["path"]
             expected = entry["md5"]
             if not path.exists():
-                drift.append(f"{name}: missing {entry['path']}")
+                if not ignored(root, entry["path"]):
+                    drift.append(f"{name}: missing {entry['path']}")
             elif expected.endswith(".dir"):
                 if not path.is_dir():
                     drift.append(f"{name}: not a directory: {entry['path']}")
@@ -36,6 +41,17 @@ def file_drift(root: Path) -> list[str]:
                     path.read_bytes()).hexdigest() != expected:
                 drift.append(f"{name}: changed {entry['path']}")
     return drift
+
+
+def ignored(root: Path, relative: str) -> bool:
+    """Whether git carries no bytes for the path, so none can be checked."""
+    # check-ignore matches a directory-only pattern only for a query that
+    # names a directory, which a path repro has not built yet does not.
+    return any(
+        subprocess.run(["git", "check-ignore", "-q", "--", probe],
+                       cwd=root,
+                       check=False).returncode == 0
+        for probe in (relative, relative.rstrip("/") + "/"))
 
 
 def git(*args: str, cwd: Path = REPO) -> bytes:
