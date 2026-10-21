@@ -1483,12 +1483,12 @@ stages:
       size: 16638
     - path: agent/workspace.py
       hash: md5
-      md5: edd9287ccd0ce826a68d8feced0da57b
-      size: 29209
+      md5: cd805bb2550e3b18dbd35ce1c821da76
+      size: 29214
     - path: cli/native.mjs
       hash: md5
-      md5: 73cbbf7d4ef87fe3d3d913dacd8a48a8
-      size: 5336
+      md5: f5f9495f9941e1831b054bc7bfec4f07
+      size: 6009
     - path: cli/processes.mjs
       hash: md5
       md5: 3bbbbda0ec019955edfc55d4a8b2b118
@@ -1499,8 +1499,8 @@ stages:
       size: 209
     - path: pyproject.toml
       hash: md5
-      md5: fdbbd6637bf75899d5343756a0beba1d
-      size: 3396
+      md5: d57ba617edc55509062197e23d824784
+      size: 3436
     - path: server/clients/kubernetes.mjs
       hash: md5
       md5: ad9c81b5c970bbd2d580eb26b7b7c93b
@@ -1555,12 +1555,12 @@ stages:
       size: 18072
     - path: server/seed/papers.py
       hash: md5
-      md5: 738b598fd375b9c9d1bd2c4edb1ff11f
-      size: 7987
+      md5: efa8f354ab5f782c9d3d25b105be88c5
+      size: 8054
     - path: server/shared_workspace.py
       hash: md5
-      md5: 3f8e304f0e8be4163c447008c7d0abce
-      size: 29202
+      md5: 8ab9fba3a47a77bcea379eef6f67aaab
+      size: 29912
     - path: submodule/Toolathlon/Dockerfile
       hash: md5
       md5: ef0411a8355076bb165e97ddbe3f8191
@@ -1609,62 +1609,62 @@ stages:
       size: 344456
     - path: submodule/mirage/python/mirage/accessor/s3.py
       hash: md5
-      md5: f7a2a67ead0608f33354245bd01570f5
-      size: 2276
+      md5: 97d2f0e9887fc251aa22891b6aaf42f1
+      size: 2291
     - path: submodule/mirage/python/mirage/core/s3
       hash: md5
-      md5: cd987fb31421ad262ac1ea987350cf76.dir
-      size: 57856
-      nfiles: 23
+      md5: 24321d78c3de3c22631c13220ae7de44.dir
+      size: 63329
+      nfiles: 21
     - path: submodule/mirage/python/mirage/fuse
       hash: md5
-      md5: 9c05883d2ab1e3d444b8e7b959da03e1.dir
-      size: 79095
-      nfiles: 10
+      md5: 6d35c95cdce9c1a8ad2954472e8ecb92.dir
+      size: 39988
+      nfiles: 6
     - path: submodule/mirage/python/mirage/vfs/s3
       hash: md5
-      md5: fb2d13795d1a51d757269a90b63659ad.dir
-      size: 11554
+      md5: adddf0a3266132234a7fbf6c9befe8ac.dir
+      size: 11593
       nfiles: 4
     - path: submodule/mirage/python/pyproject.toml
       hash: md5
-      md5: 42fe72ffb9cdac9ae69986e04f3833e4
-      size: 15414
+      md5: 8aa028c927e6b832699d593ad202f99a
+      size: 15865
     - path: submodule/mirage/python/uv.lock
       hash: md5
-      md5: 7f14d24ef998ec12748c48912247311c
-      size: 1806137
+      md5: 2bc579ddb61293f85838aa133ab71ae9
+      size: 1235472
     - path: 
         submodule/mirage/typescript/packages/core/src/commands/builtin/generic_bind
       hash: md5
-      md5: 66a895cce1d987b57a522bf9e77ee207.dir
-      size: 330558
-      nfiles: 87
+      md5: 0ee2fec7c1b912e5a503860cbcbb3c67.dir
+      size: 285739
+      nfiles: 89
     - path: submodule/mirage/typescript/packages/core/src/runtime/sandbox/e2b
       hash: md5
-      md5: be8f277a0c3b083256a537d75fee5b12.dir
-      size: 6705
-      nfiles: 3
+      md5: 9d62c7e9fffae2e60c42eb1649cd4289.dir
+      size: 11591
+      nfiles: 4
     - path: submodule/mirage/typescript/packages/core/src/vfs/base.ts
       hash: md5
-      md5: ec1a4943a6f1e14c5e7d1d3de22e2742
-      size: 25385
+      md5: cbd9c764e371d75f7b3ed718d1e3515e
+      size: 35568
     - path: submodule/mirage/typescript/packages/node/package.json
       hash: md5
-      md5: 7763ee9d40067a1f25e8f932c82dca36
-      size: 3481
+      md5: 330738257098aa3563d004cb1970410b
+      size: 3516
     - path: submodule/mirage/typescript/pnpm-lock.yaml
       hash: md5
-      md5: 90b33242acdc1b0074263ee34e1acf7f
-      size: 470197
+      md5: 1b616448e623cc5b264236cbd1235fb4
+      size: 485151
     - path: task/toolathlon/__init__.py
       hash: md5
-      md5: 5856710c27115697a3b9a7dee7fa9c8c
-      size: 50231
+      md5: 81423f5f5a5d4a5034be6f490d0fc60f
+      size: 50584
     - path: task/toolathlon/k8s-deployment-cleanup
       hash: md5
-      md5: 02e651809757a547ab6521cffaf4eed8.dir
-      size: 22473
+      md5: 9d64be37f57ef7d78e4c9392853c080d.dir
+      size: 19432
       nfiles: 8
     - path: tests/kubernetes_lineage.py
       hash: md5
@@ -1684,8 +1684,8 @@ stages:
       size: 11435
     - path: uv.lock
       hash: md5
-      md5: a06caf31e1f6d5bba67fa3d05e88cb0a
-      size: 746859
+      md5: f6ab3065bdb51ae35817b3b055a118e8
+      size: 770519
     - path: vendor/filesystem-mcp/package-lock.json
       hash: md5
       md5: 8547cddd020b76bf9ecdc1ae45dbce23
@@ -1704,8 +1704,8 @@ stages:
       size: 195
     - path: vfs/kubernetes.mjs
       hash: md5
-      md5: be17ec8f0765e9ac484bf40db84089f4
-      size: 3943
+      md5: fc282801dcc0586168dfb468a4fb5c3f
+      size: 3977
   wandb-capture-environment:
     cmd: git show 697dd64bc66c6b9b4d66e781b53327e85acce823:uv.lock > 
       task/toolathlon/shared/fixtures/wandb/capture-uv.lock
@@ -1941,8 +1941,8 @@ stages:
       size: 16638
     - path: agent/workspace.py
       hash: md5
-      md5: edd9287ccd0ce826a68d8feced0da57b
-      size: 29209
+      md5: cd805bb2550e3b18dbd35ce1c821da76
+      size: 29214
     - path: bin/start.sh
       hash: md5
       md5: e7206b957cd28b6925bae77eaf1dc83e
@@ -1950,8 +1950,8 @@ stages:
       isexec: true
     - path: cli/native.mjs
       hash: md5
-      md5: 73cbbf7d4ef87fe3d3d913dacd8a48a8
-      size: 5336
+      md5: f5f9495f9941e1831b054bc7bfec4f07
+      size: 6009
     - path: cli/processes.mjs
       hash: md5
       md5: 3bbbbda0ec019955edfc55d4a8b2b118
@@ -1974,16 +1974,16 @@ stages:
       size: 195
     - path: cli/toolathlon/service_api.mjs
       hash: md5
-      md5: e11e73e4b8e5c8a0088502acbbf27bd8
-      size: 2264
+      md5: 235485ff26e2a978191bbea6b9971e43
+      size: 2695
     - path: cli/toolathlon/tool-client.mjs
       hash: md5
       md5: fde20066c4592980776e30dea8bc84ae
       size: 3741
     - path: cli/toolathlon/tool.mjs
       hash: md5
-      md5: 2a0ecdc956398f1710317af805092d1d
-      size: 1165
+      md5: f1c7d9245ffd697e21f9a892cd34482e
+      size: 1528
     - path: cli/toolathlon/woocommerce.mjs
       hash: md5
       md5: 8de64a895394176ad00e1995fc06e23a
@@ -2110,8 +2110,8 @@ stages:
       size: 5443
     - path: server/seed/papers.py
       hash: md5
-      md5: 738b598fd375b9c9d1bd2c4edb1ff11f
-      size: 7987
+      md5: efa8f354ab5f782c9d3d25b105be88c5
+      size: 8054
     - path: server/seed/seed_mail.py
       hash: md5
       md5: 60c68b804d4268e4e1823830fb305daf
@@ -2216,47 +2216,47 @@ stages:
       size: 344456
     - path: task/toolathlon/__init__.py
       hash: md5
-      md5: 5856710c27115697a3b9a7dee7fa9c8c
-      size: 50231
+      md5: 81423f5f5a5d4a5034be6f490d0fc60f
+      size: 50584
     - path: task/toolathlon/canvas-art-quiz
       hash: md5
-      md5: 61811253d95522e1fc3c6460a88b12fb.dir
-      size: 30793
+      md5: 899168371b48e8c313e9438c07b49ded.dir
+      size: 28607
       nfiles: 7
     - path: task/toolathlon/canvas-homework-grader-python
       hash: md5
-      md5: ecd4db1f5219c966a49deea2c2b3b1fe.dir
-      size: 1115179
+      md5: 95b50d895701167bc3edd97eb7b3e478.dir
+      size: 1113906
       nfiles: 13
     - path: task/toolathlon/canvas-new-students-notification
       hash: md5
-      md5: d99633ec22b35d72eeaf3b4b6e44fc58.dir
-      size: 1058125
+      md5: b61c76bb041d4ea767f5033ab91725a5.dir
+      size: 1054897
       nfiles: 11
     - path: task/toolathlon/filter-low-selling-products
       hash: md5
-      md5: 18f8cb93c1efc3cf88fb23a95cfa395c.dir
-      size: 261021
+      md5: 1cf3f8a00c9155930d5795cc7ea0e83b.dir
+      size: 260166
       nfiles: 14
     - path: task/toolathlon/inventory-sync
       hash: md5
-      md5: e639c3f2318ef4443422863917b1983f.dir
-      size: 26348
+      md5: fb5d67cbeddffe8e5790cfa6f986ec2d.dir
+      size: 24378
       nfiles: 7
     - path: task/toolathlon/k8s-mysql
       hash: md5
-      md5: 32d366fc65c03bb6746992ecd55ca288.dir
-      size: 12420
+      md5: b893d702f20746361d52be547ba5b880.dir
+      size: 6557
       nfiles: 7
     - path: task/toolathlon/k8s-redis-helm-upgrade
       hash: md5
-      md5: 6a207363bc435a4b4033e2d58adaa6e7.dir
-      size: 33852382
+      md5: 2bdad1d457b32e6e23de9ac23f5684a0.dir
+      size: 33850983
       nfiles: 463
     - path: task/toolathlon/k8s-safety-audit
       hash: md5
-      md5: 1a89429273f70848be1048fe61c5160f.dir
-      size: 37793
+      md5: 8e47b6bc40b7364e045850d4cde3994a.dir
+      size: 36631
       nfiles: 10
     - path: task/toolathlon/script/capture_redis_charts.py
       hash: md5
@@ -2274,8 +2274,8 @@ stages:
       nfiles: 9
     - path: task/toolathlon/woocommerce-new-product
       hash: md5
-      md5: ebb42141d9f27ec1d7ab63516ec03510.dir
-      size: 35813
+      md5: 88410786489012869d99babd80d1943d.dir
+      size: 34152
       nfiles: 8
     - path: task/toolathlon/woocommerce-stock-alert/shared/fixtures/woocommerce
       hash: md5
@@ -2284,8 +2284,8 @@ stages:
       nfiles: 9
     - path: task/toolathlon/woocommerce-update-cover
       hash: md5
-      md5: e85a25cc0fc9fe6d3573c8f9e7c55a4b.dir
-      size: 177677
+      md5: 9e4bf76a7fcc907815d5730b1e3f8944.dir
+      size: 176659
       nfiles: 13
     - path: tests/bq_proxy.py
       hash: md5
@@ -2317,16 +2317,16 @@ stages:
       size: 22419
     - path: tests/service_mounts.mjs
       hash: md5
-      md5: 6b7d1fbf6317d3aa3f9f3167bcced7f7
-      size: 6673
+      md5: 6ec952776c90ea068e83391af95dd955
+      size: 6686
     - path: tests/sheet_formats.py
       hash: md5
       md5: e20957a5d416f7b3e2fe13fab10eecaf
       size: 12155
     - path: uv.lock
       hash: md5
-      md5: a06caf31e1f6d5bba67fa3d05e88cb0a
-      size: 746859
+      md5: f6ab3065bdb51ae35817b3b055a118e8
+      size: 770519
     - path: vendor/canvas-mcp/package-lock.json
       hash: md5
       md5: 1b35e4b2cfff185d14b1b9ca0fc93323
@@ -2385,8 +2385,8 @@ stages:
       size: 4632
     - path: vfs/service_api.mjs
       hash: md5
-      md5: 430145cb9d9ba51dd9036693d65120d3
-      size: 2190
+      md5: a38ba5891ce86e5dc6c8659f5e1fab88
+      size: 2249
     - path: vfs/woocommerce.mjs
       hash: md5
       md5: 2420a538fc5413b402f4acd65fd994bb
@@ -3122,8 +3122,8 @@ stages:
       size: 8078
     - path: server/seed/business_sheets.py
       hash: md5
-      md5: e67cbe8074c6593e063ca668e72616e2
-      size: 19522
+      md5: af33ca51f872ab54c32b21cf39a86c86
+      size: 20114
     - path: server/seed/seed_mail.py
       hash: md5
       md5: 60c68b804d4268e4e1823830fb305daf
@@ -3174,18 +3174,18 @@ stages:
       size: 438
     - path: submodule/mirage/integ/prisma/gws.prisma
       hash: md5
-      md5: e2c9c75d8ef082736d9ab06c68f415ac
-      size: 15112
+      md5: 4aede94fad2108ea76c77fd7d28ad0ef
+      size: 15422
     - path: submodule/mirage/integ/server/gws
       hash: md5
-      md5: a40b6fa2381e94a98798435186ea2229.dir
-      size: 396920
+      md5: d2daa7892ed44047c5f9f9ca433a6e0a.dir
+      size: 400279
       nfiles: 52
     - path: submodule/mirage/integ/server/kit
       hash: md5
-      md5: 8e3704b2106745079f2b8d2de40715a6.dir
-      size: 175964
-      nfiles: 26
+      md5: 89a118c3463c3df12171d0adb661a8a4.dir
+      size: 177298
+      nfiles: 27
     - path: task/toolathlon/script/capture_woocommerce.py
       hash: md5
       md5: 643cd7f6c6f4e4dc934d5a5530a9d4a3
@@ -3251,8 +3251,8 @@ stages:
       size: 20143
     - path: server/seed/business_sheets.py
       hash: md5
-      md5: e67cbe8074c6593e063ca668e72616e2
-      size: 19522
+      md5: af33ca51f872ab54c32b21cf39a86c86
+      size: 20114
     - path: server/seed/woocommerce_fixture.py
       hash: md5
       md5: 63f600feb70feae9c4e27edbccb502cc
@@ -3299,18 +3299,18 @@ stages:
       size: 438
     - path: submodule/mirage/integ/prisma/gws.prisma
       hash: md5
-      md5: e2c9c75d8ef082736d9ab06c68f415ac
-      size: 15112
+      md5: 4aede94fad2108ea76c77fd7d28ad0ef
+      size: 15422
     - path: submodule/mirage/integ/server/gws
       hash: md5
-      md5: a40b6fa2381e94a98798435186ea2229.dir
-      size: 396920
+      md5: d2daa7892ed44047c5f9f9ca433a6e0a.dir
+      size: 400279
       nfiles: 52
     - path: submodule/mirage/integ/server/kit
       hash: md5
-      md5: 8e3704b2106745079f2b8d2de40715a6.dir
-      size: 175964
-      nfiles: 26
+      md5: 89a118c3463c3df12171d0adb661a8a4.dir
+      size: 177298
+      nfiles: 27
     - path: task/toolathlon/script/capture_woocommerce.py
       hash: md5
       md5: 643cd7f6c6f4e4dc934d5a5530a9d4a3
@@ -3848,28 +3848,28 @@ stages:
       size: 25811
     - path: agent/workspace.py
       hash: md5
-      md5: edd9287ccd0ce826a68d8feced0da57b
-      size: 29209
+      md5: cd805bb2550e3b18dbd35ce1c821da76
+      size: 29214
     - path: cli/cli_main.py
       hash: md5
-      md5: 91858c4430914493671d36b16f449bcc
-      size: 2911
+      md5: f33c42b8d56c5c03221a058712a9bcf7
+      size: 3001
     - path: cli/fixture-network.mjs
       hash: md5
-      md5: 5d5fa1ebe7b4aee4b29e05cf8377cdce
-      size: 1933
+      md5: 48eba2e9afc194ab209953202cd09f79
+      size: 3509
     - path: cli/shims.mjs
       hash: md5
-      md5: bb55308bdab596e7ca2f7503f5eb387f
-      size: 6430
+      md5: a71c04e3dc9124e62dd6d183a0f20d9e
+      size: 6732
     - path: cli/toolathlon/browser-client.mjs
       hash: md5
       md5: 60b5eca7f87aaf0b8933c51a1ac96af6
       size: 3475
     - path: cli/toolathlon/hub.mjs
       hash: md5
-      md5: 40db1d30d8753f32b55c4295c01fe739
-      size: 3194
+      md5: e78584dc7c6764efbc4036098ff6db48
+      size: 3668
     - path: server/clone.py
       hash: md5
       md5: de46d5b827aff204d1db04305f96baf8
@@ -3933,20 +3933,20 @@ stages:
     - path: 
         submodule/mirage/typescript/packages/core/src/runtime/python/pyodide/py/execution.py
       hash: md5
-      md5: 9977a145d84cd498658e037b549a9582
-      size: 32711
+      md5: fdc225c28758d4f123695745a6b02949
+      size: 27271
     - path: submodule/toolathlon_gym/local_servers/yahoo-finance-mcp/server.py
       hash: md5
       md5: ead784c3d2857b31d554fd12094016b5
       size: 28109
     - path: task/toolathlon/__init__.py
       hash: md5
-      md5: 5856710c27115697a3b9a7dee7fa9c8c
-      size: 50231
+      md5: 81423f5f5a5d4a5034be6f490d0fc60f
+      size: 50584
     - path: task/toolathlon/course-assistant
       hash: md5
-      md5: d4f828abd2d86716c326fd4c9c92374b.dir
-      size: 21460
+      md5: 911d792c29549c727511affb90566af8.dir
+      size: 18770
       nfiles: 8
     - path: task/toolathlon/git-bug-hunt/shared/seed_mock.py
       hash: md5
@@ -3958,8 +3958,8 @@ stages:
       size: 284
     - path: task/toolathlon/verl-dataset
       hash: md5
-      md5: 3e835cd2b365f886de216c27b31f5015.dir
-      size: 2219011
+      md5: 1f50370ca487ce53675d5e6d4d2b7183.dir
+      size: 2217994
       nfiles: 13
     - path: tests/daemon_rate_limit.py
       hash: md5
@@ -3967,16 +3967,16 @@ stages:
       size: 4809
     - path: tests/fixture_network.mjs
       hash: md5
-      md5: 95d11e86d4cdea279f6c10fc836c9c5c
-      size: 12293
+      md5: b6bf1574c16df44a594d1d0579b414d2
+      size: 12551
     - path: tests/linux_execution.py
       hash: md5
       md5: c00738ac4ee8b98fee6490e0d35e9242
       size: 13216
     - path: tests/toolathlon_fidelity.py
       hash: md5
-      md5: 5d689713498a23839eafa9661e2417ed
-      size: 15109
+      md5: 0e9d77692718cdc5996b9f67b3d49087
+      size: 15094
     - path: tests/workspace_clone.py
       hash: md5
       md5: adbb6230a3ee97e98acbca4c11101432
@@ -4198,8 +4198,8 @@ stages:
       size: 18072
     - path: server/shared_workspace.py
       hash: md5
-      md5: b98e7fe4f948558466e7760c850d1a7f
-      size: 31124
+      md5: 8ab9fba3a47a77bcea379eef6f67aaab
+      size: 29912
     - path: setup/browser_lineage.py
       hash: md5
       md5: 5ffcd6c6c6faa4138fd797bcdcc1141b
@@ -4497,12 +4497,12 @@ stages:
       size: 8078
     - path: server/seed/business_sheets.py
       hash: md5
-      md5: e67cbe8074c6593e063ca668e72616e2
-      size: 19522
+      md5: af33ca51f872ab54c32b21cf39a86c86
+      size: 20114
     - path: server/seed/papers.py
       hash: md5
-      md5: 738b598fd375b9c9d1bd2c4edb1ff11f
-      size: 7987
+      md5: efa8f354ab5f782c9d3d25b105be88c5
+      size: 8054
     - path: server/seed/seed_mail.py
       hash: md5
       md5: 60c68b804d4268e4e1823830fb305daf
@@ -4553,18 +4553,18 @@ stages:
       size: 438
     - path: submodule/mirage/integ/prisma/gws.prisma
       hash: md5
-      md5: e2c9c75d8ef082736d9ab06c68f415ac
-      size: 15112
+      md5: 4aede94fad2108ea76c77fd7d28ad0ef
+      size: 15422
     - path: submodule/mirage/integ/server/gws
       hash: md5
-      md5: a40b6fa2381e94a98798435186ea2229.dir
-      size: 396920
+      md5: d2daa7892ed44047c5f9f9ca433a6e0a.dir
+      size: 400279
       nfiles: 52
     - path: submodule/mirage/integ/server/kit
       hash: md5
-      md5: 8e3704b2106745079f2b8d2de40715a6.dir
-      size: 175964
-      nfiles: 26
+      md5: 89a118c3463c3df12171d0adb661a8a4.dir
+      size: 177298
+      nfiles: 27
     - path: task/toolathlon/script/capture_woocommerce.py
       hash: md5
       md5: 643cd7f6c6f4e4dc934d5a5530a9d4a3
@@ -4638,12 +4638,12 @@ stages:
       size: 8078
     - path: server/seed/business_sheets.py
       hash: md5
-      md5: e67cbe8074c6593e063ca668e72616e2
-      size: 19522
+      md5: af33ca51f872ab54c32b21cf39a86c86
+      size: 20114
     - path: server/seed/papers.py
       hash: md5
-      md5: 738b598fd375b9c9d1bd2c4edb1ff11f
-      size: 7987
+      md5: efa8f354ab5f782c9d3d25b105be88c5
+      size: 8054
     - path: server/seed/seed_mail.py
       hash: md5
       md5: 60c68b804d4268e4e1823830fb305daf
@@ -4694,18 +4694,18 @@ stages:
       size: 438
     - path: submodule/mirage/integ/prisma/gws.prisma
       hash: md5
-      md5: e2c9c75d8ef082736d9ab06c68f415ac
-      size: 15112
+      md5: 4aede94fad2108ea76c77fd7d28ad0ef
+      size: 15422
     - path: submodule/mirage/integ/server/gws
       hash: md5
-      md5: a40b6fa2381e94a98798435186ea2229.dir
-      size: 396920
+      md5: d2daa7892ed44047c5f9f9ca433a6e0a.dir
+      size: 400279
       nfiles: 52
     - path: submodule/mirage/integ/server/kit
       hash: md5
-      md5: 8e3704b2106745079f2b8d2de40715a6.dir
-      size: 175964
-      nfiles: 26
+      md5: 89a118c3463c3df12171d0adb661a8a4.dir
+      size: 177298
+      nfiles: 27
     - path: task/toolathlon/script/capture_woocommerce.py
       hash: md5
       md5: 643cd7f6c6f4e4dc934d5a5530a9d4a3
@@ -6896,8 +6896,8 @@ stages:
       size: 3741
     - path: cli/toolathlon/tool.mjs
       hash: md5
-      md5: 2a0ecdc956398f1710317af805092d1d
-      size: 1165
+      md5: f1c7d9245ffd697e21f9a892cd34482e
+      size: 1528
     - path: redirect/gws_calendar
       hash: md5
       md5: 5210e37d8398d764341af8e466dd58d0.dir
@@ -6942,41 +6942,41 @@ stages:
       size: 489
     - path: submodule/mirage/typescript/pnpm-lock.yaml
       hash: md5
-      md5: 90b33242acdc1b0074263ee34e1acf7f
-      size: 470197
+      md5: 1b616448e623cc5b264236cbd1235fb4
+      size: 485151
     - path: task/toolathlon/gdp-cr5-analysis/vfs
       hash: md5
-      md5: 635ff27f7faa9f6517d22318ef6a7abc.dir
+      md5: 33f8d1bcf4060a0def8a24e4a952e387.dir
       size: 25558
       nfiles: 3
     - path: task/toolathlon/inter-final-performance-analysis/vfs
       hash: md5
-      md5: c793906e1e3537294eb7af63ef33569e.dir
+      md5: dd6146f6a272c2e6fa87344112ea85bb.dir
       size: 25650
       nfiles: 3
     - path: task/toolathlon/investment-decision-analysis/vfs
       hash: md5
-      md5: 5136342d36e44f9ad8edf6eb7b183dd9.dir
+      md5: d793621da1088cfbbad66f21e1136d3e.dir
       size: 25584
       nfiles: 3
     - path: task/toolathlon/k8s-safety-audit/vfs
       hash: md5
-      md5: cfe9aee7ce6fefb79f5d3f231cf6499c.dir
+      md5: 79d0989705d4be1942be361b3ee12014.dir
       size: 14212
       nfiles: 3
     - path: task/toolathlon/llm-training-dataset/vfs
       hash: md5
-      md5: 50056171ecd472b4697b1cbeee689ace.dir
+      md5: 202666c6e832c1032cbec0cd88b9d288.dir
       size: 24411
       nfiles: 3
     - path: task/toolathlon/nhl-b2b-analysis/vfs
       hash: md5
-      md5: d9c86d7a75f0bead6076e20ee3994fa6.dir
+      md5: 2656bda58412e7a6852c07985442276b.dir
       size: 15435
       nfiles: 3
     - path: task/toolathlon/quantitative-financial-analysis/vfs
       hash: md5
-      md5: 3a1c199ab2975c9a4233c7e2cd3c1a22.dir
+      md5: 143a1aa5040c103e9da0df2b0522ac5d.dir
       size: 32690
       nfiles: 3
     - path: task/toolathlon/script/setup_pyodide_packages.py
@@ -6985,7 +6985,7 @@ stages:
       size: 4766
     - path: task/toolathlon/set-conf-cr-ddl/vfs
       hash: md5
-      md5: 0795080f6feb031740797da729352ece.dir
+      md5: 04e7fd8ce89dbfafe30e22c6dbfced30.dir
       size: 10709
       nfiles: 3
     - path: task/toolathlon/student-interview/vfs
@@ -6995,7 +6995,7 @@ stages:
       nfiles: 3
     - path: task/toolathlon/update-material-inventory/vfs
       hash: md5
-      md5: ec0959b8235b5541ceaedfc23ba680ee.dir
+      md5: 4302e7412ca19b1f1a534b326132dcd7.dir
       size: 33629
       nfiles: 3
     - path: task/toolathlon/vlm-history-completer/vfs
@@ -7005,7 +7005,7 @@ stages:
       nfiles: 3
     - path: task/toolathlon/woocommerce-stock-alert/vfs
       hash: md5
-      md5: 83abb7b1a05efe09667afdf7bd94f144.dir
+      md5: d82b31f31f2c964f287f24fb7920eb71.dir
       size: 40585
       nfiles: 3
     - path: vendor/calendar-mcp/package-lock.json
@@ -7109,8 +7109,8 @@ stages:
       size: 3741
     - path: cli/toolathlon/tool.mjs
       hash: md5
-      md5: 2a0ecdc956398f1710317af805092d1d
-      size: 1165
+      md5: f1c7d9245ffd697e21f9a892cd34482e
+      size: 1528
     - path: server/clients/original_tools.py
       hash: md5
       md5: 35b6596e2312936bbd17a18dd707ef7e
@@ -7250,36 +7250,36 @@ stages:
       size: 260
     - path: task/toolathlon/__init__.py
       hash: md5
-      md5: 5856710c27115697a3b9a7dee7fa9c8c
-      size: 50231
+      md5: 81423f5f5a5d4a5034be6f490d0fc60f
+      size: 50584
     - path: task/toolathlon/apply-phd-email/vfs
       hash: md5
-      md5: 78e27d3b5ca531271db46761555fc488.dir
+      md5: 4500f5107263077966d7ef9747b5cec5.dir
       size: 15223
       nfiles: 3
     - path: task/toolathlon/canvas-arrange-exam/vfs
       hash: md5
-      md5: 52ec7b3a2f521370d8dfbda4776ef78d.dir
+      md5: db333e7716d2a4c6d1ed39233023f6ec.dir
       size: 33075
       nfiles: 3
     - path: task/toolathlon/canvas-art-manager/vfs
       hash: md5
-      md5: b64b45325755292514d6c727302ed410.dir
+      md5: ca4cc7834f74a3f9ea07c251883295f9.dir
       size: 30411
       nfiles: 3
     - path: task/toolathlon/canvas-homework-grader-python/vfs
       hash: md5
-      md5: 40b238c44929a5f8a650cce2ce7adbf3.dir
+      md5: 04796ce06777d4af4e8905393ac9e26c.dir
       size: 30396
       nfiles: 3
     - path: task/toolathlon/canvas-submit-late-work/vfs
       hash: md5
-      md5: e33d70cddbf760b052b11a40133c4bd1.dir
+      md5: b3d3f838d989f7942ba6a33b9e1ef243.dir
       size: 32983
       nfiles: 3
     - path: task/toolathlon/course-assistant/vfs
       hash: md5
-      md5: 827c8ae7d152c1330f9b496674b7f99a.dir
+      md5: 612b1c9dc8d756b26e97bd9290feca1f.dir
       size: 13482
       nfiles: 3
     - path: task/toolathlon/email-paper-homepage/vfs
@@ -7289,12 +7289,12 @@ stages:
       nfiles: 3
     - path: task/toolathlon/filter-low-selling-products/vfs
       hash: md5
-      md5: 26f483fa3f2ba6d5f99414f706aa692d.dir
+      md5: eb2a0469f840ebdb3715bdbf1867555b.dir
       size: 27221
       nfiles: 3
     - path: task/toolathlon/git-bug-hunt/vfs
       hash: md5
-      md5: 375b4cb45d0f39afba9302ede8640544.dir
+      md5: 1d1a36ce602e6e368b8cad127b661f96.dir
       size: 8612
       nfiles: 3
     - path: task/toolathlon/k8s-deployment-cleanup/vfs
@@ -7329,12 +7329,12 @@ stages:
       nfiles: 3
     - path: task/toolathlon/set-conf-cr-ddl/vfs
       hash: md5
-      md5: 0795080f6feb031740797da729352ece.dir
+      md5: 04e7fd8ce89dbfafe30e22c6dbfced30.dir
       size: 10709
       nfiles: 3
     - path: task/toolathlon/sla-timeout-monitor/vfs
       hash: md5
-      md5: 83725c40da232067220cd89e1cadbca5.dir
+      md5: 9066edd89718a1d86814922b285e9ca3.dir
       size: 15206
       nfiles: 3
     - path: task/toolathlon/student-interview/vfs
@@ -7344,7 +7344,7 @@ stages:
       nfiles: 3
     - path: task/toolathlon/travel-expense-reimbursement/vfs
       hash: md5
-      md5: 04801717406375b75313ec0b56b1f775.dir
+      md5: c2f2a4b6ba7d7a010882a657dfe05f78.dir
       size: 15125
       nfiles: 3
     - path: task/toolathlon/woocommerce-customer-survey/vfs
@@ -7354,12 +7354,12 @@ stages:
       nfiles: 3
     - path: task/toolathlon/woocommerce-new-product/vfs
       hash: md5
-      md5: 2d5a5e8e4d6783ca85f6ef40c5742c85.dir
+      md5: 61314c1757cf2d74d30e699435d11629.dir
       size: 27223
       nfiles: 3
     - path: task/toolathlon/woocommerce-new-welcome/vfs
       hash: md5
-      md5: 30c0dbf79816c4170f843174ddeef26e.dir
+      md5: a8c4bda72917dbd1bf450f35cd8c872f.dir
       size: 37991
       nfiles: 3
     - path: task/toolathlon/woocommerce-product-recall/vfs
@@ -7369,7 +7369,7 @@ stages:
       nfiles: 3
     - path: task/toolathlon/woocommerce-stock-alert/vfs
       hash: md5
-      md5: 83abb7b1a05efe09667afdf7bd94f144.dir
+      md5: d82b31f31f2c964f287f24fb7920eb71.dir
       size: 40585
       nfiles: 3
     - path: vendor/emails-mcp/pyproject.toml
@@ -7463,8 +7463,8 @@ stages:
       size: 3509
     - path: server/shared_workspace.py
       hash: md5
-      md5: b98e7fe4f948558466e7760c850d1a7f
-      size: 31124
+      md5: 8ab9fba3a47a77bcea379eef6f67aaab
+      size: 29912
     - path: setup/setup.py
       hash: md5
       md5: faaf0019f8e15cbc3ac8d72566c159cc
@@ -7622,12 +7622,12 @@ stages:
       size: 31936
     - path: agent/workspace.py
       hash: md5
-      md5: edd9287ccd0ce826a68d8feced0da57b
-      size: 29209
+      md5: cd805bb2550e3b18dbd35ce1c821da76
+      size: 29214
     - path: cli/shims.mjs
       hash: md5
-      md5: bb55308bdab596e7ca2f7503f5eb387f
-      size: 6430
+      md5: a71c04e3dc9124e62dd6d183a0f20d9e
+      size: 6732
     - path: redirect/eval_shim/github_token.py
       hash: md5
       md5: 04072573a2f5a03d46c4f07c4a78791b
@@ -7724,8 +7724,8 @@ stages:
       size: 2150
     - path: task/toolathlon/__init__.py
       hash: md5
-      md5: 5856710c27115697a3b9a7dee7fa9c8c
-      size: 50231
+      md5: 81423f5f5a5d4a5034be6f490d0fc60f
+      size: 50584
     - path: task/toolathlon/email-paper-homepage/shared/derive_mail.py
       hash: md5
       md5: c58e73147112613bb2e31daab3810aa2
@@ -7783,18 +7783,18 @@ stages:
       size: 438
     - path: submodule/mirage/integ/prisma/gws.prisma
       hash: md5
-      md5: e2c9c75d8ef082736d9ab06c68f415ac
-      size: 15112
+      md5: 4aede94fad2108ea76c77fd7d28ad0ef
+      size: 15422
     - path: submodule/mirage/integ/server/gws
       hash: md5
-      md5: a40b6fa2381e94a98798435186ea2229.dir
-      size: 396920
+      md5: d2daa7892ed44047c5f9f9ca433a6e0a.dir
+      size: 400279
       nfiles: 52
     - path: submodule/mirage/integ/server/kit
       hash: md5
-      md5: 8e3704b2106745079f2b8d2de40715a6.dir
-      size: 175964
-      nfiles: 26
+      md5: 89a118c3463c3df12171d0adb661a8a4.dir
+      size: 177298
+      nfiles: 27
     - path: tests/gws_restore.py
       hash: md5
       md5: ffdcf5a855f2814b5c94119b1ccf7a8d
@@ -7941,16 +7941,16 @@ stages:
       size: 344456
     - path: submodule/mirage/typescript/packages/core/src/runtime/python
       hash: md5
-      md5: 0491ac95c3af5cb71bc90f6761a32e54.dir
-      size: 488115
-      nfiles: 65
+      md5: 5fe1a401e1ec083728d137813f40a884.dir
+      size: 495641
+      nfiles: 68
     - path: submodule/mirage/typescript/pnpm-lock.yaml
       hash: md5
-      md5: 90b33242acdc1b0074263ee34e1acf7f
-      size: 470197
+      md5: 1b616448e623cc5b264236cbd1235fb4
+      size: 485151
     - path: task/toolathlon/arrange-workspace/vfs/workspace.yaml
       hash: md5
-      md5: bf47bba70f5b0058b1a3eab8c0fa5061
+      md5: 26b36c32819b0f1d0af211797a1205df
       size: 922
     - path: task/toolathlon/script/setup_upstream_python.py
       hash: md5
@@ -12529,43 +12529,43 @@ stages:
     deps:
     - path: submodule/mirage/typescript/packages/core/src/policy
       hash: md5
-      md5: 5769a52cc405a4c888986095afc235ce.dir
-      size: 407962
-      nfiles: 41
+      md5: 3c756205092d03de54f88ef939b9b876.dir
+      size: 495342
+      nfiles: 43
     - path: submodule/mirage/typescript/packages/core/src/workspace/expand
       hash: md5
-      md5: 86815560665c2655835c5ad1497023dc.dir
-      size: 246856
+      md5: 61b24c04beeb2cc75e02608262890dbb.dir
+      size: 259077
       nfiles: 35
     - path: submodule/mirage/typescript/packages/core/src/workspace/workspace
       hash: md5
-      md5: 2e9287ec7c2a195ae50362861b55830c.dir
-      size: 412627
+      md5: f1acaa71da82dd8b3d7585295d11ea6e.dir
+      size: 439259
       nfiles: 29
     - path: task/toolathlon/__init__.py
       hash: md5
-      md5: 5856710c27115697a3b9a7dee7fa9c8c
-      size: 50231
+      md5: 81423f5f5a5d4a5034be6f490d0fc60f
+      size: 50584
     - path: task/toolathlon/music-analysis/vfs/workspace.yaml
       hash: md5
-      md5: 2d443e40197e6cd08186cf1078013f97
+      md5: 8b7fa9d08c9e4bfc7b8b7449bacd50c1
       size: 1022
     - path: task/toolathlon/sync-todo-to-readme/vfs/workspace.yaml
       hash: md5
-      md5: 86c91382a0d45c4e277894d300813329
+      md5: 8746ea94fed1fd43f643a965c9c57b46
       size: 1052
-    - path: task/toolathlon/task_paths.js
+    - path: task/toolathlon/task_paths.py
       hash: md5
-      md5: ede810316a80afc7d163d4907654120b
-      size: 2313
+      md5: d02c0ef086dbdc565be84123a7fd9347
+      size: 4200
     - path: tests/toolathlon_task_paths.mjs
       hash: md5
-      md5: 2f6ddec0a242e67cc09e8ef319b255d4
-      size: 4782
+      md5: 83f4e82183b50b97ed52c16e7278f3d2
+      size: 4845
     - path: tests/toolathlon_task_paths.py
       hash: md5
-      md5: 8e3875e878436ac9dac038f523fb76fb
-      size: 1929
+      md5: 95c2ab47a17ad78e7efef89c40d677d8
+      size: 2004
   atlas-task@spain-world-cup-apartment-rent:
     cmd: uv run --with pandas --with pyarrow python 
       task/mcpatlas/script/derive_task.py spain-world-cup-apartment-rent
