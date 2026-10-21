@@ -207,10 +207,17 @@ def point_at(task: str, launch: str | None = None) -> None:
         # Asked of the seam rather than spelled: this line named
         # `$REPO/Toolathlon` for a while after the checkout moved under
         # `submodule/`, and the failed `cd` aborted the whole command.
+        #
+        # The key is the stack's, named through upstream's own
+        # `--credentials_file`: its default is the checkout's
+        # `configs/gcp-service_account.keys.json`, which only the grader's
+        # `place_gcp_key` fills, after the seed, so a fresh checkout could
+        # not seed at all.
         done = subprocess.run(
             [
                 "uv", "run", "python", "-m", preprocess, "--agent_workspace",
-                str(stack), "--launch_time", launch
+                str(stack), "--launch_time", launch, "--credentials_file",
+                str(stack / "gcp-service_account.keys.json")
             ],
             cwd=dataset.root(),
             env={

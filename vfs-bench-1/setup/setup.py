@@ -86,6 +86,15 @@ STEPS: tuple[tuple[str, Action, Path], ...] = (
      ),
     ("GYM howtocook MCP server: build", ("npm", "run", "build"), REPO /
      "submodule" / "toolathlon_gym" / "local_servers" / "HowToCook-mcp"),
+    # GYM's Word and PowerPoint servers start with `uv --project <server>
+    # run` inside the confined launch, which cannot write into the
+    # submodule: without an environment there, uv's attempt to create one
+    # is refused and the server exits before `initialize`.
+    ("GYM Word MCP server", ("uv", "sync", "--locked"), REPO / "submodule" /
+     "toolathlon_gym" / "local_servers" / "Office-Word-MCP-Server"),
+    ("GYM PowerPoint MCP server", ("uv", "sync",
+                                   "--locked"), REPO / "submodule" /
+     "toolathlon_gym" / "local_servers" / "Office-PowerPoint-MCP-Server"),
     ("the mounted wheels", (*UV, "task/toolathlon/script/setup_wheels.py"),
      REPO),
     # Package builders read the installed Pyodide lock, so install first.

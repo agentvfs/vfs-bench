@@ -314,6 +314,15 @@ def current_snapshot(data):
             if 'props' not in cell_columns:
                 db.execute("ALTER TABLE SheetCell ADD COLUMN props TEXT "
                            "NOT NULL DEFAULT '{}'")
+            # Drive's change feed is a table of its own, in the DDL Prisma
+            # pushes for it. A capture from before it recorded no changes,
+            # so it starts empty, as a fresh fake's does.
+            if not db.execute(
+                    "SELECT 1 FROM sqlite_master WHERE "
+                    "type = 'table' AND name = 'DriveChange'").fetchone():
+                db.execute('CREATE TABLE "DriveChange" ("tenant" TEXT NOT '
+                           'NULL, "seq" INTEGER NOT NULL, "fileId" TEXT NOT '
+                           'NULL, PRIMARY KEY ("tenant", "seq"))')
         return Path(snapshot.name).read_bytes()
 
 
