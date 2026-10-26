@@ -14,12 +14,17 @@ import { pathToFileURL } from 'node:url'
 import type { Workspace } from '@struktoai/mirage-node'
 import { buildSystemPrompt } from '@struktoai/mirage-openai-agents'
 
+import { type Change, changes } from './diff.ts'
 import * as dump from './dump.ts'
 import { start } from './fakes.ts'
 import { ROOT } from './paths.ts'
 import { Run } from './runs.ts'
 import { type Graded, type Task, graded } from './task.ts'
 import { openWorkspace } from './workspace.ts'
+
+// Every run is in UTC, whatever the host's zone, as upstream's containers
+// are: the workspace's `date` and python3, and the fakes, which inherit it.
+process.env.TZ = 'UTC'
 
 /** What `act` returns: the run record's agent fields. */
 export interface Outcome {
@@ -53,6 +58,8 @@ export async function execute(ref: string, act: Act, info: Record<string, unknow
   let answer: unknown = null
   let grade: Graded
   let gradeError: string | null = null
+  // What the agent changed, from the seeded snapshot to the last one.
+  let changed: Change[] | null = null
   // Stop the fakes and save their logs, once, when the run ends or the
   // process is told to stop.
   let stopping: Promise<void> | undefined
@@ -80,6 +87,10 @@ export async function execute(ref: string, act: Act, info: Record<string, unknow
     const workspace = await openWorkspace(join(task.dir, 'workspace.yaml'), run.env)
     try {
       for (const { name, cli, config } of (await task.clis?.(run)) ?? []) workspace.registerCli(name, cli, config)
+      for (const line of task.shellInit?.(run) ?? []) {
+        const io = await workspace.shell(line, { record: false })
+        if (io.exitCode !== 0) throw new Error(`shell init '${line}' exited ${io.exitCode}: ${io.stderrText}`)
+      }
       const skills = await workspace.skillMd()
       instructions = await buildSystemPrompt({
         workspace,
@@ -92,6 +103,7 @@ export async function execute(ref: string, act: Act, info: Record<string, unknow
     // A grader that throws fails the run but keeps the agent's trace.
     try {
       const after = await task.snapshot(run)
+      changed = changes(before, after)
       if (existsSync(run.answerPath)) answer = JSON.parse(readFileSync(run.answerPath, 'utf8'))
       grade = await task.grade({ run, before, after, seeded, answer })
     } catch (error) {
@@ -115,6 +127,7 @@ export async function execute(ref: string, act: Act, info: Record<string, unknow
     passed: grade.passed,
     checks: grade.checks,
     grade_error: gradeError,
+    changes: changed,
     instructions,
     task_instruction: task.instruction,
     ...outcome,

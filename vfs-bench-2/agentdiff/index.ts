@@ -148,7 +148,9 @@ export async function load(slug: string): Promise<Task> {
     },
     async snapshot(run) {
       if (session === null) return null
-      return platform(run.fakes.get(FAKE)!.url, 'diffRun', { runId: session.runId })
+      // The diff alone; the reply's snapshot names are this run's own.
+      const { diff } = await platform(run.fakes.get(FAKE)!.url, 'diffRun', { runId: session.runId })
+      return { diff }
     },
     async grade({ run }) {
       const url = run.fakes.get(FAKE)!.url

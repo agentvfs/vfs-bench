@@ -14,8 +14,12 @@
  * Search scenarios end in one answer, which the agent hands in with
  * `complete-task --answer`; it must equal the oracle's
  * `send_message_to_user` content after normalizing case, spaces and a
- * trailing full stop, where Gaia2 asks an LLM judge. The clock is frozen at
- * the scenario's start. Setup:
+ * trailing full stop, where Gaia2 asks an LLM judge.
+ *
+ * The clock is frozen at the scenario's start, as upstream's libfaketime
+ * freezes its container's: for the apps (`launch.py`), for python3
+ * (`clock.py`, run before each command) and for the shell's `date`, a
+ * function over `date -d @<start>`. Setup:
  * `uv run --project gaia2 python -I gaia2/setup.py`.
  */
 import { readFileSync } from 'node:fs'
@@ -34,6 +38,7 @@ const DATA = join(STATE, 'gaia2')
 const FAKE = 'GAIA2'
 
 interface Scenario {
+  metadata: { definition: { start_time: number } }
   events: { action: { app: string; function: string; args: { name: string; value: unknown }[] } }[]
 }
 
@@ -82,6 +87,7 @@ export async function load(slug: string): Promise<Task> {
   const [instruction] = content('send_message_to_agent')
   const expected = content('send_message_to_user')
   if (instruction === undefined || expected.length !== 1) throw new Error(`${id}: expected one task and one answer`)
+  const start = scenario.metadata.definition.start_time
   const prompt = edited(
     (await runPython(HERE, join(HERE, 'prompt.py'), {
       scenario: path,
@@ -98,6 +104,7 @@ export async function load(slug: string): Promise<Task> {
     async seed(run) {
       await run.fakes.get(FAKE)!.reset({ fixture: path })
       run.env.GAIA2_FILES = join(run.dir, 'gaia2', 'filesystem')
+      run.env.GAIA2_CLOCK = `${readFileSync(join(HERE, 'clock.py'), 'utf8')}\nfreeze(${start})\ndel freeze\n`
       return null
     },
     async clis(run) {
@@ -106,6 +113,7 @@ export async function load(slug: string): Promise<Task> {
         { name: 'complete-task', cli: COMPLETE_TASK, config: { path: run.answerPath } },
       ]
     },
+    shellInit: () => [`date() { command date -d @${Math.floor(start)} "$@"; }`],
     snapshot: async (run) => run.fakes.get(FAKE)!.get('/snapshot'),
     async grade({ answer }) {
       const given = (answer as { answer?: string | null } | null)?.answer ?? null

@@ -54,8 +54,19 @@ export interface Task {
   seed(run: Run): Promise<unknown>
   /** CLIs to install once the fakes are up, for tools only a running fake lists. */
   clis?(run: Run): Promise<InstalledCli[]>
+  /**
+   * Shell lines run in the agent's session before it starts, left out of
+   * its history: a function standing in for a command, say.
+   */
+  shellInit?(run: Run): string[]
   /** The state the grade compares: fake records, files. */
   snapshot(run: Run): Promise<unknown>
+  /**
+   * Snapshot keys whose values the task's services set from the wall clock
+   * when seeding, as LiveClawBench's mocks set `created_at`. Only these may
+   * differ between two seeds (`harness/determinism.ts`).
+   */
+  clockFields?: string[]
   grade(input: GradeInput): Promise<Graded>
   /** Appended to Mirage's system prompt; given the workspace's CLI docs. */
   instructions?(skillMd: string): string

@@ -12,8 +12,14 @@ with ``toolset="api"``, the benchmark's default:
 - a call drops ``{}`` arguments and passes the world, as
   ``update_tool_args`` does
 - the snapshot is the world, dumped as JSON
+
+One change: the ids upstream draws from ``uuid4`` come from a generator
+seeded with the task's name, so seeding a task twice gives the same world.
 """
 import json
+import random
+import sys
+import uuid
 from pathlib import Path
 from typing import Any
 
@@ -24,6 +30,28 @@ from automationbench.runner import (AutomationBenchEnv,
 from automationbench.schema.world import WorldState
 from automationbench.tools.api import API_TOOLS
 from datasets import Dataset
+
+UUID4 = uuid.uuid4
+IDS = random.Random()
+
+
+def seeded_uuid4() -> uuid.UUID:
+    """A version-4 UUID from ``IDS``."""
+    return uuid.UUID(int=IDS.getrandbits(128), version=4)
+
+
+def seed_ids(key: str) -> None:
+    """Draw upstream's ``uuid4`` ids from ``IDS``, seeded with ``key``.
+
+    Upstream calls both ``uuid.uuid4()`` and a module's own ``uuid4()``;
+    both names are looked up at call time.
+    """
+    IDS.seed(key)
+    uuid.uuid4 = seeded_uuid4
+    for name, module in list(sys.modules.items()):
+        if name.startswith("automationbench") and getattr(
+                module, "uuid4", None) is UUID4:
+            module.uuid4 = seeded_uuid4
 
 
 class AutomationBench:
@@ -45,6 +73,7 @@ class AutomationBench:
     def reset(self, fixture: str, epoch: str | None) -> None:
         """Load the task exported to ``fixture`` by setup.py."""
         info = json.loads(Path(fixture).read_text())["info"]
+        seed_ids(info["task_name"])
         initial = strip_none_values(info.get("initial_state", {}))
         self.world = WorldState(**initial)
         self.world.meta.allowed_services = compute_allowed_services(

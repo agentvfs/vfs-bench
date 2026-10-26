@@ -8,6 +8,15 @@ runtimes:
       package_base_url: ${PYTHON_PACKAGES}/
       max_memory: 2G
   - workspace
+command_limits:
+  python3: {timeout_seconds: 300}
+# Offline: python3 has no network and the shell's fetchers are refused, so
+# services are reached through their CLIs only.
+profiles:
+  default:
+    commands:
+      deny:
+        - {commands: [curl, wget], reason: the workspace is offline}
 mounts:
   /workspace:
     vfs: disk
