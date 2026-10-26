@@ -1,0 +1,8 @@
+{
+  "task": "finance-invoice-process",
+  "mocks": ["finance", "email"],
+  "rewrite": {
+    "at http://localhost:1235/": "with the `finance` CLI",
+    "at http://localhost:5174/": "with the `email` CLI"
+  }
+}

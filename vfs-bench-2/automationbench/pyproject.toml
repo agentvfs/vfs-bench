@@ -1,0 +1,16 @@
+[project]
+name = "vfs-bench-2-automationbench"
+version = "0.1.0"
+description = "AutomationBench's world, tools and rubric, run as a vfs-bench-2 fake"
+requires-python = "==3.13.*"  # upstream .python-version
+# Upstream v1.0.6 at its pinned commit (zapier/AutomationBench, MIT).
+dependencies = [
+    "automation-bench @ git+https://github.com/zapier/AutomationBench@4a8e1061254004d9dac807054eed33fad7d1ff14",
+    # Upstream's uv.lock versions of what its tasks, tools and rubric import.
+    "verifiers==0.2.1",
+    "datasets==4.4.2",
+    "pydantic==2.12.5",
+]
+
+[tool.uv]
+package = false

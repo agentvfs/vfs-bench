@@ -1,0 +1,19 @@
+# Gaia2 search scenario 0002 (scenario_universe_21_a7j0iw). The apps are
+# CLIs installed by the harness from the running fake (gaia2/index.ts); the
+# Files app's drive is mounted at /cloud-drive.
+mode: exec
+runtimes:
+  - name: pyodide
+    config:
+      lock_file_url: ${PYTHON_PACKAGES}/pyodide-lock.json
+      package_base_url: ${PYTHON_PACKAGES}/
+  - workspace
+mounts:
+  /workspace:
+    vfs: ram
+    mode: write
+  /cloud-drive:
+    vfs: disk
+    mode: write
+    config:
+      root: ${GAIA2_FILES}

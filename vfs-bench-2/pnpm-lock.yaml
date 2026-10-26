@@ -1,0 +1,29 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      '@openai/agents':
+        specifier: link:submodule/mirage/typescript/packages/openai-agents/node_modules/@openai/agents
+        version: link:submodule/mirage/typescript/packages/openai-agents/node_modules/@openai/agents
+      '@struktoai/mirage-core':
+        specifier: link:submodule/mirage/typescript/packages/core
+        version: link:submodule/mirage/typescript/packages/core
+      '@struktoai/mirage-node':
+        specifier: link:submodule/mirage/typescript/packages/node
+        version: link:submodule/mirage/typescript/packages/node
+      '@struktoai/mirage-openai-agents':
+        specifier: link:submodule/mirage/typescript/packages/openai-agents
+        version: link:submodule/mirage/typescript/packages/openai-agents
+    devDependencies:
+      '@types/node':
+        specifier: link:submodule/mirage/typescript/node_modules/@types/node
+        version: link:submodule/mirage/typescript/node_modules/@types/node
+      typescript:
+        specifier: link:submodule/mirage/typescript/packages/node/node_modules/typescript
+        version: link:submodule/mirage/typescript/packages/node/node_modules/typescript

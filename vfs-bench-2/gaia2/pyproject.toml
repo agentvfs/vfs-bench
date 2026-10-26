@@ -1,0 +1,17 @@
+[project]
+name = "vfs-bench-2-gaia2"
+version = "0.1.0"
+description = "Gaia2's own app CLIs (gaia2-cli) and loader, behind the bridge"
+requires-python = "==3.12.*"
+dependencies = [
+    "gaia2-cli",
+    "gaia2-core",
+    "pyarrow==22.0.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+gaia2-cli = { git = "https://github.com/facebookresearch/meta-agents-research-environments", rev = "a9fd2edccb4bc7e22fbf45c8482a5fef30a2a5a4", subdirectory = "gaia2-cli/cli" }
+gaia2-core = { git = "https://github.com/facebookresearch/meta-agents-research-environments", rev = "a9fd2edccb4bc7e22fbf45c8482a5fef30a2a5a4", subdirectory = "gaia2-cli/core" }

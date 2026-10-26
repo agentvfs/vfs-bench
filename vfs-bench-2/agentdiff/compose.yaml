@@ -1,0 +1,45 @@
+# One Agent-Diff backend per run: upstream's ops/docker-compose.yml with the
+# database on tmpfs, the API on an ephemeral loopback port, and only the
+# task's service seeded (AGENTDIFF_SEED, e.g. `box`).
+services:
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: diff_the_universe
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    tmpfs:
+      - /var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    command: postgres -c wal_level=logical -c max_replication_slots=10 -c max_wal_senders=10
+
+  backend:
+    image: vfsbench-agentdiff-backend:3bb9c40
+    build:
+      context: ${AGENTDIFF_BACKEND}
+      dockerfile: ${AGENTDIFF_HERE}/Dockerfile
+      additional_contexts:
+        vfsbench: ${AGENTDIFF_HERE}
+    ports:
+      - "127.0.0.1::8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/diff_the_universe"
+      LOGICAL_REPLICATION_ENABLED: "false"
+      ENVIRONMENT: "development"
+    command: >
+      sh -c "alembic upgrade head &&
+        python utils/seed_${AGENTDIFF_SEED}_template.py &&
+        uvicorn src.platform.api.main:app --host 0.0.0.0 --port 8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/platform/templates')"]
+      interval: 2s
+      timeout: 5s
+      retries: 120
