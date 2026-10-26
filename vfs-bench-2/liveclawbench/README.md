@@ -27,9 +27,10 @@ This clones upstream into `state/liveclawbench/src`, checking out only
 ## Divergences from upstream
 
 - The agent uses the apps through their CLIs, not a browser.
-- The mocks seed timestamps from the wall clock, as upstream's do, so two
-  seeds differ by the time between them. `harness/determinism.ts` reports
-  those timestamps separately.
+- The mocks stamp `created_at` and `updated_at` from the wall clock, as
+  upstream's do, so two seeds differ there by the time between them.
+  `index.ts` declares those two fields (`clockFields`), and
+  `harness/determinism.ts` reports them separately.
 - The snapshot leaves out password hashes. Upstream salts them afresh on
   every seed, and no verifier reads them.
 

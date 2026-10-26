@@ -61,6 +61,12 @@ export interface Task {
   shellInit?(run: Run): string[]
   /** The state the grade compares: fake records, files. */
   snapshot(run: Run): Promise<unknown>
+  /**
+   * Snapshot keys whose values the task's services set from the wall clock
+   * when seeding, as LiveClawBench's mocks set `created_at`. Only these may
+   * differ between two seeds (`harness/determinism.ts`).
+   */
+  clockFields?: string[]
   grade(input: GradeInput): Promise<Graded>
   /** Appended to Mirage's system prompt; given the workspace's CLI docs. */
   instructions?(skillMd: string): string

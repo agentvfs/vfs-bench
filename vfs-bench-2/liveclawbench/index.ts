@@ -130,6 +130,9 @@ export async function load(slug: string): Promise<Task> {
       for (const mock of spec.mocks) out[mock] = withoutSecrets(await sqliteTables(data(run, mock).db))
       return out
     },
+    // The mocks stamp their seed rows from the wall clock (SQLite's
+    // CURRENT_TIMESTAMP, `new Date()`), as upstream's do.
+    clockFields: ['created_at', 'updated_at'],
     async grade({ run }) {
       const result = (await runPython(HERE, join(HERE, 'grade.py'), {
         verify: join(upstream, 'tests', 'verify.py'),
