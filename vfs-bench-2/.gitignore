@@ -18,6 +18,6 @@ yarn-error.log*
 .env
 # Downloaded datasets, generated task text and fixtures, per-run fake state.
 state/
-# Run transcripts; results are published on agentvfs.org, not committed.
+# Run transcripts, kept local.
 dumps/
 fakes/*/generated/
