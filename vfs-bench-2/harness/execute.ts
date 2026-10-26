@@ -7,6 +7,7 @@
  * previous run's state, or not graded, measures nothing.
  */
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { constants } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 
@@ -17,7 +18,7 @@ import * as dump from './dump.ts'
 import { start } from './fakes.ts'
 import { ROOT } from './paths.ts'
 import { Run } from './runs.ts'
-import type { Graded, Task } from './task.ts'
+import { type Graded, type Task, graded } from './task.ts'
 import { openWorkspace } from './workspace.ts'
 
 /** What `act` returns: the run record's agent fields. */
@@ -51,6 +52,27 @@ export async function execute(ref: string, act: Act, info: Record<string, unknow
   let outcome: Outcome
   let answer: unknown = null
   let grade: Graded
+  let gradeError: string | null = null
+  // Stop the fakes and save their logs, once, when the run ends or the
+  // process is told to stop.
+  let stopping: Promise<void> | undefined
+  const stop = () =>
+    (stopping ??= (async () => {
+      try {
+        await run.stop()
+      } finally {
+        // After stopping, so what a fake prints on its way down is kept.
+        for (const fake of run.fakes.values()) writeFileSync(join(run.dir, `${fake.name}.log`), fake.log.join('\n'))
+      }
+    })())
+  // A signal ends Node without running `finally`, which would leave the
+  // fakes' processes and containers running. `on`, not `once`: the agents
+  // SDK exits on SIGTERM itself unless another listener is still there.
+  const onSignal = (signal: NodeJS.Signals) => {
+    void stop().finally(() => process.exit(128 + constants.signals[signal]))
+  }
+  process.on('SIGINT', onSignal)
+  process.on('SIGTERM', onSignal)
   try {
     for (const spec of task.fakes(run)) await start(spec, run)
     const seeded = await task.seed(run)
@@ -67,12 +89,19 @@ export async function execute(ref: string, act: Act, info: Record<string, unknow
     } finally {
       await workspace.close()
     }
-    const after = await task.snapshot(run)
-    if (existsSync(run.answerPath)) answer = JSON.parse(readFileSync(run.answerPath, 'utf8'))
-    grade = await task.grade({ run, before, after, seeded, answer })
+    // A grader that throws fails the run but keeps the agent's trace.
+    try {
+      const after = await task.snapshot(run)
+      if (existsSync(run.answerPath)) answer = JSON.parse(readFileSync(run.answerPath, 'utf8'))
+      grade = await task.grade({ run, before, after, seeded, answer })
+    } catch (error) {
+      gradeError = (error as Error).stack ?? String(error)
+      grade = graded([{ name: 'the grader ran', passed: false, detail: gradeError }])
+    }
   } finally {
-    for (const fake of run.fakes.values()) writeFileSync(join(run.dir, `${fake.name}.log`), fake.log.join('\n'))
-    await run.stop()
+    await stop()
+    process.off('SIGINT', onSignal)
+    process.off('SIGTERM', onSignal)
   }
   const record = {
     run_id: run.id,
@@ -85,6 +114,7 @@ export async function execute(ref: string, act: Act, info: Record<string, unknow
     answer,
     passed: grade.passed,
     checks: grade.checks,
+    grade_error: gradeError,
     instructions,
     task_instruction: task.instruction,
     ...outcome,

@@ -81,10 +81,14 @@ export class Fake {
   async stop(): Promise<void> {
     if (this.process.exitCode === null && this.process.signalCode === null) {
       const exited = new Promise((resolve) => this.process.once('exit', resolve))
+      const closed = new Promise((resolve) => this.process.once('close', resolve))
       this.process.kill('SIGTERM')
       const timer = setTimeout(() => this.process.kill('SIGKILL'), 10_000)
       await exited
       clearTimeout(timer)
+      // The rest of what it printed on the way down, unless something it
+      // left running holds its output open.
+      await Promise.race([closed, new Promise((resolve) => setTimeout(resolve, 2000).unref())])
     }
     rmSync(this.stateDir, { recursive: true, force: true })
   }

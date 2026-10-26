@@ -24,11 +24,14 @@ const env = {
   AGENTDIFF_HERE: HERE,
   AGENTDIFF_SEED: values.seed!,
 }
-/** Run `docker compose` on this run's project; its own output goes to stderr, the fake's log. */
-const compose = (...args: string[]) =>
+/**
+ * Run `docker compose` on this run's project and return its stdout; its
+ * stderr, and with `toLog` its stdout too, goes to stderr, the fake's log.
+ */
+const compose = (args: string[], toLog = false) =>
   execFileSync('docker', ['compose', '-p', values.project!, '-f', join(HERE, 'compose.yaml'), ...args], {
     env,
-    stdio: ['ignore', 'pipe', 'inherit'],
+    stdio: ['ignore', toLog ? process.stderr.fd : 'pipe', 'inherit'],
     encoding: 'utf8',
   })
 
@@ -36,11 +39,13 @@ let stopping = false
 function down(code: number): never {
   if (!stopping) {
     stopping = true
-    try {
-      process.stderr.write(compose('logs', '--no-color', 'backend'))
-      compose('down', '--volumes', '--remove-orphans', '--timeout', '2')
-    } catch (error) {
-      process.stderr.write(`compose down failed: ${(error as Error).message}\n`)
+    // The backend's log first, but the project comes down even without it.
+    for (const args of [['logs', '--no-color', 'backend'], ['down', '--volumes', '--remove-orphans', '--timeout', '2']]) {
+      try {
+        compose(args, true)
+      } catch (error) {
+        process.stderr.write(`compose ${args[0]} failed: ${(error as Error).message}\n`)
+      }
     }
   }
   process.exit(code)
@@ -49,10 +54,10 @@ process.on('SIGTERM', () => down(0))
 process.on('SIGINT', () => down(0))
 
 try {
-  compose('up', '--detach', '--wait')
+  compose(['up', '--detach', '--wait'])
 } catch {
   down(1)
 }
-const address = compose('port', 'backend', '8000').trim()
+const address = compose(['port', 'backend', '8000']).trim()
 console.log(`AGENTDIFF_URL=http://${address}`)
 setInterval(() => {}, 1 << 30)

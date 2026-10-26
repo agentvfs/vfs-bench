@@ -92,23 +92,29 @@ class ComplexMCP:
         self.processes = []
         env = {**os.environ, "PYTHONPATH": str(self.src)}
         http = ["--transport", "http", "--host", "127.0.0.1", "--port"]
-        for name, (argv, _) in SERVERS.items():
-            port = free_port()
-            # The fastmcp script beside this interpreter, as upstream runs
-            # `fastmcp run`; the unit server is a module with its own main.
-            program = ([sys.executable] if argv[0] == "-m" else
-                       [str(Path(sys.executable).parent / "fastmcp")])
-            self.processes.append(
-                subprocess.Popen(
-                    [*program, *argv, *http, str(port)],
-                    cwd=self.src,
-                    env=env,
-                    stdout=subprocess.DEVNULL,
-                    stderr=sys.stderr))
-            self.urls[name] = f"http://127.0.0.1:{port}/mcp"
-        for name, url in self.urls.items():
-            self.wait(name, url)
-        self.catalog = self.list_tools()
+        try:
+            for name, (argv, _) in SERVERS.items():
+                port = free_port()
+                # The fastmcp script beside this interpreter, as upstream
+                # runs `fastmcp run`; the unit server is a module with its
+                # own main.
+                program = ([sys.executable] if argv[0] == "-m" else
+                           [str(Path(sys.executable).parent / "fastmcp")])
+                self.processes.append(
+                    subprocess.Popen([*program, *argv, *http,
+                                      str(port)],
+                                     cwd=self.src,
+                                     env=env,
+                                     stdout=subprocess.DEVNULL,
+                                     stderr=sys.stderr))
+                self.urls[name] = f"http://127.0.0.1:{port}/mcp"
+            for name, url in self.urls.items():
+                self.wait(name, url)
+            self.catalog = self.list_tools()
+        except BaseException:
+            # The bridge closes only a world it has; this one never was.
+            self.close()
+            raise
         self.sessions: dict[str, str] = {}
         self.initial: dict[str, Any] = {}
         self.final: dict[str, Any] | None = None
