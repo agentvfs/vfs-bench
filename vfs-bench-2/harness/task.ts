@@ -29,6 +29,15 @@ export interface Graded {
   checks: Check[]
 }
 
+/** What the agent did: the run record's agent fields. */
+export interface Outcome {
+  status: string
+  error: string | null
+  final_output: string | null
+  usage: Record<string, number>
+  items: unknown[]
+}
+
 export interface GradeInput {
   run: Run
   /** What `snapshot` returned right after the seed. */
@@ -39,6 +48,8 @@ export interface GradeInput {
   seeded: unknown
   /** What the agent submitted with `complete-task`, or null. */
   answer: unknown
+  /** The agent's run, for a grader that judges its replies, as Claw-Eval's do. */
+  outcome: Outcome
 }
 
 export interface Task {

@@ -1,0 +1,18 @@
+[project]
+name = "vfs-bench-2-claweval"
+version = "0.1.0"
+description = "Claw-Eval's mock services and task graders"
+requires-python = ">=3.11"
+# Upstream's own dependencies and its `mock` extra's, for the services
+# these tasks use.
+dependencies = [
+    "fastapi>=0.115",
+    "httpx>=0.27",
+    "openai>=1.0",
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+    "uvicorn>=0.30",
+]
+
+[tool.uv]
+package = false

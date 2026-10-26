@@ -13,8 +13,9 @@ workspace:
 - **Services are local fakes.** Each is seeded per run and acts as the
   signed-in user. Where upstream ships its own simulation, it runs
   unchanged.
-- **Graders are deterministic.** They are upstream's own checks wherever
-  possible, never an LLM judge.
+- **Graders are upstream's own** wherever possible. They check the
+  services' end state, and an LLM judge only where upstream's grader asks
+  one (Claw-Eval).
 
 The plan and its status are tracked in the roadmap issue,
 [agentvfs/vfs-bench#6](https://github.com/agentvfs/vfs-bench/issues/6).
@@ -30,6 +31,7 @@ Run dumps stay local; nothing is published yet.
 | [DataSpace](dataspace/README.md) | HKUSTDial/DataSpace | 1 of 60 public | none, files only |
 | [LiveClawBench](liveclawbench/README.md) | Mosi-AI/LiveClawBench | 1 of 113 | upstream's Node mocks, under Bun |
 | [ComplexMCP](complexmcp/README.md) | ATH-MaaS/complex-mcp | 1 of 47 | upstream's 15 MCP servers |
+| [Claw-Eval](claweval/README.md) | claw-eval/claw-eval | 1 of 60 | upstream's FastAPI mocks |
 
 EnterpriseOps-Gym is skipped for now: its tool servers ship only as amd64
 images of bytecode, with no source and no license.
@@ -117,6 +119,7 @@ submodule/    Mirage, pinned and unmodified
     task.json        which upstream task this is
     workspace.yaml   the Mirage workspace: mounts, runtimes, limits
     tests/oracle.sh  a scripted solution, one shell call per block
+    tests/oracle.reply.md  the solution's last reply, for a grader that judges it
     tests/noop.sh    doing nothing, which must fail
 ```
 

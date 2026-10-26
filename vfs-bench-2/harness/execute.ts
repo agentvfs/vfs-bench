@@ -19,21 +19,12 @@ import * as dump from './dump.ts'
 import { start } from './fakes.ts'
 import { ROOT } from './paths.ts'
 import { Run } from './runs.ts'
-import { type Graded, type Task, graded } from './task.ts'
+import { type Graded, type Outcome, type Task, graded } from './task.ts'
 import { openWorkspace } from './workspace.ts'
 
 // Every run is in UTC, whatever the host's zone, as upstream's containers
 // are: the workspace's `date` and python3, and the fakes, which inherit it.
 process.env.TZ = 'UTC'
-
-/** What `act` returns: the run record's agent fields. */
-export interface Outcome {
-  status: string
-  error: string | null
-  final_output: string | null
-  usage: Record<string, number>
-  items: unknown[]
-}
 
 /** What happens in the workspace, given it, the system prompt and the instruction. */
 export type Act = (workspace: Workspace, instructions: string, instruction: string) => Promise<Outcome>
@@ -105,7 +96,7 @@ export async function execute(ref: string, act: Act, info: Record<string, unknow
       const after = await task.snapshot(run)
       changed = changes(before, after)
       if (existsSync(run.answerPath)) answer = JSON.parse(readFileSync(run.answerPath, 'utf8'))
-      grade = await task.grade({ run, before, after, seeded, answer })
+      grade = await task.grade({ run, before, after, seeded, answer, outcome })
     } catch (error) {
       gradeError = (error as Error).stack ?? String(error)
       grade = graded([{ name: 'the grader ran', passed: false, detail: gradeError }])
