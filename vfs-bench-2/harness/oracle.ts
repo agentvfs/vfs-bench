@@ -45,7 +45,7 @@ async function main(): Promise<number> {
   const { task } = await loadTask(ref)
   const script = scriptPath ?? join(task.dir, 'tests', 'oracle.sh')
   const lines = calls(readFileSync(script, 'utf8'))
-  const replyPath = script.replace(/\.sh$/, '.reply.md')
+  const replyPath = `${script.replace(/\.sh$/, '')}.reply.md`
   const reply = existsSync(replyPath) ? readFileSync(replyPath, 'utf8') : null
   const record = await execute(
     ref,
