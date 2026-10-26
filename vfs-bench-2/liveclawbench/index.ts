@@ -17,7 +17,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { type OpenApi, openapiCli } from '../clis/openapi.ts'
-import { type FakeSpec, sqliteTables } from '../harness/fakes.ts'
+import { type FakeSpec, type Tables, sqliteTables } from '../harness/fakes.ts'
 import { STATE } from '../harness/paths.ts'
 import { runPython } from '../harness/python.ts'
 import type { Run } from '../harness/runs.ts'
@@ -61,6 +61,16 @@ function rewritten(text: string, rewrite: Record<string, string>): string {
     text = text.replace(from, to)
   }
   return text
+}
+
+/**
+ * A mock's tables without its password hashes, which upstream salts afresh
+ * on every seed; no verifier reads them.
+ */
+function withoutSecrets(tables: Tables): Tables {
+  return Object.fromEntries(
+    Object.entries(tables).map(([name, rows]) => [name, rows.map(({ password_hash: _, ...row }) => row)]),
+  )
 }
 
 /** A mock's fake: `FINANCE`, `DOC_SEARCH`. */
@@ -117,7 +127,7 @@ export async function load(slug: string): Promise<Task> {
     },
     async snapshot(run) {
       const out: Record<string, unknown> = {}
-      for (const mock of spec.mocks) out[mock] = await sqliteTables(data(run, mock).db)
+      for (const mock of spec.mocks) out[mock] = withoutSecrets(await sqliteTables(data(run, mock).db))
       return out
     },
     async grade({ run }) {
