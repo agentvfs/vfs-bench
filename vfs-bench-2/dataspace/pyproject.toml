@@ -1,0 +1,9 @@
+[project]
+name = "vfs-bench-2-dataspace"
+version = "0.1.0"
+description = "DataSpace's evaluator, which needs only the standard library"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.uv]
+package = false

@@ -1,0 +1,22 @@
+[project]
+name = "vfs-bench-2-complexmcp"
+version = "0.1.0"
+description = "ComplexMCP's servers and judge, run as a vfs-bench-2 fake"
+requires-python = ">=3.11"
+# What upstream's 15 servers and its judge import, at upstream's
+# requirements.txt pins. The rest of that file (torch, chromadb,
+# onnxruntime) serves its client's tool retrieval, which is not used here.
+dependencies = [
+    "fastmcp==2.13.3",
+    "mcp==1.22.0",
+    "pydantic==2.12.5",
+    "python-levenshtein==0.27.3",
+    "levenshtein==0.27.3",
+    "shortuuid==1.0.13",
+    "colorlog==6.10.1",
+    "pyyaml==6.0.3",
+    "pyarrow==22.0.0",
+]
+
+[tool.uv]
+package = false

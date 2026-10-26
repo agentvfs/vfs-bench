@@ -13,3 +13,6 @@
 [submodule "submodule/mcp-atlas"]
 	path = vfs-bench-1/submodule/mcp-atlas
 	url = https://github.com/scaleapi/mcp-atlas.git
+[submodule "vfs-bench-2/submodule/mirage"]
+	path = vfs-bench-2/submodule/mirage
+	url = https://github.com/strukto-ai/mirage.git

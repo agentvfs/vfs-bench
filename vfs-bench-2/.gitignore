@@ -1,0 +1,23 @@
+# Python
+.venv/
+__pycache__/
+
+# Node
+node_modules/
+# A symlink, which `node_modules/` (directories only) does not match.
+fakes/node_modules
+.pnpm-store/
+.npm/
+*.tsbuildinfo
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.eslintcache
+
+.env
+# Downloaded datasets, generated task text and fixtures, per-run fake state.
+state/
+# Run transcripts; results are published on agentvfs.org, not committed.
+dumps/
+fakes/*/generated/

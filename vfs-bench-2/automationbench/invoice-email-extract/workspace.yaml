@@ -1,0 +1,13 @@
+# AutomationBench finance.invoice_email_extract (example 4001). The `api`
+# CLI is installed by the harness from the running fake
+# (automationbench/index.ts).
+mode: exec
+runtimes:
+  - name: pyodide
+    config:
+      lock_file_url: ${PYTHON_PACKAGES}/pyodide-lock.json
+      package_base_url: ${PYTHON_PACKAGES}/
+  - workspace
+mounts:
+  /workspace:
+    vfs: ram

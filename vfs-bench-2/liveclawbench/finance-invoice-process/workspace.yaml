@@ -1,0 +1,14 @@
+# LiveClawBench finance-invoice-process. The finance and email apps are the
+# `finance` and `email` CLIs; /workspace is the agent's scratch space, as in
+# upstream's task image.
+mode: exec
+runtimes:
+  - name: pyodide
+    config:
+      lock_file_url: ${PYTHON_PACKAGES}/pyodide-lock.json
+      package_base_url: ${PYTHON_PACKAGES}/
+  - workspace
+mounts:
+  /workspace:
+    vfs: ram
+    mode: write

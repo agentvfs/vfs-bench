@@ -1,0 +1,12 @@
+# ComplexMCP task 2: LightTalk and LightShop, seed 42. The servers' CLIs
+# are installed by the harness from the running fake (complexmcp/index.ts).
+mode: exec
+runtimes:
+  - name: pyodide
+    config:
+      lockFileUrl: ${PYTHON_PACKAGES}/pyodide-lock.json
+      packageBaseUrl: ${PYTHON_PACKAGES}/
+  - workspace
+mounts:
+  /workspace:
+    vfs: ram
