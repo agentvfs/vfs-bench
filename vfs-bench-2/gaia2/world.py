@@ -24,7 +24,6 @@ from pathlib import Path
 from typing import Any
 
 import click
-
 from bridge.server import ToolError
 
 HERE = Path(__file__).resolve().parent
@@ -49,7 +48,8 @@ def option_schema(param: click.Option) -> dict:
     if param.help:
         schema["description"] = param.help
     # Click marks "no default" with a sentinel object, not None.
-    if not param.is_flag and isinstance(param.default, (str, int, float, list, tuple)):
+    if not param.is_flag and isinstance(param.default,
+                                        (str, int, float, list, tuple)):
         schema["default"] = param.default
     return schema
 
@@ -62,8 +62,11 @@ class Gaia2:
         self.filesystem = filesystem
         self.sim_time: float | None = None
         dist = importlib.metadata.distribution("gaia2-cli")
-        self.apps = {ep.name: ep.value for ep in dist.entry_points
-                     if ep.group == "console_scripts" and ep.name not in NOT_APPS}
+        self.apps = {
+            ep.name: ep.value
+            for ep in dist.entry_points
+            if ep.group == "console_scripts" and ep.name not in NOT_APPS
+        }
         self.catalog: list[dict] = []
         # tool -> property -> (option string, is a switch)
         self.options: dict[str, dict[str, tuple[str, bool]]] = {}
@@ -79,7 +82,8 @@ class Gaia2:
         properties, required, options = {}, [], {}
         for param in command.params:
             if not isinstance(param, click.Option):
-                raise ValueError(f"{tool}: positional '{param.name}' is not supported")
+                raise ValueError(
+                    f"{tool}: positional '{param.name}' is not supported")
             if param.name == "help":
                 continue
             flag = max(param.opts, key=len)
@@ -91,8 +95,11 @@ class Gaia2:
         self.catalog.append({
             "name": tool,
             "description": (command.help or "").strip(),
-            "parameters": {"type": "object", "properties": properties,
-                           "required": required},
+            "parameters": {
+                "type": "object",
+                "properties": properties,
+                "required": required
+            },
         })
         self.options[tool] = options
 
@@ -106,17 +113,21 @@ class Gaia2:
         self.state.mkdir(parents=True)
         scenario = json.loads(Path(fixture).read_text())
         self.sim_time = float(scenario["metadata"]["definition"]["start_time"])
+        argv = ["gaia2-init", "--scenario", fixture]
+        argv += ["--state-dir", str(self.state)]
+        argv += ["--fs-backing-dir", self.filesystem]
         done = subprocess.run(
-            [sys.executable, "-I", LAUNCH, "gaia2_cli.init_cmd:main",
-             "gaia2-init", "--scenario", fixture, "--state-dir", str(self.state),
-             "--fs-backing-dir", self.filesystem],
-            env=self._env(), capture_output=True, text=True)
+            [sys.executable, "-I", LAUNCH, "gaia2_cli.init_cmd:main", *argv],
+            env=self._env(),
+            capture_output=True,
+            text=True)
         if done.returncode != 0:
             raise RuntimeError(f"gaia2-init failed:\n{done.stderr}")
 
     def _env(self) -> dict:
-        return {**os.environ, "GAIA2_STATE_DIR": str(self.state),
-                "GAIA2_SIM_TIME": str(self.sim_time)}
+        return dict(os.environ,
+                    GAIA2_STATE_DIR=str(self.state),
+                    GAIA2_SIM_TIME=str(self.sim_time))
 
     def call(self, tool: str, arguments: dict) -> str:
         binary, _, command = tool.partition(".")
@@ -133,7 +144,10 @@ class Gaia2:
                 argv += [flag, str(value)]
         done = subprocess.run(
             [sys.executable, "-I", LAUNCH, self.apps[binary], binary, *argv],
-            env=self._env(), cwd=self.state, capture_output=True, text=True)
+            env=self._env(),
+            cwd=self.state,
+            capture_output=True,
+            text=True)
         if done.returncode != 0:
             raise ToolError((done.stderr or done.stdout).strip())
         return done.stdout
@@ -144,8 +158,10 @@ class Gaia2:
         shutil.rmtree(self.state / "filesystem", ignore_errors=True)
 
     def snapshot(self) -> dict:
-        apps = {path.stem: json.loads(path.read_text())
-                for path in sorted(self.state.glob("*.json"))}
+        apps = {
+            path.stem: json.loads(path.read_text())
+            for path in sorted(self.state.glob("*.json"))
+        }
         events = self.state / "events.jsonl"
         lines = events.read_text().splitlines() if events.exists() else []
         return {"apps": apps, "events": [json.loads(line) for line in lines]}

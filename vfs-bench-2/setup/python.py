@@ -26,39 +26,37 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DEST = ROOT / "state" / "python"
 CDN = "https://cdn.jsdelivr.net/pyodide/v{version}/full/"
+PYPI = "https://files.pythonhosted.org/packages/{path}/{filename}"
 
 # What the datasets' tasks import that Pyodide carries but does not ship on
 # disk: tables and SQLite-adjacent analysis (DataSpace), PDFs, images and
 # documents (DataSpace, Gaia2).
-PYODIDE = ("numpy", "pandas", "pyarrow", "pymupdf", "pillow",
-           "opencv-python", "lxml", "tzdata")
+PYODIDE = ("numpy", "pandas", "pyarrow", "pymupdf", "pillow", "opencv-python",
+           "lxml", "tzdata")
 # Pure-Python wheels Pyodide does not carry: name, version, filename,
-# sha256, url, dependencies.
+# sha256, the file's path on PyPI, dependencies.
 PURE = (
     ("pypdf", "6.21.2", "pypdf-6.21.2-py3-none-any.whl",
      "1d44d1a3a200f25062adff0085b02040e4646431ac2ccac22e42679e91466084",
-     "https://files.pythonhosted.org/packages/1b/4d/c9d2d67f204eff463237a1a8f5e25a6923b7b1043982b91fcaf104c8ef60/pypdf-6.21.2-py3-none-any.whl",
-     ()),
+     "1b/4d/c9d2d67f204eff463237a1a8f5e25a6923b7b1043982b91fcaf104c8ef60", ()),
     ("openpyxl", "3.1.5", "openpyxl-3.1.5-py2.py3-none-any.whl",
      "5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2",
-     "https://files.pythonhosted.org/packages/c0/da/977ded879c29cbd04de313843e76868e6e13408a94ed6b987245dc7c8506/openpyxl-3.1.5-py2.py3-none-any.whl",
-     ("et-xmlfile",)),
+     "c0/da/977ded879c29cbd04de313843e76868e6e13408a94ed6b987245dc7c8506",
+     ("et-xmlfile", )),
     ("et-xmlfile", "2.0.0", "et_xmlfile-2.0.0-py3-none-any.whl",
      "7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa",
-     "https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl",
-     ()),
+     "c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a", ()),
     ("python-docx", "1.2.0", "python_docx-1.2.0-py3-none-any.whl",
      "3fd478f3250fbbbfd3b94fe1e985955737c145627498896a8a6bf81f4baf66c7",
-     "https://files.pythonhosted.org/packages/d0/00/1e03a4989fa5795da308cd774f05b704ace555a70f9bf9d3be057b680bcf/python_docx-1.2.0-py3-none-any.whl",
+     "d0/00/1e03a4989fa5795da308cd774f05b704ace555a70f9bf9d3be057b680bcf",
      ("lxml", "typing-extensions")),
     ("python-pptx", "1.0.2", "python_pptx-1.0.2-py3-none-any.whl",
      "160838e0b8565a8b1f67947675886e9fea18aa5e795db7ae531606d68e785cba",
-     "https://files.pythonhosted.org/packages/d9/4f/00be2196329ebbff56ce564aa94efb0fbc828d00de250b1980de1a34ab49/python_pptx-1.0.2-py3-none-any.whl",
+     "d9/4f/00be2196329ebbff56ce564aa94efb0fbc828d00de250b1980de1a34ab49",
      ("pillow", "xlsxwriter", "lxml", "typing-extensions")),
     ("xlsxwriter", "3.3.0", "xlsxwriter-3.3.0-py3-none-any.whl",
      "5f04772d43281da5109af66f39b65153359a203e896847c416476e709b024469",
-     "https://files.pythonhosted.org/packages/ce/9d/3d30eaaa7e06bdb6172f938b2661d64f8d899bdca54120384ecf3759488a/xlsxwriter-3.3.0-py3-none-any.whl",
-     ()),
+     "ce/9d/3d30eaaa7e06bdb6172f938b2661d64f8d899bdca54120384ecf3759488a", ()),
 )
 
 
@@ -99,7 +97,8 @@ def imports_of(wheel: Path) -> list[str]:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    parser.add_argument("--check", action="store_true",
+    parser.add_argument("--check",
+                        action="store_true",
                         help="verify the bundle without downloading")
     args = parser.parse_args(argv)
     installed = pyodide_dir()
@@ -119,14 +118,19 @@ def main(argv: list[str] | None = None) -> int:
 
     for name in PYODIDE:
         take(name)
-    for name, ver, filename, sha256, url, depends in PURE:
+    for name, ver, filename, sha256, path, depends in PURE:
         packages[name] = {
-            "name": name, "version": ver, "file_name": filename,
-            "sha256": sha256, "install_dir": "site",
-            "package_type": "package", "imports": [],
-            "depends": list(depends), "unvendored_tests": False,
+            "name": name,
+            "version": ver,
+            "file_name": filename,
+            "sha256": sha256,
+            "install_dir": "site",
+            "package_type": "package",
+            "imports": [],
+            "depends": list(depends),
+            "unvendored_tests": False,
         }
-        urls[name] = url
+        urls[name] = PYPI.format(path=path, filename=filename)
         for dependency in depends:
             if dependency not in packages and dependency in stock["packages"]:
                 take(dependency)
@@ -148,11 +152,17 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     pure = {name for name, *_ in PURE}
     for name in pure:
-        packages[name]["imports"] = imports_of(DEST / packages[name]["file_name"])
+        packages[name]["imports"] = imports_of(DEST /
+                                               packages[name]["file_name"])
     # Keep every stock entry, so a stdlib module Pyodide unvendors still
     # resolves; the ones not downloaded here fail loudly on import.
-    lock = {"info": stock["info"],
-            "packages": {**stock["packages"], **packages}}
+    lock = {
+        "info": stock["info"],
+        "packages": {
+            **stock["packages"],
+            **packages
+        }
+    }
     (DEST / "pyodide-lock.json").write_text(json.dumps(lock, indent=1) + "\n")
     print(f"{len(packages)} packages in {DEST} for pyodide {version}")
     return 0

@@ -17,10 +17,10 @@ import json
 from pathlib import Path
 from typing import Any
 
+from automationbench.rubric import create_rubric
 from automationbench.runner import (AutomationBenchEnv,
                                     compute_allowed_services,
                                     strip_none_values)
-from automationbench.rubric import create_rubric
 from automationbench.schema.world import WorldState
 from automationbench.tools.api import API_TOOLS
 from datasets import Dataset
@@ -31,9 +31,10 @@ class AutomationBench:
 
     def __init__(self):
         # Upstream's environment, only to read the tool schemas it builds.
-        env = AutomationBenchEnv(
-            dataset=Dataset.from_list([{"prompt": [], "answer": "", "info": "{}"}]),
-            rubric=create_rubric(), toolset="api")
+        row = {"prompt": [], "answer": "", "info": "{}"}
+        env = AutomationBenchEnv(dataset=Dataset.from_list([row]),
+                                 rubric=create_rubric(),
+                                 toolset="api")
         self.catalog = [t["function"] for t in env._all_oai_tools]
         self.functions = {tool.__name__: tool for tool in API_TOOLS}
         self.world: WorldState | None = None
@@ -51,8 +52,11 @@ class AutomationBench:
 
     def call(self, tool: str, arguments: dict) -> Any:
         function = self.functions[tool]
-        arguments = {k: v for k, v in arguments.items()
-                     if not (isinstance(v, dict) and not v)}
+        arguments = {
+            k: v
+            for k, v in arguments.items()
+            if not (isinstance(v, dict) and not v)
+        }
         if "world" in function.__code__.co_varnames:
             arguments["world"] = self.world
         return function(**arguments)

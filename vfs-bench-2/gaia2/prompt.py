@@ -21,11 +21,11 @@ def main() -> int:
     tool_list = "\n".join(f"- `{name}` — {about}"
                           for name, about in sorted(tools.items()))
     messaging = [k for k in sorted(tools) if k in MESSAGING]
-    prompt = (Path(data["template"]).read_text()
-              .replace("{{TOOL_LIST}}", tool_list)
-              .replace("{{MESSAGING_TOOLS}}",
-                       ", ".join(messaging) if messaging else "messages, chats")
-              .replace("{{EXEC_TOOL}}", data["exec_tool"]))
+    prompt = Path(data["template"]).read_text()
+    prompt = prompt.replace("{{TOOL_LIST}}", tool_list)
+    prompt = prompt.replace("{{MESSAGING_TOOLS}}",
+                            ", ".join(messaging or ["messages", "chats"]))
+    prompt = prompt.replace("{{EXEC_TOOL}}", data["exec_tool"])
     print(json.dumps(prompt))
     return 0
 

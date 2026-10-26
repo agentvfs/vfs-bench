@@ -18,15 +18,22 @@ def main() -> int:
     data = json.load(sys.stdin)
     info = json.loads(Path(data["task"]).read_text())["info"]
     state = {
-        "info": {**info, "assertions": [strip_none_values(a)
-                                        for a in info["assertions"]]},
+        "info": {
+            **info, "assertions":
+            [strip_none_values(a) for a in info["assertions"]]
+        },
         "initial_state": strip_none_values(info.get("initial_state", {})),
         "world": WorldState(**data["world"]),
     }
     credit = partial_credit(state)
-    print(json.dumps({"partial_credit": credit,
-                      "assertions": state.get("_assertion_results", [])},
-                     ensure_ascii=False, default=str))
+    print(
+        json.dumps(
+            {
+                "partial_credit": credit,
+                "assertions": state.get("_assertion_results", [])
+            },
+            ensure_ascii=False,
+            default=str))
     return 0
 
 

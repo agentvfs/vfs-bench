@@ -54,8 +54,11 @@ class Remote(io.RawIOBase):
         return self.pos
 
     def seek(self, offset, whence=0):
-        self.pos = {0: offset, 1: self.pos + offset,
-                    2: self.size + offset}[whence]
+        self.pos = {
+            0: offset,
+            1: self.pos + offset,
+            2: self.size + offset
+        }[whence]
         return self.pos
 
     def readinto(self, buffer):
@@ -73,16 +76,17 @@ class Remote(io.RawIOBase):
 
 def ported() -> list[str]:
     """The upstream task ids of this repo's DataSpace tasks."""
-    return sorted(json.loads(p.read_text())["task_id"]
-                  for p in HERE.glob("*/task.json"))
+    return sorted(
+        json.loads(p.read_text())["task_id"] for p in HERE.glob("*/task.json"))
 
 
 def main() -> int:
     tasks = ported()
-    archive = zipfile.ZipFile(io.BufferedReader(Remote(ARCHIVE),
-                                                buffer_size=1 << 20))
+    archive = zipfile.ZipFile(
+        io.BufferedReader(Remote(ARCHIVE), buffer_size=1 << 20))
     sums = {}
-    for line in archive.read(PREFIX + "checksums.sha256").decode().splitlines():
+    for line in archive.read(PREFIX +
+                             "checksums.sha256").decode().splitlines():
         digest, _, name = line.strip().partition("  ")
         sums[name.removeprefix("./")] = digest
     wanted = []
@@ -90,9 +94,10 @@ def main() -> int:
         name = info.filename.removeprefix(PREFIX)
         if info.is_dir():
             continue
-        if any(name.startswith(f"input/{t}/") or name in (
-                f"output/{t}/gold.csv", f"evaluation/configs/{t}.json")
-               for t in tasks):
+        if any(
+                name.startswith(f"input/{t}/") or name in (
+                    f"output/{t}/gold.csv", f"evaluation/configs/{t}.json")
+                for t in tasks):
             wanted.append((info, name))
     for info, name in wanted:
         target = STATE / "benchmark" / name

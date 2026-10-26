@@ -16,21 +16,22 @@ import tempfile
 
 def main() -> int:
     data = json.load(sys.stdin)
+    env = {**os.environ, **data["env"]}
     with tempfile.TemporaryDirectory() as cwd:
-        done = subprocess.run(
-            [sys.executable, "-I", data["verify"]], cwd=cwd,
-            env={**os.environ, **data["env"]},
-            capture_output=True, text=True, timeout=900)
+        done = subprocess.run([sys.executable, "-I", data["verify"]],
+                              cwd=cwd,
+                              env=env,
+                              capture_output=True,
+                              text=True,
+                              timeout=900)
     out = done.stdout + done.stderr
     scores = re.findall(r"Score:\s*([0-9.]+)", out)
-    lines = [m.groups() for m in re.finditer(r"^\s*(PASS|FAIL|ERROR):\s*(.*)$",
-                                              out, re.MULTILINE)]
-    print(json.dumps({
-        "score": float(scores[-1]) if scores else 0.0,
-        "results": [{"passed": kind == "PASS", "message": text}
-                    for kind, text in lines],
-        "output": out,
-    }))
+    score = float(scores[-1]) if scores else 0.0
+    lines = re.findall(r"^\s*(PASS|FAIL|ERROR):\s*(.*)$", out, re.MULTILINE)
+    results = [
+        dict(passed=kind == "PASS", message=text) for kind, text in lines
+    ]
+    print(json.dumps({"score": score, "results": results, "output": out}))
     return 0
 
 

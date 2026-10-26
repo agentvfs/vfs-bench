@@ -112,13 +112,17 @@ def serve(name: str, world: World, port: int = 0) -> None:
                         result = world.call(body["tool"],
                                             body.get("arguments") or {})
                     except ToolError as error:
-                        return self.reply(200, {"ok": False,
-                                                "error": str(error)})
-                    except Exception as error:  # the agent sees the error
-                        sys.stderr.write(traceback.format_exc())
                         return self.reply(200, {
                             "ok": False,
-                            "error": f"{type(error).__name__}: {error}"})
+                            "error": str(error)
+                        })
+                    except Exception as error:  # the agent sees the error
+                        sys.stderr.write(traceback.format_exc())
+                        return self.reply(
+                            200, {
+                                "ok": False,
+                                "error": f"{type(error).__name__}: {error}"
+                            })
                     return self.reply(200, {"ok": True, "result": result})
             self.reply(404, {"error": f"no route {self.path}"})
 
@@ -132,12 +136,16 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--name", required=True)
     parser.add_argument("--world", required=True, help="module:Class")
-    parser.add_argument("--path", action="append", default=[],
+    parser.add_argument("--path",
+                        action="append",
+                        default=[],
                         help="directories to import the world from")
-    parser.add_argument("--config", default="{}",
+    parser.add_argument("--config",
+                        default="{}",
                         help="JSON keyword arguments for the world")
     parser.add_argument("--port", type=int, default=0)
-    parser.add_argument("--dump-tools", action="store_true",
+    parser.add_argument("--dump-tools",
+                        action="store_true",
                         help="print the tools as JSON and exit")
     args = parser.parse_args(argv)
     # -I leaves the script's own directory off sys.path, so add the repo

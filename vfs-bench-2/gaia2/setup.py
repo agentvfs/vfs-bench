@@ -62,8 +62,10 @@ def main() -> int:
     with urllib.request.urlopen(
             f"{HF}/api/datasets/{repo}/tree/{rev}?recursive=true") as reply:
         tree = json.load(reply)
-    files = [e["path"] for e in tree if e["type"] == "file"
-             and e["path"].startswith("demo_filesystem/")]
+    files = [
+        e["path"] for e in tree
+        if e["type"] == "file" and e["path"].startswith("demo_filesystem/")
+    ]
     for path in files:
         fetch(resolve(repo, rev, path), STATE / "filesystem" / path)
     print(f"filesystem: {len(files)} files")

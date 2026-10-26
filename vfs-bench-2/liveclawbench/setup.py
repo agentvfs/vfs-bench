@@ -22,12 +22,13 @@ def git(*args: str) -> None:
 def main() -> int:
     if not (SRC / ".git").is_dir():
         SRC.parent.mkdir(parents=True, exist_ok=True)
-        subprocess.run(["git", "clone", "--quiet", "--filter=blob:none",
-                        "--no-checkout", REPO, str(SRC)], check=True)
+        clone = ["git", "clone", "--quiet", "--filter=blob:none"]
+        subprocess.run([*clone, "--no-checkout", REPO, str(SRC)], check=True)
     git("sparse-checkout", "set", "--no-cone", "/mock-platform/", "/tasks/")
     git("checkout", "--quiet", COMMIT)
     subprocess.run(["bun", "install", "--frozen-lockfile"],
-                   cwd=SRC / "mock-platform", check=True)
+                   cwd=SRC / "mock-platform",
+                   check=True)
     print(f"LiveClawBench {COMMIT[:7]} in {SRC}")
     return 0
 

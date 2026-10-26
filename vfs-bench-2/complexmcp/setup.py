@@ -23,9 +23,10 @@ def main() -> int:
     if not (src / ".git").is_dir():
         STATE.mkdir(parents=True, exist_ok=True)
         subprocess.run(["git", "clone", "--quiet", REPO, str(src)], check=True)
-    subprocess.run(["git", "-C", str(src), "checkout", "--quiet", COMMIT],
-                   check=True)
-    rows = pq.read_table(src / "benchmark" / "data" / "data.parquet").to_pylist()
+    subprocess.run(
+        ["git", "-C", str(src), "checkout", "--quiet", COMMIT], check=True)
+    rows = pq.read_table(src / "benchmark" / "data" /
+                         "data.parquet").to_pylist()
     tasks = [{
         "index": index,
         "seed": int(row["seed"]),
@@ -35,8 +36,8 @@ def main() -> int:
         "tool_cnt": json.loads(row["tool_cnt"]),
         "gt_env": json.loads(row["gt_env"]),
     } for index, row in enumerate(rows)]
-    (STATE / "tasks.json").write_text(json.dumps(tasks, indent=1,
-                                                 ensure_ascii=False))
+    (STATE / "tasks.json").write_text(
+        json.dumps(tasks, indent=1, ensure_ascii=False))
     print(f"{len(tasks)} tasks from {COMMIT[:7]} in {STATE}")
     return 0
 

@@ -90,18 +90,21 @@ class ComplexMCP:
         threading.Thread(target=self.loop.run_forever, daemon=True).start()
         self.urls: dict[str, str] = {}
         self.processes = []
+        env = {**os.environ, "PYTHONPATH": str(self.src)}
+        http = ["--transport", "http", "--host", "127.0.0.1", "--port"]
         for name, (argv, _) in SERVERS.items():
             port = free_port()
-            extra = (["--transport", "http", "--host", "127.0.0.1", "--port",
-                      str(port)])
             # The fastmcp script beside this interpreter, as upstream runs
             # `fastmcp run`; the unit server is a module with its own main.
             program = ([sys.executable] if argv[0] == "-m" else
                        [str(Path(sys.executable).parent / "fastmcp")])
-            self.processes.append(subprocess.Popen(
-                [*program, *argv, *extra], cwd=self.src,
-                env={**os.environ, "PYTHONPATH": str(self.src)},
-                stdout=subprocess.DEVNULL, stderr=sys.stderr))
+            self.processes.append(
+                subprocess.Popen(
+                    [*program, *argv, *http, str(port)],
+                    cwd=self.src,
+                    env=env,
+                    stdout=subprocess.DEVNULL,
+                    stderr=sys.stderr))
             self.urls[name] = f"http://127.0.0.1:{port}/mcp"
         for name, url in self.urls.items():
             self.wait(name, url)
@@ -125,27 +128,35 @@ class ComplexMCP:
 
     async def _call(self, server: str, tool: str, arguments: dict) -> str:
         async with Client(self.urls[server]) as client:
-            return (await client.call_tool(tool, arguments,
-                                           raise_on_error=False)).content[0].text
+            result = await client.call_tool(tool,
+                                            arguments,
+                                            raise_on_error=False)
+            return result.content[0].text
 
     def list_tools(self) -> list[dict]:
         tools = []
         for server, (_, desc) in SERVERS.items():
             if desc is None:
+
                 async def listed(url=self.urls[server]):
                     async with Client(url) as client:
                         return await client.list_tools()
+
                 for tool in self.run(listed()):
-                    tools.append({"name": f"{server}.{tool.name}",
-                                  "description": tool.description or "",
-                                  "parameters": tool.inputSchema})
+                    tools.append({
+                        "name": f"{server}.{tool.name}",
+                        "description": tool.description or "",
+                        "parameters": tool.inputSchema
+                    })
             else:
                 for tool in json.loads((self.src / desc).read_text()):
                     if tool["tool_name"] in HIDDEN:
                         continue
-                    tools.append({"name": f"{server}.{tool['tool_name']}",
-                                  "description": tool["description"],
-                                  "parameters": schema_of(tool["arguments"])})
+                    tools.append({
+                        "name": f"{server}.{tool['tool_name']}",
+                        "description": tool["description"],
+                        "parameters": schema_of(tool["arguments"])
+                    })
         return tools
 
     def tools(self) -> list[dict]:
@@ -156,15 +167,17 @@ class ComplexMCP:
             self.finish()
         self.sessions, self.initial, self.final = {}, {}, None
         seed, apps = fixture["seed"], fixture["apps"]
-        login = json.loads(self.run(self._call(SYSTEM, "login",
-                                               {"seed": seed})))
+        login = json.loads(
+            self.run(self._call(SYSTEM, "login", {"seed": seed})))
         self.initial[SYSTEM] = login.pop("session_info")
         self.sessions[SYSTEM] = login["session_id"]
-        os_cfg = {"session_id": self.sessions[SYSTEM],
-                  "url": self.urls[SYSTEM]}
+        os_cfg = {
+            "session_id": self.sessions[SYSTEM],
+            "url": self.urls[SYSTEM]
+        }
         for app in apps:
-            login = json.loads(self.run(self._call(
-                app, "login", {"seed": seed, "os_cfg": os_cfg})))
+            arguments = {"seed": seed, "os_cfg": os_cfg}
+            login = json.loads(self.run(self._call(app, "login", arguments)))
             self.initial[app] = login.pop("session_info")
             self.sessions[app] = login["session_id"]
 
@@ -173,11 +186,16 @@ class ComplexMCP:
             return self.finish()
         server, _, name = tool.partition(".")
         if server not in self.urls or name in HIDDEN:
-            return {"status": "error", "output": f"This tool `{tool}` doesn't exist."}
+            return {
+                "status": "error",
+                "output": f"This tool `{tool}` doesn't exist."
+            }
         if SERVERS[server][1] is not None:
             if server not in self.sessions:
-                return {"status": "failed",
-                        "output": f"{server} has not been logged into yet."}
+                return {
+                    "status": "failed",
+                    "output": f"{server} has not been logged into yet."
+                }
             arguments = {**arguments, "session_id": self.sessions[server]}
         try:
             return self.run(self._call(server, name, arguments))
@@ -187,10 +205,11 @@ class ComplexMCP:
     def finish(self) -> dict:
         """Log every app out; what each logout returns is its end state."""
         if self.final is None:
-            self.final = {
-                app: json.loads(self.run(self._call(app, "logout",
-                                                    {"session_id": sid})))
-                for app, sid in self.sessions.items()}
+            final = {}
+            for app, sid in self.sessions.items():
+                logout = self._call(app, "logout", {"session_id": sid})
+                final[app] = json.loads(self.run(logout))
+            self.final = final
         return self.final
 
     def snapshot(self) -> dict:

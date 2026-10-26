@@ -20,7 +20,9 @@ def main() -> int:
 
     log = io.StringIO()
     with contextlib.redirect_stdout(log):
-        result = judge_env(data["initial"], data["final"], data["gt_env"],
+        result = judge_env(data["initial"],
+                           data["final"],
+                           data["gt_env"],
                            verbose=True)
     print(json.dumps({**result, "log": log.getvalue()}))
     return 0

@@ -12,14 +12,15 @@ from pathlib import Path
 
 def main() -> int:
     data = json.load(sys.stdin)
-    spec = importlib.util.spec_from_file_location("evaluate", data["evaluator"])
+    spec = importlib.util.spec_from_file_location("evaluate",
+                                                  data["evaluator"])
     evaluate = importlib.util.module_from_spec(spec)
     sys.modules["evaluate"] = evaluate  # its dataclasses resolve their module
     spec.loader.exec_module(evaluate)
-    result = evaluate.evaluate_task(
-        config=evaluate.load_task_config(Path(data["config"])),
-        prediction_path=Path(data["prediction"]),
-        gold_path=Path(data["gold"]))
+    config = evaluate.load_task_config(Path(data["config"]))
+    result = evaluate.evaluate_task(config=config,
+                                    prediction_path=Path(data["prediction"]),
+                                    gold_path=Path(data["gold"]))
     print(json.dumps(result.to_dict(), ensure_ascii=False))
     return 0
 

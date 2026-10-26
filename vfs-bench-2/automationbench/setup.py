@@ -28,8 +28,9 @@ def main() -> int:
             info = row["info"]
             info = json.loads(info) if isinstance(info, str) else info
             if info["task_name"] in names:
-                (STATE / f"{info['task_name']}.json").write_text(json.dumps(
-                    {**row, "info": info}, indent=1, ensure_ascii=False))
+                task = {**row, "info": info}
+                text = json.dumps(task, indent=1, ensure_ascii=False)
+                (STATE / f"{info['task_name']}.json").write_text(text)
                 names.discard(info["task_name"])
         if names:
             raise SystemExit(f"not in {domain}: {sorted(names)}")
