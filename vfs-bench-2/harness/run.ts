@@ -27,8 +27,9 @@ import {
 import type { Workspace } from '@struktoai/mirage-node'
 import { MirageEditor, MirageShellExecutor, mirageReadFileTool } from '@struktoai/mirage-openai-agents'
 
-import { type Outcome, execute } from './execute.ts'
+import { execute } from './execute.ts'
 import { ROOT } from './paths.ts'
+import type { Outcome } from './task.ts'
 
 export interface AgentOptions {
   model: string

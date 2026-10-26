@@ -20,6 +20,9 @@ importers:
       '@struktoai/mirage-openai-agents':
         specifier: link:submodule/mirage/typescript/packages/openai-agents
         version: link:submodule/mirage/typescript/packages/openai-agents
+      yaml:
+        specifier: link:submodule/mirage/typescript/packages/node/node_modules/yaml
+        version: link:submodule/mirage/typescript/packages/node/node_modules/yaml
     devDependencies:
       '@types/node':
         specifier: link:submodule/mirage/typescript/node_modules/@types/node

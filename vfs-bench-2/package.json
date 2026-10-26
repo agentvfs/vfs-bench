@@ -15,13 +15,15 @@
     "Mirage TS comes from the submodule, built there with",
     "  (cd submodule/mirage/typescript && pnpm install && pnpm --filter @struktoai/mirage-core --filter @struktoai/mirage-node --filter @struktoai/mirage-openai-agents build)",
     "and linked, so moving the pin takes effect without publishing. @openai/agents",
-    "is linked to the copy mirage-openai-agents resolves, so there is one SDK."
+    "is linked to the copy mirage-openai-agents resolves, so there is one SDK.",
+    "yaml is mirage-node's own, for upstream files in YAML (Claw-Eval's task.yaml)."
   ],
   "dependencies": {
     "@openai/agents": "link:submodule/mirage/typescript/packages/openai-agents/node_modules/@openai/agents",
     "@struktoai/mirage-core": "link:submodule/mirage/typescript/packages/core",
     "@struktoai/mirage-node": "link:submodule/mirage/typescript/packages/node",
-    "@struktoai/mirage-openai-agents": "link:submodule/mirage/typescript/packages/openai-agents"
+    "@struktoai/mirage-openai-agents": "link:submodule/mirage/typescript/packages/openai-agents",
+    "yaml": "link:submodule/mirage/typescript/packages/node/node_modules/yaml"
   },
   "devDependencies": {
     "@types/node": "link:submodule/mirage/typescript/node_modules/@types/node",
