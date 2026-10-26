@@ -32,11 +32,19 @@ async function seeded(ref: string): Promise<{ at: number; snapshot: unknown }> {
   }
 }
 
-/** A timestamp that moved by `gap`, the time between the seeds. */
+/** A date and a time, with an optional fraction and zone: `2026-10-25 09:42:06`, `2026-10-25T09:42:06.5Z`. */
+const TIMESTAMP = /^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:?\d{2})?$/
+
+/**
+ * A timestamp that moved forward by `gap`, the time between the seeds, and
+ * kept its format: anything else is a real difference.
+ */
 function followsClock(change: Change, gap: number): boolean {
-  if (change.kind !== 'updated' || typeof change.before !== 'string' || typeof change.after !== 'string') return false
-  const moved = Date.parse(change.after) - Date.parse(change.before)
-  return Number.isFinite(moved) && Math.abs(moved - gap) <= CLOCK_SLACK_MS
+  const { kind, before, after } = change
+  if (kind !== 'updated' || typeof before !== 'string' || typeof after !== 'string') return false
+  if (!TIMESTAMP.test(before) || before.replace(/\d/g, '0') !== after.replace(/\d/g, '0')) return false
+  const moved = Date.parse(after) - Date.parse(before)
+  return moved > 0 && Math.abs(moved - gap) <= CLOCK_SLACK_MS
 }
 
 async function main(): Promise<number> {
