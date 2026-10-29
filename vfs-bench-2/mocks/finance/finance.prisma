@@ -1,0 +1,281 @@
+// The finance fake's store: LiveClawBench's finance mock (Mosi-AI/LiveClawBench
+// @ 303dc77, MIT, mock-platform/mocks/finance/src/db/schema.ts and
+// schema-v2.ts, with the `_migrations` table of db/migrate.ts), one SQLite
+// file per run.
+//
+// Each table and column is upstream's, by name, type, nullability, default,
+// key and index, in upstream's column order, so upstream's verify.py reads a
+// run's file unchanged and a `SELECT *` reply lists its fields as upstream's
+// does. Fields keep upstream's snake_case column names for that reason;
+// only the models are renamed, with @@map. Two things Prisma cannot say are
+// left to the routes: the CHECK lists on `role`, `category`, `status`,
+// `approval_status`, `expense_category`, `depreciation_method`,
+// `asset_class_code` and `direction`, and ON UPDATE NO ACTION, which
+// `onUpdate: NoAction` states.
+//
+// Upstream's timestamps default to SQLite's `datetime('now')`, which the
+// routes never rely on: each write stamps the run's frozen clock itself.
+// `_env` is the fake's own (below).
+//
+// No tenant column: a run is one company's world (tenantKind 'none'), as
+// upstream's mock is.
+
+datasource db {
+  provider = "sqlite"
+  url      = env("INTEG_DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "client"
+}
+
+// The environment upstream's mock reads when it starts (`TASK_NAME`), which
+// one fake that every task of a job shares cannot take from its own: each
+// task's fixture states it. The table is the fake's own; upstream has none.
+model RunEnv {
+  name  String @id
+  value String
+
+  @@map("_env")
+}
+
+model Migration {
+  id         String @id
+  applied_at String @default(dbgenerated("(datetime('now'))"))
+
+  @@map("_migrations")
+}
+
+model User {
+  id            Int    @id @default(autoincrement())
+  username      String @unique
+  password_hash String
+  role          String @default("user")
+  is_active     Int    @default(1)
+  created_at    String @default(dbgenerated("(datetime('now'))"))
+  updated_at    String @default(dbgenerated("(datetime('now'))"))
+
+  expenseReports   ExpenseReport[]
+  dashboardConfigs DashboardConfig[]
+
+  @@map("user")
+}
+
+model DepartmentFinancialRecord {
+  id                    Int    @id @default(autoincrement())
+  month                 String
+  department_name       String
+  manager_email         String
+  budget_amount         Float  @default(0)
+  actual_expense_amount Float  @default(0)
+  revenue_amount        Float  @default(0)
+  created_at            String @default(dbgenerated("(datetime('now'))"))
+  updated_at            String @default(dbgenerated("(datetime('now'))"))
+
+  @@unique([month, department_name])
+  @@map("department_financial_record")
+}
+
+model SystemConfig {
+  id           Int    @id @default(autoincrement())
+  config_key   String @unique
+  config_value String
+  created_at   String @default(dbgenerated("(datetime('now'))"))
+  updated_at   String @default(dbgenerated("(datetime('now'))"))
+
+  @@map("system_config")
+}
+
+model TransactionRecord {
+  id              Int    @id @default(autoincrement())
+  trade_date      String
+  vendor_name     String
+  amount          Float  @default(0)
+  category        String @default("other")
+  status          String @default("pending")
+  approval_status String @default("pending")
+  approval_note   String @default("")
+  created_at      String @default(dbgenerated("(datetime('now'))"))
+  updated_at      String @default(dbgenerated("(datetime('now'))"))
+
+  accountTransactions AccountTransaction[]
+
+  @@index([trade_date], map: "idx_transaction_trade_date")
+  @@index([category], map: "idx_transaction_category")
+  @@index([status], map: "idx_transaction_status")
+  @@index([vendor_name], map: "idx_transaction_vendor_name")
+  @@map("transaction_record")
+}
+
+model AccountBalance {
+  id                Int    @id @default(autoincrement())
+  account_id        String @unique
+  system_balance    Float  @default(0)
+  statement_balance Float  @default(0)
+  diff_amount       Float  @default(0)
+  status            String @default("pending")
+  created_at        String @default(dbgenerated("(datetime('now'))"))
+  updated_at        String @default(dbgenerated("(datetime('now'))"))
+
+  transactions AccountTransaction[]
+
+  @@map("account_balance")
+}
+
+model AccountTransaction {
+  id                 Int    @id @default(autoincrement())
+  account_balance_id Int
+  transaction_id     Int?
+  amount             Float  @default(0)
+  status             String @default("pending")
+  created_at         String @default(dbgenerated("(datetime('now'))"))
+  updated_at         String @default(dbgenerated("(datetime('now'))"))
+
+  account     AccountBalance     @relation(fields: [account_balance_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  transaction TransactionRecord? @relation(fields: [transaction_id], references: [id], onDelete: Restrict, onUpdate: NoAction)
+
+  @@index([account_balance_id], map: "idx_account_transaction_balance_id")
+  @@index([transaction_id], map: "idx_account_transaction_transaction_id")
+  @@map("account_transaction")
+}
+
+model Vendor {
+  id          Int    @id @default(autoincrement())
+  vendor_code String @unique
+  vendor_name String @unique
+  is_active   Int    @default(1)
+  created_at  String @default(dbgenerated("(datetime('now'))"))
+  updated_at  String @default(dbgenerated("(datetime('now'))"))
+
+  invoices Invoice[]
+
+  @@map("vendor")
+}
+
+model ExpenseReport {
+  id                 Int    @id @default(autoincrement())
+  trip_name          String
+  total_amount       Float  @default(0)
+  status             String @default("draft")
+  created_by_user_id Int
+  created_at         String @default(dbgenerated("(datetime('now'))"))
+  updated_at         String @default(dbgenerated("(datetime('now'))"))
+
+  createdBy User          @relation(fields: [created_by_user_id], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  items     ExpenseItem[]
+
+  @@index([created_by_user_id], map: "idx_expense_report_created_by")
+  @@map("expense_report")
+}
+
+model ExpenseItem {
+  id                Int    @id @default(autoincrement())
+  expense_report_id Int
+  expense_category  String @default("meals")
+  amount            Float  @default(0)
+  created_at        String @default(dbgenerated("(datetime('now'))"))
+  updated_at        String @default(dbgenerated("(datetime('now'))"))
+
+  report ExpenseReport @relation(fields: [expense_report_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("expense_item")
+}
+
+model Invoice {
+  id             Int     @id @default(autoincrement())
+  vendor_id      Int
+  vendor_name    String?
+  invoice_number String
+  invoice_date   String
+  status         String  @default("submitted")
+  created_at     String  @default(dbgenerated("(datetime('now'))"))
+  updated_at     String  @default(dbgenerated("(datetime('now'))"))
+
+  vendor Vendor            @relation(fields: [vendor_id], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  items  InvoiceLineItem[]
+
+  @@index([vendor_id], map: "idx_invoice_vendor_id")
+  @@map("invoice")
+}
+
+model InvoiceLineItem {
+  id            Int    @id @default(autoincrement())
+  invoice_id    Int
+  description   String
+  category_code String
+  amount        Float  @default(0)
+  created_at    String @default(dbgenerated("(datetime('now'))"))
+  updated_at    String @default(dbgenerated("(datetime('now'))"))
+
+  invoice Invoice @relation(fields: [invoice_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("invoice_line_item")
+}
+
+model AssetRecord {
+  id                  Int    @id @default(autoincrement())
+  asset_name          String
+  cost_basis          Float  @default(0)
+  residual_value      Float  @default(0)
+  useful_life_years   Int    @default(1)
+  depreciation_method String @default("straight_line")
+  annual_depreciation Float  @default(0)
+  correction_reason   String @default("")
+  created_at          String @default(dbgenerated("(datetime('now'))"))
+  updated_at          String @default(dbgenerated("(datetime('now'))"))
+
+  @@map("asset_record")
+}
+
+model BudgetAlert {
+  id              Int     @id @default(autoincrement())
+  department_name String?
+  threshold       Float   @default(0)
+  month           String?
+  created_at      String  @default(dbgenerated("(datetime('now'))"))
+
+  @@map("budget_alert")
+}
+
+model DashboardConfig {
+  id                     Int     @id @default(autoincrement())
+  user_id                Int     @unique
+  date_range_start       String
+  date_range_end         String
+  formula_json           String? @default("{}")
+  department_weight_json String? @default("{}")
+  created_at             String  @default(dbgenerated("(datetime('now'))"))
+  updated_at             String  @default(dbgenerated("(datetime('now'))"))
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Restrict, onUpdate: NoAction)
+
+  @@map("dashboard_config")
+}
+
+model PortfolioHolding {
+  id               Int    @id @default(autoincrement())
+  asset_class_code String @unique @default("eq")
+  asset_name       String
+  current_value    Float  @default(0)
+  created_at       String @default(dbgenerated("(datetime('now'))"))
+  updated_at       String @default(dbgenerated("(datetime('now'))"))
+
+  orders PortfolioOrder[]
+
+  @@map("portfolio_holding")
+}
+
+model PortfolioOrder {
+  id               Int    @id @default(autoincrement())
+  asset_class_code String
+  direction        String @default("buy")
+  amount           Float  @default(0)
+  status           String @default("executed")
+  created_at       String @default(dbgenerated("(datetime('now'))"))
+  updated_at       String @default(dbgenerated("(datetime('now'))"))
+
+  holding PortfolioHolding @relation(fields: [asset_class_code], references: [asset_class_code], onDelete: Restrict, onUpdate: NoAction)
+
+  @@map("portfolio_order")
+}
