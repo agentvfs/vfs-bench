@@ -274,11 +274,26 @@ for upstream's reasons:
   `reward.json`, which Harbor refuses (`VerifierOutputParseError`).
 - nutrition-log-meal's verifier needs `zoneinfo` data (below).
 
-Of the 102 tasks on a per-task image, 61 need a mock with no layout here
+Of the 102 tasks on a per-task image, 37 need a mock with no layout here
 (social, calendar, airline and others), and 7 a legacy startup script; both
-are refused at start. 36 tasks' solutions run `openclaw agent`, the image's
+are refused at start. 29 use no mock at all. 36 tasks' solutions run `openclaw agent`, the image's
 own model agent, so they have no scripted oracle. weather-city-travel-pick
 and weather-outdoor-window fetch from Python, which has no network here.
+
+21 of the 102 tasks' solutions log in with a cookie jar: `curl -c <file>`
+on the login request, then `-b <file>` on every later one, 6 of them with
+`-L`. Mirage's curl keeps the jar as curl does, in a file in the
+workspace. The 10 finance tasks among them have mocks with a layout here:
+- finance-anomaly-detect, finance-budget-alert, finance-expense-log,
+  finance-invoice-process, finance-monthly-close and
+  finance-portfolio-rebalancing pass.
+- finance-analysis-generate, finance-dashboard-repair,
+  finance-depreciation-audit and finance-tax-prepare are refused at start.
+  Their Dockerfiles also `COPY policies/ /workspace/policies/`, and only
+  `COPY . <dir>` is carried out.
+
+The other 11 need a mock with no layout here (calendar, social, workspace,
+expense, insurance or health), and 4 of them a legacy startup script too.
 
 ## Divergences and gaps
 
@@ -313,21 +328,11 @@ and weather-outdoor-window fetch from Python, which has no network here.
   and gets only its services; the environment logs a warning. The agents
   run on the host, so their model calls are unaffected. The capability
   declared is `disable_internet` alone, and no CPU or memory limits.
-- **Cookies.** Mirage's curl has no cookie engine. 20 of the 102 tasks'
-  solutions log in with one: `-c <file>` on the login request, then
-  `-b <file>` on every later one, 6 of them with `-L`. They need curl's
-  `-c/--cookie-jar <file>`, writing each response's `Set-Cookie` (each hop
-  of a redirect included) to the file in curl's Netscape cookie-file
-  format, through the workspace's files; and `-b/--cookie <file>`, sending
-  the jar's cookies that match the request's host, path and scheme and have
-  not expired, on each hop too. `-b name=value` is sent as is.
-- **Other curl gaps.** `-G/--get` (sending `-d` and `--data-urlencode` as
+- **Time.** An `exec` is one Mirage line, and `workspace.yaml` gives a
+  line 300 s (`@line` in `command_limits`). Past that it exits 124
+  (`line: timed out after 300s`), however long Harbor's `timeout_sec`.
+- **curl.** It lacks `-G/--get` (sending `-d` and `--data-urlencode` as
   the query) and the `-w` variable `%{redirect_url}`.
-- **Shell.** Under `set -o pipefail`, in `a | b | c || d` with `a` failing,
-  Mirage never runs `d`, and with `set -e` the line exits 1; bash runs `d`.
-  Two-stage pipelines are right. Upstream's `test.sh`
-  (`grep | tail | grep || echo 0`) hits it only when the verifier prints no
-  score, and then writes no reward.
 - **Python.** `python3` is Pyodide. It has no network, so the 15 verifiers
   that query a live service fail that step; weather-aqi-report's falls back
   to the seeded values, as upstream's code does. `zoneinfo` finds no time
