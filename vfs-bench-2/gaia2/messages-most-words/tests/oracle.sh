@@ -14,10 +14,10 @@ for id in $(jq -r 'select(.participant_ids | length == 2) | .conversation_id' /w
 done > /workspace/direct.jsonl
 
 # Words in each chat's first (oldest) 6 messages, for chats of 6 or more.
-# The chat with +979551234567 has the most, 283. Upstream's answer counts
-# per chat: summed over a contact's chats, Elian Toledano's two would lead.
-python3 - <<'PY'
-import json
+# Fatima Al-Khaja's chat has the most, 283. Upstream's answer counts per
+# chat: summed over a contact's chats, Elian Toledano's two would lead.
+top=$(python3 - <<'PY'
+import json, sys
 me = json.load(open('/workspace/me.json'))['phone']
 convs = {c['conversation_id']: c for c in map(json.loads, open('/workspace/conversations.jsonl'))}
 counts = []
@@ -28,10 +28,10 @@ for line in open('/workspace/direct.jsonl'):
         continue
     other = next(p for p in convs[read['metadata']['conversation_id']]['participant_ids'] if p != me)
     counts.append((sum(len(m['content'].split()) for m in messages[:6]), other))
-for words, other in sorted(counts, reverse=True)[:3]:
-    print(words, other)
+counts.sort(reverse=True)
+print(counts[:3], file=sys.stderr)
+print(counts[0][1])
 PY
-
-messages get-user-name-from-id --user-id +979551234567
-
-complete-task --answer 'Fatima Al-Khaja'
+)
+answer=$(messages get-user-name-from-id --user-id "$top" | jq -r .)
+complete-task --answer "$answer"

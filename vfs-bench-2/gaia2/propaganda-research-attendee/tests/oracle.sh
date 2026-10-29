@@ -1,7 +1,7 @@
 # The user's ids: their phone on Messages, a user id on Chats.
 contacts get-current-user-details | tee /workspace/me.json
 
-chats get-user-id --user-name 'Anastasiya Kuznetsova' > /workspace/me-chats.json
+chats get-user-id --user-name "$(jq -r '"\(.first_name) \(.last_name)"' /workspace/me.json)" > /workspace/me-chats.json
 
 # The conversations that mention "propaganda" on either app, in full.
 for id in $(messages search --query propaganda | jq -r '.[]'); do messages read-conversation --conversation-id $id --limit 1000 | jq -c '{app: "messages"} + .'; done > /workspace/found.jsonl
@@ -29,11 +29,14 @@ cat /workspace/names.txt
 # attends six, Aidan Ó Cuinn four, Saskia Krauss three.
 calendar search-events --query Research > /workspace/research.json
 
-python3 - <<'PY'
-import collections, json
+answer=$(python3 - <<'PY'
+import collections, json, sys
 names = set(open('/workspace/names.txt').read().split('\n')) - {''}
 events = [e for e in json.load(open('/workspace/research.json')) if 'Research' in e['title']]
-print(len(events), collections.Counter(a for e in events for a in e['attendees'] if a in names).most_common())
+count = collections.Counter(a for e in events for a in e['attendees'] if a in names)
+top = max(count.values())
+print(len(events), count.most_common(), file=sys.stderr)
+print(min(a for a, n in count.items() if n == top))
 PY
-
-complete-task --answer 'Kunto Wijayanto'
+)
+complete-task --answer "$answer"

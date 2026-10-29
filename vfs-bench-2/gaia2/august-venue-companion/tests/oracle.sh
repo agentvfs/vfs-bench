@@ -28,6 +28,6 @@ PY
 while read -r name; do
   email=$(contacts search-contacts --query "$name" | jq -r '.[0].email')
   emails search-emails --query "$email" --folder-name INBOX | jq -c --arg who "$name" --arg email "$email" '[.[] | select(.sender == $email)] | {who: $who, latest: (map(.timestamp) | max)}'
-done < /workspace/tied.txt | jq -s -c 'sort_by(.latest) | reverse'
-
-complete-task --answer 'Khalid Al-Mansoori'
+done < /workspace/tied.txt | jq -s -c 'sort_by(.latest) | reverse' | tee /workspace/latest.json
+answer=$(jq -r 'max_by(.latest) | .who' /workspace/latest.json)
+complete-task --answer "$answer"

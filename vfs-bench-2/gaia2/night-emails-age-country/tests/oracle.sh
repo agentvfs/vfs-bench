@@ -28,11 +28,18 @@ while read -r name; do
     id=$($app get-user-id --user-name "$name" | jq -r .)
     [ "$id" = null ] && continue
     for conv in $($app search --query "$id" | jq -r '.[]'); do
-      $app read-conversation --conversation-id $conv --limit 1000 | jq -c --arg id "$id" --arg who "$name ($app)" '.messages[] | select(.sender_id == $id) | {who: $who, timestamp}'
+      $app read-conversation --conversation-id $conv --limit 1000 | jq -c --arg id "$id" --arg name "$name" --arg app $app '.messages[] | select(.sender_id == $id) | {name: $name, app: $app, timestamp}'
     done
   done
-done < /workspace/same.txt | jq -s -c 'group_by(.who) | map(max_by(.timestamp)) | sort_by(.timestamp) | reverse'
+done < /workspace/same.txt | jq -s -c 'group_by(.name) | map(max_by(.timestamp))' | tee /workspace/latest.json
 
-contacts search-contacts --query 'Krittaya Wongcharoen'
-
-complete-task --answer Thailand
+# Krittaya Wongcharoen lives in Thailand.
+answer=$(python3 - <<'PY'
+import json, sys
+latest = max(json.load(open('/workspace/latest.json')), key=lambda m: m['timestamp'])
+contact = next(c for c in map(json.loads, open('/workspace/contacts.jsonl')) if f"{c['first_name']} {c['last_name']}" == latest['name'])
+print(latest, file=sys.stderr)
+print(contact['country'])
+PY
+)
+complete-task --answer "$answer"

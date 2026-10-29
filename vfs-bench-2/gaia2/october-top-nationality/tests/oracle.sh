@@ -29,8 +29,8 @@ done > /workspace/chats-names.jsonl
 # Everyone the user wrote to, heard from or shared an active conversation
 # with this month, once each and only if a contact: Thai (23) leads
 # Belgian (20).
-python3 - <<'PY'
-import collections, json
+answer=$(python3 - <<'PY'
+import collections, json, sys
 since = 1727740800
 me = json.load(open('/workspace/me.json'))
 contacts = list(map(json.loads, open('/workspace/contacts.jsonl')))
@@ -50,7 +50,10 @@ for conv in map(json.loads, open('/workspace/october.jsonl')):
         if c:
             people.add(c['email'])
 people.discard(me['email'])
-print(len(people), collections.Counter(by['email'][p]['nationality'] for p in people).most_common(4))
+count = collections.Counter(by['email'][p]['nationality'] for p in people)
+top = max(count.values())
+print(len(people), count.most_common(4), file=sys.stderr)
+print(min(n for n, k in count.items() if k == top))
 PY
-
-complete-task --answer Thai
+)
+complete-task --answer "$answer"
