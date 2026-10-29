@@ -74,6 +74,7 @@ node harness/oracle.ts gaia2/chats-cultures-oldest [script]
 node harness/determinism.ts gaia2/chats-cultures-oldest
 
 pnpm typecheck
+pnpm test       # the harness's own checks, which need no dataset
 ```
 
 ### What a run does
