@@ -96,7 +96,7 @@ requests retry transient errors.
 Every workspace is set up the same way:
 - `python3` is Pyodide, with the packages `setup/python.py` bundles, and
   gets 2 GB.
-- Each shell call gets 300 s in all (`@line` in `command_limits`). Mirage
+- Each shell call gets 600 s in all (`@line` in `command_limits`). Mirage
   limits a line's time, not a command's.
 - The workspace is offline. Python has no network, and `curl` and `wget`
   are refused.
