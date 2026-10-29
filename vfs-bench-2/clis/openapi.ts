@@ -6,6 +6,8 @@
  * summary in kebab case (`Create invoice` is `create-invoice`), and its
  * path, query and JSON body parameters are its flags, typed as tools.ts
  * types a tool's. A call sends the request and prints the response body.
+ * A required header whose schema allows one value, such as a version
+ * header, is sent with that value and is not a flag.
  * An operation whose spec describes no body but whose method takes one
  * gets `--body JSON`; one whose body is only multipart is left out.
  *
@@ -54,6 +56,16 @@ interface Route {
   /** JSON body properties; `null` when the whole body is `--body`. */
   bodyParams: string[] | null
   hasBody: boolean
+  /** Required headers whose one allowed value is sent with every call. */
+  headers: Record<string, string>
+}
+
+/** The one value a schema allows, for an enum of one or a `const`. */
+function onlyValue(schema: JsonSchema): string | undefined {
+  const fixed = schema as JsonSchema & { const?: unknown }
+  if (fixed.const !== undefined) return String(fixed.const)
+  if (fixed.enum?.length === 1) return String(fixed.enum[0])
+  return undefined
 }
 
 /** A schema with every local `$ref` replaced by what it points to, and `allOf` merged. */
@@ -142,6 +154,11 @@ function toolFor(method: string, path: string, op: Operation, spec: OpenApi): [T
     joined: new Set(params.filter((p) => p.in === 'query' && p.explode === false).map((p) => p.name)),
     bodyParams,
     hasBody,
+    headers: {},
+  }
+  for (const p of params.filter((p) => p.in === 'header' && p.required === true)) {
+    const value = onlyValue(deref(p.schema, spec))
+    if (value !== undefined) route.headers[p.name] = value
   }
   return [{ name, description, parameters: { type: 'object', properties, required }, call: `${route.method} ${path}` }, route]
 }
@@ -198,7 +215,7 @@ function transport(routes: Map<string, Route>, session: Session): Send {
       if (Array.isArray(value) && route.joined.has(name)) query.append(name, value.join(','))
       else for (const v of Array.isArray(value) ? value : [value]) query.append(name, String(v))
     }
-    const headers: Record<string, string> = session.headers()
+    const headers: Record<string, string> = { ...route.headers, ...session.headers() }
     let body: string | undefined
     if (route.hasBody) {
       const payload =
