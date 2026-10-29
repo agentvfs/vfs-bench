@@ -1,0 +1,30 @@
+# Agent-Diff box_157 on the box_default template. The `box` CLI is
+# installed by the harness (agentdiff/index.ts); Box's files are mounted at
+# /box, against the run's own environment.
+mode: exec
+runtimes:
+  - name: pyodide
+    config:
+      lock_file_url: ${PYTHON_PACKAGES}/pyodide-lock.json
+      package_base_url: ${PYTHON_PACKAGES}/
+      max_memory: 2G
+  - workspace
+command_limits:
+  python3: {timeout_seconds: 300}
+# Offline: python3 has no network and the shell's fetchers are refused, so
+# services are reached through their CLIs only.
+profiles:
+  default:
+    commands:
+      deny:
+        - {commands: [curl, wget], reason: the workspace is offline}
+mounts:
+  /workspace:
+    vfs: ram
+    mode: write
+  /box:
+    vfs: box
+    mode: write
+    config:
+      endpoint: ${BOX_ENDPOINT}
+      accessToken: agent-diff
