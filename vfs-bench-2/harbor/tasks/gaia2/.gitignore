@@ -1,0 +1,18 @@
+# Made from Gaia2's data (CC BY 4.0, with the Llama terms), which is fetched
+# at setup and never committed: harbor/gaia2.py writes these from it.
+*/instruction.md
+*/environment/kit/
+*/environment/drive/
+*/solution/solve.sh
+# Our own solutions, which find the answer through the apps.
+!search-0002/solution/solve.sh
+!search-0012/solution/solve.sh
+!search-0034/solution/solve.sh
+!search-0038/solution/solve.sh
+!search-0231/solution/solve.sh
+!search-0284/solution/solve.sh
+!search-0295/solution/solve.sh
+!search-0396/solution/solve.sh
+!search-0419/solution/solve.sh
+!search-0430/solution/solve.sh
+!search-0435/solution/solve.sh

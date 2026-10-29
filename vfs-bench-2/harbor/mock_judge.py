@@ -1,14 +1,17 @@
 """A stand-in judge: an OpenAI-compatible chat completions server on localhost.
 
-    uv run --project harbor python -I harbor/mock_judge.py \
-        [--host 127.0.0.1] [--port 8765] [--score 1.0] [--log <file>]
+    uv run --project harbor python -I harbor/mock_judge.py
+        [--host 127.0.0.1] [--port 8765] [--score 1.0] [--content <text>]
+        [--log <file>]
 
 It answers every ``POST /v1/chat/completions`` with one message whose
 content is upstream's judge reply, ``{"score": <score>, "reasoning":
-"mock judge"}``, and logs each request's model and the start of its last
-message. It checks the judge's plumbing (the verifier's route to the API,
-the key, the model name, the reply's parsing) without a real model, so the
-scores it gives are not a judgment of anything. A verifier's VM reaches
+"mock judge"}`` (or ``--content`` as given: Gaia2's checkers read
+``[[Success]]``/``[[True]]`` or ``[[Failure]]``/``[[False]]``), and logs
+each request's model and the start of its last message. It checks the
+judge's plumbing (the verifier's route to the API, the key, the model name,
+the reply's parsing) without a real model, so the scores it gives are not a
+judgment of anything. A verifier's VM reaches
 it as ``OPENAI_BASE_URL=http://host.microsandbox.internal:<port>/v1``.
 """
 import argparse
@@ -22,6 +25,9 @@ def main() -> int:
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--score", type=float, default=1.0)
+    parser.add_argument(
+        "--content",
+        help="the reply's content as given, in place of the score's JSON")
     parser.add_argument("--log")
     args = parser.parse_args()
 
@@ -46,10 +52,11 @@ def main() -> int:
                                 "last": str(last)[:200]
                             },
                             ensure_ascii=False) + "\n")
-            content = json.dumps({
-                "score": args.score,
-                "reasoning": "mock judge"
-            })
+            content = (args.content if args.content is not None else
+                       json.dumps({
+                           "score": args.score,
+                           "reasoning": "mock judge"
+                       }))
             reply = json.dumps({
                 "id":
                 "mock",

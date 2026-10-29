@@ -24,7 +24,7 @@ SCENARIOS = ("meta-agents-research-environments/gaia2",
              "78ea3bdbdeec2bdcd6afa5420915d8a22f23ed99")
 FILESYSTEM = ("meta-agents-research-environments/gaia2_filesystem",
               "132e26376f5e963bb59f64bcccdd02188cb08dee")
-SPLITS = ("search", "execution")
+SPLITS = ("search", "execution", "ambiguity")
 TEMPLATE = ("https://raw.githubusercontent.com/facebookresearch/"
             "meta-agents-research-environments/"
             "a9fd2edccb4bc7e22fbf45c8482a5fef30a2a5a4/"
