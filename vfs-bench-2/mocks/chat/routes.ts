@@ -25,6 +25,7 @@ import {
   mimeOf,
   positiveId,
   previews,
+  rowId,
   stickerJson,
 } from './wire.ts'
 
@@ -311,6 +312,7 @@ function sendBody(body: unknown): { body?: string; message_kind: 'chat' | 'stick
     // z.coerce.number().int().positive()
     stickerId = Number(raw.sticker_id)
     if (!Number.isInteger(stickerId) || stickerId <= 0) return undefined
+    stickerId = rowId(stickerId)
   }
   return {
     ...(raw.body === undefined ? {} : { body: raw.body as string }),

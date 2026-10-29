@@ -72,15 +72,29 @@ export function redirect(location: string): Reply {
   return { status: 302, headers: { Location: location } }
 }
 
+/** The largest id Prisma binds to an `Int`. */
+const INT_MAX = 2 ** 31 - 1
+
+/**
+ * The id to look a row up by. Upstream's SQLite matches an id no row can
+ * have (`1.5`, `Infinity`, past 2^31) to nothing, so its handler answers
+ * as for a missing row; Prisma refuses to bind one to an `Int`. Such an id
+ * is asked for as -1, which no row has.
+ */
+export function rowId(value: number): number {
+  return Number.isInteger(value) && value <= INT_MAX ? value : -1
+}
+
 /**
  * A path or query parameter as upstream's zod schema reads it
  * (`z.coerce.number().positive()`), or the 400 its validation hook answers.
+ * An id no row can have comes back as `rowId`'s -1.
  */
 export function positiveId(name: string, raw: string | undefined): number | Reply {
   const value = Number(raw ?? '')
   if (Number.isNaN(value)) return failure(400, `${name}: Expected number, received nan`)
   if (!(value > 0)) return failure(400, `${name}: Number must be greater than 0`)
-  return value
+  return rowId(value)
 }
 
 /** `z.enum(CATEGORIES).optional()` on the query, or its 400. */

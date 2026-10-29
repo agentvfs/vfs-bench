@@ -21,8 +21,10 @@ state/
 # Run transcripts, kept local.
 dumps/
 fakes/*/generated/
-# The kit fakes' Prisma clients, generated on first start (harbor/fakes.ts),
-# and the link to Mirage's integ packages Prisma resolves them through.
-mocks/*/generated/
-mocks/*/generated.*/
+# The kit fakes' Prisma clients, generated on first start (harbor/fakes.ts):
+# one per schema, the link to the current one, a launcher's staging, and the
+# link to Mirage's integ packages Prisma resolves them through.
+mocks/*/generated
+mocks/*/generated-*/
+mocks/*/generated.*
 mocks/node_modules

@@ -54,11 +54,14 @@ uv run --project harbor python -I harbor/export.py [--check]
 Each trial's environment is under `<trial dir>/mirage/`: the generated
 `workspace.yaml` and `plan.json`, and the logs of the mocks, the launcher
 and the daemon. With `--delete` (the default) its directories go and those
-files stay.
+files stay. The shared fakes log into the job's directory, as
+`fake-<service>.log` and `fake-<service>.launcher.log`.
 
 The kit fakes' Prisma clients are generated the first time each fake
 starts, through `mocks/node_modules`, a gitignored link to Mirage's integ
-packages. After that, `pnpm exec tsc -p mocks` type-checks the fakes.
+packages. Each schema gets a client of its own, `mocks/<service>/generated-<hash>/`,
+and `generated` links to the current one, so jobs started together never
+remove a client another one is loading. After that, `pnpm exec tsc -p mocks` type-checks the fakes.
 
 ## Files
 

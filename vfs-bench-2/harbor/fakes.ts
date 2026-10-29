@@ -2,7 +2,7 @@
  * Start one kit fake that every trial of a Harbor job shares, for
  * vfsbench_harbor's MirageEnvironment.
  *
- *     node harbor/fakes.ts --service chat --root <dir> --fixture <name>
+ *     node harbor/fakes.ts --service chat --root <dir> --fixture <name> --log <file>
  *
  * A service is this repo's fake under `mocks/<service>/` (chat, weather)
  * or, failing that, Mirage's own integ fake (gws). It starts with
@@ -11,10 +11,12 @@
  * is a run of its own (`POST /reset {"run": ...}`), its SQLite file under
  * the fake's state directory. Once the fake listens this prints
  * `FAKE={"url": ..., "state": ...}`, and it stops the fake on SIGTERM or
- * when its stdin closes (its parent is gone).
+ * when its stdin closes (its parent is gone), writing the fake's output to
+ * `--log`.
  */
 import { execFileSync } from 'node:child_process'
-import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, symlinkSync, writeFileSync } from 'node:fs'
+import { createHash } from 'node:crypto'
+import { existsSync, lstatSync, mkdirSync, readFileSync, readlinkSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { join, relative, resolve } from 'node:path'
 import { parseArgs } from 'node:util'
 
@@ -26,9 +28,15 @@ import { Run } from '../harness/runs.ts'
 export const MOCKS = join(ROOT, 'mocks')
 
 /**
- * Generate a fake's Prisma client if it is missing or older than its
- * schema. It is generated beside, then moved into place, so a second
- * launcher never loads a half-written one.
+ * Generate a fake's Prisma client if its schema has none yet, and point
+ * `generated` at it.
+ *
+ * Each schema's client is a directory of its own, `generated-<hash>`, and
+ * `generated` is a link to it, so launchers of jobs started together never
+ * delete or overwrite a client another one loads. Each generates beside,
+ * then renames into place: the first rename wins and the others drop their
+ * copy. The link is swapped by a rename too. A client an older schema left
+ * stays, since a running fake may still be loading it.
  *
  * Prisma resolves @prisma/client from the client's directory, so
  * `mocks/node_modules` links Mirage's integ packages (it is gitignored), and
@@ -37,9 +45,20 @@ export const MOCKS = join(ROOT, 'mocks')
 function ensureClient(service: string): void {
   const dir = join(MOCKS, service)
   const out = join(dir, 'generated')
-  const index = join(out, 'index.js')
   const schema = join(dir, `${service}.prisma`)
-  if (existsSync(index) && statSync(index).mtimeMs >= statSync(schema).mtimeMs) return
+  const text = readFileSync(schema, 'utf8')
+  const name = `generated-${createHash('sha256').update(text).digest('hex').slice(0, 12)}`
+  const client = join(dir, name)
+  if (!existsSync(join(client, 'index.js'))) generate(dir, text, client)
+  if (lstatSync(out, { throwIfNoEntry: false })?.isSymbolicLink() && readlinkSync(out) === name) return
+  const link = join(dir, `generated.${process.pid}.link`)
+  rmSync(link, { force: true })
+  symlinkSync(name, link)
+  renameSync(link, out)
+}
+
+/** Generate a schema's Prisma client into `client`, unless another launcher has. */
+function generate(dir: string, text: string, client: string): void {
   const modules = join(MOCKS, 'node_modules')
   try {
     symlinkSync(relative(MOCKS, join(INTEG, 'node_modules')), modules)
@@ -50,8 +69,7 @@ function ensureClient(service: string): void {
   const source = join(dir, `generated.${process.pid}.schema`)
   try {
     mkdirSync(source, { recursive: true })
-    const text = readFileSync(schema, 'utf8').replace(/output\s*=\s*"generated"/, `output = ${JSON.stringify(staged)}`)
-    writeFileSync(join(source, 'schema.prisma'), text)
+    writeFileSync(join(source, 'schema.prisma'), text.replace(/output\s*=\s*"generated"/, `output = ${JSON.stringify(staged)}`))
     execFileSync(process.execPath, [join(INTEG, 'node_modules', 'prisma', 'build', 'index.js'), 'generate', '--schema', join(source, 'schema.prisma')], {
       cwd: dir,
       env: {
@@ -63,8 +81,13 @@ function ensureClient(service: string): void {
       stdio: 'pipe',
       timeout: 120_000,
     })
-    rmSync(out, { recursive: true, force: true })
-    renameSync(staged, out)
+    try {
+      renameSync(staged, client)
+    } catch (error) {
+      // Another launcher renamed its copy of the same client first.
+      const code = (error as NodeJS.ErrnoException).code
+      if ((code !== 'ENOTEMPTY' && code !== 'EEXIST') || !existsSync(join(client, 'index.js'))) throw error
+    }
   } finally {
     rmSync(source, { recursive: true, force: true })
     rmSync(staged, { recursive: true, force: true })
@@ -74,10 +97,12 @@ function ensureClient(service: string): void {
 async function main(): Promise<void> {
   // Every run is in UTC, as harness/execute.ts runs it; the fake inherits it.
   process.env.TZ = 'UTC'
-  const { values } = parseArgs({ options: { service: { type: 'string' }, root: { type: 'string' }, fixture: { type: 'string' } } })
-  const { service, fixture } = values
-  if (service === undefined || values.root === undefined || fixture === undefined) {
-    throw new Error('usage: fakes.ts --service <name> --root <dir> --fixture <name>')
+  const { values } = parseArgs({
+    options: { service: { type: 'string' }, root: { type: 'string' }, fixture: { type: 'string' }, log: { type: 'string' } },
+  })
+  const { service, fixture, log } = values
+  if (service === undefined || values.root === undefined || fixture === undefined || log === undefined) {
+    throw new Error('usage: fakes.ts --service <name> --root <dir> --fixture <name> --log <file>')
   }
   const root = resolve(values.root)
   mkdirSync(join(root, 'fixtures', service), { recursive: true })
@@ -93,7 +118,7 @@ async function main(): Promise<void> {
       try {
         await run.stop()
       } finally {
-        if (fake !== undefined) writeFileSync(join(root, `${service}.log`), fake.log.join('\n'))
+        if (fake !== undefined) writeFileSync(log, fake.log.join('\n'))
       }
     })())
   for (const signal of ['SIGTERM', 'SIGINT'] as const) process.on(signal, () => void stop().finally(() => process.exit(0)))

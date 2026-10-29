@@ -91,22 +91,28 @@ class SharedFakes:
             os.replace(temp, target)
         return name
 
-    def fake(self, service: str, fixture: str, node: str,
-             env: dict[str, str]) -> Fake:
+    def fake(self, service: str, fixture: str, node: str, env: dict[str, str],
+             logs: Path) -> Fake:
         """The service's fake, started if it is not yet.
 
+        Its logs go to ``logs`` (the job's directory), not the pool's root,
+        so they outlive the pool: ``fake-<service>.launcher.log`` as it runs,
+        and ``fake-<service>.log``, the fake's own output, once it stops.
         Blocks while it starts, so the environment calls it in a thread.
         """
         with self._lock:
             live = self._fakes.get(service)
             if live is not None and live.process.poll() is None:
                 return live
-            log = (self.root / f"{service}.launcher.log").open("ab")
+            logs.mkdir(parents=True, exist_ok=True)
+            launcher = logs / f"fake-{service}.launcher.log"
+            log = launcher.open("ab")
             process = subprocess.Popen(
                 [
                     node,
                     str(LAUNCHER), "--service", service, "--root",
-                    str(self.root), "--fixture", fixture
+                    str(self.root), "--fixture", fixture, "--log",
+                    str(logs / f"fake-{service}.log")
                 ],
                 cwd=ROOT,
                 env=env,
@@ -123,7 +129,7 @@ class SharedFakes:
                     break
             else:
                 process.wait()
-                text = (self.root / f"{service}.launcher.log").read_text()
+                text = launcher.read_text()
                 raise RuntimeError(
                     f"the shared {service} fake exited ({process.returncode}) "
                     f"before it was ready:\n{text[-4000:]}")

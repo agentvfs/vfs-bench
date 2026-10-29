@@ -126,6 +126,10 @@ class MirageEnvironment(BaseEnvironment):
         self._workdir = "/"
         super().__init__(*args, **kwargs)
         self._run_dir = (self.trial_paths.trial_dir / "mirage").resolve()
+        # The shared fakes' logs go in the job's directory, as files: Harbor
+        # takes every directory there for a trial (and removes one with no
+        # result when it resumes the job).
+        self._fake_logs = self.trial_paths.trial_dir.parent.resolve()
 
     @staticmethod
     def type() -> str:
@@ -216,8 +220,9 @@ class MirageEnvironment(BaseEnvironment):
         for service, block in (spec.get("fakes") or {}).items():
             fixture = shared.register(service, task,
                                       self.environment_dir / block["fixture"])
-            fake = await asyncio.to_thread(shared.fake, service, fixture,
-                                           self._node, self._host_env())
+            fake = await asyncio.to_thread(shared.fake,
+                                           service, fixture, self._node,
+                                           self._host_env(), self._fake_logs)
             run = await shared.open(fake, name, fixture, block.get("epoch"))
             self._runs.append(run)
             runs[service] = {"url": run.url, "db": str(run.db)}

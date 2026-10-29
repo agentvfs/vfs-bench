@@ -24,8 +24,9 @@ every file but the Dockerfile is upstream's.
 
 ``--check`` writes nothing and exits 1 if any verbatim, derived or
 generated file differs from what upstream gives, if mirage.yaml's ``env``,
-``copy`` and ``run`` disagree with upstream's Dockerfile, or if a file is
-missing or unaccounted for.
+``copy``, ``run`` and ``workdir`` disagree with upstream's Dockerfile (and
+``TASK_NAME``, its base image's), or if a file is missing or unaccounted
+for.
 """
 import argparse
 import os
@@ -68,18 +69,35 @@ def derived_instruction(text: str, task: str) -> str:
     return text.replace(old, new)
 
 
+def env_pairs(args: str) -> list[tuple[str, str]]:
+    """``ENV A=1 B=2`` or ``ENV A 1``, unquoted, as liveclawbench.ts does."""
+
+    def unquote(value: str) -> str:
+        return re.sub(r"^'(.*)'$", r"\1", re.sub(r'^"(.*)"$', r"\1", value))
+
+    if not re.match(r"\S+=", args):
+        name, _, value = args.partition(" ")
+        return [(name, unquote(value.strip()))]
+    return [(m[1], unquote(m[2]))
+            for m in re.finditer(r"(\S+?)=(\"[^\"]*\"|'[^']*'|\S*)", args)]
+
+
 def dockerfile(task: str) -> dict:
-    """What upstream's Dockerfile sets: its RUN lines and COPY targets."""
+    """What upstream's Dockerfile sets: RUN, COPY targets, ENV and WORKDIR."""
     text = (UPSTREAM / task / "environment" / "Dockerfile").read_text()
     joined = re.sub(r"\\\n\s*", " ", text)
-    runs, copies = [], []
+    runs, copies, env, workdir = [], [], {}, None
     for line in joined.splitlines():
         line = line.strip()
         if line.startswith("RUN ") and not line[4:].lstrip().startswith("["):
             runs.append(re.sub(r"\s+", " ", line[4:].strip()))
         elif re.fullmatch(r"COPY \. \S+", line):
             copies.append(line.split()[2].rstrip("/"))
-    return {"run": runs, "copy": copies}
+        elif line.startswith("ENV "):
+            env.update(env_pairs(line[4:].strip()))
+        elif line.startswith("WORKDIR "):
+            workdir = line[8:].strip()
+    return {"run": runs, "copy": copies, "env": env, "workdir": workdir}
 
 
 def expected(task: str, mirage: dict) -> dict[str, bytes]:
@@ -124,8 +142,13 @@ def agrees(task: str, mirage: dict) -> list[str]:
     """Where mirage.yaml disagrees with what upstream's Dockerfile sets."""
     docker = dockerfile(task)
     problems = []
-    if (mirage.get("env") or {}).get("TASK_NAME") != task:
-        problems.append(f"env.TASK_NAME is not {task}")
+    # TASK_NAME is the base image's, as liveclawbench.ts sets it.
+    env = {"TASK_NAME": task, **docker["env"]}
+    if (mirage.get("env") or {}) != env:
+        problems.append(f"env is not the base image's and Dockerfile's {env}")
+    if mirage.get("workdir") != docker["workdir"]:
+        problems.append(
+            f"workdir is not the Dockerfile's WORKDIR {docker['workdir']}")
     if [re.sub(r"\s+", " ", r)
             for r in mirage.get("run") or []] != docker["run"]:
         problems.append(
