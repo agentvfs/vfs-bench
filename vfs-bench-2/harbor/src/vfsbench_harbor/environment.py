@@ -1,0 +1,450 @@
+"""A Harbor environment served from a Mirage workspace instead of a container.
+
+``harbor run --env vfsbench_harbor:MirageEnvironment`` builds nothing. For
+each trial, ``start()`` runs ``harbor/mocks.ts``, which starts the task's
+mocks and lays out its workspace, then starts a Mirage daemon of the
+trial's own and creates the workspace through the daemon's HTTP API.
+``exec`` is the daemon's ``/shell``. Every path Harbor uses is a disk mount,
+so uploads and downloads are copies into and out of the mounts' host
+directories.
+
+One daemon per trial keeps trials apart: each has its own network (its
+``localhost:<port>`` reaches only its own mocks), event loop and crashes.
+``--ek daemon_url=<url>`` points the environment at a shared daemon
+instead, which cannot route each trial to its own mocks until Mirage has a
+per-workspace network map (see the README).
+"""
+import asyncio
+import json
+import os
+import re
+import shlex
+import shutil
+import signal
+import socket
+import sqlite3
+import time
+from pathlib import Path, PurePosixPath
+
+import httpx
+from harbor.environments.base import BaseEnvironment, ExecResult
+from harbor.environments.capabilities import (EnvironmentCapabilities,
+                                              EnvironmentResourceCapabilities)
+from harbor.models.task.config import NetworkMode
+from harbor.models.trial.paths import EnvironmentPaths
+from harbor.utils.path_filter import filter_paths_by_patterns
+
+HARBOR = Path(__file__).resolve().parents[2]
+ROOT = HARBOR.parent
+MOCKS = HARBOR / "mocks.ts"
+PRELOAD = HARBOR / "preload.ts"
+DAEMON = ROOT / "submodule/mirage/typescript/packages/server/src/bin/daemon.ts"
+
+# The task image's base, which runs LiveClawBench's mocks.
+BASE = re.compile(r"FROM\s+liveclawbench-[a-z0-9-]+-base(:\S+)?",
+                  re.IGNORECASE)
+# The model's credentials stay with Harbor; neither the mocks nor the
+# workspace gets them.
+MODEL_ENV = re.compile(r".*_API_KEY|OPENAI_BASE_URL|OPENAI_API_BASE")
+NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
+SQLITE = b"SQLite format 3\x00"
+DONE = {"done", "failed", "canceled"}
+
+
+def _free_port() -> int:
+    with socket.socket() as s:
+        s.bind(("127.0.0.1", 0))
+        return s.getsockname()[1]
+
+
+def _snapshot(view: Path, live: Path) -> None:
+    """Copy a mock's state file to where the workspace reads it.
+
+    A SQLite file is copied whole with ``VACUUM INTO`` and set to the
+    rollback journal: the mocks keep theirs in WAL mode, open, and
+    Pyodide's SQLite cannot share a WAL with another process.
+    """
+    if not live.exists():
+        view.unlink(missing_ok=True)
+        return
+    temp = view.with_name(f"{view.name}.tmp")
+    temp.unlink(missing_ok=True)
+    with live.open("rb") as f:
+        sqlite = f.read(len(SQLITE)) == SQLITE
+    if sqlite:
+        source = sqlite3.connect(f"file:{live}?mode=ro", uri=True)
+        try:
+            source.execute("VACUUM INTO ?", (str(temp), ))
+        finally:
+            source.close()
+        copy = sqlite3.connect(temp)
+        try:
+            copy.execute("PRAGMA journal_mode = DELETE")
+        finally:
+            copy.close()
+    else:
+        shutil.copyfile(live, temp)
+    os.replace(temp, view)
+
+
+class MirageEnvironment(BaseEnvironment):
+    """A trial's environment as a workspace on a Mirage daemon.
+
+    Args:
+        node: the Node binary (24.15 or later) that runs the mocks and the
+            daemon.
+        daemon_url: a running daemon to create the workspace on, in place of
+            starting one for the trial.
+    """
+
+    def __init__(self,
+                 *args,
+                 node: str = "node",
+                 daemon_url: str | None = None,
+                 **kwargs):
+        self._node = node
+        self._daemon_url = daemon_url
+        self._processes: list[asyncio.subprocess.Process] = []
+        self._client: httpx.AsyncClient | None = None
+        self._workspace_id = ""
+        self._mounts: dict[str, dict[str, str]] = {}
+        self._state: list[tuple[Path, Path]] = []
+        # One refresh at a time: overlapping ones would share each state
+        # file's temporary copy.
+        self._refreshing = asyncio.Lock()
+        self._workdir = "/"
+        super().__init__(*args, **kwargs)
+        self._run_dir = (self.trial_paths.trial_dir / "mirage").resolve()
+
+    @staticmethod
+    def type() -> str:
+        return "mirage"
+
+    @property
+    def capabilities(self) -> EnvironmentCapabilities:
+        # Always offline: a task asking for the internet gets only its mocks.
+        return EnvironmentCapabilities(disable_internet=True)
+
+    @classmethod
+    def resource_capabilities(cls) -> EnvironmentResourceCapabilities:
+        # No CPU or memory is reserved or capped for the task.
+        return EnvironmentResourceCapabilities()
+
+    def _validate_definition(self):
+        dockerfile = self.environment_dir / "Dockerfile"
+        if not dockerfile.is_file():
+            raise FileNotFoundError(
+                f"{dockerfile} not found: the mirage environment runs "
+                "LiveClawBench tasks, whose environment/Dockerfile is FROM "
+                "liveclawbench-<task>-base")
+        lines = [
+            line.strip() for line in dockerfile.read_text().splitlines()
+            if line.strip() and not line.strip().startswith("#")
+        ]
+        if not lines or BASE.fullmatch(lines[0]) is None:
+            first = lines[0] if lines else "(empty)"
+            raise ValueError(
+                f"{dockerfile} is not FROM liveclawbench-<task>-base, so the "
+                f"mirage environment cannot run it (first line: {first!r})")
+        if self.task_env_config.docker_image or (
+                self.environment_dir / "docker-compose.yaml").exists():
+            raise ValueError("the mirage environment runs a Dockerfile only, "
+                             "not an image or Compose")
+
+    def _host_env(self) -> dict[str, str]:
+        env = {
+            k: v
+            for k, v in os.environ.items() if not MODEL_ENV.fullmatch(k)
+        }
+        return {**env, "TZ": "UTC"}
+
+    async def _spawn(self,
+                     name: str,
+                     *argv: str,
+                     env: dict[str, str],
+                     ready_line: bool = False) -> asyncio.subprocess.Process:
+        """Start a process of the trial's, logging to ``<run>/<name>.log``.
+
+        Its stdin stays open: each exits when it closes, so none outlives
+        Harbor. ``ready_line`` keeps stdout for its ready line.
+        """
+        log = (self._run_dir / f"{name}.log").open("ab")
+        process = await asyncio.create_subprocess_exec(
+            *argv,
+            cwd=ROOT,
+            env=env,
+            stdin=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE if ready_line else log,
+            stderr=log,
+        )
+        log.close()
+        self._processes.append(process)
+        return process
+
+    async def _plan(self) -> dict:
+        """Start the mocks and read the plan ``mocks.ts`` writes."""
+        mocks = await self._spawn(
+            "mocks",
+            self._node,
+            str(MOCKS),
+            "--task",
+            str(self.environment_dir.parent.resolve()),
+            "--run",
+            str(self._run_dir),
+            env=self._host_env(),
+            ready_line=True,
+        )
+        assert mocks.stdout is not None
+        while True:
+            line = (await mocks.stdout.readline()).decode()
+            if line == "":
+                await mocks.wait()
+                log = (self._run_dir / "mocks.log").read_text()
+                raise RuntimeError(f"mocks.ts exited ({mocks.returncode}) "
+                                   f"before it was ready:\n{log[-4000:]}")
+            if line.startswith("PLAN="):
+                return json.loads(
+                    Path(line.removeprefix("PLAN=").strip()).read_text())
+
+    async def _start_daemon(self, routes: dict[str, str]) -> str:
+        """Start the trial's own daemon, routing its network; wait for it."""
+        port = _free_port()
+        daemon = await self._spawn(
+            "daemon",
+            self._node,
+            "--experimental-transform-types",
+            "--no-warnings",
+            "--import",
+            str(PRELOAD),
+            str(DAEMON),
+            env={
+                **self._host_env(),
+                "MIRAGE_HOME":
+                str(self._run_dir / "mirage-home"),
+                "MIRAGE_DAEMON_PORT":
+                str(port),
+                "VFSBENCH_ROUTES":
+                json.dumps(routes),
+            },
+        )
+        url = f"http://127.0.0.1:{port}"
+        async with httpx.AsyncClient() as client:
+            for _ in range(600):
+                if daemon.returncode is not None:
+                    log = (self._run_dir / "daemon.log").read_text()
+                    raise RuntimeError(
+                        f"the Mirage daemon exited ({daemon.returncode}):\n"
+                        f"{log[-4000:]}")
+                try:
+                    if (await
+                            client.get(f"{url}/v1/health")).status_code == 200:
+                        return url
+                except httpx.TransportError:
+                    pass
+                await asyncio.sleep(0.1)
+        raise RuntimeError(f"the Mirage daemon did not answer on {url}")
+
+    async def start(self, force_build: bool) -> None:
+        if self._run_dir.exists():
+            shutil.rmtree(self._run_dir)
+        self._run_dir.mkdir(parents=True)
+        if self.network_policy.network_mode == NetworkMode.PUBLIC:
+            self.logger.warning(
+                "%s asks for the internet; the mirage workspace is offline "
+                "and reaches only its mocks",
+                self.environment_name,
+            )
+        plan = await self._plan()
+        self._mounts = plan["mounts"]
+        # Where Harbor's agents and verifier write, which Docker mounts.
+        paths = EnvironmentPaths.for_os(self.os)
+        for path in (paths.agent_dir, paths.verifier_dir, paths.artifacts_dir):
+            self._host(str(path), write=True).mkdir(parents=True,
+                                                    exist_ok=True)
+        self._state = [(Path(view), Path(live))
+                       for view, live in plan["state"]]
+        self._workdir = self.task_env_config.workdir or plan["workdir"]
+        routes = {} if self._network_disabled else plan["routes"]
+        url = self._daemon_url or await self._start_daemon(routes)
+        self._client = httpx.AsyncClient(base_url=url,
+                                         timeout=httpx.Timeout(60, read=None))
+        self._workspace_id = re.sub(r"[^A-Za-z0-9_-]", "-", self.session_id)
+        reply = await self._client.post("/v1/workspaces",
+                                        json={
+                                            "id": self._workspace_id,
+                                            "config": plan["config"]
+                                        })
+        if reply.status_code >= 300:
+            raise RuntimeError("creating the workspace failed "
+                               f"({reply.status_code}): {reply.text}")
+        # The Dockerfile's RUN lines, as its build would run them.
+        for step in plan["run"]:
+            done = await self.exec(step["line"], cwd=step["cwd"])
+            if done.return_code != 0:
+                raise RuntimeError(
+                    f"the Dockerfile's RUN {step['line']!r} exited "
+                    f"{done.return_code} in the workspace:\n"
+                    f"{done.stderr or done.stdout}")
+
+    async def stop(self, delete: bool):
+        try:
+            if self._client is not None:
+                try:
+                    await self._client.post(
+                        f"/v1/workspaces/{self._workspace_id}/close")
+                    if self._daemon_url is None:
+                        await self._client.post("/v1/shutdown")
+                except httpx.TransportError:
+                    pass
+                await self._client.aclose()
+                self._client = None
+        finally:
+            # The daemon, then the mocks: each stops on SIGTERM.
+            for process in reversed(self._processes):
+                if process.returncode is None:
+                    process.send_signal(signal.SIGTERM)
+                    try:
+                        await asyncio.wait_for(process.wait(), 15)
+                    except TimeoutError:
+                        process.kill()
+            self._processes = []
+        if delete:
+            # The logs and the plan stay; the workspace's files go.
+            for child in self._run_dir.iterdir():
+                if child.is_dir():
+                    shutil.rmtree(child)
+
+    def _host(self, path: str, *, write: bool = False) -> Path:
+        """The host file behind a workspace path, through its mount."""
+        target = PurePosixPath(os.path.normpath(PurePosixPath("/", path)))
+        prefixes = [p for p in self._mounts if target.is_relative_to(p)]
+        if not prefixes:
+            mounts = ", ".join(self._mounts)
+            raise FileNotFoundError(
+                f"{path} is outside the workspace's mounts ({mounts})")
+        prefix = max(prefixes, key=len)
+        if write and self._mounts[prefix]["mode"] == "read":
+            raise PermissionError(f"{path} is on a read-only mount ({prefix})")
+        return Path(self._mounts[prefix]["root"], target.relative_to(prefix))
+
+    async def exec(
+        self,
+        command: str,
+        cwd: str | None = None,
+        env: dict[str, str] | None = None,
+        timeout_sec: int | None = None,
+        user: str | int | None = None,
+    ) -> ExecResult:
+        # The workspace has no users, so `user` changes nothing. The shell
+        # API takes no environment, so it is exported ahead of the line; a
+        # line with a working directory runs in a session of its own, so
+        # neither outlives it, as in `docker exec`.
+        assert self._client is not None, "the environment is not started"
+        exports = "".join(
+            f"export {name}={shlex.quote(value)}\n"
+            for name, value in (self._merge_env(env) or {}).items()
+            if NAME.fullmatch(name))
+        async with self._refreshing:
+            await asyncio.to_thread(self._refresh_state)
+        reply = await self._client.post(
+            f"/v1/workspaces/{self._workspace_id}/shell",
+            params={"background": "true"},
+            json={
+                "command": exports + command,
+                "cwd": cwd or self._workdir
+            },
+        )
+        reply.raise_for_status()
+        job = reply.json()["job_id"]
+        try:
+            detail = await self._wait(job, timeout_sec)
+        except asyncio.CancelledError:
+            # A canceled exec (asyncio.wait_for, a trial's timeout) leaves
+            # nothing running behind it to overlap what comes next.
+            await asyncio.shield(self._client.delete(f"/v1/jobs/{job}"))
+            raise
+        if detail["status"] != "done":
+            raise RuntimeError(f"the workspace's shell {detail['status']}: "
+                               f"{detail.get('error')}")
+        result = detail["result"]
+        return ExecResult(stdout=result["stdout"],
+                          stderr=result["stderr"],
+                          return_code=result["exit_code"])
+
+    async def _wait(self, job: str, timeout_sec: int | None) -> dict:
+        """The shell job's detail once it ends; past ``timeout_sec`` the job
+        is canceled and this raises."""
+        assert self._client is not None
+        started = time.monotonic()
+        while True:
+            left = None if timeout_sec is None else timeout_sec - (
+                time.monotonic() - started)
+            waited = await self._client.post(
+                f"/v1/jobs/{job}/wait",
+                json={} if left is None else {"timeout_s": max(left, 0)},
+            )
+            waited.raise_for_status()
+            detail = waited.json()
+            if detail["status"] in DONE:
+                return detail
+            if left is not None and time.monotonic() - started >= timeout_sec:
+                await self._client.delete(f"/v1/jobs/{job}")
+                raise RuntimeError(
+                    f"Command timed out after {timeout_sec} seconds")
+
+    def _refresh_state(self) -> None:
+        """Bring each mock's state file in the workspace up to date."""
+        for view, live in self._state:
+            _snapshot(view, live)
+
+    async def upload_file(self, source_path: Path | str, target_path: str):
+        target = self._host(target_path, write=True)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source_path, target)
+
+    async def upload_dir(self, source_dir: Path | str, target_dir: str):
+        shutil.copytree(source_dir,
+                        self._host(target_dir, write=True),
+                        dirs_exist_ok=True)
+
+    async def download_file(self, source_path: str, target_path: Path | str):
+        Path(target_path).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(self._host(source_path), target_path)
+
+    async def download_dir(self, source_dir: str, target_dir: Path | str):
+        shutil.copytree(self._host(source_dir), target_dir, dirs_exist_ok=True)
+
+    async def download_dir_with_exclusions(self, *, source_dir: str,
+                                           target_dir: Path | str,
+                                           exclude: list[str]) -> None:
+        # Harbor's own packs a tar in the environment; the files are on the
+        # host.
+        shutil.copytree(self._host(source_dir),
+                        target_dir,
+                        dirs_exist_ok=True,
+                        ignore=shutil.ignore_patterns(*exclude))
+
+    async def download_dir_filtered(
+        self,
+        *,
+        source_dir: str,
+        target_dir: Path | str,
+        include=None,
+        exclude=None,
+        protect=None,
+    ) -> None:
+        source = self._host(source_dir)
+        paths = [
+            p.relative_to(source).as_posix() for p in source.rglob("*")
+            if p.is_file()
+        ]
+        selected = filter_paths_by_patterns(paths,
+                                            include=include,
+                                            exclude=exclude)
+        selected += [
+            p for p in paths if p in (protect or ()) and p not in selected
+        ]
+        for name in selected:
+            destination = Path(target_dir, name)
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source / name, destination)

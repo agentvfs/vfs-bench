@@ -1,0 +1,14 @@
+# LiveClawBench tasks that run unchanged on the mirage environment, from
+# upstream's own directories: the oracle reaches 1.0 and nop does not. From
+# vfs-bench-2/:
+#   uv run --project harbor harbor run -c harbor/liveclawbench.yaml -a oracle -o state/harbor/jobs
+environment:
+  import_path: vfsbench_harbor:MirageEnvironment
+tasks:
+  - path: state/liveclawbench/src/tasks/chat-sticker-engagement
+  - path: state/liveclawbench/src/tasks/sticker-store-acquire
+  - path: state/liveclawbench/src/tasks/weather-aqi-report
+  - path: state/liveclawbench/src/tasks/newsletter-digest-forward
+  - path: state/liveclawbench/src/tasks/procurement-quote-compare-reply
+  - path: state/liveclawbench/src/tasks/stale-client-escalation
+  - path: state/liveclawbench/src/tasks/vendor-requirement-followup

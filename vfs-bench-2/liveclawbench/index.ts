@@ -25,8 +25,8 @@ import type { Run } from '../harness/runs.ts'
 import { type Task, graded } from '../harness/task.ts'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
-const SRC = join(STATE, 'liveclawbench', 'src')
-const PLATFORM = join(SRC, 'mock-platform')
+export const SRC = join(STATE, 'liveclawbench', 'src')
+export const PLATFORM = join(SRC, 'mock-platform')
 
 /**
  * Where each mock keeps its data, as upstream's task images set it
@@ -35,7 +35,7 @@ const PLATFORM = join(SRC, 'mock-platform')
  * a SQLite or a JSON file each, keyed by the path upstream's verifiers read
  * them at.
  */
-const DATA: Record<string, (dir: string) => { env: Record<string, string>; files: Record<string, string> }> = {
+export const DATA: Record<string, (dir: string) => { env: Record<string, string>; files: Record<string, string> }> = {
   chat: (dir) => ({
     env: {
       CHAT_DB_PATH: join(dir, 'chat.sqlite'),
@@ -64,6 +64,12 @@ const DATA: Record<string, (dir: string) => { env: Record<string, string>; files
       ['orders', 'cart', 'user'].map((name) => [`/tmp/mosi_shop_${name}.json`, join(dir, `mosi_shop_${name}.json`)]),
     ),
   }),
+  // The image starts the weather mock with no environment, so it keeps its
+  // database at its default, /tmp/weather.db.
+  weather: (dir) => ({
+    env: { WEATHER_DB_PATH: join(dir, 'weather.db') },
+    files: { '/tmp/weather.db': join(dir, 'weather.db') },
+  }),
 }
 
 /** What the CLI for each mock says it is. */
@@ -75,7 +81,7 @@ const ABOUT: Record<string, string> = {
   shop: 'The Mosi Shop: products, your cart, checkout, orders and profile.',
 }
 
-interface Spec {
+export interface Spec {
   task: string
   mocks: string[]
   /** Each app URL in the instruction, and the CLI it becomes. */
@@ -115,7 +121,7 @@ function withoutRandom(tables: Tables): Tables {
 }
 
 /** A mock's fake: `FINANCE`, `DOC_SEARCH`. */
-const fakeName = (mock: string) => mock.toUpperCase().replace(/-/g, '_')
+export const fakeName = (mock: string) => mock.toUpperCase().replace(/-/g, '_')
 
 function data(run: Run, mock: string) {
   const dir = run.path('mock-data', mock)
@@ -153,7 +159,8 @@ async function state(files: Record<string, string>): Promise<Record<string, unkn
   return out
 }
 
-function fake(run: Run, spec: Spec, mock: string): FakeSpec {
+/** A mock's fake, run as upstream's task image runs it. */
+export function fake(run: Run, spec: Spec, mock: string): FakeSpec {
   const extra = run.path('mock-data', 'extra-seed')
   mkdirSync(extra, { recursive: true })
   return {
