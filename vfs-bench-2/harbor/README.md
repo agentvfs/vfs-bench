@@ -59,8 +59,8 @@ files stay. The shared fakes log into the job's directory, as
 
 The kit fakes' Prisma clients are generated the first time each fake
 starts, through `mocks/node_modules`, a gitignored link to Mirage's integ
-packages. Each schema gets a client of its own, `mocks/<service>/generated-<hash>/`,
-and `generated` links to the current one, so jobs started together never
+packages. Each schema gets a client of its own, `mocks/<service>/client-<hash>/`,
+and `client` links to the current one, so jobs started together never
 remove a client another one is loading. After that, `pnpm exec tsc -p mocks` type-checks the fakes.
 
 ## Files

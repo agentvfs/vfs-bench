@@ -29,16 +29,15 @@ export const MOCKS = join(ROOT, 'mocks')
 
 /**
  * Generate a fake's Prisma client if its schema has none yet, and point
- * `generated` at it.
+ * `client` at it.
  *
- * Each schema's client is a directory of its own, `generated-<hash>`, and
- * `generated` is a link to it, so launchers of jobs started together never
+ * Each schema's client is a directory of its own, `client-<hash>`, and
+ * `client` is a link to it, so launchers of jobs started together never
  * delete or overwrite a client another one loads. Each generates beside,
  * then renames into place: the first rename wins and the others drop their
- * copy. The link is swapped by a rename too. A client an older schema left
- * stays, since a running fake may still be loading it; so does a client an
- * earlier layout generated in place at `generated`, which is renamed aside
- * to `generated-legacy-<pid>-<n>` for the link to take its name.
+ * copy. The link is swapped by a rename too, which only ever replaces a
+ * link. A client an older schema left stays, since a running fake may still
+ * be loading it.
  *
  * Prisma resolves @prisma/client from the client's directory, so
  * `mocks/node_modules` links Mirage's integ packages (it is gitignored), and
@@ -46,33 +45,17 @@ export const MOCKS = join(ROOT, 'mocks')
  */
 function ensureClient(service: string): void {
   const dir = join(MOCKS, service)
-  const out = join(dir, 'generated')
+  const out = join(dir, 'client')
   const schema = join(dir, `${service}.prisma`)
   const text = readFileSync(schema, 'utf8')
-  const name = `generated-${createHash('sha256').update(text).digest('hex').slice(0, 12)}`
+  const name = `client-${createHash('sha256').update(text).digest('hex').slice(0, 12)}`
   const client = join(dir, name)
   if (!existsSync(join(client, 'index.js'))) generate(dir, text, client)
   if (lstatSync(out, { throwIfNoEntry: false })?.isSymbolicLink() && readlinkSync(out) === name) return
-  const link = join(dir, `generated.${process.pid}.link`)
+  const link = join(dir, `client.${process.pid}.link`)
   rmSync(link, { force: true })
   symlinkSync(name, link)
-  for (let attempt = 0; ; attempt++) {
-    try {
-      renameSync(link, out)
-      return
-    } catch (error) {
-      // A link cannot replace a directory; anything else, or a directory
-      // that keeps coming back, is an error.
-      if ((error as NodeJS.ErrnoException).code !== 'EISDIR' || attempt === 3) throw error
-    }
-    // Another launcher may move it first, or have put its link there: a
-    // link moved aside is harmless, since this one replaces it.
-    try {
-      renameSync(out, join(dir, `generated-legacy-${process.pid}-${attempt}`))
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
-    }
-  }
+  renameSync(link, out)
 }
 
 /** Generate a schema's Prisma client into `client`, unless another launcher has. */
@@ -83,11 +66,11 @@ function generate(dir: string, text: string, client: string): void {
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error
   }
-  const staged = join(dir, `generated.${process.pid}`)
-  const source = join(dir, `generated.${process.pid}.schema`)
+  const staged = join(dir, `client.${process.pid}`)
+  const source = join(dir, `client.${process.pid}.schema`)
   try {
     mkdirSync(source, { recursive: true })
-    writeFileSync(join(source, 'schema.prisma'), text.replace(/output\s*=\s*"generated"/, `output = ${JSON.stringify(staged)}`))
+    writeFileSync(join(source, 'schema.prisma'), text.replace(/output\s*=\s*"client"/, `output = ${JSON.stringify(staged)}`))
     execFileSync(process.execPath, [join(INTEG, 'node_modules', 'prisma', 'build', 'index.js'), 'generate', '--schema', join(source, 'schema.prisma')], {
       cwd: dir,
       env: {

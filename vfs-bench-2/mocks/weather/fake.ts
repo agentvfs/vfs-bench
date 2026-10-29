@@ -7,7 +7,7 @@
 import type { Dmmf, Fake } from '../../submodule/mirage/integ/server/kit/typescript/index.ts'
 import { config } from './config.ts'
 import type { C } from './config.ts'
-import { Prisma, PrismaClient } from './generated/index.js'
+import { Prisma, PrismaClient } from './client/index.js'
 import { weatherRoutes } from './routes.ts'
 
 const dmmf = Prisma.dmmf as unknown as Dmmf

@@ -10,7 +10,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { parseConfig } from '../../submodule/mirage/integ/server/kit/typescript/index.ts'
-import { PrismaClient } from './generated/index.js'
+import { PrismaClient } from './client/index.js'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 

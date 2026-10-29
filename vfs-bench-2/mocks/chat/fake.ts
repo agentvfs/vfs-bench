@@ -10,7 +10,7 @@ import { route } from '../../submodule/mirage/integ/server/kit/typescript/index.
 import type { Dmmf, Fake, KitRoute } from '../../submodule/mirage/integ/server/kit/typescript/index.ts'
 import { ChatClient, config } from './config.ts'
 import type { C } from './config.ts'
-import { Prisma } from './generated/index.js'
+import { Prisma } from './client/index.js'
 import { pages } from './pages.ts'
 import { apiRoutes, staticRoutes } from './routes.ts'
 import { notFound } from './wire.ts'
