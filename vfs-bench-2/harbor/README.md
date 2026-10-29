@@ -43,8 +43,14 @@ DENO_NO_PACKAGE_JSON=1 OPENAI_API_KEY=... OPENAI_BASE_URL=... OPENAI_API_BASE=..
   uv run --project harbor --extra dspy harbor run -c harbor/liveclawbench.yaml \
   -a dspy-rlm -m openai/gpt-5.6-luna -o state/harbor/jobs
 
-# Trials side by side cannot reach each other.
-uv run --project harbor python -I harbor/isolation.py [--out <dir>]
+# Each verifier in a microVM of its own, with real CPython (see below).
+uv run --project harbor harbor run -c harbor/liveclawbench-msb.yaml -a oracle -n 18 -o state/harbor/jobs
+uv run --project harbor harbor run -p state/liveclawbench/src/tasks/weather-aqi-report \
+  --env vfsbench_harbor:MirageEnvironment --verifier vfsbench_harbor:MicrosandboxVerifier \
+  -a oracle -o state/harbor/jobs
+
+# Trials side by side cannot reach each other; --msb checks their verifier VMs too.
+uv run --project harbor python -I harbor/isolation.py [--out <dir>] [--msb]
 
 # Rewrite the committed tasks from upstream, or check them against it.
 uv run --project harbor python -I harbor/export.py [--check]
@@ -74,6 +80,10 @@ remove a client another one is loading. After that, `pnpm exec tsc -p mocks` typ
   daemon's HTTP API.
 - `src/vfsbench_harbor/fakes.py`: the shared kit fakes, one per service
   for the Harbor process, and each trial's runs of them.
+- `src/vfsbench_harbor/microsandbox.py`: `MicrosandboxVerifier`, which runs
+  a trial's verifier in a microVM, and the host's proxies for it.
+- `src/vfsbench_harbor/guest.py`: run inside that VM. It relays the
+  upstream ports and runs `test.sh`.
 - `fakes.ts`: starts one shared kit fake, with `harness/fakes.ts`.
 - `mocks.ts`: one per trial. It lays out the run's directories and writes
   the plan: the workspace config, each mount's host directory, the state
@@ -100,6 +110,7 @@ remove a client another one is loading. After that, `pnpm exec tsc -p mocks` typ
   finance `session.ts`, its cookie login.
 - `workspace.yaml`: the workspace every trial starts from.
 - `liveclawbench.yaml`: the committed tasks, as a Harbor job config.
+- `liveclawbench-msb.yaml`: the same, each verifier in a microVM.
 - `isolation.py`: the isolation check.
 
 ## The committed tasks
@@ -312,7 +323,7 @@ own mocks.
 | Network | Its own routes: its upstream ports reach its own runs or mocks, and its mounts its own runs; every other path and port, another trial's or its own, and the internet are refused |
 | CPU | Its own Node process and event loop, Pyodide included; nothing is capped |
 | Crash | A daemon that dies ends only its trial. A shared fake that dies fails the trials using it |
-| Verifier | Shares the agent's workspace, as Harbor's shared verifier does on Docker |
+| Verifier | Shares the agent's workspace, as Harbor's shared verifier does on Docker; or, with `MicrosandboxVerifier`, a microVM of its own (below) |
 
 `isolation.py` starts seven trials at once from the committed tasks:
 chat-sticker-engagement twice (A and B, on one chat fake), weather-aqi-report
@@ -337,6 +348,192 @@ policy in the workspace config, an allowlist with host and port mapping
 (`localhost:1235` to `127.0.0.1:53211`) that curl's HTTP layer applies for
 the workspace it runs in.
 
+## The verifier in a microVM
+
+`harbor/liveclawbench-msb.yaml`, or `--verifier
+vfsbench_harbor:MicrosandboxVerifier` on any run, verifies each trial
+outside its workspace, in a microVM of its own. microsandbox's `msb`
+(0.5.10) boots it from `python:3.12-slim-bookworm`, so `test.sh` gets
+CPython 3.12 and what Pyodide lacks: a network to the trial's services,
+`subprocess` and time zones. The agent's side is unchanged. You need `msb`
+on `PATH` or at `~/.local/bin/msb` (`--verifier-kwarg msb=<path>` names
+another). The image is pulled once per job.
+
+It is Harbor's verifier with another place to run. Harbor calls it as it
+calls its own, with the trial's environment still up:
+
+1. It uploads `tests/` into the workspace's `/tests` and removes stale
+   rewards, as Harbor's does.
+2. The environment refreshes its copies of the services' state files.
+3. It starts a proxy for each upstream port the trial reaches on localhost,
+   each on a free port of the host's loopback.
+4. It creates a VM with each of the workspace's disk mounts copied in at
+   its own path, and a network that reaches those proxy ports alone.
+5. In the VM, `guest.py` listens on each upstream port, relays each
+   connection to its proxy, and runs Harbor's command for `test.sh` with
+   the container's `ENV` and the task's verifier environment. Then it
+   writes `/logs/verifier` out as a tar.
+6. It removes the VM, however the verification ended, puts that tar's
+   files in the trial's verifier directory, and parses the reward as
+   Harbor's own does.
+
+| Docker's shared verifier | Here |
+|---|---|
+| `test.sh` in the agent's container | `test.sh` in a VM booted for the trial; the agent's workspace is left as it is |
+| The container's files | Copies of each disk mount (`/workspace`, `/logs`, `/tests`, `/solution`, `/tmp`, the services' data at `/var/lib/mock-data/...` and `/opt/mock/data/...`), taken when verifying starts. Nothing on the host is mounted |
+| The mocks on `localhost:<port>` | `localhost:<upstream port>` in the VM, relayed to the trial's proxy on the host, which sends each request to the trial's route: its run of a shared fake (`<fake>/_run/<run>`) or its own mock |
+| The container's network | `--no-net`, and `--net-rule allow@host:tcp:<proxy port>` for each route; a task with no routes has no network |
+| `python3` | CPython 3.12, the image's, with its standard library and time zones |
+| `ENV`, `[verifier.env]` | The workspace's `env:`, then the task's verifier environment as Harbor resolves it |
+| The container's CPUs and memory | The task's `cpus`, `memory_mb` and `storage_mb`; `--verifier-kwarg memory_mb=512` and so on change them |
+| `/logs/verifier` | Read back as a tar, its regular files only |
+| The verifier's timeout | Harbor's; the VM is removed when it fires, on cancel, and on `SIGTERM` |
+
+The proxy is to the VM what `preload.ts` is to the workspace. It reads
+each request with h11 and sends it on with httpx, never as raw bytes, so a
+request reaches a fake only under the trial's run. It first reads the
+path as a URL parser reads an http URL's: a backslash is a slash, `%2e` a
+dot, and dot segments resolve. So `/../_run/b` and `/..\..\_run/b` stay in
+the trial's run. The fake's own parser would otherwise resolve them after
+the run's prefix, and they would reach another run. The kit's endpoints
+(`/reset`, `/_kit/...`) answer 404. Each trial's `mirage/verifier.log`
+has the VM's attempts, its timings and peak memory, and every request its
+proxies passed.
+
+### Why a verifier, not Harbor's separate mode
+
+Harbor 0.25 can run the verifier in an environment of its own
+(`environment_mode = "separate"`). It does not fit here:
+- It is set in `task.toml`, which `export.py --check` keeps byte for byte
+  as upstream's. A verifier is chosen by the job (`verifier.import_path`).
+- Harbor builds that environment from the job's environment config, so it
+  would be another Mirage workspace, with Pyodide again.
+- It stops the agent's environment before the verifier starts. That drops
+  the trial's runs on the shared fakes and its own mocks, so a verifier
+  that queries a service has nothing to query, and the state files would
+  have to be declared artifacts to reach it.
+
+A custom verifier runs where Harbor's shared verifier runs, with the
+environment still up, and no task changes.
+
+### Results
+
+At `-n 7` the committed tasks score as they do on Pyodide: the oracle 1.0
+on all seven, and nop 0.0, 0.0, 0.0, 0.2, 0.0, 0.2 and 0.4, in the order of
+the table above.
+
+Three upstream task directories, run with a curl solution of ours in place
+of upstream's Python one (kept out of the repo):
+
+| Task | Its verifier needs | Pyodide: oracle, nop | microVM: oracle, nop |
+|---|---|---|---|
+| nutrition-log-meal | `zoneinfo` | no reward, no reward | 1.0, 0.0 |
+| weather-outdoor-window | the weather mock, over HTTP | 1.0, 0.0, from its fallback | 1.0, 0.0, from the trial's mock |
+| weather-city-travel-pick | the weather mock, over HTTP | refused | refused |
+
+- nutrition-log-meal reads today's date in `ZoneInfo(TZ)`. Pyodide has no
+  time zones, so its fallback to UTC raises too (`ZoneInfoNotFoundError`),
+  and `test.sh` writes no reward. Our solution logs lunch through the
+  mint-diet mock's JSON API (`POST /api/log/<date>/entries`), since
+  upstream's posts to a form route that answers GET only.
+- weather-outdoor-window's verifier cannot reach the mock on Pyodide and
+  falls back to values it carries, which are the seed's, so the score is
+  the same. In the VM it reads the trial's mock (`GET
+  /location/shanghai/hourly -> 200` in its log).
+- weather-city-travel-pick's verifier reads the trial's mock in the VM (11
+  requests), then writes a string to `reward.json` (`_meta_city_got`),
+  which Harbor refuses (`VerifierOutputParseError`) wherever it runs, as
+  with mint-diet-comprehensive.
+
+### Overheads
+
+On an Apple silicon Mac (14 cores, 48 GB), with msb 0.5.10: 27 trials of
+the committed tasks at `-n 7` (one retried after a hang, below, is left
+out), 7 at `-n 1`, and 14 on Pyodide at `-n 7`.
+
+| | `-n 7`, median (max) | `-n 1`, median |
+|---|---|---|
+| Harbor's verify step, in a microVM | 1.03 s (1.19) | 0.77 s |
+| Harbor's verify step, on Pyodide | 1.22 s (1.33) | |
+| Boot: create with the copies | 0.31 s (0.40) | 0.23 s |
+| `guest.py`: `test.sh`, then the tar of `/logs/verifier` | 0.60 s (0.74) | 0.47 s |
+| Removing the VM | 0.07 s (0.11) | 0.06 s |
+| Peak host memory, a 4 GiB VM | 198 MiB (199) | 197 MiB |
+| Peak host memory, a 2 GiB VM (weather) | 84 MiB (85) | 85 MiB |
+
+The memory is mostly the VM's own, and grows with its size: a 512 MiB VM
+(`--verifier-kwarg memory_mb=512`) peaks near 45 MiB, and all seven still
+score 1.0 in it. Copying in costs little: a 300 MB workspace of 3,000
+files boots in 0.5 s. A job of the seven at `-n 7` takes about 10 s, as on
+Pyodide.
+
+msb 0.5.10 now and then hangs. A create never returns: 2 of 175 in a
+stress test, concurrent or one at a time, and 1 of about 125 in the jobs
+here. Or a running VM leaves a command unrun, and every later one: once in
+`isolation.py`'s runs. Both are caught before `test.sh` starts. A create
+has 30 s (it takes a third of one), and `guest.py`'s first line,
+`STARTED`, has 15 s to come. Past either, the VM is removed and the
+verification starts again in a new one, up to three times, so a hang
+costs 15 to 30 s. Once `STARTED` has come, a hang cannot be told from a
+slow test, and Harbor's timeout ends it.
+
+### Isolation
+
+`isolation.py --msb` adds 37 checks to the 32: after those, it boots the
+five trials' verifier VMs at once, as the verifier boots them, and checks
+from inside them. A VM that hangs is booted again, as the verifier does,
+and the output notes it. All 69 pass:
+- Each VM is its own, runs CPython with time zones, and has its own
+  trial's state: A's pack in its chat copy, D's mail in its gws copy; B and
+  E do not have them.
+- A and B each reach their own run at `localhost:5003`, and C its weather
+  run at `localhost:3000`; C has no port 5003.
+- A cannot reach B's run by path through its own URL, nor with dot
+  segments, plain, encoded or with backslashes. It cannot reset its run,
+  reach the kit's endpoints, or reach them with `%XX` or a doubled slash.
+  Each is a 404 in its own run. Without the backslash rule, A read B's
+  run.
+- A reaches its own proxy on the host, but not B's or C's, the shared chat
+  and gws fakes' real ports, its Mirage daemon's port, a port on its own
+  loopback, or the internet by name or address. D, with no routes,
+  reaches neither the host nor the internet.
+- A's writes to `/workspace`, `/tmp` and `/logs/verifier` are its own:
+  B, up at the same time, does not see them, and they do not reach A's
+  files on the host. No host run directory is visible inside.
+- Every VM is gone from `msb ls` afterwards.
+
+### Gaps
+
+- **Packages.** The image has Python's standard library alone. Upstream's
+  verifiers that need more need an image with it (`--verifier-kwarg
+  image=<image>`): the 13 that import the email app's Flask and SQLAlchemy
+  models, the 25 that use `subprocess` to run git, pytest and the like,
+  and one that imports grpc. None of their tasks starts here yet (their
+  mocks or `RUN` lines are refused), so none was tried.
+- **LLM judges.** 21 tasks' verifiers call a model's API, which the VM
+  cannot reach. That needs a rule for the API's host (`--net-rule
+  allow@<host>:tcp:443`) and the key, which msb's `--secret` can keep out
+  of the guest.
+- **Copies.** The VM sees the trial's files as they were when verifying
+  started, and only `/logs/verifier` comes back; on Docker the shared
+  verifier writes into the agent's container. msb's copies all have the
+  time 1970-01-01. `/tmp` in the VM is a 128 MiB tmpfs, filled from the
+  trial's before `test.sh` starts.
+- **Network.** The proxies speak HTTP/1.1 and buffer each body. HTTPS,
+  upgrades and other protocols on an upstream port are not carried. The
+  guest's IPv6 gateway reaches the host's `::1`, where no proxy listens,
+  so the relay dials the IPv4 one.
+- **Users.** `test.sh` runs as root, whatever `[verifier] user` says, as
+  `exec` ignores `user` in the workspace.
+- **A Harbor that dies.** After a `SIGKILL` the VM lives on until its
+  `--max-duration`, four times the task's verifier timeout and ten minutes
+  more. Then it stops, but `msb ls` lists it until `msb rm`.
+- **msb's stdin and output.** `msb exec` hangs while its stdin is an open
+  pipe or socket, so every call gives it `/dev/null`. Without `--stream`
+  it holds all output until the command ends, so `STARTED` needs it.
+- **Hosts.** Tried on macOS on Apple silicon only. On Linux, msb needs
+  KVM.
+
 ## Upstream tasks
 
 The committed tasks pass from their upstream directories too, with the
@@ -350,13 +547,16 @@ for upstream's reasons:
 - mint-diet-comprehensive also uses `curl -G` and `-w '%{redirect_url}'`,
   which Mirage's curl lacks. Its verifier writes non-numeric fields to
   `reward.json`, which Harbor refuses (`VerifierOutputParseError`).
-- nutrition-log-meal's verifier needs `zoneinfo` data (below).
+- nutrition-log-meal's verifier needs `zoneinfo` data (below). In a
+  microVM it verifies (above).
 
 Of the 102 tasks on a per-task image, 37 need a mock with no layout here
 (social, calendar, airline and others), and 7 a legacy startup script; both
 are refused at start. 29 use no mock at all. 36 tasks' solutions run `openclaw agent`, the image's
 own model agent, so they have no scripted oracle. weather-city-travel-pick
-and weather-outdoor-window fetch from Python, which has no network here.
+and weather-outdoor-window's solutions fetch from Python, which has no
+network here; their verifiers do too, and in a microVM they reach the mock
+(above).
 
 21 of the 102 tasks' solutions log in with a cookie jar: `curl -c <file>`
 on the login request, then `-b <file>` on every later one, 6 of them with
@@ -446,6 +646,8 @@ expense, insurance or health), and 4 of them a legacy startup script too.
   zones, since nothing loads Pyodide's `tzdata` for it (nutrition-log-meal).
   Of the 102, 4 verifiers use `subprocess` and 3 import the email app's
   Flask and SQLAlchemy models, which Pyodide cannot run.
+  `MicrosandboxVerifier` runs the verifier in CPython instead, with the
+  network to the trial's services and time zones (above).
 - **State files are copies.** Upstream's mocks keep SQLite in WAL mode,
   open, and Pyodide's SQLite cannot share a WAL with another process (it
   fails with a disk I/O error, and writes a `-shm` beside the live file).

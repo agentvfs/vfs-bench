@@ -1,0 +1,29 @@
+# liveclawbench.yaml's tasks, each trial's verifier run in a microVM of its
+# own (microsandbox's msb) with real CPython, not in the Mirage workspace's
+# Pyodide. From vfs-bench-2/:
+#   uv run --project harbor harbor run -c harbor/liveclawbench-msb.yaml -a oracle -n 18 -o state/harbor/jobs
+# Any other run takes it as a flag:
+#   --verifier vfsbench_harbor:MicrosandboxVerifier
+environment:
+  import_path: vfsbench_harbor:MirageEnvironment
+verifier:
+  import_path: vfsbench_harbor:MicrosandboxVerifier
+tasks:
+  - path: harbor/tasks/liveclawbench/chat-sticker-engagement
+  - path: harbor/tasks/liveclawbench/sticker-store-acquire
+  - path: harbor/tasks/liveclawbench/weather-aqi-report
+  - path: harbor/tasks/liveclawbench/newsletter-digest-forward
+  - path: harbor/tasks/liveclawbench/procurement-quote-compare-reply
+  - path: harbor/tasks/liveclawbench/stale-client-escalation
+  - path: harbor/tasks/liveclawbench/vendor-requirement-followup
+  - path: harbor/tasks/liveclawbench/finance-anomaly-detect
+  - path: harbor/tasks/liveclawbench/finance-dashboard-repair
+  - path: harbor/tasks/liveclawbench/finance-depreciation-audit
+  - path: harbor/tasks/liveclawbench/finance-expense-log
+  - path: harbor/tasks/liveclawbench/finance-monthly-close
+  - path: harbor/tasks/liveclawbench/finance-portfolio-rebalancing
+  - path: harbor/tasks/liveclawbench/finance-analysis-generate
+  - path: harbor/tasks/liveclawbench/finance-budget-alert
+  - path: harbor/tasks/liveclawbench/finance-invoice-process
+  - path: harbor/tasks/liveclawbench/finance-tax-prepare
+  - path: harbor/tasks/liveclawbench/finance-budget-shift

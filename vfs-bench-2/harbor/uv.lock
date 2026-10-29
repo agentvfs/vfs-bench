@@ -2625,7 +2625,10 @@ name = "vfsbench-harbor"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "h11" },
     { name = "harbor" },
+    { name = "httpx" },
+    { name = "pyyaml" },
 ]
 
 [package.optional-dependencies]
@@ -2639,8 +2642,11 @@ dspy = [
 requires-dist = [
     { name = "deno", marker = "extra == 'dspy'" },
     { name = "dspy", marker = "extra == 'dspy'", specifier = "==3.2.1" },
+    { name = "h11" },
     { name = "harbor", specifier = "==0.25.0" },
     { name = "harbor", extras = ["dspy"], marker = "extra == 'dspy'", specifier = "==0.25.0" },
+    { name = "httpx" },
+    { name = "pyyaml" },
 ]
 provides-extras = ["dspy"]
 
