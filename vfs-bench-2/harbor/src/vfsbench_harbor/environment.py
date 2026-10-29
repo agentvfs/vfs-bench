@@ -210,7 +210,7 @@ class MirageEnvironment(BaseEnvironment):
 
         Each fake starts on the first trial that needs it, seeded from that
         trial's fixture; every trial then resets a run of its own from its
-        task's fixture, at the task's epoch.
+        task's fixture, at the task's epoch, with the task's faults armed.
         """
         spec = yaml.safe_load(self._mirage_yaml.read_text()) or {}
         shared = fakes.pool()
@@ -223,7 +223,8 @@ class MirageEnvironment(BaseEnvironment):
             fake = await asyncio.to_thread(shared.fake,
                                            service, fixture, self._node,
                                            self._host_env(), self._fake_logs)
-            run = await shared.open(fake, name, fixture, block.get("epoch"))
+            run = await shared.open(fake, name, fixture, block.get("epoch"),
+                                    block.get("faults"))
             self._runs.append(run)
             runs[service] = {"url": run.url, "db": str(run.db)}
         return runs

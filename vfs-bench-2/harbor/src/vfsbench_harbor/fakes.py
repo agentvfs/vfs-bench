@@ -4,9 +4,10 @@ Harbor runs every trial of a job in one Python process, so a pool kept by
 that process is the job's. The first trial that needs a service starts its
 fake (``harbor/fakes.ts``); later trials reuse it, and each trial is a run
 of its own on it: ``POST /reset {"run": <trial>, "fixture": ..., "epoch":
-...}`` seeds a SQLite file of the run's, and ``DELETE /_kit/runs/<run>``
-drops it when the trial stops. The fakes stay up until the process exits:
-their stdin closes then, and each stops.
+...}`` seeds a SQLite file of the run's, ``POST /_run/<run>/_kit/faults``
+arms the task's fault plans on it, and ``DELETE /_kit/runs/<run>`` drops it
+when the trial stops. The fakes stay up until the process exits: their
+stdin closes then, and each stops.
 
 A pool the environment starts lazily, rather than a Harbor job plugin, works
 with every ``harbor run`` as it is: Harbor 0.25 takes plugins only as
@@ -137,18 +138,34 @@ class SharedFakes:
             self._fakes[service] = fake
             return fake
 
-    async def open(self, fake: Fake, run: str, fixture: str,
-                   epoch: str | None) -> Run:
-        """Seed a trial's run from its fixture; the run's URL and file."""
+    async def open(self,
+                   fake: Fake,
+                   run: str,
+                   fixture: str,
+                   epoch: str | None,
+                   faults: list[dict] | None = None) -> Run:
+        """Seed a trial's run from its fixture; the run's URL and file.
+
+        ``faults`` are kit fault plans (``POST /_kit/faults``), armed on the
+        run once it is seeded, since a reset disarms them: each answers the
+        next requests to its route in place of the fake.
+        """
         body = {"run": run, "fixture": fixture}
         if epoch is not None:
             body["epoch"] = epoch
         async with httpx.AsyncClient(timeout=120) as client:
             reply = await client.post(f"{fake.url}/reset", json=body)
-        if reply.status_code != 200:
-            raise RuntimeError(f"resetting run {run} of the {fake.service} "
-                               f"fake failed ({reply.status_code}): "
-                               f"{reply.text}")
+            if reply.status_code != 200:
+                raise RuntimeError(f"resetting run {run} of the "
+                                   f"{fake.service} fake failed "
+                                   f"({reply.status_code}): {reply.text}")
+            if faults:
+                reply = await client.post(f"{fake.url}/_run/{run}/_kit/faults",
+                                          json={"plans": faults})
+                if reply.status_code != 200:
+                    raise RuntimeError(f"arming run {run}'s faults on the "
+                                       f"{fake.service} fake failed "
+                                       f"({reply.status_code}): {reply.text}")
         files = list(fake.state.glob(f"mirage-kit-{fake.service}-*/{run}.db"))
         if len(files) != 1:
             raise RuntimeError(f"run {run} of the {fake.service} fake has "
