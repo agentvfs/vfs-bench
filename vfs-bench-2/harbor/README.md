@@ -274,9 +274,9 @@ for upstream's reasons:
   `reward.json`, which Harbor refuses (`VerifierOutputParseError`).
 - nutrition-log-meal's verifier needs `zoneinfo` data (below).
 
-Of the 102 tasks on a per-task image, 61 need a mock with no layout here
+Of the 102 tasks on a per-task image, 37 need a mock with no layout here
 (social, calendar, airline and others), and 7 a legacy startup script; both
-are refused at start. 36 tasks' solutions run `openclaw agent`, the image's
+are refused at start. 29 use no mock at all. 36 tasks' solutions run `openclaw agent`, the image's
 own model agent, so they have no scripted oracle. weather-city-travel-pick
 and weather-outdoor-window fetch from Python, which has no network here.
 
