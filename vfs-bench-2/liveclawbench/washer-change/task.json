@@ -1,0 +1,8 @@
+{
+  "task": "washer-change",
+  "mocks": ["shop"],
+  "rewrite": {
+    "(address: http://localhost:1234/)": "(the `shop` CLI)",
+    "(address: http://localhost:1234/, open it in your browser)": "(the `shop` CLI)"
+  }
+}
