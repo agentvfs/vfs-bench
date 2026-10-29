@@ -1,0 +1,35 @@
+# DataSpace task_44. Upstream's smolagents harness paths: the task context
+# read-only at /workspace, the answer written to /output/prediction.csv.
+mode: exec
+runtimes:
+  - name: pyodide
+    config:
+      lock_file_url: ${PYTHON_PACKAGES}/pyodide-lock.json
+      package_base_url: ${PYTHON_PACKAGES}/
+      max_memory: 2G
+  - workspace
+command_limits:
+  python3: {timeout_seconds: 300}
+# Offline: python3 has no network and the shell's fetchers are refused, so
+# services are reached through their CLIs only.
+profiles:
+  default:
+    commands:
+      deny:
+        - {commands: [curl, wget], reason: the workspace is offline}
+mounts:
+  /workspace:
+    vfs: disk
+    mode: read
+    config:
+      root: ${DATASPACE_CONTEXT}
+  /output:
+    vfs: disk
+    mode: write
+    config:
+      root: ${DATASPACE_OUTPUT}
+  /opt/dataspace:
+    vfs: disk
+    mode: read
+    config:
+      root: ${DATASPACE_WORKBENCH}
