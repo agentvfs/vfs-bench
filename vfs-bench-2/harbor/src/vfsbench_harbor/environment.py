@@ -109,6 +109,9 @@ class MirageEnvironment(BaseEnvironment):
         self._workspace_id = ""
         self._mounts: dict[str, dict[str, str]] = {}
         self._state: list[tuple[Path, Path]] = []
+        # One refresh at a time: overlapping ones would share each state
+        # file's temporary copy.
+        self._refreshing = asyncio.Lock()
         self._workdir = "/"
         super().__init__(*args, **kwargs)
         self._run_dir = (self.trial_paths.trial_dir / "mirage").resolve()
@@ -341,7 +344,8 @@ class MirageEnvironment(BaseEnvironment):
             f"export {name}={shlex.quote(value)}\n"
             for name, value in (self._merge_env(env) or {}).items()
             if NAME.fullmatch(name))
-        await asyncio.to_thread(self._refresh_state)
+        async with self._refreshing:
+            await asyncio.to_thread(self._refresh_state)
         reply = await self._client.post(
             f"/v1/workspaces/{self._workspace_id}/shell",
             params={"background": "true"},
@@ -352,6 +356,25 @@ class MirageEnvironment(BaseEnvironment):
         )
         reply.raise_for_status()
         job = reply.json()["job_id"]
+        try:
+            detail = await self._wait(job, timeout_sec)
+        except asyncio.CancelledError:
+            # A canceled exec (asyncio.wait_for, a trial's timeout) leaves
+            # nothing running behind it to overlap what comes next.
+            await asyncio.shield(self._client.delete(f"/v1/jobs/{job}"))
+            raise
+        if detail["status"] != "done":
+            raise RuntimeError(f"the workspace's shell {detail['status']}: "
+                               f"{detail.get('error')}")
+        result = detail["result"]
+        return ExecResult(stdout=result["stdout"],
+                          stderr=result["stderr"],
+                          return_code=result["exit_code"])
+
+    async def _wait(self, job: str, timeout_sec: int | None) -> dict:
+        """The shell job's detail once it ends; past ``timeout_sec`` the job
+        is canceled and this raises."""
+        assert self._client is not None
         started = time.monotonic()
         while True:
             left = None if timeout_sec is None else timeout_sec - (
@@ -363,18 +386,11 @@ class MirageEnvironment(BaseEnvironment):
             waited.raise_for_status()
             detail = waited.json()
             if detail["status"] in DONE:
-                break
+                return detail
             if left is not None and time.monotonic() - started >= timeout_sec:
                 await self._client.delete(f"/v1/jobs/{job}")
                 raise RuntimeError(
                     f"Command timed out after {timeout_sec} seconds")
-        if detail["status"] != "done":
-            raise RuntimeError(f"the workspace's shell {detail['status']}: "
-                               f"{detail.get('error')}")
-        result = detail["result"]
-        return ExecResult(stdout=result["stdout"],
-                          stderr=result["stderr"],
-                          return_code=result["exit_code"])
 
     def _refresh_state(self) -> None:
         """Bring each mock's state file in the workspace up to date."""

@@ -91,9 +91,11 @@ Each trial has its own daemon and its own mock processes.
 | Verifier | Shares the agent's workspace, as Harbor's shared verifier does on Docker |
 
 `isolation.py` starts three trials at once (chat-sticker-engagement twice,
-weather-aqi-report once) and checks this from inside the workspaces. All 14
-checks pass. Harbor's own `-k 2 -n 2` over one task runs two daemons and
-two mock sets side by side, and both trials pass.
+weather-aqi-report once) and checks this from inside the workspaces. It
+also checks one trial's commands against each other: six at once each see
+its state, and a command canceled mid-run (`asyncio.wait_for`) is stopped
+before it writes. All 16 checks pass. Harbor's own `-k 2 -n 2` over one
+task runs two daemons and two mock sets side by side, and both trials pass.
 
 `--ek daemon_url=<url>` creates the workspace on a running daemon instead.
 That daemon cannot route each workspace to its own mocks: Mirage's curl

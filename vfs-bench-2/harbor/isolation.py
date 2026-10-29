@@ -5,7 +5,9 @@
 Starts three trials at once, each with its own daemon: chat-sticker-engagement
 twice (A and B, both reaching their chat mock at localhost:5003) and
 weather-aqi-report (C). Then checks, from inside the workspaces, that each
-trial reaches only its own mocks and files. Exits 1 if any check fails.
+trial reaches only its own mocks and files, and that a trial's own commands
+keep apart too: several at once each see its state, and one canceled stops.
+Exits 1 if any check fails.
 """
 import asyncio
 import json
@@ -70,6 +72,25 @@ async def main() -> int:
             lambda code, out: code == 0)
         await check(a, "sees the pack in its own data mount", PACKS,
                     lambda code, out: out == "1")
+        # Each exec first refreshes the workspace's copy of the mocks'
+        # state, so commands at once refresh at once.
+        results = await asyncio.gather(*(a.exec(PACKS, timeout_sec=120)
+                                         for _ in range(6)))
+        passed = all(r.return_code == 0 and (r.stdout or "").strip() == "1"
+                     for r in results)
+        failed += not passed
+        outs = [(r.stdout or r.stderr or "").strip()[:60] for r in results]
+        print(f"{'PASS' if passed else 'FAIL'} [a] six commands at once each "
+              f"see the pack\n    {outs}")
+        try:
+            await asyncio.wait_for(
+                a.exec("sleep 3; echo late > /workspace/late", timeout_sec=60),
+                0.5)
+        except TimeoutError:
+            pass
+        await asyncio.sleep(5)
+        await check(a, "a canceled command stops before it writes",
+                    "ls /workspace/late", lambda code, out: code != 0)
         await check(b, "does not see A's pack in its data mount", PACKS,
                     lambda code, out: out == "0")
         await check(b, "does not see A's pack on its mock",
