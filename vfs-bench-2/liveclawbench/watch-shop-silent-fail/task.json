@@ -1,0 +1,7 @@
+{
+  "task": "watch-shop-silent-fail",
+  "mocks": ["shop"],
+  "rewrite": {
+    "(http://localhost:1234/)": "(the `shop` CLI)"
+  }
+}
