@@ -1,0 +1,24 @@
+# liveclawbench.yaml's tasks, each trial's verifier run in a microVM of its
+# own (microsandbox's msb) with real CPython, not in the Mirage workspace's
+# Pyodide. From vfs-bench-2/:
+#   uv run --project harbor harbor run -c harbor/liveclawbench-msb.yaml -a oracle -n 13 -o state/harbor/jobs
+# Any other run takes it as a flag:
+#   --verifier vfsbench_harbor:MicrosandboxVerifier
+environment:
+  import_path: vfsbench_harbor:MirageEnvironment
+verifier:
+  import_path: vfsbench_harbor:MicrosandboxVerifier
+tasks:
+  - path: harbor/tasks/liveclawbench/chat-sticker-engagement
+  - path: harbor/tasks/liveclawbench/sticker-store-acquire
+  - path: harbor/tasks/liveclawbench/weather-aqi-report
+  - path: harbor/tasks/liveclawbench/newsletter-digest-forward
+  - path: harbor/tasks/liveclawbench/procurement-quote-compare-reply
+  - path: harbor/tasks/liveclawbench/stale-client-escalation
+  - path: harbor/tasks/liveclawbench/vendor-requirement-followup
+  - path: harbor/tasks/liveclawbench/candidate-interview-slot-confirm
+  - path: harbor/tasks/liveclawbench/email-reply
+  - path: harbor/tasks/liveclawbench/email-sending-verify
+  - path: harbor/tasks/liveclawbench/email-writing
+  - path: harbor/tasks/liveclawbench/interview-slot-verify
+  - path: harbor/tasks/liveclawbench/meeting-slot-race
