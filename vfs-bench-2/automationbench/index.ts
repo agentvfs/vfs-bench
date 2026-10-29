@@ -57,6 +57,27 @@ export async function load(slug: string): Promise<Task> {
       return [{ name: 'api', cli: toolsCli('api', mirrored, "AutomationBench's API tools."), config: { url } }]
     },
     snapshot: async (run) => run.fakes.get(FAKE)!.get('/snapshot'),
+    // Upstream's records stamp what a task leaves unset from the wall clock
+    // (`datetime.now()` defaults), as do the world's `meta.current_time` and
+    // Gmail's `date` and `internal_date`, in epoch milliseconds. These are
+    // all the fields any of its tasks stamps when seeded.
+    clockFields: [
+      'created_at',
+      'created_date',
+      'created_time',
+      'current_time',
+      'date',
+      'date_created',
+      'date_modified',
+      'internal_date',
+      'last_modified_date',
+      'last_modified_date_time',
+      'last_updated_time',
+      'modified_at',
+      'registered_at',
+      'updated_at',
+      'updated_date',
+    ],
     async grade({ after }) {
       const result = (await runPython(HERE, join(HERE, 'grade.py'), {
         task: exported,
