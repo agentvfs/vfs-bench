@@ -41,6 +41,12 @@ This clones upstream into `state/complexmcp/src` and exports the tasks to
   earlier trade draws. So one extra add and remove before checkout, or the
   same trades in another order, failed a correct run. 27 tasks expect a
   new transaction.
+- The judge sees every float rounded to 6 places, in the starting, end
+  and expected environments. Upstream compares floats exactly, and a
+  balance sums its trades in the order they were made, so the same trades
+  in another order can miss the expected balance by 1e-12. In task 44, 74
+  of the 120 orders of its four buys and the VIP upgrade did. Six places
+  is far below a cent, the smallest real difference.
 
 ## Tasks
 
