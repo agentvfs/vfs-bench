@@ -2,15 +2,18 @@
 
     uv run --project harbor python -I harbor/isolation.py [--out <dir>]
 
-Starts five trials at once from the committed tasks, each with its own
+Starts seven trials at once from the committed tasks, each with its own
 daemon, on kit fakes they share: chat-sticker-engagement twice (A and B,
 both reaching the one chat fake at localhost:5003, each its own run),
-weather-aqi-report (C), and stale-client-escalation twice (D and E, both on
-the one gws fake through /gmail and the gws CLI). Then checks, from inside
-the workspaces, that each trial reaches only its own runs and files: not
-another's state, not another's run by path through its own URL, and not the
-shared fakes' real ports. A trial's own commands keep apart too: several at
-once each see its state, and one canceled stops. Exits 1 if any check fails.
+weather-aqi-report (C), stale-client-escalation twice (D and E, both on the
+one gws fake through /gmail and the gws CLI), and finance-anomaly-detect
+twice (F and G, both on the one finance fake at localhost:1235, each
+logged in with a cookie of its own run's). Then checks, from inside the
+workspaces, that each trial reaches only its own runs and files: not
+another's state, not another's run by path through its own URL, not the
+shared fakes' real ports, and not another run's session. A trial's own
+commands keep apart too: several at once each see its state, and one
+canceled stops. Exits 1 if any check fails.
 """
 import argparse
 import asyncio
@@ -40,6 +43,17 @@ MAILS = ("python3 -c \"import sqlite3; "
          "print(db.execute(\\\"select count(*) from MessageHeader where "
          f"name = 'Subject' and value = '{SUBJECT}'\\\").fetchone()[0])\"")
 TOKEN = "-H 'Authorization: Bearer gws-integ-token'"
+FINANCE = "http://localhost:1235"
+JAR = "/tmp/finance.jar"
+LOGIN = (f"curl -s -c {JAR} -X POST {FINANCE}/api/auth/login "
+         "-H 'Content-Type: application/json' "
+         "-d '{\"username\":\"admin\",\"password\":\"admin123\"}'")
+# Whether transaction 8 is flagged, from the finance's data mount.
+FLAGGED = ("python3 -c \"import sqlite3; "
+           "db = sqlite3.connect('/opt/mock/data/finance_app.sqlite'); "
+           "print(db.execute(\\\"select count(*) from transaction_record "
+           "where id = 8 and status = 'flagged'\\\").fetchone()[0])\"")
+REFUSED_SESSION = '{"success":false,"message":"Invalid or expired token"}'
 
 
 def trial(out: Path, task: str, name: str) -> MirageEnvironment:
@@ -67,7 +81,8 @@ async def main() -> int:
     a, b = (trial(out, "chat-sticker-engagement", n) for n in ("a", "b"))
     c = trial(out, "weather-aqi-report", "c")
     d, e = (trial(out, "stale-client-escalation", n) for n in ("d", "e"))
-    trials = (a, b, c, d, e)
+    f, g = (trial(out, "finance-anomaly-detect", n) for n in ("f", "g"))
+    trials = (a, b, c, d, e, f, g)
     await asyncio.gather(*(t.start(force_build=False) for t in trials))
     failed = 0
 
@@ -198,6 +213,56 @@ async def main() -> int:
         await check(e, "cannot reach the shared gws fake outside its run",
                     f"curl -sS {TOKEN} {gws}/gmail/v1/users/me/messages",
                     refused)
+
+        # The shared finance fake, whose session is a cookie of the run's.
+        finance = origin(real["f"]["1235"])
+        report(
+            origin(real["g"]["1235"]) == finance and real["f"] != real["g"],
+            "f,g", "share one finance fake, each with a run of its own",
+            f"{real['f']['1235']}  {real['g']['1235']}")
+        sessions = {}
+        for t in (f, g):
+            await check(t, "logs in with a cookie jar", LOGIN,
+                        lambda code, out: code == 0 and '"admin"' in out)
+            jar = await t.exec(f"cat {JAR}", timeout_sec=120)
+            line = next((ln for ln in (jar.stdout or "").splitlines()
+                         if "\ttoken\t" in ln), "")
+            sessions[t.session_id] = line.split("\t")[-1]
+        await check(
+            f, "flags a transaction on its own run",
+            f"curl -sf -b {JAR} -X POST {FINANCE}/api/transactions/8/flag",
+            lambda code, out: code == 0 and '"flagged"' in out)
+        await check(f, "sees the flag in its own data mount", FLAGGED,
+                    lambda code, out: out == "1")
+        await check(g, "does not see F's flag in its data mount", FLAGGED,
+                    lambda code, out: out == "0")
+        await check(g, "does not see F's flag on its API",
+                    f"curl -sf -b {JAR} {FINANCE}/api/transactions/8",
+                    lambda code, out: code == 0 and '"pending"' in out)
+        await check(
+            g, "refuses F's session cookie",
+            f"curl -s -H 'Cookie: token={sessions['f']}' "
+            f"{FINANCE}/api/transactions",
+            lambda code, out: out == REFUSED_SESSION and sessions["f"] != "")
+        await check(
+            f, "refuses G's session cookie",
+            f"curl -s -H 'Cookie: token={sessions['g']}' "
+            f"{FINANCE}/api/transactions",
+            lambda code, out: out == REFUSED_SESSION and sessions["g"] != "")
+        await check(
+            f, "still takes its own session cookie",
+            f"curl -s -H 'Cookie: token={sessions['f']}' "
+            f"{FINANCE}/api/transactions/8",
+            lambda code, out: '"flagged"' in out)
+        f_run = urlsplit(real["f"]["1235"]).path
+        await check(g, "cannot reach F's run by path through its own URL",
+                    f"curl -s -b {JAR} {FINANCE}{f_run}/api/transactions",
+                    not_found)
+        await check(g, "cannot reach F's run on the shared fake's real port",
+                    f"curl -sS -b {JAR} {finance}{f_run}/api/transactions",
+                    refused)
+        await check(g, "cannot reach the shared finance fake outside its run",
+                    f"curl -sS {finance}/api/transactions", refused)
     finally:
         await asyncio.gather(*(t.stop(delete=True) for t in trials))
     print(
