@@ -11,7 +11,7 @@ runtimes:
       max_memory: 2G
   - workspace
 command_limits:
-  python3: {timeout_seconds: 300}
+  "@line": {timeout_seconds: 300}
 # Offline but for curl, which reaches only this trial's mocks: the sidecar
 # routes each upstream address (localhost:5003) to its mock and refuses
 # everything else. python3 has no network.

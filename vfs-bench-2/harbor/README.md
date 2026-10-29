@@ -313,6 +313,9 @@ and weather-outdoor-window fetch from Python, which has no network here.
   and gets only its services; the environment logs a warning. The agents
   run on the host, so their model calls are unaffected. The capability
   declared is `disable_internet` alone, and no CPU or memory limits.
+- **Time.** An `exec` is one Mirage line, and `workspace.yaml` gives a
+  line 300 s (`@line` in `command_limits`). Past that it exits 124
+  (`line: timed out after 300s`), however long Harbor's `timeout_sec`.
 - **Cookies.** Mirage's curl has no cookie engine. 20 of the 102 tasks'
   solutions log in with one: `-c <file>` on the login request, then
   `-b <file>` on every later one, 6 of them with `-L`. They need curl's
