@@ -49,6 +49,10 @@ uv run --project harbor python -I harbor/isolation.py [--out <dir>]
 # Rewrite the committed tasks from upstream, or check them against it.
 uv run --project harbor python -I harbor/export.py [--check]
 uv run --project harbor python -I harbor/test_export.py
+
+# The finance fake against upstream's finance mock (Bun): exits 1 on an
+# unexpected difference.
+node harbor/compare.ts [task ...]
 ```
 
 `--ek node=<path>` names the Node binary if `node` on `PATH` is not 24.
@@ -78,6 +82,7 @@ remove a client another one is loading. After that, `pnpm exec tsc -p mocks` typ
 - `copies.ts`: a task's `COPY` lines as both adapters read them, in order,
   and how `mocks.ts` lays them out and maps an `ENV` path a mock reads
   through them (`copies.test.ts`, in `pnpm test`).
+- `compare.ts`: the finance fake against upstream's finance mock.
 - `mirage.ts`: the adapter `mocks.ts` reads a committed task with, from its
   `environment/mirage.yaml`.
 - `liveclawbench.ts`: the adapter for an upstream task. It reuses
@@ -193,12 +198,17 @@ path with no parameter the session, then the body's type (415), then zod's
 validation (400); on a path with one, validation, the type, then the
 session. Validation messages are zod 3's, in mock-lib's envelope. Its pages
 are upstream's components (`src/pages/*.tsx`), bundled with esbuild as the
-chat's are, over the rows upstream's `index.tsx` hands them. Upstream's mock,
-run under Bun with the same seed and clock (`Date` and SQLite's
-`datetime('now')` frozen at the epoch), and the fake were each sent the
-same 139 requests for each of the 11 tasks: every route, page and login
-case, the solutions' requests, validation failures, type and body edge
-cases, and a write of every kind. 128 answer byte for byte the same in
+chat's are, over the rows upstream's `index.tsx` hands them.
+`compare.ts` checks the fake against upstream's mock. It runs upstream's
+mock as an upstream task directory does (`liveclawbench.ts`'s plan: Bun,
+its own seed and the task's seed SQL), with `fixtures/frozen.ts` freezing
+`Date` and SQLite's `datetime('now')` at the epoch, and resets a run of the
+fake from the task's committed fixture. It sends both the same 139
+requests for each of the 11 tasks, compares status, type, location,
+`Set-Cookie` and body, then the tables each leaves behind, and exits 1 on
+any difference but the two known ones below. The requests are every
+route, page and login case, the solutions' requests, validation failures,
+type and body edge cases, and a write of every kind. 128 answer byte for byte the same in
 every task but finance-budget-shift, 127 there. The others differ only
 where the clock does: a write's `created_at`/`updated_at` (in
 finance-budget-shift also the rows its fault rewrites), and a later login's
