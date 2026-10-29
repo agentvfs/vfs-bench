@@ -1,11 +1,13 @@
-"""ComplexMCP's 15 MCP servers, as one bridge world.
+"""ComplexMCP's MCP servers, as one bridge world.
 
 Upstream's own servers run as processes, launched as its
 ``docker/start_benchmark_sandbox.sh`` launches them but on free local
-ports. This world is their MCP client, as upstream's ``client/agent.py``
-Toolbox is:
+ports. The OSINT server is left out: its tools run whois, nmap and dig on
+the host, which would put the live network in an offline workspace, and
+no task uses it. This world is their MCP client, as upstream's
+``client/agent.py`` Toolbox is:
 
-- tools are named ``<Server>.<tool>``. The 8 plain servers list theirs over
+- tools are named ``<Server>.<tool>``. The 7 plain servers list theirs over
   MCP; the 7 Light apps' come from their ``desc.json``, the descriptions
   upstream shows its model, without ``login``, ``logout`` and the hidden
   ``session_id``.
@@ -32,7 +34,6 @@ from fastmcp import Client
 SERVERS = {  # name: (argv after the interpreter, desc.json or None)
     "MathServer": (["run", "servers/math/app.py"], None),
     "UnitServer": (["-m", "servers.unit.app"], None),  # its own __main__
-    "OSINTServer": (["run", "servers/osint/app.py"], None),
     "TimeServer": (["run", "servers/time/app.py"], None),
     "LangServer": (["run", "servers/lang/app.py"], None),
     "CryptoServer": (["run", "servers/crypto/app.py"], None),

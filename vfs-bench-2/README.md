@@ -30,7 +30,7 @@ Run dumps stay local; nothing is published yet.
 | [Gaia2](gaia2/README.md) | Meta's ARE, gaia2-cli | 1 of 320 | upstream's apps, gaia2-cli |
 | [DataSpace](dataspace/README.md) | HKUSTDial/DataSpace | 1 of 60 public | none, files only |
 | [LiveClawBench](liveclawbench/README.md) | Mosi-AI/LiveClawBench | 1 of 113 | upstream's Node mocks, under Bun |
-| [ComplexMCP](complexmcp/README.md) | ATH-MaaS/complex-mcp | 1 of 47 | upstream's 15 MCP servers |
+| [ComplexMCP](complexmcp/README.md) | ATH-MaaS/complex-mcp | 1 of 47 | 14 of upstream's 15 MCP servers |
 | [Claw-Eval](claweval/README.md) | claw-eval/claw-eval | 1 of 60 | upstream's FastAPI mocks |
 
 EnterpriseOps-Gym is skipped for now: its tool servers ship only as amd64

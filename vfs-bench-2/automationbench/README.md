@@ -31,6 +31,9 @@ to `state/automationbench/tasks/<task_name>.json`.
   the task's name. So two seeds give the same world, and the ids still
   look like UUIDs.
 - The apps are reached through the `api` CLI only. Nothing is mounted.
+- The world never gets the model's OpenAI key. Given one, upstream's
+  ChatGPT app calls OpenAI; without it, as here, the app gives upstream's
+  own simulated reply.
 
 ## Tasks
 
