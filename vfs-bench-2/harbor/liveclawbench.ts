@@ -19,7 +19,7 @@ import { join, relative } from 'node:path'
 import type { FakeSpec } from '../harness/fakes.ts'
 import type { Run } from '../harness/runs.ts'
 import { DATA, PLATFORM, fake, fakeName } from '../liveclawbench/index.ts'
-import { type Copy, copyTarget } from './copies.ts'
+import { type Copy, copiedPath, copyTarget } from './copies.ts'
 import type { Plan } from './mocks.ts'
 
 /**
@@ -132,8 +132,8 @@ export function plan(taskDir: string, run: Run): Plan {
           }
           continue
         }
-        const copied = [...copies].reverse().find(({ to }) => value.startsWith(`${to}/`))
-        mockEnv[name] = copied === undefined ? value : join(copied.from!, value.slice(copied.to.length + 1))
+        // A copied file's or directory's path is the host's for the mock.
+        mockEnv[name] = copiedPath(copies, value) ?? value
       }
     } else if (op === 'RUN' && !args.startsWith('[')) {
       lines.push({ cwd: workdir ?? '/', line: args })

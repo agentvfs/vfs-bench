@@ -76,7 +76,8 @@ remove a client another one is loading. After that, `pnpm exec tsc -p mocks` typ
   files, and the routes from upstream's ports to the services. For an
   upstream task it also starts the trial's own mocks.
 - `copies.ts`: a task's `COPY` lines as both adapters read them, in order,
-  and how `mocks.ts` lays them out (`copies.test.ts`, in `pnpm test`).
+  and how `mocks.ts` lays them out and maps an `ENV` path a mock reads
+  through them (`copies.test.ts`, in `pnpm test`).
 - `mirage.ts`: the adapter `mocks.ts` reads a committed task with, from its
   `environment/mirage.yaml`.
 - `liveclawbench.ts`: the adapter for an upstream task. It reuses

@@ -9,8 +9,8 @@
  * copies to one destination apart, where a map by destination would keep
  * only the last.
  */
-import { cpSync, mkdirSync, statSync } from 'node:fs'
-import { basename } from 'node:path'
+import { cpSync, existsSync, mkdirSync, statSync } from 'node:fs'
+import { basename, join } from 'node:path'
 
 /** One copy: a host path into a workspace path. `from` null makes an empty directory. */
 export interface Copy {
@@ -24,6 +24,28 @@ export interface Copy {
  */
 export function copyTarget(dest: string, from: string): string {
   return dest.endsWith('/') && statSync(from).isFile() ? `${dest}${basename(from)}` : dest.replace(/\/$/, '')
+}
+
+/**
+ * The host file behind a workspace path the copies put there, for an
+ * `ENV` a mock reads: a file copied to exactly that path, or one under a
+ * copied directory, the last copy that holds it winning, as it does in the
+ * image. A path no copy holds yet maps through the last directory it is
+ * under; one under no copy is undefined.
+ */
+export function copiedPath(copies: Copy[], path: string): string | undefined {
+  const latest = [...copies].reverse()
+  let under: string | undefined
+  for (const { to, from } of latest) {
+    if (from === null) continue
+    if (path === to) return from
+    if (path.startsWith(`${to}/`)) {
+      const host = join(from, path.slice(to.length + 1))
+      if (existsSync(host)) return host
+      under ??= host
+    }
+  }
+  return under
 }
 
 /** Lay the copies out in order, each workspace path through `host` to its directory. */
