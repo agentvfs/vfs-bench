@@ -28,7 +28,7 @@ Run dumps stay local; nothing is published yet.
 | [Agent-Diff](agentdiff/README.md) | agent-diff-bench/agent-diff | 1 of 224 | upstream's API replicas, in Docker |
 | [AutomationBench](automationbench/README.md) | zapier/AutomationBench v1.0.6 | 1 of 606 | upstream's Python world |
 | [Gaia2](gaia2/README.md) | Meta's ARE, gaia2-cli | 1 of 320 | upstream's apps, gaia2-cli |
-| [DataSpace](dataspace/README.md) | HKUSTDial/DataSpace | 1 of 60 public | none, files only |
+| [DataSpace](dataspace/README.md) | HKUSTDial/DataSpace | 11 of 60 public | none, files only |
 | [LiveClawBench](liveclawbench/README.md) | Mosi-AI/LiveClawBench | 1 of 113 | upstream's Node mocks, under Bun |
 | [ComplexMCP](complexmcp/README.md) | ATH-MaaS/complex-mcp | 11 of 47 | 14 of upstream's 15 MCP servers |
 | [Claw-Eval](claweval/README.md) | claw-eval/claw-eval | 1 of 60 | upstream's FastAPI mocks |
@@ -74,6 +74,7 @@ node harness/oracle.ts gaia2/chats-cultures-oldest [script]
 node harness/determinism.ts gaia2/chats-cultures-oldest
 
 pnpm typecheck
+pnpm test       # the harness's own checks, which need no dataset
 ```
 
 ### What a run does
