@@ -119,6 +119,8 @@ class MirageEnvironment(BaseEnvironment):
         self._workspace_id = ""
         self._mounts: dict[str, dict[str, str]] = {}
         self._state: list[tuple[Path, Path]] = []
+        self._routes: dict[str, str] = {}
+        self._env: dict[str, str] = {}
         self._runs: list[fakes.Run] = []
         # One refresh at a time: overlapping ones would share each state
         # file's temporary copy.
@@ -316,7 +318,9 @@ class MirageEnvironment(BaseEnvironment):
         self._state = [(Path(view), Path(live))
                        for view, live in plan["state"]]
         self._workdir = self.task_env_config.workdir or plan["workdir"]
+        self._env = dict(plan["config"].get("env") or {})
         routes = {} if self._network_disabled else plan["routes"]
+        self._routes = dict(routes)
         # A mount or CLI reaches its service at the trial's run directly,
         # so these stay reachable with the network off.
         allow = plan.get("allow", [])
@@ -406,8 +410,7 @@ class MirageEnvironment(BaseEnvironment):
             f"export {name}={shlex.quote(value)}\n"
             for name, value in (self._merge_env(env) or {}).items()
             if NAME.fullmatch(name))
-        async with self._refreshing:
-            await asyncio.to_thread(self._refresh_state)
+        await self.refresh_state()
         reply = await self._client.post(
             f"/v1/workspaces/{self._workspace_id}/shell",
             params={"background": "true"},
@@ -458,6 +461,41 @@ class MirageEnvironment(BaseEnvironment):
         """Bring each mock's state file in the workspace up to date."""
         for view, live in self._state:
             _snapshot(view, live)
+
+    async def refresh_state(self) -> None:
+        """Bring each mock's state file in the workspace up to date, as
+        every ``exec`` does first; one refresh at a time."""
+        async with self._refreshing:
+            await asyncio.to_thread(self._refresh_state)
+
+    # What a verifier run outside the workspace reads (microsandbox.py):
+    # the trial's files, its routes and the container's environment.
+
+    @property
+    def disk_mounts(self) -> dict[str, Path]:
+        """Each disk mount's workspace path, and its host directory."""
+        return {path: Path(m["root"]) for path, m in self._mounts.items()}
+
+    @property
+    def routes(self) -> dict[int, str]:
+        """Each upstream port the trial reaches on localhost, and the URL
+        behind it: its own mock, or its run of a shared fake. Empty when the
+        task turns the network off."""
+        return {int(port): url for port, url in self._routes.items()}
+
+    @property
+    def container_env(self) -> dict[str, str]:
+        """The environment every command sees, as the container's ``ENV``."""
+        return dict(self._env)
+
+    @property
+    def workdir(self) -> str:
+        """Where a command runs when Harbor names no directory."""
+        return self._workdir
+
+    def host_path(self, path: str, *, write: bool = False) -> Path:
+        """The host file behind a workspace path."""
+        return self._host(path, write=write)
 
     async def upload_file(self, source_path: Path | str, target_path: str):
         target = self._host(target_path, write=True)
