@@ -2,16 +2,19 @@
 
     uv run --project harbor python -I harbor/isolation.py [--out <dir>]
 
-Starts five trials at once from the committed tasks, each with its own
+Starts seven trials at once from the committed tasks, each with its own
 daemon, on kit fakes they share: chat-sticker-engagement twice (A and B,
 both reaching the one chat fake at localhost:5003, each its own run),
-weather-aqi-report (C), and candidate-interview-slot-confirm twice (D and
-E, both on the one gws fake through /gmail, /calendar and the gws CLI).
-Then checks, from inside the workspaces, that each trial reaches only its
-own runs and files: not another's state, mail or calendar events, not
-another's run by path through its own URL, and not the shared fakes' real
-ports. A trial's own commands keep apart too: several at once each see its
-state, and one canceled stops. Exits 1 if any check fails.
+weather-aqi-report (C), candidate-interview-slot-confirm twice (D and E,
+both on the one gws fake through /gmail, /calendar and the gws CLI), and
+email-sending-verify twice (F and G, on that gws fake too, each with the
+task's fault plan armed on its run). Then checks, from inside the
+workspaces, that each trial reaches only its own runs and files: not
+another's state, mail or calendar events, not another's run by path through
+its own URL, and not the shared fakes' real ports; and that each run's
+fault fires once, for that run alone. A trial's own commands keep apart
+too: several at once each see its state, and one canceled stops. Exits 1
+if any check fails.
 """
 import argparse
 import asyncio
@@ -41,6 +44,12 @@ MAILS = ("python3 -c \"import sqlite3; "
          "print(db.execute(\\\"select count(*) from MessageHeader where "
          f"name = 'Subject' and value = '{SUBJECT}'\\\").fetchone()[0])\"")
 TOKEN = "-H 'Authorization: Bearer gws-integ-token'"
+# F's and G's mail: email-sending-verify's fault answers a run's first send
+# as sent and stores nothing.
+FAULTED = "isolation-check-fault"
+FAULTED_MAILS = MAILS.replace(SUBJECT, FAULTED)
+FAULTED_SEND = (f"gws gmail send --to iso@example.com --subject {FAULTED} "
+                "--body isolation")
 # D's calendar event, on a day of its own.
 EVENT_DAY = "2026-05-28"
 EVENT = ("gws calendar events insert --params '{\"calendarId\": \"primary\"}' "
@@ -82,7 +91,8 @@ async def main() -> int:
     c = trial(out, "weather-aqi-report", "c")
     d, e = (trial(out, "candidate-interview-slot-confirm", n)
             for n in ("d", "e"))
-    trials = (a, b, c, d, e)
+    f, g = (trial(out, "email-sending-verify", n) for n in ("f", "g"))
+    trials = (a, b, c, d, e, f, g)
     await asyncio.gather(*(t.start(force_build=False) for t in trials))
     failed = 0
 
@@ -213,6 +223,27 @@ async def main() -> int:
         await check(e, "cannot reach the shared gws fake outside its run",
                     f"curl -sS {TOKEN} {gws}/gmail/v1/users/me/messages",
                     refused)
+
+        # Fault plans, armed on F's run and on G's: each run's first send
+        # is answered by its own plan, once.
+        sent = lambda n: lambda code, out: out == str(n)  # noqa: E731
+        await check(f, "its first send is answered as sent", FAULTED_SEND,
+                    lambda code, out: code == 0)
+        await check(f, "its first send stored nothing", FAULTED_MAILS, sent(0))
+        await check(
+            g, "its own first send is answered as sent, though "
+            "F's fault has fired", FAULTED_SEND, lambda code, out: code == 0)
+        await check(g, "its first send stored nothing", FAULTED_MAILS, sent(0))
+        await check(f, "its second send is stored", FAULTED_SEND,
+                    lambda code, out: code == 0)
+        await check(f, "has its one stored message", FAULTED_MAILS, sent(1))
+        await check(g, "does not see F's stored message", FAULTED_MAILS,
+                    sent(0))
+        await check(g, "its second send is stored", FAULTED_SEND,
+                    lambda code, out: code == 0)
+        await check(g, "has its one stored message", FAULTED_MAILS, sent(1))
+        await check(f, "still has only its own message", FAULTED_MAILS,
+                    sent(1))
 
         # The shared gws fake's calendars, through the mount and the CLI.
         await check(d, "creates an event with the gws CLI", EVENT,

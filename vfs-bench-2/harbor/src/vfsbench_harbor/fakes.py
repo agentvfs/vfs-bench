@@ -18,7 +18,9 @@ all.
 Each fixture is registered under the pool's own root, named by its task and
 content, so one fake seeds every task's runs from its own task directory.
 """
+import asyncio
 import atexit
+import contextlib
 import hashlib
 import json
 import os
@@ -153,23 +155,35 @@ class SharedFakes:
         body = {"run": run, "fixture": fixture}
         if epoch is not None:
             body["epoch"] = epoch
-        async with httpx.AsyncClient(timeout=120) as client:
-            reply = await client.post(f"{fake.url}/reset", json=body)
-            if reply.status_code != 200:
-                raise RuntimeError(f"resetting run {run} of the "
-                                   f"{fake.service} fake failed "
-                                   f"({reply.status_code}): {reply.text}")
-            if faults:
-                reply = await client.post(f"{fake.url}/_run/{run}/_kit/faults",
-                                          json={"plans": faults})
+        try:
+            async with httpx.AsyncClient(timeout=120) as client:
+                reply = await client.post(f"{fake.url}/reset", json=body)
                 if reply.status_code != 200:
-                    raise RuntimeError(f"arming run {run}'s faults on the "
+                    raise RuntimeError(f"resetting run {run} of the "
                                        f"{fake.service} fake failed "
                                        f"({reply.status_code}): {reply.text}")
-        files = list(fake.state.glob(f"mirage-kit-{fake.service}-*/{run}.db"))
-        if len(files) != 1:
-            raise RuntimeError(f"run {run} of the {fake.service} fake has "
-                               f"{len(files)} files under {fake.state}")
+                if faults:
+                    reply = await client.post(
+                        f"{fake.url}/_run/{run}/_kit/faults",
+                        json={"plans": faults})
+                    if reply.status_code != 200:
+                        raise RuntimeError(
+                            f"arming run {run}'s faults on the "
+                            f"{fake.service} fake failed "
+                            f"({reply.status_code}): {reply.text}")
+            files = list(
+                fake.state.glob(f"mirage-kit-{fake.service}-*/{run}.db"))
+            if len(files) != 1:
+                raise RuntimeError(f"run {run} of the {fake.service} fake has "
+                                   f"{len(files)} files under {fake.state}")
+        except BaseException:
+            # No trial holds the run yet, so its stop() would never drop it:
+            # a run seeded, or half seeded, goes before the error does, a
+            # canceled start included.
+            with contextlib.suppress(httpx.HTTPError):
+                await asyncio.shield(
+                    self.drop(Run(fake.service, run, "", Path())))
+            raise
         return Run(fake.service, run, f"{fake.url}/_run/{run}", files[0])
 
     async def drop(self, run: Run) -> None:

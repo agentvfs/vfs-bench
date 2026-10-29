@@ -287,10 +287,11 @@ own mocks.
 | Crash | A daemon that dies ends only its trial. A shared fake that dies fails the trials using it |
 | Verifier | Shares the agent's workspace, as Harbor's shared verifier does on Docker |
 
-`isolation.py` starts five trials at once from the committed tasks:
+`isolation.py` starts seven trials at once from the committed tasks:
 chat-sticker-engagement twice (A and B, on one chat fake), weather-aqi-report
-once (C), and candidate-interview-slot-confirm twice (D and E, on one gws
-fake). It checks from inside the workspaces that a trial sees only its own
+once (C), candidate-interview-slot-confirm twice (D and E, on one gws fake),
+and email-sending-verify twice (F and G, on that gws fake, each with its
+fault plan armed). It checks from inside the workspaces that a trial sees only its own
 state: on its data mount, through its API, its `/gmail` and `/calendar`
 mounts and the `gws` CLI, mail and calendar events alike. It
 checks that a trial cannot reach another's run by path through its own URL
@@ -298,8 +299,11 @@ checks that a trial cannot reach another's run by path through its own URL
 real port, or outside its runs, and cannot reset its run. It also checks
 one trial's commands against each other: six at once each see its state,
 and a command canceled mid-run (`asyncio.wait_for`) is stopped before it
-writes. All 40 checks pass: the 16 it had before the fakes were shared
-among them, and 8 for the calendar.
+writes. And each run's fault fires once, for that run alone: F's and G's
+first sends are answered as sent and store nothing, their second sends are
+stored, and neither sees the other's. All 50 checks pass: the 16 it had
+before the fakes were shared among them, 8 for the calendar and 10 for the
+fault plans.
 
 `--ek daemon_url=<url>` creates the workspace on a running daemon instead.
 That daemon cannot route each workspace to its own mocks: Mirage's curl
