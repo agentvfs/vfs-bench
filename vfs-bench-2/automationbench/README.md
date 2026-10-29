@@ -27,9 +27,14 @@ to `state/automationbench/tasks/<task_name>.json`.
 
 ## Divergences from upstream
 
-- Ids that upstream draws from `uuid4` come from a generator seeded with
-  the task's name. So two seeds give the same world, and the ids still
-  look like UUIDs.
+- Ids that upstream draws from `uuid4` or from `random` (HubSpot's,
+  Zendesk's, Mailchimp's and others) come from generators seeded with the
+  task's name. So two seeds give the same ids, in upstream's formats.
+  Timestamps are not frozen: as upstream does, the world stamps what a task
+  leaves undated from the wall clock, and most tasks set no
+  `meta.current_time`, so it is the real time too. `index.ts` declares
+  those fields (`clockFields`), and `harness/determinism.ts` lets only
+  them differ between two seeds, by the time between the seeds.
 - The apps are reached through the `api` CLI only. Nothing is mounted.
 - The world never gets the model's OpenAI key. Given one, upstream's
   ChatGPT app calls OpenAI; without it, as here, the app gives upstream's
