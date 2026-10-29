@@ -30,7 +30,7 @@ Run dumps stay local; nothing is published yet.
 | [Gaia2](gaia2/README.md) | Meta's ARE, gaia2-cli | 1 of 320 | upstream's apps, gaia2-cli |
 | [DataSpace](dataspace/README.md) | HKUSTDial/DataSpace | 11 of 60 public | none, files only |
 | [LiveClawBench](liveclawbench/README.md) | Mosi-AI/LiveClawBench | 11 of 113 | upstream's Node mocks, under Bun |
-| [ComplexMCP](complexmcp/README.md) | ATH-MaaS/complex-mcp | 1 of 47 | 14 of upstream's 15 MCP servers |
+| [ComplexMCP](complexmcp/README.md) | ATH-MaaS/complex-mcp | 11 of 47 | 14 of upstream's 15 MCP servers |
 | [Claw-Eval](claweval/README.md) | claw-eval/claw-eval | 11 of 126 | upstream's FastAPI mocks |
 
 EnterpriseOps-Gym is skipped for now: its tool servers ship only as amd64
@@ -122,6 +122,8 @@ submodule/    Mirage, pinned and unmodified
     tests/oracle.sh  a scripted solution, one shell call per block
     tests/oracle.reply.md  the solution's last reply, for a grader that judges it
     tests/noop.sh    doing nothing, which must fail
+    tests/oracle-*.sh  other correct solutions, which must pass
+    tests/wrong-*.sh   near misses, which must fail
 ```
 
 ## License

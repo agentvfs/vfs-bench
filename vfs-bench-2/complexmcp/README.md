@@ -33,9 +33,39 @@ This clones upstream into `state/complexmcp/src` and exports the tasks to
   do the discovery.
 - The shell can do arithmetic (`awk`, `python3`), so the math and unit
   servers are optional here.
+- The judge also skips `trid`, the LightShop and LightStock transaction
+  id. Upstream skips the other ids its apps draw from the session's seeded
+  random generator (`rid` and `oid` since its `3e45e5d`), but not this
+  one. It comes out the same only when a run draws as often before each
+  checkout or trade: every `add_to_cart`, `wait_payment_password` and
+  earlier trade draws. So one extra add and remove before checkout, or the
+  same trades in another order, failed a correct run. 27 tasks expect a
+  new transaction.
+- The judge sees every float rounded to 6 places, in the starting, end
+  and expected environments. Upstream compares floats exactly, and a
+  balance sums its trades in the order they were made, so the same trades
+  in another order can miss the expected balance by 1e-12. In task 44, 74
+  of the 120 orders of its four buys and the VIP upgrade did. Six places
+  is far below a cent, the smallest real difference.
+
+The `trid` and float rules are checked by `tests/oracle-*.sh`, which must
+pass, and `tests/wrong-*.sh`, which must fail: an extra cart item before
+checkout (`family-group-airpods`), trades in another order
+(`liquidate-short-news-flight`, `tech-stocks-flight-bitter-gourd`), and
+one share too few or one cent off (`nike-to-20-shares`).
 
 ## Tasks
 
 | Task | Upstream |
 |---|---|
 | `family-group-airpods` | task 2 (seed 42; LightTalk, LightShop) |
+| `remove-silent-classmates` | task 8 (seed 42; LightTalk) |
+| `family-and-classmate-groups` | task 12 (seed 42; LightTalk) |
+| `business-flight-sf-ny` | task 21 (seed 1; LightTalk, LightFlight) |
+| `fashion-brand-days-chickpeas` | task 32 (seed 8; LightTalk, LightShop, LightNews) |
+| `mangosteen-and-mango` | task 35 (seed 8; LightShop) |
+| `homecoming-play-endive` | task 37 (seed 8; LightTalk, LightShop, LightNews) |
+| `nike-to-20-shares` | task 43 (seed 41; LightStock) |
+| `tech-stocks-flight-bitter-gourd` | task 44 (seed 108; LightTalk, LightShop, LightFlight, LightStock) |
+| `liquidate-short-news-flight` | task 45 (seed 114514; LightTalk, LightFlight, LightStock, LightNews) |
+| `butternut-new-year-messages` | task 46 (seed 123; LightTalk, LightShop) |
