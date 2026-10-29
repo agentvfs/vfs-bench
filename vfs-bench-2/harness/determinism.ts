@@ -42,14 +42,17 @@ const TIMESTAMP = /^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:?
 /**
  * A declared wall-clock field whose timestamp moved forward by `gap`, the
  * time between the seeds, and kept its format: anything else is a real
- * difference.
+ * difference. A timestamp is a date-time string, or an integer of epoch
+ * milliseconds (as Gmail's `internal_date`).
  */
 function followsClock(change: Change, gap: number, clockFields: string[]): boolean {
   const { kind, path, before, after } = change
   if (kind !== 'updated' || !clockFields.includes(path.at(-1) ?? '')) return false
-  if (typeof before !== 'string' || typeof after !== 'string') return false
-  if (!TIMESTAMP.test(before) || before.replace(/\d/g, '0') !== after.replace(/\d/g, '0')) return false
-  const moved = Date.parse(after) - Date.parse(before)
+  let moved: number
+  if (Number.isInteger(before) && Number.isInteger(after)) moved = (after as number) - (before as number)
+  else if (typeof before !== 'string' || typeof after !== 'string') return false
+  else if (!TIMESTAMP.test(before) || before.replace(/\d/g, '0') !== after.replace(/\d/g, '0')) return false
+  else moved = Date.parse(after) - Date.parse(before)
   return moved > 0 && Math.abs(moved - gap) <= CLOCK_SLACK_MS
 }
 

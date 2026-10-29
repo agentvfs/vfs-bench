@@ -6,10 +6,11 @@ services (gmail, calendar, contacts, crm, helpdesk, finance, ...). Each
 task's own grader scores the run, and asks an LLM judge for part of the
 score.
 
-This port takes the 60 general tasks whose agent works only through mock
-services; 30 of them are in Chinese. The rest of the split is left for later
-or out:
-- 68 also give the agent files (`sandbox_files`), which would be a mount;
+This port takes the 126 general tasks whose agent works through mock
+services: the 60 that use services only, and 66 of the 68 that also give the
+agent files (`sandbox_files`), which are mounted at `/workspace`. 52 of them
+are in Chinese. The rest of the split is left for later or out:
+- T097 and T098 give the agent PDFs that upstream's repo does not have;
 - 25 browse the live web (`web_real`);
 - 8 have no services and run only in upstream's sandbox container.
 
@@ -34,6 +35,7 @@ defaults to upstream's, `google/gemini-3-flash-preview`.
 | The runner starts each service, `python mock_services/<service>/server.py`, with the task's fixtures in its environment | The same app, unchanged, on a free port (`serve.py`), with the same environment |
 | One tool per service endpoint, `helpdesk_get_ticket` | A CLI per service with the tools as subcommands, `helpdesk get-ticket --ticket-id TK-1201`, generated from the task's tool schemas |
 | The dispatcher POSTs a tool call's input to its endpoint and records the call | The CLI does the same and records the same dispatch |
+| The runner writes each of the task's `sandbox_files` to `/workspace/<path>` in the sandbox container, which the agent can also write to | The same files, copied into the run directory and mounted writable at `/workspace` (`workspace.yaml`) |
 | The system prompt gives the task's `mock_today` | The same line, ahead of Mirage's prompt |
 | After the run, the runner fetches each service's audit log | The same logs, as the run's snapshot |
 | `grader.py`, with the trace, the audit logs and the judge | The same grader, unchanged, given the run converted to upstream's trace (`grade.py`). A task passes at upstream's threshold, a task score of 0.75. |
@@ -53,9 +55,23 @@ defaults to upstream's, `google/gemini-3-flash-preview`.
   and a task with `mock_today` keeps their dates as written. Without it,
   gmail and calendar shift their dates to the wall clock, as upstream's do.
 - The workspace's `date` reads the wall clock. Upstream's sandbox does too.
+- Upstream snapshots the sandbox's files after the run (`env_snapshot`), but
+  no grader in scope reads them, so the run's `/workspace` is not graded.
 
 ## Tasks
 
+Tasks with `sandbox_files` list them as files.
+
 | Task | Upstream | Services |
 |---|---|---|
+| `incident-postmortem-zh` | `T037zh_incident_postmortem` | helpdesk, config, gmail, kb, notes, scheduler; files |
+| `email-phishing-triage` | `T075_email_phishing_injection` | gmail; files |
+| `army-expenditures` | `T085_officeqa_army_expenditures` | ocr (`ocr-t59`); files |
+| `complaint-investigation` | `T110_complaint_investigation` | gmail, contacts, crm, finance |
+| `project-progress-report-zh` | `T149zh_project_progress_report` | calendar, notes, todo, contacts |
+| `supply-chain-investigation` | `T152_supply_chain_investigation` | finance, inventory, crm, helpdesk |
+| `market-research-report` | `T154_market_research_report` | rss, kb, crm, gmail, contacts |
 | `onsite-support-dispatch` | `T156_onsite_support_dispatch` | gmail, calendar, contacts, crm, helpdesk |
+| `month-end-reconciliation` | `T158_month_end_reconciliation` | finance, crm, config, inventory, scheduler |
+| `automation-failure-recovery-zh` | `T161zh_automation_failure_recovery` | scheduler, config, helpdesk, kb, inventory |
+| `quarterly-customer-review-zh` | `T163zh_quarterly_customer_review` | gmail, contacts, finance, rss, crm |
