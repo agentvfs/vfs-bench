@@ -12,7 +12,8 @@
  * Box's files are also mounted at `/box`. The system prompt keeps
  * upstream's session and environment lines (its ReAct prompt) without its
  * XML reply format. Upstream's evaluator grades the run's diff against the
- * task's assertions. Setup: `python3 -I agentdiff/setup.py`.
+ * task's assertions, which ignore Box rows' `path`, a later column.
+ * Setup: `python3 -I agentdiff/setup.py`.
  */
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
@@ -154,7 +155,13 @@ export async function load(slug: string): Promise<Task> {
     },
     async grade({ run }) {
       const url = run.fakes.get(FAKE)!.url
-      const result = await platform(url, 'evaluateRun', { runId: session!.runId, expectedOutput: JSON.parse(row.answer) })
+      const expected = JSON.parse(row.answer) as { ignore_fields?: { global?: string[] } }
+      // Box rows' `path` (the ancestor ids, materialized) came after the
+      // assertions; they already ignore it as `path_collection`.
+      if (info.service === 'box') {
+        expected.ignore_fields = { ...expected.ignore_fields, global: [...(expected.ignore_fields?.global ?? []), 'path'] }
+      }
+      const result = await platform(url, 'evaluateRun', { runId: session!.runId, expectedOutput: expected })
       const detail = (await (await fetch(`${url}/api/platform/results/${session!.runId}`)).json()) as {
         failures?: string[]
         score?: unknown

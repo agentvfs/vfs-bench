@@ -25,7 +25,7 @@ Run dumps stay local; nothing is published yet.
 
 | Dataset | Upstream | Ported | Services |
 |---|---|---|---|
-| [Agent-Diff](agentdiff/README.md) | agent-diff-bench/agent-diff | 1 of 224 | upstream's API replicas, in Docker |
+| [Agent-Diff](agentdiff/README.md) | agent-diff-bench/agent-diff | 11 of 224 | upstream's API replicas, in Docker |
 | [AutomationBench](automationbench/README.md) | zapier/AutomationBench v1.0.6 | 11 of 606 | upstream's Python world |
 | [Gaia2](gaia2/README.md) | Meta's ARE, gaia2-cli | 1 of 320 | upstream's apps, gaia2-cli |
 | [DataSpace](dataspace/README.md) | HKUSTDial/DataSpace | 11 of 60 public | none, files only |
