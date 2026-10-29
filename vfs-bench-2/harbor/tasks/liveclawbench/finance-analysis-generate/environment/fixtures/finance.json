@@ -1,0 +1,822 @@
+{
+ "_env": [
+  {
+   "name": "TASK_NAME",
+   "value": "finance-analysis-generate"
+  }
+ ],
+ "_migrations": [
+  {
+   "id": "finance_v1",
+   "applied_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": "finance_v2",
+   "applied_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "user": [
+  {
+   "id": 1,
+   "username": "admin",
+   "password_hash": "pbkdf2:sha256:600000$a5b740eb442df4a6944d37f6a50fc3c3$5d2f3c741d06556fedf54c77c232c7d0d8db6d7f62d40c233922f43580413747",
+   "role": "admin",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "username": "john",
+   "password_hash": "pbkdf2:sha256:600000$c91719ca36e0944f713d2d7c42207003$cbf872d20e9eb943f553031d3e5bd1baae568928b05f9bee3c103f9198d951f7",
+   "role": "user",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "username": "jane",
+   "password_hash": "pbkdf2:sha256:600000$d972d12bfb8004bf9a651f50ea2c68d0$e6b3f38a3cf7ce31aa93d9f3613f2a70761dce4cb64d232ff5d4604a69591959",
+   "role": "user",
+   "is_active": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "department_financial_record": [
+  {
+   "id": 1,
+   "month": "2026-01",
+   "department_name": "Engineering",
+   "manager_email": "eng.manager@example.com",
+   "budget_amount": 150000,
+   "actual_expense_amount": 85000,
+   "revenue_amount": 180000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "month": "2026-01",
+   "department_name": "Sales",
+   "manager_email": "sales.manager@example.com",
+   "budget_amount": 150000,
+   "actual_expense_amount": 85000,
+   "revenue_amount": 180000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "month": "2026-01",
+   "department_name": "Marketing",
+   "manager_email": "marketing.manager@example.com",
+   "budget_amount": 150000,
+   "actual_expense_amount": 85000,
+   "revenue_amount": 180000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "month": "2026-01",
+   "department_name": "HR",
+   "manager_email": "hr.manager@example.com",
+   "budget_amount": 150000,
+   "actual_expense_amount": 85000,
+   "revenue_amount": 180000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "month": "2026-01",
+   "department_name": "Finance",
+   "manager_email": "finance.manager@example.com",
+   "budget_amount": 150000,
+   "actual_expense_amount": 85000,
+   "revenue_amount": 180000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "month": "2026-01",
+   "department_name": "Operations",
+   "manager_email": "ops.manager@example.com",
+   "budget_amount": 150000,
+   "actual_expense_amount": 85000,
+   "revenue_amount": 180000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 7,
+   "month": "2026-02",
+   "department_name": "Engineering",
+   "manager_email": "eng.manager@example.com",
+   "budget_amount": 150000,
+   "actual_expense_amount": 85000,
+   "revenue_amount": 180000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 8,
+   "month": "2026-02",
+   "department_name": "Sales",
+   "manager_email": "sales.manager@example.com",
+   "budget_amount": 150000,
+   "actual_expense_amount": 85000,
+   "revenue_amount": 180000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 9,
+   "month": "2026-02",
+   "department_name": "Marketing",
+   "manager_email": "marketing.manager@example.com",
+   "budget_amount": 150000,
+   "actual_expense_amount": 85000,
+   "revenue_amount": 180000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 10,
+   "month": "2026-02",
+   "department_name": "HR",
+   "manager_email": "hr.manager@example.com",
+   "budget_amount": 150000,
+   "actual_expense_amount": 85000,
+   "revenue_amount": 180000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 11,
+   "month": "2026-02",
+   "department_name": "Finance",
+   "manager_email": "finance.manager@example.com",
+   "budget_amount": 150000,
+   "actual_expense_amount": 85000,
+   "revenue_amount": 180000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 12,
+   "month": "2026-02",
+   "department_name": "Operations",
+   "manager_email": "ops.manager@example.com",
+   "budget_amount": 150000,
+   "actual_expense_amount": 85000,
+   "revenue_amount": 180000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 13,
+   "month": "2026-03",
+   "department_name": "Engineering",
+   "manager_email": "eng.manager@example.com",
+   "budget_amount": 50000,
+   "actual_expense_amount": 55000,
+   "revenue_amount": 62000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 14,
+   "month": "2026-03",
+   "department_name": "Sales",
+   "manager_email": "sales.manager@example.com",
+   "budget_amount": 40000,
+   "actual_expense_amount": 38000,
+   "revenue_amount": 78000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 15,
+   "month": "2026-03",
+   "department_name": "Marketing",
+   "manager_email": "marketing.manager@example.com",
+   "budget_amount": 30000,
+   "actual_expense_amount": 32000,
+   "revenue_amount": 41000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 16,
+   "month": "2026-03",
+   "department_name": "HR",
+   "manager_email": "hr.manager@example.com",
+   "budget_amount": 20000,
+   "actual_expense_amount": 19500,
+   "revenue_amount": 5000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 17,
+   "month": "2026-03",
+   "department_name": "Finance",
+   "manager_email": "finance.manager@example.com",
+   "budget_amount": 25000,
+   "actual_expense_amount": 23000,
+   "revenue_amount": 8000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 18,
+   "month": "2026-03",
+   "department_name": "Operations",
+   "manager_email": "ops.manager@example.com",
+   "budget_amount": 35000,
+   "actual_expense_amount": 34000,
+   "revenue_amount": 12000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "system_config": [
+  {
+   "id": 1,
+   "config_key": "approval_limit",
+   "config_value": "50000",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "transaction_record": [
+  {
+   "id": 1,
+   "trade_date": "2026-01-05",
+   "vendor_name": "Acme Corp",
+   "amount": 12500.5,
+   "category": "software",
+   "status": "pending",
+   "approval_status": "pending",
+   "approval_note": "",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "trade_date": "2026-01-10",
+   "vendor_name": "Globex",
+   "amount": 52000,
+   "category": "travel",
+   "status": "pending",
+   "approval_status": "pending",
+   "approval_note": "",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "trade_date": "2026-01-12",
+   "vendor_name": "Initech",
+   "amount": 3400,
+   "category": "office_supplies",
+   "status": "pending",
+   "approval_status": "pending",
+   "approval_note": "",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "trade_date": "2026-01-15",
+   "vendor_name": "Hooli",
+   "amount": 78000,
+   "category": "marketing",
+   "status": "pending",
+   "approval_status": "pending",
+   "approval_note": "",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "trade_date": "2026-01-18",
+   "vendor_name": "Massive Dynamic",
+   "amount": 2100,
+   "category": "utilities",
+   "status": "pending",
+   "approval_status": "pending",
+   "approval_note": "",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "trade_date": "2026-02-01",
+   "vendor_name": "Stark Ind",
+   "amount": 15000,
+   "category": "professional_services",
+   "status": "flagged",
+   "approval_status": "pending",
+   "approval_note": "",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 7,
+   "trade_date": "2026-02-05",
+   "vendor_name": "Wayne Ent",
+   "amount": 9000,
+   "category": "meals",
+   "status": "pending",
+   "approval_status": "pending",
+   "approval_note": "",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 8,
+   "trade_date": "2026-02-08",
+   "vendor_name": "Cyberdyne",
+   "amount": 67000,
+   "category": "transport",
+   "status": "pending",
+   "approval_status": "pending",
+   "approval_note": "",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 9,
+   "trade_date": "2026-02-10",
+   "vendor_name": "Umbrella",
+   "amount": 4500,
+   "category": "software",
+   "status": "pending",
+   "approval_status": "pending",
+   "approval_note": "",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 10,
+   "trade_date": "2026-02-14",
+   "vendor_name": "Oscorp",
+   "amount": 32000,
+   "category": "travel",
+   "status": "pending",
+   "approval_status": "pending",
+   "approval_note": "",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "account_balance": [
+  {
+   "id": 1,
+   "account_id": "ACC-1001",
+   "system_balance": 50000,
+   "statement_balance": 49800,
+   "diff_amount": 200,
+   "status": "pending",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "account_id": "ACC-1002",
+   "system_balance": 120000,
+   "statement_balance": 119500,
+   "diff_amount": 500,
+   "status": "pending",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "account_id": "ACC-1003",
+   "system_balance": 75000,
+   "statement_balance": 75200,
+   "diff_amount": -200,
+   "status": "flagged",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "account_transaction": [
+  {
+   "id": 1,
+   "account_balance_id": 1,
+   "transaction_id": 1,
+   "amount": 12500.5,
+   "status": "cleared",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "account_balance_id": 1,
+   "transaction_id": 2,
+   "amount": 52000,
+   "status": "pending",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "account_balance_id": 1,
+   "transaction_id": null,
+   "amount": 3000,
+   "status": "pending",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "account_balance_id": 2,
+   "transaction_id": 3,
+   "amount": 3400,
+   "status": "cleared",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "account_balance_id": 2,
+   "transaction_id": 4,
+   "amount": 78000,
+   "status": "pending",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "account_balance_id": 2,
+   "transaction_id": null,
+   "amount": 5000,
+   "status": "pending",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 7,
+   "account_balance_id": 3,
+   "transaction_id": 5,
+   "amount": 2100,
+   "status": "cleared",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 8,
+   "account_balance_id": 3,
+   "transaction_id": 6,
+   "amount": 15000,
+   "status": "flagged",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 9,
+   "account_balance_id": 3,
+   "transaction_id": null,
+   "amount": 8000,
+   "status": "pending",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "vendor": [
+  {
+   "id": 1,
+   "vendor_code": "V001",
+   "vendor_name": "Acme Corp",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "vendor_code": "V002",
+   "vendor_name": "Globex Systems",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "vendor_code": "V003",
+   "vendor_name": "Initech Solutions",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "vendor_code": "V004",
+   "vendor_name": "Hooli Technologies",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "vendor_code": "V005",
+   "vendor_name": "Stark Industries",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "expense_report": [
+  {
+   "id": 1,
+   "trip_name": "Q1 Sales Trip",
+   "total_amount": 2500,
+   "status": "submitted",
+   "created_by_user_id": 2,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "trip_name": "Dev Conference",
+   "total_amount": 1800,
+   "status": "draft",
+   "created_by_user_id": 2,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "expense_item": [
+  {
+   "id": 1,
+   "expense_report_id": 1,
+   "expense_category": "flight",
+   "amount": 1200,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "expense_report_id": 1,
+   "expense_category": "hotel",
+   "amount": 800,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "expense_report_id": 1,
+   "expense_category": "meals",
+   "amount": 500,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "expense_report_id": 2,
+   "expense_category": "flight",
+   "amount": 1000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "expense_report_id": 2,
+   "expense_category": "hotel",
+   "amount": 600,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "expense_report_id": 2,
+   "expense_category": "transport",
+   "amount": 200,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "invoice": [
+  {
+   "id": 1,
+   "vendor_id": 1,
+   "vendor_name": "Acme Corp",
+   "invoice_number": "INV-2026-001",
+   "invoice_date": "2026-01-15",
+   "status": "submitted",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "vendor_id": 2,
+   "vendor_name": "Globex Systems",
+   "invoice_number": "INV-2026-002",
+   "invoice_date": "2026-02-01",
+   "status": "posted",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "vendor_id": 3,
+   "vendor_name": "Initech Solutions",
+   "invoice_number": "INV-2026-003",
+   "invoice_date": "2026-02-10",
+   "status": "cancelled",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "invoice_line_item": [
+  {
+   "id": 1,
+   "invoice_id": 1,
+   "description": "Software License Renewal",
+   "category_code": "5300",
+   "amount": 12500.5,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "invoice_id": 1,
+   "description": "Support Package",
+   "category_code": "5400",
+   "amount": 3000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "invoice_id": 2,
+   "description": "Travel Expenses",
+   "category_code": "5100",
+   "amount": 52000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "invoice_id": 3,
+   "description": "Office Supplies",
+   "category_code": "5000",
+   "amount": 3400,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "invoice_id": 3,
+   "description": "Utilities",
+   "category_code": "5500",
+   "amount": 2100,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "asset_record": [
+  {
+   "id": 1,
+   "asset_name": "Server Rack A",
+   "cost_basis": 50000,
+   "residual_value": 5000,
+   "useful_life_years": 5,
+   "depreciation_method": "straight_line",
+   "annual_depreciation": 9000,
+   "correction_reason": "",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "asset_name": "Laptop Fleet",
+   "cost_basis": 80000,
+   "residual_value": 8000,
+   "useful_life_years": 4,
+   "depreciation_method": "straight_line",
+   "annual_depreciation": 18000,
+   "correction_reason": "",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "asset_name": "Office Furniture",
+   "cost_basis": 30000,
+   "residual_value": 3000,
+   "useful_life_years": 10,
+   "depreciation_method": "straight_line",
+   "annual_depreciation": 2700,
+   "correction_reason": "",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "asset_name": "Company Vehicle",
+   "cost_basis": 60000,
+   "residual_value": 10000,
+   "useful_life_years": 6,
+   "depreciation_method": "declining_balance",
+   "annual_depreciation": 10000,
+   "correction_reason": "",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "asset_name": "Network Equipment",
+   "cost_basis": 25000,
+   "residual_value": 2500,
+   "useful_life_years": 5,
+   "depreciation_method": "straight_line",
+   "annual_depreciation": 4500,
+   "correction_reason": "",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "budget_alert": [],
+ "dashboard_config": [
+  {
+   "id": 1,
+   "user_id": 1,
+   "date_range_start": "2026-01-01",
+   "date_range_end": "2026-12-31",
+   "formula_json": "{}",
+   "department_weight_json": "{}",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "portfolio_holding": [
+  {
+   "id": 1,
+   "asset_class_code": "eq",
+   "asset_name": "Equities",
+   "current_value": 100000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "asset_class_code": "fi",
+   "asset_name": "Fixed Income",
+   "current_value": 80000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "asset_class_code": "ca",
+   "asset_name": "Cash",
+   "current_value": 50000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "asset_class_code": "al",
+   "asset_name": "Alternatives",
+   "current_value": 20000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "portfolio_order": [
+  {
+   "id": 1,
+   "asset_class_code": "eq",
+   "direction": "buy",
+   "amount": 5000,
+   "status": "executed",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "asset_class_code": "fi",
+   "direction": "sell",
+   "amount": 3000,
+   "status": "executed",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "asset_class_code": "al",
+   "direction": "buy",
+   "amount": 2000,
+   "status": "submitted",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ]
+}

@@ -9,16 +9,17 @@
  * (`scripts/build-task-images.ts`). Here each mock runs as
  * `liveclawbench/index.ts` runs it, under Bun on a free port, and the plan
  * routes its upstream port there. The task's own Dockerfile then adds
- * `ENV`, `COPY . <dir>`, `WORKDIR` and `RUN`, whose lines run in the
- * workspace once it opens; any other instruction is refused, since nothing
- * here can carry it out.
+ * `ENV`, `COPY <src> <dest>` (from its `environment/`), `WORKDIR` and
+ * `RUN`, whose lines run in the workspace once it opens; any other
+ * instruction is refused, since nothing here can carry it out.
  */
 import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { join, relative } from 'node:path'
 
 import type { FakeSpec } from '../harness/fakes.ts'
 import type { Run } from '../harness/runs.ts'
 import { DATA, PLATFORM, fake, fakeName } from '../liveclawbench/index.ts'
+import { type Copy, copiedPath, copyTarget } from './copies.ts'
 import type { Plan } from './mocks.ts'
 
 /**
@@ -37,6 +38,9 @@ const PORTS: Record<string, number[]> = {
 
 /** A per-task image's base, which names the task. */
 const BASE = /^liveclawbench-([a-z0-9-]+)-base(?::\S+)?$/
+
+/** `COPY <src> <dest>`, with no flags: a source in the build context, `environment/`. */
+const COPY = /^([^-\s]\S*)\s+(\S+)$/
 
 interface Mapping {
   binaries: string[]
@@ -102,16 +106,20 @@ export function plan(taskDir: string, run: Run): Plan {
   const layout = Object.fromEntries(mapping.binaries.map((mock) => [mock, DATA[mock]!(run.path('mock-data', mock))]))
   const env: Record<string, string> = { TASK_NAME: task }
   const mockEnv: Record<string, string> = {}
-  // Read first: an `ENV` may name a file a later `COPY` puts there.
-  const copies: Record<string, string> = Object.fromEntries(
-    steps
-      .filter(({ op, args }) => op === 'COPY' && /^\.\s+\S+$/.test(args))
-      .map(({ args }) => [args.split(/\s+/)[1]!.replace(/\/$/, ''), environmentDir]),
-  )
+  // Read first: an `ENV` may name a file a later `COPY` puts there. Kept
+  // in order, so two copies to one destination both arrive.
+  const copies: Copy[] = []
+  for (const { op, args } of steps) {
+    const copy = op === 'COPY' ? COPY.exec(args) : null
+    if (copy === null) continue
+    const from = join(environmentDir, copy[1]!)
+    if (relative(environmentDir, from).startsWith('..')) throw new Error(`${task}: COPY ${copy[1]} is outside environment/`)
+    copies.push({ to: copyTarget(copy[2]!, from), from })
+  }
   const lines: { cwd: string; line: string }[] = []
   let workdir: string | undefined
   for (const { op, args, line } of steps.slice(1)) {
-    if (op === 'COPY' && /^\.\s+\S+$/.test(args)) continue
+    if (op === 'COPY' && COPY.test(args)) continue
     if (op === 'ENV') {
       for (const [name, value] of envPairs(args)) {
         // The workspace sees the value as the container does.
@@ -124,8 +132,8 @@ export function plan(taskDir: string, run: Run): Plan {
           }
           continue
         }
-        const copied = Object.keys(copies).find((dir) => value.startsWith(`${dir}/`))
-        mockEnv[name] = copied === undefined ? value : join(copies[copied]!, value.slice(copied.length + 1))
+        // A copied file's or directory's path is the host's for the mock.
+        mockEnv[name] = copiedPath(copies, value) ?? value
       }
     } else if (op === 'RUN' && !args.startsWith('[')) {
       lines.push({ cwd: workdir ?? '/', line: args })

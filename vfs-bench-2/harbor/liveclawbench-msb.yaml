@@ -1,7 +1,7 @@
 # liveclawbench.yaml's tasks, each trial's verifier run in a microVM of its
 # own (microsandbox's msb) with real CPython, not in the Mirage workspace's
 # Pyodide. From vfs-bench-2/:
-#   uv run --project harbor harbor run -c harbor/liveclawbench-msb.yaml -a oracle -n 13 -o state/harbor/jobs
+#   uv run --project harbor harbor run -c harbor/liveclawbench-msb.yaml -a oracle -n 24 -o state/harbor/jobs
 # Any other run takes it as a flag:
 #   --verifier vfsbench_harbor:MicrosandboxVerifier
 environment:
@@ -22,3 +22,14 @@ tasks:
   - path: harbor/tasks/liveclawbench/email-writing
   - path: harbor/tasks/liveclawbench/interview-slot-verify
   - path: harbor/tasks/liveclawbench/meeting-slot-race
+  - path: harbor/tasks/liveclawbench/finance-anomaly-detect
+  - path: harbor/tasks/liveclawbench/finance-dashboard-repair
+  - path: harbor/tasks/liveclawbench/finance-depreciation-audit
+  - path: harbor/tasks/liveclawbench/finance-expense-log
+  - path: harbor/tasks/liveclawbench/finance-monthly-close
+  - path: harbor/tasks/liveclawbench/finance-portfolio-rebalancing
+  - path: harbor/tasks/liveclawbench/finance-analysis-generate
+  - path: harbor/tasks/liveclawbench/finance-budget-alert
+  - path: harbor/tasks/liveclawbench/finance-invoice-process
+  - path: harbor/tasks/liveclawbench/finance-tax-prepare
+  - path: harbor/tasks/liveclawbench/finance-budget-shift

@@ -14,6 +14,10 @@
  *     env: {TASK_NAME: chat-sticker-engagement}
  *     copy:                      # COPY . <dir>: entries of environment/
  *       /workspace/environment: [notes]
+ *       /workspace/policies: policies/  # COPY <src> <dest>: src, in environment/
+ *       /workspace:              # several COPYs to one <dest>, in order
+ *         - {src: policies/}
+ *         - {src: ., entries: [notes]}
  *     run: [mkdir -p /workspace/output]   # RUN lines, in the workspace
  *     workdir: /workspace        # WORKDIR, if any
  *     workspace:                 # added to harbor/workspace.yaml
@@ -25,11 +29,12 @@
  * `${<SERVICE>_URL}` in `workspace` is that service's run URL.
  */
 import { existsSync, readFileSync } from 'node:fs'
-import { basename, join } from 'node:path'
+import { basename, join, relative } from 'node:path'
 
 import { parse } from 'yaml'
 
 import type { Run } from '../harness/runs.ts'
+import { type Copy, copyTarget } from './copies.ts'
 import type { Plan } from './mocks.ts'
 
 /** A shared fake's run, as the environment reset it for this trial. */
@@ -52,11 +57,17 @@ interface FakeBlock {
 interface MirageYaml {
   fakes: Record<string, FakeBlock>
   env?: Record<string, string>
-  copy?: Record<string, string[]>
+  copy?: Record<string, CopyValue>
   run?: string[]
   workdir?: string
   workspace?: Record<string, unknown>
 }
+
+/**
+ * A destination's copies: `COPY . <dest>`'s entries of environment/, one
+ * `COPY <src> <dest>`'s source, or several COPYs to it, in order.
+ */
+type CopyValue = string[] | string | { src: string; entries?: string[] }[]
 
 const KEYS = new Set(['fakes', 'env', 'copy', 'run', 'workdir', 'workspace'])
 
@@ -80,6 +91,24 @@ function interpolate<T>(value: T, vars: Record<string, string>, where: string): 
   ) as T
 }
 
+/** A destination's copies, as mirage.yaml states them, in order. */
+function copiesOf(dest: string, value: CopyValue, environmentDir: string, where: string): Copy[] {
+  const source = (src: string): Copy => {
+    const from = join(environmentDir, src)
+    if (relative(environmentDir, from).startsWith('..')) throw new Error(`${where}: COPY ${src} is outside environment/`)
+    return { to: copyTarget(dest, from), from }
+  }
+  const everything = (entries: string[]): Copy[] =>
+    entries.length === 0
+      ? [{ to: dest.replace(/\/$/, ''), from: null }]
+      : entries.map((entry) => ({ to: `${dest.replace(/\/$/, '')}/${entry}`, from: join(environmentDir, entry) }))
+  if (typeof value === 'string') return [source(value)]
+  if (value.every((v) => typeof v === 'string')) return everything(value as string[])
+  return (value as { src: string; entries?: string[] }[]).flatMap((step) =>
+    step.src === '.' ? everything(step.entries ?? []) : [source(step.src)],
+  )
+}
+
 /** The plan for a task with a mirage.yaml, over its fakes' runs. */
 export function plan(taskDir: string, _run: Run, external: Record<string, External>): Plan {
   const path = file(taskDir)!
@@ -98,11 +127,7 @@ export function plan(taskDir: string, _run: Run, external: Record<string, Extern
     }
     if (fake.state !== undefined) state[fake.state] = run.db
   }
-  const copies: Record<string, string | null> = {}
-  for (const [dir, entries] of Object.entries(spec.copy ?? {})) {
-    if (entries.length === 0) copies[dir] = null
-    for (const entry of entries) copies[`${dir.replace(/\/$/, '')}/${entry}`] = join(environmentDir, entry)
-  }
+  const copies = Object.entries(spec.copy ?? {}).flatMap(([dest, value]) => copiesOf(dest, value, environmentDir, path))
   const vars = Object.fromEntries(Object.entries(external).map(([service, run]) => [`${service.toUpperCase()}_URL`, run.url]))
   return {
     name: spec.env?.TASK_NAME ?? basename(taskDir),

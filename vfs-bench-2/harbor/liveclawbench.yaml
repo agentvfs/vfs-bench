@@ -20,3 +20,14 @@ tasks:
   - path: harbor/tasks/liveclawbench/email-writing
   - path: harbor/tasks/liveclawbench/interview-slot-verify
   - path: harbor/tasks/liveclawbench/meeting-slot-race
+  - path: harbor/tasks/liveclawbench/finance-anomaly-detect
+  - path: harbor/tasks/liveclawbench/finance-dashboard-repair
+  - path: harbor/tasks/liveclawbench/finance-depreciation-audit
+  - path: harbor/tasks/liveclawbench/finance-expense-log
+  - path: harbor/tasks/liveclawbench/finance-monthly-close
+  - path: harbor/tasks/liveclawbench/finance-portfolio-rebalancing
+  - path: harbor/tasks/liveclawbench/finance-analysis-generate
+  - path: harbor/tasks/liveclawbench/finance-budget-alert
+  - path: harbor/tasks/liveclawbench/finance-invoice-process
+  - path: harbor/tasks/liveclawbench/finance-tax-prepare
+  - path: harbor/tasks/liveclawbench/finance-budget-shift

@@ -4,13 +4,13 @@ Third-party material in vfs-bench-2
 vfs-bench-2 is MIT-licensed (see ../LICENSE). It runs other benchmarks
 unchanged where it can. Their code and data are downloaded by each dataset's
 setup script into state/, which is gitignored, at the source pinned below.
-Apart from thirteen of LiveClawBench's tasks, none of that is redistributed
-here.
+Apart from twenty-four of LiveClawBench's tasks, none of that is
+redistributed here.
 
 What this directory does carry from them is small, and each entry names it:
 prompts quoted or adapted in a dataset's index.ts, a rewritten tool guide,
-a pinned dependency list, and LiveClawBench's thirteen task directories. The
-MIT notices that cover those follow the entries, verbatim.
+a pinned dependency list, and LiveClawBench's twenty-four task directories.
+The MIT notices that cover those follow the entries, verbatim.
 
 
 Datasets
@@ -82,12 +82,14 @@ LiveClawBench
   License:   MIT, Copyright (c) 2026 Mosi AI
   Fetched:   mock-platform/ and tasks/, by liveclawbench/setup.py.
   Committed: each task's task.json quotes the instruction phrases it
-             rewrites. harbor/tasks/liveclawbench/ holds thirteen of its task
-             directories (task.toml, instruction, solution, tests and
-             notes), verbatim or adapted as harbor/export.py says, with
-             fixtures generated from its mocks' seed data. mocks/chat and
-             mocks/weather reimplement its chat and weather mocks' APIs and
-             tables, and mocks/weather copies its weather pages' markup.
+             rewrites. harbor/tasks/liveclawbench/ holds twenty-four of its
+             task directories (task.toml, instruction, solution, tests,
+             notes, policies and seed SQL), verbatim or adapted as
+             harbor/export.py says, with fixtures generated from its mocks'
+             seed data. mocks/chat, mocks/weather and mocks/finance
+             reimplement its chat, weather and finance mocks' APIs and
+             tables (mocks/finance its mock-lib login too), and
+             mocks/weather copies its weather pages' markup.
 
 ComplexMCP
   Source:    https://github.com/ATH-MaaS/complex-mcp

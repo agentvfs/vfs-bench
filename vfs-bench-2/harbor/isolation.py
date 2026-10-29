@@ -2,18 +2,20 @@
 
     uv run --project harbor python -I harbor/isolation.py [--out <dir>] [--msb]
 
-Starts seven trials at once from the committed tasks, each with its own
+Starts nine trials at once from the committed tasks, each with its own
 daemon, on kit fakes they share: chat-sticker-engagement twice (A and B,
 both reaching the one chat fake at localhost:5003, each its own run),
 weather-aqi-report (C), candidate-interview-slot-confirm twice (D and E,
-both on the one gws fake through /gmail, /calendar and the gws CLI), and
+both on the one gws fake through /gmail, /calendar and the gws CLI),
 email-sending-verify twice (F and G, on that gws fake too, each with the
-task's fault plan armed on its run). Then checks, from inside the
-workspaces, that each trial reaches only its own runs and files: not
-another's state, mail or calendar events, not another's run by path through
-its own URL, and not the shared fakes' real ports; and that each run's
-fault fires once, for that run alone. A trial's own commands keep apart
-too: several at once each see its state, and one canceled stops.
+task's fault plan armed on its run), and finance-anomaly-detect twice (H
+and I, both on the one finance fake at localhost:1235, each logged in with
+a cookie of its own run's). Then checks, from inside the workspaces, that
+each trial reaches only its own runs and files: not another's state, mail
+or calendar events, not another's run by path through its own URL, not the
+shared fakes' real ports, and not another run's session; and that each
+run's fault fires once, for that run alone. A trial's own commands keep
+apart too: several at once each see its state, and one canceled stops.
 
 With ``--msb``, it then boots the verifier microVMs of A to E at once, as
 ``MicrosandboxVerifier`` boots them, and checks from inside them that each
@@ -54,6 +56,17 @@ MAILS = ("python3 -c \"import sqlite3; "
          "print(db.execute(\\\"select count(*) from MessageHeader where "
          f"name = 'Subject' and value = '{SUBJECT}'\\\").fetchone()[0])\"")
 TOKEN = "-H 'Authorization: Bearer gws-integ-token'"
+FINANCE = "http://localhost:1235"
+JAR = "/tmp/finance.jar"
+LOGIN = (f"curl -s -c {JAR} -X POST {FINANCE}/api/auth/login "
+         "-H 'Content-Type: application/json' "
+         "-d '{\"username\":\"admin\",\"password\":\"admin123\"}'")
+# Whether transaction 8 is flagged, from the finance's data mount.
+FLAGGED = ("python3 -c \"import sqlite3; "
+           "db = sqlite3.connect('/opt/mock/data/finance_app.sqlite'); "
+           "print(db.execute(\\\"select count(*) from transaction_record "
+           "where id = 8 and status = 'flagged'\\\").fetchone()[0])\"")
+REFUSED_SESSION = '{"success":false,"message":"Invalid or expired token"}'
 # F's and G's mail: email-sending-verify's fault answers a run's first send
 # as sent and stores nothing.
 FAULTED = "isolation-check-fault"
@@ -130,7 +143,8 @@ async def main() -> int:
     d, e = (trial(out, "candidate-interview-slot-confirm", n)
             for n in ("d", "e"))
     f, g = (trial(out, "email-sending-verify", n) for n in ("f", "g"))
-    trials = (a, b, c, d, e, f, g)
+    h, i = (trial(out, "finance-anomaly-detect", n) for n in ("h", "i"))
+    trials = (a, b, c, d, e, f, g, h, i)
     await asyncio.gather(*(t.start(force_build=False) for t in trials))
     failed = 0
 
@@ -305,6 +319,56 @@ async def main() -> int:
             e, "cannot reach D's calendar on the shared fake's real port",
             f"curl -sS {TOKEN} "
             f"{gws}{d_run}/calendar/v3/calendars/primary/events", refused)
+
+        # The shared finance fake, whose session is a cookie of the run's.
+        finance = origin(real["h"]["1235"])
+        report(
+            origin(real["i"]["1235"]) == finance and real["h"] != real["i"],
+            "h,i", "share one finance fake, each with a run of its own",
+            f"{real['h']['1235']}  {real['i']['1235']}")
+        sessions = {}
+        for t in (h, i):
+            await check(t, "logs in with a cookie jar", LOGIN,
+                        lambda code, out: code == 0 and '"admin"' in out)
+            jar = await t.exec(f"cat {JAR}", timeout_sec=120)
+            line = next((ln for ln in (jar.stdout or "").splitlines()
+                         if "\ttoken\t" in ln), "")
+            sessions[t.session_id] = line.split("\t")[-1]
+        await check(
+            h, "flags a transaction on its own run",
+            f"curl -sf -b {JAR} -X POST {FINANCE}/api/transactions/8/flag",
+            lambda code, out: code == 0 and '"flagged"' in out)
+        await check(h, "sees the flag in its own data mount", FLAGGED,
+                    lambda code, out: out == "1")
+        await check(i, "does not see H's flag in its data mount", FLAGGED,
+                    lambda code, out: out == "0")
+        await check(i, "does not see H's flag on its API",
+                    f"curl -sf -b {JAR} {FINANCE}/api/transactions/8",
+                    lambda code, out: code == 0 and '"pending"' in out)
+        await check(
+            i, "refuses H's session cookie",
+            f"curl -s -H 'Cookie: token={sessions['h']}' "
+            f"{FINANCE}/api/transactions",
+            lambda code, out: out == REFUSED_SESSION and sessions["h"] != "")
+        await check(
+            h, "refuses I's session cookie",
+            f"curl -s -H 'Cookie: token={sessions['i']}' "
+            f"{FINANCE}/api/transactions",
+            lambda code, out: out == REFUSED_SESSION and sessions["i"] != "")
+        await check(
+            h, "still takes its own session cookie",
+            f"curl -s -H 'Cookie: token={sessions['h']}' "
+            f"{FINANCE}/api/transactions/8",
+            lambda code, out: '"flagged"' in out)
+        h_run = urlsplit(real["h"]["1235"]).path
+        await check(i, "cannot reach H's run by path through its own URL",
+                    f"curl -s -b {JAR} {FINANCE}{h_run}/api/transactions",
+                    not_found)
+        await check(i, "cannot reach H's run on the shared fake's real port",
+                    f"curl -sS -b {JAR} {finance}{h_run}/api/transactions",
+                    refused)
+        await check(i, "cannot reach the shared finance fake outside its run",
+                    f"curl -sS {finance}/api/transactions", refused)
         if args.msb:
             await microvms(trials[:5], real, runs, report)
     finally:
