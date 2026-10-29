@@ -306,19 +306,20 @@ async function compare(task: string, fake: { url: string; state: string }, scrat
   const run = new Run(`compare-${task}`, runDir)
   const plan = liveclawbench.plan(join(PLATFORM, '..', 'tasks', task), run)
   const [spec] = plan.fakes
-  // bun <serve.ts> ... becomes bun --preload frozen.ts <serve.ts> ...
-  await start(
-    {
-      ...spec!,
-      argv: [spec!.argv[0]!, '--preload', join(HERE, 'fixtures', 'frozen.ts'), ...spec!.argv.slice(1)],
-      env: { ...spec!.env, TZ: 'UTC', FROZEN_EPOCH: EPOCH },
-    },
-    run,
-  )
   const differ: string[] = []
   let same = 0
   let clocked = 0
   try {
+    // bun <serve.ts> ... becomes bun --preload frozen.ts <serve.ts> ...;
+    // inside the try, so a mock that misses its deadline is stopped too.
+    await start(
+      {
+        ...spec!,
+        argv: [spec!.argv[0]!, '--preload', join(HERE, 'fixtures', 'frozen.ts'), ...spec!.argv.slice(1)],
+        env: { ...spec!.env, TZ: 'UTC', FROZEN_EPOCH: EPOCH },
+      },
+      run,
+    )
     const name = task.replace(/[^A-Za-z0-9._-]/g, '-')
     const reset = await fetch(`${fake.url}/reset`, {
       method: 'POST',
