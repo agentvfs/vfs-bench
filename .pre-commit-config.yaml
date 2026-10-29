@@ -49,8 +49,11 @@
 # lines, which leaves a trailing space that is part of the folded scalar --
 # stripping it edits the value, and dvc rewrites the file back on the next
 # repro either way, so the two would fight over every commit.
+# vfs-bench-2/harbor/tasks/ holds LiveClawBench's task directories, each
+# file upstream's bytes or an edit of them; `harbor/export.py --check` holds
+# them to upstream, and a formatter's rewrite of a verify.py fails it.
 exclude: |
-  (?x)^vfs-bench-1/(
+  (?x)^vfs-bench-2/harbor/tasks/.*$|^vfs-bench-1/(
       task/[^/]+/.*/vfs/.*\.md|
       task/[^/]+/.*/shared/task\.md|
       task/[^/]+/.*/shared/system_prompt\.md|

@@ -1,0 +1,1 @@
+I received several vendor quotes by email for the same laptop order. Please compare them in my company email system (at /gmail, or through the gws CLI), identify the best option under our budget, and reply to the selected vendor saying we would like to proceed.

@@ -1,0 +1,1 @@
+Please review the unread newsletters in my company email system (at /gmail, or through the gws CLI), write a short digest of the top three updates, save the digest into my workspace at `/workspace/notes/newsletter-digest.md`, and send it to research@work.mosi.inc.
