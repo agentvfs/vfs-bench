@@ -130,6 +130,25 @@ async def _run(*argv: str,
     return process.returncode, out, err
 
 
+async def _finish(process: asyncio.subprocess.Process,
+                  errors: asyncio.Future) -> None:
+    """A killed process's end: its stdout read and dropped, its stderr's
+    tail read to its end, then its exit. Bounded, so a pipe some other
+    process holds open cannot keep the caller waiting."""
+    assert process.stdout is not None
+
+    async def drain() -> None:
+        while await process.stdout.read(2**16):
+            pass
+        await errors
+        await process.wait()
+
+    try:
+        await asyncio.wait_for(drain(), 30)
+    except Exception:  # noqa: BLE001 - this is already a failure's path
+        errors.cancel()
+
+
 async def _tail(stream: asyncio.StreamReader, limit: int) -> bytes:
     """A stream read to its end, keeping its last ``limit`` bytes."""
     kept = b""
@@ -333,7 +352,8 @@ async def _pull(msb: str, image: str) -> None:
     code, _, err = await asyncio.shield(pull)
     if code != 0:
         _pulls.pop(image, None)
-        raise RuntimeError(f"msb pull {image} failed: {err.decode()[-2000:]}")
+        raise RuntimeError(
+            f"msb pull {image} failed: {err.decode(errors='replace')[-2000:]}")
 
 
 class Hung(Exception):
@@ -387,7 +407,7 @@ class Sandbox:
             if code != 0:
                 # msb's own timeout on a hung boot ends this way too.
                 raise Hung(f"create {vm.name} exited {code}: "
-                           f"{err.decode().strip()[-500:]}")
+                           f"{err.decode(errors='replace').strip()[-500:]}")
             log.append(f"create {vm.name}: {time.monotonic() - started:.2f}s")
             yield vm
         finally:
@@ -407,7 +427,7 @@ class Sandbox:
             return
         if code != 0:
             log.append(f"removing {self.name} failed (exit {code}): "
-                       f"{err.decode()[-2000:]}")
+                       f"{err.decode(errors='replace')[-2000:]}")
             return
         log.append(f"remove {self.name}: {time.monotonic() - started:.2f}s")
 
@@ -449,14 +469,16 @@ class Sandbox:
             err = await errors
             code = await process.wait()
             if first != STARTED:
-                raise RuntimeError(f"guest.py did not start in {self.name} "
-                                   f"(exit {code}): {(first + err).decode()}")
+                raise RuntimeError(
+                    f"guest.py did not start in {self.name} "
+                    f"(exit {code}): {(first + err).decode(errors='replace')}")
         except BaseException:
             out.close()
-            errors.cancel()
             if process.returncode is None:
                 process.kill()
-            await asyncio.shield(process.wait())
+            # Read both pipes to their end before waiting: a pipe left
+            # unread stays open, and the wait with it.
+            await asyncio.shield(_finish(process, errors))
             raise
         out.seek(0)
         return code, out, err
@@ -695,8 +717,8 @@ class MicrosandboxVerifier(Verifier):
             finally:
                 sampler.cancel()
             timings["run_s"] = time.monotonic() - started
-            log.append(f"test exit {code}" +
-                       (f"\n{err.decode()[-4000:]}" if err else ""))
+            log.append(f"test exit {code}" + (
+                f"\n{err.decode(errors='replace')[-4000:]}" if err else ""))
             self._peak(await vm.metrics(), peak)
             timings.update(peak)
             started = time.monotonic()

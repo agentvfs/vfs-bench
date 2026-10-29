@@ -296,7 +296,7 @@ async def microvms(trials, real, runs, report) -> None:
                     vms[who] = await boot(who)
             else:
                 raise RuntimeError(f"msb hung on all {ATTEMPTS} tries")
-            text = (out + err).decode().strip()
+            text = (out + err).decode(errors='replace').strip()
             shown = line.replace(f"python3 -c {shlex.quote(PROBE)}", "probe")
             report(ok(code, text), f"{who} vm", what,
                    f"$ {shown[-120:]}\n    {text[:200]}")
