@@ -49,6 +49,7 @@ const converters: Record<string, () => Promise<unknown>> = {
   chat: async () => (await import('./chat.ts')).chat(join(PLATFORM, 'mocks', 'chat')),
   weather: async () => (await import('./weather.ts')).weather(join(PLATFORM, 'mocks', 'weather')),
   gws: async () => (await import('./gws.ts')).gws(join(PLATFORM, 'mocks', 'email'), task),
+  finance: async () => (await import('./finance.ts')).finance(join(PLATFORM, 'mocks', 'finance'), join(PLATFORM, '..', 'tasks', task), epoch),
 }
 const convert = converters[service]
 if (convert === undefined) throw new Error(`no fixture converter for ${service}`)

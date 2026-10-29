@@ -15,12 +15,14 @@ fixture and the workspace's mounts. Its files are of four kinds:
   from upstream's own seed for the task (``harbor/fixtures/main.ts``, under
   Bun), at the epoch mirage.yaml gives;
 - ours: ``environment/mirage.yaml``, and a rule-A task's
-  ``solution/solve.sh`` and ``tests/verify.py``, written by hand and kept.
+  ``solution/solve.sh`` and ``tests/verify.py`` (but where ``VERBATIM_A``
+  keeps upstream's), written by hand and kept.
 
 Rule A is a task whose service Mirage already fakes: the email tasks, on
-Mirage's gws fake. Rule B is one whose service it lacks: chat and weather,
-on this repo's fakes (``mocks/``), whose API and tables are upstream's, so
-every file but the Dockerfile is upstream's.
+Mirage's gws fake. Rule B is one whose service it lacks: chat, weather and
+finance, on this repo's fakes (``mocks/``), whose API and tables are
+upstream's, so every file but the Dockerfile is upstream's. A task with
+both is rule A for its email.
 
 ``--check`` writes nothing and exits 1 if any verbatim, derived or
 generated file differs from what upstream gives, if mirage.yaml's ``env``,
@@ -52,21 +54,94 @@ TASKS = {
     "procurement-quote-compare-reply": "A",
     "stale-client-escalation": "A",
     "vendor-requirement-followup": "A",
+    "finance-anomaly-detect": "B",
+    "finance-dashboard-repair": "B",
+    "finance-depreciation-audit": "B",
+    "finance-expense-log": "B",
+    "finance-monthly-close": "B",
+    "finance-portfolio-rebalancing": "B",
+    "finance-analysis-generate": "A",
+    "finance-budget-alert": "A",
+    "finance-invoice-process": "A",
+    "finance-tax-prepare": "A",
+    "finance-budget-shift": "A",
 }
 # A rule-A task's files of ours, which differ from upstream's on purpose.
 OURS_A = ["solution/solve.sh", "tests/verify.py"]
 OURS = ["environment/mirage.yaml"]
+# A rule-A task's files that stay upstream's: its verifier reads no mail,
+# so the port changes nothing.
+VERBATIM_A = {
+    "finance-invoice-process": ["tests/verify.py"],
+    "finance-budget-shift": ["tests/verify.py"],
+}
 # A rule-A instruction: the mailbox is a mount and a CLI, not a web app.
 MAILBOX = ("(http://localhost:5174/, open it in browser)",
            "(at /gmail, or through the gws CLI)")
+# How the email mock's own API is described, where an instruction does.
+EMAIL_API = ("### Email System (http://localhost:5174)\n"
+             "- `POST /api/auth/login` - authenticate with `{\"username\": "
+             "\"peter\", \"password\": \"password123\"}` (%s)\n"
+             "%s- `POST /api/emails` - send email with Bearer token "
+             "authorization. Body format:\n"
+             "  ```json\n"
+             "  {\n"
+             "    \"recipient\": \"email@example.com\",\n"
+             "    \"subject\": \"Subject line\",\n"
+             "    \"body\": \"Email content\",\n"
+             "    \"send_now\": true\n"
+             "  }\n"
+             "  ```\n"
+             "  Use the `Authorization: Bearer <access_token>` header for "
+             "authentication.\n")
+EMAIL_SECTION = "### Email System (at /gmail, or through the gws CLI)\n"
+# The phrases a rule-A instruction reaches the mailbox by, where they are
+# not MAILBOX alone; each is replaced, and must occur once.
+MAILBOXES = {
+    "finance-analysis-generate": [
+        ("   - Email system URL: http://localhost:5174/\n"
+         "   - Login credentials: username `peter`, password `password123`\n",
+         "   - Email system: at /gmail, or through the gws CLI\n"),
+        (EMAIL_API % ("returns Bearer token", ""), EMAIL_SECTION),
+    ],
+    "finance-budget-alert": [
+        ("**Login to the email system** at http://localhost:5174/ using "
+         "credentials: username `peter`, password `password123`.",
+         "**Open the email system** (at /gmail, or through the gws CLI)."),
+        (EMAIL_API % ("returns `access_token`", ""), EMAIL_SECTION),
+    ],
+    "finance-invoice-process": [
+        ("at http://localhost:5174/ (username: `peter`, password: "
+         "`password123`)", "(at /gmail, or through the gws CLI)"),
+    ],
+    "finance-tax-prepare": [
+        ("Log in to the email system at **http://localhost:5174/** with "
+         "credentials:\n- Username: `peter`\n- Password: `password123`\n",
+         "Open the email system (at /gmail, or through the gws CLI).\n"),
+        (EMAIL_API.replace(" - ", " — ") %
+         ("returns `access_token`",
+          "- `GET /api/emails?folder=inbox` — list inbox emails\n"),
+         EMAIL_SECTION),
+    ],
+    # Its instruction never names the mailbox.
+    "finance-budget-shift": [],
+}
 
 
 def derived_instruction(text: str, task: str) -> str:
-    old, new = MAILBOX
-    if text.count(old) != 1:
-        raise ValueError(f"{task}: instruction.md names the mailbox "
-                         f"{text.count(old)} times, not once")
-    return text.replace(old, new)
+    for old, new in MAILBOXES.get(task, [MAILBOX]):
+        if text.count(old) != 1:
+            raise ValueError(f"{task}: instruction.md names the mailbox "
+                             f"{text.count(old)} times, not once: {old!r}")
+        text = text.replace(old, new)
+    return text
+
+
+def ours(task: str) -> list[str]:
+    """The task's files of ours."""
+    if TASKS[task] == "B":
+        return OURS
+    return OURS + [f for f in OURS_A if f not in VERBATIM_A.get(task, [])]
 
 
 def env_pairs(args: str) -> list[tuple[str, str]]:
@@ -110,7 +185,7 @@ def expected(task: str, mirage: dict) -> dict[str, bytes]:
         rel = path.relative_to(source).as_posix()
         if not path.is_file() or rel == "environment/Dockerfile":
             continue
-        if rule == "A" and rel in OURS_A:
+        if rel in ours(task):
             continue
         if rule == "A" and rel == "instruction.md":
             out[rel] = derived_instruction(path.read_text(), task).encode()
@@ -180,9 +255,8 @@ def main() -> int:
         mirage = yaml.safe_load(
             (target / "environment" / "mirage.yaml").read_text())
         files = expected(task, mirage)
-        ours = OURS + (OURS_A if TASKS[task] == "A" else [])
         problems = agrees(task, mirage)
-        for rel in ours:
+        for rel in ours(task):
             if not (target / rel).is_file():
                 problems.append(f"{rel} (ours) is missing")
         for rel, data in files.items():
@@ -197,7 +271,7 @@ def main() -> int:
                 path.write_bytes(data)
         for path in sorted(target.rglob("*")):
             rel = path.relative_to(target).as_posix()
-            if path.is_file() and rel not in files and rel not in ours:
+            if path.is_file() and rel not in files and rel not in ours(task):
                 problems.append(f"{rel} is not upstream's, derived or ours")
         failed += bool(problems)
         status = "FAIL" if problems else ("ok" if args.check else "written")
