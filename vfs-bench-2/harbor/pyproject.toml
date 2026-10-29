@@ -1,0 +1,16 @@
+[project]
+name = "vfsbench-harbor"
+version = "0.1.0"
+description = "A Harbor environment served from a Mirage workspace instead of a container"
+requires-python = ">=3.12"
+dependencies = ["harbor==0.25.0"]
+
+[project.optional-dependencies]
+# Harbor's dspy-rlm agent, which runs on the host and drives the
+# environment through exec only. Harbor 0.25.0 passes RLM `max_iterations`,
+# which dspy renamed in 3.3. Its sandbox needs Deno, which PyPI ships.
+dspy = ["harbor[dspy]==0.25.0", "dspy==3.2.1", "deno"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

@@ -1,0 +1,50 @@
+# The Mirage workspace a Harbor trial runs in, in place of the task's
+# container. Each path Harbor uses is a directory under the trial's run
+# dir, so its uploads and downloads are copies. The sidecar adds the mocks'
+# data directories, read-only, at the paths upstream's image keeps them.
+mode: exec
+runtimes:
+  - name: pyodide
+    config:
+      lock_file_url: ${PYTHON_PACKAGES}/pyodide-lock.json
+      package_base_url: ${PYTHON_PACKAGES}/
+      max_memory: 2G
+  - workspace
+command_limits:
+  python3: {timeout_seconds: 300}
+# Offline but for curl, which reaches only this trial's mocks: the sidecar
+# routes each upstream address (localhost:5003) to its mock and refuses
+# everything else. python3 has no network.
+profiles:
+  default:
+    commands:
+      deny:
+        - {commands: [wget], reason: the workspace is offline}
+# `read: fresh` revalidates a cached listing against its folder, since the
+# host writes these directories too.
+mounts:
+  /workspace:
+    vfs: disk
+    mode: exec
+    read: fresh
+    config: {root: '${RUN_DIR}/workspace'}
+  /logs:
+    vfs: disk
+    mode: write
+    read: fresh
+    config: {root: '${RUN_DIR}/logs'}
+  /tests:
+    vfs: disk
+    mode: exec
+    read: fresh
+    config: {root: '${RUN_DIR}/tests'}
+  /solution:
+    vfs: disk
+    mode: exec
+    read: fresh
+    config: {root: '${RUN_DIR}/solution'}
+  /tmp:
+    vfs: disk
+    mode: exec
+    read: fresh
+    config: {root: '${RUN_DIR}/tmp'}
