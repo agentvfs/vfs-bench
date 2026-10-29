@@ -17,6 +17,13 @@ import sqlite3
 import sys
 from datetime import datetime, timezone
 
+# Pyodide carries the time zone database as a package that zoneinfo finds
+# only once it is imported; CPython reads the system's.
+try:
+    import tzdata  # noqa: F401
+except ImportError:
+    pass
+
 GWS_DB = "/var/lib/mock-data/gws/gws.db"
 CALENDAR_DB = GWS_DB
 EMAIL_DB = GWS_DB

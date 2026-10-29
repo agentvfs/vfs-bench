@@ -14,6 +14,13 @@ import sys
 from datetime import datetime, timezone
 from email.utils import getaddresses
 
+# Pyodide carries the time zone database as a package that zoneinfo finds
+# only once it is imported; CPython reads the system's.
+try:
+    import tzdata  # noqa: F401
+except ImportError:
+    pass
+
 GWS_DB_PATH = "/var/lib/mock-data/gws/gws.db"
 # Peter's calendar: the primary one, which upstream's user_id = 1 was.
 PRIMARY_CALENDAR = "integ@example.com"
