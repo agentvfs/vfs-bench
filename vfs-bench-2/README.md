@@ -31,7 +31,7 @@ Run dumps stay local; nothing is published yet.
 | [DataSpace](dataspace/README.md) | HKUSTDial/DataSpace | 11 of 60 public | none, files only |
 | [LiveClawBench](liveclawbench/README.md) | Mosi-AI/LiveClawBench | 11 of 113 | upstream's Node mocks, under Bun |
 | [ComplexMCP](complexmcp/README.md) | ATH-MaaS/complex-mcp | 1 of 47 | 14 of upstream's 15 MCP servers |
-| [Claw-Eval](claweval/README.md) | claw-eval/claw-eval | 1 of 60 | upstream's FastAPI mocks |
+| [Claw-Eval](claweval/README.md) | claw-eval/claw-eval | 11 of 126 | upstream's FastAPI mocks |
 
 EnterpriseOps-Gym is skipped for now: its tool servers ship only as amd64
 images of bytecode, with no source and no license.
