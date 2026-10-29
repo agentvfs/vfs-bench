@@ -12,6 +12,7 @@
  *     env: {TASK_NAME: chat-sticker-engagement}
  *     copy:                      # COPY . <dir>: entries of environment/
  *       /workspace/environment: [notes]
+ *       /workspace/policies: policies/  # COPY <src> <dest>: src, in environment/
  *     run: [mkdir -p /workspace/output]   # RUN lines, in the workspace
  *     workdir: /workspace        # WORKDIR, if any
  *     workspace:                 # added to harbor/workspace.yaml
@@ -22,8 +23,8 @@
  * before mocks.ts runs, and hands their run URLs and files in (`external`).
  * `${<SERVICE>_URL}` in `workspace` is that service's run URL.
  */
-import { existsSync, readFileSync } from 'node:fs'
-import { basename, join } from 'node:path'
+import { existsSync, readFileSync, statSync } from 'node:fs'
+import { basename, join, relative } from 'node:path'
 
 import { parse } from 'yaml'
 
@@ -48,7 +49,7 @@ interface FakeBlock {
 interface MirageYaml {
   fakes: Record<string, FakeBlock>
   env?: Record<string, string>
-  copy?: Record<string, string[]>
+  copy?: Record<string, string[] | string>
   run?: string[]
   workdir?: string
   workspace?: Record<string, unknown>
@@ -76,6 +77,15 @@ function interpolate<T>(value: T, vars: Record<string, string>, where: string): 
   ) as T
 }
 
+/**
+ * Where `COPY <src> <dest>` puts its source, as Docker does: a file into a
+ * `<dest>` that ends in `/`, else at `<dest>`; a directory's entries into
+ * `<dest>`.
+ */
+export function copyTarget(dest: string, from: string): string {
+  return dest.endsWith('/') && statSync(from).isFile() ? `${dest}${basename(from)}` : dest.replace(/\/$/, '')
+}
+
 /** The plan for a task with a mirage.yaml, over its fakes' runs. */
 export function plan(taskDir: string, _run: Run, external: Record<string, External>): Plan {
   const path = file(taskDir)!
@@ -96,6 +106,12 @@ export function plan(taskDir: string, _run: Run, external: Record<string, Extern
   }
   const copies: Record<string, string | null> = {}
   for (const [dir, entries] of Object.entries(spec.copy ?? {})) {
+    if (typeof entries === 'string') {
+      const from = join(environmentDir, entries)
+      if (relative(environmentDir, from).startsWith('..')) throw new Error(`${path}: COPY ${entries} is outside environment/`)
+      copies[copyTarget(dir, from)] = from
+      continue
+    }
     if (entries.length === 0) copies[dir] = null
     for (const entry of entries) copies[`${dir.replace(/\/$/, '')}/${entry}`] = join(environmentDir, entry)
   }

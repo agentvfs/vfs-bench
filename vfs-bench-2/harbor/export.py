@@ -25,8 +25,8 @@ every file but the Dockerfile is upstream's.
 ``--check`` writes nothing and exits 1 if any verbatim, derived or
 generated file differs from what upstream gives, if mirage.yaml's ``env``,
 ``copy``, ``run`` and ``workdir`` disagree with upstream's Dockerfile (and
-``TASK_NAME``, its base image's), or if a file is missing or unaccounted
-for.
+``TASK_NAME``, its base image's; ``copy`` with each of its ``COPY``
+lines), or if a file is missing or unaccounted for.
 """
 import argparse
 import os
@@ -83,7 +83,8 @@ def env_pairs(args: str) -> list[tuple[str, str]]:
 
 
 def dockerfile(task: str) -> dict:
-    """What upstream's Dockerfile sets: RUN, COPY targets, ENV and WORKDIR."""
+    """What upstream's Dockerfile sets: RUN, COPY (each source and target),
+    ENV and WORKDIR."""
     text = (UPSTREAM / task / "environment" / "Dockerfile").read_text()
     joined = re.sub(r"\\\n\s*", " ", text)
     runs, copies, env, workdir = [], [], {}, None
@@ -91,8 +92,8 @@ def dockerfile(task: str) -> dict:
         line = line.strip()
         if line.startswith("RUN ") and not line[4:].lstrip().startswith("["):
             runs.append(re.sub(r"\s+", " ", line[4:].strip()))
-        elif re.fullmatch(r"COPY \. \S+", line):
-            copies.append(line.split()[2].rstrip("/"))
+        elif re.fullmatch(r"COPY [^-\s]\S* \S+", line):
+            copies.append(tuple(line.split()[1:]))
         elif line.startswith("ENV "):
             env.update(env_pairs(line[4:].strip()))
         elif line.startswith("WORKDIR "):
@@ -156,9 +157,15 @@ def agrees(task: str, mirage: dict) -> list[str]:
     environment = sorted(p.name
                          for p in (UPSTREAM / task / "environment").iterdir()
                          if p.name != "Dockerfile")
-    copies = {d: environment for d in docker["copy"]}
-    if (mirage.get("copy") or {}) != copies:
-        problems.append(f"copy is not the Dockerfile's COPY . {copies}")
+    # `COPY . <dir>` is the entries of environment/; `COPY <src> <dest>`,
+    # its source.
+    copies = {
+        dest.rstrip("/"): environment if src == "." else src
+        for src, dest in docker["copy"]
+    }
+    stated = {k.rstrip("/"): v for k, v in (mirage.get("copy") or {}).items()}
+    if stated != copies:
+        problems.append(f"copy is not the Dockerfile's COPY lines {copies}")
     return problems
 
 
