@@ -10,11 +10,21 @@
  * `is_read` is 0, and sent mail is SENT. The four system labels are Mirage's
  * own (integ/fixtures/gws/v1.json), and the `msg` counter starts past the
  * seeded ids, so a sent message takes the next one.
+ *
+ * A task whose image also runs the calendar mock (its `binaries` in
+ * task-binary-map.json) gets Peter's calendar too: upstream's calendar seed
+ * (mocks/calendar/src/seed.ts) for the task, as gws Calendar rows. Peter's
+ * calendar is the primary one, under the id the fake's `primary` names, in
+ * UTC, as upstream's mock keeps every time. Each of his `calendar_event`
+ * rows is an `Event`: its title the summary, its description the
+ * description, its start and end `startDateTime` and `endDateTime`, in UTC.
+ * Upstream's second user, Lois, has no calendar here, and the `event`
+ * counter starts past the seeded ids too.
  */
 import { Database } from 'bun:sqlite'
-import { mkdtempSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 
 interface Email {
   id: number
@@ -28,10 +38,39 @@ interface Email {
   sender_email: string
 }
 
+interface CalendarEvent {
+  id: number
+  title: string
+  description: string | null
+  event_type: string
+  start_time: string
+  end_time: string
+  source: string | null
+  source_ref: string | null
+}
+
 const LABELS = ['INBOX', 'SENT', 'UNREAD', 'TRASH'].map((id) => ({ id, name: id, type: 'system' }))
+
+/** The primary calendar's id, which `primary` names (integ/server/gws/store/state.ts). */
+const PRIMARY_CALENDAR = 'integ@example.com'
+/** Upstream's calendar user, Peter, whose events are the task's (mocks/calendar/src/seed.ts). */
+const CALENDAR_USER = 'peter.griffin@work.mosi.inc'
 
 /** gws's own id format (`st.nextId('msg')`): the kind, then four digits. */
 const messageId = (n: number) => `msg${String(n).padStart(4, '0')}`
+
+/** gws's event id format (`st.nextEventId()`): `evt`, then 23 digits. */
+const eventId = (n: number) => `evt${String(n).padStart(23, '0')}`
+
+/**
+ * An upstream event time as RFC 3339 in UTC. The API stores
+ * `toISOString()`; a seed writes `YYYY-MM-DD HH:MM:SS`, which the mock
+ * reads as UTC too.
+ */
+const utc = (time: string) => {
+  const zoned = /(Z|[+-]\d\d:\d\d)$/i.test(time) ? time : `${time.replace(' ', 'T')}Z`
+  return new Date(zoned).toISOString().replace('.000Z', 'Z')
+}
 
 /** A mailbox, as an RFC 5322 address with its display name. */
 const mailbox = (name: string, address: string) => `"${name.replace(/["\\]/g, '\\$&')}" <${address}>`
@@ -80,5 +119,60 @@ export async function gws(mock: string, task: string): Promise<Record<string, un
       labels: labels.map((labelId) => ({ labelId })),
     }
   })
-  return { labels: LABELS, messages, counters: [{ kind: 'msg', n: messages.length }] }
+  const counters = [{ kind: 'msg', n: messages.length }]
+  if (!binaries(mock, task).includes('calendar')) return { labels: LABELS, messages, counters }
+  const events = await calendarEvents(join(dirname(mock), 'calendar'), task)
+  const calendars = [
+    { id: PRIMARY_CALENDAR, summary: CALENDAR_USER, timeZone: 'UTC', accessRole: 'owner', primary: true, events },
+  ]
+  return { labels: LABELS, messages, calendars, counters: [...counters, { kind: 'event', n: events.length }] }
+}
+
+/** The mocks upstream's image for the task runs (config/task-binary-map.json). */
+function binaries(mock: string, task: string): string[] {
+  const map = JSON.parse(readFileSync(join(dirname(mock), '..', 'config', 'task-binary-map.json'), 'utf8')) as {
+    tasks: Record<string, { binaries: string[] }>
+  }
+  return map.tasks[task]?.binaries ?? []
+}
+
+/** Peter's calendar events in upstream's calendar seed for the task, as gws Events. */
+async function calendarEvents(mock: string, task: string): Promise<Record<string, unknown>[]> {
+  const dir = mkdtempSync(join(tmpdir(), 'vfsbench-calendar-seed-'))
+  const { initSchema } = (await import(join(mock, 'src', 'db', 'schema.ts'))) as { initSchema: (db: Database) => void }
+  const { seedDatabase } = (await import(join(mock, 'src', 'seed.ts'))) as { seedDatabase: (db: Database) => void }
+  const db = new Database(join(dir, 'calendar.db'), { create: true })
+  // The seed logs to stdout, which is the fixture's.
+  const log = console.log
+  console.log = (...args: unknown[]) => console.error(...args)
+  try {
+    initSchema(db)
+    seedDatabase(db)
+  } finally {
+    console.log = log
+  }
+  const rows = db
+    .query(
+      `SELECT e.id, e.title, e.description, e.event_type, e.start_time, e.end_time, e.source, e.source_ref
+       FROM calendar_event e JOIN users u ON u.id = e.user_id WHERE u.email = ? ORDER BY e.id`,
+    )
+    .all(CALENDAR_USER) as CalendarEvent[]
+  db.close()
+  rmSync(dir, { recursive: true, force: true })
+  // Seeded now, as the fake stamps an event it creates.
+  const now = new Date().toISOString()
+  return rows.map((event, i) => {
+    if (event.source !== null || event.source_ref !== null || event.event_type !== 'personal') {
+      throw new Error(`${task}: calendar event ${event.id} has a source or type, which an Event here does not carry`)
+    }
+    return {
+      id: eventId(i + 1),
+      summary: event.title,
+      ...(event.description === null ? {} : { description: event.description }),
+      startDateTime: utc(event.start_time),
+      endDateTime: utc(event.end_time),
+      created: now,
+      updated: now,
+    }
+  })
 }

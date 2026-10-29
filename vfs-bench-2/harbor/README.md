@@ -9,7 +9,7 @@ and creates a workspace on a Mirage daemon of the trial's own. Harbor's
 into and out of the workspace's mounts.
 
 It runs two kinds of task:
-- **Committed tasks**, under `tasks/liveclawbench/`: eighteen LiveClawBench
+- **Committed tasks**, under `tasks/liveclawbench/`: twenty-four LiveClawBench
   tasks as Harbor task directories. Each has an `environment/mirage.yaml`
   in place of upstream's Dockerfile. Their services are kit fakes on
   Mirage's integ kit, one process per service for the whole job, and each
@@ -26,7 +26,7 @@ done (`python3 -I liveclawbench/setup.py`). From `vfs-bench-2/`:
 
 ```sh
 uv sync --project harbor
-# The committed tasks: upstream's solutions, then doing nothing: 1.0, then less.
+# The committed tasks: their solutions, then doing nothing: 1.0, then less.
 uv run --project harbor harbor run -c harbor/liveclawbench.yaml -a oracle -o state/harbor/jobs
 uv run --project harbor harbor run -c harbor/liveclawbench.yaml -a nop -o state/harbor/jobs
 # In parallel, or one task twice; every trial shares the job's fakes.
@@ -44,7 +44,7 @@ DENO_NO_PACKAGE_JSON=1 OPENAI_API_KEY=... OPENAI_BASE_URL=... OPENAI_API_BASE=..
   -a dspy-rlm -m openai/gpt-5.6-luna -o state/harbor/jobs
 
 # Each verifier in a microVM of its own, with real CPython (see below).
-uv run --project harbor harbor run -c harbor/liveclawbench-msb.yaml -a oracle -n 18 -o state/harbor/jobs
+uv run --project harbor harbor run -c harbor/liveclawbench-msb.yaml -a oracle -n 24 -o state/harbor/jobs
 uv run --project harbor harbor run -p state/liveclawbench/src/tasks/weather-aqi-report \
   --env vfsbench_harbor:MirageEnvironment --verifier vfsbench_harbor:MicrosandboxVerifier \
   -a oracle -o state/harbor/jobs
@@ -122,7 +122,7 @@ are of four kinds, and `export.py` says which is which:
 | Kind | Files | Written by |
 |---|---|---|
 | Verbatim | `task.toml`, `tests/test.sh`, `tests/_seed_snapshots/`, the rest of `environment/` (`notes/`, `policies/`, `seed.sql`); for rule B also `instruction.md`, `solution/solve.sh`, `tests/verify.py`; a rule-A `tests/verify.py` that reads no mail (`VERBATIM_A`) | `export.py`, from upstream |
-| Derived | a rule-A `instruction.md`: how the mailbox is reached changed | `export.py`, from upstream |
+| Derived | a rule-A `instruction.md`: the phrases naming the mailbox and calendar changed | `export.py`, from upstream |
 | Generated | `environment/fixtures/<service>.json`, the run's seed | `export.py`, from upstream's seed |
 | Ours | `environment/mirage.yaml`; a rule-A `solution/solve.sh` and `tests/verify.py` | by hand |
 
@@ -132,8 +132,8 @@ disagree with upstream's Dockerfile, or if a file is missing or
 unaccounted for.
 
 `mirage.yaml` names the task's fakes, each with its fixture, the epoch its
-runs' clock is frozen at, the upstream ports that reach it and where its
-SQLite is read. It also gives the Dockerfile's `ENV`, `COPY` and `RUN`
+runs' clock is frozen at, the upstream ports that reach it, where its
+SQLite is read and the kit fault plans armed on each run (`faults`). It also gives the Dockerfile's `ENV`, `COPY` and `RUN`
 (`env`, `copy`, `run`) and the mounts and CLIs the task adds to the
 workspace (`workspace`). `copy` takes `COPY . <dir>` as the entries of
 `environment/` it copies, and `COPY <src> <dest>` as its source, relative
@@ -155,28 +155,37 @@ and the clock frozen at the epoch. The rows it writes become the fixture.
 ### Rules A and B
 
 **Rule A: Mirage already has the service, so the task uses Mirage's fake.**
-The email tasks run on Mirage's gws fake (integ/server/gws, schema
-integ/prisma/gws.prisma), its Gmail part. The agent reaches the mailbox the
-Mirage way: the `/gmail` mount (`vfs: gmail`) and the `gws` CLI, both at
-the trial's run of the fake. These tasks differ from upstream:
-- `instruction.md`: only how to reach the mailbox changes.
-  "(http://localhost:5174/, open it in browser)" becomes "(at /gmail, or
-  through the gws CLI)". The finance tasks phrase it their own way, each
-  rewritten in `export.py`'s `MAILBOXES`: the email system's URL and
-  login become "at /gmail, or through the gws CLI", and an API reference's
-  section on the email mock's REST API (login, `GET /api/emails`, `POST
-  /api/emails`) becomes its heading alone, "### Email System (at /gmail, or
-  through the gws CLI)". finance-budget-shift's instruction never names
-  the mailbox and stays upstream's.
-- `solution/solve.sh`: upstream's steps, through the mount and the CLI. It
+The email and calendar tasks run on Mirage's gws fake (integ/server/gws,
+schema integ/prisma/gws.prisma), its Gmail and Calendar parts. The agent
+reaches the mailbox and the calendar the Mirage way: the `/gmail` mount
+(`vfs: gmail`), the `/calendar` mount (`vfs: gcal`) and the `gws` CLI, all
+at the trial's run of the fake. These tasks differ from upstream:
+- `instruction.md`: only how to reach the mailbox and the calendar
+  changes. "(http://localhost:5174/, open it in browser)" becomes "(at
+  /gmail, or through the gws CLI)", and the calendar's URL "(at /calendar,
+  or through the gws CLI)". `export.py`'s `PHRASES` has each task's own
+  wording of them, and each phrase must appear exactly once. The finance
+  tasks phrase it their own way: the email system's URL and login become
+  "at /gmail, or through the gws CLI", and an API reference's section on
+  the email mock's REST API (login, `GET /api/emails`, `POST /api/emails`)
+  becomes its heading alone, "### Email System (at /gmail, or through the
+  gws CLI)". finance-budget-shift's instruction never names the mailbox and
+  stays upstream's.
+- `solution/solve.sh`: upstream's steps, through the mounts and the CLI. It
   finds a message with `grep -l` under `/gmail/INBOX/`, then sends with
-  `gws gmail send` or `gws gmail reply`, where upstream's posts to the
-  email mock's REST API.
+  `gws gmail send` or `gws gmail reply` and creates an event with
+  `gws calendar events insert`, where upstream's posts to the mocks' REST
+  APIs. Where upstream's runs `openclaw agent`, a model, with no script,
+  the script is ours: it reads what it sends and schedules from `/gmail`
+  and `/calendar`, and checks what it did as the instruction asks.
 - `tests/verify.py`: every check and weight of upstream's, reading the gws
-  run's SQLite in place of the email mock's. A finance task's finance
+  run's SQLite in place of the mocks', or of the email app's Flask and
+  SQLAlchemy models, which Pyodide cannot run. A finance task's finance
   checks are upstream's as they are, and finance-invoice-process's and
   finance-budget-shift's verifiers, which read no mail, are upstream's
   files (`VERBATIM_A`).
+- `mirage.yaml` leaves out the Dockerfile's `RUN` that installs a browser
+  (Playwright's Chromium) for upstream's web apps.
 - The seed is upstream's email seed for the task, as Gmail messages:
 
 | Upstream's email mock | Mirage's gws fake |
@@ -188,6 +197,34 @@ the trial's run of the fake. These tasks differ from upstream:
 | `recipient_email` | `To`, whose addresses verify.py reads |
 | `subject`, `body` | `Subject`, `bodyText` |
 | `created_at` | `Date` and `internalDate` |
+
+and, for a task whose image runs the calendar mock too, upstream's
+calendar seed for it, as Peter's calendar:
+
+| Upstream's calendar mock | Mirage's gws fake |
+|---|---|
+| Peter, `users` 1 | the primary `Calendar`, under the id `primary` names (`integ@example.com`), in UTC as upstream's times are |
+| a row of `calendar_event` of his | an `Event` of that calendar |
+| `title`, `description` | `summary`, `description` |
+| `start_time`, `end_time` | `startDateTime`, `endDateTime`, RFC 3339 in UTC |
+| `event_type`, `source`, `source_ref` | none: a seed that sets them is refused |
+| Lois, `users` 2 | none: no calendar of Peter's |
+
+The three calendar tasks here seed no events, as upstream's do not.
+
+Upstream's C-axis tasks change the mock's behaviour for one request
+(mock-lib's `fault-injection.ts`, keyed by `TASK_NAME`). Mirage's kit has
+fault plans of its own (`POST /_kit/faults`,
+integ/server/kit/typescript/fault.ts): each answers the next request to a
+route with a set status and body, in place of the fake, and writes nothing. A task's `faults` in `mirage.yaml`
+are armed on each trial's run once it is reset (`fakes.py`), and the trial
+cannot reach `/_kit/` to read or disarm them:
+
+| Task | Upstream's fault | Here |
+|---|---|---|
+| email-sending-verify | C2: a draft's first send answers as sent and stays a draft | the first `messages.send` answers as sent, with the id the next message takes, and stores nothing |
+| interview-slot-verify | C2: the first create stores the event an hour late and answers with the times asked for | the first `events.insert` answers with the event at the email's slot, under the id the next event takes, and stores nothing |
+| meeting-slot-race | C1: the first create writes a Team Standup into the slot asked for, then refuses it as an overlap (409) | the first `events.insert` is refused with upstream's 409 and `time_overlap`, in Google's error envelope, and no Team Standup is written |
 
 **Rule B: Mirage lacks the service, so it is a new kit fake that keeps
 upstream's API.** Chat has stickers, which Mirage's Slack and Discord fakes
@@ -241,6 +278,12 @@ password hashes' salts.
 | procurement-quote-compare-reply | A | gws, Mirage's | 1.0 | 0.0 |
 | stale-client-escalation | A | gws, Mirage's | 1.0 | 0.2 |
 | vendor-requirement-followup | A | gws, Mirage's | 1.0 | 0.4 |
+| candidate-interview-slot-confirm | A | gws, Mirage's: Gmail and Calendar | 1.0 | 0.0 |
+| email-reply | A | gws, Mirage's | 1.0 | 0.0 |
+| email-sending-verify | A | gws, Mirage's, with a fault | 1.0 | 0.0 |
+| email-writing | A | gws, Mirage's | 1.0 | 0.0 |
+| interview-slot-verify | A | gws, Mirage's: Gmail and Calendar, with a fault | 1.0 | 0.0 |
+| meeting-slot-race | A | gws, Mirage's: Gmail and Calendar, with a fault | 1.0 | 0.0 |
 | finance-anomaly-detect | B | finance (mocks/finance) | 1.0 | 0.0 |
 | finance-dashboard-repair | B | finance (mocks/finance) | 1.0 | 0.0 |
 | finance-depreciation-audit | B | finance (mocks/finance) | 1.0 | 0.0 |
@@ -253,13 +296,20 @@ password hashes' salts.
 | finance-tax-prepare | A, B | gws, finance | 1.0 | 0.2 |
 | finance-budget-shift | A, B | gws, finance | 1.0 | 0.0 |
 
-The nop scores are upstream's, on both paths. finance-budget-shift's oracle
-is ours: upstream's `solve.sh` runs `openclaw agent`, the image's own model
-agent. Ours logs in, reads March's records, sets Marketing's alert at 80%
-of its budget (`POST /api/departments/budget-alerts`) and checks the
-reply. That first alert is upstream's C1 fault for the task: it also fixes
-Sales' negative expense and lowers the HR, Finance and Operations budgets,
-which the verifier expects.
+The nop scores of the first seven and the finance eleven are upstream's,
+on both paths. The six email and calendar tasks run on Mirage's fake
+alone: from upstream's directories, the email tasks' browser install fails
+the start and the calendar mock has no layout here. Their `solve.sh` is
+upstream's, ported, for candidate-interview-slot-confirm, and ours for the
+other five, whose upstream solution is `openclaw agent`.
+
+finance-budget-shift's oracle is ours: upstream's `solve.sh` runs
+`openclaw agent`, the image's own model agent. Ours logs in, reads March's
+records, sets Marketing's alert at 80% of its budget (`POST
+/api/departments/budget-alerts`) and checks the reply. That first alert is
+upstream's C1 fault for the task: it also fixes Sales' negative expense
+and lowers the HR, Finance and Operations budgets, which the verifier
+expects.
 
 ## Shared fakes
 
@@ -276,7 +326,8 @@ Each trial is a run of its own on each fake. Its start registers the
 task's fixture with the pool, named by task and content, then calls
 `POST /reset {"run": <trial>, "fixture": <name>, "epoch": <epoch>}`. The
 kit seeds a SQLite file for the run; gws copies it from a template once a
-run has used that seed. Its stop calls `DELETE /_kit/runs/<run>`.
+run has used that seed. A task's `faults` are then armed on the run (`POST
+/_run/<run>/_kit/faults`). Its stop calls `DELETE /_kit/runs/<run>`.
 
 The trial reaches its runs as follows:
 - `localhost:<upstream port>` goes to `<fake>/_run/<run>/<path>`, so
@@ -329,20 +380,26 @@ own mocks.
 | Crash | A daemon that dies ends only its trial. A shared fake that dies fails the trials using it |
 | Verifier | Shares the agent's workspace, as Harbor's shared verifier does on Docker; or, with `MicrosandboxVerifier`, a microVM of its own (below) |
 
-`isolation.py` starts seven trials at once from the committed tasks:
+`isolation.py` starts nine trials at once from the committed tasks:
 chat-sticker-engagement twice (A and B, on one chat fake), weather-aqi-report
-once (C), stale-client-escalation twice (D and E, on one gws fake), and
-finance-anomaly-detect twice (F and G, on one finance fake). It checks from
-inside the workspaces that a trial sees only its own state: on its data
-mount, through its API, its `/gmail` mount and the `gws` CLI. It checks
-that a trial cannot reach another's run by path through its own URL
+once (C), candidate-interview-slot-confirm twice (D and E, on one gws fake),
+email-sending-verify twice (F and G, on that gws fake, each with its fault
+plan armed), and finance-anomaly-detect twice (H and I, on one finance
+fake). It checks from inside the workspaces that a trial sees only its own
+state: on its data mount, through its API, its `/gmail` and `/calendar`
+mounts and the `gws` CLI, mail and calendar events alike. It checks that a
+trial cannot reach another's run by path through its own URL
 (`localhost:5003/_run/b/...` is a 404 in its own run), by the shared fake's
-real port, or outside its runs, and cannot reset its run. F and G each log
+real port, or outside its runs, and cannot reset its run. H and I each log
 in with a cookie jar; each refuses the other's session cookie (`Invalid or
 expired token`) and takes its own. It also checks one trial's commands
 against each other: six at once each see its state, and a command canceled
-mid-run (`asyncio.wait_for`) is stopped before it writes. All 45 checks
-pass, the 16 it had before the fakes were shared among them.
+mid-run (`asyncio.wait_for`) is stopped before it writes. And each run's
+fault fires once, for that run alone: F's and G's first sends are answered
+as sent and store nothing, their second sends are stored, and neither sees
+the other's. All 63 checks pass: the 16 it had before the fakes were
+shared among them, 8 for the calendar, 10 for the fault plans and 13 for
+the finance fake.
 
 `--ek daemon_url=<url>` creates the workspace on a running daemon instead.
 That daemon cannot route each workspace to its own mocks: Mirage's curl
@@ -540,9 +597,10 @@ and the output notes it. All 69 pass:
 
 ## Upstream tasks
 
-The committed tasks pass from their upstream directories too, with the
-same nop scores, but for finance-budget-shift, whose upstream solution runs
-a model (below). Of the six cookie-free tasks first picked, three fail
+The first seven committed tasks and the finance eleven pass from their
+upstream directories too, with the same nop scores, but for
+finance-budget-shift, whose upstream solution runs a model (below). Of the
+six cookie-free tasks first picked, three fail
 for upstream's reasons:
 - mint-diet-snack-log, nutrition-log-meal and mint-diet-comprehensive: the
   mint-diet mock registers its form routes (`POST /log/<date>/entries`,
@@ -591,7 +649,49 @@ expense, insurance or health), and 4 of them a legacy startup script too.
   left naming the mount and the CLI. finance-tax-prepare's solution
   answers the tax authority with `gws gmail reply`, whose subject is the
   instruction's "Re: Q1 2026 VAT Filing Reminder - Action Required";
-  upstream's posts a new email with that subject.
+  upstream's posts a new email with that subject. A message
+  `gws` sends has `To` and `Subject` but no `From` or `Date` header, and a
+  reply keeps the thread (`threadId`) but has no `In-Reply-To`, since the
+  seed's messages have no `Message-ID`; no check reads them.
+- **Calendar tasks.** Their calendar is Google Calendar's: events with a
+  summary, an RFC 3339 start and end and an optional location, not
+  upstream's calendar app, its REST API or its frontend (5006). An event
+  has no `event_type` (candidate-interview-slot-confirm's verifier only
+  printed it), and a cancelled event counts as deleted, as the API lists
+  it. Google never refuses an overlapping event, where upstream's mock
+  answers 409. The primary calendar is in UTC, as upstream keeps every
+  time; Mirage's own default is Asia/Hong_Kong. The `/calendar` mount's
+  default listing reaches 90 days past `today`, set to the epoch's date,
+  not the host's. Upstream's second user, Lois, is not carried over.
+- **Faults.** A kit fault answers in place of the fake and writes nothing,
+  so two of upstream's three faults are approximated (the table above):
+  interview-slot-verify's first event is not stored, where upstream's is
+  stored an hour late, so an agent that never checks ends with no event
+  rather than a wrong one (0.0, where upstream's gives a titled one 0.3);
+  meeting-slot-race's slot is refused with no Team Standup in it, so the
+  slot is free when the agent looks, and its verifier's exclusion of a
+  Team Standup is moot. email-sending-verify's fault fires on the first
+  send of any kind, since Gmail here has no drafts, where upstream's fires
+  only on a draft's send (its frontend's Send on a new email posts with
+  `send_now` and is never faulted).
+- **Upstream's slips.** interview-slot-verify's verifier compares each
+  event's stored times to `YYYY-MM-DD HH:MM:SS` as strings, a form its mock
+  never stores (`toISOString()`), so upstream's 1.0 is unreachable; the
+  port compares the times, in UTC, in that form. meeting-slot-race's
+  email seed is the baseline, with no rescheduled meeting in it, so its
+  solution schedules the one meeting email there is (the Quarterly Review,
+  March 20). email-reply's and email-writing's `test.sh` copy logs of
+  upstream's email app, which are not there; `cat` fails after the reward
+  is written, as it would in an image without them.
+- **Skipped: email-reply-context-shift.** Its C1 fault fires on the inbox's
+  listing once a draft exists, and writes an "URGENT: Meeting cancelled"
+  email into it. Mirage's gws fake has no drafts (integ/server/gws/fake.ts,
+  "no threads or drafts resources at all"), and a kit fault writes nothing,
+  so neither the trigger nor the email can be made, and its verifier's
+  offline score (`llm_judge.py`'s heuristic, with no `JUDGE_BASE_URL`)
+  needs a reply that mentions the cancellation only that email announces.
+  Its verifier also writes string fields to `reward.json`, which Harbor
+  refuses (`VerifierOutputParseError`).
 - **Frozen clock.** Upstream's mocks seed relative to the wall clock and
   stamp writes with it. Here a run's clock is frozen at its epoch,
   2026-04-03T09:00:00Z, the date the tasks' solutions write, and moves a

@@ -1,0 +1,58 @@
+# interview-slot-verify, on vfsbench_harbor's mirage environment.
+#
+# In place of upstream's environment/Dockerfile: the mocks of its base
+# image are the fakes below, and its COPY line is `copy`.
+#
+# Rule A: Mirage fakes Gmail and Google Calendar, so the email and calendar
+# mocks become Mirage's own gws fake. The mailbox is the /gmail mount and the
+# calendar the /calendar mount, with the gws CLI for both, all at this
+# trial's run of it; nothing listens on upstream's ports 5001, 5174 and
+# 5006. One fake serves the whole job.
+fakes:
+  gws:
+    # Upstream's email and calendar seeds for the task, as Gmail messages
+    # and Peter's calendar (harbor/export.py writes it).
+    fixture: fixtures/gws.json
+    epoch: '2026-04-03T09:00:00Z'
+    # The run's SQLite, which the ported verify.py reads.
+    state: /var/lib/mock-data/gws/gws.db
+    # Upstream's C2 fault (c2-wrong-time, on the calendar mock's create):
+    # the first insert answers with the event at the email's slot, under the
+    # id the next event takes, and stores nothing, where upstream's stores
+    # it an hour late; a retry is stored. A kit fault plan, armed on this
+    # trial's run; it cannot store an event of its own.
+    faults:
+      - method: POST
+        route: /calendar/v3/calendars/:calendarId/events
+        status: 200
+        body:
+          kind: calendar#event
+          id: evt00000000000000000000001
+          status: confirmed
+          start: {dateTime: '2026-05-26T14:00:00+00:00', timeZone: UTC}
+          end: {dateTime: '2026-05-26T15:00:00+00:00', timeZone: UTC}
+          created: '2026-04-03T09:00:01.000Z'
+          updated: '2026-04-03T09:00:01.000Z'
+          iCalUID: evt00000000000000000000001@google.com
+          htmlLink: https://www.google.com/calendar/event?eid=evt00000000000000000000001
+env:
+  TASK_NAME: interview-slot-verify
+copy:
+  /workspace/environment: []
+# gws-integ-token is the gws fake's own fixed credential; ${GWS_URL} is this
+# trial's run. The calendar's default listing reaches 90 days past `today`,
+# the epoch's date rather than the host's.
+workspace:
+  mounts:
+    /gmail:
+      vfs: gmail
+      mode: read
+      config: {accessToken: gws-integ-token, apiBase: '${GWS_URL}'}
+    /calendar:
+      vfs: gcal
+      mode: read
+      config: {accessToken: gws-integ-token, apiBase: '${GWS_URL}', today: '2026-04-03'}
+  clis:
+    gws:
+      cli: gws
+      config: {accessToken: gws-integ-token, apiBase: '${GWS_URL}'}

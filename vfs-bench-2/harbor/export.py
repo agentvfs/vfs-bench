@@ -10,7 +10,8 @@ fixture and the workspace's mounts. Its files are of four kinds:
 
 - verbatim: upstream's, byte for byte, written here;
 - derived: upstream's with a fixed edit, written here (a rule-A
-  ``instruction.md``, where only how the mailbox is reached changes);
+  ``instruction.md``, where only how the mailbox and calendar are reached
+  changes);
 - generated: each fake's fixture, ``environment/fixtures/<service>.json``,
   from upstream's own seed for the task (``harbor/fixtures/main.ts``, under
   Bun), at the epoch mirage.yaml gives;
@@ -18,17 +19,20 @@ fixture and the workspace's mounts. Its files are of four kinds:
   ``solution/solve.sh`` and ``tests/verify.py`` (but where ``VERBATIM_A``
   keeps upstream's), written by hand and kept.
 
-Rule A is a task whose service Mirage already fakes: the email tasks, on
-Mirage's gws fake. Rule B is one whose service it lacks: chat, weather and
-finance, on this repo's fakes (``mocks/``), whose API and tables are
-upstream's, so every file but the Dockerfile is upstream's. A task with
-both is rule A for its email.
+Rule A is a task whose service Mirage already fakes: the email and
+calendar tasks, on Mirage's gws fake. Rule B is one whose service it lacks:
+chat, weather and finance, on this repo's fakes (``mocks/``), whose API and
+tables are upstream's, so every file but the Dockerfile is upstream's. A
+task with both is rule A for its email.
 
 ``--check`` writes nothing and exits 1 if any verbatim, derived or
 generated file differs from what upstream gives, if mirage.yaml's ``env``,
 ``copy``, ``run`` and ``workdir`` disagree with upstream's Dockerfile (and
 ``TASK_NAME``, its base image's; ``copy`` with each of its ``COPY``
-lines), or if a file is missing or unaccounted for.
+lines; a rule-A task leaves out the browser's install), if a file is missing
+or unaccounted for, or if any file looks like it holds a credential.
+Upstream's AgentBay harnesses (``LEFT_OUT``) are not exported: no
+``test.sh`` runs them, and they carry upstream's own keys.
 """
 import argparse
 import os
@@ -54,6 +58,12 @@ TASKS = {
     "procurement-quote-compare-reply": "A",
     "stale-client-escalation": "A",
     "vendor-requirement-followup": "A",
+    "candidate-interview-slot-confirm": "A",
+    "email-reply": "A",
+    "email-sending-verify": "A",
+    "email-writing": "A",
+    "interview-slot-verify": "A",
+    "meeting-slot-race": "A",
     "finance-anomaly-detect": "B",
     "finance-dashboard-repair": "B",
     "finance-depreciation-audit": "B",
@@ -75,9 +85,24 @@ VERBATIM_A = {
     "finance-invoice-process": ["tests/verify.py"],
     "finance-budget-shift": ["tests/verify.py"],
 }
-# A rule-A instruction: the mailbox is a mount and a CLI, not a web app.
-MAILBOX = ("(http://localhost:5174/, open it in browser)",
-           "(at /gmail, or through the gws CLI)")
+# Upstream files left out: AgentBay's cloud-runner harnesses, which no
+# test.sh runs, and which carry upstream's own service credentials.
+LEFT_OUT = re.compile(r"tests/(utils/)?agent_?bay_test(_example)?\.py"
+                      r"(\.reference)?")
+# What looks like a credential: an API key, token, secret or password set
+# to a long literal, or a key with its provider's prefix. No committed file
+# may hold one, whoever wrote it.
+CREDENTIAL = re.compile(
+    rb"os\.environ\[[^\]]+\]\s*=\s*['\"][A-Za-z0-9_./+=-]{16,}"
+    rb"|['\"]?(api_?key|access_?key|secret|token|password)['\"]?\s*[:=]\s*"
+    rb"['\"][A-Za-z0-9_./+=-]{16,}['\"]"
+    rb"|sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}", re.I)
+# A rule-A instruction: the mailbox and the calendar are mounts and a CLI,
+# not web apps. Each phrase that names one becomes the other way to reach
+# it; a task names its mailbox with MAILBOX unless PHRASES lists its own.
+GMAIL = "(at /gmail, or through the gws CLI)"
+CALENDAR = "(at /calendar, or through the gws CLI)"
+MAILBOX = ("(http://localhost:5174/, open it in browser)", GMAIL)
 # How the email mock's own API is described, where an instruction does.
 EMAIL_API = ("### Email System (http://localhost:5174)\n"
              "- `POST /api/auth/login` - authenticate with `{\"username\": "
@@ -94,10 +119,26 @@ EMAIL_API = ("### Email System (http://localhost:5174)\n"
              "  ```\n"
              "  Use the `Authorization: Bearer <access_token>` header for "
              "authentication.\n")
-EMAIL_SECTION = "### Email System (at /gmail, or through the gws CLI)\n"
-# The phrases a rule-A instruction reaches the mailbox by, where they are
-# not MAILBOX alone; each is replaced, and must occur once.
-MAILBOXES = {
+EMAIL_SECTION = f"### Email System {GMAIL}\n"
+PHRASES = {
+    "candidate-interview-slot-confirm": [
+        ("(http://localhost:5174/, open it in your browser)", GMAIL),
+        ("(http://localhost:5006/, open it in your browser)", CALENDAR),
+    ],
+    "email-reply": [
+        ("(http://localhost:5174/, open it in your browser)", GMAIL),
+    ],
+    "email-sending-verify": [
+        ("at http://localhost:5174/", GMAIL),
+    ],
+    "interview-slot-verify": [
+        ("at http://localhost:5174/", GMAIL),
+        ("at http://localhost:5006/", CALENDAR),
+    ],
+    "meeting-slot-race": [
+        ("at http://localhost:5174/", GMAIL),
+        ("at http://localhost:5006/", CALENDAR),
+    ],
     "finance-analysis-generate": [
         ("   - Email system URL: http://localhost:5174/\n"
          "   - Login credentials: username `peter`, password `password123`\n",
@@ -126,13 +167,17 @@ MAILBOXES = {
     # Its instruction never names the mailbox.
     "finance-budget-shift": [],
 }
+# A Dockerfile RUN line that installs a browser for upstream's web apps. A
+# rule-A task reaches its services through mounts and a CLI instead, and the
+# workspace has no browser, so its mirage.yaml leaves the line out.
+BROWSER = "playwright-core/cli.js install"
 
 
 def derived_instruction(text: str, task: str) -> str:
-    for old, new in MAILBOXES.get(task, [MAILBOX]):
+    for old, new in PHRASES.get(task, [MAILBOX]):
         if text.count(old) != 1:
-            raise ValueError(f"{task}: instruction.md names the mailbox "
-                             f"{text.count(old)} times, not once: {old!r}")
+            raise ValueError(f"{task}: instruction.md has {old!r} "
+                             f"{text.count(old)} times, not once")
         text = text.replace(old, new)
     return text
 
@@ -183,7 +228,8 @@ def expected(task: str, mirage: dict) -> dict[str, bytes]:
     out: dict[str, bytes] = {}
     for path in sorted(source.rglob("*")):
         rel = path.relative_to(source).as_posix()
-        if not path.is_file() or rel == "environment/Dockerfile":
+        if (not path.is_file() or rel == "environment/Dockerfile"
+                or LEFT_OUT.fullmatch(rel)):
             continue
         if rel in ours(task):
             continue
@@ -225,10 +271,9 @@ def agrees(task: str, mirage: dict) -> list[str]:
     if mirage.get("workdir") != docker["workdir"]:
         problems.append(
             f"workdir is not the Dockerfile's WORKDIR {docker['workdir']}")
-    if [re.sub(r"\s+", " ", r)
-            for r in mirage.get("run") or []] != docker["run"]:
-        problems.append(
-            f"run is not the Dockerfile's RUN lines {docker['run']}")
+    runs = [r for r in docker["run"] if TASKS[task] != "A" or BROWSER not in r]
+    if [re.sub(r"\s+", " ", r) for r in mirage.get("run") or []] != runs:
+        problems.append(f"run is not the Dockerfile's RUN lines {runs}")
     environment = sorted(p.name
                          for p in (UPSTREAM / task / "environment").iterdir()
                          if p.name != "Dockerfile")
@@ -325,6 +370,8 @@ def main() -> int:
             rel = path.relative_to(target).as_posix()
             if path.is_file() and rel not in files and rel not in ours(task):
                 problems.append(f"{rel} is not upstream's, derived or ours")
+            if path.is_file() and CREDENTIAL.search(path.read_bytes()):
+                problems.append(f"{rel} looks like it holds a credential")
         failed += bool(problems)
         status = "FAIL" if problems else ("ok" if args.check else "written")
         print(f"{status} {task}")
