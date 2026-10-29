@@ -57,7 +57,8 @@ and the daemon. With `--delete` (the default) its directories go and those
 files stay.
 
 The kit fakes' Prisma clients are generated the first time each fake
-starts. After that, `pnpm exec tsc -p mocks` type-checks the fakes.
+starts, through `mocks/node_modules`, a gitignored link to Mirage's integ
+packages. After that, `pnpm exec tsc -p mocks` type-checks the fakes.
 
 ## Files
 
