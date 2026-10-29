@@ -48,6 +48,7 @@ uv run --project harbor python -I harbor/isolation.py [--out <dir>]
 
 # Rewrite the committed tasks from upstream, or check them against it.
 uv run --project harbor python -I harbor/export.py [--check]
+uv run --project harbor python -I harbor/test_export.py
 ```
 
 `--ek node=<path>` names the Node binary if `node` on `PATH` is not 24.
@@ -74,6 +75,8 @@ remove a client another one is loading. After that, `pnpm exec tsc -p mocks` typ
   the plan: the workspace config, each mount's host directory, the state
   files, and the routes from upstream's ports to the services. For an
   upstream task it also starts the trial's own mocks.
+- `copies.ts`: a task's `COPY` lines as both adapters read them, in order,
+  and how `mocks.ts` lays them out (`copies.test.ts`, in `pnpm test`).
 - `mirage.ts`: the adapter `mocks.ts` reads a committed task with, from its
   `environment/mirage.yaml`.
 - `liveclawbench.ts`: the adapter for an upstream task. It reuses
@@ -81,7 +84,8 @@ remove a client another one is loading. After that, `pnpm exec tsc -p mocks` typ
 - `preload.ts`: loaded into each trial's daemon. It routes the trial's
   network and stops the daemon when its parent goes.
 - `tasks/liveclawbench/<task>/`: the committed tasks.
-- `export.py`: writes the committed tasks' upstream files, or checks them.
+- `export.py`: writes the committed tasks' upstream files, or checks them;
+  `test_export.py` tests its check of `copy`.
 - `fixtures/`: builds a task's kit fixture from upstream's own seed, under
   Bun.
 - `../mocks/chat/`, `../mocks/weather/`, `../mocks/finance/`: the kit fakes
@@ -116,8 +120,12 @@ SQLite is read. It also gives the Dockerfile's `ENV`, `COPY` and `RUN`
 (`env`, `copy`, `run`) and the mounts and CLIs the task adds to the
 workspace (`workspace`). `copy` takes `COPY . <dir>` as the entries of
 `environment/` it copies, and `COPY <src> <dest>` as its source, relative
-to `environment/` (`/workspace/policies: policies/`). `mirage.ts`'s header
-describes each key.
+to `environment/` (`/workspace/policies: policies/`). Several COPYs to one
+destination are a list of them in the Dockerfile's order (`- {src:
+policies/}`, `- {src: ., entries: [notes]}`), each merged into what the
+ones before left, as Docker does; export.py fails a `copy` that names a
+destination twice or states fewer COPYs than the Dockerfile has.
+`mirage.ts`'s header describes each key.
 
 A fixture comes from upstream's own seed (`fixtures/main.ts`). The mock's
 seed runs as it is, under Bun, into a scratch SQLite, with `TASK_NAME` set

@@ -19,7 +19,7 @@ import { join, relative } from 'node:path'
 import type { FakeSpec } from '../harness/fakes.ts'
 import type { Run } from '../harness/runs.ts'
 import { DATA, PLATFORM, fake, fakeName } from '../liveclawbench/index.ts'
-import { copyTarget } from './mirage.ts'
+import { type Copy, copyTarget } from './copies.ts'
 import type { Plan } from './mocks.ts'
 
 /**
@@ -106,14 +106,15 @@ export function plan(taskDir: string, run: Run): Plan {
   const layout = Object.fromEntries(mapping.binaries.map((mock) => [mock, DATA[mock]!(run.path('mock-data', mock))]))
   const env: Record<string, string> = { TASK_NAME: task }
   const mockEnv: Record<string, string> = {}
-  // Read first: an `ENV` may name a file a later `COPY` puts there.
-  const copies: Record<string, string> = {}
+  // Read first: an `ENV` may name a file a later `COPY` puts there. Kept
+  // in order, so two copies to one destination both arrive.
+  const copies: Copy[] = []
   for (const { op, args } of steps) {
     const copy = op === 'COPY' ? COPY.exec(args) : null
     if (copy === null) continue
     const from = join(environmentDir, copy[1]!)
     if (relative(environmentDir, from).startsWith('..')) throw new Error(`${task}: COPY ${copy[1]} is outside environment/`)
-    copies[copyTarget(copy[2]!, from)] = from
+    copies.push({ to: copyTarget(copy[2]!, from), from })
   }
   const lines: { cwd: string; line: string }[] = []
   let workdir: string | undefined
@@ -131,8 +132,8 @@ export function plan(taskDir: string, run: Run): Plan {
           }
           continue
         }
-        const copied = Object.keys(copies).find((dir) => value.startsWith(`${dir}/`))
-        mockEnv[name] = copied === undefined ? value : join(copies[copied]!, value.slice(copied.length + 1))
+        const copied = [...copies].reverse().find(({ to }) => value.startsWith(`${to}/`))
+        mockEnv[name] = copied === undefined ? value : join(copied.from!, value.slice(copied.to.length + 1))
       }
     } else if (op === 'RUN' && !args.startsWith('[')) {
       lines.push({ cwd: workdir ?? '/', line: args })

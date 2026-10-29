@@ -233,15 +233,47 @@ def agrees(task: str, mirage: dict) -> list[str]:
                          for p in (UPSTREAM / task / "environment").iterdir()
                          if p.name != "Dockerfile")
     # `COPY . <dir>` is the entries of environment/; `COPY <src> <dest>`,
-    # its source.
+    # its source; several COPYs to one destination, each in order, so that
+    # none of them is lost.
+    by_dest: dict[str, list[str]] = {}
+    for src, dest in docker["copy"]:
+        by_dest.setdefault(dest.rstrip("/"), []).append(src)
     copies = {
-        dest.rstrip("/"): environment if src == "." else src
-        for src, dest in docker["copy"]
+        dest: (environment if srcs[0] == "." else srcs[0])
+        if len(srcs) == 1 else [{
+            "src": ".",
+            "entries": environment
+        } if src == "." else {
+            "src": src
+        } for src in srcs]
+        for dest, srcs in by_dest.items()
     }
-    stated = {k.rstrip("/"): v for k, v in (mirage.get("copy") or {}).items()}
+    raw = mirage.get("copy") or {}
+    stated = {k.rstrip("/"): v for k, v in raw.items()}
+    if len(stated) != len(raw):
+        problems.append("copy names one destination twice")
     if stated != copies:
         problems.append(f"copy is not the Dockerfile's COPY lines {copies}")
     return problems
+
+
+class UniqueKeyLoader(yaml.SafeLoader):
+    """A YAML loader that refuses a repeated key, of which ``safe_load``
+    keeps only the last (two ``copy`` entries for one destination)."""
+
+
+def _unique_mapping(loader: UniqueKeyLoader, node: yaml.MappingNode) -> dict:
+    keys = [loader.construct_object(key, deep=True) for key, _ in node.value]
+    repeated = sorted({k for k in keys if keys.count(k) > 1}, key=str)
+    if repeated:
+        raise yaml.constructor.ConstructorError(None, None,
+                                                f"repeated keys {repeated}",
+                                                node.start_mark)
+    return loader.construct_mapping(node, deep=True)
+
+
+UniqueKeyLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
+                                _unique_mapping)
 
 
 def main() -> int:
@@ -252,8 +284,9 @@ def main() -> int:
     failed = 0
     for task in args.tasks:
         target = OUT / task
-        mirage = yaml.safe_load(
-            (target / "environment" / "mirage.yaml").read_text())
+        mirage = yaml.load(
+            (target / "environment" / "mirage.yaml").read_text(),
+            Loader=UniqueKeyLoader)
         files = expected(task, mirage)
         problems = agrees(task, mirage)
         for rel in ours(task):
