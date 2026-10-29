@@ -36,7 +36,9 @@ export const MOCKS = join(ROOT, 'mocks')
  * delete or overwrite a client another one loads. Each generates beside,
  * then renames into place: the first rename wins and the others drop their
  * copy. The link is swapped by a rename too. A client an older schema left
- * stays, since a running fake may still be loading it.
+ * stays, since a running fake may still be loading it; so does a client an
+ * earlier layout generated in place at `generated`, which is renamed aside
+ * to `generated-legacy-<pid>-<n>` for the link to take its name.
  *
  * Prisma resolves @prisma/client from the client's directory, so
  * `mocks/node_modules` links Mirage's integ packages (it is gitignored), and
@@ -54,7 +56,23 @@ function ensureClient(service: string): void {
   const link = join(dir, `generated.${process.pid}.link`)
   rmSync(link, { force: true })
   symlinkSync(name, link)
-  renameSync(link, out)
+  for (let attempt = 0; ; attempt++) {
+    try {
+      renameSync(link, out)
+      return
+    } catch (error) {
+      // A link cannot replace a directory; anything else, or a directory
+      // that keeps coming back, is an error.
+      if ((error as NodeJS.ErrnoException).code !== 'EISDIR' || attempt === 3) throw error
+    }
+    // Another launcher may move it first, or have put its link there: a
+    // link moved aside is harmless, since this one replaces it.
+    try {
+      renameSync(out, join(dir, `generated-legacy-${process.pid}-${attempt}`))
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+    }
+  }
 }
 
 /** Generate a schema's Prisma client into `client`, unless another launcher has. */
