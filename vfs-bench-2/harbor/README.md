@@ -58,6 +58,8 @@ uv run --project harbor harbor run -p state/liveclawbench/src/tasks/weather-aqi-
 
 # Trials side by side cannot reach each other; --msb checks their verifier VMs too.
 uv run --project harbor python -I harbor/isolation.py [--out <dir>] [--msb]
+# The refresh of the services' state copies, its caller canceled mid-copy.
+uv run --project harbor python -I harbor/test_environment.py
 
 # Rewrite the committed tasks from upstream, or check them against it.
 uv run --project harbor python -I harbor/export.py [--check]
@@ -87,7 +89,8 @@ remove a client another one is loading. After that, `pnpm exec tsc -p mocks` typ
 ## Files
 
 - `src/vfsbench_harbor/environment.py`: `MirageEnvironment`, a client of the
-  daemon's HTTP API.
+  daemon's HTTP API; `test_environment.py` tests its refresh of the state
+  copies.
 - `src/vfsbench_harbor/fakes.py`: the shared kit fakes, one per service
   for the Harbor process, and each trial's runs of them.
 - `src/vfsbench_harbor/microsandbox.py`: `MicrosandboxVerifier`, which runs

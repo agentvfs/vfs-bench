@@ -37,6 +37,7 @@ import socket
 import sqlite3
 import subprocess
 import tempfile
+import threading
 import time
 from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
@@ -161,8 +162,10 @@ class MirageEnvironment(BaseEnvironment):
         self._epoch: int | None = None
         self._started = 0
         # One refresh at a time: overlapping ones would share each state
-        # file's temporary copy.
-        self._refreshing = asyncio.Lock()
+        # file's temporary copy. The thread that copies holds it, so a
+        # caller canceled mid-copy (an exec's timeout, an agent's end)
+        # leaves it held until the copy is done.
+        self._refreshing = threading.Lock()
         self._workdir = "/"
         super().__init__(*args, **kwargs)
         self._run_dir = (self.trial_paths.trial_dir / "mirage").resolve()
@@ -534,15 +537,16 @@ class MirageEnvironment(BaseEnvironment):
                     f"Command timed out after {timeout_sec} seconds")
 
     def _refresh_state(self) -> None:
-        """Bring each mock's state file in the workspace up to date."""
-        for view, live in self._state:
-            _snapshot(view, live)
+        """Bring each mock's state file in the workspace up to date; one
+        refresh at a time."""
+        with self._refreshing:
+            for view, live in self._state:
+                _snapshot(view, live)
 
     async def refresh_state(self) -> None:
         """Bring each mock's state file in the workspace up to date, as
         every ``exec`` does first; one refresh at a time."""
-        async with self._refreshing:
-            await asyncio.to_thread(self._refresh_state)
+        await asyncio.to_thread(self._refresh_state)
 
     # What a verifier run outside the workspace reads (microsandbox.py):
     # the trial's files, its routes and the container's environment.
