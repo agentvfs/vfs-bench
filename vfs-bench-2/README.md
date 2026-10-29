@@ -122,6 +122,8 @@ submodule/    Mirage, pinned and unmodified
     tests/oracle.sh  a scripted solution, one shell call per block
     tests/oracle.reply.md  the solution's last reply, for a grader that judges it
     tests/noop.sh    doing nothing, which must fail
+    tests/oracle-*.sh  other correct solutions, which must pass
+    tests/wrong-*.sh   near misses, which must fail
 ```
 
 ## License

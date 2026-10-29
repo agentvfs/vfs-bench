@@ -48,6 +48,12 @@ This clones upstream into `state/complexmcp/src` and exports the tasks to
   of the 120 orders of its four buys and the VIP upgrade did. Six places
   is far below a cent, the smallest real difference.
 
+The `trid` and float rules are checked by `tests/oracle-*.sh`, which must
+pass, and `tests/wrong-*.sh`, which must fail: an extra cart item before
+checkout (`family-group-airpods`), trades in another order
+(`liquidate-short-news-flight`, `tech-stocks-flight-bitter-gourd`), and
+one share too few or one cent off (`nike-to-20-shares`).
+
 ## Tasks
 
 | Task | Upstream |
