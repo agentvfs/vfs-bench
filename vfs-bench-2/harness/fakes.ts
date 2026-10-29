@@ -34,6 +34,13 @@ export interface FakeSpec {
 
 const READY = /^([A-Z0-9_]+)_URL=(\S+)$/
 
+/**
+ * The model's credentials, which stay with the harness. Given them, an
+ * upstream simulation may call the real API mid-run, as AutomationBench's
+ * ChatGPT app does.
+ */
+const MODEL_ENV = new Set(['OPENAI_API_KEY', 'OPENAI_BASE_URL'])
+
 /** A running fake. */
 export class Fake {
   readonly log: string[] = []
@@ -135,7 +142,7 @@ function kitDatabase(stateDir: string, run: string): string {
 export async function start(spec: FakeSpec, run: Run): Promise<Fake> {
   const stateDir = mkdtempSync(join(tmpdir(), `vfsbench-${spec.name.toLowerCase()}-`))
   const env = {
-    ...process.env,
+    ...Object.fromEntries(Object.entries(process.env).filter(([name]) => !MODEL_ENV.has(name))),
     PATH: `${dirname(process.execPath)}:${process.env.PATH ?? ''}`,
     TMPDIR: stateDir,
     ...spec.env,

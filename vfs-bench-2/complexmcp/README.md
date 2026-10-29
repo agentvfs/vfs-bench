@@ -18,7 +18,7 @@ This clones upstream into `state/complexmcp/src` and exports the tasks to
 
 | Upstream | Here |
 |---|---|
-| `docker/start_benchmark_sandbox.sh` starts the 15 servers | The same servers, unchanged, on free local ports, started behind the bridge (`world.py`) |
+| `docker/start_benchmark_sandbox.sh` starts the 15 servers | The same servers but OSINT, unchanged, on free local ports, started behind the bridge (`world.py`) |
 | The `Toolbox` client calls `<Server>.<tool>` | One CLI per server, generated from the tools it lists: `light-talk get-contacts-by-tag --tag family` |
 | The Light apps' tools, from their `desc.json` | The same descriptions, without `login`, `logout` and the hidden `session_id` |
 | `AgentClient.__login` logs into LightSystem, then each task app, with the task's seed | `reset`, the same way. Each call to a Light app gets its `session_id` added. |
@@ -26,6 +26,9 @@ This clones upstream into `state/complexmcp/src` and exports the tasks to
 
 ## Divergences from upstream
 
+- The OSINT server is left out. Its tools run `whois`, `nmap` and `dig`
+  on the host, which would put the live network in an offline workspace.
+  No task uses it.
 - Upstream's `retrieve_tools` mode is left out. `--help` and the CLIs' docs
   do the discovery.
 - The shell can do arithmetic (`awk`, `python3`), so the math and unit
