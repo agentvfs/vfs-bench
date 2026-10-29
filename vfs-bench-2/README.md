@@ -112,7 +112,7 @@ harness/      the run, oracle and determinism runners; fakes, workspace, dumps
 clis/         CLI generators: from tool schemas (tools.ts), from OpenAPI
               (openapi.ts), and complete-task (answer.ts)
 bridge/       serves a Python simulation as a fake (POST /reset, /call, GET /snapshot)
-harbor/       a Harbor environment on a Mirage workspace, and seven LiveClawBench
+harbor/       a Harbor environment on a Mirage workspace, and thirteen LiveClawBench
               tasks as Harbor task directories on shared kit fakes (harbor/README.md)
 mocks/        kit fakes this repo adds on Mirage's integ kit (chat, weather)
 setup/        the workspace's python3 packages

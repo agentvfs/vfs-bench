@@ -5,12 +5,13 @@
 Starts five trials at once from the committed tasks, each with its own
 daemon, on kit fakes they share: chat-sticker-engagement twice (A and B,
 both reaching the one chat fake at localhost:5003, each its own run),
-weather-aqi-report (C), and stale-client-escalation twice (D and E, both on
-the one gws fake through /gmail and the gws CLI). Then checks, from inside
-the workspaces, that each trial reaches only its own runs and files: not
-another's state, not another's run by path through its own URL, and not the
-shared fakes' real ports. A trial's own commands keep apart too: several at
-once each see its state, and one canceled stops. Exits 1 if any check fails.
+weather-aqi-report (C), and candidate-interview-slot-confirm twice (D and
+E, both on the one gws fake through /gmail, /calendar and the gws CLI).
+Then checks, from inside the workspaces, that each trial reaches only its
+own runs and files: not another's state, mail or calendar events, not
+another's run by path through its own URL, and not the shared fakes' real
+ports. A trial's own commands keep apart too: several at once each see its
+state, and one canceled stops. Exits 1 if any check fails.
 """
 import argparse
 import asyncio
@@ -40,6 +41,19 @@ MAILS = ("python3 -c \"import sqlite3; "
          "print(db.execute(\\\"select count(*) from MessageHeader where "
          f"name = 'Subject' and value = '{SUBJECT}'\\\").fetchone()[0])\"")
 TOKEN = "-H 'Authorization: Bearer gws-integ-token'"
+# D's calendar event, on a day of its own.
+EVENT_DAY = "2026-05-28"
+EVENT = ("gws calendar events insert --params '{\"calendarId\": \"primary\"}' "
+         f"--json '{{\"summary\": \"{SUBJECT}\", "
+         f"\"start\": {{\"dateTime\": \"{EVENT_DAY}T10:00:00Z\"}}, "
+         f"\"end\": {{\"dateTime\": \"{EVENT_DAY}T11:00:00Z\"}}}}'")
+EVENTS = ("gws calendar events list --params "
+          f"'{{\"calendarId\": \"primary\", \"q\": \"{SUBJECT}\"}}'")
+# How many events in the trial's gws run are D's, from its data mount.
+CALENDAR = ("python3 -c \"import sqlite3; "
+            "db = sqlite3.connect('/var/lib/mock-data/gws/gws.db'); "
+            "print(db.execute(\\\"select count(*) from Event where "
+            f"summary = '{SUBJECT}'\\\").fetchone()[0])\"")
 
 
 def trial(out: Path, task: str, name: str) -> MirageEnvironment:
@@ -66,7 +80,8 @@ async def main() -> int:
     out = parser.parse_args().out.resolve()
     a, b = (trial(out, "chat-sticker-engagement", n) for n in ("a", "b"))
     c = trial(out, "weather-aqi-report", "c")
-    d, e = (trial(out, "stale-client-escalation", n) for n in ("d", "e"))
+    d, e = (trial(out, "candidate-interview-slot-confirm", n)
+            for n in ("d", "e"))
     trials = (a, b, c, d, e)
     await asyncio.gather(*(t.start(force_build=False) for t in trials))
     failed = 0
@@ -198,6 +213,28 @@ async def main() -> int:
         await check(e, "cannot reach the shared gws fake outside its run",
                     f"curl -sS {TOKEN} {gws}/gmail/v1/users/me/messages",
                     refused)
+
+        # The shared gws fake's calendars, through the mount and the CLI.
+        await check(d, "creates an event with the gws CLI", EVENT,
+                    lambda code, out: code == 0 and SUBJECT in out)
+        await check(d, "sees its event in its own data mount", CALENDAR,
+                    lambda code, out: out == "1")
+        await check(d, "sees its event on its /calendar mount",
+                    f"ls /calendar/primary/{EVENT_DAY}",
+                    lambda code, out: code == 0 and SUBJECT in out)
+        await check(d, "sees its event through the gws CLI", EVENTS,
+                    lambda code, out: code == 0 and SUBJECT in out)
+        await check(e, "does not see D's event in its data mount", CALENDAR,
+                    lambda code, out: out == "0")
+        await check(e, "does not see D's event on its /calendar mount",
+                    f"ls /calendar/primary/{EVENT_DAY}",
+                    lambda code, out: code == 0 and SUBJECT not in out)
+        await check(e, "does not see D's event through the gws CLI", EVENTS,
+                    lambda code, out: code == 0 and SUBJECT not in out)
+        await check(
+            e, "cannot reach D's calendar on the shared fake's real port",
+            f"curl -sS {TOKEN} "
+            f"{gws}{d_run}/calendar/v3/calendars/primary/events", refused)
     finally:
         await asyncio.gather(*(t.stop(delete=True) for t in trials))
     print(

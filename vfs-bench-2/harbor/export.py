@@ -10,23 +10,24 @@ fixture and the workspace's mounts. Its files are of four kinds:
 
 - verbatim: upstream's, byte for byte, written here;
 - derived: upstream's with a fixed edit, written here (a rule-A
-  ``instruction.md``, where only how the mailbox is reached changes);
+  ``instruction.md``, where only how the mailbox and calendar are reached
+  changes);
 - generated: each fake's fixture, ``environment/fixtures/<service>.json``,
   from upstream's own seed for the task (``harbor/fixtures/main.ts``, under
   Bun), at the epoch mirage.yaml gives;
 - ours: ``environment/mirage.yaml``, and a rule-A task's
   ``solution/solve.sh`` and ``tests/verify.py``, written by hand and kept.
 
-Rule A is a task whose service Mirage already fakes: the email tasks, on
-Mirage's gws fake. Rule B is one whose service it lacks: chat and weather,
-on this repo's fakes (``mocks/``), whose API and tables are upstream's, so
-every file but the Dockerfile is upstream's.
+Rule A is a task whose service Mirage already fakes: the email and
+calendar tasks, on Mirage's gws fake. Rule B is one whose service it lacks:
+chat and weather, on this repo's fakes (``mocks/``), whose API and tables
+are upstream's, so every file but the Dockerfile is upstream's.
 
 ``--check`` writes nothing and exits 1 if any verbatim, derived or
 generated file differs from what upstream gives, if mirage.yaml's ``env``,
 ``copy``, ``run`` and ``workdir`` disagree with upstream's Dockerfile (and
-``TASK_NAME``, its base image's), or if a file is missing or unaccounted
-for.
+``TASK_NAME``, its base image's; a rule-A task leaves out the browser's
+install), or if a file is missing or unaccounted for.
 """
 import argparse
 import os
@@ -52,21 +53,55 @@ TASKS = {
     "procurement-quote-compare-reply": "A",
     "stale-client-escalation": "A",
     "vendor-requirement-followup": "A",
+    "candidate-interview-slot-confirm": "A",
+    "email-reply": "A",
+    "email-sending-verify": "A",
+    "email-writing": "A",
+    "interview-slot-verify": "A",
+    "meeting-slot-race": "A",
 }
 # A rule-A task's files of ours, which differ from upstream's on purpose.
 OURS_A = ["solution/solve.sh", "tests/verify.py"]
 OURS = ["environment/mirage.yaml"]
-# A rule-A instruction: the mailbox is a mount and a CLI, not a web app.
-MAILBOX = ("(http://localhost:5174/, open it in browser)",
-           "(at /gmail, or through the gws CLI)")
+# A rule-A instruction: the mailbox and the calendar are mounts and a CLI,
+# not web apps. Each phrase that names one becomes the other way to reach
+# it; a task names its mailbox with MAILBOX unless PHRASES lists its own.
+GMAIL = "(at /gmail, or through the gws CLI)"
+CALENDAR = "(at /calendar, or through the gws CLI)"
+MAILBOX = ("(http://localhost:5174/, open it in browser)", GMAIL)
+PHRASES = {
+    "candidate-interview-slot-confirm": [
+        ("(http://localhost:5174/, open it in your browser)", GMAIL),
+        ("(http://localhost:5006/, open it in your browser)", CALENDAR),
+    ],
+    "email-reply": [
+        ("(http://localhost:5174/, open it in your browser)", GMAIL),
+    ],
+    "email-sending-verify": [
+        ("at http://localhost:5174/", GMAIL),
+    ],
+    "interview-slot-verify": [
+        ("at http://localhost:5174/", GMAIL),
+        ("at http://localhost:5006/", CALENDAR),
+    ],
+    "meeting-slot-race": [
+        ("at http://localhost:5174/", GMAIL),
+        ("at http://localhost:5006/", CALENDAR),
+    ],
+}
+# A Dockerfile RUN line that installs a browser for upstream's web apps. A
+# rule-A task reaches its services through mounts and a CLI instead, and the
+# workspace has no browser, so its mirage.yaml leaves the line out.
+BROWSER = "playwright-core/cli.js install"
 
 
 def derived_instruction(text: str, task: str) -> str:
-    old, new = MAILBOX
-    if text.count(old) != 1:
-        raise ValueError(f"{task}: instruction.md names the mailbox "
-                         f"{text.count(old)} times, not once")
-    return text.replace(old, new)
+    for old, new in PHRASES.get(task, [MAILBOX]):
+        if text.count(old) != 1:
+            raise ValueError(f"{task}: instruction.md has {old!r} "
+                             f"{text.count(old)} times, not once")
+        text = text.replace(old, new)
+    return text
 
 
 def env_pairs(args: str) -> list[tuple[str, str]]:
@@ -149,10 +184,9 @@ def agrees(task: str, mirage: dict) -> list[str]:
     if mirage.get("workdir") != docker["workdir"]:
         problems.append(
             f"workdir is not the Dockerfile's WORKDIR {docker['workdir']}")
-    if [re.sub(r"\s+", " ", r)
-            for r in mirage.get("run") or []] != docker["run"]:
-        problems.append(
-            f"run is not the Dockerfile's RUN lines {docker['run']}")
+    runs = [r for r in docker["run"] if TASKS[task] != "A" or BROWSER not in r]
+    if [re.sub(r"\s+", " ", r) for r in mirage.get("run") or []] != runs:
+        problems.append(f"run is not the Dockerfile's RUN lines {runs}")
     environment = sorted(p.name
                          for p in (UPSTREAM / task / "environment").iterdir()
                          if p.name != "Dockerfile")

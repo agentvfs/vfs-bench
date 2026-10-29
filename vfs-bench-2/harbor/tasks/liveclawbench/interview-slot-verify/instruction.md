@@ -1,0 +1,1 @@
+You received an email about an interview slot that needs to be confirmed. Please check your email (at /gmail, or through the gws CLI) for the details, then create the event in your calendar (at /calendar, or through the gws CLI) at the exact time specified. After creating the event, verify the time is correct by checking the event details.
