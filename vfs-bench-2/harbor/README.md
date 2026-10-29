@@ -9,7 +9,7 @@ and creates a workspace on a Mirage daemon of the trial's own. Harbor's
 into and out of the workspace's mounts.
 
 It runs two kinds of task:
-- **Committed tasks**, under `tasks/liveclawbench/`: seven LiveClawBench
+- **Committed tasks**, under `tasks/liveclawbench/`: eighteen LiveClawBench
   tasks as Harbor task directories. Each has an `environment/mirage.yaml`
   in place of upstream's Dockerfile. Their services are kit fakes on
   Mirage's integ kit, one process per service for the whole job, and each
@@ -84,9 +84,10 @@ remove a client another one is loading. After that, `pnpm exec tsc -p mocks` typ
 - `export.py`: writes the committed tasks' upstream files, or checks them.
 - `fixtures/`: builds a task's kit fixture from upstream's own seed, under
   Bun.
-- `../mocks/chat/`, `../mocks/weather/`: the kit fakes this repo adds, in
-  Mirage's integ layout: a Prisma schema, `config.ts`, `fake.ts`,
-  `routes.ts`, `wire.ts`, `pages.ts` and `main.ts`.
+- `../mocks/chat/`, `../mocks/weather/`, `../mocks/finance/`: the kit fakes
+  this repo adds, in Mirage's integ layout: a Prisma schema, `config.ts`,
+  `fake.ts`, `routes.ts`, `wire.ts`, `pages.ts` and `main.ts`, and for
+  finance `session.ts`, its cookie login.
 - `workspace.yaml`: the workspace every trial starts from.
 - `liveclawbench.yaml`: the committed tasks, as a Harbor job config.
 - `isolation.py`: the isolation check.
@@ -99,8 +100,8 @@ are of four kinds, and `export.py` says which is which:
 
 | Kind | Files | Written by |
 |---|---|---|
-| Verbatim | `task.toml`, `tests/test.sh`, `tests/_seed_snapshots/`, `environment/notes/`; for rule B also `instruction.md`, `solution/solve.sh`, `tests/verify.py` | `export.py`, from upstream |
-| Derived | a rule-A `instruction.md`: one phrase changed | `export.py`, from upstream |
+| Verbatim | `task.toml`, `tests/test.sh`, `tests/_seed_snapshots/`, the rest of `environment/` (`notes/`, `policies/`, `seed.sql`); for rule B also `instruction.md`, `solution/solve.sh`, `tests/verify.py`; a rule-A `tests/verify.py` that reads no mail (`VERBATIM_A`) | `export.py`, from upstream |
+| Derived | a rule-A `instruction.md`: how the mailbox is reached changed | `export.py`, from upstream |
 | Generated | `environment/fixtures/<service>.json`, the run's seed | `export.py`, from upstream's seed |
 | Ours | `environment/mirage.yaml`; a rule-A `solution/solve.sh` and `tests/verify.py` | by hand |
 
@@ -113,7 +114,10 @@ unaccounted for.
 runs' clock is frozen at, the upstream ports that reach it and where its
 SQLite is read. It also gives the Dockerfile's `ENV`, `COPY` and `RUN`
 (`env`, `copy`, `run`) and the mounts and CLIs the task adds to the
-workspace (`workspace`). `mirage.ts`'s header describes each key.
+workspace (`workspace`). `copy` takes `COPY . <dir>` as the entries of
+`environment/` it copies, and `COPY <src> <dest>` as its source, relative
+to `environment/` (`/workspace/policies: policies/`). `mirage.ts`'s header
+describes each key.
 
 A fixture comes from upstream's own seed (`fixtures/main.ts`). The mock's
 seed runs as it is, under Bun, into a scratch SQLite, with `TASK_NAME` set
@@ -128,13 +132,22 @@ Mirage way: the `/gmail` mount (`vfs: gmail`) and the `gws` CLI, both at
 the trial's run of the fake. These tasks differ from upstream:
 - `instruction.md`: only how to reach the mailbox changes.
   "(http://localhost:5174/, open it in browser)" becomes "(at /gmail, or
-  through the gws CLI)".
+  through the gws CLI)". The finance tasks phrase it their own way, each
+  rewritten in `export.py`'s `MAILBOXES`: the email system's URL and
+  login become "at /gmail, or through the gws CLI", and an API reference's
+  section on the email mock's REST API (login, `GET /api/emails`, `POST
+  /api/emails`) becomes its heading alone, "### Email System (at /gmail, or
+  through the gws CLI)". finance-budget-shift's instruction never names
+  the mailbox and stays upstream's.
 - `solution/solve.sh`: upstream's steps, through the mount and the CLI. It
   finds a message with `grep -l` under `/gmail/INBOX/`, then sends with
   `gws gmail send` or `gws gmail reply`, where upstream's posts to the
   email mock's REST API.
 - `tests/verify.py`: every check and weight of upstream's, reading the gws
-  run's SQLite in place of the email mock's.
+  run's SQLite in place of the email mock's. A finance task's finance
+  checks are upstream's as they are, and finance-invoice-process's and
+  finance-budget-shift's verifiers, which read no mail, are upstream's
+  files (`VERBATIM_A`).
 - The seed is upstream's email seed for the task, as Gmail messages:
 
 | Upstream's email mock | Mirage's gws fake |
@@ -149,15 +162,41 @@ the trial's run of the fake. These tasks differ from upstream:
 
 **Rule B: Mirage lacks the service, so it is a new kit fake that keeps
 upstream's API.** Chat has stickers, which Mirage's Slack and Discord fakes
-lack, and Mirage has no weather service. `mocks/chat` and `mocks/weather`
-keep upstream's routes, request and response JSON, pages and auth (none),
-with Hono's 404 for anything else. Their Prisma schemas have upstream's
+lack, and Mirage has no weather or finance service. `mocks/chat`,
+`mocks/weather` and `mocks/finance` keep upstream's routes, request and
+response JSON, pages and auth (none, or finance's cookie login), with
+Hono's 404 for anything else. Their Prisma schemas have upstream's
 tables and columns (`@@map`), so upstream's `verify.py` runs unchanged on a
 run's file. `instruction.md` and `solve.sh` are upstream's too, curl to
 `localhost:<port>` included. Against upstream's mock with its clock frozen
 at the same epoch, every weather route answers byte for byte the same,
 and so does each chat route and page tried, but for sticker file names and
 write times (below).
+
+The finance fake keeps upstream's login as it is. `POST /api/auth/login`
+answers `Set-Cookie: token=<JWT>; Max-Age=3600; Path=/; HttpOnly; Secure;
+SameSite=Strict`, an HS256 token of `{userId, role, iat, exp}`, which the
+solutions keep with `curl -c <jar>` and send back with `-b <jar>`. Every
+route but the health check, the probe, login, logout, `/` and `/login`
+answers 401 without it (`Authentication required`) or with a bad one
+(`Invalid or expired token`), in the order upstream's middleware does: on a
+path with no parameter the session, then the body's type (415), then zod's
+validation (400); on a path with one, validation, the type, then the
+session. Validation messages are zod 3's, in mock-lib's envelope. Its pages
+are upstream's components (`src/pages/*.tsx`), bundled with esbuild as the
+chat's are, over the rows upstream's `index.tsx` hands them. Upstream's mock,
+run under Bun with the same seed and clock (`Date` and SQLite's
+`datetime('now')` frozen at the epoch), and the fake were each sent the
+same 139 requests for each of the 11 tasks: every route, page and login
+case, the solutions' requests, validation failures, type and body edge
+cases, and a write of every kind. 128 answer byte for byte the same in
+every task but finance-budget-shift, 127 there. The others differ only
+where the clock does: a write's `created_at`/`updated_at` (in
+finance-budget-shift also the rows its fault rewrites), and a later login's
+`iat`/`exp`, a second per write after the epoch here and the epoch itself
+there. Each token's signature differs too, as two processes' secrets do.
+The tables each leaves behind are the same but for those times and the
+password hashes' salts.
 
 | Task | Rule | Service | Oracle | nop |
 |---|---|---|---|---|
@@ -168,8 +207,25 @@ write times (below).
 | procurement-quote-compare-reply | A | gws, Mirage's | 1.0 | 0.0 |
 | stale-client-escalation | A | gws, Mirage's | 1.0 | 0.2 |
 | vendor-requirement-followup | A | gws, Mirage's | 1.0 | 0.4 |
+| finance-anomaly-detect | B | finance (mocks/finance) | 1.0 | 0.0 |
+| finance-dashboard-repair | B | finance (mocks/finance) | 1.0 | 0.0 |
+| finance-depreciation-audit | B | finance (mocks/finance) | 1.0 | 0.0 |
+| finance-expense-log | B | finance (mocks/finance) | 1.0 | 0.0 |
+| finance-monthly-close | B | finance (mocks/finance) | 1.0 | 0.0 |
+| finance-portfolio-rebalancing | B | finance (mocks/finance) | 1.0 | 0.0 |
+| finance-analysis-generate | A, B | gws, finance | 1.0 | 0.0 |
+| finance-budget-alert | A, B | gws, finance | 1.0 | 0.0 |
+| finance-invoice-process | A, B | gws, finance | 1.0 | 0.0 |
+| finance-tax-prepare | A, B | gws, finance | 1.0 | 0.2 |
+| finance-budget-shift | A, B | gws, finance | 1.0 | 0.0 |
 
-The nop scores are upstream's, on both paths.
+The nop scores are upstream's, on both paths. finance-budget-shift's oracle
+is ours: upstream's `solve.sh` runs `openclaw agent`, the image's own model
+agent. Ours logs in, reads March's records, sets Marketing's alert at 80%
+of its budget (`POST /api/departments/budget-alerts`) and checks the
+reply. That first alert is upstream's C1 fault for the task: it also fixes
+Sales' negative expense and lowers the HR, Finance and Operations budgets,
+which the verifier expects.
 
 ## Shared fakes
 
@@ -212,7 +268,7 @@ it into the trial's read-only mount before each `exec`, as before.
 | The base image runs the mocks on fixed ports | A committed task's services are the job's shared kit fakes, the trial a run of each. An upstream task's mocks run unchanged under Bun on free ports. Either way `localhost:<upstream port>` and `127.0.0.1:<upstream port>` reach them |
 | The mocks' data at `/var/lib/mock-data/...`, `/opt/mock/data/...` | The same paths, mounted read-only, holding a copy of each state file taken before every `exec`. A rule-A task reads its gws run at `/var/lib/mock-data/gws/gws.db` |
 | `ENV` | The workspace's `env:`, as written. An upstream task's mocks get it too, with a path under a copied directory pointed at the task's file, and their own data paths pointed into the run |
-| `COPY . <dir>`, `RUN`, `WORKDIR` | The task's `environment/` copied in; each `RUN` line run in the workspace once it opens, in its `WORKDIR` |
+| `COPY <src> <dest>`, `RUN`, `WORKDIR` | The source under the task's `environment/` copied in (all of it for `COPY .`); each `RUN` line run in the workspace once it opens, in its `WORKDIR` |
 | `exec` | `POST /v1/workspaces/:id/shell?background=true`, then `POST /v1/jobs/:id/wait` |
 | `/workspace`, `/logs`, `/tests`, `/solution`, `/tmp` | Disk mounts on directories under the trial's run dir |
 | `upload_*`, `download_*` | Copies into and out of those directories |
@@ -239,18 +295,20 @@ own mocks.
 | Crash | A daemon that dies ends only its trial. A shared fake that dies fails the trials using it |
 | Verifier | Shares the agent's workspace, as Harbor's shared verifier does on Docker |
 
-`isolation.py` starts five trials at once from the committed tasks:
+`isolation.py` starts seven trials at once from the committed tasks:
 chat-sticker-engagement twice (A and B, on one chat fake), weather-aqi-report
-once (C), and stale-client-escalation twice (D and E, on one gws fake). It
-checks from inside the workspaces that a trial sees only its own state: on
-its data mount, through its API, its `/gmail` mount and the `gws` CLI. It
-checks that a trial cannot reach another's run by path through its own URL
+once (C), stale-client-escalation twice (D and E, on one gws fake), and
+finance-anomaly-detect twice (F and G, on one finance fake). It checks from
+inside the workspaces that a trial sees only its own state: on its data
+mount, through its API, its `/gmail` mount and the `gws` CLI. It checks
+that a trial cannot reach another's run by path through its own URL
 (`localhost:5003/_run/b/...` is a 404 in its own run), by the shared fake's
-real port, or outside its runs, and cannot reset its run. It also checks
-one trial's commands against each other: six at once each see its state,
-and a command canceled mid-run (`asyncio.wait_for`) is stopped before it
-writes. All 32 checks pass, the 16 it had before the fakes were shared
-among them.
+real port, or outside its runs, and cannot reset its run. F and G each log
+in with a cookie jar; each refuses the other's session cookie (`Invalid or
+expired token`) and takes its own. It also checks one trial's commands
+against each other: six at once each see its state, and a command canceled
+mid-run (`asyncio.wait_for`) is stopped before it writes. All 45 checks
+pass, the 16 it had before the fakes were shared among them.
 
 `--ek daemon_url=<url>` creates the workspace on a running daemon instead.
 That daemon cannot route each workspace to its own mocks: Mirage's curl
@@ -262,8 +320,9 @@ the workspace it runs in.
 
 ## Upstream tasks
 
-The seven committed tasks pass from their upstream directories too, with
-the same nop scores. Of the six cookie-free tasks first picked, three fail
+The committed tasks pass from their upstream directories too, with the
+same nop scores, but for finance-budget-shift, whose upstream solution runs
+a model (below). Of the six cookie-free tasks first picked, three fail
 for upstream's reasons:
 - mint-diet-snack-log, nutrition-log-meal and mint-diet-comprehensive: the
   mint-diet mock registers its form routes (`POST /log/<date>/entries`,
@@ -283,14 +342,14 @@ and weather-outdoor-window fetch from Python, which has no network here.
 21 of the 102 tasks' solutions log in with a cookie jar: `curl -c <file>`
 on the login request, then `-b <file>` on every later one, 6 of them with
 `-L`. Mirage's curl keeps the jar as curl does, in a file in the
-workspace. The 10 finance tasks among them have mocks with a layout here:
-- finance-anomaly-detect, finance-budget-alert, finance-expense-log,
-  finance-invoice-process, finance-monthly-close and
-  finance-portfolio-rebalancing pass.
-- finance-analysis-generate, finance-dashboard-repair,
-  finance-depreciation-audit and finance-tax-prepare are refused at start.
-  Their Dockerfiles also `COPY policies/ /workspace/policies/`, and only
-  `COPY . <dir>` is carried out.
+workspace. The 10 finance tasks among them have mocks with a layout here,
+and all 10 pass from their upstream directories, with the committed
+tasks' nop scores. Four of them (finance-analysis-generate,
+finance-dashboard-repair, finance-depreciation-audit and
+finance-tax-prepare) also `COPY policies/ /workspace/policies/`, which
+`liveclawbench.ts` carries out as any `COPY <src> <dest>` from
+`environment/`. finance-budget-shift, the eleventh finance task, has no
+scripted solution upstream (`openclaw: command not found`).
 
 The other 11 need a mock with no layout here (calendar, social, workspace,
 expense, insurance or health), and 4 of them a legacy startup script too.
@@ -304,15 +363,25 @@ expense, insurance or health), and 4 of them a legacy startup script too.
   check, exact address matches included; a sent message's recipients are
   its `To` addresses, as upstream's one `recipient_email` was. Mirage's
   gws fake has no drafts, threads or `messages.modify` (its own README
-  lists what it lacks), which these four tasks' checks do not need.
+  lists what it lacks), which these tasks' checks do not need. A finance
+  instruction's section on the email mock's REST API is gone, its heading
+  left naming the mount and the CLI. finance-tax-prepare's solution
+  answers the tax authority with `gws gmail reply`, whose subject is the
+  instruction's "Re: Q1 2026 VAT Filing Reminder - Action Required";
+  upstream's posts a new email with that subject.
 - **Frozen clock.** Upstream's mocks seed relative to the wall clock and
   stamp writes with it. Here a run's clock is frozen at its epoch,
   2026-04-03T09:00:00Z, the date the tasks' solutions write, and moves a
   second per write. The weather mock's "today" is that date in China
-  Standard Time, so its reseed when the date changes never happens.
+  Standard Time, so its reseed when the date changes never happens. The
+  finance mock stamps rows with SQLite's `datetime('now')` and its
+  sessions' `iat` and `exp` with `Date.now()`; here both are the run's
+  clock, and its seed's rows read the epoch (`fixtures/finance.ts`).
 - **Ids.** The chat mock names each sticker file `crypto.randomUUID()`.
   Here a file's name is a UUID-shaped counter of the run's, and the seed's
-  are counted too. No verifier reads them.
+  are counted too. No verifier reads them. The finance seed salts each
+  password hash with `crypto.getRandomValues`, a counter's here, so the
+  fixture is the same each time it is written; only login reads them.
 - **The chat fake's store.** It has one table upstream's has not:
   `_sticker_file`, each sticker's bytes by its `storage_path`, which
   upstream keeps as files. A run is then one file. Prisma cannot state
@@ -322,6 +391,25 @@ expense, insurance or health), and 4 of them a legacy startup script too.
   ignoring the part's Content-Type. The pages are upstream's own
   components (`src/components/*.tsx`), bundled with esbuild and Hono's JSX
   runtime from upstream's checkout; the store's art is read from there too.
+- **The finance fake's store and sessions.** It has one table upstream's
+  has not: `_env`, the run's `TASK_NAME`, which upstream's mock reads from
+  its environment (finance-budget-shift's fault depends on it) and a fake
+  the job shares cannot; each task's fixture states it. Prisma cannot
+  state upstream's CHECK lists; no route writes outside them, as zod and
+  the handlers' constants keep each value in, as upstream's do.
+  `asset_record` is read and edited in SQL: SQLite keeps a fractional
+  `useful_life_years` in that INTEGER column as upstream writes it, which
+  Prisma's typed calls truncate. Upstream signs sessions with a secret its
+  process draws at start; here each run draws its own on its first login
+  and forgets it when it resets, so a token from one run, or from before a
+  reset, is refused by every other, as another process's is upstream.
+  finance-budget-shift's one-shot fault (mock-lib's `shouldInject`) fires
+  once per process upstream, once per run here. Login checks PBKDF2-SHA256
+  at 600,000 iterations, as upstream's does, about a third of a second.
+- **Instructions upstream's mock does not answer.** finance-tax-prepare's
+  names `GET /api/invoices`, which upstream's mock lacks: a 404 there and
+  here. finance-budget-shift's names no API, and its alert endpoint is only
+  in upstream's code. Both stay as upstream wrote them.
 - **Kit endpoints.** A shared fake has `/reset` and `/_kit/...`, which
   upstream's mocks lack. The trial's routing answers them 404.
 - **Offline.** Every task here asks for the internet (`allow_internet`),
@@ -349,8 +437,8 @@ expense, insurance or health), and 4 of them a legacy startup script too.
 - **Not carried over.** The image's assets and frontends (the mocks read
   their assets from upstream's checkout), users, `HEALTHCHECK`, and `RUN` in
   exec form. A `RUN` line Mirage cannot run fails the start, naming it. A
-  committed task's `/workspace/environment` holds its `notes/`, not the
-  Dockerfile.
+  committed task's `/workspace/environment` holds upstream's `environment/`
+  entries (`notes/`, `policies/`, `seed.sql`), not the Dockerfile.
 - **Agents.** Agents that install into the container (claude-code, codex)
   cannot run. terminus-2 drives tmux inside the environment, and Mirage has
   none, so its setup fails (`tmux: command not found`). Harbor's dspy-rlm
