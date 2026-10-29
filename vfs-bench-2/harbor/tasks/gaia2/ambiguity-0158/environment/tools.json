@@ -1,0 +1,2301 @@
+[
+ {
+  "name": "calendar",
+  "description": "Calendar events",
+  "tools": [
+   {
+    "name": "add-event",
+    "call": "calendar.add-event",
+    "description": "Add a calendar event to the calendar. Unless specified otherwise in the task, the default week starts on Monday and ends on Sunday.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "title": {
+       "type": "string",
+       "description": "Title of the event.",
+       "default": "Event"
+      },
+      "start_datetime": {
+       "type": "string",
+       "description": "Start datetime in YYYY-MM-DD HH:MM:SS format."
+      },
+      "end_datetime": {
+       "type": "string",
+       "description": "End datetime in YYYY-MM-DD HH:MM:SS format."
+      },
+      "tag": {
+       "type": "string",
+       "description": "Tag of the event. Defaults to None."
+      },
+      "description": {
+       "type": "string",
+       "description": "Description of the event. Defaults to None."
+      },
+      "location": {
+       "type": "string",
+       "description": "Location of the event. Defaults to None."
+      },
+      "attendees": {
+       "type": "string",
+       "description": "JSON list of attendees full names, e.g. '[\"Alice\", \"Bob\"]'."
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://calendar.gaia2/calendar/add-event",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-event",
+    "call": "calendar.get-event",
+    "description": "Read a calendar event from the calendar.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "event_id": {
+       "type": "string",
+       "description": "Id of the event to read."
+      }
+     },
+     "required": [
+      "event_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://calendar.gaia2/calendar/get-event",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "delete-event",
+    "call": "calendar.delete-event",
+    "description": "Delete a calendar event from the calendar.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "event_id": {
+       "type": "string",
+       "description": "Id of the event to delete."
+      }
+     },
+     "required": [
+      "event_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://calendar.gaia2/calendar/delete-event",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-events",
+    "call": "calendar.get-events",
+    "description": "Get calendar events that have any time overlap with the specified date range (excludes events that only touch at boundaries). Unless specified otherwise in the task, the default week starts on Monday and ends on Sunday.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "start_date": {
+       "type": "string",
+       "description": "Start datetime of the range in YYYY-MM-DD HH:MM:SS format."
+      },
+      "end_date": {
+       "type": "string",
+       "description": "End datetime of the range in YYYY-MM-DD HH:MM:SS format."
+      },
+      "offset": {
+       "type": "integer",
+       "description": "Offset to start listing from, default is 0.",
+       "default": 0
+      },
+      "limit": {
+       "type": "integer",
+       "description": "Number of events to list, default is 10.",
+       "default": 10
+      }
+     },
+     "required": [
+      "start_date",
+      "end_date"
+     ]
+    },
+    "endpoint": {
+     "url": "http://calendar.gaia2/calendar/get-events",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "today-events",
+    "call": "calendar.today-events",
+    "description": "Read today's calendar events from the calendar.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://calendar.gaia2/calendar/today-events",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-all-tags",
+    "call": "calendar.get-all-tags",
+    "description": "Get all tags from the calendar.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://calendar.gaia2/calendar/get-all-tags",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-events-by-tag",
+    "call": "calendar.get-events-by-tag",
+    "description": "Get calendar events from the calendar by tag.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "tag": {
+       "type": "string",
+       "description": "Tag for which to get the events."
+      }
+     },
+     "required": [
+      "tag"
+     ]
+    },
+    "endpoint": {
+     "url": "http://calendar.gaia2/calendar/get-events-by-tag",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search-events",
+    "call": "calendar.search-events",
+    "description": "Searches for calendar events based on a query string. The search looks for partial matches in title, description, location, and attendees.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "The search query string."
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://calendar.gaia2/calendar/search-events",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "contacts",
+  "description": "Contacts",
+  "tools": [
+   {
+    "name": "get-contacts",
+    "call": "contacts.get-contacts",
+    "description": "Gets the list of contacts starting from a specified offset. There is a view limit. Use offset to scroll through the contacts.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "offset": {
+       "type": "integer",
+       "description": "Starting point to retrieve contacts from, default is 0.",
+       "default": 0
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://contacts.gaia2/contacts/get-contacts",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-contact",
+    "call": "contacts.get-contact",
+    "description": "Gets a specific contact by contact_id.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contact_id": {
+       "type": "string",
+       "description": "ID of the contact to retrieve."
+      }
+     },
+     "required": [
+      "contact_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://contacts.gaia2/contacts/get-contact",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-current-user-details",
+    "call": "contacts.get-current-user-details",
+    "description": "Gets the current user's details including name, phone number, email address, nationality, country living.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://contacts.gaia2/contacts/get-current-user-details",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "add-new-contact",
+    "call": "contacts.add-new-contact",
+    "description": "Adds a new contact to the contacts app.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "first_name": {
+       "type": "string",
+       "description": "First name of the contact, required."
+      },
+      "last_name": {
+       "type": "string",
+       "description": "Last name of the contact, required."
+      },
+      "gender": {
+       "type": "string",
+       "description": "Gender of the contact (Male, Female, Other, Unknown), optional default is Unknown."
+      },
+      "age": {
+       "type": "integer",
+       "description": "Age of the contact, optional."
+      },
+      "nationality": {
+       "type": "string",
+       "description": "Nationality of the contact, optional."
+      },
+      "city_living": {
+       "type": "string",
+       "description": "City where the contact is living, optional."
+      },
+      "country": {
+       "type": "string",
+       "description": "Country where the contact is living, optional."
+      },
+      "status": {
+       "type": "string",
+       "description": "Status of the contact (Student, Employed, Unemployed, Retired, Unknown), optional default is Unknown."
+      },
+      "job": {
+       "type": "string",
+       "description": "Job of the contact, optional."
+      },
+      "description": {
+       "type": "string",
+       "description": "Description of the contact, optional."
+      },
+      "phone": {
+       "type": "string",
+       "description": "Phone number of the contact, optional."
+      },
+      "email": {
+       "type": "string",
+       "description": "Email address of the contact, optional."
+      },
+      "address": {
+       "type": "string",
+       "description": "Address of the contact, optional."
+      }
+     },
+     "required": [
+      "first_name",
+      "last_name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://contacts.gaia2/contacts/add-new-contact",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "edit-contact",
+    "call": "contacts.edit-contact",
+    "description": "Edits specific fields of a contact by contact_id.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contact_id": {
+       "type": "string",
+       "description": "ID of the contact to edit."
+      },
+      "updates": {
+       "type": "string",
+       "description": "JSON dictionary of fields to update. Valid fields: first_name, last_name, gender (Male/Female/Other/Unknown), age (1-100), nationality, city_living, country, status (Student/Employed/Unemployed/Retired/Unknown), job, description, phone, email, address."
+      }
+     },
+     "required": [
+      "contact_id",
+      "updates"
+     ]
+    },
+    "endpoint": {
+     "url": "http://contacts.gaia2/contacts/edit-contact",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "delete-contact",
+    "call": "contacts.delete-contact",
+    "description": "Deletes a specific contact by contact_id.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contact_id": {
+       "type": "string",
+       "description": "ID of the contact to delete."
+      }
+     },
+     "required": [
+      "contact_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://contacts.gaia2/contacts/delete-contact",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search-contacts",
+    "call": "contacts.search-contacts",
+    "description": "Searches for contacts based on a query string. The search looks for partial matches in first name, last name, phone number, and email.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "The search query string."
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://contacts.gaia2/contacts/search-contacts",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "emails",
+  "description": "Emails",
+  "tools": [
+   {
+    "name": "list-emails",
+    "call": "emails.list-emails",
+    "description": "List emails in a folder with pagination.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "folder_name": {
+       "type": "string",
+       "description": "Folder name: INBOX, SENT, DRAFT, TRASH.",
+       "default": "INBOX"
+      },
+      "offset": {
+       "type": "integer",
+       "description": "Offset of first email to return.",
+       "default": 0
+      },
+      "limit": {
+       "type": "integer",
+       "description": "Maximum number of emails to return.",
+       "default": 10
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://emails.gaia2/emails/list-emails",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-email-by-id",
+    "call": "emails.get-email-by-id",
+    "description": "Get an email by its ID, marking it as read.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "email_id": {
+       "type": "string",
+       "description": "The email ID."
+      },
+      "folder_name": {
+       "type": "string",
+       "description": "Folder name (INBOX, SENT, DRAFT, TRASH).",
+       "default": "INBOX"
+      }
+     },
+     "required": [
+      "email_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://emails.gaia2/emails/get-email-by-id",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-email-by-index",
+    "call": "emails.get-email-by-index",
+    "description": "Get an email by its index in a folder, marking it as read.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "idx": {
+       "type": "integer",
+       "description": "Index in the folder (0-based, newest first)."
+      },
+      "folder_name": {
+       "type": "string",
+       "description": "Folder name (INBOX, SENT, DRAFT, TRASH).",
+       "default": "INBOX"
+      }
+     },
+     "required": [
+      "idx"
+     ]
+    },
+    "endpoint": {
+     "url": "http://emails.gaia2/emails/get-email-by-index",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "send-email",
+    "call": "emails.send-email",
+    "description": "Send an email to the specified recipients.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "recipients": {
+       "type": "string",
+       "description": "JSON list of recipient email addresses, e.g. '[\"a@b.com\"]'."
+      },
+      "subject": {
+       "type": "string",
+       "description": "Email subject.",
+       "default": ""
+      },
+      "content": {
+       "type": "string",
+       "description": "Email body.",
+       "default": ""
+      },
+      "cc": {
+       "type": "string",
+       "description": "JSON list of CC addresses (optional)."
+      },
+      "attachment_paths": {
+       "type": "string",
+       "description": "JSON list of cloud-drive paths to attach, e.g. '[\"/Documents/report.pdf\"]'."
+      }
+     },
+     "required": [
+      "recipients"
+     ]
+    },
+    "endpoint": {
+     "url": "http://emails.gaia2/emails/send-email",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "forward-email",
+    "call": "emails.forward-email",
+    "description": "Forward an email to new recipients.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "email_id": {
+       "type": "string",
+       "description": "ID of the email to forward."
+      },
+      "recipients": {
+       "type": "string",
+       "description": "JSON list of recipient email addresses."
+      },
+      "folder_name": {
+       "type": "string",
+       "description": "Folder containing the email (INBOX, SENT, DRAFT, TRASH).",
+       "default": "INBOX"
+      }
+     },
+     "required": [
+      "email_id",
+      "recipients"
+     ]
+    },
+    "endpoint": {
+     "url": "http://emails.gaia2/emails/forward-email",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "download-attachments",
+    "call": "emails.download-attachments",
+    "description": "Download attachments from an email to the local filesystem.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "email_id": {
+       "type": "string",
+       "description": "ID of the email."
+      },
+      "folder_name": {
+       "type": "string",
+       "description": "Folder containing the email (INBOX, SENT, DRAFT, TRASH).",
+       "default": "INBOX"
+      },
+      "path_to_save": {
+       "type": "string",
+       "description": "Cloud-drive directory to save attachments to.",
+       "default": "Downloads/"
+      }
+     },
+     "required": [
+      "email_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://emails.gaia2/emails/download-attachments",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "reply-to-email",
+    "call": "emails.reply-to-email",
+    "description": "Reply to an email.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "email_id": {
+       "type": "string",
+       "description": "ID of the email to reply to."
+      },
+      "content": {
+       "type": "string",
+       "description": "Reply body.",
+       "default": ""
+      },
+      "folder_name": {
+       "type": "string",
+       "description": "Folder containing the original email (INBOX, SENT, DRAFT, TRASH).",
+       "default": "INBOX"
+      },
+      "attachment_paths": {
+       "type": "string",
+       "description": "JSON list of cloud-drive paths to attach, e.g. '[\"/Documents/report.pdf\"]'."
+      }
+     },
+     "required": [
+      "email_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://emails.gaia2/emails/reply-to-email",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "move-email",
+    "call": "emails.move-email",
+    "description": "Move an email from one folder to another.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "email_id": {
+       "type": "string",
+       "description": "ID of the email to move."
+      },
+      "source_folder_name": {
+       "type": "string",
+       "description": "Source folder name (INBOX, SENT, DRAFT, TRASH)."
+      },
+      "dest_folder_name": {
+       "type": "string",
+       "description": "Destination folder name (INBOX, SENT, DRAFT, TRASH)."
+      }
+     },
+     "required": [
+      "email_id",
+      "source_folder_name",
+      "dest_folder_name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://emails.gaia2/emails/move-email",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "delete-email",
+    "call": "emails.delete-email",
+    "description": "Delete an email (moves it to TRASH).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "email_id": {
+       "type": "string",
+       "description": "ID of the email to delete."
+      },
+      "folder_name": {
+       "type": "string",
+       "description": "Folder containing the email (INBOX, SENT, DRAFT, TRASH).",
+       "default": "INBOX"
+      }
+     },
+     "required": [
+      "email_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://emails.gaia2/emails/delete-email",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search-emails",
+    "call": "emails.search-emails",
+    "description": "Search emails by query string across sender, recipients, subject, and content.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "Search query string."
+      },
+      "folder_name": {
+       "type": "string",
+       "description": "Folder to search in (INBOX, SENT, DRAFT, TRASH).",
+       "default": "INBOX"
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://emails.gaia2/emails/search-emails",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "messages",
+  "description": "Messages",
+  "tools": [
+   {
+    "name": "get-user-id",
+    "call": "messages.get-user-id",
+    "description": "Get user id for a given user name (exact match).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_name": {
+       "type": "string",
+       "description": "Exact user name to look up"
+      }
+     },
+     "required": [
+      "user_name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://messages.gaia2/messages/get-user-id",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-user-name-from-id",
+    "call": "messages.get-user-name-from-id",
+    "description": "Get user name for a given user id (exact match).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_id": {
+       "type": "string",
+       "description": "Exact user id to look up"
+      }
+     },
+     "required": [
+      "user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://messages.gaia2/messages/get-user-name-from-id",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "lookup-user-id",
+    "call": "messages.lookup-user-id",
+    "description": "Fuzzy lookup of user id by name. Returns dict of matching name->id pairs.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_name": {
+       "type": "string",
+       "description": "User name to fuzzy-search"
+      }
+     },
+     "required": [
+      "user_name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://messages.gaia2/messages/lookup-user-id",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "send-message",
+    "call": "messages.send-message",
+    "description": "Send a message to a user. Creates conversation if none exists.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_id": {
+       "type": "string",
+       "description": "Recipient user id"
+      },
+      "content": {
+       "type": "string",
+       "description": "Message content",
+       "default": ""
+      },
+      "attachment_path": {
+       "type": "string",
+       "description": "Cloud-drive path to attach, e.g. /Documents/report.pdf"
+      }
+     },
+     "required": [
+      "user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://messages.gaia2/messages/send-message",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "send-message-to-group-conversation",
+    "call": "messages.send-message-to-group-conversation",
+    "description": "Send a message to an existing group conversation (3+ participants).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "conversation_id": {
+       "type": "string",
+       "description": "Group conversation id"
+      },
+      "content": {
+       "type": "string",
+       "description": "Message content",
+       "default": ""
+      },
+      "attachment_path": {
+       "type": "string",
+       "description": "Cloud-drive path to attach, e.g. /Documents/report.pdf"
+      }
+     },
+     "required": [
+      "conversation_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://messages.gaia2/messages/send-message-to-group-conversation",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "create-group-conversation",
+    "call": "messages.create-group-conversation",
+    "description": "Create a new group conversation. Requires at least 2 other participants (you are added automatically).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_ids": {
+       "type": "string",
+       "description": "JSON list of other participant user ids (not yourself), e.g. '[\"id1\",\"id2\"]'"
+      },
+      "title": {
+       "type": "string",
+       "description": "Optional conversation title"
+      }
+     },
+     "required": [
+      "user_ids"
+     ]
+    },
+    "endpoint": {
+     "url": "http://messages.gaia2/messages/create-group-conversation",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-existing-conversation-ids",
+    "call": "messages.get-existing-conversation-ids",
+    "description": "Get conversation ids matching the exact set of participants.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_ids": {
+       "type": "string",
+       "description": "JSON list of participant user ids"
+      }
+     },
+     "required": [
+      "user_ids"
+     ]
+    },
+    "endpoint": {
+     "url": "http://messages.gaia2/messages/get-existing-conversation-ids",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list-recent-conversations",
+    "call": "messages.list-recent-conversations",
+    "description": "List conversations ordered by most recent update.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "offset": {
+       "type": "integer",
+       "description": "Starting index",
+       "default": 0
+      },
+      "limit": {
+       "type": "integer",
+       "description": "Number of conversations",
+       "default": 5
+      },
+      "offset_recent_messages_per_conversation": {
+       "type": "integer",
+       "description": "Message offset per conversation",
+       "default": 0
+      },
+      "limit_recent_messages_per_conversation": {
+       "type": "integer",
+       "description": "Message limit per conversation",
+       "default": 10
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://messages.gaia2/messages/list-recent-conversations",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list-conversations-by-participant",
+    "call": "messages.list-conversations-by-participant",
+    "description": "List conversations that include the given participant.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_id": {
+       "type": "string",
+       "description": "Participant user id"
+      },
+      "offset": {
+       "type": "integer",
+       "description": "Starting index",
+       "default": 0
+      },
+      "limit": {
+       "type": "integer",
+       "description": "Number of conversations",
+       "default": 5
+      },
+      "offset_recent_messages_per_conversation": {
+       "type": "integer",
+       "description": "Message offset per conversation",
+       "default": 0
+      },
+      "limit_recent_messages_per_conversation": {
+       "type": "integer",
+       "description": "Message limit per conversation",
+       "default": 5
+      }
+     },
+     "required": [
+      "user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://messages.gaia2/messages/list-conversations-by-participant",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "download-attachment",
+    "call": "messages.download-attachment",
+    "description": "Download an attachment from a message.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "conversation_id": {
+       "type": "string",
+       "description": "Conversation id"
+      },
+      "message_id": {
+       "type": "string",
+       "description": "Message id"
+      },
+      "download_path": {
+       "type": "string",
+       "description": "Cloud-drive directory to save attachment to",
+       "default": "Downloads/"
+      }
+     },
+     "required": [
+      "conversation_id",
+      "message_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://messages.gaia2/messages/download-attachment",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "read-conversation",
+    "call": "messages.read-conversation",
+    "description": "Read messages from a conversation (most recent first).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "conversation_id": {
+       "type": "string",
+       "description": "Conversation id"
+      },
+      "offset": {
+       "type": "integer",
+       "description": "Message offset",
+       "default": 0
+      },
+      "limit": {
+       "type": "integer",
+       "description": "Number of messages",
+       "default": 10
+      },
+      "min_date": {
+       "type": "string",
+       "description": "Min date (YYYY-MM-DD HH:MM:SS)"
+      },
+      "max_date": {
+       "type": "string",
+       "description": "Max date (YYYY-MM-DD HH:MM:SS)"
+      }
+     },
+     "required": [
+      "conversation_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://messages.gaia2/messages/read-conversation",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "add-participant-to-conversation",
+    "call": "messages.add-participant-to-conversation",
+    "description": "Add a user to a conversation. Updates title if it was the default.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "conversation_id": {
+       "type": "string",
+       "description": "Conversation id"
+      },
+      "user_id": {
+       "type": "string",
+       "description": "User id to add"
+      }
+     },
+     "required": [
+      "conversation_id",
+      "user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://messages.gaia2/messages/add-participant-to-conversation",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "remove-participant-from-conversation",
+    "call": "messages.remove-participant-from-conversation",
+    "description": "Remove a user from a conversation. Updates title if it was the default.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "conversation_id": {
+       "type": "string",
+       "description": "Conversation id"
+      },
+      "user_id": {
+       "type": "string",
+       "description": "User id to remove"
+      }
+     },
+     "required": [
+      "conversation_id",
+      "user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://messages.gaia2/messages/remove-participant-from-conversation",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "change-conversation-title",
+    "call": "messages.change-conversation-title",
+    "description": "Change the title of a conversation.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "conversation_id": {
+       "type": "string",
+       "description": "Conversation id"
+      },
+      "title": {
+       "type": "string",
+       "description": "New title"
+      }
+     },
+     "required": [
+      "conversation_id",
+      "title"
+     ]
+    },
+    "endpoint": {
+     "url": "http://messages.gaia2/messages/change-conversation-title",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search",
+    "call": "messages.search",
+    "description": "Search conversations by participants, title, and message content.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "Case-insensitive search query"
+      },
+      "min_date": {
+       "type": "string",
+       "description": "Min date (YYYY-MM-DD HH:MM:SS)"
+      },
+      "max_date": {
+       "type": "string",
+       "description": "Max date (YYYY-MM-DD HH:MM:SS)"
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://messages.gaia2/messages/search",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "regex-search",
+    "call": "messages.regex-search",
+    "description": "Search conversations using a regex pattern (case-insensitive).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "Regex search query"
+      },
+      "min_date": {
+       "type": "string",
+       "description": "Min date (YYYY-MM-DD HH:MM:SS)"
+      },
+      "max_date": {
+       "type": "string",
+       "description": "Max date (YYYY-MM-DD HH:MM:SS)"
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://messages.gaia2/messages/regex-search",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "chats",
+  "description": "Chat conversations",
+  "tools": [
+   {
+    "name": "get-user-id",
+    "call": "chats.get-user-id",
+    "description": "Get user id for a given user name (exact match).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_name": {
+       "type": "string",
+       "description": "Exact user name to look up"
+      }
+     },
+     "required": [
+      "user_name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://chats.gaia2/chats/get-user-id",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-user-name-from-id",
+    "call": "chats.get-user-name-from-id",
+    "description": "Get user name for a given user id (exact match).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_id": {
+       "type": "string",
+       "description": "Exact user id to look up"
+      }
+     },
+     "required": [
+      "user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://chats.gaia2/chats/get-user-name-from-id",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "lookup-user-id",
+    "call": "chats.lookup-user-id",
+    "description": "Fuzzy lookup of user id by name. Returns dict of matching name->id pairs.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_name": {
+       "type": "string",
+       "description": "User name to fuzzy-search"
+      }
+     },
+     "required": [
+      "user_name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://chats.gaia2/chats/lookup-user-id",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "send-message",
+    "call": "chats.send-message",
+    "description": "Send a message to a user. Creates conversation if none exists.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_id": {
+       "type": "string",
+       "description": "Recipient user id"
+      },
+      "content": {
+       "type": "string",
+       "description": "Message content",
+       "default": ""
+      },
+      "attachment_path": {
+       "type": "string",
+       "description": "Cloud-drive path to attach, e.g. /Documents/report.pdf"
+      }
+     },
+     "required": [
+      "user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://chats.gaia2/chats/send-message",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "send-message-to-group-conversation",
+    "call": "chats.send-message-to-group-conversation",
+    "description": "Send a message to an existing group conversation (3+ participants).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "conversation_id": {
+       "type": "string",
+       "description": "Group conversation id"
+      },
+      "content": {
+       "type": "string",
+       "description": "Message content",
+       "default": ""
+      },
+      "attachment_path": {
+       "type": "string",
+       "description": "Cloud-drive path to attach, e.g. /Documents/report.pdf"
+      }
+     },
+     "required": [
+      "conversation_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://chats.gaia2/chats/send-message-to-group-conversation",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "create-group-conversation",
+    "call": "chats.create-group-conversation",
+    "description": "Create a new group conversation. Requires at least 2 other participants (you are added automatically).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_ids": {
+       "type": "string",
+       "description": "JSON list of other participant user ids (not yourself), e.g. '[\"id1\",\"id2\"]'"
+      },
+      "title": {
+       "type": "string",
+       "description": "Optional conversation title"
+      }
+     },
+     "required": [
+      "user_ids"
+     ]
+    },
+    "endpoint": {
+     "url": "http://chats.gaia2/chats/create-group-conversation",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-existing-conversation-ids",
+    "call": "chats.get-existing-conversation-ids",
+    "description": "Get conversation ids matching the exact set of participants.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_ids": {
+       "type": "string",
+       "description": "JSON list of participant user ids"
+      }
+     },
+     "required": [
+      "user_ids"
+     ]
+    },
+    "endpoint": {
+     "url": "http://chats.gaia2/chats/get-existing-conversation-ids",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list-recent-conversations",
+    "call": "chats.list-recent-conversations",
+    "description": "List conversations ordered by most recent update.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "offset": {
+       "type": "integer",
+       "description": "Starting index",
+       "default": 0
+      },
+      "limit": {
+       "type": "integer",
+       "description": "Number of conversations",
+       "default": 5
+      },
+      "offset_recent_messages_per_conversation": {
+       "type": "integer",
+       "description": "Message offset per conversation",
+       "default": 0
+      },
+      "limit_recent_messages_per_conversation": {
+       "type": "integer",
+       "description": "Message limit per conversation",
+       "default": 10
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://chats.gaia2/chats/list-recent-conversations",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list-conversations-by-participant",
+    "call": "chats.list-conversations-by-participant",
+    "description": "List conversations that include the given participant.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_id": {
+       "type": "string",
+       "description": "Participant user id"
+      },
+      "offset": {
+       "type": "integer",
+       "description": "Starting index",
+       "default": 0
+      },
+      "limit": {
+       "type": "integer",
+       "description": "Number of conversations",
+       "default": 5
+      },
+      "offset_recent_messages_per_conversation": {
+       "type": "integer",
+       "description": "Message offset per conversation",
+       "default": 0
+      },
+      "limit_recent_messages_per_conversation": {
+       "type": "integer",
+       "description": "Message limit per conversation",
+       "default": 5
+      }
+     },
+     "required": [
+      "user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://chats.gaia2/chats/list-conversations-by-participant",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "download-attachment",
+    "call": "chats.download-attachment",
+    "description": "Download an attachment from a message.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "conversation_id": {
+       "type": "string",
+       "description": "Conversation id"
+      },
+      "message_id": {
+       "type": "string",
+       "description": "Message id"
+      },
+      "download_path": {
+       "type": "string",
+       "description": "Cloud-drive directory to save attachment to",
+       "default": "Downloads/"
+      }
+     },
+     "required": [
+      "conversation_id",
+      "message_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://chats.gaia2/chats/download-attachment",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "read-conversation",
+    "call": "chats.read-conversation",
+    "description": "Read messages from a conversation (most recent first).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "conversation_id": {
+       "type": "string",
+       "description": "Conversation id"
+      },
+      "offset": {
+       "type": "integer",
+       "description": "Message offset",
+       "default": 0
+      },
+      "limit": {
+       "type": "integer",
+       "description": "Number of messages",
+       "default": 10
+      },
+      "min_date": {
+       "type": "string",
+       "description": "Min date (YYYY-MM-DD HH:MM:SS)"
+      },
+      "max_date": {
+       "type": "string",
+       "description": "Max date (YYYY-MM-DD HH:MM:SS)"
+      }
+     },
+     "required": [
+      "conversation_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://chats.gaia2/chats/read-conversation",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "add-participant-to-conversation",
+    "call": "chats.add-participant-to-conversation",
+    "description": "Add a user to a conversation. Updates title if it was the default.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "conversation_id": {
+       "type": "string",
+       "description": "Conversation id"
+      },
+      "user_id": {
+       "type": "string",
+       "description": "User id to add"
+      }
+     },
+     "required": [
+      "conversation_id",
+      "user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://chats.gaia2/chats/add-participant-to-conversation",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "remove-participant-from-conversation",
+    "call": "chats.remove-participant-from-conversation",
+    "description": "Remove a user from a conversation. Updates title if it was the default.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "conversation_id": {
+       "type": "string",
+       "description": "Conversation id"
+      },
+      "user_id": {
+       "type": "string",
+       "description": "User id to remove"
+      }
+     },
+     "required": [
+      "conversation_id",
+      "user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://chats.gaia2/chats/remove-participant-from-conversation",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "change-conversation-title",
+    "call": "chats.change-conversation-title",
+    "description": "Change the title of a conversation.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "conversation_id": {
+       "type": "string",
+       "description": "Conversation id"
+      },
+      "title": {
+       "type": "string",
+       "description": "New title"
+      }
+     },
+     "required": [
+      "conversation_id",
+      "title"
+     ]
+    },
+    "endpoint": {
+     "url": "http://chats.gaia2/chats/change-conversation-title",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search",
+    "call": "chats.search",
+    "description": "Search conversations by participants, title, and message content.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "Case-insensitive search query"
+      },
+      "min_date": {
+       "type": "string",
+       "description": "Min date (YYYY-MM-DD HH:MM:SS)"
+      },
+      "max_date": {
+       "type": "string",
+       "description": "Max date (YYYY-MM-DD HH:MM:SS)"
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://chats.gaia2/chats/search",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "regex-search",
+    "call": "chats.regex-search",
+    "description": "Search conversations using a regex pattern (case-insensitive).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "Regex search query"
+      },
+      "min_date": {
+       "type": "string",
+       "description": "Min date (YYYY-MM-DD HH:MM:SS)"
+      },
+      "max_date": {
+       "type": "string",
+       "description": "Max date (YYYY-MM-DD HH:MM:SS)"
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://chats.gaia2/chats/regex-search",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "rent-a-flat",
+  "description": "Apartment listings",
+  "tools": [
+   {
+    "name": "list-all-apartments",
+    "call": "rent-a-flat.list-all-apartments",
+    "description": "List all apartments in the catalog.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://rent-a-flat.gaia2/rent-a-flat/list-all-apartments",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-apartment-details",
+    "call": "rent-a-flat.get-apartment-details",
+    "description": "Get apartment details for a given apartment id.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "apartment_id": {
+       "type": "string",
+       "description": "Apartment ID to look up"
+      }
+     },
+     "required": [
+      "apartment_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://rent-a-flat.gaia2/rent-a-flat/get-apartment-details",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "save-apartment",
+    "call": "rent-a-flat.save-apartment",
+    "description": "Save an apartment to favorites.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "apartment_id": {
+       "type": "string",
+       "description": "Apartment ID to save to favorites"
+      }
+     },
+     "required": [
+      "apartment_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://rent-a-flat.gaia2/rent-a-flat/save-apartment",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "remove-saved-apartment",
+    "call": "rent-a-flat.remove-saved-apartment",
+    "description": "Remove an apartment from favorites.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "apartment_id": {
+       "type": "string",
+       "description": "Apartment ID to remove from favorites"
+      }
+     },
+     "required": [
+      "apartment_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://rent-a-flat.gaia2/rent-a-flat/remove-saved-apartment",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list-saved-apartments",
+    "call": "rent-a-flat.list-saved-apartments",
+    "description": "List apartments saved to favorites.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://rent-a-flat.gaia2/rent-a-flat/list-saved-apartments",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search-apartments",
+    "call": "rent-a-flat.search-apartments",
+    "description": "Search for apartments based on multiple filters.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "Name of the apartment"
+      },
+      "location": {
+       "type": "string",
+       "description": "Desired location"
+      },
+      "zip_code": {
+       "type": "string",
+       "description": "Zip code of the location"
+      },
+      "min_price": {
+       "type": "number",
+       "description": "Minimum price"
+      },
+      "max_price": {
+       "type": "number",
+       "description": "Maximum price"
+      },
+      "number_of_bedrooms": {
+       "type": "integer",
+       "description": "Number of bedrooms"
+      },
+      "number_of_bathrooms": {
+       "type": "integer",
+       "description": "Number of bathrooms"
+      },
+      "property_type": {
+       "type": "string",
+       "description": "Type of property (Apartment, Condo, House, Studio)"
+      },
+      "square_footage": {
+       "type": "integer",
+       "description": "Minimum square footage"
+      },
+      "furnished_status": {
+       "type": "string",
+       "description": "Furnished, Unfurnished, or Semi-furnished"
+      },
+      "floor_level": {
+       "type": "string",
+       "description": "Ground floor, Upper floors, Penthouse, Basement"
+      },
+      "pet_policy": {
+       "type": "string",
+       "description": "Pets allowed, No pets, Cats allowed, Dogs allowed"
+      },
+      "lease_term": {
+       "type": "string",
+       "description": "Month-to-month, 6 months, 1 year, Long term lease"
+      },
+      "amenities": {
+       "type": "string",
+       "description": "Comma-separated list of desired amenities, or JSON array"
+      },
+      "saved_only": {
+       "type": "boolean",
+       "x-flag": true,
+       "description": "Search only saved apartments"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://rent-a-flat.gaia2/rent-a-flat/search-apartments",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "shopping",
+  "description": "Shopping",
+  "tools": [
+   {
+    "name": "list-all-products",
+    "call": "shopping.list-all-products",
+    "description": "List all products in the catalog.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "offset": {
+       "type": "integer",
+       "description": "Offset to start listing from.",
+       "default": 0
+      },
+      "limit": {
+       "type": "integer",
+       "description": "Number of products to list.",
+       "default": 10
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://shopping.gaia2/shopping/list-all-products",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-product-details",
+    "call": "shopping.get-product-details",
+    "description": "Get product details for a given product ID.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "product_id": {
+       "type": "string",
+       "description": "Product ID to get details for."
+      }
+     },
+     "required": [
+      "product_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://shopping.gaia2/shopping/get-product-details",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search-products",
+    "call": "shopping.search-products",
+    "description": "Search for products by name (case-insensitive substring match).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "product_name": {
+       "type": "string",
+       "description": "Product name to search for (case-insensitive substring match)."
+      },
+      "offset": {
+       "type": "integer",
+       "description": "Offset to start listing from.",
+       "default": 0
+      },
+      "limit": {
+       "type": "integer",
+       "description": "Number of products to list.",
+       "default": 10
+      }
+     },
+     "required": [
+      "product_name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://shopping.gaia2/shopping/search-products",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "add-to-cart",
+    "call": "shopping.add-to-cart",
+    "description": "Add an item to the cart.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "item_id": {
+       "type": "string",
+       "description": "Item (variant) ID to add to cart."
+      },
+      "quantity": {
+       "type": "integer",
+       "description": "Quantity to add (default 1).",
+       "default": 1
+      }
+     },
+     "required": [
+      "item_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://shopping.gaia2/shopping/add-to-cart",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "remove-from-cart",
+    "call": "shopping.remove-from-cart",
+    "description": "Remove an item from the cart.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "item_id": {
+       "type": "string",
+       "description": "Item (variant) ID to remove from cart."
+      },
+      "quantity": {
+       "type": "integer",
+       "description": "Quantity to remove (default 1).",
+       "default": 1
+      }
+     },
+     "required": [
+      "item_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://shopping.gaia2/shopping/remove-from-cart",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list-cart",
+    "call": "shopping.list-cart",
+    "description": "List the contents of the cart.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://shopping.gaia2/shopping/list-cart",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "checkout",
+    "call": "shopping.checkout",
+    "description": "Checkout the current cart and create an order.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "discount_code": {
+       "type": "string",
+       "description": "Optional discount code to apply."
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://shopping.gaia2/shopping/checkout",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-discount-code-info",
+    "call": "shopping.get-discount-code-info",
+    "description": "Get information about a specific discount code.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "discount_code": {
+       "type": "string",
+       "description": "Discount code to look up."
+      }
+     },
+     "required": [
+      "discount_code"
+     ]
+    },
+    "endpoint": {
+     "url": "http://shopping.gaia2/shopping/get-discount-code-info",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-all-discount-codes",
+    "call": "shopping.get-all-discount-codes",
+    "description": "List all available discount codes.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://shopping.gaia2/shopping/get-all-discount-codes",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list-orders",
+    "call": "shopping.list-orders",
+    "description": "List all orders.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://shopping.gaia2/shopping/list-orders",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-order-details",
+    "call": "shopping.get-order-details",
+    "description": "Get details for a specific order.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "order_id": {
+       "type": "string",
+       "description": "Order ID to get details for."
+      }
+     },
+     "required": [
+      "order_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://shopping.gaia2/shopping/get-order-details",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "cancel-order",
+    "call": "shopping.cancel-order",
+    "description": "Cancel an order. Only orders with status 'processed' or 'shipped' can be cancelled.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "order_id": {
+       "type": "string",
+       "description": "Order ID to cancel."
+      }
+     },
+     "required": [
+      "order_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://shopping.gaia2/shopping/cancel-order",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "cabs",
+  "description": "Cab rides",
+  "tools": [
+   {
+    "name": "get-quotation",
+    "call": "cabs.get-quotation",
+    "description": "Calculate price and estimated delay for a ride.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "start_location": {
+       "type": "string",
+       "description": "Starting point of the ride"
+      },
+      "end_location": {
+       "type": "string",
+       "description": "Ending point of the ride"
+      },
+      "service_type": {
+       "type": "string",
+       "description": "Type of service (Default, Premium, Van)"
+      },
+      "ride_time": {
+       "type": "string",
+       "description": "Ride time in YYYY-MM-DD HH:MM:SS format"
+      }
+     },
+     "required": [
+      "start_location",
+      "end_location",
+      "service_type"
+     ]
+    },
+    "endpoint": {
+     "url": "http://cabs.gaia2/cabs/get-quotation",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list-rides",
+    "call": "cabs.list-rides",
+    "description": "List all rides available between two locations.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "start_location": {
+       "type": "string",
+       "description": "Starting point of the ride"
+      },
+      "end_location": {
+       "type": "string",
+       "description": "Ending point of the ride"
+      },
+      "ride_time": {
+       "type": "string",
+       "description": "Ride time in YYYY-MM-DD HH:MM:SS format"
+      }
+     },
+     "required": [
+      "start_location",
+      "end_location"
+     ]
+    },
+    "endpoint": {
+     "url": "http://cabs.gaia2/cabs/list-rides",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "order-ride",
+    "call": "cabs.order-ride",
+    "description": "Order a ride and return ride details.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "start_location": {
+       "type": "string",
+       "description": "Starting point of the ride"
+      },
+      "end_location": {
+       "type": "string",
+       "description": "Ending point of the ride"
+      },
+      "service_type": {
+       "type": "string",
+       "description": "Type of service (Default, Premium, Van)"
+      },
+      "ride_time": {
+       "type": "string",
+       "description": "Ride time in YYYY-MM-DD HH:MM:SS format"
+      }
+     },
+     "required": [
+      "start_location",
+      "end_location",
+      "service_type"
+     ]
+    },
+    "endpoint": {
+     "url": "http://cabs.gaia2/cabs/order-ride",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "user-cancel-ride",
+    "call": "cabs.user-cancel-ride",
+    "description": "Cancel the current ride.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://cabs.gaia2/cabs/user-cancel-ride",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-current-ride-status",
+    "call": "cabs.get-current-ride-status",
+    "description": "Check the status of the current ride.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://cabs.gaia2/cabs/get-current-ride-status",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-ride",
+    "call": "cabs.get-ride",
+    "description": "Get a specific ride from ride history by index.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "idx": {
+       "type": "integer",
+       "description": "Index of the ride in history"
+      }
+     },
+     "required": [
+      "idx"
+     ]
+    },
+    "endpoint": {
+     "url": "http://cabs.gaia2/cabs/get-ride",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-ride-history",
+    "call": "cabs.get-ride-history",
+    "description": "Get ride history with pagination.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "offset": {
+       "type": "integer",
+       "description": "Starting index (default 0)",
+       "default": 0
+      },
+      "limit": {
+       "type": "integer",
+       "description": "Max number of rides to return (default 10)",
+       "default": 10
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://cabs.gaia2/cabs/get-ride-history",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-ride-history-length",
+    "call": "cabs.get-ride-history-length",
+    "description": "Get the total number of rides in history.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://cabs.gaia2/cabs/get-ride-history-length",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "city",
+  "description": "City information and services",
+  "tools": [
+   {
+    "name": "get-crime-rate",
+    "call": "city.get-crime-rate",
+    "description": "Get crime rate for a given zip code (rate-limited).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "zip_code": {
+       "type": "string",
+       "description": "Zip code to get crime rate for"
+      }
+     },
+     "required": [
+      "zip_code"
+     ]
+    },
+    "endpoint": {
+     "url": "http://city.gaia2/city/get-crime-rate",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-api-call-count",
+    "call": "city.get-api-call-count",
+    "description": "Get the current API call count.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://city.gaia2/city/get-api-call-count",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get-api-call-limit",
+    "call": "city.get-api-call-limit",
+    "description": "Get the API call limit for the service.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://city.gaia2/city/get-api-call-limit",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

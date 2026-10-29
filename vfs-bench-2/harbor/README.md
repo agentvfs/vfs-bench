@@ -167,6 +167,16 @@ remove a client another one is loading. After that, `pnpm exec tsc -p mocks` typ
 - `../mocks/complexmcp/`, `../mocks/complexmcp_<server>/`: ComplexMCP's 15
   servers as kit fakes, a shared library and schema and each server's
   `config.ts`, `fake.ts` and `main.ts`.
+- `tasks/gaia2/<split>-<NNNN>/`: the Gaia2 tasks (Gaia2, below), their
+  files made from Gaia2's data not committed; `gaia2.py` writes them, or
+  checks them; `gaia2_grade.py` is each one's `tests/grade.py`,
+  `gaia2_trajectory.py` each solution's `trajectory.py`; `gaia2.yaml`, their
+  job config, each verifier in a microVM; `gaia2_compare.py` checks each
+  app's fake against upstream's app, with `gaia2_calls/<cli>.py`'s calls
+  or each task's oracle.
+- `../mocks/gaia2/`, `../mocks/gaia2_<app>/`: gaia2-cli's nine apps as kit
+  fakes, a shared store, schema and Python-semantics helpers, and each
+  app's `app.ts`, `fake.ts` and `main.ts`.
 
 ## The committed tasks
 
@@ -1947,3 +1957,197 @@ every service a task subscribes to has a port.
 - **BambooHR's reads** look up action kinds no route records, so they are
   empty on every task, as upstream's; their aggregation code is ported but
   never reached.
+
+## Gaia2
+
+`tasks/gaia2/<split>-<NNNN>/`: 460 Gaia2 scenarios, all 160 of the search
+split, 146 of the 160 of the execution split and 154 of the 160 of the
+ambiguity split
+([meta-agents-research-environments/gaia2](https://huggingface.co/datasets/meta-agents-research-environments/gaia2)
+@ `78ea3bd`, CC BY 4.0 with the Llama terms in `../THIRD_PARTY_LICENSES`), on
+the apps of gaia2-cli, Meta's CLI port of ARE's apps (meta-agents-research-environments
+@ `a9fd2ed`, MIT). An assistant works a phone's apps (contacts, emails,
+messages, chats, calendar, a cloud drive, cabs, shopping, flats, a city
+guide) for one request; upstream's judge compares its write calls and its
+reply with the scenario's oracle events. An ambiguity scenario's request
+cannot be done as asked: its oracle does what it can and asks the user,
+and that question is the reply the judge compares, in the same one turn.
+
+```sh
+uv run --project gaia2 python -I gaia2/setup.py          # the data, into state/gaia2/
+uv run --project gaia2 python -I harbor/gaia2.py          # the tasks' files made from it
+uv run --project gaia2 python -I harbor/gaia2.py --site   # the judge's packages, for the VM
+uv run --project gaia2 python -I harbor/gaia2.py --check [task ...]
+uv run --project harbor harbor run -y -c harbor/gaia2.yaml -a oracle -n 4 -o state/harbor/jobs-gaia2
+uv run --project harbor harbor run -y -c harbor/gaia2.yaml -a nop -n 4 -o state/harbor/jobs-gaia2
+# One split (-i needs -p; -c takes none).
+uv run --project harbor harbor run -y -p harbor/tasks/gaia2 -i 'ambiguity-*' \
+  --env vfsbench_harbor:MirageEnvironment --verifier vfsbench_harbor:MicrosandboxVerifier \
+  -a oracle -n 4 -o state/harbor/jobs-gaia2
+# Each app's fake against upstream's app, on the same calls: gaia2_calls/'s,
+# or with --oracles every task's oracle (gaia2.py's replay).
+uv run --project gaia2 python -I harbor/gaia2_compare.py [app ...] [--scenario <split>/<id> ...]
+uv run --project gaia2 python -I harbor/gaia2_compare.py --oracles [app ...]
+# The judge's plumbing, with a stand-in that answers every check one way.
+uv run --project harbor python -I harbor/mock_judge.py --port 8771 --content '[[Success]] [[True]]'
+OPENAI_API_KEY=mock OPENAI_BASE_URL=http://host.microsandbox.internal:8771/v1 \
+  uv run --project harbor harbor run -y -c harbor/gaia2.yaml -a oracle -n 4 -o state/harbor/jobs-gaia2
+```
+
+`gaia2.py` and `gaia2_compare.py` need gaia2-cli, which the gaia2 project
+has (Python 3.12); run with `--project harbor`, each runs itself there.
+
+Gaia2's data is never committed. `gaia2.py` writes the files made from it
+into each task, and `tasks/gaia2/.gitignore` (which it writes too) keeps them
+out of git: `instruction.md`, `environment/kit/` (the fixtures),
+`environment/drive/` and the replayed `solution/solve.sh`. The scenario
+itself goes to `state/gaia2/harbor/<task>/`, which only the verifier's VM
+gets. A fresh checkout runs these tasks once setup and `gaia2.py` have run.
+
+| Upstream (gaia2-cli in its container) | Here |
+|---|---|
+| One click program per app, its state a JSON file in `GAIA2_STATE_DIR` that `gaia2-init` writes from the scenario | A kit fake per app, `mocks/gaia2_<app>/`: the app's state as one doc of the run's SQLite, seeded from that same file (`gaia2-init` run at export) |
+| A command, one process: load the state, work on it, save, `log_action` a line to `events.jsonl`, print `json.dumps(..., indent=2)` or an error on stderr | `POST /<cli>/<command>` on the trial's run, the handler upstream's command statement for statement; the line an `event` row; the reply the text upstream prints |
+| The apps' binaries on `PATH` | One CLI per app (`harbor/tools.ts`), each command and option from upstream's click program (`environment/tools.json`); an option is its first spelling (`--folder-name`, not `--folder`) |
+| The Files app, `cloud-drive` | A disk mount, `/cloud-drive`: the scenario's tree as `gaia2-init` lays it out, a copy of its own each trial (`copy`, an APFS clone); emails and messaging read and write attachments there (`extras`) |
+| libfaketime frozen at the scenario's start (the runner's `FAKETIME`) | Each run's clock is the scenario's start, frozen (`epoch`); the workspace's clock and the model's date start there (clock.ts, gateway.py) |
+| `uuid.uuid4()` | A counter of the run's, hashed: the same ids every time |
+| `AGENTS_TEMPLATE.md` rendered for the scenario, then the scenario's message | `instruction.md`: the same render with four edits (`EDITS`: `/workspace` for `/home/agent`, the drive a mount, not a CLI), the notifications section cut (nothing delivers them; these splits have no ENV events), then `## Task` and the message, verbatim |
+| The agent's reply, logged as `send_message_to_user` by its adapter | The last message of the agent's Harbor trajectory |
+| gaia2-eventd with `GAIA2_JUDGE_FINAL_TURN`: gaia2-core's judge on the turn, its LLM checks through litellm | `tests/grade.py` (`gaia2_grade.py`) in the verifier's VM: every run's state files and its event rows, in the order the calls were made, then the reply, laid out as the daemon reads them, and the daemon itself run on them, unchanged; its LLM engine over the chat completions API (`OPENAI_BASE_URL`, `OPENAI_API_KEY`, `JUDGE_MODEL`, default `gpt-oss-120b` with `JUDGE_EXTRA_BODY` `reasoning_effort: low`, upstream's calibrated judge) |
+| Reward 1.0 if the judgment succeeds, else 0.0 | The same; `reward_details.json` has the judgment, the daemon's `judgments.jsonl`, its status and each model call |
+
+The judge needs the model for every check its equality does not settle
+(gaia2-core's `_equality_checker`: case, accents and punctuation aside). Run
+without `OPENAI_API_KEY` the engine answers nothing, so such a check is
+inconclusive, a fail: a reply equal to the oracle's passes, any other fails.
+That is how the oracle and nop runs below were graded; no judge model was
+called, so no score here is a real judge's.
+
+The judge's route was checked with `mock_judge.py --content` on two
+oracles edited to need it (kept out of the repo): search 0004 with its
+answer in a sentence, and execution 0052 with both emails reworded. With
+no key both fail, their checks inconclusive; with a stand-in answering
+`[[Success]] [[True]]` both pass (one model call and four, each with the
+key and the model's name); answering `[[Failure]] [[False]]` both fail on
+those checks.
+
+### The fakes
+
+`mocks/gaia2/store.ts` is what every app shares: the store (`doc` rows
+`state` and `meta`, and `event`), the route per command, ids, the clock and
+Python's behaviour where JavaScript's differs: `pyjson.ts` (a whole float
+stays a float, `json.dumps` with `ensure_ascii`), `jsonLoads` (Python's
+decode errors, word for word), `pyrepr.ts`, `pytime.ts` (`strptime` and
+`strftime` as `_strptime` does them), `difflib.ts` (`SequenceMatcher`, for
+`lookup-user-id`), `pyre.ts` (Python's `re` over JavaScript's, for
+`regex-search`) and `pyos.ts`. Each app is `mocks/gaia2_<app>/app.ts`:
+contacts, emails, messages and chats (one module, as upstream's two differ
+by a line), calendar, cabs, rent-a-flat, shopping and city, every command,
+the hidden ENV commands included. The meta doc names the class an app logs
+under (`app_class_map.json`'s, `MessagingAppV2` for both messaging apps).
+A messaging command and a chats command share their names, so each tool's
+`call` in `tools.json` is `<cli>.<command>`, by which `tools.ts` finds its
+endpoint.
+
+Emails, messages and chats read and write attachments on the drive. A
+fake's block in `mirage.yaml` may give `extras`, which go with the trial's
+reset to the kit's `afterSeed` (`fakes.py`, `environment.py`), `${RUN_DIR}`
+the trial's run dir: `{drive: '${RUN_DIR}/cloud-drive', view: /cloud-drive}`
+puts the trial's drive in the run's meta doc, and a path on it prints as
+the workspace sees it.
+
+`gaia2_compare.py` runs upstream's click programs in its own process on a
+`gaia2-init` state directory, with time frozen and the fakes' ids, and a run
+of each fake on the same scenario, and makes the same calls on both: each
+app's calls (`gaia2_calls/<cli>.py`), every command with values from the
+scenario and the replies before, every error branch reached, edge offsets
+and limits, bad JSON, writes followed by the reads that see them. After each
+call it compares the printed text (stdout, or stderr and that it failed),
+the app's whole state and the event lines logged. On the default scenarios
+(search 0002, 0004, 0005, execution 0052) that is 3,426 calls, all the same;
+each port was also run on four to eight more scenarios of both splits,
+about 3,900 calls more, all the same. With `--oracles` the calls are every
+task's upstream oracle, each command of it on its own app: 1,246 calls on
+the 306 search and execution tasks and 748 on the 154 ambiguity ones, all
+the same. The 45 commands the solutions run are all among the default
+calls. Read as equal: a Python `set`'s order
+(a new conversation's `participant_ids`, `get-all-tags`), which changes with
+each upstream process, and the drive's host path in a download's reply.
+
+### Results
+
+| Split | Tasks | Oracle | nop |
+|---|---|---|---|
+| search | 160 | 1.0 on all 160 | 0.0 on the 79 run |
+| execution | 146 | 1.0 on all 146 | 0.0 on the 129 run |
+| ambiguity | 154 | 1.0 on all 154 | 0.0 on the 136 run |
+
+Every task ran at `-n 4` (`-n 8` for search's and execution's first oracle
+pass), its verifier in a microVM. 30 oracle trials hit msb's hang (a VM
+that boots and never runs `test.sh`, until the 300 s timeout) and passed
+when rerun. The nop pass was stopped part way: 44 of its trials hung and
+were not rerun, and 72 search tasks never ran. No nop trial scored above 0.
+No real judge has scored a task: the oracle's replies equal upstream's,
+which the judge passes without a model; with a stand-in judge
+(`mock_judge.py --content`), a reworded answer passes on `[[Success]]` and
+fails on `[[Failure]]` or with no key.
+
+The oracle is two kinds of solution. Eleven search tasks have ours, the
+pre-Harbor port's (`gaia2/<name>/tests/oracle.sh`, committed), which find
+the answer through the apps' CLIs (`search-0002`, `0012`, `0034`, `0038`,
+`0231`, `0284`, `0295`, `0396`, `0419`, `0430`, `0435`). Every other task's
+`solve.sh` is upstream's oracle replayed as gaia2-replay replays it (its
+turns, function-to-command map, placeholders and command lines,
+`daemon/replay.py`), through the workspace's CLIs, then the oracle's reply
+(or `Done.` where it has none, which the judge allows). The export first
+runs each replay on upstream's own apps, so each placeholder is the id the
+fakes mint; upstream refuses none of the 146 execution replays, nor any
+of the 154 ambiguity ones.
+
+### Skipped
+
+- **19 scenarios whose oracle calls the Files app** (`mv`, `mkdir`, `rm`):
+  14 of execution and 5 of ambiguity (0177, 0200, 0213, 0553, 0562). The
+  drive is a mount, whose operations log no event, so the judge would find
+  the agent's moves missing (`gaia2.py`'s `SKIPPED`, with each reason).
+- **ambiguity 0198**, the one scenario of these splits in which the user
+  writes to the agent twice: its second message needs a turn after the
+  first, which nothing here delivers.
+- **The other splits.** Adaptability and time need ENV events fired as the
+  agent works, a moving clock and a turn after the first (the daemon's
+  notifications). agent2agent replaces apps with other agents. The fakes
+  have the hidden ENV commands, and the event log is upstream's, but
+  nothing here fires them.
+
+### Divergences
+
+- **The drive.** `cloud-drive`'s commands (`ls`, `cat`, `mv`, ...) are file
+  commands on `/cloud-drive`, and log no events (above). A download's path
+  prints as `/cloud-drive/...`, where upstream prints its state directory's.
+- **Options.** Each option is its first spelling; click's aliases
+  (`--folder`, `--download-path`, `--path1`) are not taken. A missing or
+  badly typed option is refused by the workspace's CLI with its own message,
+  where click prints its usage (exit 2).
+- **Clock.** Frozen at the start for every app, as upstream's runner freezes
+  it; a city rate limit, once hit, never cools down, as upstream's would not
+  either.
+- **Ids.** Deterministic, not `uuid4`'s random ones.
+- **Python's `re`** for `regex-search` is translated to JavaScript's;
+  conditional groups and `\N{...}` are refused (`pyre.ts`).
+- **Uncaught exceptions.** Where upstream prints a traceback, the fake
+  prints its last line (`ValueError: ...`).
+- **The judge's transport.** urllib over the chat completions API in place
+  of litellm, which the VM lacks; prompts, votes and parsing are gaia2-core's.
+  The model name goes as given (litellm would strip an `openai/` prefix).
+  A call that fails after six tries (a refused connection, a bad reply) is
+  no answer, an inconclusive check, as litellm's would be once its retries
+  ran out. A judge on the host (`host.microsandbox.internal`) is dialed at
+  the host's IPv4 address, as `claweval_grade.py` dials it.
+- **The reply.** The trajectory's last agent message; an agent that writes no
+  trajectory, or no message, hands in no reply, so the turn never ends and
+  there is no judgment: 0, as upstream's runner scores it.
+- **The state files** are visible read-only in the workspace at
+  `/var/lib/mock-data/gaia2/`, as every committed task's services' are. They
+  hold the apps' state and the calls' log, which the CLIs show anyway; the
+  oracle is only in the VM.

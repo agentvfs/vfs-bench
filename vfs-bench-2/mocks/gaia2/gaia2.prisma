@@ -1,0 +1,39 @@
+// A Gaia2 app's store: one of gaia2-cli's apps (meta-agents-research-
+// environments @ a9fd2ed, MIT, gaia2-cli/cli/gaia2_cli/apps/<app>.py), one
+// SQLite file per run. Each app's fake links its `<service>.prisma` here.
+//
+// Upstream keeps an app's state as one JSON file in GAIA2_STATE_DIR
+// (`<app>.json`, written by gaia2-init from the scenario) and appends each
+// command's call to `events.jsonl`, which the judge reads. Here the state is
+// the `doc` row named `state`, its JSON text as Python writes it; `meta`
+// holds the class name the app logs under (`app_class_map.json`'s) and the
+// count of ids minted; and each logged call is an `event` row, its line as
+// upstream writes it and the wall-clock time it was made at, by which the
+// verifier orders the calls of every app into one log.
+//
+// No tenant column: a run is one scenario (tenantKind 'none').
+
+datasource db {
+  provider = "sqlite"
+  url      = env("INTEG_DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "client"
+}
+
+model Doc {
+  name String @id
+  doc  String
+
+  @@map("doc")
+}
+
+model Event {
+  seq   Int    @id @default(autoincrement())
+  wall  Float
+  entry String
+
+  @@map("event")
+}
