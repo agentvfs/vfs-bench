@@ -27,7 +27,9 @@ are upstream's, so every file but the Dockerfile is upstream's.
 generated file differs from what upstream gives, if mirage.yaml's ``env``,
 ``copy``, ``run`` and ``workdir`` disagree with upstream's Dockerfile (and
 ``TASK_NAME``, its base image's; a rule-A task leaves out the browser's
-install), or if a file is missing or unaccounted for.
+install), if a file is missing or unaccounted for, or if any file looks like
+it holds a credential. Upstream's AgentBay harnesses (``LEFT_OUT``) are not
+exported: no ``test.sh`` runs them, and they carry upstream's own keys.
 """
 import argparse
 import os
@@ -63,6 +65,18 @@ TASKS = {
 # A rule-A task's files of ours, which differ from upstream's on purpose.
 OURS_A = ["solution/solve.sh", "tests/verify.py"]
 OURS = ["environment/mirage.yaml"]
+# Upstream files left out: AgentBay's cloud-runner harnesses, which no
+# test.sh runs, and which carry upstream's own service credentials.
+LEFT_OUT = re.compile(r"tests/(utils/)?agent_?bay_test(_example)?\.py"
+                      r"(\.reference)?")
+# What looks like a credential: an API key, token, secret or password set
+# to a long literal, or a key with its provider's prefix. No committed file
+# may hold one, whoever wrote it.
+CREDENTIAL = re.compile(
+    rb"os\.environ\[[^\]]+\]\s*=\s*['\"][A-Za-z0-9_./+=-]{16,}"
+    rb"|['\"]?(api_?key|access_?key|secret|token|password)['\"]?\s*[:=]\s*"
+    rb"['\"][A-Za-z0-9_./+=-]{16,}['\"]"
+    rb"|sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}", re.I)
 # A rule-A instruction: the mailbox and the calendar are mounts and a CLI,
 # not web apps. Each phrase that names one becomes the other way to reach
 # it; a task names its mailbox with MAILBOX unless PHRASES lists its own.
@@ -142,7 +156,8 @@ def expected(task: str, mirage: dict) -> dict[str, bytes]:
     out: dict[str, bytes] = {}
     for path in sorted(source.rglob("*")):
         rel = path.relative_to(source).as_posix()
-        if not path.is_file() or rel == "environment/Dockerfile":
+        if (not path.is_file() or rel == "environment/Dockerfile"
+                or LEFT_OUT.fullmatch(rel)):
             continue
         if rule == "A" and rel in OURS_A:
             continue
@@ -226,6 +241,8 @@ def main() -> int:
             rel = path.relative_to(target).as_posix()
             if path.is_file() and rel not in files and rel not in ours:
                 problems.append(f"{rel} is not upstream's, derived or ours")
+            if path.is_file() and CREDENTIAL.search(path.read_bytes()):
+                problems.append(f"{rel} looks like it holds a credential")
         failed += bool(problems)
         status = "FAIL" if problems else ("ok" if args.check else "written")
         print(f"{status} {task}")
