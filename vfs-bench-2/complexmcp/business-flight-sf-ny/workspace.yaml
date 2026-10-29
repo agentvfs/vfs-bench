@@ -9,7 +9,7 @@ runtimes:
       max_memory: 2G
   - workspace
 command_limits:
-  "@line": {timeout_seconds: 300}
+  "@line": {timeout_seconds: 600}
 # Offline: python3 has no network and the shell's fetchers are refused, so
 # services are reached through their CLIs only.
 profiles:

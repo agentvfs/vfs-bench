@@ -529,8 +529,8 @@ expense, insurance or health), and 4 of them a legacy startup script too.
   run on the host, so their model calls are unaffected. The capability
   declared is `disable_internet` alone, and no CPU or memory limits.
 - **Time.** An `exec` is one Mirage line, and `workspace.yaml` gives a
-  line 300 s (`@line` in `command_limits`). Past that it exits 124
-  (`line: timed out after 300s`), however long Harbor's `timeout_sec`.
+  line 600 s (`@line` in `command_limits`). Past that it exits 124
+  (`line: timed out after 600s`), however long Harbor's `timeout_sec`.
 - **curl.** It lacks `-G/--get` (sending `-d` and `--data-urlencode` as
   the query) and the `-w` variable `%{redirect_url}`.
 - **Python.** `python3` is Pyodide. It has no network, so the 15 verifiers
