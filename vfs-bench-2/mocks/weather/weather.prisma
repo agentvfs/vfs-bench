@@ -1,0 +1,93 @@
+// The weather fake's store: LiveClawBench's weather mock (Mosi-AI/LiveClawBench
+// @ 303dc77, MIT, mock-platform/mocks/weather/src/seed.ts), one SQLite file
+// per run.
+//
+// Each table and column is upstream's, by name, type, nullability and
+// default. Fields keep upstream's snake_case column names; only the models
+// are renamed, with @@map. Every route reads; nothing writes after the seed.
+//
+// No tenant column: a run is one world (tenantKind 'none'), as upstream's
+// mock is.
+
+datasource db {
+  provider = "sqlite"
+  url      = env("INTEG_DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "generated"
+}
+
+model Location {
+  id             Int    @id @default(autoincrement())
+  slug           String @unique
+  display_name   String
+  timezone_label String
+
+  daily  WeatherDaily[]
+  hourly WeatherHourly[]
+  aqi    AirQualitySnapshot[]
+  tips   HealthActivityTip[]
+
+  @@map("location")
+}
+
+model WeatherDaily {
+  id             Int    @id @default(autoincrement())
+  location_id    Int
+  valid_date     String
+  condition_text String
+  temp_high_c    Float
+  temp_low_c     Float
+  precip_mm      Float  @default(0)
+  wind_dir       String @default("")
+  wind_speed_kmh Float  @default(0)
+  uv_index       Int    @default(0)
+
+  location Location @relation(fields: [location_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("weather_daily")
+}
+
+model WeatherHourly {
+  id             Int    @id @default(autoincrement())
+  location_id    Int
+  valid_date     String
+  hour           Int
+  temp_c         Float
+  feels_like_c   Float
+  condition_text String
+  precip_mm      Float  @default(0)
+  humidity       Int    @default(60)
+  cloud_cover    Int    @default(0)
+
+  location Location @relation(fields: [location_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("weather_hourly")
+}
+
+model AirQualitySnapshot {
+  id           Int    @id @default(autoincrement())
+  location_id  Int
+  observed_at  String
+  aqi          Int
+  category     String
+  summary_text String
+
+  location Location @relation(fields: [location_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("air_quality_snapshot")
+}
+
+model HealthActivityTip {
+  id          Int    @id @default(autoincrement())
+  location_id Int
+  valid_date  String
+  tip_title   String
+  tip_body    String
+
+  location Location @relation(fields: [location_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("health_activity_tip")
+}

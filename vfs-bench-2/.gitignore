@@ -21,3 +21,6 @@ state/
 # Run transcripts, kept local.
 dumps/
 fakes/*/generated/
+# The kit fakes' Prisma clients, generated on first start (harbor/fakes.ts).
+mocks/*/generated/
+mocks/*/generated.*/
