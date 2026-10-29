@@ -1,4 +1,5 @@
-"""The workspace mock's answers to a verifier, from the run's SQLite (vfs-bench-2).
+"""The workspace mock's answers to a verifier, from the run's SQLite
+(vfs-bench-2).
 
 The workspace tasks' verifiers read the notes over HTTP (log in, then
 ``GET /api/notes``, ``.../brief`` and ``.../task-record``), which they

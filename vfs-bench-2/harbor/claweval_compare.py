@@ -1,6 +1,7 @@
 """Check each Claw-Eval kit fake against upstream's FastAPI service.
 
-    uv run --project harbor python -I harbor/claweval_compare.py [service ...] [--task <id> ...] [-v]
+    uv run --project harbor python -I harbor/claweval_compare.py \
+        [service ...] [--task <id> ...] [-v]
 
 For each service (default: every one with a fake under ``mocks/``; gmail's
 is its drafts, for the tasks with that tool) and each
@@ -56,8 +57,10 @@ def norm(value):
         out = {k: norm(v) for k, v in value.items()}
         if isinstance(out.get("categories"), list):
             out["categories"] = sorted(out["categories"], key=str)
-        if isinstance(out.get("last_updated"), str) and DAY.match(out["last_updated"]):
-            out["last_updated"] = STAMPED.get(out["last_updated"], out["last_updated"])
+        if isinstance(out.get("last_updated"), str) and DAY.match(
+                out["last_updated"]):
+            out["last_updated"] = STAMPED.get(out["last_updated"],
+                                              out["last_updated"])
         return out
     if isinstance(value, list):
         return [norm(v) for v in value]
@@ -90,10 +93,15 @@ def sample(name: str, schema: dict, pool: dict, missing: bool):
     if kind == "object":
         return {}
     if kind == "integer":
-        ints = [v for v in seen if isinstance(v, int) and not isinstance(v, bool)]
+        ints = [
+            v for v in seen if isinstance(v, int) and not isinstance(v, bool)
+        ]
         return ints[0] if ints else 3
     if kind == "number":
-        nums = [v for v in seen if isinstance(v, (int, float)) and not isinstance(v, bool)]
+        nums = [
+            v for v in seen
+            if isinstance(v, (int, float)) and not isinstance(v, bool)
+        ]
         return nums[0] if nums else 1.5
     if kind == "boolean":
         return True
@@ -118,18 +126,29 @@ def bodies(tool: dict, pool: dict):
 
 
 class Upstream:
+
     def __init__(self, service: dict, today: str | None, log: Path):
-        env = {**os.environ, **{k: str(v) for k, v in (service.get("env") or {}).items()},
-               "ERROR_RATE": "0"}
+        env = {
+            **os.environ,
+            **{
+                k: str(v)
+                for k, v in (service.get("env") or {}).items()
+            }, "ERROR_RATE": "0"
+        }
         env.pop("MOCK_TODAY", None)
         if today:
             env["MOCK_TODAY"] = today
         script = service["command"].split()[1]
-        self.proc = subprocess.Popen(
-            ["uv", "run", "--quiet", "--project", str(ROOT / "claweval"), "python", "-I",
-             str(ROOT / "claweval" / "serve.py"), script, "UP"],
-            cwd=claweval.UPSTREAM, env=env, stdout=subprocess.PIPE,
-            stderr=log.open("w"), text=True)
+        self.proc = subprocess.Popen([
+            "uv", "run", "--quiet", "--project",
+            str(ROOT / "claweval"), "python", "-I",
+            str(ROOT / "claweval" / "serve.py"), script, "UP"
+        ],
+                                     cwd=claweval.UPSTREAM,
+                                     env=env,
+                                     stdout=subprocess.PIPE,
+                                     stderr=log.open("w"),
+                                     text=True)
         line = self.proc.stdout.readline().strip()
         if not line.startswith("UP_URL="):
             raise RuntimeError(f"upstream did not start: {line!r} (see {log})")
@@ -141,24 +160,38 @@ class Upstream:
 
 
 class Fake:
+
     def __init__(self, name: str, root: Path, first: bytes):
         (root / "fixtures" / name).mkdir(parents=True, exist_ok=True)
         (root / "fixtures" / name / "default.json").write_bytes(first)
         self.name, self.root = name, root
-        self.proc = subprocess.Popen(
-            ["node", str(HARBOR / "fakes.ts"), "--service", name, "--root", str(root),
-             "--fixture", "default", "--log", str(root / f"{name}.log")],
-            cwd=ROOT, stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+        self.proc = subprocess.Popen([
+            "node",
+            str(HARBOR / "fakes.ts"), "--service", name, "--root",
+            str(root), "--fixture", "default", "--log",
+            str(root / f"{name}.log")
+        ],
+                                     cwd=ROOT,
+                                     stdin=subprocess.PIPE,
+                                     stdout=subprocess.PIPE,
+                                     text=True)
         for line in self.proc.stdout:
             if line.startswith("FAKE="):
                 self.url = json.loads(line[5:])["url"]
                 return
-        raise RuntimeError(f"{name} did not start (see {root / f'{name}.log'})")
+        raise RuntimeError(
+            f"{name} did not start (see {root / f'{name}.log'})")
 
     def run(self, run: str, fixture_name: str, data: bytes, epoch: str) -> str:
-        (self.root / "fixtures" / self.name / f"{fixture_name}.json").write_bytes(data)
-        reply = httpx.post(f"{self.url}/reset", json={"run": run, "fixture": fixture_name,
-                                                       "epoch": epoch}, timeout=60)
+        (self.root / "fixtures" / self.name /
+         f"{fixture_name}.json").write_bytes(data)
+        reply = httpx.post(f"{self.url}/reset",
+                           json={
+                               "run": run,
+                               "fixture": fixture_name,
+                               "epoch": epoch
+                           },
+                           timeout=60)
         reply.raise_for_status()
         return f"{self.url}/_run/{run}"
 
@@ -171,7 +204,9 @@ def send(client: httpx.Client, method: str, url: str, body):
     if body is None:
         reply = client.request(method, url)
     elif isinstance(body, bytes):
-        reply = client.request(method, url, content=body,
+        reply = client.request(method,
+                               url,
+                               content=body,
                                headers={"content-type": "application/json"})
     else:
         reply = client.request(method, url, json=body)
@@ -182,8 +217,8 @@ def send(client: httpx.Client, method: str, url: str, body):
     return reply.status_code, norm(data)
 
 
-def compare(service_name: str, tasks: list[tuple[str, dict, dict]], verbose: bool,
-            tmp: Path) -> tuple[int, int]:
+def compare(service_name: str, tasks: list[tuple[str, dict, dict]],
+            verbose: bool, tmp: Path) -> tuple[int, int]:
     """Every task's requests to one service; (requests, differences)."""
     sent = failed = 0
     fake = Fake(claweval.fake(service_name), tmp / service_name,
@@ -195,18 +230,23 @@ def compare(service_name: str, tasks: list[tuple[str, dict, dict]], verbose: boo
             data = claweval.fixture(task, service)
             base = fake.run(f"cmp{n}", task_id, data, epoch)
             STAMPED[epoch[:10]] = "<today>"
-            up = Upstream(service, today, tmp / f"{service_name}-{task_id}.log")
+            up = Upstream(service, today,
+                          tmp / f"{service_name}-{task_id}.log")
             pool: dict = {}
-            harvest([json.loads(r["doc"]) for r in json.loads(data)["doc"]], pool)
+            harvest([json.loads(r["doc"]) for r in json.loads(data)["doc"]],
+                    pool)
             endpoints = {e["tool_name"]: e for e in task["tool_endpoints"]}
             port = f":{service['port']}/"
-            tools = [t for t in task["tools"] if port in endpoints[t["name"]]["url"]]
+            tools = [
+                t for t in task["tools"] if port in endpoints[t["name"]]["url"]
+            ]
             # Gmail's fake is its drafts alone; the rest is Mirage's gws.
             if service_name == "gmail":
                 tools = [t for t in tools if t["name"] == claweval.DRAFT]
             requests = []
             try:
                 with httpx.Client(timeout=30) as client:
+
                     def both(method, path, body, label):
                         nonlocal sent, failed
                         a = send(client, method, f"{up.url}{path}", body)
@@ -214,34 +254,47 @@ def compare(service_name: str, tasks: list[tuple[str, dict, dict]], verbose: boo
                         harvest(a[1], pool)
                         sent += 1
                         known = (service_name == "notes" and not today
-                                 and isinstance(body, dict) and body.get("days_back"))
+                                 and isinstance(body, dict)
+                                 and body.get("days_back"))
                         if a != b:
                             if known:
-                                print(f"  known {task_id} {label}: notes days_back reads the wall clock upstream")
+                                print(
+                                    f"  known {task_id} {label}: notes "
+                                    "days_back reads the wall clock upstream")
                             else:
                                 failed += 1
-                                print(f"  DIFF {task_id} {label}\n    upstream: {json.dumps(a, ensure_ascii=False)[:1500]}\n    fake:     {json.dumps(b, ensure_ascii=False)[:1500]}")
+                                up_text = json.dumps(a, ensure_ascii=False)
+                                fake_text = json.dumps(b, ensure_ascii=False)
+                                print(f"  DIFF {task_id} {label}\n"
+                                      f"    upstream: {up_text[:1500]}\n"
+                                      f"    fake:     {fake_text[:1500]}")
                         elif verbose:
                             print(f"  same {task_id} {label}: {a[0]}")
+
                     for tool in tools:
                         endpoint = endpoints[tool["name"]]
                         path = httpx.URL(endpoint["url"]).path
                         method = endpoint.get("method", "POST")
-                        for body in itertools.chain(bodies(tool, pool), [b"not json", b"[]", b"null"]):
-                            requests.append((method, path, body, f"{tool['name']} {body!r}"[:200]))
+                        for body in itertools.chain(bodies(
+                                tool, pool), [b"not json", b"[]", b"null"]):
+                            requests.append((method, path, body,
+                                             f"{tool['name']} {body!r}"[:200]))
                     for method, path, body, label in requests:
                         both(method, path, body, label)
                     # Once more, now that every write has happened.
                     for method, path, body, label in requests:
                         if method == "POST" and isinstance(body, dict):
                             both(method, path, body, "again " + label)
-                    both("POST", f"/{service_name.split('_')[0]}/no-such-route", {}, "unrouted")
+                    both("POST",
+                         f"/{service_name.split('_')[0]}/no-such-route", {},
+                         "unrouted")
                     for method, path, _body, label in requests[:1]:
                         other = "GET" if method == "POST" else "POST"
                         both(other, path, None, f"{other} for {label}")
                     reset = service.get("reset_endpoint")
                     if reset:
-                        audit = httpx.URL(reset).path.removesuffix("/reset") + "/audit"
+                        audit = httpx.URL(reset).path.removesuffix(
+                            "/reset") + "/audit"
                         both("GET", audit, None, "audit")
             finally:
                 up.stop()
@@ -257,20 +310,25 @@ def main() -> int:
     parser.add_argument("--task", action="append", default=[])
     parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args()
-    ours = sorted(p.name.removeprefix("claweval_") for p in (ROOT / "mocks").glob("claweval_*")
-                  if (p / "main.ts").is_file())
+    ours = sorted(
+        p.name.removeprefix("claweval_")
+        for p in (ROOT / "mocks").glob("claweval_*")
+        if (p / "main.ts").is_file())
     services = args.services or ours
     by_service: dict[str, list] = {}
     for task_id in claweval.TASKS:
         if args.task and task_id not in args.task:
             continue
-        task = yaml.safe_load((claweval.UPSTREAM / "tasks" / task_id / "task.yaml").read_text())
+        task = yaml.safe_load(
+            (claweval.UPSTREAM / "tasks" / task_id / "task.yaml").read_text())
         for service in task["services"]:
-            name = "ocr" if service["name"].startswith("ocr") else service["name"]
+            name = "ocr" if service["name"].startswith(
+                "ocr") else service["name"]
             if name == "gmail" and not claweval.has_draft(task):
                 continue
             if name in services:
-                by_service.setdefault(name, []).append((task_id, task, service))
+                by_service.setdefault(name, []).append(
+                    (task_id, task, service))
     total = failed = 0
     with tempfile.TemporaryDirectory(prefix="claweval-cmp-") as tmp:
         for name in services:

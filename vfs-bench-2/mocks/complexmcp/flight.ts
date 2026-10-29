@@ -399,4 +399,3 @@ export const LightFlight: App<FlightSession, FlightData> = {
     passengers: clone(s.d.passengers),
   }),
 }
-

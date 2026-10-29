@@ -172,6 +172,7 @@ allow_internet = false
 
 
 def mirage_yaml(slug: str, task_id: str) -> str:
+    benchmark = "${STATE}/dataspace/benchmark"
     return f"""# {task_id} ({slug}), on vfsbench_harbor's mirage environment
 # (harbor/dataspace.py writes it).
 #
@@ -190,7 +191,7 @@ workspace:
     /workspace:
       vfs: disk
       mode: read
-      config: {{root: '${{STATE}}/dataspace/benchmark/input/{task_id}/context'}}
+      config: {{root: '{benchmark}/input/{task_id}/context'}}
     /output:
       vfs: disk
       mode: write
@@ -204,8 +205,8 @@ verifier:
   omit: [/workspace]
   copy:
     /opt/dataspace-evaluation/evaluator: '${{STATE}}/dataspace/evaluation'
-    /opt/dataspace-evaluation/configs: '${{STATE}}/dataspace/benchmark/evaluation/configs'
-    /opt/dataspace-evaluation/gold: '${{STATE}}/dataspace/benchmark/output/{task_id}'
+    /opt/dataspace-evaluation/configs: '{benchmark}/evaluation/configs'
+    /opt/dataspace-evaluation/gold: '{benchmark}/output/{task_id}'
 """
 
 
@@ -227,16 +228,21 @@ def expected(slug: str) -> dict[str, bytes]:
         "instruction.md":
         (prompt(task_id, question, "/workspace", "/output/prediction.csv") +
          "\n").encode(),
-        "task.toml": task_toml(task_id).encode(),
-        "environment/mirage.yaml": mirage_yaml(slug, task_id).encode(),
+        "task.toml":
+        task_toml(task_id).encode(),
+        "environment/mirage.yaml":
+        mirage_yaml(slug, task_id).encode(),
         "environment/workbench/TOOLS.md":
         (PORT / "workbench" / "TOOLS.md").read_bytes(),
-        "tests/test.sh": TEST_SH.format(task_id=task_id).encode(),
-        "tests/grade.py": GRADE.read_bytes(),
+        "tests/test.sh":
+        TEST_SH.format(task_id=task_id).encode(),
+        "tests/grade.py":
+        GRADE.read_bytes(),
     }
     oracle = PORT / slug / "tests" / "oracle.sh"
     if oracle.is_file():
-        out["solution/solve.sh"] = b"#!/usr/bin/env bash\n" + oracle.read_bytes()
+        shebang = b"#!/usr/bin/env bash\n"
+        out["solution/solve.sh"] = shebang + oracle.read_bytes()
     return out
 
 
@@ -261,8 +267,8 @@ def main() -> int:
     parser.add_argument("tasks", nargs="*", default=list(TASKS))
     args = parser.parse_args()
     # Upstream's 60 public tasks, each committed or skipped, not both.
-    assert len(set(TASKS.values()) | set(SKIPPED)) == len(TASKS) + len(
-        SKIPPED) == 60
+    assert len(set(TASKS.values())
+               | set(SKIPPED)) == len(TASKS) + len(SKIPPED) == 60
     unknown = [t for t in args.tasks if t not in TASKS]
     if unknown:
         parser.error(f"not a committed task: {', '.join(unknown)}")

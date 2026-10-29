@@ -12,7 +12,8 @@ BASE = "https://api.airtable.com/v0/"
 def fetch(method, path, params=None, body=None, base=BASE):
     args = {"method": method, "url": base + path}
     if params is not None:
-        args["params"] = params if isinstance(params, str) else json.dumps(params)
+        args["params"] = params if isinstance(params,
+                                              str) else json.dumps(params)
     if body is not None:
         args["body"] = body if isinstance(body, str) else json.dumps(body)
     return "api_fetch", args
@@ -24,12 +25,18 @@ def calls(world, last):
     pairs = []
     for b in bases:
         for t in b.get("tables", []):
-            pairs.append((b.get("id"), t.get("id"), t.get("name"), [r.get("id") for r in t.get("records", [])],
-                          sorted({k for r in t.get("records", []) for k in r.get("fields", {})})))
+            pairs.append((b.get("id"), t.get("id"), t.get("name"),
+                          [r.get("id") for r in t.get("records", [])],
+                          sorted({
+                              k
+                              for r in t.get("records", [])
+                              for k in r.get("fields", {})
+                          })))
     for key in ("findRecord", "findManyRecords"):
         for rec in state.get("actions", {}).get(key, []):
             p = rec["params"]
-            pairs.append((p.get("applicationId"), p.get("tableName"), p.get("tableName"), [], []))
+            pairs.append((p.get("applicationId"), p.get("tableName"),
+                          p.get("tableName"), [], []))
     if not pairs:
         pairs = [("appNONE", "tblNONE", "None Table", [], [])]
     yield fetch("GET", "meta/bases")
@@ -46,28 +53,64 @@ def calls(world, last):
         yield fetch("GET", f"{base_id}/{table_id}", {"pageSize": "x"})
         yield fetch("GET", f"{base_id}/{table_id}", {"pageSize": [1]})
         yield fetch("GET", f"{base_id}/{table_id}", {"fields": fields[:2]})
-        yield fetch("GET", f"{base_id}/{table_id}", {"fields": ",".join(fields[:3])})
+        yield fetch("GET", f"{base_id}/{table_id}",
+                    {"fields": ",".join(fields[:3])})
         yield fetch("GET", f"{base_id}/{table_id}", {"fields": 3})
         yield fetch("GET", f"{base_id}/{table_id}", {"fields": {"Status": 1}})
-        yield fetch("GET", f"{base_id}/{table_id}", {"filterByFormula": "{Status}='Pending'", "view": "Grid"})
-        yield fetch("GET", f"{base_id}/{table_id}", {"filterByFormula": "", "view": ""})
+        yield fetch("GET", f"{base_id}/{table_id}", {
+            "filterByFormula": "{Status}='Pending'",
+            "view": "Grid"
+        })
+        yield fetch("GET", f"{base_id}/{table_id}", {
+            "filterByFormula": "",
+            "view": ""
+        })
         yield fetch("GET", f"{base_id}/tblMISSING")
         yield fetch("GET", f"{base_id}/{table_id}", "[1]")
         yield fetch("GET", f"{base_id}/{table_id}", "7")
         rid = recs[0] if recs else "recNEW"
-        yield fetch("PATCH", f"{base_id}/{table_id}/{rid}", body={"fields": {"Status": "Approved", "Amount": 1.5}})
-        yield fetch("PATCH", f"{base_id}/{table_id}/{rid}", body={"Status": "Rejected", "Reason": "No receipt"})
+        yield fetch("PATCH",
+                    f"{base_id}/{table_id}/{rid}",
+                    body={"fields": {
+                        "Status": "Approved",
+                        "Amount": 1.5
+                    }})
+        yield fetch("PATCH",
+                    f"{base_id}/{table_id}/{rid}",
+                    body={
+                        "Status": "Rejected",
+                        "Reason": "No receipt"
+                    })
         yield fetch("PATCH", f"{base_id}/{table_id}/{rid}", body={})
-        yield fetch("PATCH", f"{base_id}/{table_id}/{rid}", body={"fields": {}})
-        yield fetch("PATCH", f"{base_id}/{table_id}/{rid}", body={"fields": "text"})
+        yield fetch("PATCH",
+                    f"{base_id}/{table_id}/{rid}",
+                    body={"fields": {}})
+        yield fetch("PATCH",
+                    f"{base_id}/{table_id}/{rid}",
+                    body={"fields": "text"})
         yield fetch("PATCH", f"{base_id}/{table_id}/{rid}", body="[1, 2]")
         yield fetch("PATCH", f"{base_id}/{table_id}/{rid}", body='"str"')
-        yield fetch("POST", f"{base_id}/{table_id}/{rid}/comments", body={"text": "Approved per policy"})
+        yield fetch("POST",
+                    f"{base_id}/{table_id}/{rid}/comments",
+                    body={"text": "Approved per policy"})
         yield fetch("POST", f"{base_id}/{table_id}/{rid}/comments", body={})
-        yield fetch("POST", f"{base_id}/{table_id}/{rid}/comments", body={"text": 5})
-        yield fetch("POST", f"{base_id}/{table_id}/{rid}/comments", body={"text": {}})
+        yield fetch("POST",
+                    f"{base_id}/{table_id}/{rid}/comments",
+                    body={"text": 5})
+        yield fetch("POST",
+                    f"{base_id}/{table_id}/{rid}/comments",
+                    body={"text": {}})
         yield fetch("POST", f"{base_id}/{table_id}/{rid}/comments", body="[]")
-        yield fetch("POST", f"{base_id}/{table_id}", body={"fields": {"Name": "New", "Count": 2, "Ok": True, "N": None}})
+        yield fetch("POST",
+                    f"{base_id}/{table_id}",
+                    body={
+                        "fields": {
+                            "Name": "New",
+                            "Count": 2,
+                            "Ok": True,
+                            "N": None
+                        }
+                    })
         yield fetch("POST", f"{base_id}/{table_id}", body={"Name": "Flat"})
         yield fetch("POST", f"{base_id}/{table_id}", body={"fields": ["a"]})
         yield fetch("POST", f"{base_id}/{table_id}", body={"fields": None})

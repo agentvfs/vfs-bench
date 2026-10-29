@@ -1,6 +1,7 @@
 """Write an oracle's run as the agent's Harbor trajectory.
 
-    python3 /solution/trajectory.py <steps dir> <reply.md> /logs/agent/trajectory.json
+    python3 /solution/trajectory.py <steps dir> <reply.md> \
+        /logs/agent/trajectory.json
 
 Each committed Claw-Eval solution's ``solution/trajectory.py`` is this file
 (written by ``harbor/claweval.py``). Upstream's grader reads the model's
@@ -21,21 +22,37 @@ def main() -> int:
     trajectory = {
         "schema_version": "ATIF-v1.6",
         "session_id": "oracle",
-        "agent": {"name": "oracle", "version": "1"},
+        "agent": {
+            "name": "oracle",
+            "version": "1"
+        },
         "steps": [],
     }
     for n, cmd in enumerate(sorted(steps.glob("*.cmd")), 1):
         call = f"call_{n}"
         output = cmd.with_suffix(".out")
         trajectory["steps"].append({
-            "step_id": n,
-            "source": "agent",
-            "message": "",
-            "tool_calls": [{"tool_call_id": call, "function_name": "shell",
-                            "arguments": {"command": cmd.read_text()}}],
-            "observation": {"results": [{
-                "source_call_id": call,
-                "content": output.read_text() if output.exists() else ""}]},
+            "step_id":
+            n,
+            "source":
+            "agent",
+            "message":
+            "",
+            "tool_calls": [{
+                "tool_call_id": call,
+                "function_name": "shell",
+                "arguments": {
+                    "command": cmd.read_text()
+                }
+            }],
+            "observation": {
+                "results": [{
+                    "source_call_id":
+                    call,
+                    "content":
+                    output.read_text() if output.exists() else ""
+                }]
+            },
         })
     trajectory["steps"].append({
         "step_id": len(trajectory["steps"]) + 1,

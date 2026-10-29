@@ -37,16 +37,23 @@ from typing import Any
 COMPLEXMCP = Path("/opt/complexmcp")
 SITE = Path("/opt/complexmcp-site")
 LOGS = Path("/logs/verifier")
-PORTS = {"LightSystem": 9000, "LightTalk": 9001, "LightShop": 9002,
-         "LightWeather": 9003, "LightFlight": 9004, "LightStock": 9005,
-         "LightNews": 9006}
+PORTS = {
+    "LightSystem": 9000,
+    "LightTalk": 9001,
+    "LightShop": 9002,
+    "LightWeather": 9003,
+    "LightFlight": 9004,
+    "LightStock": 9005,
+    "LightNews": 9006
+}
 PLACES = 6
 
 
 def env(app: str, which: str) -> Any:
     """What an app's login answered, or what its logout answers now."""
     request = urllib.request.Request(f"http://localhost:{PORTS[app]}/{which}",
-                                     data=b"", method="POST")
+                                     data=b"",
+                                     method="POST")
     with urllib.request.urlopen(request, timeout=60) as reply:
         return json.load(reply)
 
@@ -70,8 +77,10 @@ def judged(row: dict, initial: dict, final: dict) -> tuple[dict, str]:
     judge.exclude_keys.add("trid")
     log = io.StringIO()
     with contextlib.redirect_stdout(log):
-        result = judge.judge_env(rounded(initial), rounded(final),
-                                 rounded(row["gt_env"]), verbose=True)
+        result = judge.judge_env(rounded(initial),
+                                 rounded(final),
+                                 rounded(row["gt_env"]),
+                                 verbose=True)
     return result, log.getvalue()
 
 
@@ -90,9 +99,13 @@ def main() -> int:
     result, log = judged(row, initial, final)
     passed = result["recall"] == result["total"] and result["misbehave"] == 0
     LOGS.mkdir(parents=True, exist_ok=True)
-    (LOGS / "reward.json").write_text(json.dumps({
-        "reward": int(passed), "total": result["total"],
-        "recall": result["recall"], "misbehave": result["misbehave"]}))
+    (LOGS / "reward.json").write_text(
+        json.dumps({
+            "reward": int(passed),
+            "total": result["total"],
+            "recall": result["recall"],
+            "misbehave": result["misbehave"]
+        }))
     (LOGS / "judge.log").write_text(log)
     print(log)
     print(f"total {result['total']}, recall {result['recall']}, "

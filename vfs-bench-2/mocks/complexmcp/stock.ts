@@ -410,4 +410,3 @@ export const LightStock: App<StockSession, StockData> = {
     },
   }),
 }
-

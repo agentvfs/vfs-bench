@@ -1,4 +1,5 @@
-"""The expense mock's answers to a verifier, from the run's SQLite (vfs-bench-2).
+"""The expense mock's answers to a verifier, from the run's SQLite
+(vfs-bench-2).
 
 expense-draft-delete's verifier reads the drafts over HTTP (a token, then
 ``GET /api/drafts``), which it cannot reach on the workspace's Python,
@@ -37,7 +38,8 @@ class Refused(Exception):
 
 def _token(conn, data):
     user = conn.execute(
-        "SELECT * FROM user WHERE email = ? AND password = ? AND is_active = 1",
+        "SELECT * FROM user WHERE email = ? AND password = ? AND is_active = "
+        "1",
         ((data or {}).get("email"), (data or {}).get("password"))).fetchone()
     if user is None:
         raise Refused('HTTP 401: {"error":"Invalid credentials"}')
@@ -64,7 +66,10 @@ def _drafts(conn, query, user_id):
         f"{ORDER[first.get('sort', 'newest')]} LIMIT ? OFFSET ?",
         params + [limit, (page - 1) * limit]).fetchall()
     return {
-        "drafts": [{k: row[k] for k in DRAFT_FIELDS} for row in rows],
+        "drafts": [{
+            k: row[k]
+            for k in DRAFT_FIELDS
+        } for row in rows],
         "total": total,
         "page": page,
         "total_pages": -(-total // limit) or 1,
@@ -84,7 +89,8 @@ def answer(method, path, data=None, token=None, error=None):
         if method == "GET" and url.path == "/api/drafts":
             if match is None:
                 raise Refused(
-                    'HTTP 401: {"success":false,"message":"Authentication required"}')
+                    'HTTP 401: {"success":false,"message":"Authentication '
+                    'required"}')
             return _drafts(conn, parse_qs(url.query), int(match.group(1)))
     finally:
         conn.close()

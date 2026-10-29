@@ -542,4 +542,3 @@ const HANDLERS: Record<string, Handler> = {
 }
 
 register('calendly', makeRouter(ROUTES, HANDLERS))
-

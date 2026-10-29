@@ -1,6 +1,7 @@
 """A stand-in judge: an OpenAI-compatible chat completions server on localhost.
 
-    uv run --project harbor python -I harbor/mock_judge.py [--host 127.0.0.1] [--port 8765] [--score 1.0] [--log <file>]
+    uv run --project harbor python -I harbor/mock_judge.py \
+        [--host 127.0.0.1] [--port 8765] [--score 1.0] [--log <file>]
 
 It answers every ``POST /v1/chat/completions`` with one message whose
 content is upstream's judge reply, ``{"score": <score>, "reasoning":
@@ -25,24 +26,52 @@ def main() -> int:
     args = parser.parse_args()
 
     class Handler(BaseHTTPRequestHandler):
+
         def do_POST(self):
-            body = json.loads(self.rfile.read(int(self.headers.get("content-length", 0))) or b"{}")
+            body = json.loads(
+                self.rfile.read(int(self.headers.get("content-length", 0)))
+                or b"{}")
             if not self.path.endswith("/chat/completions"):
                 self.send_error(404)
                 return
             last = (body.get("messages") or [{}])[-1].get("content")
             if args.log:
                 with open(args.log, "a") as f:
-                    f.write(json.dumps({"model": body.get("model"),
-                                        "auth": bool(self.headers.get("authorization")),
-                                        "last": str(last)[:200]}, ensure_ascii=False) + "\n")
-            content = json.dumps({"score": args.score, "reasoning": "mock judge"})
+                    f.write(
+                        json.dumps(
+                            {
+                                "model": body.get("model"),
+                                "auth": bool(self.headers.get(
+                                    "authorization")),
+                                "last": str(last)[:200]
+                            },
+                            ensure_ascii=False) + "\n")
+            content = json.dumps({
+                "score": args.score,
+                "reasoning": "mock judge"
+            })
             reply = json.dumps({
-                "id": "mock", "object": "chat.completion", "created": 0,
-                "model": body.get("model", "mock"),
-                "choices": [{"index": 0, "finish_reason": "stop",
-                             "message": {"role": "assistant", "content": content}}],
-                "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0},
+                "id":
+                "mock",
+                "object":
+                "chat.completion",
+                "created":
+                0,
+                "model":
+                body.get("model", "mock"),
+                "choices": [{
+                    "index": 0,
+                    "finish_reason": "stop",
+                    "message": {
+                        "role": "assistant",
+                        "content": content
+                    }
+                }],
+                "usage": {
+                    "prompt_tokens": 0,
+                    "completion_tokens": 0,
+                    "total_tokens": 0
+                },
             }).encode()
             self.send_response(200)
             self.send_header("content-type", "application/json")
@@ -54,7 +83,8 @@ def main() -> int:
             pass
 
     class Server(ThreadingHTTPServer):
-        address_family = socket.AF_INET6 if ":" in args.host else socket.AF_INET
+        address_family = (socket.AF_INET6
+                          if ":" in args.host else socket.AF_INET)
 
     Server((args.host, args.port), Handler).serve_forever()
     return 0

@@ -1,4 +1,5 @@
-"""The social mock's answers to a verifier, from the run's SQLite (vfs-bench-2).
+"""The social mock's answers to a verifier, from the run's SQLite
+(vfs-bench-2).
 
 Upstream's social verifiers that read the platform over HTTP (login, then
 ``GET /api/posts`` or ``GET /api/posts/<id>``) cannot reach it on the
@@ -21,6 +22,7 @@ import sqlite3
 from urllib.parse import parse_qs, urlsplit
 
 DB_PATH = "/var/lib/mock-data/social/social.db"
+
 
 def _int(text):
     """JavaScript's ``parseInt(text, 10)``: the leading integer, or None."""
@@ -49,13 +51,12 @@ def _posts(now):
     is due (db.ts's ``publishDueScheduledPosts``): a CTE that shadows it,
     and its parameters."""
     due = "status = 'scheduled' AND REPLACE(scheduled_for, 'T', ' ') <= ?"
-    return (
-        "WITH post AS (SELECT id, author_account_id, content, "
-        f"CASE WHEN {due} THEN 'published' ELSE status END AS status, "
-        "visibility, moderation_state, scheduled_for, scheduled_timezone, "
-        f"CASE WHEN {due} THEN ? ELSE published_at END AS published_at, "
-        "deleted_at, is_pinned, has_event_cta, created_at, updated_at "
-        "FROM main.post)", [now, now, now])
+    return ("WITH post AS (SELECT id, author_account_id, content, "
+            f"CASE WHEN {due} THEN 'published' ELSE status END AS status, "
+            "visibility, moderation_state, scheduled_for, scheduled_timezone, "
+            f"CASE WHEN {due} THEN ? ELSE published_at END AS published_at, "
+            "deleted_at, is_pinned, has_event_cta, created_at, updated_at "
+            "FROM main.post)", [now, now, now])
 
 
 def _viewer(cookie):
@@ -121,10 +122,14 @@ def _enriched(conn, post, viewer):
                 "SELECT * FROM post_asset WHERE post_id = ? ORDER BY "
                 "sort_order", (pid, ))
         ],
-        "metrics": dict(metric) if metric else None,
-        "liked": liked("post_like"),
-        "reposted": liked("post_repost"),
-        "like_count": count("SELECT COUNT(*) FROM post_like WHERE post_id = ?"),
+        "metrics":
+        dict(metric) if metric else None,
+        "liked":
+        liked("post_like"),
+        "reposted":
+        liked("post_repost"),
+        "like_count":
+        count("SELECT COUNT(*) FROM post_like WHERE post_id = ?"),
         "repost_count":
         count("SELECT COUNT(*) FROM post_repost WHERE post_id = ?"),
         "reply_count":
@@ -203,8 +208,8 @@ def _list(conn, query, viewer):
                     "SELECT target_account_id FROM follow_relation WHERE "
                     "follower_account_id = ? AND status = 'blocked' UNION "
                     "SELECT follower_account_id FROM follow_relation WHERE "
-                    "target_account_id = ? AND status = 'blocked'", (
-                        viewer, viewer))
+                    "target_account_id = ? AND status = 'blocked'", (viewer,
+                                                                     viewer))
             })
             if blocked:
                 where += (" AND p.author_account_id NOT IN "
@@ -241,7 +246,8 @@ def _detail(conn, post_id, viewer):
     post = conn.execute(
         f"{shadow} SELECT p.*, a.username as author_username, a.display_name "
         "as author_display_name FROM post p JOIN account a ON a.id = "
-        "p.author_account_id WHERE p.id = ?", shadow_params + [pid]).fetchone()
+        "p.author_account_id WHERE p.id = ?",
+        shadow_params + [pid]).fetchone()
     if not post:
         return 404, {"error": "Post not found"}
     code = _visibility(conn, post, viewer)

@@ -1,6 +1,8 @@
 """Check the AutomationBench fake against upstream's Python world.
 
-    uv run --project automationbench python -I harbor/automationbench_compare.py [service ...] [--task <task> ...] [--per N] [-v]
+    uv run --project automationbench python -I \
+        harbor/automationbench_compare.py [service ...] [--task <task> ...] \
+        [--per N] [-v]
 
 For each service (default: every one ``automationbench.PORTED`` names with a
 calls module) and each task subscribed to it (``--per`` of them, default
@@ -40,7 +42,8 @@ CALLS = HARBOR / "automationbench_calls"
 
 
 def _exporter():
-    spec = importlib.util.spec_from_file_location("ab_export", HARBOR / "automationbench.py")
+    spec = importlib.util.spec_from_file_location(
+        "ab_export", HARBOR / "automationbench.py")
     module = importlib.util.module_from_spec(spec)
     sys.modules["ab_export"] = module
     spec.loader.exec_module(module)
@@ -58,11 +61,18 @@ class Fake:
     def __init__(self, root: Path):
         self.root = root
         (root / "fixtures" / self.service).mkdir(parents=True, exist_ok=True)
-        (root / "fixtures" / self.service / "default.json").write_text('{"doc": []}\n')
-        self.proc = subprocess.Popen(
-            ["node", str(HARBOR / "fakes.ts"), "--service", self.service, "--root", str(root),
-             "--fixture", "default", "--log", str(root / "fake.log")],
-            cwd=ROOT, stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+        (root / "fixtures" / self.service /
+         "default.json").write_text('{"doc": []}\n')
+        self.proc = subprocess.Popen([
+            "node",
+            str(HARBOR / "fakes.ts"), "--service", self.service, "--root",
+            str(root), "--fixture", "default", "--log",
+            str(root / "fake.log")
+        ],
+                                     cwd=ROOT,
+                                     stdin=subprocess.PIPE,
+                                     stdout=subprocess.PIPE,
+                                     text=True)
         for line in self.proc.stdout:
             if line.startswith("FAKE="):
                 ready = json.loads(line[5:])
@@ -73,21 +83,30 @@ class Fake:
     def open(self, run: str, fixture: dict, epoch: str) -> None:
         data = json.dumps(fixture).encode()
         name = f"f-{hashlib.sha256(data).hexdigest()[:12]}"
-        (self.root / "fixtures" / self.service / f"{name}.json").write_bytes(data)
-        body = json.dumps({"run": run, "fixture": name, "epoch": epoch}).encode()
-        request = urllib.request.Request(f"{self.url}/reset", data=body,
-                                         headers={"content-type": "application/json"})
+        (self.root / "fixtures" / self.service /
+         f"{name}.json").write_bytes(data)
+        body = json.dumps({
+            "run": run,
+            "fixture": name,
+            "epoch": epoch
+        }).encode()
+        request = urllib.request.Request(
+            f"{self.url}/reset",
+            data=body,
+            headers={"content-type": "application/json"})
         urllib.request.urlopen(request, timeout=120).read()
         self.run = run
 
     def db(self) -> Path:
-        files = list(self.state_root.glob(f"mirage-kit-{self.service}-*/{self.run}.db"))
+        files = list(
+            self.state_root.glob(f"mirage-kit-{self.service}-*/{self.run}.db"))
         assert len(files) == 1, files
         return files[0]
 
     def call(self, tool: str, arguments: dict) -> str:
         request = urllib.request.Request(
-            f"{self.url}/_run/{self.run}/{tool}", data=json.dumps(arguments).encode(),
+            f"{self.url}/_run/{self.run}/{tool}",
+            data=json.dumps(arguments).encode(),
             headers={"content-type": "application/json"})
         try:
             with urllib.request.urlopen(request, timeout=60) as reply:
@@ -97,12 +116,14 @@ class Fake:
 
     def world(self) -> dict:
         with contextlib.closing(sqlite3.connect(self.db())) as conn:
-            row = conn.execute("select doc from doc where name = 'world'").fetchone()
+            row = conn.execute(
+                "select doc from doc where name = 'world'").fetchone()
         return json.loads(row[0])
 
     def hidden(self) -> dict:
         with contextlib.closing(sqlite3.connect(self.db())) as conn:
-            row = conn.execute("select doc from doc where name = 'meta'").fetchone()
+            row = conn.execute(
+                "select doc from doc where name = 'meta'").fetchone()
         return json.loads(row[0]).get("hidden") or {}
 
     def stop(self) -> None:
@@ -120,7 +141,8 @@ def first_difference(a, b, path="") -> str:
     if isinstance(a, dict):
         for k in sorted(set(a) | set(b)):
             if k not in a or k not in b:
-                return f"{path}/{k}: only in {'upstream' if k in a else 'fake'}"
+                where = "upstream" if k in a else "fake"
+                return f"{path}/{k}: only in {where}"
             d = first_difference(a[k], b[k], f"{path}/{k}")
             if d:
                 return d
@@ -133,7 +155,9 @@ def first_difference(a, b, path="") -> str:
             if d:
                 return d
         return ""
-    return "" if a == b else f"{path}: {canonical(a)[:300]} != {canonical(b)[:300]}"
+    if a == b:
+        return ""
+    return f"{path}: {canonical(a)[:300]} != {canonical(b)[:300]}"
 
 
 def calls_module(service: str):
@@ -153,7 +177,9 @@ def tasks_for(service: str, rows: dict, per: int) -> list[str]:
     for name, row in sorted(rows.items()):
         info = row["info"]
         initial = ab.strip_none_values(info.get("initial_state", {}))
-        services = ab.compute_allowed_services(initial, info.get("assertions", []), info.get("zapier_tools", []))
+        services = ab.compute_allowed_services(initial,
+                                               info.get("assertions", []),
+                                               info.get("zapier_tools", []))
         if service in services:
             by_domain.setdefault(name.split(".")[0], []).append(name)
     out: list[str] = []
@@ -164,7 +190,8 @@ def tasks_for(service: str, rows: dict, per: int) -> list[str]:
     return out
 
 
-def compare(service: str, module, task: str, rows: dict, fake: Fake, n: int, verbose: bool) -> tuple[int, int]:
+def compare(service: str, module, task: str, rows: dict, fake: Fake, n: int,
+            verbose: bool) -> tuple[int, int]:
     up = ab.Upstream(rows[task])
     fake.open(f"cmp{n}", up.fixture(), up.epoch)
     known = getattr(module, "KNOWN", {})
@@ -191,7 +218,8 @@ def compare(service: str, module, task: str, rows: dict, fake: Fake, n: int, ver
             why = next((v for k, v in known.items() if k in label), None)
             if why is None:
                 failed += 1
-            print(f"  {'known' if why else 'DIFF'} {task} {label}" + (f" ({why})" if why else ""))
+            print(f"  {'known' if why else 'DIFF'} {task} {label}" +
+                  (f" ({why})" if why else ""))
             print(f"    upstream: {a[:1500]}")
             print(f"    fake:     {b[:1500]}")
         elif verbose:
@@ -200,11 +228,15 @@ def compare(service: str, module, task: str, rows: dict, fake: Fake, n: int, ver
         if d:
             failed += 1
             print(f"  DIFF {task} world after {label}: {d}")
-        mine = sorted(getattr(up.world.google_sheets, "_updated_row_keys", set()))
-        theirs = fake.hidden().get("google_sheets", {}).get("_updated_row_keys", [])
+        mine = sorted(
+            getattr(up.world.google_sheets, "_updated_row_keys", set()))
+        theirs = fake.hidden().get("google_sheets",
+                                   {}).get("_updated_row_keys", [])
         if mine != theirs:
             failed += 1
-            print(f"  DIFF {task} rows updated after {label}: {mine} != {theirs}")
+            print(
+                f"  DIFF {task} rows updated after {label}: {mine} != {theirs}"
+            )
     return sent, failed
 
 
@@ -216,7 +248,8 @@ def main() -> int:
     parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args()
     rows = ab.rows()
-    services = args.services or sorted(s for s in ab.PORTED | {"common"} if (CALLS / f"{s}.py").is_file())
+    services = args.services or sorted(
+        s for s in ab.PORTED | {"common"} if (CALLS / f"{s}.py").is_file())
     total = failed = 0
     n = 0
     with tempfile.TemporaryDirectory(prefix="ab-cmp-") as tmp:
@@ -228,10 +261,13 @@ def main() -> int:
                     print(f"{service}: no calls module")
                     failed += 1
                     continue
-                tasks = args.task or tasks_for("gmail" if service == "common" else service, rows, args.per)
+                tasks = args.task or tasks_for(
+                    "gmail" if service == "common" else service, rows,
+                    args.per)
                 for task in tasks:
                     n += 1
-                    s, f = compare(service, module, task, rows, fake, n, args.verbose)
+                    s, f = compare(service, module, task, rows, fake, n,
+                                   args.verbose)
                     total += s
                     failed += f
                     print(f"{service} {task}: {s} calls, {f} differences")

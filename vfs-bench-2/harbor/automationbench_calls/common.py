@@ -3,10 +3,22 @@
 service gate, bad JSON)."""
 
 QUERIES = [
-    "send slack message", "inbox messages", "trash", "send label", "create contact salesforce",
-    "spreadsheet values append", "list files drive", "update opportunity stage", "", "!!!",
-    "calendar event create attendees", "zoom meeting registrants", "jira issue transition",
-    "hubspot deal pipeline", "docusign envelope recipients", "linkedin share post",
+    "send slack message",
+    "inbox messages",
+    "trash",
+    "send label",
+    "create contact salesforce",
+    "spreadsheet values append",
+    "list files drive",
+    "update opportunity stage",
+    "",
+    "!!!",
+    "calendar event create attendees",
+    "zoom meeting registrants",
+    "jira issue transition",
+    "hubspot deal pipeline",
+    "docusign envelope recipients",
+    "linkedin share post",
 ]
 
 # A URL for each service, which a world not subscribed to it refuses (401).
@@ -25,7 +37,8 @@ GATED = {
     "buffer": "https://api.bufferapp.com/1/profiles.json",
     "pipefy": "https://api.pipefy.com/graphql/",
     "recruitee": "https://api.recruitee.com/c/1/candidates",
-    "bamboohr": "https://api.bamboohr.com/api/gateway.php/acme/v1/employees/directory",
+    "bamboohr":
+    "https://api.bamboohr.com/api/gateway.php/acme/v1/employees/directory",
     "basecamp3": "https://3.basecampapi.com/1/projects.json",
     "reamaze": "https://acme.reamaze.io/api/v1/conversations",
     "confluence": "https://acme.atlassian.net/wiki/rest/api/content",
@@ -47,12 +60,14 @@ GATED = {
     "airtable": "https://api.airtable.com/v0/app1/tbl1",
     "asana": "https://app.asana.com/api/1.0/tasks",
     "notion": "https://api.notion.com/v1/search",
-    "google_ads": "https://googleads.googleapis.com/v19/customers/1/googleAds:search",
+    "google_ads":
+    "https://googleads.googleapis.com/v19/customers/1/googleAds:search",
     "linkedin": "https://api.linkedin.com/v2/me",
     "docusign": "https://demo.docusign.net/restapi/v2.1/accounts/1/envelopes",
     "zoom": "https://api.zoom.us/v2/users/me/meetings",
     "hubspot": "https://api.hubapi.com/crm/v3/objects/contacts",
-    "google_calendar": "https://www.googleapis.com/calendar/v3/calendars/primary/events",
+    "google_calendar":
+    "https://www.googleapis.com/calendar/v3/calendars/primary/events",
     "salesforce": "https://acme.my.salesforce.com/services/data/v61.0/query",
     "slack": "https://slack.com/api/conversations.list",
     "google_drive": "https://www.googleapis.com/drive/v3/files",
@@ -69,17 +84,39 @@ def calls(world, last):
     yield "api_search", {"query": "messages", "top_k": 1}
     yield "api_search", {"query": "messages", "top_k": 12}
     yield "api_search", {"query": "messages", "top_k": 0}
-    for text in ["hello", "To: a@b.c\r\nSubject: hi\r\n\r\nbody é ✓", "", "?>?>"]:
+    for text in [
+            "hello", "To: a@b.c\r\nSubject: hi\r\n\r\nbody é ✓", "", "?>?>"
+    ]:
         yield "base64_encode", {"text": text}
     allowed = set(world["meta"].get("allowed_services") or [])
     for service, url in GATED.items():
         if service not in allowed:
             yield "api_fetch", {"method": "GET", "url": url}
-    for url in ["https://example.org/x", "ftp://nowhere", "", "nothing/at/all", "https://api.unknown.io/v1/x"]:
+    for url in [
+            "https://example.org/x", "ftp://nowhere", "", "nothing/at/all",
+            "https://api.unknown.io/v1/x"
+    ]:
         yield "api_fetch", {"method": "GET", "url": url}
-    yield "api_fetch", {"method": "GET", "url": "https://example.org/x", "params": "{bad"}
-    yield "api_fetch", {"method": "GET", "url": "https://example.org/x", "body": '{"a":}'}
-    yield "api_fetch", {"method": "GET", "url": "https://example.org/x", "params": "{}", "body": ""}
+    yield "api_fetch", {
+        "method": "GET",
+        "url": "https://example.org/x",
+        "params": "{bad"
+    }
+    yield "api_fetch", {
+        "method": "GET",
+        "url": "https://example.org/x",
+        "body": '{"a":}'
+    }
+    yield "api_fetch", {
+        "method": "GET",
+        "url": "https://example.org/x",
+        "params": "{}",
+        "body": ""
+    }
     yield "api_fetch", {"method": "GET"}
-    yield "api_fetch", {"method": "GET", "url": "https://example.org/x", "extra": 1}
+    yield "api_fetch", {
+        "method": "GET",
+        "url": "https://example.org/x",
+        "extra": 1
+    }
     yield "api_search", {}

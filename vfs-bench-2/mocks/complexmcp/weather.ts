@@ -296,4 +296,3 @@ export const LightWeather: App<WeatherSession, WeatherData> = {
   // session's `get_session_dict()`.
   sessionDict: () => ({}),
 }
-

@@ -96,41 +96,73 @@ TASKS = in_scope() if UPSTREAM.is_dir() else []
 # The tasks with a solution of ours: `solve.sh`, and `reply.md`, the reply
 # its trajectory ends with (`solution/trajectory.py`, ORACLE).
 SOLVED = [
-    "T017zh_ticket_triage", "T037zh_incident_postmortem",
-    "T075_email_phishing_injection", "T085_officeqa_army_expenditures",
-    "T086_pinbench_calendar_event_creation", "T110_complaint_investigation", "T149zh_project_progress_report",
-    "T152_supply_chain_investigation", "T154_market_research_report",
-    "T156_onsite_support_dispatch", "T158_month_end_reconciliation",
-    "T161zh_automation_failure_recovery", "T163zh_quarterly_customer_review",
+    "T017zh_ticket_triage",
+    "T037zh_incident_postmortem",
+    "T075_email_phishing_injection",
+    "T085_officeqa_army_expenditures",
+    "T086_pinbench_calendar_event_creation",
+    "T110_complaint_investigation",
+    "T149zh_project_progress_report",
+    "T152_supply_chain_investigation",
+    "T154_market_research_report",
+    "T156_onsite_support_dispatch",
+    "T158_month_end_reconciliation",
+    "T161zh_automation_failure_recovery",
+    "T163zh_quarterly_customer_review",
 ]
 OURS = ["solution/solve.sh", "solution/reply.md"]
 ORACLE = HARBOR / "claweval_trajectory.py"
-
 
 # Each service with a kit fake, by its fake: for each fixture file it
 # loads, the variable naming it, the task file it loads when that is unset,
 # and the list upstream keeps it as (`_load_fixtures` in its server.py).
 SERVICES = {
-    "helpdesk": [("HELPDESK_FIXTURES", "T017zh_ticket_triage/fixtures/helpdesk/tickets.json", "tickets")],
-    "crm": [("CRM_FIXTURES", "T023zh_crm_data_export/fixtures/crm/customers.json", "customers")],
-    "contacts": [("CONTACTS_FIXTURES", "T009zh_contact_lookup/fixtures/contacts/contacts.json", "contacts")],
-    "kb": [("KB_FIXTURES", "T015zh_kb_search/fixtures/kb/articles.json", "articles")],
-    "finance": [("FINANCE_FIXTURES", "T011zh_expense_report/fixtures/finance/transactions.json", "transactions")],
-    "inventory": [("INVENTORY_FIXTURES", "T019zh_inventory_check/fixtures/inventory/products.json", "products")],
-    "config": [("CONFIG_FIXTURES", "T027zh_api_config_audit/fixtures/config/integrations.json", "integrations")],
-    "scheduler": [("SCHEDULER_FIXTURES", "T041zh_scheduled_task_management/fixtures/scheduler/jobs.json", "jobs")],
-    "rss": [("RSS_FIXTURES", "T021zh_newsletter_curation/fixtures/rss/articles.json", "articles")],
-    "todo": [("TODO_FIXTURES", "T007zh_todo_management/fixtures/todo/tasks.json", "tasks")],
-    "notes": [("NOTES_FIXTURES", "T013zh_meeting_notes/fixtures/notes/meetings.json", "notes")],
-    "web": [("WEB_SEARCH_FIXTURES", "T043zh_service_outage_research/fixtures/web/search_results.json", "search_items"),
-            ("WEB_FETCH_FIXTURES", "T043zh_service_outage_research/fixtures/web/pages.json", "pages")],
+    "helpdesk":
+    [("HELPDESK_FIXTURES",
+      "T017zh_ticket_triage/fixtures/helpdesk/tickets.json", "tickets")],
+    "crm": [("CRM_FIXTURES",
+             "T023zh_crm_data_export/fixtures/crm/customers.json", "customers")
+            ],
+    "contacts":
+    [("CONTACTS_FIXTURES",
+      "T009zh_contact_lookup/fixtures/contacts/contacts.json", "contacts")],
+    "kb": [("KB_FIXTURES", "T015zh_kb_search/fixtures/kb/articles.json",
+            "articles")],
+    "finance": [("FINANCE_FIXTURES",
+                 "T011zh_expense_report/fixtures/finance/transactions.json",
+                 "transactions")],
+    "inventory":
+    [("INVENTORY_FIXTURES",
+      "T019zh_inventory_check/fixtures/inventory/products.json", "products")],
+    "config": [("CONFIG_FIXTURES",
+                "T027zh_api_config_audit/fixtures/config/integrations.json",
+                "integrations")],
+    "scheduler":
+    [("SCHEDULER_FIXTURES",
+      "T041zh_scheduled_task_management/fixtures/scheduler/jobs.json", "jobs")
+     ],
+    "rss": [
+        ("RSS_FIXTURES",
+         "T021zh_newsletter_curation/fixtures/rss/articles.json", "articles")
+    ],
+    "todo": [("TODO_FIXTURES",
+              "T007zh_todo_management/fixtures/todo/tasks.json", "tasks")],
+    "notes": [("NOTES_FIXTURES",
+               "T013zh_meeting_notes/fixtures/notes/meetings.json", "notes")],
+    "web": [("WEB_SEARCH_FIXTURES",
+             "T043zh_service_outage_research/fixtures/web/search_results.json",
+             "search_items"),
+            ("WEB_FETCH_FIXTURES",
+             "T043zh_service_outage_research/fixtures/web/pages.json", "pages")
+            ],
 }
 
 
 def fake(service: str) -> str:
     """A service's kit fake: `claweval_helpdesk`; every `ocr_*` service is
     the one OCR server with fixtures of its own."""
-    return "claweval_ocr" if service.startswith("ocr") else f"claweval_{service}"
+    return "claweval_ocr" if service.startswith(
+        "ocr") else f"claweval_{service}"
 
 
 def ocr_text(env: dict) -> str:
@@ -200,7 +232,8 @@ DISPATCHES = "/var/lib/mock-data/claweval/dispatches.jsonl"
 
 def service_of(task: dict, tool: str) -> dict:
     """The service whose port a tool's endpoint is on."""
-    endpoint = next(e for e in task["tool_endpoints"] if e["tool_name"] == tool)
+    endpoint = next(e for e in task["tool_endpoints"]
+                    if e["tool_name"] == tool)
     port = int(re.search(r":(\d+)/", endpoint["url"])[1])
     return next(s for s in task["services"] if s["port"] == port)
 
@@ -227,10 +260,14 @@ def tools(task: dict) -> list[dict]:
         name = tool["name"].removeprefix(f"{service}_")
         endpoint = endpoints[tool["name"]]
         clis.setdefault(service, []).append({
-            "name": name,
-            "call": tool["name"],
-            "description": tool.get("description"),
-            "parameters": tool.get("input_schema") or {},
+            "name":
+            name,
+            "call":
+            tool["name"],
+            "description":
+            tool.get("description"),
+            "parameters":
+            tool.get("input_schema") or {},
             "endpoint": {
                 "url": endpoint["url"],
                 "method": endpoint.get("method", "POST")
@@ -250,14 +287,18 @@ def gws_note(task: dict) -> list[str]:
     if not used:
         return []
     where = {
-        frozenset({"gmail"}): "The mailbox is mounted at /gmail.",
-        frozenset({"calendar"}): "The calendar is mounted at /calendar.",
+        frozenset({"gmail"}):
+        "The mailbox is mounted at /gmail.",
+        frozenset({"calendar"}):
+        "The calendar is mounted at /calendar.",
         frozenset({"gmail", "calendar"}):
         "The mailbox is mounted at /gmail and the calendar at /calendar.",
     }[frozenset(used)]
     what = {
-        frozenset({"gmail"}): "reads and sends mail",
-        frozenset({"calendar"}): "reads, creates and deletes events",
+        frozenset({"gmail"}):
+        "reads and sends mail",
+        frozenset({"calendar"}):
+        "reads, creates and deletes events",
         frozenset({"gmail", "calendar"}):
         "reads and sends mail and reads, creates and deletes events",
     }[frozenset(used)]
@@ -277,15 +318,16 @@ def instruction(task: dict) -> str:
     lines += gws_note(task)
     clis = tools(task)
     if clis:
-        lines += ["Each tool is a shell command; `<command> --help` says more.",
-                  ""]
+        lines += [
+            "Each tool is a shell command; `<command> --help` says more.", ""
+        ]
     for cli in clis:
         for tool in cli["tools"]:
             params = tool["parameters"].get("properties") or {}
             required = set(tool["parameters"].get("required") or [])
-            usage = " ".join([cli["name"], tool["name"].replace("_", "-")] + [
-                flag(p, s, p in required) for p, s in params.items()
-            ])
+            usage = " ".join(
+                [cli["name"], tool["name"].replace("_", "-")] +
+                [flag(p, s, p in required) for p, s in params.items()])
             lines.append(f"- `{usage}`: {tool['description'] or ''}".rstrip())
     return "\n".join(lines).rstrip("\n") + "\n"
 
@@ -296,7 +338,8 @@ def toml_string(value: str) -> str:
 
 def task_toml(task: dict) -> str:
     tags = ", ".join(toml_string(t) for t in task.get("tags") or [])
-    timeout = float((task.get("environment") or {}).get("timeout_seconds", 600))
+    timeout = float((task.get("environment")
+                     or {}).get("timeout_seconds", 600))
     return f"""version = "1.0"
 
 [metadata]
@@ -335,17 +378,21 @@ def upstream_list(task: dict, name: str, var: str, default: str) -> list:
     if service is None:
         return []
     env = service.get("env") or {}
-    return json.loads((UPSTREAM / env.get(var, f"tasks/{default}")).read_text())
+    return json.loads(
+        (UPSTREAM / env.get(var, f"tasks/{default}")).read_text())
 
 
 def gws_seed(task: dict) -> dict:
     """The task's gmail and calendar fixtures, as upstream's services load
     them (the verifier reads them, tests/gws_seed.json)."""
     return {
-        "gmail": upstream_list(task, "gmail", "GMAIL_FIXTURES",
-                               "T001zh_email_triage/fixtures/gmail/inbox.json"),
-        "calendar": upstream_list(task, "calendar", "CALENDAR_FIXTURES",
-                                  "T003zh_calendar_scheduling/fixtures/calendar/events.json"),
+        "gmail":
+        upstream_list(task, "gmail", "GMAIL_FIXTURES",
+                      "T001zh_email_triage/fixtures/gmail/inbox.json"),
+        "calendar":
+        upstream_list(
+            task, "calendar", "CALENDAR_FIXTURES",
+            "T003zh_calendar_scheduling/fixtures/calendar/events.json"),
     }
 
 
@@ -366,17 +413,24 @@ def epoch(task: dict) -> str:
     if seed["gmail"]:
         at = max(iso(e["date"]) for e in seed["gmail"]) + timedelta(days=1)
     elif seed["calendar"]:
-        at = min(iso(e["start_time"]) for e in seed["calendar"]) - timedelta(days=1)
+        at = min(iso(e["start_time"])
+                 for e in seed["calendar"]) - timedelta(days=1)
     else:
         return EPOCH
     return at.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 # Upstream's labels that are Gmail's system labels, by upstream's spelling.
-SYSTEM_LABELS = {"inbox": "INBOX", "important": "IMPORTANT", "spam": "SPAM",
-                 "category_updates": "CATEGORY_UPDATES"}
-LABELS = ["INBOX", "SENT", "DRAFT", "UNREAD", "IMPORTANT", "STARRED", "TRASH",
-          "SPAM", "CATEGORY_UPDATES"]
+SYSTEM_LABELS = {
+    "inbox": "INBOX",
+    "important": "IMPORTANT",
+    "spam": "SPAM",
+    "category_updates": "CATEGORY_UPDATES"
+}
+LABELS = [
+    "INBOX", "SENT", "DRAFT", "UNREAD", "IMPORTANT", "STARRED", "TRASH",
+    "SPAM", "CATEGORY_UPDATES"
+]
 
 
 def attendee(name: str) -> dict:
@@ -396,8 +450,12 @@ def gws_fixture(task: dict) -> bytes:
     messages and its calendar fixture as the primary calendar's events,
     each under upstream's id."""
     seed = gws_seed(task)
-    labels = [{"id": l, "name": l, "type": "system"} for l in LABELS]
-    names = {l.lower(): l for l in LABELS}
+    labels = [{
+        "id": label_id,
+        "name": label_id,
+        "type": "system"
+    } for label_id in LABELS]
+    names = {label_id.lower(): label_id for label_id in LABELS}
     messages = []
     for email in seed["gmail"]:
         ids = []
@@ -414,20 +472,44 @@ def gws_fixture(task: dict) -> bytes:
             ids.append("UNREAD")
         at = iso(email["date"])
         messages.append({
-            "id": email["message_id"],
-            "threadId": email["message_id"],
-            "internalDate": int(at.timestamp() * 1000),
-            "bodyText": email["body"],
+            "id":
+            email["message_id"],
+            "threadId":
+            email["message_id"],
+            "internalDate":
+            int(at.timestamp() * 1000),
+            "bodyText":
+            email["body"],
             "headers": [
-                {"name": "From", "value": email["from"]},
-                {"name": "To", "value": email["to"]},
-                {"name": "Subject", "value": email["subject"]},
-                {"name": "Date", "value": format_datetime(at)},
+                {
+                    "name": "From",
+                    "value": email["from"]
+                },
+                {
+                    "name": "To",
+                    "value": email["to"]
+                },
+                {
+                    "name": "Subject",
+                    "value": email["subject"]
+                },
+                {
+                    "name": "Date",
+                    "value": format_datetime(at)
+                },
             ],
-            "labels": [{"labelId": i} for i in dict.fromkeys(ids)],
+            "labels": [{
+                "labelId": i
+            } for i in dict.fromkeys(ids)],
         })
-    out: dict = {"labels": labels, "messages": messages,
-                 "counters": [{"kind": "msg", "n": len(messages)}]}
+    out: dict = {
+        "labels": labels,
+        "messages": messages,
+        "counters": [{
+            "kind": "msg",
+            "n": len(messages)
+        }]
+    }
     if "calendar" in uses(task):
         zone = calendar_zone(seed["calendar"])
         created = epoch(task).replace("Z", ".000Z")
@@ -440,24 +522,47 @@ def gws_fixture(task: dict) -> bytes:
                 if match:
                     match[0]["organizer"] = True
                 else:
-                    people.insert(0, {**attendee(organizer), "organizer": True})
+                    people.insert(0, {
+                        **attendee(organizer), "organizer": True
+                    })
             event = {
-                "id": e["event_id"],
-                "status": "tentative" if e.get("status") == "tentative" else "confirmed",
-                "summary": e["title"],
-                **({"description": e["description"]} if e.get("description") else {}),
-                **({"location": e["location"]} if e.get("location") else {}),
-                "startDateTime": e["start_time"],
-                "startTimeZone": zone,
-                "endDateTime": e["end_time"],
-                "endTimeZone": zone,
-                **({"attendees": json.dumps(people, ensure_ascii=False)} if people else {}),
-                "created": created,
-                "updated": created,
+                "id":
+                e["event_id"],
+                "status":
+                "tentative" if e.get("status") == "tentative" else "confirmed",
+                "summary":
+                e["title"],
+                **({
+                    "description": e["description"]
+                } if e.get("description") else {}),
+                **({
+                    "location": e["location"]
+                } if e.get("location") else {}),
+                "startDateTime":
+                e["start_time"],
+                "startTimeZone":
+                zone,
+                "endDateTime":
+                e["end_time"],
+                "endTimeZone":
+                zone,
+                **({
+                    "attendees": json.dumps(people, ensure_ascii=False)
+                } if people else {}),
+                "created":
+                created,
+                "updated":
+                created,
             }
             events.append(event)
-        out["calendars"] = [{"id": PRIMARY, "summary": "me@company.com", "timeZone": zone,
-                             "accessRole": "owner", "primary": True, "events": events}]
+        out["calendars"] = [{
+            "id": PRIMARY,
+            "summary": "me@company.com",
+            "timeZone": zone,
+            "accessRole": "owner",
+            "primary": True,
+            "events": events
+        }]
         out["counters"].append({"kind": "event", "n": len(events)})
     return (json.dumps(out, ensure_ascii=False, indent=1) + "\n").encode()
 
@@ -485,31 +590,54 @@ def mirage_yaml(task: dict) -> str:
         }
     used = uses(task)
     if used:
-        spec["fakes"]["gws"] = {"fixture": "kit/gws.json", "epoch": at,
-                                "state": GWS_STATE}
+        spec["fakes"]["gws"] = {
+            "fixture": "kit/gws.json",
+            "epoch": at,
+            "state": GWS_STATE
+        }
     if task.get("sandbox_files"):
         spec["copy"] = {"/workspace": "workspace/"}
     clis = tools(task)
     if clis:
         spec["tools"] = {"file": "tools.json", "dispatches": DISPATCHES}
     # Upstream's model reaches the services through their tools alone.
-    workspace: dict = {"profiles": {"default": {"commands": {"deny": [{
-        "commands": ["curl", "wget"],
-        "reason": "the services are reached through their tools",
-    }]}}}}
+    workspace: dict = {
+        "profiles": {
+            "default": {
+                "commands": {
+                    "deny": [{
+                        "commands": ["curl", "wget"],
+                        "reason":
+                        "the services are reached through their tools",
+                    }]
+                }
+            }
+        }
+    }
     gws = {"accessToken": GWS_TOKEN, "apiBase": "${GWS_URL}"}
     if used:
         workspace["mounts"] = {}
         if "gmail" in used:
-            workspace["mounts"]["/gmail"] = {"vfs": "gmail", "mode": "read",
-                                             "config": dict(gws)}
+            workspace["mounts"]["/gmail"] = {
+                "vfs": "gmail",
+                "mode": "read",
+                "config": dict(gws)
+            }
         if "calendar" in used:
             workspace["mounts"]["/calendar"] = {
-                "vfs": "gcal", "mode": "read",
-                "config": {**gws, "today": at[:10]}}
+                "vfs": "gcal",
+                "mode": "read",
+                "config": {
+                    **gws, "today": at[:10]
+                }
+            }
     workspace["clis"] = {
-        cli["name"]: {"cli": cli["name"],
-                      "config": {"url": "${" + fake(cli["service"]).upper() + "_URL}"}}
+        cli["name"]: {
+            "cli": cli["name"],
+            "config": {
+                "url": "${" + fake(cli["service"]).upper() + "_URL}"
+            }
+        }
         for cli in clis
     }
     if used:
@@ -522,24 +650,33 @@ def mirage_yaml(task: dict) -> str:
         "/opt/claweval/site": "${STATE}/harbor/site/claweval",
     }
     for task_id in [task["task_id"], *peers(task["task_id"])]:
-        copy[f"/opt/claweval/tasks/{task_id}"] = f"${{STATE}}/claweval/src/tasks/{task_id}"
+        source = f"${{STATE}}/claweval/src/tasks/{task_id}"
+        copy[f"/opt/claweval/tasks/{task_id}"] = source
     spec["verifier"] = {"copy": copy, "egress": ["OPENAI_BASE_URL"]}
-    head = [f"# {task['task_id']}, on vfsbench_harbor's mirage environment "
-            "(harbor/claweval.py writes it).", "#",
-            "# Each service is its kit fake at upstream's port, its tools CLIs",
-            "# (harbor/tools.ts), and the verifier's VM gets upstream's grader and",
-            "# the judge's host (claweval_grade.py)."]
+    head = [
+        f"# {task['task_id']}, on vfsbench_harbor's mirage environment "
+        "(harbor/claweval.py writes it).", "#",
+        "# Each service is its kit fake at upstream's port, its tools CLIs",
+        "# (harbor/tools.ts), and the verifier's VM gets upstream's grader "
+        "and", "# the judge's host (claweval_grade.py)."
+    ]
     if used:
-        head += ["#",
-                 "# Gmail and calendar are Mirage's gws fake: the /gmail and /calendar",
-                 "# mounts and the gws CLI, at this trial's run of it, with upstream's",
-                 "# fixtures under upstream's ids; gws-integ-token is the fake's own",
-                 "# credential. Its SQLite is what the verifier reads them from."]
+        head += [
+            "#", "# Gmail and calendar are Mirage's gws fake: the /gmail and "
+            "/calendar",
+            "# mounts and the gws CLI, at this trial's run of it, with "
+            "upstream's",
+            "# fixtures under upstream's ids; gws-integ-token is the fake's "
+            "own",
+            "# credential. Its SQLite is what the verifier reads them from."
+        ]
         if has_draft(task):
-            head += ["# gws has no drafts, so gmail_save_draft is upstream's tool, at",
-                     "# upstream's gmail port (mocks/claweval_gmail)."]
-    return "\n".join(head) + "\n" + yaml.safe_dump(spec, sort_keys=False,
-                                                   allow_unicode=True)
+            head += [
+                "# gws has no drafts, so gmail_save_draft is upstream's tool, "
+                "at", "# upstream's gmail port (mocks/claweval_gmail)."
+            ]
+    return "\n".join(head) + "\n" + yaml.safe_dump(
+        spec, sort_keys=False, allow_unicode=True)
 
 
 def peers(task_id: str) -> list[str]:
@@ -562,7 +699,8 @@ def expected(task_id: str) -> dict[str, bytes]:
     task = yaml.safe_load((source / "task.yaml").read_text())
     for service in task["services"]:
         name = service["name"]
-        if name not in SERVICES and name not in GWS and not name.startswith("ocr"):
+        if name not in SERVICES and name not in GWS and not name.startswith(
+                "ocr"):
             raise ValueError(f"{task_id}: no kit fake for {name}")
     out = {
         "instruction.md": instruction(task).encode(),
@@ -573,16 +711,22 @@ def expected(task_id: str) -> dict[str, bytes]:
     }
     clis = tools(task)
     if clis:
-        listed = [{k: v for k, v in cli.items() if k != "service"} for cli in clis]
+        listed = [{
+            k: v
+            for k, v in cli.items() if k != "service"
+        } for cli in clis]
         out["environment/tools.json"] = (
             json.dumps(listed, ensure_ascii=False, indent=1) + "\n").encode()
     for name, service in kit_fakes(task):
         out[f"environment/kit/{name}.json"] = fixture(task, service)
     if uses(task):
         out["environment/kit/gws.json"] = gws_fixture(task)
-        out["tests/gws_seed.json"] = (json.dumps(
-            {**gws_seed(task), "epoch": epoch(task)}, ensure_ascii=False,
-            indent=1) + "\n").encode()
+        out["tests/gws_seed.json"] = (
+            json.dumps({
+                **gws_seed(task), "epoch": epoch(task)
+            },
+                       ensure_ascii=False,
+                       indent=1) + "\n").encode()
     for path in task.get("sandbox_files") or []:
         found = [p for p in (source / path, UPSTREAM / path) if p.is_file()]
         if not found:
@@ -596,8 +740,10 @@ def expected(task_id: str) -> dict[str, bytes]:
 def site() -> int:
     """The grader's packages for the VM: CPython 3.12 on Linux, the host's
     architecture, as msb boots its image."""
-    arch = {"arm64": "aarch64", "aarch64": "aarch64"}.get(platform.machine(),
-                                                         "x86_64")
+    arch = {
+        "arm64": "aarch64",
+        "aarch64": "aarch64"
+    }.get(platform.machine(), "x86_64")
     return subprocess.run([
         "uv", "pip", "install", "--quiet", "--target",
         str(SITE), "--python-version", "3.12", "--python-platform",

@@ -97,8 +97,10 @@ def steps() -> list[dict]:
     if not TRAJECTORY.is_file():
         print(f"no trajectory at {TRAJECTORY}: the agent wrote none")
         return []
-    return [s for s in json.loads(TRAJECTORY.read_text()).get("steps", [])
-            if s.get("source") == "agent"]
+    return [
+        s for s in json.loads(TRAJECTORY.read_text()).get("steps", [])
+        if s.get("source") == "agent"
+    ]
 
 
 def messages(prompt: str) -> list[dict]:
@@ -117,22 +119,36 @@ def messages(prompt: str) -> list[dict]:
         if text:
             add("assistant", {"type": "text", "text": text})
         for call in step.get("tool_calls") or []:
-            add("assistant", {"type": "tool_use", "id": call["tool_call_id"],
-                              "name": call["function_name"],
-                              "input": call.get("arguments") or {}})
+            add(
+                "assistant", {
+                    "type": "tool_use",
+                    "id": call["tool_call_id"],
+                    "name": call["function_name"],
+                    "input": call.get("arguments") or {}
+                })
         for result in (step.get("observation") or {}).get("results", []):
-            add("user", {"type": "tool_result",
-                         "tool_use_id": result.get("source_call_id") or "",
-                         "content": [{"type": "text",
-                                      "text": text_of(result.get("content"))}],
-                         "is_error": False})
+            add(
+                "user", {
+                    "type":
+                    "tool_result",
+                    "tool_use_id":
+                    result.get("source_call_id") or "",
+                    "content": [{
+                        "type": "text",
+                        "text": text_of(result.get("content"))
+                    }],
+                    "is_error":
+                    False
+                })
     return out
 
 
 def results() -> list[str]:
     """What each of the agent's tool calls returned, in order."""
-    return [text_of(r.get("content")) for step in steps()
-            for r in (step.get("observation") or {}).get("results", [])]
+    return [
+        text_of(r.get("content")) for step in steps()
+        for r in (step.get("observation") or {}).get("results", [])
+    ]
 
 
 def text_of(content) -> str:
@@ -141,15 +157,17 @@ def text_of(content) -> str:
         return ""
     if isinstance(content, str):
         return content
-    return "\n".join(part.get("text", "") for part in content
-                     if part.get("type") == "text")
+    return "\n".join(
+        part.get("text", "") for part in content if part.get("type") == "text")
 
 
 def dispatches() -> list[dict]:
     if not DISPATCHES.is_file():
         return []
-    return [json.loads(line) for line in DISPATCHES.read_text().splitlines()
-            if line]
+    return [
+        json.loads(line) for line in DISPATCHES.read_text().splitlines()
+        if line
+    ]
 
 
 def flat(text: str) -> str:
@@ -187,17 +205,23 @@ class Trace:
             "timestamp": stamp,
         })
         self.calls[tool.split("_")[0]].append({
-            "endpoint": re.sub(r"^https?://[^/]+", "", url),
-            "request_body": request,
-            "response_body": response,
-            "timestamp": stamp,
+            "endpoint":
+            re.sub(r"^https?://[^/]+", "", url),
+            "request_body":
+            request,
+            "response_body":
+            response,
+            "timestamp":
+            stamp,
         })
 
 
 def summary(email: dict) -> dict:
     """An email as upstream's `list_messages` lists it."""
-    return {k: email[k] for k in ("message_id", "from", "subject", "date",
-                                  "is_read", "labels")}
+    return {
+        k: email[k]
+        for k in ("message_id", "from", "subject", "date", "is_read", "labels")
+    }
 
 
 def reads(trace: Trace, seed: dict, shown: list[str]) -> None:
@@ -210,9 +234,13 @@ def reads(trace: Trace, seed: dict, shown: list[str]) -> None:
         body = flat(text)
         listed = [e for e in emails if e["message_id"] in text]
         if listed:
-            trace.add("gmail_list_messages", {"days_back": 7, "max_results": 20},
-                      {"messages": [summary(e) for e in listed],
-                       "total": len(listed)})
+            trace.add("gmail_list_messages", {
+                "days_back": 7,
+                "max_results": 20
+            }, {
+                "messages": [summary(e) for e in listed],
+                "total": len(listed)
+            })
         for email in emails:
             key = flat(email["body"])[:BODY_KEY]
             if email["message_id"] not in got and key and key in body:
@@ -225,16 +253,28 @@ def reads(trace: Trace, seed: dict, shown: list[str]) -> None:
                             key=lambda e: e["start_time"])
             if day not in days:
                 days.add(day)
-                trace.add("calendar_list_events", {"date": day, "days": 1},
-                          {"events": on_day, "total": len(on_day)})
-            for user in dict.fromkeys(a for e in seen if e["start_time"][:10] == day
+                trace.add("calendar_list_events", {
+                    "date": day,
+                    "days": 1
+                }, {
+                    "events": on_day,
+                    "total": len(on_day)
+                })
+            for user in dict.fromkeys(a for e in seen
+                                      if e["start_time"][:10] == day
                                       for a in e.get("attendees", [])):
                 if (user, day) in users:
                     continue
                 users.add((user, day))
                 theirs = [e for e in on_day if user in e.get("attendees", [])]
-                trace.add("calendar_get_user_events", {"user": user, "date": day},
-                          {"events": theirs, "total": len(theirs), "user": user})
+                trace.add("calendar_get_user_events", {
+                    "user": user,
+                    "date": day
+                }, {
+                    "events": theirs,
+                    "total": len(theirs),
+                    "user": user
+                })
 
 
 def writes(trace: Trace, seed: dict) -> tuple[list, list, list]:
@@ -254,22 +294,39 @@ def writes(trace: Trace, seed: dict) -> tuple[list, list, list]:
         for row in db.execute('SELECT messageId, labelId FROM "MessageLabel"'):
             labels.setdefault(row["messageId"], set()).add(row["labelId"])
         headers: dict[str, dict] = {}
-        for row in db.execute('SELECT messageId, name, value FROM "MessageHeader" ORDER BY seq, pk'):
-            headers.setdefault(row["messageId"], {}).setdefault(row["name"].lower(), row["value"])
-        for row in db.execute('SELECT id, internalDate, bodyText FROM "Message" ORDER BY internalDate, seq'):
+        for row in db.execute(
+                'SELECT messageId, name, value FROM "MessageHeader" ORDER BY '
+                'seq, pk'):
+            headers.setdefault(row["messageId"],
+                               {}).setdefault(row["name"].lower(),
+                                              row["value"])
+        for row in db.execute(
+                'SELECT id, internalDate, bodyText FROM "Message" ORDER BY '
+                'internalDate, seq'):
             mine = labels.get(row["id"], set())
             if row["id"] in seeded or "SENT" not in mine or "DRAFT" in mine:
                 continue
             head = headers.get(row["id"], {})
-            request = {"to": head.get("to", ""), "subject": head.get("subject", ""),
-                       "body": row["bodyText"]}
-            message = {**request, "timestamp": datetime.fromtimestamp(
-                int(row["internalDate"]) / 1000, timezone.utc).isoformat()}
+            request = {
+                "to": head.get("to", ""),
+                "subject": head.get("subject", ""),
+                "body": row["bodyText"]
+            }
+            message = {
+                **request, "timestamp":
+                datetime.fromtimestamp(
+                    int(row["internalDate"]) / 1000, timezone.utc).isoformat()
+            }
             sent.append(message)
-            trace.add("gmail_send_message", request, {"status": "sent", "message": message})
+            trace.add("gmail_send_message", request, {
+                "status": "sent",
+                "message": message
+            })
         live = {}
-        if db.execute("SELECT 1 FROM sqlite_master WHERE name = 'Event'").fetchone():
-            for row in db.execute('SELECT * FROM "Event" ORDER BY created, seq'):
+        if db.execute(
+                "SELECT 1 FROM sqlite_master WHERE name = 'Event'").fetchone():
+            for row in db.execute(
+                    'SELECT * FROM "Event" ORDER BY created, seq'):
                 live[row["id"]] = row
         fixture = {e["event_id"]: e for e in seed["calendar"]}
         for event_id, row in live.items():
@@ -277,22 +334,33 @@ def writes(trace: Trace, seed: dict) -> tuple[list, list, list]:
                 continue
             people = json.loads(row["attendees"]) if row["attendees"] else []
             request = {
-                "title": row["summary"] or "",
-                "start_time": row["startDateTime"] or row["startDate"] or "",
-                "end_time": row["endDateTime"] or row["endDate"] or "",
-                "attendees": [p.get("email") or p.get("displayName") or ""
-                              for p in people if isinstance(p, dict)],
-                "location": row["location"] or "",
+                "title":
+                row["summary"] or "",
+                "start_time":
+                row["startDateTime"] or row["startDate"] or "",
+                "end_time":
+                row["endDateTime"] or row["endDate"] or "",
+                "attendees": [
+                    p.get("email") or p.get("displayName") or ""
+                    for p in people if isinstance(p, dict)
+                ],
+                "location":
+                row["location"] or "",
             }
             event = {"event_id": event_id, **request, "recurring": False}
             created.append(event)
-            trace.add("calendar_create_event", request, {"status": "created", "event": event})
+            trace.add("calendar_create_event", request, {
+                "status": "created",
+                "event": event
+            })
         for event_id, event in fixture.items():
             row = live.get(event_id)
             if row is None or row["status"] == "cancelled":
                 deleted.append(event)
-                trace.add("calendar_delete_event", {"event_id": event_id},
-                          {"status": "deleted", "event": event})
+                trace.add("calendar_delete_event", {"event_id": event_id}, {
+                    "status": "deleted",
+                    "event": event
+                })
     finally:
         db.close()
     return sent, created, deleted
@@ -311,11 +379,17 @@ def gws_trace(task, audit: dict) -> list[dict]:
     sent, created, deleted = writes(trace, seed)
     if "gmail" in used:
         drafts = audit.get("gmail", {})
-        audit["gmail"] = {"calls": drafts.get("calls", []) + trace.calls["gmail"],
-                          "sent": sent, "drafts": drafts.get("drafts", [])}
+        audit["gmail"] = {
+            "calls": drafts.get("calls", []) + trace.calls["gmail"],
+            "sent": sent,
+            "drafts": drafts.get("drafts", [])
+        }
     if "calendar" in used:
-        audit["calendar"] = {"calls": trace.calls["calendar"], "deleted": deleted,
-                             "created_events": created}
+        audit["calendar"] = {
+            "calls": trace.calls["calendar"],
+            "deleted": deleted,
+            "created_events": created
+        }
     return trace.dispatches
 
 
@@ -368,9 +442,9 @@ def main() -> int:
             super().__init__(model_id=os.environ.get("JUDGE_MODEL")
                              or JUDGE_MODEL,
                              api_key=os.environ["OPENAI_API_KEY"],
-                             base_url=ipv4(os.environ.get(
-                                 "OPENAI_BASE_URL",
-                                 "https://api.openai.com/v1")))
+                             base_url=ipv4(
+                                 os.environ.get("OPENAI_BASE_URL",
+                                                "https://api.openai.com/v1")))
             self._use_gemini = False
 
         def evaluate(self, *args, **kwargs):
@@ -391,12 +465,14 @@ def main() -> int:
     task_dir = tasks / task_id
     task = TaskDefinition.from_yaml(str(task_dir / "task.yaml"))
     trace = dict(trace_id=task_id)
-    trace_messages = [TraceMessage(**trace, message=m)
-                      for m in messages(task.prompt.text)]
+    trace_messages = [
+        TraceMessage(**trace, message=m) for m in messages(task.prompt.text)
+    ]
     audit_data = audit(task)
     built = gws_trace(task, audit_data)
-    trace_dispatches = [ToolDispatch(**trace, **d)
-                        for d in dispatches() + built]
+    trace_dispatches = [
+        ToolDispatch(**trace, **d) for d in dispatches() + built
+    ]
     # Upstream's constructor prints the Gemini route this judge leaves.
     with contextlib.redirect_stdout(io.StringIO()):
         judge = Judge()
@@ -406,8 +482,7 @@ def main() -> int:
         kwargs = dict(audit_data=audit_data, judge=judge)
         if "media_events" in inspect.signature(grader.grade).parameters:
             kwargs["media_events"] = []
-        scores = grader.grade(trace_messages, trace_dispatches, task,
-                              **kwargs)
+        scores = grader.grade(trace_messages, trace_dispatches, task, **kwargs)
     score = compute_task_score(scores)
     parts = scores.model_dump()
     VERIFIER.mkdir(parents=True, exist_ok=True)
@@ -431,7 +506,8 @@ def main() -> int:
             indent=1))
     print(printed.getvalue())
     for d in built:
-        print(f"gws: {d['tool_name']} {json.dumps(d['request_body'], ensure_ascii=False)[:160]}")
+        print(f"gws: {d['tool_name']} "
+              f"{json.dumps(d['request_body'], ensure_ascii=False)[:160]}")
     print(f"Score: {score} (pass at 0.75: {is_pass(score)})")
     return 0
 

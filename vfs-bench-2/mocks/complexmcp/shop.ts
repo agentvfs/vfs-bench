@@ -366,4 +366,3 @@ export const LightShop: App<ShopSession, ShopData> = {
     trans_history: clone(s.d.trans_history),
   }),
 }
-

@@ -25,6 +25,12 @@ Each CLI reaches its model through the trial's gateway (gateway.py), its
 HTTPS proxy, which tells the model the run's date, as the workspace and
 services have it, in place of the host's.
 
+Neither CLI's tools go through ``MirageEnvironment.exec``, which brings
+the workspace's copies of the services' state files up to date before
+each command. So while a CLI runs, the copies are brought up to date
+first and then every ``STATE_REFRESH`` seconds: a command sees the
+services' state as it was at most that long before it ran.
+
 Everything else is Harbor's: each agent's ``run()`` builds its config,
 auth and command line as it does in a container, and its trajectory is
 Harbor's ATIF from the CLI's own session logs. ``run()`` is handed a
@@ -34,10 +40,12 @@ container paths the agent uses mapped to directories of the trial's and
 ``~/.claude`` (config, skills, memory, MCP servers) never reach a trial.
 """
 import asyncio
+import contextlib
 import json
 import os
 import re
 import shutil
+import tempfile
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
@@ -58,24 +66,35 @@ CODEX_OFF = ("apps", "browser_use", "browser_use_external",
              "browser_use_full_cdp_access", "computer_use", "image_generation",
              "in_app_browser", "plugins", "remote_plugin")
 
-# The hosts each CLI reaches its model at, whose requests the gateway gives
-# the run's date; a base URL Harbor resolves adds its own.
-CODEX_HOSTS = {"chatgpt.com", "api.openai.com"}
-CLAUDE_HOSTS = {"api.anthropic.com"}
+# The endpoints each CLI reaches its model at, as (host, port, tls), whose
+# requests the gateway gives the run's date; a base URL Harbor resolves
+# adds its own.
+CODEX_HOSTS = {("chatgpt.com", 443, True), ("api.openai.com", 443, True)}
+CLAUDE_HOSTS = {("api.anthropic.com", 443, True)}
+
+# Seconds between refreshes of the workspace's copies of the services'
+# state files while a CLI runs.
+STATE_REFRESH = 1.0
 
 # The container paths Harbor's codex and claude-code agents write, each a
 # directory of the trial's on the host.
-MAPPED = ("/installed-agent", "/tmp/codex-secrets", "/tmp/claude-code-settings",
-          EnvironmentPaths.agent_dir.as_posix())
+MAPPED = ("/installed-agent", "/tmp/codex-secrets",
+          "/tmp/claude-code-settings", EnvironmentPaths.agent_dir.as_posix())
 
 
 class _Host:
     """The container a Harbor agent expects, as the host: ``exec`` runs a
     command in bash on the host, and ``upload_file`` copies a file, each
-    with the container paths in ``MAPPED`` rewritten to the trial's
-    directories, in the command, its environment and its paths. ``HOME`` is
-    the trial's own, ``env`` is added to every command's environment, and
-    the agent runs from an empty directory of its own."""
+    with the container paths in ``MAPPED`` rewritten to directories of the
+    agent's, in the command, its environment and its paths. ``HOME`` is
+    the agent's own, ``env`` is added to every command's environment, and
+    the agent runs from an empty directory of its own.
+
+    Those directories are under a temporary one, not the trial's: a CLI
+    tells its model where it runs (Claude Code its working directory and
+    memory, Codex its skills), and the trial's path holds the job's date
+    and name. ``finish()`` moves them into the trial's: the container's
+    ``/logs/agent`` into ``agent_dir``, the rest into ``root``."""
 
     default_user = None
 
@@ -83,17 +102,16 @@ class _Host:
                  root: Path,
                  agent_dir: Path,
                  env: dict[str, str] | None = None):
+        self.trial, self.agent_dir = root.resolve(), agent_dir.resolve()
         # Absolute: the agent's commands run from a directory of their own.
-        root, agent_dir = root.resolve(), agent_dir.resolve()
-        self.root = root
-        self.home = root / "home"
+        self.root = Path(tempfile.mkdtemp(prefix="vfsbench-agent-")).resolve()
+        self.home = self.root / "home"
         self.env = env or {}
-        self.cwd = root / "cwd"
+        self.cwd = self.root / "cwd"
         for directory in (self.home, self.cwd):
             directory.mkdir(parents=True, exist_ok=True)
         self.paths = {
-            path: (agent_dir if path == MAPPED[-1] else root /
-                   path.strip("/").replace("/", "-"))
+            path: self.root / path.strip("/").replace("/", "-")
             for path in MAPPED
         }
         for host in self.paths.values():
@@ -103,9 +121,8 @@ class _Host:
 
     def host(self, path: str) -> str:
         """A path the agent names, on the host."""
-        return re.sub(
-            "|".join(re.escape(p) + r"(?=/|\b|$)" for p in MAPPED),
-            lambda m: str(self.paths[m.group(0)]), path)
+        return re.sub("|".join(re.escape(p) + r"(?=/|\b|$)" for p in MAPPED),
+                      lambda m: str(self.paths[m.group(0)]), path)
 
     async def exec(self,
                    command: str,
@@ -121,8 +138,10 @@ class _Host:
             env={
                 **os.environ, "HOME": str(self.home),
                 **self.env,
-                **{k: self.host(v)
-                   for k, v in (env or {}).items()}
+                **{
+                    k: self.host(v)
+                    for k, v in (env or {}).items()
+                }
             },
             stdin=asyncio.subprocess.DEVNULL,
             stdout=asyncio.subprocess.PIPE,
@@ -148,13 +167,56 @@ class _Host:
     async def upload_dir(self, source_dir: Path | str, target_dir: str):
         shutil.copytree(source_dir, self.host(target_dir), dirs_exist_ok=True)
 
+    def finish(self) -> None:
+        """The agent's directories moved into the trial's, where Harbor
+        reads its logs once ``run()`` returns."""
+        logs = self.paths[MAPPED[-1]]
+        if logs.exists():
+            shutil.copytree(logs,
+                            self.agent_dir,
+                            symlinks=True,
+                            dirs_exist_ok=True)
+            shutil.rmtree(logs)
+        shutil.copytree(self.root,
+                        self.trial,
+                        symlinks=True,
+                        dirs_exist_ok=True)
+        shutil.rmtree(self.root, ignore_errors=True)
 
-def _hosts(base_url: str | None) -> set[str]:
-    host = urlsplit(base_url).hostname if base_url else None
-    return {host} if host else set()
+
+def _hosts(base_url: str | None) -> set[tuple[str, int, bool]]:
+    """A base URL's endpoint, as ``(host, port, tls)``."""
+    if not base_url:
+        return set()
+    url = urlsplit(base_url)
+    if not url.hostname:
+        return set()
+    tls = url.scheme == "https"
+    return {(url.hostname, url.port or (443 if tls else 80), tls)}
 
 
-async def _gateway(hosts: set[str], environment: MirageEnvironment,
+@contextlib.asynccontextmanager
+async def _fresh_state(environment: MirageEnvironment):
+    """The workspace's copies of the services' state files brought up to
+    date now, and every ``STATE_REFRESH`` seconds until the block ends."""
+    await environment.refresh_state()
+
+    async def refresh() -> None:
+        while True:
+            await asyncio.sleep(STATE_REFRESH)
+            await environment.refresh_state()
+
+    task = asyncio.create_task(refresh())
+    try:
+        yield
+    finally:
+        task.cancel()
+        with contextlib.suppress(asyncio.CancelledError):
+            await task
+
+
+async def _gateway(hosts: set[tuple[str, int,
+                                    bool]], environment: MirageEnvironment,
                    root: Path, trust: str) -> tuple[Gateway, dict[str, str]]:
     """The trial's gateway, started, and the environment that sends a
     CLI's requests through it: its proxy for every host but the loopback,
@@ -162,10 +224,12 @@ async def _gateway(hosts: set[str], environment: MirageEnvironment,
     the variable ``trust``."""
     gateway = Gateway(hosts, environment, root / "gateway.log")
     proxy = await gateway.start()
+    proxies = ("HTTPS_PROXY", "HTTP_PROXY", "https_proxy", "http_proxy")
     return gateway, {
-        **{name: proxy
-           for name in ("HTTPS_PROXY", "HTTP_PROXY", "https_proxy",
-                        "http_proxy")},
+        **{
+            name: proxy
+            for name in proxies
+        },
         "NO_PROXY": "127.0.0.1",
         "no_proxy": "127.0.0.1",
         trust: str(authority().bundle),
@@ -176,8 +240,9 @@ async def _gateway(hosts: set[str], environment: MirageEnvironment,
 
 def _mirage(environment: BaseEnvironment) -> MirageEnvironment:
     if not isinstance(environment, MirageEnvironment):
-        raise TypeError("this agent runs on vfsbench_harbor:MirageEnvironment, "
-                        f"not {type(environment).__name__}")
+        raise TypeError(
+            "this agent runs on vfsbench_harbor:MirageEnvironment, "
+            f"not {type(environment).__name__}")
     return environment
 
 
@@ -220,9 +285,19 @@ class Codex(HarborCodex):
         config = super()._build_effective_config(openai_base_url)
         config["web_search"] = "disabled"
         # Plain bodies, so the gateway reads the date without decoding.
-        config.setdefault("features", {}).update(
-            {feature: False
-             for feature in CODEX_OFF} | {"enable_request_compression": False})
+        config.setdefault("features",
+                          {}).update({feature: False
+                                      for feature in CODEX_OFF}
+                                     | {"enable_request_compression": False})
+        # No skills: Codex's bundled ones (image generation and the like)
+        # run on the host, and their catalog names their directory under
+        # the trial's, on the host, its date included.
+        config.setdefault("skills", {}).update({
+            "bundled": {
+                "enabled": False
+            },
+            "include_instructions": False
+        })
         return config
 
     def build_cli_flags(self) -> str:
@@ -256,9 +331,11 @@ class Codex(HarborCodex):
             '[[environments]]\nid = "mirage"\nprogram = "ssh"\n'
             f"args = {json.dumps(args)}\n")
         try:
-            await super().run(instruction, host, context)
+            async with _fresh_state(mirage):
+                await super().run(instruction, host, context)
         finally:
             await gateway.close()
+            host.finish()
 
 
 class ClaudeCode(HarborClaudeCode):
@@ -315,6 +392,8 @@ class ClaudeCode(HarborClaudeCode):
             }))
         self._mcp_config = str(config)
         try:
-            await super().run(instruction, host, context)
+            async with _fresh_state(mirage):
+                await super().run(instruction, host, context)
         finally:
             await gateway.close()
+            host.finish()

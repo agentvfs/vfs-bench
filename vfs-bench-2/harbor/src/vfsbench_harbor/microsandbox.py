@@ -632,14 +632,19 @@ class MicrosandboxVerifier(Verifier):
                             str(k): v
                             for k, v in ports.items()
                         },
-                        "tmp": f"{STAGE}/tmp" if "/tmp" in mounts else None,
-                        "command": command,
+                        "tmp":
+                        f"{STAGE}/tmp" if "/tmp" in mounts else None,
+                        "command":
+                        command,
                         # The trial's time, for a verifier that reads the
                         # date (``verifier.clock``): the VM's is the host's.
-                        "now": env.now().timestamp()
+                        "now":
+                        env.now().timestamp()
                         if env.verifier.get("clock") else None,
-                        "pull": pull,
-                        "cwd": env.workdir,
+                        "pull":
+                        pull,
+                        "cwd":
+                        env.workdir,
                         "env": {
                             **env.container_env,
                             **self._env()
@@ -764,7 +769,8 @@ class MicrosandboxVerifier(Verifier):
         hosts: list[str] = []
         for name in spec.get("egress", []):
             if not env.get(name):
-                raise ValueError(f"the verifier reaches ${name}, which is unset")
+                raise ValueError(
+                    f"the verifier reaches ${name}, which is unset")
             url = urlsplit(env[name])
             if url.hostname is None:
                 raise ValueError(f"${name} is not a URL: {env[name]!r}")

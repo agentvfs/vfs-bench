@@ -1,7 +1,9 @@
 """Write the AutomationBench tasks for Harbor on Mirage, or check them.
 
-    uv run --project automationbench python -I harbor/automationbench.py [--check] [task ...]
-    uv run --project automationbench python -I harbor/automationbench.py --site
+    uv run --project automationbench python -I harbor/automationbench.py \
+        [--check] [task ...]
+    uv run --project automationbench python -I harbor/automationbench.py \
+        --site
 
 AutomationBench (zapier/AutomationBench v1.0.6, ``4a8e106``, MIT; the
 package ``automationbench/pyproject.toml`` pins) is 600 public tasks over 47
@@ -46,8 +48,6 @@ unaccounted for. ``--site`` installs the rubric's packages for the VM's
 Linux into ``state/harbor/site/automationbench``.
 """
 import argparse
-import base64
-import copy
 import datetime as _dt
 import enum
 import inspect
@@ -65,16 +65,18 @@ import typing
 import uuid
 from pathlib import Path
 
+# The imports below come after TZ is pinned to UTC, so upstream's modules
+# load on the clock they run on (hence the E402 noqas).
 os.environ["TZ"] = "UTC"
 time.tzset()
 
+from automationbench.domains import PUBLIC_DOMAINS  # noqa: E402
+from automationbench.domains import get_domain_dataset  # noqa: E402
+from automationbench.runner import compute_allowed_services  # noqa: E402
+from automationbench.runner import strip_none_values  # noqa: E402
+from automationbench.schema.world import WorldState  # noqa: E402
 from pydantic import BaseModel  # noqa: E402
 from pydantic_core import to_jsonable_python  # noqa: E402
-
-from automationbench.domains import PUBLIC_DOMAINS, get_domain_dataset  # noqa: E402
-from automationbench.runner import (compute_allowed_services,  # noqa: E402
-                                    strip_none_values)
-from automationbench.schema.world import WorldState  # noqa: E402
 
 HARBOR = Path(__file__).resolve().parent
 ROOT = HARBOR.parent
@@ -96,17 +98,22 @@ PORTED: set[str] = {p.stem.removeprefix("app_") for p in MOCK.glob("app_*.ts")}
 # Tasks left out, with why.
 SKIPPED: dict[str, str] = {}
 
-# Tasks with a solution of ours, ``harbor/tasks/automationbench/<task>/solution/solve.sh``.
+# Tasks with a solution of ours,
+# ``harbor/tasks/automationbench/<task>/solution/solve.sh``.
 SOLVED: set[str] = {
     # The pre-Harbor port's eleven (automationbench/<task>/tests/oracle.sh).
-    "finance-invoice-email-extract", "hr-intern-program-coordination",
-    "marketing-event-registration-sync", "operations-docusign-annual-review",
-    "operations-hubspot-ticket-escalation", "operations-safety-certification-gap-analysis",
-    "operations-twilio-facilities-emergency", "sales-competitive-displacement-outreach",
-    "support-gorgias-refund-processing", "support-helpcrunch-usage-alerts",
+    "finance-invoice-email-extract",
+    "hr-intern-program-coordination",
+    "marketing-event-registration-sync",
+    "operations-docusign-annual-review",
+    "operations-hubspot-ticket-escalation",
+    "operations-safety-certification-gap-analysis",
+    "operations-twilio-facilities-emergency",
+    "sales-competitive-displacement-outreach",
+    "support-gorgias-refund-processing",
+    "support-helpcrunch-usage-alerts",
     "support-zoho-freshdesk-escalation",
 }
-
 
 # ---------------------------------------------------------------------------
 # Upstream's world, on the task's clock and seeded ids
@@ -114,7 +121,8 @@ SOLVED: set[str] = {
 
 
 class Clock:
-    """The world's ``now``: its epoch, one second on for each ``api_fetch`` call."""
+    """The world's ``now``: its epoch, one second on for each ``api_fetch``
+    call."""
     epoch = _dt.datetime(2026, 4, 1, 9, tzinfo=_dt.timezone.utc)
     calls = 0
 
@@ -124,7 +132,8 @@ class Clock:
 
 
 class FrozenDatetime(_dt.datetime):
-    """``datetime`` whose ``now()`` is the clock's; a naive ``now()`` is UTC's wall time."""
+    """``datetime`` whose ``now()`` is the clock's; a naive ``now()`` is
+    UTC's wall time."""
 
     @classmethod
     def now(cls, tz=None):
@@ -194,8 +203,10 @@ def freeze() -> None:
 
 
 def epoch_of(info: dict) -> str:
-    """The task's clock: its world's ``meta.current_time``, in UTC, or ``DEFAULT_EPOCH``."""
-    current = ((info.get("initial_state") or {}).get("meta") or {}).get("current_time")
+    """The task's clock: its world's ``meta.current_time``, in UTC, or
+    ``DEFAULT_EPOCH``."""
+    current = ((info.get("initial_state") or {}).get("meta")
+               or {}).get("current_time")
     if not current:
         return DEFAULT_EPOCH
     t = _dt.datetime.fromisoformat(current.replace("Z", "+00:00"))
@@ -205,7 +216,8 @@ def epoch_of(info: dict) -> str:
 
 
 class Upstream:
-    """One task's world, as upstream's ``AutomationBenchEnv`` sets it up, and its tools.
+    """One task's world, as upstream's ``AutomationBenchEnv`` sets it up,
+    and its tools.
 
     The clock is the task's epoch, on by a second for each ``api_fetch``
     call; ``random`` and ``IDS`` are seeded with the task's name before the
@@ -226,11 +238,13 @@ class Upstream:
         initial = strip_none_values(self.info.get("initial_state", {}))
         self.world = WorldState(**initial)
         self.world.meta.allowed_services = compute_allowed_services(
-            initial, self.info.get("assertions", []), self.info.get("zapier_tools", []))
+            initial, self.info.get("assertions", []),
+            self.info.get("zapier_tools", []))
         self._save()
 
     def _tick(self) -> None:
-        Clock.epoch = _dt.datetime.fromisoformat(self.epoch.replace("Z", "+00:00"))
+        Clock.epoch = _dt.datetime.fromisoformat(
+            self.epoch.replace("Z", "+00:00"))
         Clock.calls = self.calls
 
     def _save(self) -> None:
@@ -241,12 +255,17 @@ class Upstream:
         return list(self.world.meta.allowed_services or [])
 
     def dump(self) -> dict:
-        """The world as the fake keeps it: ``meta`` and the services it is subscribed to."""
+        """The world as the fake keeps it: ``meta`` and the services it is
+        subscribed to."""
         whole = self.world.model_dump(mode="json")
-        return {k: v for k, v in whole.items() if k == "meta" or k in self.services()}
+        return {
+            k: v
+            for k, v in whole.items() if k == "meta" or k in self.services()
+        }
 
     def fixture(self) -> dict:
-        """The fake's fixture: the world, and the clock and generators it goes on with."""
+        """The fake's fixture: the world, and the clock and generators it
+        goes on with."""
         meta = {
             "task": self.name,
             "epoch": self.epoch,
@@ -254,13 +273,25 @@ class Upstream:
             "random": list(self.random_state[1]),
             "ids": list(self.ids_state[1]),
         }
-        return {"doc": [{"name": "world", "doc": json.dumps(self.dump())},
-                        {"name": "meta", "doc": json.dumps(meta)}]}
+        return {
+            "doc": [{
+                "name": "world",
+                "doc": json.dumps(self.dump())
+            }, {
+                "name": "meta",
+                "doc": json.dumps(meta)
+            }]
+        }
 
     def call(self, tool: str, arguments: dict) -> str:
-        """A tool call as ``AutomationBenchEnv`` makes it; its text, or the exception's."""
+        """A tool call as ``AutomationBenchEnv`` makes it; its text, or the
+        exception's."""
         function = self.functions[tool]
-        arguments = {k: v for k, v in arguments.items() if not (isinstance(v, dict) and not v)}
+        arguments = {
+            k: v
+            for k, v in arguments.items()
+            if not (isinstance(v, dict) and not v)
+        }
         if "world" in inspect.signature(function).parameters:
             arguments["world"] = self.world
         if tool == "api_fetch":
@@ -277,7 +308,8 @@ class Upstream:
 
 
 def rows() -> dict[str, dict]:
-    """Every public task's row, as its domain's loader returns it, by task name."""
+    """Every public task's row, as its domain's loader returns it, by task
+    name."""
     out = {}
     for domain in PUBLIC_DOMAINS:
         for row in get_domain_dataset(domain):
@@ -288,7 +320,8 @@ def rows() -> dict[str, dict]:
 
 
 def slug(name: str) -> str:
-    """A task name as its directory: ``sales.lead_router`` is ``sales-lead-router``."""
+    """A task name as its directory: ``sales.lead_router`` is
+    ``sales-lead-router``."""
     return name.replace(".", "-").replace("_", "-")
 
 
@@ -305,28 +338,39 @@ def _type(annotation) -> dict:
         return {"k": "union", "of": [_type(a) for a in args]}
     if origin is typing.Annotated:
         return _type(args[0])
-    if origin in (list, typing.List):
+    if origin in (list, list):
         return {"k": "list", "item": _type(args[0]) if args else {"k": "any"}}
-    if origin in (set, typing.Set, frozenset):
+    if origin in (set, set, frozenset):
         return {"k": "set", "item": _type(args[0]) if args else {"k": "any"}}
-    if origin in (dict, typing.Dict):
-        return {"k": "dict", "key": _type(args[0]) if args else {"k": "any"},
-                "value": _type(args[1]) if args else {"k": "any"}}
+    if origin in (dict, dict):
+        return {
+            "k": "dict",
+            "key": _type(args[0]) if args else {
+                "k": "any"
+            },
+            "value": _type(args[1]) if args else {
+                "k": "any"
+            }
+        }
     if origin is typing.Literal:
         return {"k": "literal", "values": list(args)}
     if annotation is typing.Any or annotation is object:
         return {"k": "any"}
-    if annotation in (dict, typing.Dict):
+    if annotation in (dict, dict):
         return {"k": "dict", "key": {"k": "any"}, "value": {"k": "any"}}
-    if annotation in (list, typing.List):
+    if annotation in (list, list):
         return {"k": "list", "item": {"k": "any"}}
-    if annotation in (set, typing.Set):
+    if annotation in (set, set):
         return {"k": "set", "item": {"k": "any"}}
     if inspect.isclass(annotation):
         if issubclass(annotation, BaseModel):
             return {"k": "model", "name": model_key(annotation)}
         if issubclass(annotation, enum.Enum):
-            return {"k": "literal", "values": [m.value for m in annotation], "enum": annotation.__name__}
+            return {
+                "k": "literal",
+                "values": [m.value for m in annotation],
+                "enum": annotation.__name__
+            }
         if issubclass(annotation, bool):
             return {"k": "bool"}
         if issubclass(annotation, _dt.datetime):
@@ -342,8 +386,10 @@ def _type(annotation) -> dict:
 
 
 def model_key(model: type[BaseModel]) -> str:
-    """A model's name in models.json: its module under ``schema`` and its class."""
-    return f"{model.__module__.removeprefix('automationbench.schema.')}.{model.__name__}"
+    """A model's name in models.json: its module under ``schema`` and its
+    class."""
+    module = model.__module__.removeprefix("automationbench.schema.")
+    return f"{module}.{model.__name__}"
 
 
 def _factory(model: type[BaseModel], name: str, factory) -> dict:
@@ -356,8 +402,14 @@ def _factory(model: type[BaseModel], name: str, factory) -> dict:
     qual = getattr(factory, "__qualname__", "")
     if "<lambda>" in qual:
         source = textwrap.dedent(inspect.getsource(factory)).strip()
-        return {"factory": f"lambda:{model_key(model)}.{name}", "source": source}
-    return {"factory": f"{factory.__module__.removeprefix('automationbench.')}.{qual}"}
+        return {
+            "factory": f"lambda:{model_key(model)}.{name}",
+            "source": source
+        }
+    return {
+        "factory":
+        f"{factory.__module__.removeprefix('automationbench.')}.{qual}"
+    }
 
 
 def models_json() -> dict:
@@ -385,25 +437,42 @@ def models_json() -> dict:
             while stack:
                 t = stack.pop()
                 if t["k"] == "model":
-                    todo.append(_model_class(model, t["name"], field.annotation))
-                stack += t.get("of", []) + [t[k] for k in ("item", "key", "value") if k in t]
+                    todo.append(
+                        _model_class(model, t["name"], field.annotation))
+                stack += t.get("of", []) + [
+                    t[k] for k in ("item", "key", "value") if k in t
+                ]
         decorators = model.__pydantic_decorators__
         out[model_key(model)] = {
-            "fields": fields,
-            "extra": model.model_config.get("extra"),
-            "validate_assignment": bool(model.model_config.get("validate_assignment")),
-            "before": [k for k, v in decorators.model_validators.items() if v.info.mode == "before"],
-            "after": [k for k, v in decorators.model_validators.items() if v.info.mode != "before"],
-            "field_validators": {k: list(v.info.fields) for k, v in decorators.field_validators.items()},
+            "fields":
+            fields,
+            "extra":
+            model.model_config.get("extra"),
+            "validate_assignment":
+            bool(model.model_config.get("validate_assignment")),
+            "before": [
+                k for k, v in decorators.model_validators.items()
+                if v.info.mode == "before"
+            ],
+            "after": [
+                k for k, v in decorators.model_validators.items()
+                if v.info.mode != "before"
+            ],
+            "field_validators": {
+                k: list(v.info.fields)
+                for k, v in decorators.field_validators.items()
+            },
         }
     return dict(sorted(out.items()))
 
 
-def _model_class(owner: type[BaseModel], name: str, annotation) -> type[BaseModel]:
+def _model_class(owner: type[BaseModel], name: str,
+                 annotation) -> type[BaseModel]:
     stack = [annotation]
     while stack:
         a = stack.pop()
-        if inspect.isclass(a) and issubclass(a, BaseModel) and model_key(a) == name:
+        if inspect.isclass(a) and issubclass(
+                a, BaseModel) and model_key(a) == name:
             return a
         stack += list(typing.get_args(a))
     raise LookupError(f"{owner.__name__}: no model {name}")
@@ -422,7 +491,9 @@ def endpoints_json() -> dict:
     for api_name, schema in schemas.items():
         for endpoint in schema.get("endpoints", []):
             result = {k: v for k, v in endpoint.items() if k != "path"}
-            result["url"] = search._compute_url(api_name, schema.get("baseUrl", ""), endpoint.get("path", ""))
+            result["url"] = search._compute_url(api_name,
+                                                schema.get("baseUrl", ""),
+                                                endpoint.get("path", ""))
             endpoints[endpoint["id"]] = result
     return {"lines": lines, "endpoints": endpoints}
 
@@ -432,15 +503,22 @@ def tool_schemas() -> list[dict]:
     from automationbench.rubric import create_rubric
     from automationbench.runner import AutomationBenchEnv
     from datasets import Dataset
-    env = AutomationBenchEnv(dataset=Dataset.from_list([{"prompt": [], "answer": "", "info": "{}"}]),
-                             rubric=create_rubric(), toolset="api")
+    env = AutomationBenchEnv(dataset=Dataset.from_list([{
+        "prompt": [],
+        "answer": "",
+        "info": "{}"
+    }]),
+                             rubric=create_rubric(),
+                             toolset="api")
     return [t["function"] for t in env._all_oai_tools]
 
 
 def data_files() -> dict[Path, bytes]:
     return {
-        DATA / "models.json": (json.dumps(models_json(), indent=1) + "\n").encode(),
-        DATA / "endpoints.json": (json.dumps(endpoints_json(), indent=1) + "\n").encode(),
+        DATA / "models.json":
+        (json.dumps(models_json(), indent=1) + "\n").encode(),
+        DATA / "endpoints.json":
+        (json.dumps(endpoints_json(), indent=1) + "\n").encode(),
     }
 
 
@@ -448,47 +526,65 @@ def data_files() -> dict[Path, bytes]:
 # A task's files
 # ---------------------------------------------------------------------------
 
-COMMANDS = {"api_search": "search", "api_fetch": "fetch", "base64_encode": "base64-encode"}
+COMMANDS = {
+    "api_search": "search",
+    "api_fetch": "fetch",
+    "base64_encode": "base64-encode"
+}
 
-TOOLS_INTRO = """## Tools
-
-Your tools are upstream's API tools, as the `api` CLI: `api search`, `api fetch` and
-`api base64-encode` (`api <command> --help` lists each one's flags). Each flag is the
-tool's parameter of the same name: `--params` and `--body` take a JSON string, as
-`params` and `body` do.
-"""
+TOOLS_INTRO = (
+    "## Tools\n"
+    "\n"
+    "Your tools are upstream's API tools, as the `api` CLI: `api search`, "
+    "`api fetch` and\n"
+    "`api base64-encode` (`api <command> --help` lists each one's flags). "
+    "Each flag is the\n"
+    "tool's parameter of the same name: `--params` and `--body` take a JSON "
+    "string, as\n"
+    "`params` and `body` do.\n")
 
 
 def tools_json(schemas: list[dict]) -> list[dict]:
     return [{
-        "name": "api",
-        "description": "AutomationBench's API tools: search the API endpoints, call one, encode text.",
+        "name":
+        "api",
+        "description":
+        "AutomationBench's API tools: search the API endpoints, call one, "
+        "encode text.",
         "tools": [{
             "name": COMMANDS[s["name"]],
             "call": s["name"],
             "description": s["description"],
             "parameters": s["parameters"],
-            "endpoint": {"url": f"http://automationbench/{s['name']}", "method": "POST"},
+            "endpoint": {
+                "url": f"http://automationbench/{s['name']}",
+                "method": "POST"
+            },
         } for s in schemas],
     }]
 
 
 def instruction(row: dict, schemas: list[dict]) -> str:
-    """Upstream's system prompt, the tools as the CLI carries them, then its user message."""
-    system = "\n\n".join(m["content"] for m in row["prompt"] if m["role"] == "system")
-    user = "\n\n".join(m["content"] for m in row["prompt"] if m["role"] == "user")
-    tools = "\n".join(f"- `api {COMMANDS[s['name']]}` ({s['name']}): {s['description'].splitlines()[0]}"
-                      for s in schemas)
+    """Upstream's system prompt, the tools as the CLI carries them, then its
+    user message."""
+    system = "\n\n".join(m["content"] for m in row["prompt"]
+                         if m["role"] == "system")
+    user = "\n\n".join(m["content"] for m in row["prompt"]
+                       if m["role"] == "user")
+    tools = "\n".join(f"- `api {COMMANDS[s['name']]}` ({s['name']}): "
+                      f"{s['description'].splitlines()[0]}" for s in schemas)
     return f"{system}\n\n{TOOLS_INTRO}\n{tools}\n\n## Task\n\n{user}\n"
 
 
 def task_toml(row: dict) -> str:
     info = row["info"]
+    upstream = (f"zapier/AutomationBench@{COMMIT[:7]} {info['task_name']} "
+                f"(example {row['example_id']})")
     return f"""version = "1.0"
 
 [metadata]
 category = "{info['task_name'].split('.')[0]}"
-upstream = "zapier/AutomationBench@{COMMIT[:7]} {info['task_name']} (example {row['example_id']})"
+upstream = "{upstream}"
 
 [verifier]
 # The rubric takes seconds; a hung microVM fails the trial soon, to be rerun.
@@ -509,7 +605,9 @@ allow_internet = false
 
 
 def mirage_yaml(name: str, epoch: str) -> str:
-    return f"""# {name}, on vfsbench_harbor's mirage environment (harbor/automationbench.py writes it).
+    head = (f"# {name}, on vfsbench_harbor's mirage environment "
+            "(harbor/automationbench.py writes it).")
+    return f"""{head}
 #
 # The task's world is the automationbench kit fake (mocks/automationbench),
 # seeded with the world upstream builds for the task (kit/, written from
@@ -540,12 +638,12 @@ verifier:
 """
 
 
-TEST_SH = """#!/usr/bin/env bash
-# Upstream's rubric on the world the trial's run of the fake ends with (grade.py).
-set -euo pipefail
-mkdir -p /logs/verifier
-python3 /tests/grade.py
-"""
+TEST_SH = ("#!/usr/bin/env bash\n"
+           "# Upstream's rubric on the world the trial's run of the fake ends "
+           "with (grade.py).\n"
+           "set -euo pipefail\n"
+           "mkdir -p /logs/verifier\n"
+           "python3 /tests/grade.py\n")
 
 
 def nop_score(row: dict) -> float:
@@ -553,34 +651,54 @@ def nop_score(row: dict) -> float:
     from automationbench.rubric import partial_credit
     info = row["info"]
     up = Upstream(row)
-    state = {"info": {**info, "assertions": [strip_none_values(a) for a in info["assertions"]]},
-             "initial_state": strip_none_values(info.get("initial_state", {})),
-             "world": up.world}
+    state = {
+        "info": {
+            **info, "assertions":
+            [strip_none_values(a) for a in info["assertions"]]
+        },
+        "initial_state": strip_none_values(info.get("initial_state", {})),
+        "world": up.world
+    }
     return partial_credit(state)
 
 
-def task_files(row: dict, schemas: list[dict]) -> tuple[dict[str, bytes], dict[str, bytes]]:
+def task_files(
+        row: dict,
+        schemas: list[dict]) -> tuple[dict[str, bytes], dict[str, bytes]]:
     """A task's files: those committed, and those git ignores."""
     info = row["info"]
     up = Upstream(row)
     committed = {
-        "instruction.md": instruction(row, schemas).encode(),
-        "task.toml": task_toml(row).encode(),
-        "environment/mirage.yaml": mirage_yaml(info["task_name"], up.epoch).encode(),
-        "environment/tools.json": (json.dumps(tools_json(schemas), indent=1) + "\n").encode(),
-        "tests/test.sh": TEST_SH.encode(),
-        "tests/grade.py": GRADE.read_bytes(),
+        "instruction.md":
+        instruction(row, schemas).encode(),
+        "task.toml":
+        task_toml(row).encode(),
+        "environment/mirage.yaml":
+        mirage_yaml(info["task_name"], up.epoch).encode(),
+        "environment/tools.json":
+        (json.dumps(tools_json(schemas), indent=1) + "\n").encode(),
+        "tests/test.sh":
+        TEST_SH.encode(),
+        "tests/grade.py":
+        GRADE.read_bytes(),
     }
-    task = {"task_name": info["task_name"], "assertions": info["assertions"],
-            "initial_state": info.get("initial_state", {}), "zapier_tools": info.get("zapier_tools", [])}
+    task = {
+        "task_name": info["task_name"],
+        "assertions": info["assertions"],
+        "initial_state": info.get("initial_state", {}),
+        "zapier_tools": info.get("zapier_tools", [])
+    }
     ignored = {
-        "environment/kit/automationbench.json": (json.dumps(up.fixture()) + "\n").encode(),
-        "tests/task.json": (json.dumps(task, ensure_ascii=False) + "\n").encode(),
+        "environment/kit/automationbench.json":
+        (json.dumps(up.fixture()) + "\n").encode(),
+        "tests/task.json":
+        (json.dumps(task, ensure_ascii=False) + "\n").encode(),
     }
     return committed, ignored
 
 
-GITIGNORE = """# Made from upstream's data, which harbor/automationbench.py writes again
+GITIGNORE = """\
+# Made from upstream's data, which harbor/automationbench.py writes again
 # from the pinned package: each world's fixture (32 MB for all 600 tasks) and
 # what the rubric reads besides the world.
 */environment/kit/
@@ -591,14 +709,26 @@ GITIGNORE = """# Made from upstream's data, which harbor/automationbench.py writ
 def job_yaml(tasks: list[str]) -> str:
     lines = [
         "# The AutomationBench tasks (harbor/tasks/automationbench/, which",
-        "# harbor/automationbench.py writes), on the mirage environment, each trial's",
-        "# verifier in a microVM of its own: upstream's rubric on the world the trial's",
+        ("# harbor/automationbench.py writes), on the mirage environment, "
+         "each trial's"),
+        ("# verifier in a microVM of its own: upstream's rubric on the world "
+         "the trial's"),
         "# run of the fake ends with. From vfs-bench-2/, after",
-        "# `uv run --project automationbench python -I harbor/automationbench.py [--site]`:",
-        "#   uv run --project harbor harbor run -y -c harbor/automationbench.yaml -a oracle -n 8 -o state/harbor/jobs-automationbench",
-        "environment:", "  import_path: vfsbench_harbor:MirageEnvironment",
-        "verifier:", "  import_path: vfsbench_harbor:MicrosandboxVerifier", "tasks:"]
-    lines += [f"  - path: harbor/tasks/automationbench/{task}" for task in sorted(tasks)]
+        ("# `uv run --project automationbench python -I "
+         "harbor/automationbench.py [--site]`:"),
+        ("#   uv run --project harbor harbor run -y -c "
+         "harbor/automationbench.yaml -a oracle -n 8 -o "
+         "state/harbor/jobs-automationbench"),
+        "environment:",
+        "  import_path: vfsbench_harbor:MirageEnvironment",
+        "verifier:",
+        "  import_path: vfsbench_harbor:MicrosandboxVerifier",
+        "tasks:",
+    ]
+    lines += [
+        f"  - path: harbor/tasks/automationbench/{task}"
+        for task in sorted(tasks)
+    ]
     return "\n".join(lines) + "\n"
 
 
@@ -606,34 +736,54 @@ def site() -> int:
     """The rubric's packages for the VM: CPython 3.12 on Linux, the host's
     architecture, as msb boots its image; and upstream's package, as pinned.
 
-    The rubric's ``google_sheets_row_updated`` imports ``automationbench.tools``,
-    whose Zapier Salesforce module imports ``openai`` (never called here), so
-    the VM gets upstream's pinned ``openai`` too."""
-    arch = {"arm64": "aarch64", "aarch64": "aarch64"}.get(platform.machine(), "x86_64")
+    The rubric's ``google_sheets_row_updated`` imports
+    ``automationbench.tools``, whose Zapier Salesforce module imports
+    ``openai`` (never called here), so the VM gets upstream's pinned
+    ``openai`` too."""
+    arch = {
+        "arm64": "aarch64",
+        "aarch64": "aarch64"
+    }.get(platform.machine(), "x86_64")
     import openai
     import pydantic
     import pydantic_core
     code = subprocess.run([
-        "uv", "pip", "install", "--quiet", "--target", str(SITE), "--python-version", "3.12",
-        "--python-platform", f"{arch}-manylinux_2_28", "--only-binary", ":all:",
-        f"pydantic=={pydantic.VERSION}", f"pydantic-core=={pydantic_core.__version__}",
+        "uv",
+        "pip",
+        "install",
+        "--quiet",
+        "--target",
+        str(SITE),
+        "--python-version",
+        "3.12",
+        "--python-platform",
+        f"{arch}-manylinux_2_28",
+        "--only-binary",
+        ":all:",
+        f"pydantic=={pydantic.VERSION}",
+        f"pydantic-core=={pydantic_core.__version__}",
         f"openai=={openai.__version__}",
     ]).returncode
     if code:
         return code
     target = SITE / "automationbench"
     shutil.rmtree(target, ignore_errors=True)
-    shutil.copytree(PACKAGE, target, ignore=shutil.ignore_patterns("__pycache__", "domains"))
+    shutil.copytree(PACKAGE,
+                    target,
+                    ignore=shutil.ignore_patterns("__pycache__", "domains"))
     return 0
 
 
-def selected(all_rows: dict[str, dict]) -> tuple[dict[str, str], dict[str, str]]:
+def selected(
+        all_rows: dict[str, dict]) -> tuple[dict[str, str], dict[str, str]]:
     """The tasks written, by directory name, and those left out, with why."""
     chosen, left = {}, {}
     for name, row in sorted(all_rows.items()):
         info = row["info"]
         initial = strip_none_values(info.get("initial_state", {}))
-        services = compute_allowed_services(initial, info.get("assertions", []), info.get("zapier_tools", []))
+        services = compute_allowed_services(initial,
+                                            info.get("assertions", []),
+                                            info.get("zapier_tools", []))
         missing = sorted(set(services) - PORTED)
         if name in SKIPPED:
             left[name] = SKIPPED[name]
@@ -648,7 +798,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--check", action="store_true")
     parser.add_argument("--site", action="store_true")
-    parser.add_argument("--data", action="store_true", help="write only the fake's data files")
+    parser.add_argument("--data",
+                        action="store_true",
+                        help="write only the fake's data files")
     parser.add_argument("tasks", nargs="*")
     args = parser.parse_args()
     if args.site:
@@ -659,7 +811,8 @@ def main() -> int:
         nonlocal failed
         if args.check:
             if not path.is_file() or path.read_bytes() != data:
-                print(f"FAIL {path.relative_to(ROOT)} differs from what upstream gives")
+                print(f"FAIL {path.relative_to(ROOT)} differs from what "
+                      "upstream gives")
                 failed += 1
         else:
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -675,7 +828,8 @@ def main() -> int:
     schemas = tool_schemas()
     for task in wanted:
         if task not in chosen:
-            print(f"FAIL {task}: not a task written here ({left.get(chosen.get(task, ''), 'unknown')})")
+            print(f"FAIL {task}: not a task written here "
+                  f"({left.get(chosen.get(task, ''), 'unknown')})")
             failed += 1
             continue
         row = all_rows[chosen[task]]
@@ -695,7 +849,8 @@ def main() -> int:
                 failed += 1
         for path in sorted(target.rglob("*")):
             rel = path.relative_to(target).as_posix()
-            if path.is_file() and rel not in committed and rel not in ignored and rel not in ours:
+            if (path.is_file() and rel not in committed and rel not in ignored
+                    and rel not in ours):
                 print(f"FAIL {task}: {rel} is not generated or ours")
                 failed += 1
         if not args.check:
@@ -707,7 +862,8 @@ def main() -> int:
             if path.is_dir() and path.name not in chosen:
                 print(f"FAIL {path.name}: not a task written here")
                 failed += 1
-    print(f"{len(chosen)} tasks, {len(left)} left out" + (f", {failed} failures" if failed else ""))
+    print(f"{len(chosen)} tasks, {len(left)} left out" +
+          (f", {failed} failures" if failed else ""))
     return 1 if failed else 0
 
 

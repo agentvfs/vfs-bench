@@ -692,12 +692,23 @@ Harbor's agents set themselves up through the container: they write
 their config and credentials under `/installed-agent` and `/tmp`, run the
 CLI, and copy its session logs to `/logs/agent`. Here their `run()` is
 Harbor's, handed a stand-in for the container (`agents.py`'s `_Host`):
-each command runs in bash on the host, with those paths mapped to the
-trial's `agent-host/` directory and `/logs/agent` to the trial's agent
-directory. `HOME` is a directory of the trial's, so the host user's
+each command runs in bash on the host, with those paths mapped to
+directories of the agent's. `HOME` is one of them, so the host user's
 `~/.codex` and `~/.claude` (their config, skills, memory and MCP servers)
-reach no trial, and the CLI runs from an empty directory of its own. The
-model's key is Harbor's, resolved from the host as its agents resolve it.
+reach no trial, and the CLI runs from an empty one. They sit under a
+temporary directory while the CLI runs, since a CLI tells its model where
+it runs (Claude Code its working directory and memory) and the trial's
+path holds the job's date; afterwards `/logs/agent` moves into the trial's
+agent directory and the rest into its `agent-host/`. Codex's bundled
+skills are off (`[skills.bundled] enabled = false`): they run on the host,
+and their catalog names a host path. The model's key is Harbor's, resolved
+from the host as its agents resolve it.
+
+Neither CLI's tools go through `MirageEnvironment.exec`, which brings the
+workspace's copies of the services' state files up to date before each
+command. So while a CLI runs, the copies are brought up to date when it
+starts and then every second (`STATE_REFRESH`): a command sees the
+services' state as it was at most a second before.
 
 Tried against a scripted model (an OpenAI Responses and Anthropic
 Messages server on localhost that asks for one shell command, then
@@ -744,20 +755,27 @@ would read the host's date and zone. Three things make them the trial's:
   Claude Code "Today's date is", from the host. Neither takes a date, and
   both run under the hardened runtime, which a faked clock (libfaketime)
   cannot reach. So each trial has a gateway (`gateway.py`), its CLI's HTTPS
-  proxy (`HTTPS_PROXY`): a `CONNECT` to a model's host (chatgpt.com,
-  api.openai.com, api.anthropic.com, or a base URL's) is answered with TLS
-  from a certificate the Harbor process's CA mints, which the CLI is told to
-  trust (`CODEX_CA_CERTIFICATE`, `NODE_EXTRA_CA_CERTS`, with certifi's
-  roots); each request's host date becomes the run's, and Codex's
-  `<timezone>` the trial's, UTC; the reply streams back as it is. Every other
-  host is a plain tunnel; the loopback, where the workspace's endpoints are,
-  is not proxied (`NO_PROXY`). A base URL in place of a proxy does not do:
+  proxy (`HTTPS_PROXY`): a `CONNECT` to a model's endpoint (chatgpt.com,
+  api.openai.com, api.anthropic.com, or a base URL's, at its own port) is
+  answered with TLS from a certificate the Harbor process's CA mints, which
+  the CLI is told to trust (`CODEX_CA_CERTIFICATE`, `NODE_EXTRA_CA_CERTS`,
+  with certifi's roots), or served as HTTP for an `http://` base URL. In
+  each request, the date the CLI states (`<current_date>`, "Today's date
+  is") becomes the run's where it is the host's, and Codex's `<timezone>`
+  the trial's, UTC; nothing else changes, so a date in the task's data or a
+  tool's result reaches the model as it is. The reply streams back as it
+  is. Every other host is a plain tunnel; the loopback, where the
+  workspace's endpoints are, is not proxied (`NO_PROXY`). A base URL in
+  place of a proxy does not do:
   Codex on a ChatGPT login takes only ChatGPT's own HTTPS origin
   ("workspace routing discovery failed"). The gateway refuses websockets
   (404), so Codex falls back to HTTP, whose bodies it can read, and asks for
   no compression of its own (Codex's `enable_request_compression` is off).
   `<trial>/agent-host/gateway.log` lists each request, `(date)` where one
-  was rewritten.
+  was rewritten and `(host's date left)` where the host's date is still in
+  it, as a CLI that states the date in a new way would leave it. With
+  `gpt-6-astra`, interview-slot-verify's 14 model requests were all dated,
+  none with the host's date left.
 - **The zone.** The CLI runs with `TZ=UTC`, the trial's.
 
 The agent's own session log, and so its trajectory, keeps the host's date:

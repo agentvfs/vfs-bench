@@ -19,10 +19,10 @@ One daemon per trial keeps trials apart: each has its own network (its
 ``localhost:<port>`` reaches only its own mocks, or its own runs of the
 shared fakes), event loop and crashes. Each daemon also listens for SSH on
 the loopback, for the job's key alone, which is how a coding agent on the
-host runs its tools in the workspace (agents.py). ``--ek daemon_url=<url>`` points the
-environment at a shared daemon instead, which cannot route each trial to
-its own mocks until Mirage has a per-workspace network map (see the
-README).
+host runs its tools in the workspace (agents.py).
+``--ek daemon_url=<url>`` points the environment at a shared daemon
+instead, which cannot route each trial to its own mocks until Mirage has a
+per-workspace network map (see the README).
 """
 import asyncio
 import atexit
@@ -67,7 +67,6 @@ MODEL_ENV = re.compile(r".*_API_KEY|OPENAI_BASE_URL|OPENAI_API_BASE")
 NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 SQLITE = b"SQLite format 3\x00"
 DONE = {"done", "failed", "canceled"}
-
 
 # The characters JavaScript's encodeURIComponent leaves as they are, as the
 # fake escapes a file's path (mocks/upstream/fake.ts).
@@ -265,8 +264,9 @@ class MirageEnvironment(BaseEnvironment):
                                            service, fixture, self._node,
                                            self._host_env(), self._fake_logs)
             # A fake's `extras` may name the trial's run dir, `${RUN_DIR}`.
-            extras = json.loads(json.dumps(block.get("extras") or {}).replace(
-                "${RUN_DIR}", str(self._run_dir)))
+            extras = json.loads(
+                json.dumps(block.get("extras")
+                           or {}).replace("${RUN_DIR}", str(self._run_dir)))
             run = await shared.open(fake, name, fixture, block.get("epoch"),
                                     block.get("faults"), extras)
             self._runs.append(run)
@@ -339,13 +339,13 @@ class MirageEnvironment(BaseEnvironment):
                 "VFSBENCH_ALLOW":
                 json.dumps(allow),
                 **({} if tools is None else {
-                    "VFSBENCH_TOOLS": tools["file"],
-                    "VFSBENCH_DISPATCHES": tools["dispatches"],
-                }),
+                       "VFSBENCH_TOOLS": tools["file"],
+                       "VFSBENCH_DISPATCHES": tools["dispatches"],
+                   }),
                 **({} if self._epoch is None else {
-                    "VFSBENCH_EPOCH": str(self._epoch),
-                    "VFSBENCH_STARTED": str(self._started),
-                }),
+                       "VFSBENCH_EPOCH": str(self._epoch),
+                       "VFSBENCH_STARTED": str(self._started),
+                   }),
             },
         )
         url = f"http://127.0.0.1:{port}"

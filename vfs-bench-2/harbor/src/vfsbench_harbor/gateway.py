@@ -8,21 +8,25 @@ date instead (the task's epoch, moving on since the trial started:
 ``MirageEnvironment.now``), as a container's mocks and clock agree. The
 CLIs take no date to tell the model, and run under the hardened runtime,
 which a faked clock cannot reach, so the gateway stands between the CLI and
-its model: each request to a model's host has the host's date (today, in
-UTC and in local time, as ``YYYY-MM-DD``) replaced by the run's, and the
-host's time zone where Codex names it by the trial's, UTC, and is sent on;
-the reply comes back as it is, streamed.
+its model: in each request to a model's endpoint, the date the CLI states
+(Codex's ``<current_date>``, Claude Code's "Today's date is") becomes the
+run's where it is the host's (today, in UTC or in local time), as does the
+time zone Codex names (``<timezone>``), and the request is sent on; the
+reply comes back as it is, streamed. Nothing else in a request changes: a
+date in the task's data, a tool's result or the conversation is the
+model's to read as it is.
 
 The gateway is the CLI's HTTPS proxy (``HTTPS_PROXY``), so the CLI keeps
 its own endpoints, which Codex on a ChatGPT login requires: its workspace
-routing takes only ChatGPT's own HTTPS origin. A ``CONNECT`` to one of the
-model hosts is answered with TLS from a certificate for that host, minted
-from a CA of the Harbor process's (``Authority``), which the CLI is told to
-trust with the usual roots (``CODEX_CA_CERTIFICATE``,
-``NODE_EXTRA_CA_CERTS``). Every other ``CONNECT`` is a plain tunnel, and a
-plain-HTTP request to a model host (a gateway's) is forwarded as it comes.
+routing takes only ChatGPT's own HTTPS origin. A ``CONNECT`` to an HTTPS
+model endpoint is answered with TLS from a certificate for its host,
+minted from a CA of the Harbor process's (``Authority``), which the CLI is
+told to trust with the usual roots (``CODEX_CA_CERTIFICATE``,
+``NODE_EXTRA_CA_CERTS``); one to a plain-HTTP model endpoint is served as
+HTTP. Every other ``CONNECT`` is a plain tunnel, and a plain-HTTP request
+in absolute form is forwarded as it comes.
 
-    gateway = Gateway({"chatgpt.com", "api.openai.com"}, environment, log)
+    gateway = Gateway({("chatgpt.com", 443, True)}, environment, log)
     proxy = await gateway.start()      # http://127.0.0.1:<port>
     await gateway.close()
 
@@ -36,10 +40,11 @@ import contextlib
 import functools
 import gzip
 import os
+import re
 import shutil
 import ssl
 import tempfile
-from datetime import date, datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import certifi
@@ -49,7 +54,6 @@ from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.x509.oid import NameOID
-
 from vfsbench_harbor.environment import MirageEnvironment
 
 # What a hop takes for itself, never forwarded.
@@ -59,6 +63,12 @@ HOP = {
     "transfer-encoding", "upgrade"
 }
 READ = 1 << 16
+
+# Where each CLI states the date, the date itself the second group: Codex's
+# environment context, and Claude Code's line, whose apostrophe varies
+# (``'``, ``’``, or the JSON escape of either), "now" when it has moved on.
+DATED = (rb"(<current_date>)(\d{4}-\d{2}-\d{2})(?=</current_date>)",
+         rb"(Today\S{1,6}s date is (?:now )?)(\d{4}-\d{2}-\d{2})")
 
 
 class Authority:
@@ -83,11 +93,34 @@ class Authority:
         now = datetime.now(timezone.utc)
         builder = (x509.CertificateBuilder().subject_name(subject).issuer_name(
             self._name).public_key(key.public_key()).serial_number(
-                x509.random_serial_number()).not_valid_before(
-                    now - timedelta(days=1)).not_valid_after(
-                        now + timedelta(days=30)).add_extension(
-                            x509.BasicConstraints(ca=ca, path_length=None),
-                            critical=True))
+                x509.random_serial_number()).not_valid_before(now - timedelta(
+                    days=1)).not_valid_after(now +
+                                             timedelta(days=30)).add_extension(
+                                                 x509.BasicConstraints(
+                                                     ca=ca, path_length=None),
+                                                 critical=True))
+        # Key identifiers and usages, which strict verifiers (Python's since
+        # 3.13) require of a chain.
+        builder = builder.add_extension(
+            x509.SubjectKeyIdentifier.from_public_key(key.public_key()),
+            critical=False).add_extension(
+                x509.AuthorityKeyIdentifier.from_issuer_public_key(
+                    self._key.public_key()),
+                critical=False).add_extension(x509.KeyUsage(
+                    digital_signature=not ca,
+                    content_commitment=False,
+                    key_encipherment=False,
+                    data_encipherment=False,
+                    key_agreement=False,
+                    key_cert_sign=ca,
+                    crl_sign=ca,
+                    encipher_only=False,
+                    decipher_only=False),
+                                              critical=True)
+        if not ca:
+            builder = builder.add_extension(x509.ExtendedKeyUsage(
+                [x509.ExtendedKeyUsageOID.SERVER_AUTH]),
+                                            critical=False)
         if host is not None:
             builder = builder.add_extension(x509.SubjectAlternativeName(
                 [x509.DNSName(host)]),
@@ -144,38 +177,49 @@ def _plain(body: bytes, encoding: str) -> bytes:
 
 class Gateway:
     """One trial's gateway: an HTTPS proxy that puts the trial's date in
-    each request to the model hosts ``hosts``.
+    each request to the model endpoints ``endpoints``.
 
     Args:
-        hosts: the hosts whose requests carry the date to the model.
+        endpoints: each endpoint whose requests carry the date to the
+            model, as ``(host, port, tls)``.
         environment: the trial's, whose clock is the run's.
         log: where each request's method, host, path and status go when
             the gateway closes.
     """
 
-    def __init__(self, hosts: set[str], environment: MirageEnvironment,
-                 log: Path):
-        self._hosts = hosts
+    def __init__(self, endpoints: set[tuple[str, int, bool]],
+                 environment: MirageEnvironment, log: Path):
+        self._tls = {(host, port) for host, port, tls in endpoints if tls}
+        self._plain = {(host, port)
+                       for host, port, tls in endpoints if not tls}
         self._environment = environment
         self._log_path = log
         self._log: list[str] = []
         self._server: asyncio.Server | None = None
         self._session: ClientSession | None = None
 
-    def replacements(self) -> list[tuple[bytes, bytes]]:
-        """What of the host's the CLI may send, each with the trial's: its
-        dates, and the time zone Codex names (``<timezone>``), which is UTC
-        in the trial, as its workspace and services are."""
-        run = self._environment.now().date().isoformat()
-        host = {datetime.now().date(), datetime.now(timezone.utc).date()}
-        out = [(d.isoformat().encode(), run.encode())
-               for d in sorted(host, key=date.toordinal)
-               if d.isoformat() != run]
+    def redate(self, body: bytes) -> tuple[bytes, bool]:
+        """``body`` with the date its CLI states, where it is the host's,
+        the trial's instead, and the time zone Codex names
+        (``<timezone>``) the trial's, UTC, as its workspace and services
+        keep time; and whether anything changed."""
+        run = self._environment.now().date().isoformat().encode()
+        host = {
+            d.isoformat().encode()
+            for d in (datetime.now().date(), datetime.now(timezone.utc).date())
+        }
+
+        def swap(m: re.Match) -> bytes:
+            return m[1] + (run if m[2] in host else m[2])
+
+        out = body
+        for pattern in DATED:
+            out = re.sub(pattern, swap, out)
         zone = _host_zone()
         if zone not in (None, "UTC"):
-            out.append((f"<timezone>{zone}</timezone>".encode(),
-                        b"<timezone>UTC</timezone>"))
-        return out
+            out = out.replace(f"<timezone>{zone}</timezone>".encode(),
+                              b"<timezone>UTC</timezone>")
+        return out, out != body
 
     async def start(self) -> str:
         self._session = ClientSession(timeout=ClientTimeout(total=None),
@@ -203,16 +247,17 @@ class Gateway:
                 await self._serve(reader, writer, None, head)
                 return
             host, _, port = target.rpartition(":")
+            endpoint = (host, int(port or 443))
             writer.write(b"HTTP/1.1 200 Connection Established\r\n\r\n")
             await writer.drain()
-            if host in self._hosts and int(port or 443) == 443:
+            if endpoint in self._tls:
                 await writer.start_tls(authority().context(host))
                 await self._serve(reader, writer, f"https://{target}", b"")
-            elif host in self._hosts:
+            elif endpoint in self._plain:
                 # A plain-HTTP endpoint's tunnel (a websocket to one).
                 await self._serve(reader, writer, f"http://{target}", b"")
             else:
-                await self._tunnel(reader, writer, host, int(port or 443))
+                await self._tunnel(reader, writer, *endpoint)
         except Exception as e:
             # The CLI sees the connection close, as a proxy's failing would.
             self._log.append(f"connection ended: {type(e).__name__}: {e}")
@@ -236,7 +281,8 @@ class Gateway:
             with contextlib.suppress(Exception):
                 dst.close()
 
-        await asyncio.gather(pipe(reader, far_writer), pipe(far_reader, writer))
+        await asyncio.gather(pipe(reader, far_writer),
+                             pipe(far_reader, writer))
 
     async def _serve(self, reader: asyncio.StreamReader,
                      writer: asyncio.StreamWriter, origin: str | None,
@@ -266,9 +312,9 @@ class Gateway:
                 return
             conn.start_next_cycle()
 
-    async def _answer(self, conn: h11.Connection,
-                      writer: asyncio.StreamWriter, origin: str | None,
-                      request: h11.Request, body: bytes) -> None:
+    async def _answer(self, conn: h11.Connection, writer: asyncio.StreamWriter,
+                      origin: str | None, request: h11.Request,
+                      body: bytes) -> None:
         headers = {k.decode().lower(): v.decode() for k, v in request.headers}
         target = request.target.decode()
         url = f"{origin}{target}" if origin else target
@@ -277,11 +323,13 @@ class Gateway:
             await self._send(conn, writer, 404, [], [b""])
             return
         body = _plain(body, headers.get("content-encoding", "").lower())
-        dated = False
-        for host, run in self.replacements():
-            if host in body:
-                body = body.replace(host, run)
-                dated = True
+        body, dated = self.redate(body)
+        # The host's date left elsewhere in a request, as a task's data or
+        # a tool's result may carry it, is the model's to read; noted, so
+        # a date the CLI states in a new way shows up here.
+        left = any(d.isoformat().encode() in body
+                   for d in (datetime.now().date(),
+                             datetime.now(timezone.utc).date()))
         forward = {k: v for k, v in headers.items() if k not in HOP}
         # The reply goes back as it comes, so only in an encoding the CLI
         # asked for: the client library would otherwise ask for its own.
@@ -292,15 +340,16 @@ class Gateway:
                                          headers=forward,
                                          data=body) as reply:
             self._log.append(f"{request.method.decode()} {url} -> "
-                             f"{reply.status}" + (" (date)" if dated else ""))
+                             f"{reply.status}" + (" (date)" if dated else "") +
+                             (" (host's date left)" if left else ""))
             out = [(k, v) for k, v in reply.headers.items()
                    if k.lower() not in HOP or k.lower() == "content-encoding"]
             await self._send(conn, writer, reply.status, out,
                              reply.content.iter_any())
 
     async def _send(self, conn: h11.Connection, writer: asyncio.StreamWriter,
-                    status: int, headers: list[tuple[str, str]],
-                    chunks) -> None:
+                    status: int, headers: list[tuple[str,
+                                                     str]], chunks) -> None:
         writer.write(
             conn.send(
                 h11.Response(status_code=status,

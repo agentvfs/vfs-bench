@@ -1,4 +1,5 @@
-"""Grade one AutomationBench trial with upstream's rubric, in the verifier's VM.
+"""Grade one AutomationBench trial with upstream's rubric, in the
+verifier's VM.
 
     python3 /tests/grade.py
 
@@ -40,9 +41,13 @@ SETS = {("google_sheets", "_updated_row_keys")}
 
 
 def strip_none_values(obj):
-    """``automationbench.runner.strip_none_values`` (runner imports verifiers, which the VM lacks)."""
+    """``automationbench.runner.strip_none_values`` (runner imports
+    verifiers, which the VM lacks)."""
     if isinstance(obj, dict):
-        return {k: strip_none_values(v) for k, v in obj.items() if v is not None}
+        return {
+            k: strip_none_values(v)
+            for k, v in obj.items() if v is not None
+        }
     if isinstance(obj, list):
         return [strip_none_values(item) for item in obj if item is not None]
     return obj
@@ -59,7 +64,9 @@ def end_world():
     hidden = json.loads(docs.get("meta") or "{}").get("hidden") or {}
     for service, attributes in hidden.items():
         for name, value in attributes.items():
-            object.__setattr__(getattr(world, service), name, set(value) if (service, name) in SETS else value)
+            object.__setattr__(
+                getattr(world, service), name,
+                set(value) if (service, name) in SETS else value)
     return world
 
 
@@ -71,21 +78,35 @@ def main() -> int:
     task = json.loads(TASK.read_text())
     VERIFIER.mkdir(parents=True, exist_ok=True)
     state = {
-        "info": {**task, "assertions": [strip_none_values(a) for a in task["assertions"]]},
-        "initial_state": strip_none_values(copy.deepcopy(task.get("initial_state", {}))),
-        "world": end_world(),
+        "info": {
+            **task, "assertions":
+            [strip_none_values(a) for a in task["assertions"]]
+        },
+        "initial_state":
+        strip_none_values(copy.deepcopy(task.get("initial_state", {}))),
+        "world":
+        end_world(),
     }
     credit = partial_credit(state)
     results = state.get("_assertion_results", [])
     (VERIFIER / "reward.json").write_text(json.dumps({"reward": credit}))
-    (VERIFIER / "reward_details.json").write_text(json.dumps({
-        "partial_credit": credit,
-        "task_completed_correctly": float(credit == 1.0),
-        "assertions": results,
-    }, ensure_ascii=False, indent=1, default=str))
+    (VERIFIER / "reward_details.json").write_text(
+        json.dumps(
+            {
+                "partial_credit": credit,
+                "task_completed_correctly": float(credit == 1.0),
+                "assertions": results,
+            },
+            ensure_ascii=False,
+            indent=1,
+            default=str))
     for r in results:
-        status = "excluded" if r.get("excluded") else ("PASS" if r["passed"] else "FAIL")
-        print(f"[{status}] {r['type']} {json.dumps(r['params'], ensure_ascii=False, default=str)[:300]}")
+        status = "excluded" if r.get("excluded") else (
+            "PASS" if r["passed"] else "FAIL")
+        print(
+            f"[{status}] {r['type']} "
+            f"{json.dumps(r['params'], ensure_ascii=False, default=str)[:300]}"
+        )
     print(f"partial_credit {credit}")
     return 0
 
