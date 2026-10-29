@@ -286,7 +286,9 @@ async def microvms(trials, real, runs, report) -> None:
             # verifier does.
             for _ in range(ATTEMPTS):
                 try:
-                    code, out, err = await vms[who].guest(line)
+                    code, answer, err = await vms[who].guest(line)
+                    with answer:
+                        out = answer.read()
                     break
                 except Hung as e:
                     print(f"note [{who} vm] {e}; booting another", flush=True)
@@ -410,13 +412,16 @@ async def microvms(trials, real, runs, report) -> None:
                     ok)
     finally:
         await asyncio.gather(*(s.aclose() for s in stacks.values()))
+    # Every VM booted, a replacement for a hung one included.
     listed = subprocess.run([vms["a"].msb, "ls"],
                             capture_output=True,
                             text=True,
-                            stdin=subprocess.DEVNULL).stdout
-    report(not any(name in listed for name in names), "a-e",
-           "every VM is removed afterwards",
-           listed.strip()[:200])
+                            stdin=subprocess.DEVNULL)
+    report(
+        listed.returncode == 0 and not any(name in listed.stdout
+                                           for name in booted), "a-e",
+        "every VM is removed afterwards",
+        (listed.stdout + listed.stderr).strip()[:200])
 
 
 if __name__ == "__main__":

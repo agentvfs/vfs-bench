@@ -38,7 +38,6 @@ its peak memory and each request its proxies passed.
 """
 import asyncio
 import contextlib
-import io
 import json
 import re
 import secrets
@@ -49,6 +48,7 @@ import tempfile
 import time
 from collections.abc import AsyncIterator
 from pathlib import Path, PurePosixPath
+from typing import IO
 from urllib.parse import urlsplit
 
 import h11
@@ -87,6 +87,14 @@ KIT = re.compile(r"/(reset|_kit)(/|$)")
 ATTEMPTS = 3
 CREATE_TIMEOUT = 30
 ANSWER_TIMEOUT = 15
+# What the host keeps of a VM's answer: its stdout (the pulled logs' tar) is
+# spooled to a temporary file, past SPOOL bytes, and refused past
+# MAX_OUTPUT; of its stderr (the test's output) only the last ERROR_TAIL
+# bytes are kept. /logs is the trial's to write, so neither is bounded
+# otherwise.
+SPOOL = 2**20
+MAX_OUTPUT = 64 * 2**20
+ERROR_TAIL = 64 * 2**10
 
 
 def _msb(name: str | None) -> str:
@@ -120,6 +128,14 @@ async def _run(*argv: str,
         raise
     assert process.returncode is not None
     return process.returncode, out, err
+
+
+async def _tail(stream: asyncio.StreamReader, limit: int) -> bytes:
+    """A stream read to its end, keeping its last ``limit`` bytes."""
+    kept = b""
+    while chunk := await stream.read(2**16):
+        kept = (kept + chunk)[-limit:]
+    return kept
 
 
 def _path(target: bytes) -> str | None:
@@ -380,16 +396,26 @@ class Sandbox:
     async def remove(self, log: list[str]) -> None:
         started = time.monotonic()
         try:
-            await _run(self.msb, "rm", "-f", "-q", self.name, timeout=60)
+            code, _, err = await _run(self.msb,
+                                      "rm",
+                                      "-f",
+                                      "-q",
+                                      self.name,
+                                      timeout=60)
         except TimeoutError:
             log.append(f"removing {self.name} timed out")
             return
+        if code != 0:
+            log.append(f"removing {self.name} failed (exit {code}): "
+                       f"{err.decode()[-2000:]}")
+            return
         log.append(f"remove {self.name}: {time.monotonic() - started:.2f}s")
 
-    async def guest(self, *args: str) -> tuple[int, bytes, bytes]:
+    async def guest(self, *args: str) -> tuple[int, IO[bytes], bytes]:
         """Run ``guest.py`` in the VM, to its end: its status, its stdout
-        after its first line, and its stderr. Raises ``Hung`` if that first
-        line does not come in time, so the VM never ran it."""
+        after its first line, spooled and rewound (the caller closes it),
+        and its stderr's last ``ERROR_TAIL`` bytes. Raises ``Hung`` if that
+        first line does not come in time, so the VM never ran it."""
         process = await asyncio.create_subprocess_exec(
             self.msb,
             "exec",
@@ -406,7 +432,8 @@ class Sandbox:
             stderr=asyncio.subprocess.PIPE,
         )
         assert process.stdout is not None and process.stderr is not None
-        errors = asyncio.ensure_future(process.stderr.read())
+        errors = asyncio.ensure_future(_tail(process.stderr, ERROR_TAIL))
+        out = tempfile.SpooledTemporaryFile(max_size=SPOOL)
         try:
             try:
                 first = await asyncio.wait_for(process.stdout.readline(),
@@ -414,18 +441,24 @@ class Sandbox:
             except TimeoutError:
                 raise Hung(f"{self.name} ran nothing in {ANSWER_TIMEOUT}s; "
                            "msb left the command unrun") from None
-            out = await process.stdout.read()
+            while chunk := await process.stdout.read(2**16):
+                if out.tell() + len(chunk) > MAX_OUTPUT:
+                    raise RuntimeError(
+                        f"{self.name}'s answer passed {MAX_OUTPUT} bytes")
+                out.write(chunk)
             err = await errors
             code = await process.wait()
+            if first != STARTED:
+                raise RuntimeError(f"guest.py did not start in {self.name} "
+                                   f"(exit {code}): {(first + err).decode()}")
         except BaseException:
+            out.close()
             errors.cancel()
             if process.returncode is None:
                 process.kill()
             await asyncio.shield(process.wait())
             raise
-        if first != STARTED:
-            raise RuntimeError(f"guest.py did not start in {self.name} "
-                               f"(exit {code}): {(first + err).decode()}")
+        out.seek(0)
         return code, out, err
 
     async def metrics(self) -> dict:
@@ -442,14 +475,15 @@ class Sandbox:
             return {}
 
 
-def extract(data: bytes, target: Path, *, include: list[str] | None,
+def extract(data: IO[bytes], target: Path, *, include: list[str] | None,
             exclude: list[str] | None, protect: tuple[str, ...]) -> list[str]:
     """A tar's regular files into ``target``: no links, devices or names
     outside it, and only the files ``include`` and ``exclude`` choose, as
     Harbor's own download chooses them, ``protect`` always. The names."""
-    if not data:
+    if not data.read(1):
         return []
-    with tarfile.open(fileobj=io.BytesIO(data)) as tar:
+    data.seek(0)
+    with tarfile.open(fileobj=data) as tar:
         members = {}
         for member in tar.getmembers():
             name = PurePosixPath(member.name)
@@ -470,7 +504,8 @@ def extract(data: bytes, target: Path, *, include: list[str] | None,
             extracted = tar.extractfile(members[name])
             assert extracted is not None
             destination.unlink(missing_ok=True)
-            destination.write_bytes(extracted.read())
+            with destination.open("wb") as written:
+                shutil.copyfileobj(extracted, written)
     return sorted(chosen)
 
 
@@ -666,12 +701,13 @@ class MicrosandboxVerifier(Verifier):
             timings.update(peak)
             started = time.monotonic()
         timings["remove_s"] = time.monotonic() - started
-        extract(out,
-                self.trial_paths.verifier_dir,
-                include=self.include_logs,
-                exclude=self.exclude_logs,
-                protect=(self.trial_paths.reward_text_path.name,
-                         self.trial_paths.reward_json_path.name))
+        with out:
+            extract(out,
+                    self.trial_paths.verifier_dir,
+                    include=self.include_logs,
+                    exclude=self.exclude_logs,
+                    protect=(self.trial_paths.reward_text_path.name,
+                             self.trial_paths.reward_json_path.name))
 
     def _max_duration(self) -> str:
         """A backstop for a VM whose Harbor process is gone: four times the
