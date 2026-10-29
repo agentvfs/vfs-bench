@@ -41,4 +41,14 @@ setup also fetches upstream's `evaluation/evaluate.py`.
 
 | Task | Upstream |
 |---|---|
+| `fund-ytd-returns` | `task_33` |
 | `china-credit-trends` | `task_35` |
+| `weekly-benchmark-top10` | `task_43` |
+| `latest-treatments` | `task_44` |
+| `regional-gdp-sectors` | `task_58` |
+| `culture-before-admission` | `task_87` |
+| `nonlisted-shares-by-province` | `task_129` |
+| `deposit-corp-reserve-assets` | `task_168` |
+| `pre-2000-money-banking` | `task_264` |
+| `manager-alpha-top10` | `task_267` |
+| `icu-stay-calendar-days` | `task_409` |
