@@ -9,6 +9,8 @@
  *         epoch: '2026-04-03T09:00:00Z' # the run's frozen clock
  *         ports: [5003]                 # localhost:<port> reaches the run
  *         state: /opt/mock/data/chat/chat.sqlite  # where its SQLite is read
+ *         faults: [{method: POST, route: /api/stickers, status: 500}]
+ *                                       # kit fault plans armed on the run
  *     env: {TASK_NAME: chat-sticker-engagement}
  *     copy:                      # COPY . <dir>: entries of environment/
  *       /workspace/environment: [notes]
@@ -43,6 +45,8 @@ interface FakeBlock {
   epoch?: string
   ports?: number[]
   state?: string
+  /** Armed by the environment, not here (fakes.py). */
+  faults?: unknown[]
 }
 
 interface MirageYaml {

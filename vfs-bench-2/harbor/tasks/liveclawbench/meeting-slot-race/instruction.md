@@ -1,0 +1,1 @@
+You received an email about a rescheduled meeting. Please check your email (at /gmail, or through the gws CLI) for the details, then create the corresponding event in your calendar (at /calendar, or through the gws CLI) at the specified time. After creating the event, verify it appears correctly in your calendar.

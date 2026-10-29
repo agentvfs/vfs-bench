@@ -1,0 +1,1 @@
+Please send an email to my leader, Mary, at the company email system website (at /gmail, or through the gws CLI) informing her that the serious BUG she discovered last night has been fixed, and asking when she would be available to discuss plans for the new project. Her email address is mary.lee@work.mosi.inc
