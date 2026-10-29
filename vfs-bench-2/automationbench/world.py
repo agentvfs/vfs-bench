@@ -13,8 +13,10 @@ with ``toolset="api"``, the benchmark's default:
   ``update_tool_args`` does
 - the snapshot is the world, dumped as JSON
 
-One change: the ids upstream draws from ``uuid4`` come from a generator
-seeded with the task's name, so seeding a task twice gives the same world.
+One change: the ids upstream draws from ``uuid4`` and ``random`` come from
+generators seeded with the task's name, so seeding a task twice gives the
+same world. Its timestamps still follow the wall clock, as upstream's do
+(``index.ts`` declares them).
 """
 import json
 import random
@@ -41,12 +43,15 @@ def seeded_uuid4() -> uuid.UUID:
 
 
 def seed_ids(key: str) -> None:
-    """Draw upstream's ``uuid4`` ids from ``IDS``, seeded with ``key``.
+    """Draw upstream's ids from generators seeded with ``key``.
 
-    Upstream calls both ``uuid.uuid4()`` and a module's own ``uuid4()``;
-    both names are looked up at call time.
+    ``uuid4`` ids come from ``IDS``. Upstream calls both ``uuid.uuid4()``
+    and a module's own ``uuid4()``; both names are looked up at call time.
+    The ids its apps draw from ``random`` (HubSpot's, Zendesk's,
+    Mailchimp's) come from the module's own generator, seeded here too.
     """
     IDS.seed(key)
+    random.seed(key)
     uuid.uuid4 = seeded_uuid4
     for name, module in list(sys.modules.items()):
         if name.startswith("automationbench") and getattr(

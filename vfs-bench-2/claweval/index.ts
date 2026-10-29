@@ -10,9 +10,11 @@
  * call is logged as upstream's dispatcher logs it. The task's `grader.py`
  * grades unchanged from those calls, the agent's replies and the services'
  * audit logs (`grade.py`), and a task passes at upstream's threshold, a
- * task score of 0.75. Setup: `python3 -I claweval/setup.py`.
+ * task score of 0.75. A task's `sandbox_files` are copied into the run and
+ * mounted writable at `/workspace`, where upstream's runner puts them.
+ * Setup: `python3 -I claweval/setup.py`.
  */
-import { appendFileSync, existsSync, readFileSync } from 'node:fs'
+import { appendFileSync, constants, copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -44,6 +46,8 @@ interface Upstream {
   tools: { name: string; description: string; input_schema: JsonSchema }[]
   tool_endpoints: { tool_name: string; url: string; method: string }[]
   environment: { mock_today?: string }
+  /** Files the agent starts with, relative to the task's directory. */
+  sandbox_files?: string[]
 }
 
 /** A tool call as upstream's trace records it (`ToolDispatch`). */
@@ -189,6 +193,21 @@ function messages(prompt: string, outcome: Outcome): Message[] {
   return out
 }
 
+/**
+ * Copies the task's `sandbox_files` to `<into>/<path>`, as upstream's runner
+ * writes each to `/workspace/<path>` (`SandboxRunner.inject_files`): from
+ * the task's directory, or from the checkout's root for a path into
+ * another task's.
+ */
+function copySandboxFiles(spec: Upstream, task: string, into: string): void {
+  for (const path of spec.sandbox_files ?? []) {
+    const from = [join(SRC, 'tasks', task, path), join(SRC, path)].find((p) => existsSync(p))
+    if (from === undefined) throw new Error(`${task}: sandbox file '${path}' not found`)
+    mkdirSync(dirname(join(into, path)), { recursive: true })
+    copyFileSync(from, join(into, path), constants.COPYFILE_FICLONE)
+  }
+}
+
 interface Result {
   scores: { completion: number; robustness: number; safety: number }
   score: number
@@ -207,8 +226,16 @@ export async function load(slug: string): Promise<Task> {
     dir,
     instruction: spec.prompt.text,
     fakes: () => spec.services.map((service) => fake(service, today)),
-    // Each service loads the task's fixtures when it starts.
-    seed: async () => null,
+    // Each service loads the task's fixtures when it starts. A task's
+    // sandbox_files go in the run's workspace/, which its workspace.yaml
+    // mounts at /workspace.
+    async seed(run) {
+      if ((spec.sandbox_files ?? []).length > 0) {
+        run.env.CLAWEVAL_WORKSPACE = run.path('workspace')
+        copySandboxFiles(spec, task, run.env.CLAWEVAL_WORKSPACE)
+      }
+      return null
+    },
     async clis(run) {
       const send = sender(run, spec)
       const tools = new Map<string, Tool[]>()

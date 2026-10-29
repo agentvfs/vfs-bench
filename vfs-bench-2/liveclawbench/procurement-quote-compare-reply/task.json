@@ -1,0 +1,7 @@
+{
+  "task": "procurement-quote-compare-reply",
+  "mocks": ["email"],
+  "rewrite": {
+    "(http://localhost:5174/, open it in browser)": "(the `email` CLI)"
+  }
+}

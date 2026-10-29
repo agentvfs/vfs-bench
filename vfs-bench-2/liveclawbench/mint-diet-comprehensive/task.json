@@ -1,0 +1,7 @@
+{
+  "task": "mint-diet-comprehensive",
+  "mocks": ["mint-diet"],
+  "rewrite": {
+    "at http://localhost:5003/ — open it in your browser": "with the `mint-diet` CLI"
+  }
+}
