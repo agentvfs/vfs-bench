@@ -1,0 +1,78 @@
+[
+ {
+  "name": "notes",
+  "description": "The notes service's tools.",
+  "tools": [
+   {
+    "name": "list",
+    "call": "notes_list",
+    "description": "获取会议记录列表",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "max_results": {
+       "type": "integer",
+       "description": "最大返回数量",
+       "default": 10
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9105/notes/list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get",
+    "call": "notes_get",
+    "description": "根据ID获取会议记录详细内容",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "note_id": {
+       "type": "string",
+       "description": "会议记录ID"
+      }
+     },
+     "required": [
+      "note_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9105/notes/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "share",
+    "call": "notes_share",
+    "description": "将会议记录分享给其他人",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "note_id": {
+       "type": "string",
+       "description": "会议记录ID"
+      },
+      "recipients": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "接收人列表"
+      }
+     },
+     "required": [
+      "note_id",
+      "recipients"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9105/notes/share",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

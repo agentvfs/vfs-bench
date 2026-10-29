@@ -1,0 +1,461 @@
+{
+ "_env": [
+  {
+   "name": "TASK_NAME",
+   "value": "mint-diet-stockout"
+  }
+ ],
+ "_schema": [
+  {
+   "type": "table",
+   "name": "food_catalog",
+   "sql": "CREATE TABLE food_catalog (\n      id               INTEGER PRIMARY KEY AUTOINCREMENT,\n      name             TEXT    NOT NULL,\n      serving_size_value REAL  NOT NULL,\n      serving_size_unit  TEXT  NOT NULL,\n      calories_kcal    REAL,\n      protein_g        REAL,\n      carbs_g          REAL,\n      fat_g            REAL,\n      created_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', '2026-04-03 09:00:00', 'localtime')),\n      updated_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', '2026-04-03 09:00:00', 'localtime'))\n    )"
+  },
+  {
+   "type": "table",
+   "name": "daily_log",
+   "sql": "CREATE TABLE daily_log (\n      id                   INTEGER PRIMARY KEY AUTOINCREMENT,\n      log_date             TEXT    NOT NULL UNIQUE,\n      calorie_budget_kcal  REAL    NOT NULL DEFAULT 1500,\n      total_calories_kcal  REAL    NOT NULL DEFAULT 0,\n      total_protein_g      REAL    NOT NULL DEFAULT 0,\n      total_carbs_g        REAL    NOT NULL DEFAULT 0,\n      total_fat_g          REAL    NOT NULL DEFAULT 0,\n      created_at           TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', '2026-04-03 09:00:00', 'localtime')),\n      updated_at           TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', '2026-04-03 09:00:00', 'localtime'))\n    )"
+  },
+  {
+   "type": "table",
+   "name": "food_entry",
+   "sql": "CREATE TABLE food_entry (\n      id              INTEGER PRIMARY KEY AUTOINCREMENT,\n      daily_log_id    INTEGER NOT NULL REFERENCES daily_log(id) ON DELETE CASCADE,\n      food_catalog_id INTEGER REFERENCES food_catalog(id) ON DELETE SET NULL,\n      meal_slot       TEXT    NOT NULL CHECK (meal_slot IN ('breakfast','lunch','dinner','snacks')),\n      food_name       TEXT    NOT NULL,\n      quantity_value  REAL    NOT NULL,\n      quantity_unit   TEXT    NOT NULL,\n      calories_kcal   REAL    NOT NULL DEFAULT 0,\n      protein_g       REAL    NOT NULL DEFAULT 0,\n      carbs_g         REAL    NOT NULL DEFAULT 0,\n      fat_g           REAL    NOT NULL DEFAULT 0,\n      sort_order      INTEGER NOT NULL DEFAULT 0,\n      created_at      TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', '2026-04-03 09:00:00', 'localtime')),\n      updated_at      TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', '2026-04-03 09:00:00', 'localtime'))\n    )"
+  },
+  {
+   "type": "table",
+   "name": "meal_plan",
+   "sql": "CREATE TABLE meal_plan (\n      id                  INTEGER PRIMARY KEY AUTOINCREMENT,\n      title               TEXT    NOT NULL,\n      start_date          TEXT    NOT NULL,\n      end_date            TEXT    NOT NULL,\n      status              TEXT    NOT NULL DEFAULT 'draft' CHECK (status IN ('draft','active','archived')),\n      target_calories_kcal REAL,\n      notes               TEXT,\n      created_at          TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', '2026-04-03 09:00:00', 'localtime')),\n      updated_at          TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', '2026-04-03 09:00:00', 'localtime'))\n    )"
+  },
+  {
+   "type": "table",
+   "name": "meal_plan_day",
+   "sql": "CREATE TABLE meal_plan_day (\n      id            INTEGER PRIMARY KEY AUTOINCREMENT,\n      meal_plan_id  INTEGER NOT NULL REFERENCES meal_plan(id) ON DELETE CASCADE,\n      plan_date     TEXT    NOT NULL,\n      created_at    TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', '2026-04-03 09:00:00', 'localtime')),\n      updated_at    TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', '2026-04-03 09:00:00', 'localtime')),\n      UNIQUE (meal_plan_id, plan_date)\n    )"
+  },
+  {
+   "type": "table",
+   "name": "meal_plan_item",
+   "sql": "CREATE TABLE meal_plan_item (\n      id              INTEGER PRIMARY KEY AUTOINCREMENT,\n      meal_plan_day_id INTEGER NOT NULL REFERENCES meal_plan_day(id) ON DELETE CASCADE,\n      meal_slot       TEXT    NOT NULL CHECK (meal_slot IN ('breakfast','lunch','dinner')),\n      dish_name       TEXT    NOT NULL,\n      notes           TEXT,\n      sort_order      INTEGER NOT NULL DEFAULT 0,\n      created_at      TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', '2026-04-03 09:00:00', 'localtime')),\n      updated_at      TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', '2026-04-03 09:00:00', 'localtime'))\n    )"
+  },
+  {
+   "type": "table",
+   "name": "ingredient_item",
+   "sql": "CREATE TABLE ingredient_item (\n      id            INTEGER PRIMARY KEY AUTOINCREMENT,\n      meal_plan_id  INTEGER NOT NULL REFERENCES meal_plan(id) ON DELETE CASCADE,\n      name          TEXT    NOT NULL,\n      quantity_value REAL   NOT NULL DEFAULT 0,\n      quantity_unit  TEXT   NOT NULL DEFAULT 'g',\n      notes         TEXT,\n      created_at    TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', '2026-04-03 09:00:00', 'localtime')),\n      updated_at    TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', '2026-04-03 09:00:00', 'localtime'))\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_food_entry_slot",
+   "sql": "CREATE INDEX idx_food_entry_slot ON food_entry(daily_log_id, meal_slot, sort_order)"
+  },
+  {
+   "type": "index",
+   "name": "idx_food_catalog_name",
+   "sql": "CREATE INDEX idx_food_catalog_name ON food_catalog(name COLLATE NOCASE)"
+  },
+  {
+   "type": "index",
+   "name": "idx_meal_plan_dates",
+   "sql": "CREATE INDEX idx_meal_plan_dates ON meal_plan(start_date, end_date)"
+  },
+  {
+   "type": "index",
+   "name": "idx_ingredient_plan",
+   "sql": "CREATE INDEX idx_ingredient_plan ON ingredient_item(meal_plan_id)"
+  },
+  {
+   "type": "trigger",
+   "name": "trg_entry_after_insert",
+   "sql": "CREATE TRIGGER trg_entry_after_insert\n    AFTER INSERT ON food_entry BEGIN\n      UPDATE daily_log\n      SET total_calories_kcal = (SELECT COALESCE(SUM(calories_kcal), 0) FROM food_entry WHERE daily_log_id = NEW.daily_log_id),\n          total_protein_g     = (SELECT COALESCE(SUM(protein_g),     0) FROM food_entry WHERE daily_log_id = NEW.daily_log_id),\n          total_carbs_g       = (SELECT COALESCE(SUM(carbs_g),       0) FROM food_entry WHERE daily_log_id = NEW.daily_log_id),\n          total_fat_g         = (SELECT COALESCE(SUM(fat_g),         0) FROM food_entry WHERE daily_log_id = NEW.daily_log_id),\n          updated_at          = strftime('%Y-%m-%d %H:%M:%S', datetime('now'), 'localtime')\n      WHERE id = NEW.daily_log_id;\n    END"
+  },
+  {
+   "type": "trigger",
+   "name": "trg_entry_after_update",
+   "sql": "CREATE TRIGGER trg_entry_after_update\n    AFTER UPDATE ON food_entry BEGIN\n      UPDATE daily_log\n      SET total_calories_kcal = (SELECT COALESCE(SUM(calories_kcal), 0) FROM food_entry WHERE daily_log_id = NEW.daily_log_id),\n          total_protein_g     = (SELECT COALESCE(SUM(protein_g),     0) FROM food_entry WHERE daily_log_id = NEW.daily_log_id),\n          total_carbs_g       = (SELECT COALESCE(SUM(carbs_g),       0) FROM food_entry WHERE daily_log_id = NEW.daily_log_id),\n          total_fat_g         = (SELECT COALESCE(SUM(fat_g),         0) FROM food_entry WHERE daily_log_id = NEW.daily_log_id),\n          updated_at          = strftime('%Y-%m-%d %H:%M:%S', datetime('now'), 'localtime')\n      WHERE id = NEW.daily_log_id;\n    END"
+  },
+  {
+   "type": "trigger",
+   "name": "trg_entry_after_delete",
+   "sql": "CREATE TRIGGER trg_entry_after_delete\n    AFTER DELETE ON food_entry BEGIN\n      UPDATE daily_log\n      SET total_calories_kcal = (SELECT COALESCE(SUM(calories_kcal), 0) FROM food_entry WHERE daily_log_id = OLD.daily_log_id),\n          total_protein_g     = (SELECT COALESCE(SUM(protein_g),     0) FROM food_entry WHERE daily_log_id = OLD.daily_log_id),\n          total_carbs_g       = (SELECT COALESCE(SUM(carbs_g),       0) FROM food_entry WHERE daily_log_id = OLD.daily_log_id),\n          total_fat_g         = (SELECT COALESCE(SUM(fat_g),         0) FROM food_entry WHERE daily_log_id = OLD.daily_log_id),\n          updated_at          = strftime('%Y-%m-%d %H:%M:%S', datetime('now'), 'localtime')\n      WHERE id = OLD.daily_log_id;\n    END"
+  }
+ ],
+ "food_catalog": [
+  {
+   "id": 1,
+   "name": "白米饭",
+   "serving_size_value": 200,
+   "serving_size_unit": "g",
+   "calories_kcal": 260,
+   "protein_g": 4.8,
+   "carbs_g": 57.6,
+   "fat_g": 0.4,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "name": "糙米饭",
+   "serving_size_value": 200,
+   "serving_size_unit": "g",
+   "calories_kcal": 220,
+   "protein_g": 4.6,
+   "carbs_g": 45.8,
+   "fat_g": 1.8,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "name": "全麦面包",
+   "serving_size_value": 35,
+   "serving_size_unit": "g",
+   "calories_kcal": 82,
+   "protein_g": 3.5,
+   "carbs_g": 15,
+   "fat_g": 1.1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "name": "白吐司",
+   "serving_size_value": 30,
+   "serving_size_unit": "g",
+   "calories_kcal": 80,
+   "protein_g": 2.5,
+   "carbs_g": 14.8,
+   "fat_g": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "name": "鸡蛋",
+   "serving_size_value": 50,
+   "serving_size_unit": "g",
+   "calories_kcal": 72,
+   "protein_g": 6.3,
+   "carbs_g": 0.4,
+   "fat_g": 5,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "name": "鸡胸肉",
+   "serving_size_value": 150,
+   "serving_size_unit": "g",
+   "calories_kcal": 195,
+   "protein_g": 36,
+   "carbs_g": 0,
+   "fat_g": 4.5,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 7,
+   "name": "三文鱼",
+   "serving_size_value": 100,
+   "serving_size_unit": "g",
+   "calories_kcal": 208,
+   "protein_g": 20,
+   "carbs_g": 0,
+   "fat_g": 13,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 8,
+   "name": "牛肉",
+   "serving_size_value": 100,
+   "serving_size_unit": "g",
+   "calories_kcal": 250,
+   "protein_g": 26,
+   "carbs_g": 0,
+   "fat_g": 15,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 9,
+   "name": "豆腐",
+   "serving_size_value": 100,
+   "serving_size_unit": "g",
+   "calories_kcal": 76,
+   "protein_g": 8,
+   "carbs_g": 1.9,
+   "fat_g": 4.2,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 10,
+   "name": "牛奶",
+   "serving_size_value": 240,
+   "serving_size_unit": "ml",
+   "calories_kcal": 149,
+   "protein_g": 8,
+   "carbs_g": 11.7,
+   "fat_g": 8,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 11,
+   "name": "酸奶",
+   "serving_size_value": 100,
+   "serving_size_unit": "g",
+   "calories_kcal": 61,
+   "protein_g": 3.5,
+   "carbs_g": 4.7,
+   "fat_g": 3.3,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 12,
+   "name": "燕麦",
+   "serving_size_value": 40,
+   "serving_size_unit": "g",
+   "calories_kcal": 152,
+   "protein_g": 5,
+   "carbs_g": 27,
+   "fat_g": 2.5,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 13,
+   "name": "香蕉",
+   "serving_size_value": 120,
+   "serving_size_unit": "g",
+   "calories_kcal": 107,
+   "protein_g": 1.3,
+   "carbs_g": 27.1,
+   "fat_g": 0.4,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 14,
+   "name": "苹果",
+   "serving_size_value": 180,
+   "serving_size_unit": "g",
+   "calories_kcal": 94,
+   "protein_g": 0.5,
+   "carbs_g": 25.1,
+   "fat_g": 0.3,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 15,
+   "name": "牛油果",
+   "serving_size_value": 100,
+   "serving_size_unit": "g",
+   "calories_kcal": 160,
+   "protein_g": 2,
+   "carbs_g": 8.5,
+   "fat_g": 14.7,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 16,
+   "name": "oatmeal",
+   "serving_size_value": 40,
+   "serving_size_unit": "g",
+   "calories_kcal": 152,
+   "protein_g": 5,
+   "carbs_g": 27,
+   "fat_g": 2.5,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 17,
+   "name": "whole-grain bread",
+   "serving_size_value": 35,
+   "serving_size_unit": "g",
+   "calories_kcal": 82,
+   "protein_g": 3.5,
+   "carbs_g": 15,
+   "fat_g": 1.1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 18,
+   "name": "chicken breast",
+   "serving_size_value": 150,
+   "serving_size_unit": "g",
+   "calories_kcal": 195,
+   "protein_g": 36,
+   "carbs_g": 0,
+   "fat_g": 4.5,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 19,
+   "name": "salmon",
+   "serving_size_value": 100,
+   "serving_size_unit": "g",
+   "calories_kcal": 208,
+   "protein_g": 20,
+   "carbs_g": 0,
+   "fat_g": 13,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 20,
+   "name": "beef steak",
+   "serving_size_value": 150,
+   "serving_size_unit": "g",
+   "calories_kcal": 375,
+   "protein_g": 39,
+   "carbs_g": 0,
+   "fat_g": 22.5,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 21,
+   "name": "tofu",
+   "serving_size_value": 100,
+   "serving_size_unit": "g",
+   "calories_kcal": 76,
+   "protein_g": 8,
+   "carbs_g": 1.9,
+   "fat_g": 4.2,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 22,
+   "name": "greek yogurt",
+   "serving_size_value": 170,
+   "serving_size_unit": "g",
+   "calories_kcal": 100,
+   "protein_g": 17,
+   "carbs_g": 6,
+   "fat_g": 0.7,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 23,
+   "name": "milk",
+   "serving_size_value": 240,
+   "serving_size_unit": "ml",
+   "calories_kcal": 149,
+   "protein_g": 8,
+   "carbs_g": 11.7,
+   "fat_g": 8,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 24,
+   "name": "banana",
+   "serving_size_value": 120,
+   "serving_size_unit": "g",
+   "calories_kcal": 107,
+   "protein_g": 1.3,
+   "carbs_g": 27.1,
+   "fat_g": 0.4,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 25,
+   "name": "apple",
+   "serving_size_value": 180,
+   "serving_size_unit": "g",
+   "calories_kcal": 94,
+   "protein_g": 0.5,
+   "carbs_g": 25.1,
+   "fat_g": 0.3,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 26,
+   "name": "avocado",
+   "serving_size_value": 100,
+   "serving_size_unit": "g",
+   "calories_kcal": 160,
+   "protein_g": 2,
+   "carbs_g": 8.5,
+   "fat_g": 14.7,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 27,
+   "name": "almonds",
+   "serving_size_value": 28,
+   "serving_size_unit": "g",
+   "calories_kcal": 164,
+   "protein_g": 6,
+   "carbs_g": 6.1,
+   "fat_g": 14.2,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 28,
+   "name": "peanut butter",
+   "serving_size_value": 32,
+   "serving_size_unit": "g",
+   "calories_kcal": 191,
+   "protein_g": 7.1,
+   "carbs_g": 6.3,
+   "fat_g": 16.4,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 29,
+   "name": "spinach",
+   "serving_size_value": 50,
+   "serving_size_unit": "g",
+   "calories_kcal": 12,
+   "protein_g": 1.7,
+   "carbs_g": 1,
+   "fat_g": 0.2,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 30,
+   "name": "broccoli",
+   "serving_size_value": 100,
+   "serving_size_unit": "g",
+   "calories_kcal": 34,
+   "protein_g": 2.8,
+   "carbs_g": 6.6,
+   "fat_g": 0.4,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 31,
+   "name": "potato chips",
+   "serving_size_value": 28,
+   "serving_size_unit": "g",
+   "calories_kcal": 152,
+   "protein_g": 2,
+   "carbs_g": 15,
+   "fat_g": 9.5,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "daily_log": [],
+ "food_entry": [],
+ "meal_plan": [],
+ "meal_plan_day": [],
+ "meal_plan_item": [],
+ "ingredient_item": [],
+ "_file": []
+}

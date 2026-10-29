@@ -1,0 +1,121 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_1401",
+   "threadId": "msg_1401",
+   "internalDate": 1774493100000,
+   "bodyText": "你好，我是万通物流的赵总监。我们的仓储管理系统从今天上午10点开始就频繁报错，到现在已经超过30分钟完全无法使用。200多个仓库的实时调度全部中断，配送车辆无法获取调度指令，预计每小时直接经济损失超过50万元。\n\n我们是贵司VIP客户，合同中明确约定了1小时响应、4小时解决的SLA标准。请立即启动紧急响应流程，我需要在1小时内收到处理方案和预计恢复时间。\n\n如果今天不能解决，我们将按照合同条款追究违约责任。\n\n万通物流 赵总监\n电话：13900140001",
+   "headers": [
+    {
+     "name": "From",
+     "value": "zhao@wantong-logistics.com"
+    },
+    {
+     "name": "To",
+     "value": "support@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "紧急：系统已不可用超过30分钟，严重影响仓储调度"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 26 Mar 2026 10:45:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_1402",
+   "threadId": "msg_1402",
+   "internalDate": 1774486800000,
+   "bodyText": "本周技术部工作汇报：\n1. 完成了v3.2版本的灰度发布\n2. 数据库主从切换演练顺利完成\n3. 下周计划：API网关升级、报表模块优化\n\n各组请及时更新JIRA进度。",
+   "headers": [
+    {
+     "name": "From",
+     "value": "weekly-report@company.com"
+    },
+    {
+     "name": "To",
+     "value": "all-staff@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "技术部周报 — 2026年第12周"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 26 Mar 2026 09:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 2
+  }
+ ]
+}

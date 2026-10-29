@@ -1,0 +1,49 @@
+[
+ {
+  "name": "todo",
+  "description": "The todo service's tools.",
+  "tools": [
+   {
+    "name": "list_tasks",
+    "call": "todo_list_tasks",
+    "description": "查看待办事项列表",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "状态筛选(pending/completed/all)",
+       "default": "pending"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9102/todo/tasks",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_task",
+    "call": "todo_get_task",
+    "description": "获取待办详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "待办ID"
+      }
+     },
+     "required": [
+      "task_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9102/todo/tasks/get",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

@@ -1,0 +1,92 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_751",
+   "threadId": "msg_751",
+   "internalDate": 1774396800000,
+   "bodyText": "请整理本周AI和大模型相关的行业动态，按主题分类后发给团队。重点关注：模型发布、应用落地、芯片进展。周五前完成。",
+   "headers": [
+    {
+     "name": "From",
+     "value": "boss@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "请整理本周AI行业简报"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Mar 2026 08:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 1
+  }
+ ]
+}

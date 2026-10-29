@@ -9,7 +9,7 @@
  * copies to one destination apart, where a map by destination would keep
  * only the last.
  */
-import { cpSync, existsSync, mkdirSync, statSync } from 'node:fs'
+import { constants, cpSync, existsSync, mkdirSync, statSync } from 'node:fs'
 import { basename, join } from 'node:path'
 
 /** One copy: a host path into a workspace path. `from` null makes an empty directory. */
@@ -60,6 +60,8 @@ export function copyInto(copies: Copy[], host: (path: string) => string | undefi
     if (from === null) mkdirSync(target, { recursive: true })
     else if (statSync(from).isFile() && existsSync(target) && statSync(target).isDirectory())
       cpSync(from, join(target, basename(from)))
-    else cpSync(from, target, { recursive: true })
+    // A clone where the file system has them (APFS, Btrfs), else a copy:
+    // a Gaia2 trial's drive is 250 MB.
+    else cpSync(from, target, { recursive: true, mode: constants.COPYFILE_FICLONE })
   }
 }

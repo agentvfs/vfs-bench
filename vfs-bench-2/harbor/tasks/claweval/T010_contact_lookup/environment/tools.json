@@ -1,0 +1,80 @@
+[
+ {
+  "name": "contacts",
+  "description": "The contacts service's tools.",
+  "tools": [
+   {
+    "name": "search",
+    "call": "contacts_search",
+    "description": "Search for contacts by name",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "Search keyword (name)"
+      },
+      "department": {
+       "type": "string",
+       "description": "Filter by department"
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9103/contacts/search",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get",
+    "call": "contacts_get",
+    "description": "Get detailed contact information by ID",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contact_id": {
+       "type": "string",
+       "description": "Contact ID"
+      }
+     },
+     "required": [
+      "contact_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9103/contacts/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "send_message",
+    "call": "contacts_send_message",
+    "description": "Send a message to a contact",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contact_id": {
+       "type": "string",
+       "description": "Contact ID"
+      },
+      "message": {
+       "type": "string",
+       "description": "Message content"
+      }
+     },
+     "required": [
+      "contact_id",
+      "message"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9103/contacts/send_message",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

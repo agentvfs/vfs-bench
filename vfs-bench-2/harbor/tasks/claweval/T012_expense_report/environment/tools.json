@@ -1,0 +1,86 @@
+[
+ {
+  "name": "finance",
+  "description": "The finance service's tools.",
+  "tools": [
+   {
+    "name": "list_transactions",
+    "call": "finance_list_transactions",
+    "description": "Get the list of expense transactions",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "start_date": {
+       "type": "string",
+       "description": "Start date (YYYY-MM-DD)"
+      },
+      "end_date": {
+       "type": "string",
+       "description": "End date (YYYY-MM-DD)"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9104/finance/transactions",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_transaction",
+    "call": "finance_get_transaction",
+    "description": "Get details of a single transaction",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "transaction_id": {
+       "type": "string",
+       "description": "Transaction ID"
+      }
+     },
+     "required": [
+      "transaction_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9104/finance/transactions/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "submit_report",
+    "call": "finance_submit_report",
+    "description": "Submit an expense report",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "title": {
+       "type": "string",
+       "description": "Report title"
+      },
+      "transactions": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "List of transaction IDs to include"
+      },
+      "total_amount": {
+       "type": "number",
+       "description": "Total amount"
+      }
+     },
+     "required": [
+      "title",
+      "transactions",
+      "total_amount"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9104/finance/report/submit",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

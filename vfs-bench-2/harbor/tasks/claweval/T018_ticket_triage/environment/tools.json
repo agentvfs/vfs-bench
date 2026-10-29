@@ -1,0 +1,111 @@
+[
+ {
+  "name": "helpdesk",
+  "description": "The helpdesk service's tools.",
+  "tools": [
+   {
+    "name": "list_tickets",
+    "call": "helpdesk_list_tickets",
+    "description": "Get the list of tickets",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "Filter by ticket status (open/closed/all)",
+       "default": "open"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9107/helpdesk/tickets",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_ticket",
+    "call": "helpdesk_get_ticket",
+    "description": "Get ticket details",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticket_id": {
+       "type": "string",
+       "description": "Ticket ID"
+      }
+     },
+     "required": [
+      "ticket_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9107/helpdesk/tickets/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_ticket",
+    "call": "helpdesk_update_ticket",
+    "description": "Update ticket information",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticket_id": {
+       "type": "string",
+       "description": "Ticket ID"
+      },
+      "priority": {
+       "type": "string",
+       "description": "Priority level (urgent/high/medium/low)"
+      },
+      "tags": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "List of tags"
+      },
+      "category": {
+       "type": "string",
+       "description": "Category"
+      }
+     },
+     "required": [
+      "ticket_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9107/helpdesk/tickets/update",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "close_ticket",
+    "call": "helpdesk_close_ticket",
+    "description": "Close a ticket",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticket_id": {
+       "type": "string",
+       "description": "Ticket ID"
+      },
+      "resolution": {
+       "type": "string",
+       "description": "Resolution description"
+      }
+     },
+     "required": [
+      "ticket_id",
+      "resolution"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9107/helpdesk/tickets/close",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

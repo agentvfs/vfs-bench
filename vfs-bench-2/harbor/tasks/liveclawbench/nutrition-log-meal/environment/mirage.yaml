@@ -1,0 +1,27 @@
+# nutrition-log-meal, on vfsbench_harbor's mirage environment.
+#
+# In place of upstream's environment/Dockerfile: the mocks of its base
+# image are the fakes below, and its COPY, RUN, ENV and WORKDIR lines are
+# `copy`, `run`, `env` and `workdir`.
+#
+# Rule B: Mirage has no such service, so each upstream mock is this repo's
+# kit fake that runs upstream's own app: mint-diet (mocks/mintdiet).
+# One fake of each serves the whole job; this trial is a run of its own on
+# each.
+fakes:
+  mintdiet:
+    # Upstream's seed for the task (harbor/export.py writes it).
+    fixture: fixtures/mintdiet.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports: [5003]
+    # Where upstream's image keeps its SQLite, which verify.py reads.
+    state: /var/lib/mock-data/mint-diet/mint-diet.sqlite
+env:
+  TASK_NAME: nutrition-log-meal
+  TZ: UTC
+run:
+  - mkdir -p /workspace/output
+# The verifier reads today's date: a microVM's clock is set to the trial's
+# (MicrosandboxVerifier), as the workspace's is.
+verifier:
+  clock: true

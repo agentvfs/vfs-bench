@@ -1,0 +1,306 @@
+{
+ "_env": [
+  {
+   "name": "TASK_NAME",
+   "value": "grocery-reorder"
+  }
+ ],
+ "_schema": [
+  {
+   "type": "table",
+   "name": "thermostat_settings",
+   "sql": "CREATE TABLE thermostat_settings (\n      id INTEGER PRIMARY KEY CHECK (id = 1),\n      mode TEXT NOT NULL CHECK (mode IN ('comfort', 'eco', 'off')),\n      temperature REAL NOT NULL,\n      updated_at TEXT NOT NULL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "coffee_schedule",
+   "sql": "CREATE TABLE coffee_schedule (\n      id INTEGER PRIMARY KEY CHECK (id = 1),\n      start_time TEXT NOT NULL,\n      beans_grams INTEGER DEFAULT 20,\n      cancelled INTEGER DEFAULT 0,\n      updated_at TEXT NOT NULL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "benchmark_clock",
+   "sql": "CREATE TABLE benchmark_clock (\n      id INTEGER PRIMARY KEY CHECK (id = 1),\n      clock_time TEXT NOT NULL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "room_metrics",
+   "sql": "CREATE TABLE room_metrics (\n      id INTEGER PRIMARY KEY,\n      temperature REAL NOT NULL,\n      humidity REAL NOT NULL,\n      unit_temp TEXT NOT NULL,\n      noise REAL,\n      light REAL,\n      air_quality REAL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "room",
+   "sql": "CREATE TABLE room (\n      id INTEGER PRIMARY KEY,\n      name TEXT NOT NULL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "inventory_item",
+   "sql": "CREATE TABLE inventory_item (\n      id INTEGER PRIMARY KEY,\n      item_name TEXT NOT NULL,\n      quantity REAL NOT NULL,\n      unit TEXT NOT NULL,\n      location TEXT NOT NULL,\n      expiry_date TEXT,\n      category TEXT,\n      updated_at TEXT\n    )"
+  },
+  {
+   "type": "table",
+   "name": "inventory_snapshot",
+   "sql": "CREATE TABLE inventory_snapshot (\n      id INTEGER PRIMARY KEY,\n      item_name TEXT NOT NULL,\n      quantity REAL NOT NULL,\n      unit TEXT NOT NULL,\n      location TEXT,\n      captured_at TEXT NOT NULL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "grocery_product",
+   "sql": "CREATE TABLE grocery_product (\n      product_id TEXT PRIMARY KEY,\n      name TEXT NOT NULL,\n      quantity REAL NOT NULL,\n      unit TEXT NOT NULL,\n      stock_status TEXT NOT NULL CHECK (stock_status IN ('sufficient', 'insufficient', 'unavailable')),\n      substitute_for TEXT,\n      reference TEXT\n    )"
+  },
+  {
+   "type": "table",
+   "name": "wearable_recovery_state",
+   "sql": "CREATE TABLE wearable_recovery_state (\n      id INTEGER PRIMARY KEY CHECK (id = 1),\n      sleep_hours REAL NOT NULL,\n      sleep_score REAL NOT NULL,\n      readiness REAL NOT NULL,\n      resting_heart_rate REAL NOT NULL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "calendar_event",
+   "sql": "CREATE TABLE calendar_event (\n      id INTEGER PRIMARY KEY,\n      title TEXT NOT NULL,\n      start_time TEXT NOT NULL,\n      event_type TEXT,\n      workout_type TEXT CHECK (workout_type IN ('hiit', 'yoga', 'walking', 'cycling', 'strength', 'stretching', 'swimming', 'rest') OR workout_type IS NULL),\n      updated_at TEXT NOT NULL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "user_constraints",
+   "sql": "CREATE TABLE user_constraints (\n      id INTEGER PRIMARY KEY CHECK (id = 1),\n      calorie_target REAL NOT NULL,\n      macro_targets TEXT NOT NULL,\n      allergy_constraints TEXT NOT NULL,\n      weekly_budget_limit REAL NOT NULL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "recipe",
+   "sql": "CREATE TABLE recipe (\n      id INTEGER PRIMARY KEY,\n      name TEXT NOT NULL,\n      meal_type TEXT NOT NULL CHECK (meal_type IN ('breakfast', 'lunch', 'dinner')),\n      ingredients TEXT NOT NULL,\n      calories_total REAL NOT NULL,\n      allergens TEXT\n    )"
+  },
+  {
+   "type": "table",
+   "name": "recipe_nutrition",
+   "sql": "CREATE TABLE recipe_nutrition (\n      id INTEGER PRIMARY KEY,\n      meal_id INTEGER NOT NULL,\n      ingredient_name TEXT NOT NULL,\n      quantity REAL NOT NULL,\n      unit TEXT NOT NULL,\n      calories REAL NOT NULL,\n      protein_g REAL,\n      carbs_g REAL,\n      fat_g REAL,\n      FOREIGN KEY (meal_id) REFERENCES recipe(id)\n    )"
+  },
+  {
+   "type": "table",
+   "name": "meal_plan",
+   "sql": "CREATE TABLE meal_plan (\n      id INTEGER PRIMARY KEY,\n      plan_id TEXT NOT NULL,\n      created_at TEXT NOT NULL,\n      plan_data TEXT NOT NULL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "substitution_mapping",
+   "sql": "CREATE TABLE substitution_mapping (\n      id INTEGER PRIMARY KEY,\n      original_item TEXT NOT NULL,\n      substitute_item TEXT NOT NULL,\n      substitution_ratio REAL NOT NULL,\n      category TEXT\n    )"
+  }
+ ],
+ "thermostat_settings": [
+  {
+   "id": 1,
+   "mode": "eco",
+   "temperature": 70,
+   "updated_at": "2026-05-12T07:00:00Z"
+  }
+ ],
+ "coffee_schedule": [
+  {
+   "id": 1,
+   "start_time": "07:00",
+   "beans_grams": 20,
+   "cancelled": 0,
+   "updated_at": "2026-05-12T06:00:00Z"
+  }
+ ],
+ "benchmark_clock": [
+  {
+   "id": 1,
+   "clock_time": "2026-05-12T08:00:00Z"
+  }
+ ],
+ "room_metrics": [
+  {
+   "id": 1,
+   "temperature": 68.5,
+   "humidity": 52,
+   "unit_temp": "F",
+   "noise": 25,
+   "light": 120,
+   "air_quality": 88
+  }
+ ],
+ "room": [
+  {
+   "id": 1,
+   "name": "Living Room"
+  }
+ ],
+ "inventory_item": [
+  {
+   "id": 1,
+   "item_name": "Eggs",
+   "quantity": 11,
+   "unit": "pieces",
+   "location": "fridge",
+   "expiry_date": "2026-05-20",
+   "category": "dairy",
+   "updated_at": null
+  },
+  {
+   "id": 2,
+   "item_name": "Eggs",
+   "quantity": 7,
+   "unit": "pieces",
+   "location": "pantry",
+   "expiry_date": "2026-05-22",
+   "category": "dairy",
+   "updated_at": null
+  },
+  {
+   "id": 3,
+   "item_name": "Milk",
+   "quantity": 0.5,
+   "unit": "gallons",
+   "location": "fridge",
+   "expiry_date": "2026-05-15",
+   "category": "dairy",
+   "updated_at": null
+  },
+  {
+   "id": 4,
+   "item_name": "Bread",
+   "quantity": 1,
+   "unit": "loaf",
+   "location": "pantry",
+   "expiry_date": "2026-05-18",
+   "category": "bakery",
+   "updated_at": null
+  },
+  {
+   "id": 5,
+   "item_name": "Butter",
+   "quantity": 0.25,
+   "unit": "lbs",
+   "location": "fridge",
+   "expiry_date": "2026-05-25",
+   "category": "dairy",
+   "updated_at": null
+  },
+  {
+   "id": 6,
+   "item_name": "Blue Mountain Coffee Beans",
+   "quantity": 500,
+   "unit": "grams",
+   "location": "pantry",
+   "expiry_date": "2026-12-01",
+   "category": "coffee",
+   "updated_at": null
+  }
+ ],
+ "inventory_snapshot": [
+  {
+   "id": 1,
+   "item_name": "Eggs",
+   "quantity": 11,
+   "unit": "pieces",
+   "location": "fridge",
+   "captured_at": "2026-05-12T08:00:00Z"
+  },
+  {
+   "id": 2,
+   "item_name": "Eggs",
+   "quantity": 7,
+   "unit": "pieces",
+   "location": "pantry",
+   "captured_at": "2026-05-12T08:00:00Z"
+  },
+  {
+   "id": 3,
+   "item_name": "Milk",
+   "quantity": 0.5,
+   "unit": "gallons",
+   "location": "fridge",
+   "captured_at": "2026-05-12T08:00:00Z"
+  },
+  {
+   "id": 4,
+   "item_name": "Bread",
+   "quantity": 1,
+   "unit": "loaf",
+   "location": "pantry",
+   "captured_at": "2026-05-12T08:00:00Z"
+  },
+  {
+   "id": 5,
+   "item_name": "Butter",
+   "quantity": 0.25,
+   "unit": "lbs",
+   "location": "fridge",
+   "captured_at": "2026-05-12T08:00:00Z"
+  },
+  {
+   "id": 6,
+   "item_name": "Blue Mountain Coffee Beans",
+   "quantity": 500,
+   "unit": "grams",
+   "location": "pantry",
+   "captured_at": "2026-05-12T08:00:00Z"
+  }
+ ],
+ "wearable_recovery_state": [
+  {
+   "id": 1,
+   "sleep_hours": 7.5,
+   "sleep_score": 82,
+   "readiness": 75,
+   "resting_heart_rate": 58
+  }
+ ],
+ "calendar_event": [
+  {
+   "id": 1,
+   "title": "Morning Workout",
+   "start_time": "2026-05-12T08:00:00Z",
+   "event_type": "workout",
+   "workout_type": "yoga",
+   "updated_at": "2026-05-11T20:00:00Z"
+  },
+  {
+   "id": 2,
+   "title": "Team Standup",
+   "start_time": "2026-05-12T10:00:00Z",
+   "event_type": "meeting",
+   "workout_type": null,
+   "updated_at": "2026-05-11T09:00:00Z"
+  }
+ ],
+ "user_constraints": [
+  {
+   "id": 1,
+   "calorie_target": 2000,
+   "macro_targets": "{\"protein\": 150, \"carbs\": 250, \"fat\": 65}",
+   "allergy_constraints": "[]",
+   "weekly_budget_limit": 150
+  }
+ ],
+ "recipe": [],
+ "recipe_nutrition": [],
+ "meal_plan": [],
+ "substitution_mapping": [],
+ "_row": [
+  {
+   "seq": 1,
+   "table": "grocery_product",
+   "data": "{\"product_id\":\"PROD001\",\"name\":\"Organic Whole Milk\",\"quantity\":1,\"unit\":\"gallon\",\"stock_status\":\"sufficient\",\"substitute_for\":null,\"reference\":\"ORD000001\"}"
+  },
+  {
+   "seq": 2,
+   "table": "grocery_product",
+   "data": "{\"product_id\":\"PROD002\",\"name\":\"Salted Butter\",\"quantity\":1,\"unit\":\"lb\",\"stock_status\":\"sufficient\",\"substitute_for\":null,\"reference\":\"ORD000002\"}"
+  }
+ ],
+ "_file": [
+  {
+   "path": "/opt/mock/data/smarthome.sql",
+   "data": "-- Seed data for grocery-reorder task\n-- Focus: Cross-service inventory check and ordering with unit conversion\n\n-- Room\nINSERT OR IGNORE INTO room (id, name) VALUES (1, 'Living Room');\n\n-- Room Metrics\nINSERT OR IGNORE INTO room_metrics (id, temperature, humidity, unit_temp, noise, light, air_quality)\nVALUES (1, 68.5, 52.0, 'F', 25.0, 120.0, 88);\n\n-- Thermostat Settings\nINSERT OR IGNORE INTO thermostat_settings (id, mode, temperature, updated_at)\nVALUES (1, 'eco', 70.0, '2026-05-12T07:00:00Z');\n\n-- Coffee Schedule\nINSERT OR IGNORE INTO coffee_schedule (id, start_time, beans_grams, cancelled, updated_at)\nVALUES (1, '07:00', 20, 0, '2026-05-12T06:00:00Z');\n\n-- Benchmark Clock\nINSERT OR IGNORE INTO benchmark_clock (id, clock_time)\nVALUES (1, '2026-05-12T08:00:00Z');\n\n-- Wearable Recovery State\nINSERT OR IGNORE INTO wearable_recovery_state (id, sleep_hours, sleep_score, readiness, resting_heart_rate)\nVALUES (1, 7.5, 82.0, 75.0, 58.0);\n\n-- Calendar Events\nINSERT OR IGNORE INTO calendar_event (id, title, start_time, event_type, workout_type, updated_at) VALUES\n(1, 'Morning Workout', '2026-05-12T08:00:00Z', 'workout', 'yoga', '2026-05-11T20:00:00Z'),\n(2, 'Team Standup', '2026-05-12T10:00:00Z', 'meeting', NULL, '2026-05-11T09:00:00Z');\n\n-- User Constraints\nINSERT OR IGNORE INTO user_constraints (id, calorie_target, macro_targets, allergy_constraints, weekly_budget_limit)\nVALUES (1, 2000.0, '{\"protein\": 150, \"carbs\": 250, \"fat\": 65}', '[]', 150.0);\n\n-- Inventory Items (eggs split across fridge and pantry)\nINSERT OR IGNORE INTO inventory_item (item_name, quantity, unit, location, expiry_date, category) VALUES\n('Eggs', 11.0, 'pieces', 'fridge', '2026-05-20', 'dairy'),\n('Eggs', 7.0, 'pieces', 'pantry', '2026-05-22', 'dairy'),\n('Milk', 0.5, 'gallons', 'fridge', '2026-05-15', 'dairy'),\n('Bread', 1.0, 'loaf', 'pantry', '2026-05-18', 'bakery'),\n('Butter', 0.25, 'lbs', 'fridge', '2026-05-25', 'dairy'),\n('Blue Mountain Coffee Beans', 500.0, 'grams', 'pantry', '2026-12-01', 'coffee');  -- coffee beans stock\n\n-- Grocery Products (Shopping List with existing order references)\nINSERT OR IGNORE INTO grocery_product (product_id, name, quantity, unit, stock_status, reference) VALUES\n('PROD001', 'Organic Whole Milk', 1.0, 'gallon', 'sufficient', 'ORD000001'),\n('PROD002', 'Salted Butter', 1.0, 'lb', 'sufficient', 'ORD000002');\n",
+   "encoding": "utf8"
+  },
+  {
+   "path": "/opt/mock/startup-overrides/grocery-reorder.sh",
+   "data": "#!/bin/bash\n# Write initial orders to shop data directory\n# This runs via startup_extra after shop mock initializes\n\nset -e\n\nmkdir -p /var/lib/mock-data/shop\n\n# Write orders with correct Order schema matching shop mock types.ts:\n# - order_id, user_id, items, total_amount, status, create_time, shipping_address\n# - status uses capitalized format (Delivered, Pending Shipment, etc.)\n# - create_time format: \"YYYY-MM-DD HH:MM:SS\" (not ISO format with T)\n\ncat > /var/lib/mock-data/shop/mosi_shop_orders.json << 'EOF'\n[\n  {\n    \"order_id\": \"ORD000001\",\n    \"user_id\": \"Peter Griffin\",\n    \"items\": [\n      {\n        \"product_id\": \"prod_0001\",\n        \"title\": \"Organic Whole Milk, 1 Gallon\",\n        \"price\": 4.99,\n        \"quantity\": 1,\n        \"image_url\": \"https://example.com/milk.jpg\"\n      }\n    ],\n    \"total_amount\": 4.99,\n    \"status\": \"Delivered\",\n    \"create_time\": \"2026-05-10 10:00:00\",\n    \"shipping_address\": \"1234 Innovation Drive, San Francisco, CA 94105, USA\"\n  },\n  {\n    \"order_id\": \"ORD000002\",\n    \"user_id\": \"Peter Griffin\",\n    \"items\": [\n      {\n        \"product_id\": \"prod_0004\",\n        \"title\": \"Salted Butter, 1 lb\",\n        \"price\": 3.49,\n        \"quantity\": 1,\n        \"image_url\": \"https://example.com/butter.jpg\"\n      }\n    ],\n    \"total_amount\": 3.49,\n    \"status\": \"Delivered\",\n    \"create_time\": \"2026-05-11 14:00:00\",\n    \"shipping_address\": \"1234 Innovation Drive, San Francisco, CA 94105, USA\"\n  }\n]\nEOF\n\n# Create symlink for verifier access (orders only; shop creates cart/user files)\nln -sf /var/lib/mock-data/shop/mosi_shop_orders.json /tmp/mosi_shop_orders.json\n",
+   "encoding": "utf8"
+  },
+  {
+   "path": "/opt/mock/static/shop/products.json",
+   "data": "[\n  {\n    \"id\": \"prod_0001\",\n    \"title\": \"Organic Whole Milk, 1 Gallon\",\n    \"price\": 4.99,\n    \"rating\": 4.8,\n    \"rating_count\": \"2,456 ratings\",\n    \"image_url\": \"https://example.com/milk.jpg\",\n    \"stock_quantity\": 50,\n    \"sponsored\": false,\n    \"best_seller\": true,\n    \"overall_pick\": false,\n    \"limited_time\": false,\n    \"discounted\": false,\n    \"low_stock\": false\n  },\n  {\n    \"id\": \"prod_0002\",\n    \"title\": \"Fresh Orange Juice, 1 Gallon\",\n    \"price\": 6.49,\n    \"rating\": 4.6,\n    \"rating_count\": \"1,234 ratings\",\n    \"image_url\": \"https://example.com/oj.jpg\",\n    \"stock_quantity\": 30,\n    \"sponsored\": false,\n    \"best_seller\": false,\n    \"overall_pick\": false,\n    \"limited_time\": false,\n    \"discounted\": false,\n    \"low_stock\": false\n  },\n  {\n    \"id\": \"prod_0003\",\n    \"title\": \"Whole Wheat Bread, 1 Loaf\",\n    \"price\": 3.99,\n    \"rating\": 4.5,\n    \"rating_count\": \"987 ratings\",\n    \"image_url\": \"https://example.com/bread.jpg\",\n    \"stock_quantity\": 40,\n    \"sponsored\": false,\n    \"best_seller\": false,\n    \"overall_pick\": false,\n    \"limited_time\": false,\n    \"discounted\": false,\n    \"low_stock\": false\n  },\n  {\n    \"id\": \"prod_0004\",\n    \"title\": \"Salted Butter, 1 lb\",\n    \"price\": 3.49,\n    \"rating\": 4.7,\n    \"rating_count\": \"1,567 ratings\",\n    \"image_url\": \"https://example.com/butter.jpg\",\n    \"stock_quantity\": 60,\n    \"sponsored\": false,\n    \"best_seller\": true,\n    \"overall_pick\": false,\n    \"limited_time\": false,\n    \"discounted\": false,\n    \"low_stock\": false\n  },\n  {\n    \"id\": \"prod_0005\",\n    \"title\": \"Greek Yogurt, 32 oz\",\n    \"price\": 5.99,\n    \"rating\": 4.6,\n    \"rating_count\": \"2,123 ratings\",\n    \"image_url\": \"https://example.com/yogurt.jpg\",\n    \"stock_quantity\": 45,\n    \"sponsored\": false,\n    \"best_seller\": false,\n    \"overall_pick\": true,\n    \"limited_time\": false,\n    \"discounted\": false,\n    \"low_stock\": false\n  },\n  {\n    \"id\": \"prod_0006\",\n    \"title\": \"Fresh Salmon Fillet, 2 lbs\",\n    \"price\": 18.99,\n    \"rating\": 4.8,\n    \"rating_count\": \"567 ratings\",\n    \"image_url\": \"https://example.com/salmon.jpg\",\n    \"stock_quantity\": 25,\n    \"sponsored\": false,\n    \"best_seller\": false,\n    \"overall_pick\": false,\n    \"limited_time\": false,\n    \"discounted\": false,\n    \"low_stock\": true\n  },\n  {\n    \"id\": \"prod_0007\",\n    \"title\": \"Organic Mixed Salad Greens, 5 oz\",\n    \"price\": 4.49,\n    \"rating\": 4.4,\n    \"rating_count\": \"890 ratings\",\n    \"image_url\": \"https://example.com/salad.jpg\",\n    \"stock_quantity\": 70,\n    \"sponsored\": false,\n    \"best_seller\": false,\n    \"overall_pick\": false,\n    \"limited_time\": false,\n    \"discounted\": false,\n    \"low_stock\": false\n  },\n  {\n    \"id\": \"prod_0008\",\n    \"title\": \"Granola Cereal, 18 oz\",\n    \"price\": 5.49,\n    \"rating\": 4.5,\n    \"rating_count\": \"1,345 ratings\",\n    \"image_url\": \"https://example.com/granola.jpg\",\n    \"stock_quantity\": 55,\n    \"sponsored\": false,\n    \"best_seller\": false,\n    \"overall_pick\": false,\n    \"limited_time\": false,\n    \"discounted\": false,\n    \"low_stock\": false\n  },\n  {\n    \"id\": \"prod_eggs\",\n    \"title\": \"One Dozen of Eggs, Fresh Farm Eggs, 1 Dozen\",\n    \"price\": 5.99,\n    \"rating\": 4.7,\n    \"rating_count\": \"1,234 ratings\",\n    \"image_url\": \"https://example.com/eggs.jpg\",\n    \"stock_quantity\": 100,\n    \"sponsored\": false,\n    \"best_seller\": true,\n    \"overall_pick\": false,\n    \"limited_time\": false,\n    \"discounted\": false,\n    \"low_stock\": false\n  }\n]\n",
+   "encoding": "utf8"
+  }
+ ]
+}

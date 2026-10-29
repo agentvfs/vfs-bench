@@ -1,0 +1,21 @@
+version = "1.0"
+
+[metadata]
+category = "sales"
+upstream = "zapier/AutomationBench@4a8e106 sales.docusign_completion_processor (example 1158)"
+
+[verifier]
+# The rubric takes seconds; a hung microVM fails the trial soon, to be rerun.
+timeout_sec = 120.0
+
+[agent]
+timeout_sec = 1800.0
+
+[environment]
+build_timeout_sec = 300.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 4096
+# The agent reaches the world through the api CLI alone; curl and wget are
+# off (environment/mirage.yaml).
+allow_internet = false

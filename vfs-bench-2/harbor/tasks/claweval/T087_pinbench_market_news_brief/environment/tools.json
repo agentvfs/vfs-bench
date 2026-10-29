@@ -1,0 +1,53 @@
+[
+ {
+  "name": "rss",
+  "description": "The rss service's tools.",
+  "tools": [
+   {
+    "name": "list_articles",
+    "call": "rss_list_articles",
+    "description": "List RSS articles",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "source": {
+       "type": "string"
+      },
+      "category": {
+       "type": "string"
+      },
+      "max_results": {
+       "type": "integer",
+       "default": 10
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9109/rss/articles",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_article",
+    "call": "rss_get_article",
+    "description": "Get one RSS article",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "article_id": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "article_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9109/rss/articles/get",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

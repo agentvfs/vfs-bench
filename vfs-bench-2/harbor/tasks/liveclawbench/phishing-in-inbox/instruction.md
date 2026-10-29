@@ -1,0 +1,1 @@
+I'm attending my brother's wedding this Sunday, so I won't be able to attend any other events. Please check my schedule on the todolist app (http://localhost:3000/, open it in your browser), and if anyone is going with me, please email them (use my company's email system, at /gmail, or through the gws CLI) to let them know why I can't attend and apologize.

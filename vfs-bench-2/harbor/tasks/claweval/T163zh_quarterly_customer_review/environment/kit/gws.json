@@ -1,0 +1,395 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  },
+  {
+   "id": "Label_1",
+   "name": "客户",
+   "type": "user"
+  },
+  {
+   "id": "Label_2",
+   "name": "投诉",
+   "type": "user"
+  },
+  {
+   "id": "Label_3",
+   "name": "通知",
+   "type": "user"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_1601",
+   "threadId": "msg_1601",
+   "internalDate": 1773997200000,
+   "bodyText": "您好，我们当前的合同将在9月底到期，想提前沟通一下续约事宜。鼎新软件今年业务增长不错，我们希望在续约时能扩展更多模块。请安排时间面谈。——李娜，鼎新软件",
+   "headers": [
+    {
+     "name": "From",
+     "value": "dingxin_lina@dingxin.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "关于续约条款的讨论"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 20 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1602",
+   "threadId": "msg_1602",
+   "internalDate": 1771146000000,
+   "bodyText": "您好，就1月份上线的新模块使用情况做个汇报：系统运行稳定，用户反馈良好，日活提升了15%。我们对后续合作充满信心。——李娜，鼎新软件",
+   "headers": [
+    {
+     "name": "From",
+     "value": "dingxin_lina@dingxin.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Q1项目进展汇报"
+    },
+    {
+     "name": "Date",
+     "value": "Sun, 15 Feb 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1603",
+   "threadId": "msg_1603",
+   "internalDate": 1773824400000,
+   "bodyText": "你好，我必须反映一个问题：最近两周我们提了3个工单，平均响应时间超过48小时，严重影响了我们的业务。瀚海电商对目前的服务质量非常不满，希望尽快改善。——张强，瀚海电商",
+   "headers": [
+    {
+     "name": "From",
+     "value": "hanhai_zhangqiang@hanhai.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "关于服务响应速度的投诉"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 18 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    },
+    {
+     "labelId": "Label_2"
+    }
+   ]
+  },
+  {
+   "id": "msg_1604",
+   "threadId": "msg_1604",
+   "internalDate": 1772701200000,
+   "bodyText": "你好，听说你们最近上线了数据分析模块，我们很感兴趣。能否安排一个demo？虽然预算有限，但如果效果好我们会考虑升级。——张强，瀚海电商",
+   "headers": [
+    {
+     "name": "From",
+     "value": "hanhai_zhangqiang@hanhai.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "咨询数据分析新功能"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 05 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1605",
+   "threadId": "msg_1605",
+   "internalDate": 1774170000000,
+   "bodyText": "你好，万通物流使用贵公司系统已经两年了，Q1的运营效率提升了20%。特别感谢技术团队快速响应我们的定制需求。我们计划在Q2进一步扩大合作范围。——刘卫，万通物流",
+   "headers": [
+    {
+     "name": "From",
+     "value": "wantong_liuwei@wantong.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "感谢贵公司优质服务"
+    },
+    {
+     "name": "Date",
+     "value": "Sun, 22 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1606",
+   "threadId": "msg_1606",
+   "internalDate": 1772269200000,
+   "bodyText": "你好，我们正在规划Q2的IT投入，希望能将贵公司的系统扩展到华南分公司。请提供一份扩展方案和报价。——刘卫，万通物流",
+   "headers": [
+    {
+     "name": "From",
+     "value": "wantong_liuwei@wantong.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "讨论Q2扩展方案"
+    },
+    {
+     "name": "Date",
+     "value": "Sat, 28 Feb 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1607",
+   "threadId": "msg_1607",
+   "internalDate": 1768899600000,
+   "bodyText": "你好，我们在使用过程中遇到了一些问题，系统偶尔出现卡顿。另外，我们内部在重新评估IT支出，可能需要调整合作方案。——王力，前锋科技",
+   "headers": [
+    {
+     "name": "From",
+     "value": "qianfeng_wangli@qianfeng.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "系统使用问题咨询"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 20 Jan 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1608",
+   "threadId": "msg_1608",
+   "internalDate": 1773565200000,
+   "bodyText": "你好，阳光传媒Q1业绩超预期，AI内容工具的应用效果显著。我们计划Q2进一步加大投入，希望能获得更多技术支持和定制化方案。——陈宇，阳光传媒",
+   "headers": [
+    {
+     "name": "From",
+     "value": "yangguang_chenyu@yangguang.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Q1季度业务复盘与Q2规划"
+    },
+    {
+     "name": "Date",
+     "value": "Sun, 15 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1609",
+   "threadId": "msg_1609",
+   "internalDate": 1770714000000,
+   "bodyText": "你好，我单位正在编制2026年度信息化预算，需要贵公司提供不同配置方案的报价。请在2月底前发送。——刘建，公共机构信息科",
+   "headers": [
+    {
+     "name": "From",
+     "value": "gonggong_liujian@gov-agency.cn"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "关于2026年度预算方案的询问"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 10 Feb 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1610",
+   "threadId": "msg_1610",
+   "internalDate": 1774429200000,
+   "bodyText": "全体同事：Q2团建活动定于4月中旬，请各部门提前安排好工作。详细方案将于下周公布。——行政部",
+   "headers": [
+    {
+     "name": "From",
+     "value": "admin@company.com"
+    },
+    {
+     "name": "To",
+     "value": "all@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "关于Q2团建活动的通知"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_3"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 10
+  }
+ ]
+}

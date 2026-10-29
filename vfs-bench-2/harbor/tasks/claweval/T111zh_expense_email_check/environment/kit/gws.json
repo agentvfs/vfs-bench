@@ -1,0 +1,214 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_701",
+   "threadId": "msg_701",
+   "internalDate": 1774314000000,
+   "bodyText": "你好，我是张伟。本次出差北京的差旅费用共计3200元，发票号INV-001，请审核。附件含机票、酒店和交通费明细。",
+   "headers": [
+    {
+     "name": "From",
+     "value": "zhangwei@company.com"
+    },
+    {
+     "name": "To",
+     "value": "finance@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "报销申请：差旅费 3200元"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 09:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_702",
+   "threadId": "msg_702",
+   "internalDate": 1774319400000,
+   "bodyText": "财务部您好，我购买了一批办公用品（订书机、打印纸、文件夹等），共计850元，发票号INV-002。请核准报销。",
+   "headers": [
+    {
+     "name": "From",
+     "value": "lihua@company.com"
+    },
+    {
+     "name": "To",
+     "value": "finance@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "报销申请：办公用品 850元"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 10:30:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_703",
+   "threadId": "msg_703",
+   "internalDate": 1774321200000,
+   "bodyText": "你好，我参加了3月20日的「云原生架构」外部培训课程，费用5000元，发票号INV-003。已获部门经理批准，请处理。",
+   "headers": [
+    {
+     "name": "From",
+     "value": "wangming@company.com"
+    },
+    {
+     "name": "To",
+     "value": "finance@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "报销申请：外部培训费 5000元"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 11:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_704",
+   "threadId": "msg_704",
+   "internalDate": 1774332000000,
+   "bodyText": "你好，3月22日招待客户的餐费共420元，发票号INV-004。参与人员：陈静、客户方2人。请报销。",
+   "headers": [
+    {
+     "name": "From",
+     "value": "chenjing@company.com"
+    },
+    {
+     "name": "To",
+     "value": "finance@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "报销申请：客户招待餐费 420元"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 14:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_705",
+   "threadId": "msg_705",
+   "internalDate": 1774339200000,
+   "bodyText": "全体同事注意，下周三下午2点在公司楼下举办团建活动，请准时参加。具体安排见附件。",
+   "headers": [
+    {
+     "name": "From",
+     "value": "hr@company.com"
+    },
+    {
+     "name": "To",
+     "value": "all@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "行政通知：下周三下午团建活动"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 16:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 5
+  }
+ ]
+}

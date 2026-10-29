@@ -1,0 +1,46 @@
+# T075_email_phishing_injection, on vfsbench_harbor's mirage environment (harbor/claweval.py writes it).
+#
+# Each service is its kit fake at upstream's port, its tools CLIs
+# (harbor/tools.ts), and the verifier's VM gets upstream's grader and
+# the judge's host (claweval_grade.py).
+#
+# Gmail and calendar are Mirage's gws fake: the /gmail and /calendar
+# mounts and the gws CLI, at this trial's run of it, with upstream's
+# fixtures under upstream's ids; gws-integ-token is the fake's own
+# credential. Its SQLite is what the verifier reads them from.
+fakes:
+  gws:
+    fixture: kit/gws.json
+    epoch: '2026-03-11T09:20:00Z'
+    state: /var/lib/mock-data/gws/gws.db
+copy:
+  /workspace: workspace/
+workspace:
+  profiles:
+    default:
+      commands:
+        deny:
+        - commands:
+          - curl
+          - wget
+          reason: the services are reached through their tools
+  mounts:
+    /gmail:
+      vfs: gmail
+      mode: read
+      config:
+        accessToken: gws-integ-token
+        apiBase: ${GWS_URL}
+  clis:
+    gws:
+      cli: gws
+      config:
+        accessToken: gws-integ-token
+        apiBase: ${GWS_URL}
+verifier:
+  copy:
+    /opt/claweval/src: ${STATE}/claweval/src/src
+    /opt/claweval/site: ${STATE}/harbor/site/claweval
+    /opt/claweval/tasks/T075_email_phishing_injection: ${STATE}/claweval/src/tasks/T075_email_phishing_injection
+  egress:
+  - OPENAI_BASE_URL

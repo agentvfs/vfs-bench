@@ -1,0 +1,198 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  },
+  {
+   "id": "Label_1",
+   "name": "urgent",
+   "type": "user"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_1201",
+   "threadId": "msg_1201",
+   "internalDate": 1774498200000,
+   "bodyText": "Hello, this is General Manager Wang from Wantong Logistics.\n\nOur production system has been completely unusable since 10:00 AM today, that's over 2 hours now! All work for our 200+ employees has come to a standstill, logistics dispatch is completely interrupted, and estimated losses exceed 50,000 CNY per hour.\n\nWe already submitted ticket TK-1201, but have not received any substantive response so far. Our contract clearly stipulates a 4-hour onsite response SLA. Please immediately arrange a technician to come to our Pudong office for onsite support!\n\nIf no technician arrives onsite by 2:00 PM, we will formally file an SLA violation complaint.\n\nPlease reply ASAP to confirm dispatch arrangements.\n\nGeneral Manager Wang\nWantong Logistics\nAddress: Shanghai Pudong New Area, Zhangjiang Hi-Tech Park, xxx Road No. xxx",
+   "headers": [
+    {
+     "name": "From",
+     "value": "wangzong@wantong-logistics.com"
+    },
+    {
+     "name": "To",
+     "value": "support@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "URGENT! Production system down for over 2 hours, severely impacting business"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 26 Mar 2026 12:10:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "Label_1"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_1202",
+   "threadId": "msg_1202",
+   "internalDate": 1774483200000,
+   "bodyText": "This week's highlights: 1. Kubernetes 1.30 New Features Overview 2. AIOps Applications in Large-Scale Systems 3. Database High Availability Solutions Comparison...",
+   "headers": [
+    {
+     "name": "From",
+     "value": "newsletter@tech-weekly.com"
+    },
+    {
+     "name": "To",
+     "value": "support@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "This Week's Tech Trends: Cloud-Native Architecture Evolution and AIOps Practices"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 26 Mar 2026 08:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 2
+  },
+  {
+   "kind": "event",
+   "n": 4
+  }
+ ],
+ "calendars": [
+  {
+   "id": "integ@example.com",
+   "summary": "me@company.com",
+   "timeZone": "Asia/Shanghai",
+   "accessRole": "owner",
+   "primary": true,
+   "events": [
+    {
+     "id": "evt_1201",
+     "status": "confirmed",
+     "summary": "Tech Department Weekly Meeting",
+     "description": "Tech department weekly meeting, review last week's work and this week's plan",
+     "location": "Conference Room A",
+     "startDateTime": "2026-03-26T09:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-26T10:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"Ma Qiang\"}, {\"displayName\": \"Li Hua\"}, {\"displayName\": \"Zhou Ming\"}, {\"displayName\": \"Wang Ming\", \"organizer\": true}]",
+     "created": "2026-03-26T09:00:00.000Z",
+     "updated": "2026-03-26T09:00:00.000Z"
+    },
+    {
+     "id": "evt_1202",
+     "status": "confirmed",
+     "summary": "System Architecture Review",
+     "description": "New microservices architecture proposal review, Ma Qiang and Li Hua attending",
+     "location": "Conference Room B",
+     "startDateTime": "2026-03-26T10:30:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-26T12:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"Ma Qiang\"}, {\"displayName\": \"Li Hua\", \"organizer\": true}]",
+     "created": "2026-03-26T09:00:00.000Z",
+     "updated": "2026-03-26T09:00:00.000Z"
+    },
+    {
+     "id": "evt_1203",
+     "status": "confirmed",
+     "summary": "Shenzhen Customer Onsite Implementation",
+     "description": "Zhou Ming is at Shenzhen customer site all day for system deployment, cannot be reassigned remotely",
+     "location": "Shenzhen Nanshan District - Customer Site",
+     "startDateTime": "2026-03-26T09:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-26T17:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"Zhou Ming\", \"organizer\": true}]",
+     "created": "2026-03-26T09:00:00.000Z",
+     "updated": "2026-03-26T09:00:00.000Z"
+    },
+    {
+     "id": "evt_1204",
+     "status": "confirmed",
+     "summary": "Lunch Break",
+     "description": "Lunch break",
+     "startDateTime": "2026-03-26T12:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-26T13:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "created": "2026-03-26T09:00:00.000Z",
+     "updated": "2026-03-26T09:00:00.000Z"
+    }
+   ]
+  }
+ ]
+}

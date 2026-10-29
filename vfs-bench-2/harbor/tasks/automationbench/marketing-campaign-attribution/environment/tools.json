@@ -1,0 +1,119 @@
+[
+ {
+  "name": "api",
+  "description": "AutomationBench's API tools: search the API endpoints, call one, encode text.",
+  "tools": [
+   {
+    "name": "search",
+    "call": "api_search",
+    "description": "Search available API endpoints by keyword.\n\nUse this to discover which endpoint to call before using api_fetch.\nRanks results using BM25 over endpoint descriptions and parameter text.\nReturns full endpoint details including the URL to pass to api_fetch.",
+    "parameters": {
+     "properties": {
+      "query": {
+       "description": "Space-separated keywords (e.g. \"inbox messages\", \"trash\", \"send label\").\n   Uses API-native terms: \"messages\" not \"emails\", \"trash\" not \"delete\".",
+       "title": "Query",
+       "type": "string"
+      },
+      "top_k": {
+       "default": 5,
+       "description": "Maximum number of results to return (default 5).",
+       "title": "Top K",
+       "type": "integer"
+      }
+     },
+     "required": [
+      "query",
+      "top_k"
+     ],
+     "title": "api_search_args",
+     "type": "object",
+     "additionalProperties": false
+    },
+    "endpoint": {
+     "url": "http://automationbench/api_search",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "fetch",
+    "call": "api_fetch",
+    "description": "Call an API endpoint by its full URL, routing to the appropriate world state mutation.\n\nUse api_search first to discover the correct URL and parameters for an endpoint.",
+    "parameters": {
+     "properties": {
+      "method": {
+       "description": "HTTP method (GET, POST, PUT, PATCH, DELETE).",
+       "title": "Method",
+       "type": "string"
+      },
+      "url": {
+       "description": "Full API URL from api_search results (e.g., \"https://api.hubapi.com/crm/v3/objects/contacts\").",
+       "title": "Url",
+       "type": "string"
+      },
+      "params": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Query parameters as a JSON string (e.g., '{\"labelIds\": \"INBOX\"}').",
+       "title": "Params"
+      },
+      "body": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Request body as a JSON string (e.g., '{\"subject\": \"Hi\", \"body\": \"Hello\"}').",
+       "title": "Body"
+      }
+     },
+     "required": [
+      "method",
+      "url",
+      "params",
+      "body"
+     ],
+     "title": "api_fetch_args",
+     "type": "object",
+     "additionalProperties": false
+    },
+    "endpoint": {
+     "url": "http://automationbench/api_fetch",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "base64-encode",
+    "call": "base64_encode",
+    "description": "Encode text to base64url \u2014 the format Gmail API body fields require.\n\nThe Gmail messages.send / drafts endpoints accept the message body only in\nbase64url form: either ``raw`` (the full RFC 2822 message, base64url-encoded)\nor ``payload.body.data`` (the body text, base64url-encoded). Use this tool to\nproduce that encoding, then pass the result to api_fetch. This is a local\nhelper \u2014 it does not call any API endpoint.",
+    "parameters": {
+     "properties": {
+      "text": {
+       "description": "Plaintext to encode (an email body, or a full RFC 2822 message).",
+       "title": "Text",
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ],
+     "title": "base64_encode_args",
+     "type": "object",
+     "additionalProperties": false
+    },
+    "endpoint": {
+     "url": "http://automationbench/base64_encode",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

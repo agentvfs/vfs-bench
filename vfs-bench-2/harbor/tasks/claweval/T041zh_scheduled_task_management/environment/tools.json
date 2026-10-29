@@ -1,0 +1,284 @@
+[
+ {
+  "name": "scheduler",
+  "description": "The scheduler service's tools.",
+  "tools": [
+   {
+    "name": "list_jobs",
+    "call": "scheduler_list_jobs",
+    "description": "列出所有定时任务",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "按最近运行状态筛选 (success/failed)"
+      },
+      "enabled": {
+       "type": "boolean",
+       "description": "按启用状态筛选"
+      },
+      "tag": {
+       "type": "string",
+       "description": "按标签筛选"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9112/scheduler/jobs",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_job",
+    "call": "scheduler_get_job",
+    "description": "获取定时任务详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "job_id": {
+       "type": "string",
+       "description": "任务ID"
+      }
+     },
+     "required": [
+      "job_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9112/scheduler/jobs/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "create_job",
+    "call": "scheduler_create_job",
+    "description": "创建新的定时任务",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "任务名称"
+      },
+      "cron_expression": {
+       "type": "string",
+       "description": "Cron表达式"
+      },
+      "action": {
+       "type": "string",
+       "description": "任务执行的操作"
+      },
+      "enabled": {
+       "type": "boolean",
+       "description": "是否启用",
+       "default": true
+      },
+      "tags": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "标签列表"
+      }
+     },
+     "required": [
+      "name",
+      "cron_expression",
+      "action"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9112/scheduler/jobs/create",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_job",
+    "call": "scheduler_update_job",
+    "description": "更新定时任务配置",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "job_id": {
+       "type": "string",
+       "description": "任务ID"
+      },
+      "enabled": {
+       "type": "boolean",
+       "description": "是否启用"
+      },
+      "cron_expression": {
+       "type": "string",
+       "description": "新的Cron表达式"
+      },
+      "name": {
+       "type": "string",
+       "description": "新名称"
+      },
+      "action": {
+       "type": "string",
+       "description": "新操作"
+      },
+      "tags": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "新标签"
+      }
+     },
+     "required": [
+      "job_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9112/scheduler/jobs/update",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "delete_job",
+    "call": "scheduler_delete_job",
+    "description": "删除定时任务",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "job_id": {
+       "type": "string",
+       "description": "任务ID"
+      }
+     },
+     "required": [
+      "job_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9112/scheduler/jobs/delete",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "job_history",
+    "call": "scheduler_job_history",
+    "description": "查看定时任务执行历史",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "job_id": {
+       "type": "string",
+       "description": "任务ID"
+      },
+      "limit": {
+       "type": "integer",
+       "description": "返回条数",
+       "default": 10
+      }
+     },
+     "required": [
+      "job_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9112/scheduler/jobs/history",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "kb",
+  "description": "The kb service's tools.",
+  "tools": [
+   {
+    "name": "search",
+    "call": "kb_search",
+    "description": "搜索知识库文章",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "搜索关键词"
+      },
+      "category": {
+       "type": "string",
+       "description": "按分类筛选"
+      },
+      "max_results": {
+       "type": "integer",
+       "description": "最大返回数量",
+       "default": 5
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9106/kb/search",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_article",
+    "call": "kb_get_article",
+    "description": "获取知识库文章详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "article_id": {
+       "type": "string",
+       "description": "文章ID"
+      }
+     },
+     "required": [
+      "article_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9106/kb/articles/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "gmail",
+  "description": "The gmail service's tools.",
+  "tools": [
+   {
+    "name": "save_draft",
+    "call": "gmail_save_draft",
+    "description": "保存邮件草稿",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "to": {
+       "type": "string",
+       "description": "收件人邮箱"
+      },
+      "subject": {
+       "type": "string",
+       "description": "邮件主题"
+      },
+      "body": {
+       "type": "string",
+       "description": "邮件正文"
+      }
+     },
+     "required": [
+      "to",
+      "subject",
+      "body"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9100/gmail/drafts/save",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

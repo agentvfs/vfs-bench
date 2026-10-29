@@ -1,0 +1,5 @@
+# Made from upstream's data, which harbor/automationbench.py writes again
+# from the pinned package: each world's fixture (32 MB for all 600 tasks) and
+# what the rubric reads besides the world.
+*/environment/kit/
+*/tests/task.json

@@ -1,0 +1,109 @@
+[
+ {
+  "name": "rss",
+  "description": "The rss service's tools.",
+  "tools": [
+   {
+    "name": "list_feeds",
+    "call": "rss_list_feeds",
+    "description": "Get all RSS subscription feeds",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "category": {
+       "type": "string",
+       "description": "Filter by category"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9109/rss/feeds",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_articles",
+    "call": "rss_list_articles",
+    "description": "Get a list of articles",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "source": {
+       "type": "string",
+       "description": "Filter by source"
+      },
+      "category": {
+       "type": "string",
+       "description": "Filter by category"
+      },
+      "max_results": {
+       "type": "integer",
+       "description": "Maximum number of results to return",
+       "default": 20
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9109/rss/articles",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_article",
+    "call": "rss_get_article",
+    "description": "Get the full content of an article",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "article_id": {
+       "type": "string",
+       "description": "Article ID"
+      }
+     },
+     "required": [
+      "article_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9109/rss/articles/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "publish",
+    "call": "rss_publish",
+    "description": "Publish a newsletter",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "title": {
+       "type": "string",
+       "description": "Newsletter title"
+      },
+      "content": {
+       "type": "string",
+       "description": "Newsletter content"
+      },
+      "recipients": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "List of recipients"
+      }
+     },
+     "required": [
+      "title",
+      "content"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9109/rss/publish",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

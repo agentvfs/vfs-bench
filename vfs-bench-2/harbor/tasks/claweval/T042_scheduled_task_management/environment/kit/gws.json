@@ -1,0 +1,86 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_2101",
+   "threadId": "msg_2101",
+   "internalDate": 1772001000000,
+   "bodyText": "Hi,\n\nSome scheduled tasks seem to be acting up lately. The weekly_report didn't generate last Monday, and it looks like some tasks may have been disabled.\n\nCould you check the system's scheduled tasks when you get a chance and let us know if anything's wrong?\n\nOps Team\nops@company.com",
+   "headers": [
+    {
+     "name": "From",
+     "value": "ops@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Please check scheduled task status"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Feb 2026 14:30:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 1
+  }
+ ]
+}

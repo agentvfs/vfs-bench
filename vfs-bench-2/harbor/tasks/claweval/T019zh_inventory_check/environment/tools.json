@@ -1,0 +1,78 @@
+[
+ {
+  "name": "inventory",
+  "description": "The inventory service's tools.",
+  "tools": [
+   {
+    "name": "list_products",
+    "call": "inventory_list_products",
+    "description": "获取商品库存列表",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "category": {
+       "type": "string",
+       "description": "按类别筛选"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9108/inventory/products",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_product",
+    "call": "inventory_get_product",
+    "description": "获取单个商品的详细库存信息",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "product_id": {
+       "type": "string",
+       "description": "商品ID"
+      }
+     },
+     "required": [
+      "product_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9108/inventory/products/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "create_order",
+    "call": "inventory_create_order",
+    "description": "创建补货订单",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "product_id": {
+       "type": "string",
+       "description": "商品ID"
+      },
+      "quantity": {
+       "type": "integer",
+       "description": "补货数量"
+      },
+      "supplier": {
+       "type": "string",
+       "description": "供应商"
+      }
+     },
+     "required": [
+      "product_id",
+      "quantity"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9108/inventory/orders/create",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

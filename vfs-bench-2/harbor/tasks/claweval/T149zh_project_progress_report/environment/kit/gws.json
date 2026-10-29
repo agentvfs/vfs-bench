@@ -1,0 +1,183 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 0
+  },
+  {
+   "kind": "event",
+   "n": 8
+  }
+ ],
+ "calendars": [
+  {
+   "id": "integ@example.com",
+   "summary": "me@company.com",
+   "timeZone": "Asia/Shanghai",
+   "accessRole": "owner",
+   "primary": true,
+   "events": [
+    {
+     "id": "evt_601",
+     "status": "confirmed",
+     "summary": "Alpha项目需求评审",
+     "description": "Alpha项目需求评审，讨论Q2功能规划，关联纪要NOTE-601",
+     "location": "会议室A",
+     "startDateTime": "2026-03-17T10:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-17T11:30:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"王明\", \"organizer\": true}, {\"displayName\": \"李华\"}]",
+     "created": "2026-03-24T09:00:00.000Z",
+     "updated": "2026-03-24T09:00:00.000Z"
+    },
+    {
+     "id": "evt_602",
+     "status": "confirmed",
+     "summary": "Alpha项目技术方案",
+     "description": "Alpha项目技术架构方案讨论，关联纪要NOTE-602",
+     "location": "技术区",
+     "startDateTime": "2026-03-20T14:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-20T16:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"李华\", \"organizer\": true}, {\"displayName\": \"马强\"}]",
+     "created": "2026-03-24T09:00:00.000Z",
+     "updated": "2026-03-24T09:00:00.000Z"
+    },
+    {
+     "id": "evt_603",
+     "status": "confirmed",
+     "summary": "Beta项目启动会",
+     "description": "Beta项目正式启动，任务分工和排期，关联纪要NOTE-603",
+     "location": "会议室B",
+     "startDateTime": "2026-03-18T09:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-18T10:30:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"赵蕾\", \"organizer\": true}, {\"displayName\": \"张伟\"}, {\"displayName\": \"周明\"}]",
+     "created": "2026-03-24T09:00:00.000Z",
+     "updated": "2026-03-24T09:00:00.000Z"
+    },
+    {
+     "id": "evt_604",
+     "status": "confirmed",
+     "summary": "Beta项目进度检查",
+     "description": "Beta项目第一次进度检查，关联纪要NOTE-604",
+     "location": "会议室B",
+     "startDateTime": "2026-03-22T10:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-22T11:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"赵蕾\", \"organizer\": true}, {\"displayName\": \"张伟\"}]",
+     "created": "2026-03-24T09:00:00.000Z",
+     "updated": "2026-03-24T09:00:00.000Z"
+    },
+    {
+     "id": "evt_605",
+     "status": "confirmed",
+     "summary": "Gamma项目客户对接",
+     "description": "Gamma项目客户需求确认，关联纪要NOTE-605",
+     "location": "线上会议",
+     "startDateTime": "2026-03-19T15:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-19T16:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"赵蕾\"}, {\"displayName\": \"王明\", \"organizer\": true}]",
+     "created": "2026-03-24T09:00:00.000Z",
+     "updated": "2026-03-24T09:00:00.000Z"
+    },
+    {
+     "id": "evt_606",
+     "status": "confirmed",
+     "summary": "Gamma项目交付评审",
+     "description": "Gamma项目交付物评审，验收标准确认",
+     "location": "会议室A",
+     "startDateTime": "2026-03-24T14:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-24T16:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"王明\", \"organizer\": true}, {\"displayName\": \"赵蕾\"}, {\"displayName\": \"李华\"}]",
+     "created": "2026-03-24T09:00:00.000Z",
+     "updated": "2026-03-24T09:00:00.000Z"
+    },
+    {
+     "id": "evt_607",
+     "status": "confirmed",
+     "summary": "全员周会",
+     "description": "每周全员例会，公司动态通报",
+     "location": "大会议室",
+     "startDateTime": "2026-03-21T10:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-21T11:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"HR\", \"organizer\": true}, {\"displayName\": \"全员\"}]",
+     "created": "2026-03-24T09:00:00.000Z",
+     "updated": "2026-03-24T09:00:00.000Z"
+    },
+    {
+     "id": "evt_608",
+     "status": "confirmed",
+     "summary": "团建活动策划",
+     "description": "Q2团建活动初步策划",
+     "location": "休息区",
+     "startDateTime": "2026-03-23T12:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-23T13:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"周明\", \"organizer\": true}]",
+     "created": "2026-03-24T09:00:00.000Z",
+     "updated": "2026-03-24T09:00:00.000Z"
+    }
+   ]
+  }
+ ]
+}

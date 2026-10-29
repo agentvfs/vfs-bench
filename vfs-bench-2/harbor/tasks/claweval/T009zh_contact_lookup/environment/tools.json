@@ -1,0 +1,80 @@
+[
+ {
+  "name": "contacts",
+  "description": "The contacts service's tools.",
+  "tools": [
+   {
+    "name": "search",
+    "call": "contacts_search",
+    "description": "按名字搜索联系人",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "搜索关键词（姓名）"
+      },
+      "department": {
+       "type": "string",
+       "description": "按部门筛选"
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9103/contacts/search",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get",
+    "call": "contacts_get",
+    "description": "根据ID获取联系人详细信息",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contact_id": {
+       "type": "string",
+       "description": "联系人ID"
+      }
+     },
+     "required": [
+      "contact_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9103/contacts/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "send_message",
+    "call": "contacts_send_message",
+    "description": "给联系人发送消息",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contact_id": {
+       "type": "string",
+       "description": "联系人ID"
+      },
+      "message": {
+       "type": "string",
+       "description": "消息内容"
+      }
+     },
+     "required": [
+      "contact_id",
+      "message"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9103/contacts/send_message",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

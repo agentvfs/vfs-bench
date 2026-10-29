@@ -1,0 +1,8 @@
+{
+ "login": [
+  {
+   "seed": 8,
+   "apps": "[\"LightTalk\", \"LightShop\", \"LightNews\"]"
+  }
+ ]
+}

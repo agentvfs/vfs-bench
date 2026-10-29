@@ -1,0 +1,127 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 0
+  },
+  {
+   "kind": "event",
+   "n": 4
+  }
+ ],
+ "calendars": [
+  {
+   "id": "integ@example.com",
+   "summary": "me@company.com",
+   "timeZone": "Asia/Shanghai",
+   "accessRole": "owner",
+   "primary": true,
+   "events": [
+    {
+     "id": "evt_201",
+     "status": "confirmed",
+     "summary": "Product Plan Review",
+     "description": "Discuss Q2 product plan, please prepare relevant materials in advance",
+     "location": "Conference Room A",
+     "startDateTime": "2026-03-27T09:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-27T10:30:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"Wang Ming\", \"organizer\": true}, {\"displayName\": \"Li Hua\"}, {\"displayName\": \"Zhao Lei\"}]",
+     "created": "2026-03-26T09:00:00.000Z",
+     "updated": "2026-03-26T09:00:00.000Z"
+    },
+    {
+     "id": "evt_202",
+     "status": "confirmed",
+     "summary": "Client Demo",
+     "description": "Demo new features for Director Chen, important client — be well prepared",
+     "location": "Conference Room B",
+     "startDateTime": "2026-03-27T11:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-27T12:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"Zhao Lei\", \"organizer\": true}, {\"displayName\": \"Zhang Wei\"}, {\"displayName\": \"External:Director Chen\"}]",
+     "created": "2026-03-26T09:00:00.000Z",
+     "updated": "2026-03-26T09:00:00.000Z"
+    },
+    {
+     "id": "evt_203",
+     "status": "confirmed",
+     "summary": "Tech Stack Selection Discussion",
+     "description": "Discuss microservice framework selection, candidates: Spring Cloud / Dubbo",
+     "location": "Tech Area Open Space",
+     "startDateTime": "2026-03-27T14:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-27T15:30:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"Li Hua\", \"organizer\": true}, {\"displayName\": \"Ma Qiang\"}, {\"displayName\": \"Zhou Ming\"}]",
+     "created": "2026-03-26T09:00:00.000Z",
+     "updated": "2026-03-26T09:00:00.000Z"
+    },
+    {
+     "id": "evt_204",
+     "status": "confirmed",
+     "summary": "All-Hands Weekly Meeting",
+     "description": "This week's work summary and next week's plan",
+     "location": "Main Conference Room",
+     "startDateTime": "2026-03-27T16:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-27T17:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"Wang Ming\", \"organizer\": true}, {\"displayName\": \"Li Hua\"}, {\"displayName\": \"Zhao Lei\"}, {\"displayName\": \"Ma Qiang\"}, {\"displayName\": \"Zhang Wei\"}, {\"displayName\": \"Zhou Ming\"}]",
+     "created": "2026-03-26T09:00:00.000Z",
+     "updated": "2026-03-26T09:00:00.000Z"
+    }
+   ]
+  }
+ ]
+}

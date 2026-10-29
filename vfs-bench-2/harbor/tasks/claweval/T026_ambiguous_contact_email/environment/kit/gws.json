@@ -1,0 +1,118 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_201",
+   "threadId": "msg_201",
+   "internalDate": 1772154000000,
+   "bodyText": "Hi, for the budget review meeting on Friday at 2 PM, please have Manager Zhang join us. We need to discuss the Q2 departmental budget allocation.\n\nPlease notify Manager Zhang.\n\nMing Li",
+   "headers": [
+    {
+     "name": "From",
+     "value": "liming@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Friday Budget Review Meeting"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 27 Feb 2026 09:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  },
+  {
+   "id": "msg_202",
+   "threadId": "msg_202",
+   "internalDate": 1772159400000,
+   "bodyText": "Hello, two new employees are joining next Monday. Please arrange workstations and equipment.\n\nAlso, the onboarding training schedule needs to be confirmed with Manager Zhang. The technical training portion on his end hasn't been finalized yet.\n\nFang Wang",
+   "headers": [
+    {
+     "name": "From",
+     "value": "wangfang@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "New Employee Onboarding Arrangements"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 27 Feb 2026 10:30:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 2
+  }
+ ]
+}

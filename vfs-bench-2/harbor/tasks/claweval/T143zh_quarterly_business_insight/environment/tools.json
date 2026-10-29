@@ -1,0 +1,164 @@
+[
+ {
+  "name": "finance",
+  "description": "The finance service's tools.",
+  "tools": [
+   {
+    "name": "list_transactions",
+    "call": "finance_list_transactions",
+    "description": "查看交易记录",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "start_date": {
+       "type": "string",
+       "description": "起始日期(YYYY-MM-DD)"
+      },
+      "end_date": {
+       "type": "string",
+       "description": "截止日期(YYYY-MM-DD)"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9104/finance/transactions",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_transaction",
+    "call": "finance_get_transaction",
+    "description": "获取交易详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "transaction_id": {
+       "type": "string",
+       "description": "交易ID"
+      }
+     },
+     "required": [
+      "transaction_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9104/finance/transactions/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "crm",
+  "description": "The crm service's tools.",
+  "tools": [
+   {
+    "name": "list_customers",
+    "call": "crm_list_customers",
+    "description": "列出客户",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "客户状态筛选"
+      },
+      "tier": {
+       "type": "string",
+       "description": "客户等级筛选"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_customer",
+    "call": "crm_get_customer",
+    "description": "获取客户详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "customer_id": {
+       "type": "string",
+       "description": "客户ID"
+      }
+     },
+     "required": [
+      "customer_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "rss",
+  "description": "The rss service's tools.",
+  "tools": [
+   {
+    "name": "list_feeds",
+    "call": "rss_list_feeds",
+    "description": "列出RSS订阅源",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9109/rss/feeds",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_feed",
+    "call": "rss_get_feed",
+    "description": "获取RSS源文章列表",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "feed_id": {
+       "type": "string",
+       "description": "订阅源ID"
+      }
+     },
+     "required": [
+      "feed_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9109/rss/feeds/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_article",
+    "call": "rss_get_article",
+    "description": "获取文章详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "article_id": {
+       "type": "string",
+       "description": "文章ID"
+      }
+     },
+     "required": [
+      "article_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9109/rss/articles/get",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

@@ -1,6 +1,6 @@
 """Fetch the DataSpace tasks this repo ports, without the whole archive.
 
-    python3 -I dataspace/setup.py
+    python3 -I dataspace/setup.py [task_N ...]
 
 DataSpace (HKUSTDial/DataSpace, MIT code and data) ships its 410 tasks as
 one 2.9 GB zip on Hugging Face. This reads only the ported tasks' entries
@@ -12,11 +12,15 @@ pinned commit. Everything lands in ``state/dataspace/``:
     benchmark/input/task_N/...        the task's question and context
     benchmark/output/task_N/gold.csv  its public reference answer
     benchmark/evaluation/configs/task_N.json
-    evaluate.py
+    evaluation/evaluate.py
+
+The tasks are this directory's and the Harbor tasks' (``harbor/tasks/
+dataspace/*/task.toml``), or the ones named on the command line.
 """
 import hashlib
 import io
 import json
+import re
 import sys
 import urllib.request
 import zipfile
@@ -75,13 +79,22 @@ class Remote(io.RawIOBase):
 
 
 def ported() -> list[str]:
-    """The upstream task ids of this repo's DataSpace tasks."""
-    return sorted(
-        json.loads(p.read_text())["task_id"] for p in HERE.glob("*/task.json"))
+    """The upstream task ids of this repo's DataSpace tasks: this
+    directory's, and the Harbor tasks' (``task_id`` in task.toml)."""
+    ids = {
+        json.loads(p.read_text())["task_id"]
+        for p in HERE.glob("*/task.json")
+    }
+    for path in (ROOT / "harbor" / "tasks" / "dataspace").glob("*/task.toml"):
+        found = re.search(r'^task_id = "(task_\d+)"$', path.read_text(), re.M)
+        if found is None:
+            raise SystemExit(f"{path} names no task_id")
+        ids.add(found[1])
+    return sorted(ids)
 
 
 def main() -> int:
-    tasks = ported()
+    tasks = sys.argv[1:] or ported()
     archive = zipfile.ZipFile(
         io.BufferedReader(Remote(ARCHIVE), buffer_size=1 << 20))
     sums = {}
@@ -114,7 +127,9 @@ def main() -> int:
         target.write_bytes(data)
         print(f"fetch {name}")
     with urllib.request.urlopen(EVALUATOR) as reply:
-        (STATE / "evaluate.py").write_bytes(reply.read())
+        # In a directory of its own, which Harbor's verifier VM gets alone.
+        (STATE / "evaluation").mkdir(parents=True, exist_ok=True)
+        (STATE / "evaluation" / "evaluate.py").write_bytes(reply.read())
     print(f"{len(tasks)} tasks, {len(wanted)} files from {REVISION[:7]} "
           f"in {STATE}")
     return 0

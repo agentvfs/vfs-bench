@@ -67,7 +67,7 @@ export async function load(slug: string): Promise<Task> {
     snapshot: async () => null,
     async grade({ run }) {
       const result = (await runPython(HERE, join(HERE, 'grade.py'), {
-        evaluator: join(STATE, 'dataspace', 'evaluate.py'),
+        evaluator: join(STATE, 'dataspace', 'evaluation', 'evaluate.py'),
         config: join(BENCHMARK, 'evaluation', 'configs', `${taskId}.json`),
         prediction: join(run.path('output'), 'prediction.csv'),
         gold: join(BENCHMARK, 'output', taskId, 'gold.csv'),

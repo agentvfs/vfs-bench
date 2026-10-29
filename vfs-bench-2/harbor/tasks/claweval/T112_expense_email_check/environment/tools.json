@@ -1,0 +1,52 @@
+[
+ {
+  "name": "finance",
+  "description": "The finance service's tools.",
+  "tools": [
+   {
+    "name": "list_transactions",
+    "call": "finance_list_transactions",
+    "description": "List transaction records",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "start_date": {
+       "type": "string",
+       "description": "Start date (YYYY-MM-DD)"
+      },
+      "end_date": {
+       "type": "string",
+       "description": "End date (YYYY-MM-DD)"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9104/finance/transactions",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_transaction",
+    "call": "finance_get_transaction",
+    "description": "Get transaction details",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "transaction_id": {
+       "type": "string",
+       "description": "Transaction ID"
+      }
+     },
+     "required": [
+      "transaction_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9104/finance/transactions/get",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

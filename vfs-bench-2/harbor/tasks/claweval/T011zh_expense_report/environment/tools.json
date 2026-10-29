@@ -1,0 +1,86 @@
+[
+ {
+  "name": "finance",
+  "description": "The finance service's tools.",
+  "tools": [
+   {
+    "name": "list_transactions",
+    "call": "finance_list_transactions",
+    "description": "获取费用交易记录列表",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "start_date": {
+       "type": "string",
+       "description": "开始日期 (YYYY-MM-DD)"
+      },
+      "end_date": {
+       "type": "string",
+       "description": "结束日期 (YYYY-MM-DD)"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9104/finance/transactions",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_transaction",
+    "call": "finance_get_transaction",
+    "description": "获取单笔交易详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "transaction_id": {
+       "type": "string",
+       "description": "交易ID"
+      }
+     },
+     "required": [
+      "transaction_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9104/finance/transactions/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "submit_report",
+    "call": "finance_submit_report",
+    "description": "提交费用报告",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "title": {
+       "type": "string",
+       "description": "报告标题"
+      },
+      "transactions": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "包含的交易ID列表"
+      },
+      "total_amount": {
+       "type": "number",
+       "description": "总金额"
+      }
+     },
+     "required": [
+      "title",
+      "transactions",
+      "total_amount"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9104/finance/report/submit",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

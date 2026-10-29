@@ -1,0 +1,223 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_101",
+   "threadId": "msg_101",
+   "internalDate": 1772269200000,
+   "bodyText": "Hi,\n\nI noticed that our project was originally due on March 1, but it looks like we may not be able to deliver on time.\n\nOur management is very concerned about the delivery timeline. Could you please confirm as soon as possible:\n1. What is the current actual progress of the project?\n2. How long of a delay do you anticipate?\n3. What steps can be taken to speed things up?\n\nI hope to receive a reply today.\n\nThank you,\nDirector Liu | BigCorp Group",
+   "headers": [
+    {
+     "name": "From",
+     "value": "client@bigcorp.com"
+    },
+    {
+     "name": "To",
+     "value": "user@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Regarding the project delay"
+    },
+    {
+     "name": "Date",
+     "value": "Sat, 28 Feb 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_102",
+   "threadId": "msg_102",
+   "internalDate": 1772204400000,
+   "bodyText": "Dear colleagues,\n\nWe have the following options for our March team-building activity. Please vote:\nA. Outdoor BBQ\nB. Escape Room\nC. Go-karting\n\nPlease reply with your choice by this Friday.\n\nAdmin Department",
+   "headers": [
+    {
+     "name": "From",
+     "value": "hr@company.com"
+    },
+    {
+     "name": "To",
+     "value": "all-staff@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "March team-building activity vote"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 27 Feb 2026 15:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  },
+  {
+   "id": "msg_103",
+   "threadId": "msg_103",
+   "internalDate": 1772268300000,
+   "bodyText": "Alert Details:\n\nServer: prod-web-03\nMetric: CPU Usage\nCurrent Value: 92.3%\nThreshold: 90%\nTriggered At: 2026-02-28 08:45:00 UTC\n\nPlease investigate promptly.\n\n-- Monitoring System",
+   "headers": [
+    {
+     "name": "From",
+     "value": "tech-alerts@monitoring.internal"
+    },
+    {
+     "name": "To",
+     "value": "user@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "[ALERT] Production CPU usage exceeded 90%"
+    },
+    {
+     "name": "Date",
+     "value": "Sat, 28 Feb 2026 08:45:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_104",
+   "threadId": "msg_104",
+   "internalDate": 1772287200000,
+   "bodyText": "Hi,\n\nI've been waiting a full day and still haven't received a reply. Management just asked for an update, and the situation is very urgent.\n\nPlease make sure to reply directly to this email before end of business today -- don't just save a draft! If possible, please send your response right away.\n\nThank you,\nDirector Liu | BigCorp Group",
+   "headers": [
+    {
+     "name": "From",
+     "value": "client@bigcorp.com"
+    },
+    {
+     "name": "To",
+     "value": "user@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Re: Re: Regarding the project delay"
+    },
+    {
+     "name": "Date",
+     "value": "Sat, 28 Feb 2026 14:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_105",
+   "threadId": "msg_105",
+   "internalDate": 1772274600000,
+   "bodyText": "Forwarding this report for your reference. If you have any feedback, please reply to me.\n\n------Forwarded Message------\nFrom: research@company.com\nContent: Please review the Q1 competitive analysis report (attached). Key focus areas: 1) Impact of Product A's new features on our business 2) Changes in pricing strategy",
+   "headers": [
+    {
+     "name": "From",
+     "value": "boss@company.com"
+    },
+    {
+     "name": "To",
+     "value": "user@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Fwd: Competitive Analysis Report"
+    },
+    {
+     "name": "Date",
+     "value": "Sat, 28 Feb 2026 10:30:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 5
+  }
+ ]
+}

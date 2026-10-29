@@ -1,0 +1,144 @@
+[
+ {
+  "name": "scheduler",
+  "description": "The scheduler service's tools.",
+  "tools": [
+   {
+    "name": "list_jobs",
+    "call": "scheduler_list_jobs",
+    "description": "List scheduled jobs",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "Filter by status (all/enabled/disabled)"
+      },
+      "tag": {
+       "type": "string",
+       "description": "Filter by tag"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9112/scheduler/jobs",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_job",
+    "call": "scheduler_get_job",
+    "description": "Get scheduled job details",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "job_id": {
+       "type": "string",
+       "description": "Job ID"
+      }
+     },
+     "required": [
+      "job_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9112/scheduler/jobs/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "config",
+  "description": "The config service's tools.",
+  "tools": [
+   {
+    "name": "list_integrations",
+    "call": "config_list_integrations",
+    "description": "List integration configurations",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "Filter by status (active/inactive/all)"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9111/config/integrations",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_integration",
+    "call": "config_get_integration",
+    "description": "Get integration configuration details",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "integration_id": {
+       "type": "string",
+       "description": "Integration ID"
+      }
+     },
+     "required": [
+      "integration_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9111/config/integrations/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "inventory",
+  "description": "The inventory service's tools.",
+  "tools": [
+   {
+    "name": "list_items",
+    "call": "inventory_list_items",
+    "description": "List inventory items",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "category": {
+       "type": "string",
+       "description": "Filter by category"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9108/inventory/products",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_item",
+    "call": "inventory_get_item",
+    "description": "Get inventory item details",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "product_id": {
+       "type": "string",
+       "description": "Product ID"
+      }
+     },
+     "required": [
+      "product_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9108/inventory/products/get",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

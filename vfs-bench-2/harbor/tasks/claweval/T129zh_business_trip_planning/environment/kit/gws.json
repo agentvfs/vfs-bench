@@ -1,0 +1,283 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_801",
+   "threadId": "msg_801",
+   "internalDate": 1774317600000,
+   "bodyText": "您好，我们是贵公司的VIP客户鼎新软件，希望邀请您4月2日来上海办公室讨论下半年合作方案。这次会议对我们非常重要，请务必参加。联系人：上海办陈经理。",
+   "headers": [
+    {
+     "name": "From",
+     "value": "chen@vip-client.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "邀请4月2日来上海拜访"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 10:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_802",
+   "threadId": "msg_802",
+   "internalDate": 1774332000000,
+   "bodyText": "团队你好，深圳分公司计划4月2日至3日举办技术交流活动，主题是微服务架构升级。欢迎总部同事参加。联系人：深圳办李伟。",
+   "headers": [
+    {
+     "name": "From",
+     "value": "liwei@shenzhen-branch.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "深圳技术交流 4/2-4/3"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 14:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_803",
+   "threadId": "msg_803",
+   "internalDate": 1774227600000,
+   "bodyText": "全体通知：4月5日在北京总部召开年度战略会议，所有部门负责人必须参加。已为各地同事预订往返机票，请确认行程。",
+   "headers": [
+    {
+     "name": "From",
+     "value": "hr@company.com"
+    },
+    {
+     "name": "To",
+     "value": "all@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "北京总部年度会议 4月5日"
+    },
+    {
+     "name": "Date",
+     "value": "Mon, 23 Mar 2026 09:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    }
+   ]
+  },
+  {
+   "id": "msg_804",
+   "threadId": "msg_804",
+   "internalDate": 1774429200000,
+   "bodyText": "请大家在周五下班前提交本周周报。",
+   "headers": [
+    {
+     "name": "From",
+     "value": "weekly@company.com"
+    },
+    {
+     "name": "To",
+     "value": "all@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "本周周报提醒"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Mar 2026 17:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  },
+  {
+   "id": "msg_805",
+   "threadId": "msg_805",
+   "internalDate": 1774411200000,
+   "bodyText": "这周末部门聚餐，你来不来？",
+   "headers": [
+    {
+     "name": "From",
+     "value": "zhaolei@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "周末聚餐"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Mar 2026 12:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 5
+  },
+  {
+   "kind": "event",
+   "n": 4
+  }
+ ],
+ "calendars": [
+  {
+   "id": "integ@example.com",
+   "summary": "me@company.com",
+   "timeZone": "Asia/Shanghai",
+   "accessRole": "owner",
+   "primary": true,
+   "events": [
+    {
+     "id": "evt_401",
+     "status": "confirmed",
+     "summary": "产品评审会",
+     "description": "Q2产品评审，讨论新功能优先级",
+     "location": "本地-会议室A",
+     "startDateTime": "2026-04-02T09:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-04-02T12:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"我\"}, {\"displayName\": \"王明\", \"organizer\": true}, {\"displayName\": \"周明\"}]",
+     "created": "2026-03-25T09:00:00.000Z",
+     "updated": "2026-03-25T09:00:00.000Z"
+    },
+    {
+     "id": "evt_402",
+     "status": "confirmed",
+     "summary": "无安排",
+     "description": "空闲日",
+     "startDateTime": "2026-04-03T00:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-04-03T23:59:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "created": "2026-03-25T09:00:00.000Z",
+     "updated": "2026-03-25T09:00:00.000Z"
+    },
+    {
+     "id": "evt_403",
+     "status": "confirmed",
+     "summary": "北京年度会议",
+     "description": "已预订机票：4/4出发 4/6返回",
+     "location": "北京总部",
+     "startDateTime": "2026-04-05T09:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-04-05T18:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"HR\", \"organizer\": true}, {\"displayName\": \"全部负责人\"}]",
+     "created": "2026-03-25T09:00:00.000Z",
+     "updated": "2026-03-25T09:00:00.000Z"
+    },
+    {
+     "id": "evt_404",
+     "status": "confirmed",
+     "summary": "团建活动",
+     "description": "Q2团建",
+     "location": "本地-公司楼下",
+     "startDateTime": "2026-04-07T14:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-04-07T18:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"HR\", \"organizer\": true}, {\"displayName\": \"全员\"}]",
+     "created": "2026-03-25T09:00:00.000Z",
+     "updated": "2026-03-25T09:00:00.000Z"
+    }
+   ]
+  }
+ ]
+}

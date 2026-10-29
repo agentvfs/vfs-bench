@@ -50,7 +50,11 @@ const converters: Record<string, () => Promise<unknown>> = {
   weather: async () => (await import('./weather.ts')).weather(join(PLATFORM, 'mocks', 'weather')),
   gws: async () => (await import('./gws.ts')).gws(join(PLATFORM, 'mocks', 'email'), task),
   finance: async () => (await import('./finance.ts')).finance(join(PLATFORM, 'mocks', 'finance'), join(PLATFORM, '..', 'tasks', task), epoch),
+  social: async () => (await import('./social.ts')).social(PLATFORM, task, epoch),
 }
-const convert = converters[service]
+const { MOCKS } = await import('../../mocks/upstream/mocks.ts')
+const convert =
+  converters[service] ??
+  (MOCKS[service] === undefined ? undefined : async () => (await import('./upstream.ts')).upstream(PLATFORM, service, task, epoch))
 if (convert === undefined) throw new Error(`no fixture converter for ${service}`)
 process.stdout.write(`${JSON.stringify(await convert(), null, 1)}\n`)

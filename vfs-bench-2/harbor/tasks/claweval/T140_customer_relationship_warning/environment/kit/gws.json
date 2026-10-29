@@ -1,0 +1,163 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  },
+  {
+   "id": "Label_1",
+   "name": "client",
+   "type": "user"
+  },
+  {
+   "id": "Label_2",
+   "name": "notice",
+   "type": "user"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_901",
+   "threadId": "msg_901",
+   "internalDate": 1773997200000,
+   "bodyText": "Hello, our contract is expiring soon and we would like to learn about the renewal terms and pricing in advance. We are quite satisfied with the current service, but hope to get a discount on pricing. Please arrange a time to discuss at your earliest convenience. — Liu Wei, Wantong Logistics",
+   "headers": [
+    {
+     "name": "From",
+     "value": "wangtong_liuwei@wantong.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Inquiry about renewal terms"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 20 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_902",
+   "threadId": "msg_902",
+   "internalDate": 1770714000000,
+   "bodyText": "Hi, we have been using your product and would like to learn about higher-tier service plans. Our business is scaling up and the current plan may no longer be sufficient. — Li Na, Dingxin Software",
+   "headers": [
+    {
+     "name": "From",
+     "value": "dingxin_lina@dingxin.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Interest in service upgrade"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 10 Feb 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_903",
+   "threadId": "msg_903",
+   "internalDate": 1774429200000,
+   "bodyText": "Dear colleagues, the Qingming Festival holiday is scheduled for April 4-6, a total of 3 days. Please plan your work accordingly. — Admin Department",
+   "headers": [
+    {
+     "name": "From",
+     "value": "admin@company.com"
+    },
+    {
+     "name": "To",
+     "value": "all@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Qingming Festival holiday notice"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_2"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 3
+  }
+ ]
+}

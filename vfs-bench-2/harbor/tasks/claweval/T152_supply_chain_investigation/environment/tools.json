@@ -1,0 +1,257 @@
+[
+ {
+  "name": "helpdesk",
+  "description": "The helpdesk service's tools.",
+  "tools": [
+   {
+    "name": "list_tickets",
+    "call": "helpdesk_list_tickets",
+    "description": "List tickets",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "Filter by ticket status (open/all)",
+       "default": "open"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9107/helpdesk/tickets",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_ticket",
+    "call": "helpdesk_get_ticket",
+    "description": "Get ticket details",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticket_id": {
+       "type": "string",
+       "description": "Ticket ID"
+      }
+     },
+     "required": [
+      "ticket_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9107/helpdesk/tickets/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_ticket",
+    "call": "helpdesk_update_ticket",
+    "description": "Update ticket (priority, tags, category)",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticket_id": {
+       "type": "string",
+       "description": "Ticket ID"
+      },
+      "priority": {
+       "type": "string",
+       "description": "Priority level"
+      },
+      "tags": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "Tag list"
+      },
+      "category": {
+       "type": "string",
+       "description": "Ticket category"
+      }
+     },
+     "required": [
+      "ticket_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9107/helpdesk/tickets/update",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "close_ticket",
+    "call": "helpdesk_close_ticket",
+    "description": "Close a ticket",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticket_id": {
+       "type": "string",
+       "description": "Ticket ID"
+      },
+      "resolution": {
+       "type": "string",
+       "description": "Resolution notes"
+      }
+     },
+     "required": [
+      "ticket_id",
+      "resolution"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9107/helpdesk/tickets/close",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "inventory",
+  "description": "The inventory service's tools.",
+  "tools": [
+   {
+    "name": "list_items",
+    "call": "inventory_list_items",
+    "description": "List inventory items",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "category": {
+       "type": "string",
+       "description": "Filter by category"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9108/inventory/products",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_item",
+    "call": "inventory_get_item",
+    "description": "Get inventory item details",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "product_id": {
+       "type": "string",
+       "description": "Product ID"
+      }
+     },
+     "required": [
+      "product_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9108/inventory/products/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "finance",
+  "description": "The finance service's tools.",
+  "tools": [
+   {
+    "name": "list_transactions",
+    "call": "finance_list_transactions",
+    "description": "List financial transactions",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "start_date": {
+       "type": "string",
+       "description": "Start date (YYYY-MM-DD)"
+      },
+      "end_date": {
+       "type": "string",
+       "description": "End date (YYYY-MM-DD)"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9104/finance/transactions",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_transaction",
+    "call": "finance_get_transaction",
+    "description": "Get transaction details",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "transaction_id": {
+       "type": "string",
+       "description": "Transaction ID"
+      }
+     },
+     "required": [
+      "transaction_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9104/finance/transactions/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "crm",
+  "description": "The crm service's tools.",
+  "tools": [
+   {
+    "name": "list_customers",
+    "call": "crm_list_customers",
+    "description": "List customers and suppliers",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "Filter by status (active/suspended)"
+      },
+      "tier": {
+       "type": "string",
+       "description": "Filter by tier (vip/standard/core)"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_customer",
+    "call": "crm_get_customer",
+    "description": "Get customer or supplier details",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "customer_id": {
+       "type": "string",
+       "description": "Customer/Supplier ID"
+      }
+     },
+     "required": [
+      "customer_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers/get",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

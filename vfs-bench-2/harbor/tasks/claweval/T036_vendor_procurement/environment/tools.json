@@ -1,0 +1,298 @@
+[
+ {
+  "name": "inventory",
+  "description": "The inventory service's tools.",
+  "tools": [
+   {
+    "name": "list_products",
+    "call": "inventory_list_products",
+    "description": "Get the product inventory list",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "category": {
+       "type": "string",
+       "description": "Filter by category"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9108/inventory/products",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_product",
+    "call": "inventory_get_product",
+    "description": "Get detailed inventory information for a single product",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "product_id": {
+       "type": "string",
+       "description": "Product ID"
+      }
+     },
+     "required": [
+      "product_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9108/inventory/products/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "rss",
+  "description": "The rss service's tools.",
+  "tools": [
+   {
+    "name": "list_articles",
+    "call": "rss_list_articles",
+    "description": "Get the list of articles",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "source": {
+       "type": "string",
+       "description": "Filter by source"
+      },
+      "category": {
+       "type": "string",
+       "description": "Filter by category"
+      },
+      "max_results": {
+       "type": "integer",
+       "description": "Maximum number of results to return",
+       "default": 20
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9109/rss/articles",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_article",
+    "call": "rss_get_article",
+    "description": "Get the full content of an article",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "article_id": {
+       "type": "string",
+       "description": "Article ID"
+      }
+     },
+     "required": [
+      "article_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9109/rss/articles/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "crm",
+  "description": "The crm service's tools.",
+  "tools": [
+   {
+    "name": "list_customers",
+    "call": "crm_list_customers",
+    "description": "Get the CRM customer list, filterable by status, tier, or industry",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "Filter by customer status: active, inactive, churned"
+      },
+      "tier": {
+       "type": "string",
+       "description": "Filter by customer tier: vip, standard"
+      },
+      "industry": {
+       "type": "string",
+       "description": "Filter by industry"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_customer",
+    "call": "crm_get_customer",
+    "description": "Get full details for a single customer",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "customer_id": {
+       "type": "string",
+       "description": "Customer ID"
+      }
+     },
+     "required": [
+      "customer_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "kb",
+  "description": "The kb service's tools.",
+  "tools": [
+   {
+    "name": "search",
+    "call": "kb_search",
+    "description": "Search knowledge base articles",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "Search keywords"
+      },
+      "category": {
+       "type": "string",
+       "description": "Filter by category"
+      },
+      "max_results": {
+       "type": "integer",
+       "description": "Maximum number of results to return",
+       "default": 5
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9106/kb/search",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_article",
+    "call": "kb_get_article",
+    "description": "Get knowledge base article details",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "article_id": {
+       "type": "string",
+       "description": "Article ID"
+      }
+     },
+     "required": [
+      "article_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9106/kb/articles/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "finance",
+  "description": "The finance service's tools.",
+  "tools": [
+   {
+    "name": "list_transactions",
+    "call": "finance_list_transactions",
+    "description": "Get the list of expense transaction records",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "start_date": {
+       "type": "string",
+       "description": "Start date (YYYY-MM-DD)"
+      },
+      "end_date": {
+       "type": "string",
+       "description": "End date (YYYY-MM-DD)"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9104/finance/transactions",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_transaction",
+    "call": "finance_get_transaction",
+    "description": "Get details for a single transaction",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "transaction_id": {
+       "type": "string",
+       "description": "Transaction ID"
+      }
+     },
+     "required": [
+      "transaction_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9104/finance/transactions/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "report_submit",
+    "call": "finance_report_submit",
+    "description": "Submit a financial report",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "title": {
+       "type": "string",
+       "description": "Report title"
+      },
+      "content": {
+       "type": "string",
+       "description": "Report content"
+      },
+      "total_amount": {
+       "type": "number",
+       "description": "Total amount"
+      },
+      "report_type": {
+       "type": "string",
+       "description": "Report type: expense, procurement, budget"
+      }
+     },
+     "required": [
+      "title",
+      "content"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9104/finance/report/submit",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

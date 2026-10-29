@@ -1,0 +1,41 @@
+// A Claw-Eval service's store: one of claw-eval/claw-eval's FastAPI mocks
+// (@ 5680b8b, MIT, mock_services/<service>/server.py), one SQLite file per
+// run. Each service's fake links its `<service>.prisma` here.
+//
+// Upstream keeps a service's state as Python lists of dicts, loaded from the
+// task's fixture JSON, and logs each call to an audit list the grader reads.
+// Here each list is the rows of `doc` of its `kind`, each dict one row's
+// JSON text, in its list's order (`seq`), and each logged call a row of
+// `audit_call`. A run's file is the state the verifier reads.
+//
+// No tenant column: a run is one world (tenantKind 'none'), as upstream's
+// service process is.
+
+datasource db {
+  provider = "sqlite"
+  url      = env("INTEG_DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "client"
+}
+
+model Doc {
+  seq  Int    @id @default(autoincrement())
+  kind String
+  doc  String
+
+  @@index([kind, seq])
+  @@map("doc")
+}
+
+model AuditCall {
+  seq           Int    @id @default(autoincrement())
+  endpoint      String
+  request_body  String
+  response_body String
+  timestamp     String
+
+  @@map("audit_call")
+}

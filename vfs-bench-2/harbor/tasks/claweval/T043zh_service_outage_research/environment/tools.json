@@ -1,0 +1,93 @@
+[
+ {
+  "name": "web",
+  "description": "The web service's tools.",
+  "tools": [
+   {
+    "name": "search",
+    "call": "web_search",
+    "description": "搜索互联网，返回相关网页结果列表（标题、链接、摘要）",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "搜索关键词或查询语句"
+      },
+      "max_results": {
+       "type": "integer",
+       "description": "最大返回结果数",
+       "default": 10
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9113/web/search",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "fetch",
+    "call": "web_fetch",
+    "description": "获取指定URL的完整网页内容",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "url": {
+       "type": "string",
+       "description": "要获取的网页URL"
+      },
+      "timeout_seconds": {
+       "type": "integer",
+       "description": "请求超时时间（秒）",
+       "default": 30
+      }
+     },
+     "required": [
+      "url"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9113/web/fetch",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "send_notification",
+    "call": "send_notification",
+    "description": "向指定渠道发送通知消息（邮件、Slack、短信等）",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "channel": {
+       "type": "string",
+       "description": "通知渠道：email, slack, sms"
+      },
+      "message": {
+       "type": "string",
+       "description": "通知内容"
+      },
+      "recipients": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "接收人列表"
+      }
+     },
+     "required": [
+      "channel",
+      "message"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9113/web/notify",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

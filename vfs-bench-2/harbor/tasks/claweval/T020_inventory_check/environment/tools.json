@@ -1,0 +1,78 @@
+[
+ {
+  "name": "inventory",
+  "description": "The inventory service's tools.",
+  "tools": [
+   {
+    "name": "list_products",
+    "call": "inventory_list_products",
+    "description": "Get the product inventory list",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "category": {
+       "type": "string",
+       "description": "Filter by category"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9108/inventory/products",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_product",
+    "call": "inventory_get_product",
+    "description": "Get detailed inventory information for a single product",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "product_id": {
+       "type": "string",
+       "description": "Product ID"
+      }
+     },
+     "required": [
+      "product_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9108/inventory/products/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "create_order",
+    "call": "inventory_create_order",
+    "description": "Create a restock order",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "product_id": {
+       "type": "string",
+       "description": "Product ID"
+      },
+      "quantity": {
+       "type": "integer",
+       "description": "Restock quantity"
+      },
+      "supplier": {
+       "type": "string",
+       "description": "Supplier"
+      }
+     },
+     "required": [
+      "product_id",
+      "quantity"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9108/inventory/orders/create",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

@@ -1,0 +1,47 @@
+[
+ {
+  "name": "notes",
+  "description": "The notes service's tools.",
+  "tools": [
+   {
+    "name": "list",
+    "call": "notes_list",
+    "description": "List notes",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "max_results": {
+       "type": "integer",
+       "default": 10
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9105/notes/list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get",
+    "call": "notes_get",
+    "description": "Get one note",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "note_id": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "note_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9105/notes/get",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

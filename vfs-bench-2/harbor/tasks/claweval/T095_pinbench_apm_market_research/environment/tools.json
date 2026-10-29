@@ -1,0 +1,55 @@
+[
+ {
+  "name": "kb",
+  "description": "The kb service's tools.",
+  "tools": [
+   {
+    "name": "search",
+    "call": "kb_search",
+    "description": "Search the KB",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string"
+      },
+      "category": {
+       "type": "string"
+      },
+      "max_results": {
+       "type": "integer",
+       "default": 5
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9106/kb/search",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_article",
+    "call": "kb_get_article",
+    "description": "Get one KB article",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "article_id": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "article_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9106/kb/articles/get",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

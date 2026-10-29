@@ -1,0 +1,1 @@
+I recently moved to a new city, so I need to update the delivery address and phone number at my profile of Mosi Shop (address: http://localhost:1234/). My new delivery address is [4278 Maple View Drive, Sacramento, CA 95814, USA] and my new phone num is [12345678901]. Please help me update them at my profile of Mosi Shop (address: http://localhost:1234/, open it in your browser).

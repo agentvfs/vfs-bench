@@ -1,0 +1,297 @@
+[
+ {
+  "name": "helpdesk",
+  "description": "The helpdesk service's tools.",
+  "tools": [
+   {
+    "name": "list_tickets",
+    "call": "helpdesk_list_tickets",
+    "description": "获取工单列表",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "按状态筛选：open, resolved, done, investigating"
+      },
+      "priority": {
+       "type": "string",
+       "description": "按优先级筛选：low, medium, high, critical"
+      },
+      "date_from": {
+       "type": "string",
+       "description": "起始日期 (ISO 8601)"
+      },
+      "date_to": {
+       "type": "string",
+       "description": "截止日期 (ISO 8601)"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9107/helpdesk/tickets",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_ticket",
+    "call": "helpdesk_get_ticket",
+    "description": "获取单个工单详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticket_id": {
+       "type": "string",
+       "description": "工单ID"
+      }
+     },
+     "required": [
+      "ticket_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9107/helpdesk/tickets/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "config",
+  "description": "The config service's tools.",
+  "tools": [
+   {
+    "name": "list_integrations",
+    "call": "config_list_integrations",
+    "description": "获取所有第三方集成的列表（概览信息）",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "按状态筛选：active, degraded, expired"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9111/config/integrations",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_integration",
+    "call": "config_get_integration",
+    "description": "获取单个集成的完整配置信息",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "integration_id": {
+       "type": "string",
+       "description": "集成ID"
+      }
+     },
+     "required": [
+      "integration_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9111/config/integrations/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "kb",
+  "description": "The kb service's tools.",
+  "tools": [
+   {
+    "name": "search",
+    "call": "kb_search",
+    "description": "搜索知识库文章",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "搜索关键词"
+      },
+      "category": {
+       "type": "string",
+       "description": "按分类筛选"
+      },
+      "max_results": {
+       "type": "integer",
+       "description": "最大返回数量",
+       "default": 5
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9106/kb/search",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_article",
+    "call": "kb_get_article",
+    "description": "获取知识库文章详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "article_id": {
+       "type": "string",
+       "description": "文章ID"
+      }
+     },
+     "required": [
+      "article_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9106/kb/articles/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "notes",
+  "description": "The notes service's tools.",
+  "tools": [
+   {
+    "name": "list",
+    "call": "notes_list",
+    "description": "获取笔记/会议记录列表",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "date_from": {
+       "type": "string",
+       "description": "起始日期"
+      },
+      "date_to": {
+       "type": "string",
+       "description": "截止日期"
+      },
+      "tag": {
+       "type": "string",
+       "description": "按标签筛选"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9105/notes/list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get",
+    "call": "notes_get",
+    "description": "获取笔记/会议记录详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "note_id": {
+       "type": "string",
+       "description": "笔记ID"
+      }
+     },
+     "required": [
+      "note_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9105/notes/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "scheduler",
+  "description": "The scheduler service's tools.",
+  "tools": [
+   {
+    "name": "list_jobs",
+    "call": "scheduler_list_jobs",
+    "description": "列出所有定时任务",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "按最近运行状态筛选 (success/failed/stopped)"
+      },
+      "enabled": {
+       "type": "boolean",
+       "description": "按启用状态筛选"
+      },
+      "tag": {
+       "type": "string",
+       "description": "按标签筛选"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9112/scheduler/jobs",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_job",
+    "call": "scheduler_get_job",
+    "description": "获取定时任务详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "job_id": {
+       "type": "string",
+       "description": "任务ID"
+      }
+     },
+     "required": [
+      "job_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9112/scheduler/jobs/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "job_history",
+    "call": "scheduler_job_history",
+    "description": "查看定时任务执行历史",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "job_id": {
+       "type": "string",
+       "description": "任务ID"
+      },
+      "limit": {
+       "type": "integer",
+       "description": "返回条数",
+       "default": 10
+      }
+     },
+     "required": [
+      "job_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9112/scheduler/jobs/history",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

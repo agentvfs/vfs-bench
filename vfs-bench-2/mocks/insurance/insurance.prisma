@@ -1,0 +1,257 @@
+// The insurance fake's store: LiveClawBench's insurance mock (Mosi-AI/LiveClawBench
+// @ 303dc77, MIT, mock-platform/mocks/insurance), one SQLite file per run.
+//
+// Generated with `prisma db pull` from upstream's own CREATE TABLE and
+// CREATE INDEX statements (each fixture's `_schema`), so each table, column,
+// key, foreign key and index is upstream's, by name and in order, and
+// upstream's verify.py and its own statements read a run's file as they
+// read upstream's. Column types are as SQLite keeps them (text, integer,
+// real); a default of SQLite's 'now' is `datetime('now')`, which each run
+// answers with its clock. Prisma cannot state upstream's CHECKs: each run
+// gets them as triggers (mocks/upstream/checks.ts). The last four models
+// are the fake's own (mocks/upstream).
+//
+// No tenant column: a run is one world, as upstream's mock is one.
+
+datasource db {
+  provider = "sqlite"
+  url      = env("INTEG_DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "client"
+}
+
+model migrations {
+  id         Int     @id @default(autoincrement())
+  name       String  @unique
+  applied_at String? @default(dbgenerated("(datetime('now'))"))
+
+  @@map("_migrations")
+}
+
+model appointment {
+  id                    Int              @id @default(autoincrement())
+  user_id               Int
+  provider_id           Int
+  slot_id               Int
+  provider_name         String
+  service_name_snapshot String
+  check_item            String
+  slot_start_time       String
+  slot_end_time         String
+  cost_snapshot         Int
+  distance_km_snapshot  Float
+  status                String           @default("confirmed")
+  created_at            String?          @default(dbgenerated("(datetime('now'))"))
+  updated_at            String?          @default(dbgenerated("(datetime('now'))"))
+  appointment_slot      appointment_slot @relation(fields: [slot_id], references: [id], onUpdate: NoAction)
+  provider              provider         @relation(fields: [provider_id], references: [id], onUpdate: NoAction)
+  users                 users            @relation(fields: [user_id], references: [id], onUpdate: NoAction)
+
+  @@index([slot_id], map: "idx_appointment_slot")
+  @@index([user_id], map: "idx_appointment_user")
+}
+
+model appointment_slot {
+  id                  Int              @id @default(autoincrement())
+  provider_service_id Int
+  start_time          String
+  end_time            String
+  is_available        Int              @default(1)
+  created_at          String?          @default(dbgenerated("(datetime('now'))"))
+  updated_at          String?          @default(dbgenerated("(datetime('now'))"))
+  appointment         appointment[]
+  provider_service    provider_service @relation(fields: [provider_service_id], references: [id], onUpdate: NoAction)
+
+  @@index([provider_service_id], map: "idx_appointment_slot_service")
+}
+
+model claim {
+  id               Int                @id @default(autoincrement())
+  user_id          Int
+  claim_type       String
+  total_amount     Int
+  service_date     String
+  provider_name    String
+  check_item       String
+  status           String             @default("submitted")
+  notes            String?
+  created_at       String?            @default(dbgenerated("(datetime('now'))"))
+  updated_at       String?            @default(dbgenerated("(datetime('now'))"))
+  users            users              @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  claim_attachment claim_attachment[]
+  claim_line_item  claim_line_item[]
+
+  @@index([user_id], map: "idx_claim_user")
+}
+
+model claim_attachment {
+  id         Int     @id @default(autoincrement())
+  claim_id   Int
+  filename   String
+  file_path  String
+  created_at String? @default(dbgenerated("(datetime('now'))"))
+  updated_at String? @default(dbgenerated("(datetime('now'))"))
+  claim      claim   @relation(fields: [claim_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([claim_id], map: "idx_claim_attachment_claim")
+}
+
+model claim_line_item {
+  id           Int     @id @default(autoincrement())
+  claim_id     Int
+  description  String
+  amount_cents Int
+  created_at   String? @default(dbgenerated("(datetime('now'))"))
+  updated_at   String? @default(dbgenerated("(datetime('now'))"))
+  claim        claim   @relation(fields: [claim_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([claim_id], map: "idx_claim_line_item_claim")
+}
+
+model current_policy {
+  id             Int            @id @default(autoincrement())
+  user_id        Int
+  plan_id        Int
+  status         String         @default("active")
+  created_at     String?        @default(dbgenerated("(datetime('now'))"))
+  updated_at     String?        @default(dbgenerated("(datetime('now'))"))
+  insurance_plan insurance_plan @relation(fields: [plan_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users          users          @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([user_id], map: "idx_current_policy_user")
+}
+
+model insurance_plan {
+  id              Int              @id @default(autoincrement())
+  code            String
+  name            String
+  description     String?
+  effective_year  Int
+  premium_monthly Int
+  deductible      Int
+  created_at      String?          @default(dbgenerated("(datetime('now'))"))
+  updated_at      String?          @default(dbgenerated("(datetime('now'))"))
+  current_policy  current_policy[]
+  plan_benefit    plan_benefit[]
+  plan_selection  plan_selection[]
+
+  @@unique([code, effective_year])
+}
+
+model plan_benefit {
+  id               Int            @id @default(autoincrement())
+  plan_id          Int
+  benefit_category String
+  coverage_type    String
+  coverage_value   Int?
+  notes            String?
+  created_at       String?        @default(dbgenerated("(datetime('now'))"))
+  updated_at       String?        @default(dbgenerated("(datetime('now'))"))
+  insurance_plan   insurance_plan @relation(fields: [plan_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([plan_id], map: "idx_plan_benefit_plan")
+}
+
+model plan_selection {
+  id                  Int            @id @default(autoincrement())
+  user_id             Int
+  plan_id             Int
+  year                Int
+  plan_code_snapshot  String
+  plan_name_snapshot  String
+  deductible_snapshot Int
+  premium_snapshot    Int
+  selected_at         String         @default(dbgenerated("(datetime('now'))"))
+  created_at          String?        @default(dbgenerated("(datetime('now'))"))
+  updated_at          String?        @default(dbgenerated("(datetime('now'))"))
+  insurance_plan      insurance_plan @relation(fields: [plan_id], references: [id], onUpdate: NoAction)
+  users               users          @relation(fields: [user_id], references: [id], onUpdate: NoAction)
+
+  @@index([user_id], map: "idx_plan_selection_user")
+}
+
+model provider {
+  id               Int                @id @default(autoincrement())
+  name             String
+  district         String
+  distance_km      Float
+  network_status   String             @default("in_network")
+  created_at       String?            @default(dbgenerated("(datetime('now'))"))
+  updated_at       String?            @default(dbgenerated("(datetime('now'))"))
+  appointment      appointment[]
+  provider_service provider_service[]
+}
+
+model provider_service {
+  id               Int                @id @default(autoincrement())
+  provider_id      Int
+  check_item       String
+  service_name     String
+  cost             Int
+  created_at       String?            @default(dbgenerated("(datetime('now'))"))
+  updated_at       String?            @default(dbgenerated("(datetime('now'))"))
+  appointment_slot appointment_slot[]
+  provider         provider           @relation(fields: [provider_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([provider_id, check_item])
+  @@index([provider_id], map: "idx_provider_service_provider")
+}
+
+model users {
+  id             Int              @id @default(autoincrement())
+  email          String           @unique
+  password_hash  String
+  first_name     String
+  last_name      String
+  phone          String?
+  created_at     String?          @default(dbgenerated("(datetime('now'))"))
+  updated_at     String?          @default(dbgenerated("(datetime('now'))"))
+  appointment    appointment[]
+  claim          claim[]
+  current_policy current_policy[]
+  plan_selection plan_selection[]
+
+  @@index([email], map: "idx_users_email")
+}
+
+// The environment upstream's mock reads from its process (`TASK_NAME`),
+// which a fake every task of a job shares cannot take from its own: each
+// task's fixture states it.
+model vfsbench_env {
+  name  String @id
+  value String
+
+  @@map("_env")
+}
+
+// Each file the mock keeps on disk upstream, by its path in the image, and
+// the task's assets: text as it is, anything else as base64.
+model vfsbench_file {
+  path     String @id
+  data     String
+  encoding String @default("utf8")
+
+  @@map("_file")
+}
+
+// The rows of upstream's tables Prisma cannot key (marked @@ignore above),
+// which the fake inserts itself, in order, once the kit has seeded the rest.
+model vfsbench_row {
+  seq   Int    @id
+  table String
+  data  String
+
+  @@map("_row")
+}
+
+// Upstream's CREATE TABLE and CREATE INDEX statements, as its seed ran them.
+model vfsbench_schema {
+  name String @id
+  type String
+  sql  String
+
+  @@map("_schema")
+}

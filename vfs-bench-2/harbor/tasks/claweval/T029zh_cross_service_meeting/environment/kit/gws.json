@@ -1,0 +1,232 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_301",
+   "threadId": "msg_301",
+   "internalDate": 1772172000000,
+   "bodyText": "你好，\n\n我们希望在下周安排一次联合项目评审会议，讨论Q1进度和Q2计划。\n\n请邀请以下人员参加：\n- 你方工程部的赵磊\n- 你方产品部的李明\n- 我方会有3人参加\n\n会议时长约2小时，请查看各位下周三（2026年3月4日）下午的空闲时间，告知可行的时段。\n\n如果周三不行，周四下午也可以。\n\n谢谢，\n陈总监\nPartner Corp",
+   "headers": [
+    {
+     "name": "From",
+     "value": "director@partner-corp.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "项目评审会议邀请"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 27 Feb 2026 14:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_302",
+   "threadId": "msg_302",
+   "internalDate": 1772181000000,
+   "bodyText": "收到，工作总结已提交。\n\n另外提醒一下，下周三下午我2点到3点有个内部技术分享会，其他时间都OK。\n\n赵磊",
+   "headers": [
+    {
+     "name": "From",
+     "value": "zhaolei@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Re: 本周工作总结"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 27 Feb 2026 16:30:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  },
+  {
+   "id": "msg_303",
+   "threadId": "msg_303",
+   "internalDate": 1772240400000,
+   "bodyText": "Hi，\n\n下周三我全天有空，周四下午3点后有个客户拜访，3点前都OK。\n\n李明",
+   "headers": [
+    {
+     "name": "From",
+     "value": "liming@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "下周日程"
+    },
+    {
+     "name": "Date",
+     "value": "Sat, 28 Feb 2026 09:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 3
+  },
+  {
+   "kind": "event",
+   "n": 5
+  }
+ ],
+ "calendars": [
+  {
+   "id": "integ@example.com",
+   "summary": "me@company.com",
+   "timeZone": "Asia/Shanghai",
+   "accessRole": "owner",
+   "primary": true,
+   "events": [
+    {
+     "id": "evt_401",
+     "status": "confirmed",
+     "summary": "产品部周会",
+     "location": "会议室A",
+     "startDateTime": "2026-03-04T09:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-04T10:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"email\": \"liming@company.com\", \"organizer\": true}, {\"email\": \"wangfang@company.com\"}]",
+     "created": "2026-03-03T09:00:00.000Z",
+     "updated": "2026-03-03T09:00:00.000Z"
+    },
+    {
+     "id": "evt_402",
+     "status": "confirmed",
+     "summary": "内部技术分享会",
+     "location": "会议室B",
+     "startDateTime": "2026-03-04T14:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-04T15:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"email\": \"zhaolei@company.com\"}, {\"email\": \"zhangwei@company.com\", \"organizer\": true}]",
+     "created": "2026-03-03T09:00:00.000Z",
+     "updated": "2026-03-03T09:00:00.000Z"
+    },
+    {
+     "id": "evt_403",
+     "status": "confirmed",
+     "summary": "午餐",
+     "startDateTime": "2026-03-04T12:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-04T13:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"email\": \"liming@company.com\", \"organizer\": true}]",
+     "created": "2026-03-03T09:00:00.000Z",
+     "updated": "2026-03-03T09:00:00.000Z"
+    },
+    {
+     "id": "evt_404",
+     "status": "confirmed",
+     "summary": "客户拜访",
+     "location": "客户办公室",
+     "startDateTime": "2026-03-05T15:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-05T17:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"email\": \"liming@company.com\", \"organizer\": true}]",
+     "created": "2026-03-03T09:00:00.000Z",
+     "updated": "2026-03-03T09:00:00.000Z"
+    },
+    {
+     "id": "evt_405",
+     "status": "confirmed",
+     "summary": "团队1对1",
+     "location": "线上",
+     "startDateTime": "2026-03-04T10:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-04T11:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"email\": \"zhaolei@company.com\", \"organizer\": true}, {\"email\": \"zhangwei@company.com\"}]",
+     "created": "2026-03-03T09:00:00.000Z",
+     "updated": "2026-03-03T09:00:00.000Z"
+    }
+   ]
+  }
+ ]
+}

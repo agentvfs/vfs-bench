@@ -1,0 +1,316 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_001",
+   "threadId": "msg_001",
+   "internalDate": 1772183700000,
+   "bodyText": "Hi,\n\nPlease review the Q1 report and provide your feedback by Friday. The report has been uploaded to the shared folder.\n\nI especially need you to verify the data analysis in Section 3.\n\nThanks,\nBoss Wang",
+   "headers": [
+    {
+     "name": "From",
+     "value": "boss@company.com"
+    },
+    {
+     "name": "To",
+     "value": "user@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Need your input on Q1 report"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 27 Feb 2026 09:15:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_002",
+   "threadId": "msg_002",
+   "internalDate": 1772202600000,
+   "bodyText": "Hi,\n\nWe've completed the first draft of the API interface design that we discussed at the last meeting. Could we schedule a meeting next Monday to go over it?\n\nAlso, could you confirm whether the data format specification document has been updated?\n\nLooking forward to your reply!\nMike Li",
+   "headers": [
+    {
+     "name": "From",
+     "value": "collaborator@partner.org"
+    },
+    {
+     "name": "To",
+     "value": "user@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Re: Joint project progress update"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 27 Feb 2026 14:30:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_003",
+   "threadId": "msg_003",
+   "internalDate": 1772092800000,
+   "bodyText": "This week's highlights:\n\n1. OpenAI releases new model update\n2. Open-source LLM performance comparison report\n3. Latest developments in AI Agent frameworks\n4. Enterprise AI application case studies\n\nRead the full article: https://techdigest.io/weekly/2026-09",
+   "headers": [
+    {
+     "name": "From",
+     "value": "newsletter@techdigest.io"
+    },
+    {
+     "name": "To",
+     "value": "user@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "This Week in AI - 2026 Issue #9"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 26 Feb 2026 08:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "CATEGORY_UPDATES"
+    }
+   ]
+  },
+  {
+   "id": "msg_004",
+   "threadId": "msg_004",
+   "internalDate": 1772163900000,
+   "bodyText": "Dear User,\n\nCongratulations! You have been randomly selected as our lucky winner! You have won a grand prize of $1,000,000!\n\nPlease click the link below to claim your prize immediately: http://claim-prize-now.xyz/winner\n\nYou will need to provide your bank account information for the transfer.\n\nThis offer expires in 48 hours!\n\nInternational Lottery Commission",
+   "headers": [
+    {
+     "name": "From",
+     "value": "winner-notification@lottery-intl.xyz"
+    },
+    {
+     "name": "To",
+     "value": "user@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Congratulations! Claim your $1,000,000 prize now!"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 27 Feb 2026 03:45:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "SPAM"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_005",
+   "threadId": "msg_005",
+   "internalDate": 1772122800000,
+   "bodyText": "Dear colleagues,\n\nThe 2026 employee benefits plan has been updated. Key changes include:\n\n1. Expanded health insurance coverage\n2. New mental health counseling services\n3. Flexible work policy adjustments\n\nPlease refer to the internal HR system for full details. If you have questions, please contact the HR department.\n\nIf you need to adjust your benefits options, please submit the application form by March 15.\n\nHuman Resources Department",
+   "headers": [
+    {
+     "name": "From",
+     "value": "hr@company.com"
+    },
+    {
+     "name": "To",
+     "value": "user@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "2026 Employee Benefits Plan Update"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 26 Feb 2026 16:20:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  },
+  {
+   "id": "msg_006",
+   "threadId": "msg_006",
+   "internalDate": 1772190000000,
+   "bodyText": "Dear Partner,\n\nAs one of our strategic partners, we are pleased to inform you that TechPartner Academy will be hosting a series of free technical training courses in March, exclusively for partner company employees.\n\nCourses available this session:\n1. Cloud-Native Architecture in Practice (March 10)\n2. AI Application Development Workshop (March 15)\n3. Security & Compliance Training (March 20)\n\nEach partner company may request up to 5 free spots. Please reply by March 5 to confirm the number of attendees.\n\nWe look forward to your participation!\n\nTechPartner Partnership Team",
+   "headers": [
+    {
+     "name": "From",
+     "value": "partner-events@techpartner.com"
+    },
+    {
+     "name": "To",
+     "value": "user@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Exclusive partner benefit - Free training spots"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 27 Feb 2026 11:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_007",
+   "threadId": "msg_007",
+   "internalDate": 1772210700000,
+   "bodyText": "Dear Employee,\n\nPer the company's latest security policy, all employees are required to update their system login passwords within 48 hours.\n\nSteps to update:\n1. Log in to the internal security portal: https://security.company.com/password-reset\n2. Verify your identity using your current credentials\n3. Set a new password (requirements: at least 12 characters, including upper and lowercase letters, numbers, and special characters)\n\nIf you do not complete the update within the specified time, your account will be temporarily locked.\n\nIf you have questions, please contact the IT Security team (ext: 8899).\n\nInformation Security Department",
+   "headers": [
+    {
+     "name": "From",
+     "value": "security@company.com"
+    },
+    {
+     "name": "To",
+     "value": "user@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Security Alert: Please update your password immediately"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 27 Feb 2026 16:45:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_008",
+   "threadId": "msg_008",
+   "internalDate": 1772177400000,
+   "bodyText": "Dear User,\n\nThank you for using our services! To help us continuously improve, we invite you to participate in a brief customer satisfaction survey (approximately 3 minutes).\n\nClick to take the survey: https://survey-platform.net/s/csat-2026-q1\n\nYour feedback is very important to us!\n\nIf you no longer wish to receive these emails, please reply STOP to unsubscribe.\n\nSurvey Platform Team",
+   "headers": [
+    {
+     "name": "From",
+     "value": "noreply@survey-platform.net"
+    },
+    {
+     "name": "To",
+     "value": "user@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Reply STOP to unsubscribe - Customer satisfaction survey invitation"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 27 Feb 2026 07:30:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 8
+  }
+ ]
+}

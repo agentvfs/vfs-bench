@@ -1,0 +1,124 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_901",
+   "threadId": "msg_901",
+   "internalDate": 1774314000000,
+   "bodyText": "团队好，请在本周五前完成竞品A和竞品B的最新动态分析报告，重点关注：1. 竞品A新版本对我们的威胁 2. 竞品B融资后的市场策略 3. 我们的应对建议。报告发给管理层。",
+   "headers": [
+    {
+     "name": "From",
+     "value": "product-manager@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "请本周五前交竞品分析报告"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 09:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_902",
+   "threadId": "msg_902",
+   "internalDate": 1774407600000,
+   "bodyText": "今天拜访万通物流时，赵总监提到竞品A刚发布了AI助手功能，问我们什么时候也会有类似功能。我回答说在规划中。请在报告中重点分析这个竞品威胁。",
+   "headers": [
+    {
+     "name": "From",
+     "value": "sales-rep@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "客户提到竞品A的AI功能"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Mar 2026 11:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 2
+  }
+ ]
+}

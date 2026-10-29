@@ -1,0 +1,85 @@
+[
+ {
+  "name": "kb",
+  "description": "The kb service's tools.",
+  "tools": [
+   {
+    "name": "search",
+    "call": "kb_search",
+    "description": "搜索知识库文章",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "搜索关键词"
+      },
+      "category": {
+       "type": "string",
+       "description": "按类别筛选"
+      },
+      "max_results": {
+       "type": "integer",
+       "description": "最大返回数量",
+       "default": 5
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9106/kb/search",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_article",
+    "call": "kb_get_article",
+    "description": "获取知识库文章详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "article_id": {
+       "type": "string",
+       "description": "文章ID"
+      }
+     },
+     "required": [
+      "article_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9106/kb/articles/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_article",
+    "call": "kb_update_article",
+    "description": "更新知识库文章内容",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "article_id": {
+       "type": "string",
+       "description": "文章ID"
+      },
+      "content": {
+       "type": "string",
+       "description": "更新后的内容"
+      }
+     },
+     "required": [
+      "article_id",
+      "content"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9106/kb/articles/update",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

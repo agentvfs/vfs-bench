@@ -1,0 +1,4707 @@
+{
+ "_env": [
+  {
+   "name": "TASK_NAME",
+   "value": "health-daily-record"
+  }
+ ],
+ "_schema": [
+  {
+   "type": "table",
+   "name": "_migrations",
+   "sql": "CREATE TABLE _migrations (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      name TEXT NOT NULL UNIQUE,\n      applied_at TEXT DEFAULT (datetime('2026-05-13 09:00:00'))\n    )"
+  },
+  {
+   "type": "table",
+   "name": "mock_user",
+   "sql": "CREATE TABLE mock_user (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      username TEXT NOT NULL UNIQUE,\n      display_name TEXT,\n      created_at TEXT NOT NULL DEFAULT (datetime('2026-05-13 09:00:00'))\n    )"
+  },
+  {
+   "type": "table",
+   "name": "health_daily_snapshot",
+   "sql": "CREATE TABLE health_daily_snapshot (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      user_id INTEGER NOT NULL DEFAULT 1,\n      date TEXT NOT NULL,\n      steps INTEGER,\n      active_energy_kcal REAL,\n      sleep_hours REAL,\n      sleep_quality REAL,\n      light_sleep_hours REAL,\n      deep_sleep_hours REAL,\n      rem_sleep_hours REAL,\n      low_intensity_min REAL,\n      medium_intensity_min REAL,\n      high_intensity_min REAL,\n      total_activity_min REAL,\n      resting_heart_rate_bpm INTEGER,\n      avg_heart_rate_bpm INTEGER,\n      weight_kg REAL,\n      body_fat_percent REAL,\n      blood_oxygen_percent REAL,\n      created_at TEXT NOT NULL DEFAULT (datetime('2026-05-13 09:00:00')),\n      UNIQUE(user_id, date),\n      FOREIGN KEY (user_id) REFERENCES mock_user(id)\n    )"
+  },
+  {
+   "type": "table",
+   "name": "health_metric_series",
+   "sql": "CREATE TABLE health_metric_series (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      user_id INTEGER NOT NULL DEFAULT 1,\n      metric_type TEXT NOT NULL,\n      date TEXT NOT NULL,\n      value REAL NOT NULL,\n      created_at TEXT NOT NULL DEFAULT (datetime('2026-05-13 09:00:00')),\n      UNIQUE(user_id, metric_type, date),\n      FOREIGN KEY (user_id) REFERENCES mock_user(id)\n    )"
+  },
+  {
+   "type": "table",
+   "name": "allergen",
+   "sql": "CREATE TABLE allergen (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      user_id INTEGER NOT NULL DEFAULT 1,\n      name TEXT NOT NULL,\n      severity TEXT,\n      notes TEXT,\n      archived INTEGER NOT NULL DEFAULT 0,\n      archived_at TEXT,\n      created_at TEXT NOT NULL DEFAULT (datetime('2026-05-13 09:00:00')),\n      updated_at TEXT NOT NULL DEFAULT (datetime('2026-05-13 09:00:00')),\n      FOREIGN KEY (user_id) REFERENCES mock_user(id)\n    )"
+  },
+  {
+   "type": "table",
+   "name": "medication",
+   "sql": "CREATE TABLE medication (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      user_id INTEGER NOT NULL DEFAULT 1,\n      name TEXT NOT NULL,\n      display_name TEXT,\n      frequency TEXT NOT NULL DEFAULT 'daily',\n      dose_amount REAL,\n      dose_unit TEXT,\n      start_date TEXT NOT NULL,\n      end_date TEXT,\n      notes TEXT,\n      archived INTEGER NOT NULL DEFAULT 0,\n      archived_at TEXT,\n      created_at TEXT NOT NULL DEFAULT (datetime('2026-05-13 09:00:00')),\n      updated_at TEXT NOT NULL DEFAULT (datetime('2026-05-13 09:00:00')),\n      FOREIGN KEY (user_id) REFERENCES mock_user(id)\n    )"
+  },
+  {
+   "type": "table",
+   "name": "medication_intake_slot",
+   "sql": "CREATE TABLE medication_intake_slot (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      medication_id INTEGER NOT NULL,\n      time_hhmm TEXT NOT NULL,\n      dose_amount REAL,\n      dose_unit TEXT,\n      label TEXT,\n      FOREIGN KEY (medication_id) REFERENCES medication(id) ON DELETE CASCADE\n    )"
+  },
+  {
+   "type": "table",
+   "name": "medication_dose_log",
+   "sql": "CREATE TABLE medication_dose_log (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      medication_id INTEGER NOT NULL,\n      slot_id INTEGER,\n      logged_at TEXT NOT NULL DEFAULT (datetime('2026-05-13 09:00:00')),\n      status TEXT NOT NULL DEFAULT 'taken',\n      log_dose_amount REAL,\n      log_dose_unit TEXT,\n      notes TEXT,\n      created_at TEXT NOT NULL DEFAULT (datetime('2026-05-13 09:00:00')),\n      updated_at TEXT NOT NULL DEFAULT (datetime('2026-05-13 09:00:00')),\n      FOREIGN KEY (medication_id) REFERENCES medication(id) ON DELETE CASCADE,\n      FOREIGN KEY (slot_id) REFERENCES medication_intake_slot(id)\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_snapshot_user_date",
+   "sql": "CREATE INDEX idx_snapshot_user_date ON health_daily_snapshot(user_id, date)"
+  },
+  {
+   "type": "index",
+   "name": "idx_metric_user_type_date",
+   "sql": "CREATE INDEX idx_metric_user_type_date ON health_metric_series(user_id, metric_type, date)"
+  },
+  {
+   "type": "index",
+   "name": "idx_allergen_user",
+   "sql": "CREATE INDEX idx_allergen_user ON allergen(user_id, archived)"
+  },
+  {
+   "type": "index",
+   "name": "idx_medication_user",
+   "sql": "CREATE INDEX idx_medication_user ON medication(user_id, archived)"
+  },
+  {
+   "type": "index",
+   "name": "idx_slot_medication",
+   "sql": "CREATE INDEX idx_slot_medication ON medication_intake_slot(medication_id)"
+  },
+  {
+   "type": "index",
+   "name": "idx_dose_log_medication",
+   "sql": "CREATE INDEX idx_dose_log_medication ON medication_dose_log(medication_id, logged_at)"
+  },
+  {
+   "type": "table",
+   "name": "system_config",
+   "sql": "CREATE TABLE system_config (\n      key TEXT PRIMARY KEY,\n      value TEXT NOT NULL\n    )"
+  }
+ ],
+ "_migrations": [],
+ "mock_user": [
+  {
+   "id": 1,
+   "username": "default",
+   "display_name": "Health User",
+   "created_at": "2026-05-13 09:00:00"
+  }
+ ],
+ "health_daily_snapshot": [
+  {
+   "id": 1,
+   "user_id": 1,
+   "date": "2026-04-14",
+   "steps": 9056,
+   "active_energy_kcal": 238,
+   "sleep_hours": 6,
+   "sleep_quality": 59.5,
+   "light_sleep_hours": 3.43,
+   "deep_sleep_hours": 1.07,
+   "rem_sleep_hours": 1.5,
+   "low_intensity_min": 36,
+   "medium_intensity_min": 18,
+   "high_intensity_min": 12,
+   "total_activity_min": 66,
+   "resting_heart_rate_bpm": 56,
+   "avg_heart_rate_bpm": 87,
+   "weight_kg": 66.2,
+   "body_fat_percent": 22.5,
+   "blood_oxygen_percent": 99,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 2,
+   "user_id": 1,
+   "date": "2026-04-15",
+   "steps": 5178,
+   "active_energy_kcal": 290,
+   "sleep_hours": 8.7,
+   "sleep_quality": 79.1,
+   "light_sleep_hours": 4.73,
+   "deep_sleep_hours": 1.87,
+   "rem_sleep_hours": 2.1,
+   "low_intensity_min": 31,
+   "medium_intensity_min": 10,
+   "high_intensity_min": 6,
+   "total_activity_min": 47,
+   "resting_heart_rate_bpm": 57,
+   "avg_heart_rate_bpm": 74,
+   "weight_kg": 65.5,
+   "body_fat_percent": 20.2,
+   "blood_oxygen_percent": 98.5,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 3,
+   "user_id": 1,
+   "date": "2026-04-16",
+   "steps": 3538,
+   "active_energy_kcal": 187,
+   "sleep_hours": 7.8,
+   "sleep_quality": 69.1,
+   "light_sleep_hours": 4.2,
+   "deep_sleep_hours": 1.62,
+   "rem_sleep_hours": 1.98,
+   "low_intensity_min": 19,
+   "medium_intensity_min": 6,
+   "high_intensity_min": 2,
+   "total_activity_min": 27,
+   "resting_heart_rate_bpm": 70,
+   "avg_heart_rate_bpm": 69,
+   "weight_kg": 67,
+   "body_fat_percent": 19.2,
+   "blood_oxygen_percent": 96.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 4,
+   "user_id": 1,
+   "date": "2026-04-17",
+   "steps": 6048,
+   "active_energy_kcal": 418,
+   "sleep_hours": 6.2,
+   "sleep_quality": 61.7,
+   "light_sleep_hours": 3.53,
+   "deep_sleep_hours": 1.13,
+   "rem_sleep_hours": 1.53,
+   "low_intensity_min": 31,
+   "medium_intensity_min": 11,
+   "high_intensity_min": 6,
+   "total_activity_min": 48,
+   "resting_heart_rate_bpm": 63,
+   "avg_heart_rate_bpm": 78,
+   "weight_kg": 65.2,
+   "body_fat_percent": 20.6,
+   "blood_oxygen_percent": 97.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 5,
+   "user_id": 1,
+   "date": "2026-04-18",
+   "steps": 11080,
+   "active_energy_kcal": 464,
+   "sleep_hours": 6.4,
+   "sleep_quality": 53.7,
+   "light_sleep_hours": 4.15,
+   "deep_sleep_hours": 0.93,
+   "rem_sleep_hours": 1.32,
+   "low_intensity_min": 38,
+   "medium_intensity_min": 24,
+   "high_intensity_min": 16,
+   "total_activity_min": 78,
+   "resting_heart_rate_bpm": 71,
+   "avg_heart_rate_bpm": 80,
+   "weight_kg": 69.3,
+   "body_fat_percent": 19.2,
+   "blood_oxygen_percent": 97.5,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 6,
+   "user_id": 1,
+   "date": "2026-04-19",
+   "steps": 7747,
+   "active_energy_kcal": 640,
+   "sleep_hours": 7,
+   "sleep_quality": 67.3,
+   "light_sleep_hours": 4.17,
+   "deep_sleep_hours": 1.23,
+   "rem_sleep_hours": 1.6,
+   "low_intensity_min": 30,
+   "medium_intensity_min": 16,
+   "high_intensity_min": 7,
+   "total_activity_min": 53,
+   "resting_heart_rate_bpm": 70,
+   "avg_heart_rate_bpm": 80,
+   "weight_kg": 67,
+   "body_fat_percent": 21.8,
+   "blood_oxygen_percent": 98.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 7,
+   "user_id": 1,
+   "date": "2026-04-20",
+   "steps": 13223,
+   "active_energy_kcal": 397,
+   "sleep_hours": 8.5,
+   "sleep_quality": 59,
+   "light_sleep_hours": 4.93,
+   "deep_sleep_hours": 1.45,
+   "rem_sleep_hours": 2.12,
+   "low_intensity_min": 40,
+   "medium_intensity_min": 35,
+   "high_intensity_min": 26,
+   "total_activity_min": 101,
+   "resting_heart_rate_bpm": 68,
+   "avg_heart_rate_bpm": 88,
+   "weight_kg": 68,
+   "body_fat_percent": 18.4,
+   "blood_oxygen_percent": 98.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 8,
+   "user_id": 1,
+   "date": "2026-04-21",
+   "steps": 10584,
+   "active_energy_kcal": 180,
+   "sleep_hours": 7.3,
+   "sleep_quality": 63.6,
+   "light_sleep_hours": 4.45,
+   "deep_sleep_hours": 1.27,
+   "rem_sleep_hours": 1.58,
+   "low_intensity_min": 36,
+   "medium_intensity_min": 24,
+   "high_intensity_min": 14,
+   "total_activity_min": 74,
+   "resting_heart_rate_bpm": 60,
+   "avg_heart_rate_bpm": 83,
+   "weight_kg": 69.7,
+   "body_fat_percent": 20.1,
+   "blood_oxygen_percent": 95.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 9,
+   "user_id": 1,
+   "date": "2026-04-22",
+   "steps": 13039,
+   "active_energy_kcal": 585,
+   "sleep_hours": 7.1,
+   "sleep_quality": 81.4,
+   "light_sleep_hours": 3.83,
+   "deep_sleep_hours": 1.37,
+   "rem_sleep_hours": 1.9,
+   "low_intensity_min": 44,
+   "medium_intensity_min": 37,
+   "high_intensity_min": 25,
+   "total_activity_min": 106,
+   "resting_heart_rate_bpm": 57,
+   "avg_heart_rate_bpm": 86,
+   "weight_kg": 65.3,
+   "body_fat_percent": 20.1,
+   "blood_oxygen_percent": 95.3,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 10,
+   "user_id": 1,
+   "date": "2026-04-23",
+   "steps": 10411,
+   "active_energy_kcal": 214,
+   "sleep_hours": 6.8,
+   "sleep_quality": 54.6,
+   "light_sleep_hours": 4.22,
+   "deep_sleep_hours": 1.12,
+   "rem_sleep_hours": 1.47,
+   "low_intensity_min": 36,
+   "medium_intensity_min": 24,
+   "high_intensity_min": 16,
+   "total_activity_min": 76,
+   "resting_heart_rate_bpm": 73,
+   "avg_heart_rate_bpm": 78,
+   "weight_kg": 69.7,
+   "body_fat_percent": 15.8,
+   "blood_oxygen_percent": 95.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 11,
+   "user_id": 1,
+   "date": "2026-04-24",
+   "steps": 8306,
+   "active_energy_kcal": 156,
+   "sleep_hours": 5.7,
+   "sleep_quality": 56.1,
+   "light_sleep_hours": 3.53,
+   "deep_sleep_hours": 0.87,
+   "rem_sleep_hours": 1.3,
+   "low_intensity_min": 34,
+   "medium_intensity_min": 15,
+   "high_intensity_min": 8,
+   "total_activity_min": 57,
+   "resting_heart_rate_bpm": 71,
+   "avg_heart_rate_bpm": 76,
+   "weight_kg": 65.4,
+   "body_fat_percent": 24.9,
+   "blood_oxygen_percent": 98.9,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 12,
+   "user_id": 1,
+   "date": "2026-04-25",
+   "steps": 8988,
+   "active_energy_kcal": 397,
+   "sleep_hours": 5.7,
+   "sleep_quality": 66.7,
+   "light_sleep_hours": 3.47,
+   "deep_sleep_hours": 0.97,
+   "rem_sleep_hours": 1.27,
+   "low_intensity_min": 36,
+   "medium_intensity_min": 19,
+   "high_intensity_min": 10,
+   "total_activity_min": 65,
+   "resting_heart_rate_bpm": 69,
+   "avg_heart_rate_bpm": 68,
+   "weight_kg": 65.7,
+   "body_fat_percent": 15.6,
+   "blood_oxygen_percent": 98.3,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 13,
+   "user_id": 1,
+   "date": "2026-04-26",
+   "steps": 9778,
+   "active_energy_kcal": 210,
+   "sleep_hours": 8.5,
+   "sleep_quality": 71.2,
+   "light_sleep_hours": 4.85,
+   "deep_sleep_hours": 1.73,
+   "rem_sleep_hours": 1.92,
+   "low_intensity_min": 38,
+   "medium_intensity_min": 20,
+   "high_intensity_min": 13,
+   "total_activity_min": 71,
+   "resting_heart_rate_bpm": 58,
+   "avg_heart_rate_bpm": 83,
+   "weight_kg": 67,
+   "body_fat_percent": 20.6,
+   "blood_oxygen_percent": 98.3,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 14,
+   "user_id": 1,
+   "date": "2026-04-27",
+   "steps": 9659,
+   "active_energy_kcal": 297,
+   "sleep_hours": 7.1,
+   "sleep_quality": 70.8,
+   "light_sleep_hours": 3.95,
+   "deep_sleep_hours": 1.33,
+   "rem_sleep_hours": 1.82,
+   "low_intensity_min": 42,
+   "medium_intensity_min": 22,
+   "high_intensity_min": 14,
+   "total_activity_min": 78,
+   "resting_heart_rate_bpm": 72,
+   "avg_heart_rate_bpm": 78,
+   "weight_kg": 66.4,
+   "body_fat_percent": 21.5,
+   "blood_oxygen_percent": 97.3,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 15,
+   "user_id": 1,
+   "date": "2026-04-28",
+   "steps": 9087,
+   "active_energy_kcal": 334,
+   "sleep_hours": 7.4,
+   "sleep_quality": 79.5,
+   "light_sleep_hours": 4.18,
+   "deep_sleep_hours": 1.52,
+   "rem_sleep_hours": 1.7,
+   "low_intensity_min": 42,
+   "medium_intensity_min": 24,
+   "high_intensity_min": 12,
+   "total_activity_min": 78,
+   "resting_heart_rate_bpm": 66,
+   "avg_heart_rate_bpm": 84,
+   "weight_kg": 66.6,
+   "body_fat_percent": 16.8,
+   "blood_oxygen_percent": 95.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 16,
+   "user_id": 1,
+   "date": "2026-04-29",
+   "steps": 8461,
+   "active_energy_kcal": 536,
+   "sleep_hours": 8.8,
+   "sleep_quality": 62.6,
+   "light_sleep_hours": 5.23,
+   "deep_sleep_hours": 1.47,
+   "rem_sleep_hours": 2.1,
+   "low_intensity_min": 42,
+   "medium_intensity_min": 21,
+   "high_intensity_min": 12,
+   "total_activity_min": 75,
+   "resting_heart_rate_bpm": 59,
+   "avg_heart_rate_bpm": 89,
+   "weight_kg": 65.7,
+   "body_fat_percent": 23.6,
+   "blood_oxygen_percent": 96.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 17,
+   "user_id": 1,
+   "date": "2026-04-30",
+   "steps": 8373,
+   "active_energy_kcal": 435,
+   "sleep_hours": 8.1,
+   "sleep_quality": 76.8,
+   "light_sleep_hours": 4.37,
+   "deep_sleep_hours": 1.73,
+   "rem_sleep_hours": 2,
+   "low_intensity_min": 35,
+   "medium_intensity_min": 19,
+   "high_intensity_min": 12,
+   "total_activity_min": 66,
+   "resting_heart_rate_bpm": 58,
+   "avg_heart_rate_bpm": 73,
+   "weight_kg": 69.3,
+   "body_fat_percent": 17.4,
+   "blood_oxygen_percent": 95.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 18,
+   "user_id": 1,
+   "date": "2026-05-01",
+   "steps": 8716,
+   "active_energy_kcal": 649,
+   "sleep_hours": 6.2,
+   "sleep_quality": 51,
+   "light_sleep_hours": 3.98,
+   "deep_sleep_hours": 0.93,
+   "rem_sleep_hours": 1.28,
+   "low_intensity_min": 36,
+   "medium_intensity_min": 21,
+   "high_intensity_min": 13,
+   "total_activity_min": 70,
+   "resting_heart_rate_bpm": 71,
+   "avg_heart_rate_bpm": 71,
+   "weight_kg": 67.9,
+   "body_fat_percent": 18.7,
+   "blood_oxygen_percent": 96.8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 19,
+   "user_id": 1,
+   "date": "2026-05-02",
+   "steps": 13413,
+   "active_energy_kcal": 273,
+   "sleep_hours": 6.2,
+   "sleep_quality": 57.1,
+   "light_sleep_hours": 3.67,
+   "deep_sleep_hours": 1.02,
+   "rem_sleep_hours": 1.52,
+   "low_intensity_min": 41,
+   "medium_intensity_min": 36,
+   "high_intensity_min": 22,
+   "total_activity_min": 99,
+   "resting_heart_rate_bpm": 72,
+   "avg_heart_rate_bpm": 69,
+   "weight_kg": 68.6,
+   "body_fat_percent": 19.4,
+   "blood_oxygen_percent": 97.4,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 20,
+   "user_id": 1,
+   "date": "2026-05-03",
+   "steps": 7412,
+   "active_energy_kcal": 457,
+   "sleep_hours": 7.8,
+   "sleep_quality": 75.6,
+   "light_sleep_hours": 4.48,
+   "deep_sleep_hours": 1.43,
+   "rem_sleep_hours": 1.88,
+   "low_intensity_min": 32,
+   "medium_intensity_min": 14,
+   "high_intensity_min": 7,
+   "total_activity_min": 53,
+   "resting_heart_rate_bpm": 73,
+   "avg_heart_rate_bpm": 67,
+   "weight_kg": 67.8,
+   "body_fat_percent": 23.7,
+   "blood_oxygen_percent": 98.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 21,
+   "user_id": 1,
+   "date": "2026-05-04",
+   "steps": 9212,
+   "active_energy_kcal": 509,
+   "sleep_hours": 6.9,
+   "sleep_quality": 54.1,
+   "light_sleep_hours": 4.13,
+   "deep_sleep_hours": 1.22,
+   "rem_sleep_hours": 1.55,
+   "low_intensity_min": 44,
+   "medium_intensity_min": 23,
+   "high_intensity_min": 12,
+   "total_activity_min": 79,
+   "resting_heart_rate_bpm": 62,
+   "avg_heart_rate_bpm": 76,
+   "weight_kg": 67.4,
+   "body_fat_percent": 18.5,
+   "blood_oxygen_percent": 98.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 22,
+   "user_id": 1,
+   "date": "2026-05-05",
+   "steps": 7707,
+   "active_energy_kcal": 211,
+   "sleep_hours": 5.6,
+   "sleep_quality": 63,
+   "light_sleep_hours": 3.13,
+   "deep_sleep_hours": 1.07,
+   "rem_sleep_hours": 1.4,
+   "low_intensity_min": 32,
+   "medium_intensity_min": 17,
+   "high_intensity_min": 8,
+   "total_activity_min": 57,
+   "resting_heart_rate_bpm": 64,
+   "avg_heart_rate_bpm": 84,
+   "weight_kg": 68.8,
+   "body_fat_percent": 16.7,
+   "blood_oxygen_percent": 97.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 23,
+   "user_id": 1,
+   "date": "2026-05-06",
+   "steps": 11297,
+   "active_energy_kcal": 356,
+   "sleep_hours": 7.4,
+   "sleep_quality": 59.6,
+   "light_sleep_hours": 4.33,
+   "deep_sleep_hours": 1.37,
+   "rem_sleep_hours": 1.7,
+   "low_intensity_min": 37,
+   "medium_intensity_min": 27,
+   "high_intensity_min": 16,
+   "total_activity_min": 80,
+   "resting_heart_rate_bpm": 58,
+   "avg_heart_rate_bpm": 75,
+   "weight_kg": 68.7,
+   "body_fat_percent": 17.9,
+   "blood_oxygen_percent": 97.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 24,
+   "user_id": 1,
+   "date": "2026-05-07",
+   "steps": 3274,
+   "active_energy_kcal": 422,
+   "sleep_hours": 7,
+   "sleep_quality": 57.3,
+   "light_sleep_hours": 4.28,
+   "deep_sleep_hours": 1.23,
+   "rem_sleep_hours": 1.48,
+   "low_intensity_min": 27,
+   "medium_intensity_min": 7,
+   "high_intensity_min": 2,
+   "total_activity_min": 36,
+   "resting_heart_rate_bpm": 65,
+   "avg_heart_rate_bpm": 82,
+   "weight_kg": 69.7,
+   "body_fat_percent": 23.9,
+   "blood_oxygen_percent": 97.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 25,
+   "user_id": 1,
+   "date": "2026-05-08",
+   "steps": 6799,
+   "active_energy_kcal": 168,
+   "sleep_hours": 6.9,
+   "sleep_quality": 60.1,
+   "light_sleep_hours": 4.08,
+   "deep_sleep_hours": 1.22,
+   "rem_sleep_hours": 1.6,
+   "low_intensity_min": 36,
+   "medium_intensity_min": 15,
+   "high_intensity_min": 9,
+   "total_activity_min": 60,
+   "resting_heart_rate_bpm": 74,
+   "avg_heart_rate_bpm": 85,
+   "weight_kg": 67.7,
+   "body_fat_percent": 24.9,
+   "blood_oxygen_percent": 95.5,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 26,
+   "user_id": 1,
+   "date": "2026-05-09",
+   "steps": 8394,
+   "active_energy_kcal": 196,
+   "sleep_hours": 7.7,
+   "sleep_quality": 78.3,
+   "light_sleep_hours": 4.3,
+   "deep_sleep_hours": 1.53,
+   "rem_sleep_hours": 1.87,
+   "low_intensity_min": 36,
+   "medium_intensity_min": 20,
+   "high_intensity_min": 12,
+   "total_activity_min": 68,
+   "resting_heart_rate_bpm": 60,
+   "avg_heart_rate_bpm": 75,
+   "weight_kg": 68,
+   "body_fat_percent": 24.8,
+   "blood_oxygen_percent": 95.4,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 27,
+   "user_id": 1,
+   "date": "2026-05-10",
+   "steps": 12300,
+   "active_energy_kcal": 499,
+   "sleep_hours": 6.8,
+   "sleep_quality": 50.3,
+   "light_sleep_hours": 4.13,
+   "deep_sleep_hours": 1.05,
+   "rem_sleep_hours": 1.62,
+   "low_intensity_min": 40,
+   "medium_intensity_min": 28,
+   "high_intensity_min": 19,
+   "total_activity_min": 87,
+   "resting_heart_rate_bpm": 61,
+   "avg_heart_rate_bpm": 72,
+   "weight_kg": 65.5,
+   "body_fat_percent": 19.8,
+   "blood_oxygen_percent": 96.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 28,
+   "user_id": 1,
+   "date": "2026-05-11",
+   "steps": 4171,
+   "active_energy_kcal": 206,
+   "sleep_hours": 7.1,
+   "sleep_quality": 75.5,
+   "light_sleep_hours": 3.8,
+   "deep_sleep_hours": 1.53,
+   "rem_sleep_hours": 1.77,
+   "low_intensity_min": 27,
+   "medium_intensity_min": 10,
+   "high_intensity_min": 3,
+   "total_activity_min": 40,
+   "resting_heart_rate_bpm": 70,
+   "avg_heart_rate_bpm": 89,
+   "weight_kg": 67.9,
+   "body_fat_percent": 20.8,
+   "blood_oxygen_percent": 96.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 29,
+   "user_id": 1,
+   "date": "2026-05-12",
+   "steps": 9876,
+   "active_energy_kcal": 447,
+   "sleep_hours": 6.6,
+   "sleep_quality": 50.2,
+   "light_sleep_hours": 4.02,
+   "deep_sleep_hours": 1.07,
+   "rem_sleep_hours": 1.52,
+   "low_intensity_min": 34,
+   "medium_intensity_min": 23,
+   "high_intensity_min": 14,
+   "total_activity_min": 71,
+   "resting_heart_rate_bpm": 56,
+   "avg_heart_rate_bpm": 84,
+   "weight_kg": 65.2,
+   "body_fat_percent": 24.1,
+   "blood_oxygen_percent": 98.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 30,
+   "user_id": 1,
+   "date": "2026-05-13",
+   "steps": 7572,
+   "active_energy_kcal": 548,
+   "sleep_hours": 7.6,
+   "sleep_quality": 78.5,
+   "light_sleep_hours": 4.08,
+   "deep_sleep_hours": 1.65,
+   "rem_sleep_hours": 1.87,
+   "low_intensity_min": 32,
+   "medium_intensity_min": 15,
+   "high_intensity_min": 9,
+   "total_activity_min": 56,
+   "resting_heart_rate_bpm": 58,
+   "avg_heart_rate_bpm": 70,
+   "weight_kg": 65.7,
+   "body_fat_percent": 20.9,
+   "blood_oxygen_percent": 96,
+   "created_at": "2026-05-13 09:00:00"
+  }
+ ],
+ "health_metric_series": [
+  {
+   "id": 1,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-04-14",
+   "value": 9056,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 2,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-04-14",
+   "value": 238,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 3,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-04-14",
+   "value": 6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 4,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-04-14",
+   "value": 59.5,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 5,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-04-14",
+   "value": 3.43,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 6,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-04-14",
+   "value": 1.07,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 7,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-04-14",
+   "value": 1.5,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 8,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-04-14",
+   "value": 36,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 9,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-04-14",
+   "value": 18,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 10,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-04-14",
+   "value": 12,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 11,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-04-14",
+   "value": 66,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 12,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-04-14",
+   "value": 56,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 13,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-04-14",
+   "value": 87,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 14,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-04-14",
+   "value": 66.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 15,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-04-14",
+   "value": 22.5,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 16,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-04-14",
+   "value": 99,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 17,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-04-15",
+   "value": 5178,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 18,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-04-15",
+   "value": 290,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 19,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-04-15",
+   "value": 8.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 20,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-04-15",
+   "value": 79.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 21,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-04-15",
+   "value": 4.73,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 22,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-04-15",
+   "value": 1.87,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 23,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-04-15",
+   "value": 2.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 24,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-04-15",
+   "value": 31,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 25,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-04-15",
+   "value": 10,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 26,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-04-15",
+   "value": 6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 27,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-04-15",
+   "value": 47,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 28,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-04-15",
+   "value": 57,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 29,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-04-15",
+   "value": 74,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 30,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-04-15",
+   "value": 65.5,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 31,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-04-15",
+   "value": 20.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 32,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-04-15",
+   "value": 98.5,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 33,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-04-16",
+   "value": 3538,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 34,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-04-16",
+   "value": 187,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 35,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-04-16",
+   "value": 7.8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 36,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-04-16",
+   "value": 69.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 37,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-04-16",
+   "value": 4.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 38,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-04-16",
+   "value": 1.62,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 39,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-04-16",
+   "value": 1.98,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 40,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-04-16",
+   "value": 19,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 41,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-04-16",
+   "value": 6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 42,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-04-16",
+   "value": 2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 43,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-04-16",
+   "value": 27,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 44,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-04-16",
+   "value": 70,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 45,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-04-16",
+   "value": 69,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 46,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-04-16",
+   "value": 67,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 47,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-04-16",
+   "value": 19.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 48,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-04-16",
+   "value": 96.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 49,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-04-17",
+   "value": 6048,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 50,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-04-17",
+   "value": 418,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 51,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-04-17",
+   "value": 6.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 52,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-04-17",
+   "value": 61.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 53,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-04-17",
+   "value": 3.53,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 54,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-04-17",
+   "value": 1.13,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 55,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-04-17",
+   "value": 1.53,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 56,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-04-17",
+   "value": 31,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 57,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-04-17",
+   "value": 11,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 58,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-04-17",
+   "value": 6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 59,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-04-17",
+   "value": 48,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 60,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-04-17",
+   "value": 63,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 61,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-04-17",
+   "value": 78,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 62,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-04-17",
+   "value": 65.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 63,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-04-17",
+   "value": 20.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 64,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-04-17",
+   "value": 97.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 65,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-04-18",
+   "value": 11080,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 66,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-04-18",
+   "value": 464,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 67,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-04-18",
+   "value": 6.4,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 68,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-04-18",
+   "value": 53.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 69,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-04-18",
+   "value": 4.15,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 70,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-04-18",
+   "value": 0.93,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 71,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-04-18",
+   "value": 1.32,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 72,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-04-18",
+   "value": 38,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 73,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-04-18",
+   "value": 24,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 74,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-04-18",
+   "value": 16,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 75,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-04-18",
+   "value": 78,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 76,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-04-18",
+   "value": 71,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 77,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-04-18",
+   "value": 80,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 78,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-04-18",
+   "value": 69.3,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 79,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-04-18",
+   "value": 19.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 80,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-04-18",
+   "value": 97.5,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 81,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-04-19",
+   "value": 7747,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 82,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-04-19",
+   "value": 640,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 83,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-04-19",
+   "value": 7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 84,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-04-19",
+   "value": 67.3,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 85,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-04-19",
+   "value": 4.17,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 86,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-04-19",
+   "value": 1.23,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 87,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-04-19",
+   "value": 1.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 88,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-04-19",
+   "value": 30,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 89,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-04-19",
+   "value": 16,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 90,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-04-19",
+   "value": 7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 91,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-04-19",
+   "value": 53,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 92,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-04-19",
+   "value": 70,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 93,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-04-19",
+   "value": 80,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 94,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-04-19",
+   "value": 67,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 95,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-04-19",
+   "value": 21.8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 96,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-04-19",
+   "value": 98.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 97,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-04-20",
+   "value": 13223,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 98,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-04-20",
+   "value": 397,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 99,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-04-20",
+   "value": 8.5,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 100,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-04-20",
+   "value": 59,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 101,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-04-20",
+   "value": 4.93,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 102,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-04-20",
+   "value": 1.45,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 103,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-04-20",
+   "value": 2.12,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 104,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-04-20",
+   "value": 40,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 105,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-04-20",
+   "value": 35,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 106,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-04-20",
+   "value": 26,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 107,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-04-20",
+   "value": 101,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 108,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-04-20",
+   "value": 68,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 109,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-04-20",
+   "value": 88,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 110,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-04-20",
+   "value": 68,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 111,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-04-20",
+   "value": 18.4,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 112,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-04-20",
+   "value": 98.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 113,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-04-21",
+   "value": 10584,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 114,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-04-21",
+   "value": 180,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 115,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-04-21",
+   "value": 7.3,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 116,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-04-21",
+   "value": 63.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 117,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-04-21",
+   "value": 4.45,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 118,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-04-21",
+   "value": 1.27,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 119,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-04-21",
+   "value": 1.58,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 120,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-04-21",
+   "value": 36,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 121,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-04-21",
+   "value": 24,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 122,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-04-21",
+   "value": 14,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 123,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-04-21",
+   "value": 74,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 124,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-04-21",
+   "value": 60,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 125,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-04-21",
+   "value": 83,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 126,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-04-21",
+   "value": 69.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 127,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-04-21",
+   "value": 20.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 128,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-04-21",
+   "value": 95.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 129,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-04-22",
+   "value": 13039,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 130,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-04-22",
+   "value": 585,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 131,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-04-22",
+   "value": 7.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 132,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-04-22",
+   "value": 81.4,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 133,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-04-22",
+   "value": 3.83,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 134,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-04-22",
+   "value": 1.37,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 135,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-04-22",
+   "value": 1.9,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 136,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-04-22",
+   "value": 44,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 137,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-04-22",
+   "value": 37,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 138,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-04-22",
+   "value": 25,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 139,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-04-22",
+   "value": 106,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 140,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-04-22",
+   "value": 57,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 141,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-04-22",
+   "value": 86,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 142,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-04-22",
+   "value": 65.3,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 143,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-04-22",
+   "value": 20.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 144,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-04-22",
+   "value": 95.3,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 145,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-04-23",
+   "value": 10411,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 146,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-04-23",
+   "value": 214,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 147,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-04-23",
+   "value": 6.8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 148,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-04-23",
+   "value": 54.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 149,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-04-23",
+   "value": 4.22,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 150,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-04-23",
+   "value": 1.12,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 151,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-04-23",
+   "value": 1.47,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 152,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-04-23",
+   "value": 36,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 153,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-04-23",
+   "value": 24,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 154,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-04-23",
+   "value": 16,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 155,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-04-23",
+   "value": 76,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 156,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-04-23",
+   "value": 73,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 157,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-04-23",
+   "value": 78,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 158,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-04-23",
+   "value": 69.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 159,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-04-23",
+   "value": 15.8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 160,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-04-23",
+   "value": 95.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 161,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-04-24",
+   "value": 8306,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 162,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-04-24",
+   "value": 156,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 163,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-04-24",
+   "value": 5.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 164,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-04-24",
+   "value": 56.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 165,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-04-24",
+   "value": 3.53,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 166,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-04-24",
+   "value": 0.87,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 167,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-04-24",
+   "value": 1.3,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 168,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-04-24",
+   "value": 34,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 169,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-04-24",
+   "value": 15,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 170,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-04-24",
+   "value": 8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 171,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-04-24",
+   "value": 57,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 172,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-04-24",
+   "value": 71,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 173,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-04-24",
+   "value": 76,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 174,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-04-24",
+   "value": 65.4,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 175,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-04-24",
+   "value": 24.9,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 176,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-04-24",
+   "value": 98.9,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 177,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-04-25",
+   "value": 8988,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 178,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-04-25",
+   "value": 397,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 179,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-04-25",
+   "value": 5.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 180,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-04-25",
+   "value": 66.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 181,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-04-25",
+   "value": 3.47,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 182,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-04-25",
+   "value": 0.97,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 183,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-04-25",
+   "value": 1.27,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 184,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-04-25",
+   "value": 36,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 185,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-04-25",
+   "value": 19,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 186,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-04-25",
+   "value": 10,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 187,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-04-25",
+   "value": 65,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 188,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-04-25",
+   "value": 69,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 189,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-04-25",
+   "value": 68,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 190,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-04-25",
+   "value": 65.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 191,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-04-25",
+   "value": 15.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 192,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-04-25",
+   "value": 98.3,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 193,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-04-26",
+   "value": 9778,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 194,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-04-26",
+   "value": 210,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 195,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-04-26",
+   "value": 8.5,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 196,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-04-26",
+   "value": 71.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 197,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-04-26",
+   "value": 4.85,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 198,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-04-26",
+   "value": 1.73,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 199,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-04-26",
+   "value": 1.92,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 200,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-04-26",
+   "value": 38,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 201,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-04-26",
+   "value": 20,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 202,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-04-26",
+   "value": 13,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 203,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-04-26",
+   "value": 71,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 204,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-04-26",
+   "value": 58,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 205,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-04-26",
+   "value": 83,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 206,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-04-26",
+   "value": 67,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 207,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-04-26",
+   "value": 20.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 208,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-04-26",
+   "value": 98.3,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 209,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-04-27",
+   "value": 9659,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 210,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-04-27",
+   "value": 297,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 211,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-04-27",
+   "value": 7.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 212,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-04-27",
+   "value": 70.8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 213,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-04-27",
+   "value": 3.95,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 214,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-04-27",
+   "value": 1.33,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 215,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-04-27",
+   "value": 1.82,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 216,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-04-27",
+   "value": 42,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 217,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-04-27",
+   "value": 22,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 218,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-04-27",
+   "value": 14,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 219,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-04-27",
+   "value": 78,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 220,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-04-27",
+   "value": 72,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 221,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-04-27",
+   "value": 78,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 222,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-04-27",
+   "value": 66.4,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 223,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-04-27",
+   "value": 21.5,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 224,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-04-27",
+   "value": 97.3,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 225,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-04-28",
+   "value": 9087,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 226,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-04-28",
+   "value": 334,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 227,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-04-28",
+   "value": 7.4,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 228,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-04-28",
+   "value": 79.5,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 229,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-04-28",
+   "value": 4.18,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 230,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-04-28",
+   "value": 1.52,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 231,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-04-28",
+   "value": 1.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 232,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-04-28",
+   "value": 42,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 233,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-04-28",
+   "value": 24,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 234,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-04-28",
+   "value": 12,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 235,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-04-28",
+   "value": 78,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 236,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-04-28",
+   "value": 66,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 237,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-04-28",
+   "value": 84,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 238,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-04-28",
+   "value": 66.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 239,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-04-28",
+   "value": 16.8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 240,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-04-28",
+   "value": 95.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 241,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-04-29",
+   "value": 8461,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 242,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-04-29",
+   "value": 536,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 243,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-04-29",
+   "value": 8.8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 244,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-04-29",
+   "value": 62.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 245,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-04-29",
+   "value": 5.23,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 246,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-04-29",
+   "value": 1.47,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 247,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-04-29",
+   "value": 2.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 248,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-04-29",
+   "value": 42,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 249,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-04-29",
+   "value": 21,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 250,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-04-29",
+   "value": 12,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 251,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-04-29",
+   "value": 75,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 252,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-04-29",
+   "value": 59,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 253,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-04-29",
+   "value": 89,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 254,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-04-29",
+   "value": 65.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 255,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-04-29",
+   "value": 23.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 256,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-04-29",
+   "value": 96.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 257,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-04-30",
+   "value": 8373,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 258,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-04-30",
+   "value": 435,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 259,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-04-30",
+   "value": 8.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 260,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-04-30",
+   "value": 76.8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 261,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-04-30",
+   "value": 4.37,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 262,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-04-30",
+   "value": 1.73,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 263,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-04-30",
+   "value": 2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 264,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-04-30",
+   "value": 35,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 265,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-04-30",
+   "value": 19,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 266,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-04-30",
+   "value": 12,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 267,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-04-30",
+   "value": 66,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 268,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-04-30",
+   "value": 58,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 269,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-04-30",
+   "value": 73,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 270,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-04-30",
+   "value": 69.3,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 271,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-04-30",
+   "value": 17.4,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 272,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-04-30",
+   "value": 95.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 273,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-05-01",
+   "value": 8716,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 274,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-05-01",
+   "value": 649,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 275,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-05-01",
+   "value": 6.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 276,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-05-01",
+   "value": 51,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 277,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-05-01",
+   "value": 3.98,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 278,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-05-01",
+   "value": 0.93,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 279,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-05-01",
+   "value": 1.28,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 280,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-05-01",
+   "value": 36,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 281,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-05-01",
+   "value": 21,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 282,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-05-01",
+   "value": 13,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 283,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-05-01",
+   "value": 70,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 284,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-05-01",
+   "value": 71,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 285,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-05-01",
+   "value": 71,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 286,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-05-01",
+   "value": 67.9,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 287,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-05-01",
+   "value": 18.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 288,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-05-01",
+   "value": 96.8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 289,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-05-02",
+   "value": 13413,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 290,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-05-02",
+   "value": 273,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 291,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-05-02",
+   "value": 6.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 292,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-05-02",
+   "value": 57.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 293,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-05-02",
+   "value": 3.67,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 294,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-05-02",
+   "value": 1.02,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 295,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-05-02",
+   "value": 1.52,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 296,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-05-02",
+   "value": 41,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 297,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-05-02",
+   "value": 36,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 298,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-05-02",
+   "value": 22,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 299,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-05-02",
+   "value": 99,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 300,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-05-02",
+   "value": 72,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 301,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-05-02",
+   "value": 69,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 302,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-05-02",
+   "value": 68.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 303,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-05-02",
+   "value": 19.4,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 304,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-05-02",
+   "value": 97.4,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 305,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-05-03",
+   "value": 7412,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 306,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-05-03",
+   "value": 457,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 307,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-05-03",
+   "value": 7.8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 308,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-05-03",
+   "value": 75.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 309,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-05-03",
+   "value": 4.48,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 310,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-05-03",
+   "value": 1.43,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 311,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-05-03",
+   "value": 1.88,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 312,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-05-03",
+   "value": 32,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 313,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-05-03",
+   "value": 14,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 314,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-05-03",
+   "value": 7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 315,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-05-03",
+   "value": 53,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 316,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-05-03",
+   "value": 73,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 317,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-05-03",
+   "value": 67,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 318,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-05-03",
+   "value": 67.8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 319,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-05-03",
+   "value": 23.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 320,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-05-03",
+   "value": 98.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 321,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-05-04",
+   "value": 9212,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 322,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-05-04",
+   "value": 509,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 323,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-05-04",
+   "value": 6.9,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 324,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-05-04",
+   "value": 54.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 325,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-05-04",
+   "value": 4.13,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 326,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-05-04",
+   "value": 1.22,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 327,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-05-04",
+   "value": 1.55,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 328,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-05-04",
+   "value": 44,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 329,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-05-04",
+   "value": 23,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 330,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-05-04",
+   "value": 12,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 331,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-05-04",
+   "value": 79,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 332,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-05-04",
+   "value": 62,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 333,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-05-04",
+   "value": 76,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 334,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-05-04",
+   "value": 67.4,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 335,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-05-04",
+   "value": 18.5,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 336,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-05-04",
+   "value": 98.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 337,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-05-05",
+   "value": 7707,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 338,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-05-05",
+   "value": 211,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 339,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-05-05",
+   "value": 5.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 340,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-05-05",
+   "value": 63,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 341,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-05-05",
+   "value": 3.13,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 342,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-05-05",
+   "value": 1.07,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 343,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-05-05",
+   "value": 1.4,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 344,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-05-05",
+   "value": 32,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 345,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-05-05",
+   "value": 17,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 346,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-05-05",
+   "value": 8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 347,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-05-05",
+   "value": 57,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 348,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-05-05",
+   "value": 64,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 349,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-05-05",
+   "value": 84,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 350,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-05-05",
+   "value": 68.8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 351,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-05-05",
+   "value": 16.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 352,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-05-05",
+   "value": 97.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 353,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-05-06",
+   "value": 11297,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 354,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-05-06",
+   "value": 356,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 355,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-05-06",
+   "value": 7.4,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 356,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-05-06",
+   "value": 59.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 357,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-05-06",
+   "value": 4.33,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 358,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-05-06",
+   "value": 1.37,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 359,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-05-06",
+   "value": 1.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 360,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-05-06",
+   "value": 37,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 361,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-05-06",
+   "value": 27,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 362,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-05-06",
+   "value": 16,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 363,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-05-06",
+   "value": 80,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 364,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-05-06",
+   "value": 58,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 365,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-05-06",
+   "value": 75,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 366,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-05-06",
+   "value": 68.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 367,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-05-06",
+   "value": 17.9,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 368,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-05-06",
+   "value": 97.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 369,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-05-07",
+   "value": 3274,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 370,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-05-07",
+   "value": 422,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 371,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-05-07",
+   "value": 7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 372,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-05-07",
+   "value": 57.3,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 373,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-05-07",
+   "value": 4.28,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 374,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-05-07",
+   "value": 1.23,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 375,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-05-07",
+   "value": 1.48,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 376,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-05-07",
+   "value": 27,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 377,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-05-07",
+   "value": 7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 378,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-05-07",
+   "value": 2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 379,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-05-07",
+   "value": 36,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 380,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-05-07",
+   "value": 65,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 381,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-05-07",
+   "value": 82,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 382,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-05-07",
+   "value": 69.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 383,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-05-07",
+   "value": 23.9,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 384,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-05-07",
+   "value": 97.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 385,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-05-08",
+   "value": 6799,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 386,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-05-08",
+   "value": 168,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 387,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-05-08",
+   "value": 6.9,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 388,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-05-08",
+   "value": 60.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 389,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-05-08",
+   "value": 4.08,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 390,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-05-08",
+   "value": 1.22,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 391,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-05-08",
+   "value": 1.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 392,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-05-08",
+   "value": 36,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 393,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-05-08",
+   "value": 15,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 394,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-05-08",
+   "value": 9,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 395,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-05-08",
+   "value": 60,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 396,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-05-08",
+   "value": 74,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 397,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-05-08",
+   "value": 85,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 398,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-05-08",
+   "value": 67.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 399,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-05-08",
+   "value": 24.9,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 400,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-05-08",
+   "value": 95.5,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 401,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-05-09",
+   "value": 8394,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 402,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-05-09",
+   "value": 196,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 403,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-05-09",
+   "value": 7.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 404,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-05-09",
+   "value": 78.3,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 405,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-05-09",
+   "value": 4.3,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 406,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-05-09",
+   "value": 1.53,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 407,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-05-09",
+   "value": 1.87,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 408,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-05-09",
+   "value": 36,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 409,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-05-09",
+   "value": 20,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 410,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-05-09",
+   "value": 12,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 411,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-05-09",
+   "value": 68,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 412,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-05-09",
+   "value": 60,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 413,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-05-09",
+   "value": 75,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 414,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-05-09",
+   "value": 68,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 415,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-05-09",
+   "value": 24.8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 416,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-05-09",
+   "value": 95.4,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 417,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-05-10",
+   "value": 12300,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 418,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-05-10",
+   "value": 499,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 419,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-05-10",
+   "value": 6.8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 420,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-05-10",
+   "value": 50.3,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 421,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-05-10",
+   "value": 4.13,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 422,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-05-10",
+   "value": 1.05,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 423,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-05-10",
+   "value": 1.62,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 424,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-05-10",
+   "value": 40,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 425,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-05-10",
+   "value": 28,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 426,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-05-10",
+   "value": 19,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 427,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-05-10",
+   "value": 87,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 428,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-05-10",
+   "value": 61,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 429,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-05-10",
+   "value": 72,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 430,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-05-10",
+   "value": 65.5,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 431,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-05-10",
+   "value": 19.8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 432,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-05-10",
+   "value": 96.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 433,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-05-11",
+   "value": 4171,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 434,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-05-11",
+   "value": 206,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 435,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-05-11",
+   "value": 7.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 436,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-05-11",
+   "value": 75.5,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 437,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-05-11",
+   "value": 3.8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 438,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-05-11",
+   "value": 1.53,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 439,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-05-11",
+   "value": 1.77,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 440,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-05-11",
+   "value": 27,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 441,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-05-11",
+   "value": 10,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 442,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-05-11",
+   "value": 3,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 443,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-05-11",
+   "value": 40,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 444,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-05-11",
+   "value": 70,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 445,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-05-11",
+   "value": 89,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 446,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-05-11",
+   "value": 67.9,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 447,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-05-11",
+   "value": 20.8,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 448,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-05-11",
+   "value": 96.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 449,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-05-12",
+   "value": 9876,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 450,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-05-12",
+   "value": 447,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 451,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-05-12",
+   "value": 6.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 452,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-05-12",
+   "value": 50.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 453,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-05-12",
+   "value": 4.02,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 454,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-05-12",
+   "value": 1.07,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 455,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-05-12",
+   "value": 1.52,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 456,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-05-12",
+   "value": 34,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 457,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-05-12",
+   "value": 23,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 458,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-05-12",
+   "value": 14,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 459,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-05-12",
+   "value": 71,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 460,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-05-12",
+   "value": 56,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 461,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-05-12",
+   "value": 84,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 462,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-05-12",
+   "value": 65.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 463,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-05-12",
+   "value": 24.1,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 464,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-05-12",
+   "value": 98.2,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 465,
+   "user_id": 1,
+   "metric_type": "steps",
+   "date": "2026-05-13",
+   "value": 7572,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 466,
+   "user_id": 1,
+   "metric_type": "active_energy_kcal",
+   "date": "2026-05-13",
+   "value": 548,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 467,
+   "user_id": 1,
+   "metric_type": "sleep_hours",
+   "date": "2026-05-13",
+   "value": 7.6,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 468,
+   "user_id": 1,
+   "metric_type": "sleep_quality",
+   "date": "2026-05-13",
+   "value": 78.5,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 469,
+   "user_id": 1,
+   "metric_type": "light_sleep_hours",
+   "date": "2026-05-13",
+   "value": 4.08,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 470,
+   "user_id": 1,
+   "metric_type": "deep_sleep_hours",
+   "date": "2026-05-13",
+   "value": 1.65,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 471,
+   "user_id": 1,
+   "metric_type": "rem_sleep_hours",
+   "date": "2026-05-13",
+   "value": 1.87,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 472,
+   "user_id": 1,
+   "metric_type": "low_intensity_min",
+   "date": "2026-05-13",
+   "value": 32,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 473,
+   "user_id": 1,
+   "metric_type": "medium_intensity_min",
+   "date": "2026-05-13",
+   "value": 15,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 474,
+   "user_id": 1,
+   "metric_type": "high_intensity_min",
+   "date": "2026-05-13",
+   "value": 9,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 475,
+   "user_id": 1,
+   "metric_type": "total_activity_min",
+   "date": "2026-05-13",
+   "value": 56,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 476,
+   "user_id": 1,
+   "metric_type": "resting_heart_rate_bpm",
+   "date": "2026-05-13",
+   "value": 58,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 477,
+   "user_id": 1,
+   "metric_type": "avg_heart_rate_bpm",
+   "date": "2026-05-13",
+   "value": 70,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 478,
+   "user_id": 1,
+   "metric_type": "weight_kg",
+   "date": "2026-05-13",
+   "value": 65.7,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 479,
+   "user_id": 1,
+   "metric_type": "body_fat_percent",
+   "date": "2026-05-13",
+   "value": 20.9,
+   "created_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 480,
+   "user_id": 1,
+   "metric_type": "blood_oxygen_percent",
+   "date": "2026-05-13",
+   "value": 96,
+   "created_at": "2026-05-13 09:00:00"
+  }
+ ],
+ "allergen": [
+  {
+   "id": 1,
+   "user_id": 1,
+   "name": "Peanuts",
+   "severity": "severe",
+   "notes": "Severe allergy, carry epinephrine pen at all times",
+   "archived": 0,
+   "archived_at": null,
+   "created_at": "2026-05-13 09:00:00",
+   "updated_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 2,
+   "user_id": 1,
+   "name": "Pollen",
+   "severity": "mild",
+   "notes": "Seasonal, take antihistamines in spring",
+   "archived": 0,
+   "archived_at": null,
+   "created_at": "2026-05-13 09:00:00",
+   "updated_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 3,
+   "user_id": 1,
+   "name": "Shellfish",
+   "severity": "moderate",
+   "notes": "Allergic to shrimp and crab, fish is fine",
+   "archived": 0,
+   "archived_at": null,
+   "created_at": "2026-05-13 09:00:00",
+   "updated_at": "2026-05-13 09:00:00"
+  }
+ ],
+ "medication": [
+  {
+   "id": 1,
+   "user_id": 1,
+   "name": "Vitamin D",
+   "display_name": null,
+   "frequency": "daily",
+   "dose_amount": null,
+   "dose_unit": null,
+   "start_date": "2026-05-13",
+   "end_date": null,
+   "notes": "One tablet daily after meals",
+   "archived": 0,
+   "archived_at": null,
+   "created_at": "2026-05-13 09:00:00",
+   "updated_at": "2026-05-13 09:00:00"
+  },
+  {
+   "id": 2,
+   "user_id": 1,
+   "name": "Omega-3",
+   "display_name": "Fish Oil",
+   "frequency": "daily",
+   "dose_amount": null,
+   "dose_unit": null,
+   "start_date": "2026-05-13",
+   "end_date": null,
+   "notes": "Two capsules daily",
+   "archived": 0,
+   "archived_at": null,
+   "created_at": "2026-05-13 09:00:00",
+   "updated_at": "2026-05-13 09:00:00"
+  }
+ ],
+ "medication_intake_slot": [
+  {
+   "id": 1,
+   "medication_id": 1,
+   "time_hhmm": "08:00",
+   "dose_amount": 1,
+   "dose_unit": "tablet",
+   "label": "After breakfast"
+  },
+  {
+   "id": 2,
+   "medication_id": 2,
+   "time_hhmm": "08:00",
+   "dose_amount": 1,
+   "dose_unit": "capsule",
+   "label": "After breakfast"
+  },
+  {
+   "id": 3,
+   "medication_id": 2,
+   "time_hhmm": "20:00",
+   "dose_amount": 1,
+   "dose_unit": "capsule",
+   "label": "After dinner"
+  }
+ ],
+ "medication_dose_log": [],
+ "_row": [
+  {
+   "seq": 1,
+   "table": "system_config",
+   "data": "{\"key\":\"current_date\",\"value\":\"2026-05-13\"}"
+  },
+  {
+   "seq": 2,
+   "table": "system_config",
+   "data": "{\"key\":\"current_time\",\"value\":\"16:42\"}"
+  }
+ ],
+ "_file": []
+}

@@ -1,0 +1,89 @@
+[
+ {
+  "name": "crm",
+  "description": "The crm service's tools.",
+  "tools": [
+   {
+    "name": "list_customers",
+    "call": "crm_list_customers",
+    "description": "List customers",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "Customer status (active/churned)"
+      },
+      "tier": {
+       "type": "string",
+       "description": "Customer tier (vip/standard)"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_customer",
+    "call": "crm_get_customer",
+    "description": "Get customer details",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "customer_id": {
+       "type": "string",
+       "description": "Customer ID"
+      }
+     },
+     "required": [
+      "customer_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "gmail",
+  "description": "The gmail service's tools.",
+  "tools": [
+   {
+    "name": "save_draft",
+    "call": "gmail_save_draft",
+    "description": "Save email draft",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "to": {
+       "type": "string",
+       "description": "Recipient"
+      },
+      "subject": {
+       "type": "string",
+       "description": "Subject"
+      },
+      "body": {
+       "type": "string",
+       "description": "Body"
+      }
+     },
+     "required": [
+      "to",
+      "subject",
+      "body"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9100/gmail/drafts/save",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

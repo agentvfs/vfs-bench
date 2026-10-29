@@ -1,0 +1,270 @@
+[
+ {
+  "name": "finance",
+  "description": "The finance service's tools.",
+  "tools": [
+   {
+    "name": "list_transactions",
+    "call": "finance_list_transactions",
+    "description": "查看财务交易记录",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "start_date": {
+       "type": "string",
+       "description": "起始日期(YYYY-MM-DD)"
+      },
+      "end_date": {
+       "type": "string",
+       "description": "截止日期(YYYY-MM-DD)"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9104/finance/transactions",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_transaction",
+    "call": "finance_get_transaction",
+    "description": "获取交易详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "transaction_id": {
+       "type": "string",
+       "description": "交易ID"
+      }
+     },
+     "required": [
+      "transaction_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9104/finance/transactions/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "crm",
+  "description": "The crm service's tools.",
+  "tools": [
+   {
+    "name": "list_customers",
+    "call": "crm_list_customers",
+    "description": "查看客户列表",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "按状态筛选(active/inactive/churned)"
+      },
+      "tier": {
+       "type": "string",
+       "description": "按等级筛选(VIP/standard)"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_customer",
+    "call": "crm_get_customer",
+    "description": "获取客户详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "customer_id": {
+       "type": "string",
+       "description": "客户ID"
+      }
+     },
+     "required": [
+      "customer_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "config",
+  "description": "The config service's tools.",
+  "tools": [
+   {
+    "name": "list_integrations",
+    "call": "config_list_integrations",
+    "description": "查看所有系统集成配置",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "按状态筛选(active/error/degraded)"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9111/config/integrations",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_integration",
+    "call": "config_get_integration",
+    "description": "获取集成配置详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "integration_id": {
+       "type": "string",
+       "description": "集成ID"
+      }
+     },
+     "required": [
+      "integration_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9111/config/integrations/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "inventory",
+  "description": "The inventory service's tools.",
+  "tools": [
+   {
+    "name": "list_products",
+    "call": "inventory_list_products",
+    "description": "查看库存产品列表",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "category": {
+       "type": "string",
+       "description": "按分类筛选"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9108/inventory/products",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_product",
+    "call": "inventory_get_product",
+    "description": "获取库存产品详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "product_id": {
+       "type": "string",
+       "description": "产品ID"
+      }
+     },
+     "required": [
+      "product_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9108/inventory/products/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "scheduler",
+  "description": "The scheduler service's tools.",
+  "tools": [
+   {
+    "name": "list_jobs",
+    "call": "scheduler_list_jobs",
+    "description": "列出所有定时任务",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "按最近运行状态筛选(success/failed)"
+      },
+      "tag": {
+       "type": "string",
+       "description": "按标签筛选"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9112/scheduler/jobs",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_job",
+    "call": "scheduler_get_job",
+    "description": "获取定时任务详情（含执行历史）",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "job_id": {
+       "type": "string",
+       "description": "任务ID"
+      }
+     },
+     "required": [
+      "job_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9112/scheduler/jobs/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "job_history",
+    "call": "scheduler_job_history",
+    "description": "查看定时任务执行历史",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "job_id": {
+       "type": "string",
+       "description": "任务ID"
+      },
+      "limit": {
+       "type": "integer",
+       "description": "返回条数",
+       "default": 10
+      }
+     },
+     "required": [
+      "job_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9112/scheduler/jobs/history",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

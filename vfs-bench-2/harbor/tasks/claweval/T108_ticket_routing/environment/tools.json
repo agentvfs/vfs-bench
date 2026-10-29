@@ -1,0 +1,218 @@
+[
+ {
+  "name": "helpdesk",
+  "description": "The helpdesk service's tools.",
+  "tools": [
+   {
+    "name": "list_tickets",
+    "call": "helpdesk_list_tickets",
+    "description": "List tickets",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "Filter by ticket status (open/all)",
+       "default": "open"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9107/helpdesk/tickets",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_ticket",
+    "call": "helpdesk_get_ticket",
+    "description": "Get ticket details",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticket_id": {
+       "type": "string",
+       "description": "Ticket ID"
+      }
+     },
+     "required": [
+      "ticket_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9107/helpdesk/tickets/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_ticket",
+    "call": "helpdesk_update_ticket",
+    "description": "Update ticket (priority, tags, category)",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticket_id": {
+       "type": "string",
+       "description": "Ticket ID"
+      },
+      "priority": {
+       "type": "string",
+       "description": "Priority"
+      },
+      "tags": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "Tag list"
+      },
+      "category": {
+       "type": "string",
+       "description": "Ticket category"
+      }
+     },
+     "required": [
+      "ticket_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9107/helpdesk/tickets/update",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "close_ticket",
+    "call": "helpdesk_close_ticket",
+    "description": "Close ticket",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticket_id": {
+       "type": "string",
+       "description": "Ticket ID"
+      },
+      "resolution": {
+       "type": "string",
+       "description": "Resolution notes"
+      }
+     },
+     "required": [
+      "ticket_id",
+      "resolution"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9107/helpdesk/tickets/close",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "kb",
+  "description": "The kb service's tools.",
+  "tools": [
+   {
+    "name": "search",
+    "call": "kb_search",
+    "description": "Search knowledge base articles",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "Search keywords"
+      },
+      "category": {
+       "type": "string",
+       "description": "Filter by category"
+      },
+      "max_results": {
+       "type": "integer",
+       "description": "Maximum number of results",
+       "default": 5
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9106/kb/search",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_article",
+    "call": "kb_get_article",
+    "description": "Get full knowledge base article",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "article_id": {
+       "type": "string",
+       "description": "Article ID"
+      }
+     },
+     "required": [
+      "article_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9106/kb/articles/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "crm",
+  "description": "The crm service's tools.",
+  "tools": [
+   {
+    "name": "list_customers",
+    "call": "crm_list_customers",
+    "description": "List customers",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "Customer status (active/churned)"
+      },
+      "tier": {
+       "type": "string",
+       "description": "Customer tier (vip/standard)"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_customer",
+    "call": "crm_get_customer",
+    "description": "Get customer details",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "customer_id": {
+       "type": "string",
+       "description": "Customer ID"
+      }
+     },
+     "required": [
+      "customer_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers/get",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

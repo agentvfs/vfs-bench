@@ -1,0 +1,95 @@
+[
+ {
+  "name": "notes",
+  "description": "The notes service's tools.",
+  "tools": [
+   {
+    "name": "list",
+    "call": "notes_list",
+    "description": "List meeting minutes",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "tag": {
+       "type": "string",
+       "description": "Filter by tag"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9105/notes/list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get",
+    "call": "notes_get",
+    "description": "Get meeting minutes details",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "note_id": {
+       "type": "string",
+       "description": "Minutes ID"
+      }
+     },
+     "required": [
+      "note_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9105/notes/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "todo",
+  "description": "The todo service's tools.",
+  "tools": [
+   {
+    "name": "list_tasks",
+    "call": "todo_list_tasks",
+    "description": "List to-do items",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "Filter by status (pending/completed/all)",
+       "default": "all"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9102/todo/tasks",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_task",
+    "call": "todo_get_task",
+    "description": "Get to-do item details",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "To-do ID"
+      }
+     },
+     "required": [
+      "task_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9102/todo/tasks/get",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

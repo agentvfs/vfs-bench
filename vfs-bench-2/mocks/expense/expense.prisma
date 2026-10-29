@@ -1,0 +1,153 @@
+// The expense fake's store: LiveClawBench's expense mock (Mosi-AI/LiveClawBench
+// @ 303dc77, MIT, mock-platform/mocks/expense), one SQLite file per run.
+//
+// Generated with `prisma db pull` from upstream's own CREATE TABLE and
+// CREATE INDEX statements (each fixture's `_schema`), so each table, column,
+// key, foreign key and index is upstream's, by name and in order, and
+// upstream's verify.py and its own statements read a run's file as they
+// read upstream's. Column types are as SQLite keeps them (text, integer,
+// real); a default of SQLite's 'now' is `datetime('now')`, which each run
+// answers with its clock. Prisma cannot state upstream's CHECKs: each run
+// gets them as triggers (mocks/upstream/checks.ts). The last four models
+// are the fake's own (mocks/upstream).
+//
+// No tenant column: a run is one world, as upstream's mock is one.
+
+datasource db {
+  provider = "sqlite"
+  url      = env("INTEG_DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "client"
+}
+
+model migrations {
+  id         Int     @id @default(autoincrement())
+  name       String  @unique
+  applied_at String? @default(dbgenerated("(datetime('now'))"))
+
+  @@map("_migrations")
+}
+
+model expense_activity {
+  id            Int           @id @default(autoincrement())
+  draft_id      Int
+  actor_user_id Int?
+  action_type   String
+  field_name    String?
+  old_value     String?
+  new_value     String?
+  created_at    String        @default(dbgenerated("(datetime('now'))"))
+  user          user?         @relation(fields: [actor_user_id], references: [id], onUpdate: NoAction)
+  expense_draft expense_draft @relation(fields: [draft_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([created_at], map: "idx_activity_created_at")
+  @@index([draft_id], map: "idx_activity_draft_id")
+}
+
+model expense_attachment {
+  id                     Int           @id @default(autoincrement())
+  draft_id               Int
+  attachment_ref         String        @unique
+  original_filename      String
+  storage_path           String
+  mime_type              String
+  file_size_bytes        Int           @default(0)
+  page_count             Int?
+  preview_text           String?
+  extracted_vendor_name  String?
+  extracted_amount       Float?
+  extracted_currency     String?
+  extracted_invoice_date String?
+  created_at             String        @default(dbgenerated("(datetime('now'))"))
+  expense_draft          expense_draft @relation(fields: [draft_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([attachment_ref], map: "idx_attachment_ref")
+  @@index([draft_id], map: "idx_attachment_draft_id")
+}
+
+model expense_draft {
+  id                 Int                  @id @default(autoincrement())
+  draft_code         String               @unique
+  user_id            Int
+  vendor_name        String
+  category           String?
+  amount             Float
+  currency           String               @default("USD")
+  invoice_date       String
+  expense_date       String?
+  notes              String?
+  source_type        String               @default("manual")
+  status             String               @default("draft")
+  attachment_ref     String?
+  created_at         String               @default(dbgenerated("(datetime('now'))"))
+  updated_at         String               @default(dbgenerated("(datetime('now'))"))
+  submitted_at       String?
+  expense_activity   expense_activity[]
+  expense_attachment expense_attachment[]
+  user               user                 @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([attachment_ref], map: "idx_draft_attachment_ref")
+  @@index([draft_code], map: "idx_draft_code")
+  @@index([status], map: "idx_draft_status")
+  @@index([user_id], map: "idx_draft_user_id")
+}
+
+model user {
+  id                 Int                @id @default(autoincrement())
+  full_name          String
+  email              String             @unique
+  password           String
+  department         String
+  role               String             @default("employee")
+  preferred_currency String             @default("USD")
+  avatar_url         String?
+  is_active          Int                @default(1)
+  created_at         String             @default(dbgenerated("(datetime('now'))"))
+  last_login_at      String?
+  expense_activity   expense_activity[]
+  expense_draft      expense_draft[]
+
+  @@index([email], map: "idx_user_email")
+}
+
+// The environment upstream's mock reads from its process (`TASK_NAME`),
+// which a fake every task of a job shares cannot take from its own: each
+// task's fixture states it.
+model vfsbench_env {
+  name  String @id
+  value String
+
+  @@map("_env")
+}
+
+// Each file the mock keeps on disk upstream, by its path in the image, and
+// the task's assets: text as it is, anything else as base64.
+model vfsbench_file {
+  path     String @id
+  data     String
+  encoding String @default("utf8")
+
+  @@map("_file")
+}
+
+// The rows of upstream's tables Prisma cannot key (marked @@ignore above),
+// which the fake inserts itself, in order, once the kit has seeded the rest.
+model vfsbench_row {
+  seq   Int    @id
+  table String
+  data  String
+
+  @@map("_row")
+}
+
+// Upstream's CREATE TABLE and CREATE INDEX statements, as its seed ran them.
+model vfsbench_schema {
+  name String @id
+  type String
+  sql  String
+
+  @@map("_schema")
+}

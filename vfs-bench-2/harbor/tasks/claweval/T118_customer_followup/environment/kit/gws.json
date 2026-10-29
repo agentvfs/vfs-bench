@@ -1,0 +1,115 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_711",
+   "threadId": "msg_711",
+   "internalDate": 1770703200000,
+   "bodyText": "Hello, the Q2 partnership plans we discussed last time still need further refinement. Please contact me when convenient. -- Manager Zhou",
+   "headers": [
+    {
+     "name": "From",
+     "value": "zhoujl@dingxin-soft.com"
+    },
+    {
+     "name": "To",
+     "value": "sales@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Regarding next quarter's partnership plans"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 10 Feb 2026 14:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  },
+  {
+   "id": "msg_712",
+   "threadId": "msg_712",
+   "internalDate": 1770256800000,
+   "bodyText": "Hi, we are considering upgrading from our current Standard edition to the Enterprise edition and would like to learn about the specific feature differences and pricing plans. Please arrange a discussion soon. -- Zhang Hua",
+   "headers": [
+    {
+     "name": "From",
+     "value": "zhanghua@sunlight-media.com"
+    },
+    {
+     "name": "To",
+     "value": "sales@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Partnership upgrade interest"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 05 Feb 2026 10:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 2
+  }
+ ]
+}

@@ -1,0 +1,63 @@
+# T152_supply_chain_investigation, on vfsbench_harbor's mirage environment (harbor/claweval.py writes it).
+#
+# Each service is its kit fake at upstream's port, its tools CLIs
+# (harbor/tools.ts), and the verifier's VM gets upstream's grader and
+# the judge's host (claweval_grade.py).
+fakes:
+  claweval_finance:
+    fixture: kit/claweval_finance.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports:
+    - 9104
+  claweval_inventory:
+    fixture: kit/claweval_inventory.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports:
+    - 9108
+  claweval_crm:
+    fixture: kit/claweval_crm.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports:
+    - 9110
+  claweval_helpdesk:
+    fixture: kit/claweval_helpdesk.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports:
+    - 9107
+tools:
+  file: tools.json
+  dispatches: /var/lib/mock-data/claweval/dispatches.jsonl
+workspace:
+  profiles:
+    default:
+      commands:
+        deny:
+        - commands:
+          - curl
+          - wget
+          reason: the services are reached through their tools
+  clis:
+    helpdesk:
+      cli: helpdesk
+      config:
+        url: ${CLAWEVAL_HELPDESK_URL}
+    inventory:
+      cli: inventory
+      config:
+        url: ${CLAWEVAL_INVENTORY_URL}
+    finance:
+      cli: finance
+      config:
+        url: ${CLAWEVAL_FINANCE_URL}
+    crm:
+      cli: crm
+      config:
+        url: ${CLAWEVAL_CRM_URL}
+verifier:
+  copy:
+    /opt/claweval/src: ${STATE}/claweval/src/src
+    /opt/claweval/site: ${STATE}/harbor/site/claweval
+    /opt/claweval/tasks/T152_supply_chain_investigation: ${STATE}/claweval/src/tasks/T152_supply_chain_investigation
+    /opt/claweval/tasks/T151zh_supply_chain_investigation: ${STATE}/claweval/src/tasks/T151zh_supply_chain_investigation
+  egress:
+  - OPENAI_BASE_URL

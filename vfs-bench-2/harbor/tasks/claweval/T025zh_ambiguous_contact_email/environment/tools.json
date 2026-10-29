@@ -1,0 +1,95 @@
+[
+ {
+  "name": "contacts",
+  "description": "The contacts service's tools.",
+  "tools": [
+   {
+    "name": "search",
+    "call": "contacts_search",
+    "description": "搜索通讯录中的联系人",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "搜索关键词（姓名、部门等）"
+      },
+      "department": {
+       "type": "string",
+       "description": "按部门筛选"
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9103/contacts/search",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get",
+    "call": "contacts_get",
+    "description": "获取联系人详细信息",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contact_id": {
+       "type": "string",
+       "description": "联系人ID"
+      }
+     },
+     "required": [
+      "contact_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9103/contacts/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "gmail",
+  "description": "The gmail service's tools.",
+  "tools": [
+   {
+    "name": "save_draft",
+    "call": "gmail_save_draft",
+    "description": "将邮件保存为草稿",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "to": {
+       "type": "string",
+       "description": "收件人邮箱地址"
+      },
+      "subject": {
+       "type": "string",
+       "description": "邮件主题"
+      },
+      "body": {
+       "type": "string",
+       "description": "邮件正文"
+      },
+      "reply_to_message_id": {
+       "type": "string",
+       "description": "如果是回复邮件，原邮件ID"
+      }
+     },
+     "required": [
+      "to",
+      "subject",
+      "body"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9100/gmail/drafts/save",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

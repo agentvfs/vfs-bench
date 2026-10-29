@@ -18,13 +18,22 @@
  * UTC, as upstream's mock keeps every time. Each of his `calendar_event`
  * rows is an `Event`: its title the summary, its description the
  * description, its start and end `startDateTime` and `endDateTime`, in UTC.
- * Upstream's second user, Lois, has no calendar here, and the `event`
- * counter starts past the seeded ids too.
+ * Its `event_type` and `source` have no field in an Event and are left out;
+ * its `source_ref`, the note upstream's calendar page shows beside it, is
+ * the description of an event that has none. Upstream's second user, Lois,
+ * has no calendar here, and the `event` counter starts past the seeded ids
+ * too.
+ *
+ * A task with a legacy startup script gets the rows it adds to the email
+ * and calendar mocks too (`startup.ts`), after their seeds, as upstream's
+ * image adds them once its mocks are up.
  */
 import { Database } from 'bun:sqlite'
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
+
+import { startupSql } from './startup.ts'
 
 interface Email {
   id: number
@@ -83,6 +92,7 @@ export async function gws(mock: string, task: string): Promise<Record<string, un
   const db = new Database(file, { create: true })
   initSchema(db)
   seedDatabase(db)
+  for (const sql of startupSql(dirname(dirname(mock)), task, 'email')) db.run(sql)
   const attachments = db.query('SELECT COUNT(*) AS n FROM attachments').get() as { n: number }
   if (attachments.n > 0) throw new Error(`${task}: upstream seeds attachments, which this converter does not carry`)
   const me = db.query("SELECT username, email FROM users WHERE username = 'peter'").get() as { username: string; email: string }
@@ -148,6 +158,7 @@ async function calendarEvents(mock: string, task: string): Promise<Record<string
   try {
     initSchema(db)
     seedDatabase(db)
+    for (const sql of startupSql(dirname(dirname(mock)), task, 'calendar')) db.run(sql)
   } finally {
     console.log = log
   }
@@ -162,13 +173,17 @@ async function calendarEvents(mock: string, task: string): Promise<Record<string
   // Seeded now, as the fake stamps an event it creates.
   const now = new Date().toISOString()
   return rows.map((event, i) => {
-    if (event.source !== null || event.source_ref !== null || event.event_type !== 'personal') {
-      throw new Error(`${task}: calendar event ${event.id} has a source or type, which an Event here does not carry`)
+    // An event's source_ref is a note the calendar shows with it; with no
+    // description beside it, it is the Event's description. Its source, a
+    // category, has no field and is left out.
+    if (event.source_ref !== null && event.description !== null) {
+      throw new Error(`${task}: calendar event ${event.id} has a description and a source_ref, which an Event cannot both carry`)
     }
+    const description = event.description ?? event.source_ref
     return {
       id: eventId(i + 1),
       summary: event.title,
-      ...(event.description === null ? {} : { description: event.description }),
+      ...(description === null ? {} : { description }),
       startDateTime: utc(event.start_time),
       endDateTime: utc(event.end_time),
       created: now,

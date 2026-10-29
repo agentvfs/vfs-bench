@@ -1,0 +1,89 @@
+[
+ {
+  "name": "crm",
+  "description": "The crm service's tools.",
+  "tools": [
+   {
+    "name": "list_customers",
+    "call": "crm_list_customers",
+    "description": "列出客户",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "客户状态(active/churned)"
+      },
+      "tier": {
+       "type": "string",
+       "description": "客户等级(vip/standard)"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_customer",
+    "call": "crm_get_customer",
+    "description": "获取客户详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "customer_id": {
+       "type": "string",
+       "description": "客户ID"
+      }
+     },
+     "required": [
+      "customer_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "gmail",
+  "description": "The gmail service's tools.",
+  "tools": [
+   {
+    "name": "save_draft",
+    "call": "gmail_save_draft",
+    "description": "保存邮件草稿",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "to": {
+       "type": "string",
+       "description": "收件人"
+      },
+      "subject": {
+       "type": "string",
+       "description": "主题"
+      },
+      "body": {
+       "type": "string",
+       "description": "正文"
+      }
+     },
+     "required": [
+      "to",
+      "subject",
+      "body"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9100/gmail/drafts/save",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

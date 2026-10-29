@@ -1,0 +1,54 @@
+[
+ {
+  "name": "contacts",
+  "description": "The contacts service's tools.",
+  "tools": [
+   {
+    "name": "search",
+    "call": "contacts_search",
+    "description": "Search internal contacts directory",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "Search keyword"
+      },
+      "department": {
+       "type": "string",
+       "description": "Filter by department"
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9103/contacts/search",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get",
+    "call": "contacts_get",
+    "description": "Get contact details",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contact_id": {
+       "type": "string",
+       "description": "Contact ID"
+      }
+     },
+     "required": [
+      "contact_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9103/contacts/get",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

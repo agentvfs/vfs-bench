@@ -1,0 +1,3808 @@
+{
+ "_env": [
+  {
+   "name": "TASK_NAME",
+   "value": "insurance-deductible-selection"
+  }
+ ],
+ "_schema": [
+  {
+   "type": "table",
+   "name": "_migrations",
+   "sql": "CREATE TABLE _migrations (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      name TEXT NOT NULL UNIQUE,\n      applied_at TEXT DEFAULT (datetime('2026-04-03 09:00:00'))\n    )"
+  },
+  {
+   "type": "table",
+   "name": "users",
+   "sql": "CREATE TABLE users (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      email TEXT UNIQUE NOT NULL,\n      password_hash TEXT NOT NULL,\n      first_name TEXT NOT NULL,\n      last_name TEXT NOT NULL,\n      phone TEXT,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00'))\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_users_email",
+   "sql": "CREATE INDEX idx_users_email ON users(email)"
+  },
+  {
+   "type": "table",
+   "name": "claim",
+   "sql": "CREATE TABLE claim (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      user_id INTEGER NOT NULL,\n      claim_type TEXT NOT NULL,\n      total_amount INTEGER NOT NULL,\n      service_date TEXT NOT NULL,\n      provider_name TEXT NOT NULL,\n      check_item TEXT NOT NULL,\n      status TEXT NOT NULL DEFAULT 'submitted',\n      notes TEXT,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (user_id) REFERENCES users(id)\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_claim_user",
+   "sql": "CREATE INDEX idx_claim_user ON claim(user_id)"
+  },
+  {
+   "type": "table",
+   "name": "claim_line_item",
+   "sql": "CREATE TABLE claim_line_item (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      claim_id INTEGER NOT NULL,\n      description TEXT NOT NULL,\n      amount_cents INTEGER NOT NULL,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (claim_id) REFERENCES claim(id) ON DELETE CASCADE\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_claim_line_item_claim",
+   "sql": "CREATE INDEX idx_claim_line_item_claim ON claim_line_item(claim_id)"
+  },
+  {
+   "type": "table",
+   "name": "claim_attachment",
+   "sql": "CREATE TABLE claim_attachment (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      claim_id INTEGER NOT NULL,\n      filename TEXT NOT NULL,\n      file_path TEXT NOT NULL,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (claim_id) REFERENCES claim(id) ON DELETE CASCADE\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_claim_attachment_claim",
+   "sql": "CREATE INDEX idx_claim_attachment_claim ON claim_attachment(claim_id)"
+  },
+  {
+   "type": "table",
+   "name": "provider",
+   "sql": "CREATE TABLE provider (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      name TEXT NOT NULL,\n      district TEXT NOT NULL,\n      distance_km REAL NOT NULL,\n      network_status TEXT NOT NULL DEFAULT 'in_network',\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00'))\n    )"
+  },
+  {
+   "type": "table",
+   "name": "provider_service",
+   "sql": "CREATE TABLE provider_service (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      provider_id INTEGER NOT NULL,\n      check_item TEXT NOT NULL,\n      service_name TEXT NOT NULL,\n      cost INTEGER NOT NULL,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (provider_id) REFERENCES provider(id) ON DELETE CASCADE,\n      UNIQUE(provider_id, check_item)\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_provider_service_provider",
+   "sql": "CREATE INDEX idx_provider_service_provider ON provider_service(provider_id)"
+  },
+  {
+   "type": "table",
+   "name": "appointment_slot",
+   "sql": "CREATE TABLE appointment_slot (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      provider_service_id INTEGER NOT NULL,\n      start_time TEXT NOT NULL,\n      end_time TEXT NOT NULL,\n      is_available INTEGER NOT NULL DEFAULT 1,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (provider_service_id) REFERENCES provider_service(id) ON DELETE RESTRICT\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_appointment_slot_service",
+   "sql": "CREATE INDEX idx_appointment_slot_service ON appointment_slot(provider_service_id)"
+  },
+  {
+   "type": "table",
+   "name": "appointment",
+   "sql": "CREATE TABLE appointment (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      user_id INTEGER NOT NULL,\n      provider_id INTEGER NOT NULL,\n      slot_id INTEGER NOT NULL,\n      provider_name TEXT NOT NULL,\n      service_name_snapshot TEXT NOT NULL,\n      check_item TEXT NOT NULL,\n      slot_start_time TEXT NOT NULL,\n      slot_end_time TEXT NOT NULL,\n      cost_snapshot INTEGER NOT NULL,\n      distance_km_snapshot REAL NOT NULL,\n      status TEXT NOT NULL DEFAULT 'confirmed',\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT,\n      FOREIGN KEY (provider_id) REFERENCES provider(id) ON DELETE RESTRICT,\n      FOREIGN KEY (slot_id) REFERENCES appointment_slot(id) ON DELETE RESTRICT\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_appointment_user",
+   "sql": "CREATE INDEX idx_appointment_user ON appointment(user_id)"
+  },
+  {
+   "type": "index",
+   "name": "idx_appointment_slot",
+   "sql": "CREATE INDEX idx_appointment_slot ON appointment(slot_id)"
+  },
+  {
+   "type": "table",
+   "name": "insurance_plan",
+   "sql": "CREATE TABLE insurance_plan (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      code TEXT NOT NULL,\n      name TEXT NOT NULL,\n      description TEXT,\n      effective_year INTEGER NOT NULL,\n      premium_monthly INTEGER NOT NULL,\n      deductible INTEGER NOT NULL,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      UNIQUE(code, effective_year)\n    )"
+  },
+  {
+   "type": "table",
+   "name": "plan_benefit",
+   "sql": "CREATE TABLE plan_benefit (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      plan_id INTEGER NOT NULL,\n      benefit_category TEXT NOT NULL,\n      coverage_type TEXT NOT NULL,\n      coverage_value INTEGER,\n      notes TEXT,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (plan_id) REFERENCES insurance_plan(id) ON DELETE CASCADE\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_plan_benefit_plan",
+   "sql": "CREATE INDEX idx_plan_benefit_plan ON plan_benefit(plan_id)"
+  },
+  {
+   "type": "table",
+   "name": "current_policy",
+   "sql": "CREATE TABLE current_policy (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      user_id INTEGER NOT NULL,\n      plan_id INTEGER NOT NULL,\n      status TEXT NOT NULL DEFAULT 'active',\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (user_id) REFERENCES users(id),\n      FOREIGN KEY (plan_id) REFERENCES insurance_plan(id)\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_current_policy_user",
+   "sql": "CREATE INDEX idx_current_policy_user ON current_policy(user_id)"
+  },
+  {
+   "type": "index",
+   "name": "idx_current_policy_active",
+   "sql": "CREATE UNIQUE INDEX idx_current_policy_active ON current_policy(user_id) WHERE status = 'active'"
+  },
+  {
+   "type": "table",
+   "name": "plan_selection",
+   "sql": "CREATE TABLE plan_selection (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      user_id INTEGER NOT NULL,\n      plan_id INTEGER NOT NULL,\n      year INTEGER NOT NULL,\n      plan_code_snapshot TEXT NOT NULL,\n      plan_name_snapshot TEXT NOT NULL,\n      deductible_snapshot INTEGER NOT NULL,\n      premium_snapshot INTEGER NOT NULL,\n      selected_at TEXT NOT NULL DEFAULT (datetime('2026-04-03 09:00:00')),\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT,\n      FOREIGN KEY (plan_id) REFERENCES insurance_plan(id) ON DELETE RESTRICT\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_plan_selection_user",
+   "sql": "CREATE INDEX idx_plan_selection_user ON plan_selection(user_id)"
+  }
+ ],
+ "_migrations": [],
+ "users": [
+  {
+   "id": 1,
+   "email": "peter.griffin@work.mosi.inc",
+   "password_hash": "$2a$10$jN6zvAUK11N6xoY8FL18z.JeRs.b3uMeZQFyIeNs/42DNB2gMHgcO",
+   "first_name": "Peter",
+   "last_name": "Griffin",
+   "phone": "+1-555-0100",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "claim": [
+  {
+   "id": 1,
+   "user_id": 1,
+   "claim_type": "medical",
+   "total_amount": 15000,
+   "service_date": "2026-04-12",
+   "provider_name": "Central Family Clinic",
+   "check_item": "general_checkup",
+   "status": "submitted",
+   "notes": "Annual physical for fiscal year.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "user_id": 1,
+   "claim_type": "dental",
+   "total_amount": 12500,
+   "service_date": "2026-03-22",
+   "provider_name": "Eastside Dental & Vision",
+   "check_item": "dental",
+   "status": "reviewing",
+   "notes": "Routine cleaning, no follow-up required.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "user_id": 1,
+   "claim_type": "vision",
+   "total_amount": 9500,
+   "service_date": "2026-02-08",
+   "provider_name": "Eastside Dental & Vision",
+   "check_item": "vision",
+   "status": "reimbursed",
+   "notes": "Eye exam reimbursed in full.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "claim_line_item": [
+  {
+   "id": 1,
+   "claim_id": 1,
+   "description": "Office visit",
+   "amount_cents": 15000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "claim_id": 2,
+   "description": "Dental cleaning",
+   "amount_cents": 10000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "claim_id": 2,
+   "description": "Fluoride treatment",
+   "amount_cents": 2500,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "claim_id": 3,
+   "description": "Comprehensive eye exam",
+   "amount_cents": 9500,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "claim_attachment": [],
+ "provider": [
+  {
+   "id": 1,
+   "name": "Metro Lab Services",
+   "district": "Central",
+   "distance_km": 1.2,
+   "network_status": "in_network",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "name": "Nutrition & Wellness Center",
+   "district": "Central",
+   "distance_km": 1.8,
+   "network_status": "in_network",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "name": "Central Family Clinic",
+   "district": "Central",
+   "distance_km": 0.8,
+   "network_status": "in_network",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "name": "Riverside Medical Center",
+   "district": "Riverside",
+   "distance_km": 2.4,
+   "network_status": "in_network",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "name": "Northgate Health",
+   "district": "North",
+   "distance_km": 3.1,
+   "network_status": "in_network",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "name": "Eastside Dental & Vision",
+   "district": "East",
+   "distance_km": 4,
+   "network_status": "in_network",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 7,
+   "name": "Southside Diagnostics",
+   "district": "South",
+   "distance_km": 5.2,
+   "network_status": "in_network",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 8,
+   "name": "Westview General Hospital",
+   "district": "West",
+   "distance_km": 6.5,
+   "network_status": "in_network",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 9,
+   "name": "Hillcrest Specialty Clinic",
+   "district": "Hillcrest",
+   "distance_km": 7.3,
+   "network_status": "in_network",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 10,
+   "name": "Lakeside Imaging Lab",
+   "district": "Lakeside",
+   "distance_km": 8,
+   "network_status": "in_network",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 11,
+   "name": "Bayview Wellness Center",
+   "district": "Bayview",
+   "distance_km": 9.4,
+   "network_status": "in_network",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 12,
+   "name": "Parkside Urgent Care",
+   "district": "Parkside",
+   "distance_km": 10.2,
+   "network_status": "in_network",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 13,
+   "name": "Greenfield Family Practice",
+   "district": "Greenfield",
+   "distance_km": 11.5,
+   "network_status": "in_network",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 14,
+   "name": "Highland Specialist Group",
+   "district": "Highland",
+   "distance_km": 12.8,
+   "network_status": "in_network",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 15,
+   "name": "Summit Out-of-Network Clinic",
+   "district": "Summit",
+   "distance_km": 3.5,
+   "network_status": "out_of_network",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 16,
+   "name": "Valley Premium Medical",
+   "district": "Valley",
+   "distance_km": 4.8,
+   "network_status": "out_of_network",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 17,
+   "name": "Coastal Healthcare Partners",
+   "district": "Coastal",
+   "distance_km": 6.2,
+   "network_status": "out_of_network",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 18,
+   "name": "Pinnacle Private Practice",
+   "district": "Downtown",
+   "distance_km": 1.5,
+   "network_status": "out_of_network",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "provider_service": [
+  {
+   "id": 1,
+   "provider_id": 1,
+   "check_item": "lab",
+   "service_name": "Blood Test",
+   "cost": 2500,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "provider_id": 2,
+   "check_item": "specialist",
+   "service_name": "Diet Consultation",
+   "cost": 5000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "provider_id": 3,
+   "check_item": "general_checkup",
+   "service_name": "Annual Physical Exam",
+   "cost": 15000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "provider_id": 3,
+   "check_item": "dental",
+   "service_name": "Routine Cleaning",
+   "cost": 12000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "provider_id": 3,
+   "check_item": "vision",
+   "service_name": "Comprehensive Eye Exam",
+   "cost": 9500,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "provider_id": 3,
+   "check_item": "lab",
+   "service_name": "Standard Blood Panel",
+   "cost": 8000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 7,
+   "provider_id": 4,
+   "check_item": "general_checkup",
+   "service_name": "Annual Physical Exam",
+   "cost": 15000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 8,
+   "provider_id": 4,
+   "check_item": "dental",
+   "service_name": "Routine Cleaning",
+   "cost": 12000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 9,
+   "provider_id": 4,
+   "check_item": "vision",
+   "service_name": "Comprehensive Eye Exam",
+   "cost": 9500,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 10,
+   "provider_id": 4,
+   "check_item": "lab",
+   "service_name": "Standard Blood Panel",
+   "cost": 8000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 11,
+   "provider_id": 4,
+   "check_item": "imaging",
+   "service_name": "Diagnostic X-Ray",
+   "cost": 22000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 12,
+   "provider_id": 4,
+   "check_item": "specialist",
+   "service_name": "Specialist Consult",
+   "cost": 25000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 13,
+   "provider_id": 5,
+   "check_item": "general_checkup",
+   "service_name": "Annual Physical Exam",
+   "cost": 15000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 14,
+   "provider_id": 5,
+   "check_item": "dental",
+   "service_name": "Routine Cleaning",
+   "cost": 12000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 15,
+   "provider_id": 5,
+   "check_item": "lab",
+   "service_name": "Standard Blood Panel",
+   "cost": 8000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 16,
+   "provider_id": 5,
+   "check_item": "imaging",
+   "service_name": "Diagnostic X-Ray",
+   "cost": 22000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 17,
+   "provider_id": 6,
+   "check_item": "general_checkup",
+   "service_name": "Annual Physical Exam",
+   "cost": 15000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 18,
+   "provider_id": 6,
+   "check_item": "dental",
+   "service_name": "Routine Cleaning",
+   "cost": 12000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 19,
+   "provider_id": 6,
+   "check_item": "vision",
+   "service_name": "Comprehensive Eye Exam",
+   "cost": 9500,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 20,
+   "provider_id": 6,
+   "check_item": "lab",
+   "service_name": "Standard Blood Panel",
+   "cost": 8000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 21,
+   "provider_id": 7,
+   "check_item": "general_checkup",
+   "service_name": "Annual Physical Exam",
+   "cost": 15000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 22,
+   "provider_id": 7,
+   "check_item": "lab",
+   "service_name": "Standard Blood Panel",
+   "cost": 8000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 23,
+   "provider_id": 7,
+   "check_item": "imaging",
+   "service_name": "Diagnostic X-Ray",
+   "cost": 22000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 24,
+   "provider_id": 7,
+   "check_item": "specialist",
+   "service_name": "Specialist Consult",
+   "cost": 25000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 25,
+   "provider_id": 8,
+   "check_item": "general_checkup",
+   "service_name": "Annual Physical Exam",
+   "cost": 15000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 26,
+   "provider_id": 8,
+   "check_item": "dental",
+   "service_name": "Routine Cleaning",
+   "cost": 12000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 27,
+   "provider_id": 8,
+   "check_item": "vision",
+   "service_name": "Comprehensive Eye Exam",
+   "cost": 9500,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 28,
+   "provider_id": 8,
+   "check_item": "lab",
+   "service_name": "Standard Blood Panel",
+   "cost": 8000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 29,
+   "provider_id": 8,
+   "check_item": "imaging",
+   "service_name": "Diagnostic X-Ray",
+   "cost": 22000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 30,
+   "provider_id": 8,
+   "check_item": "specialist",
+   "service_name": "Specialist Consult",
+   "cost": 25000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 31,
+   "provider_id": 9,
+   "check_item": "general_checkup",
+   "service_name": "Annual Physical Exam",
+   "cost": 15000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 32,
+   "provider_id": 9,
+   "check_item": "dental",
+   "service_name": "Routine Cleaning",
+   "cost": 12000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 33,
+   "provider_id": 9,
+   "check_item": "vision",
+   "service_name": "Comprehensive Eye Exam",
+   "cost": 9500,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 34,
+   "provider_id": 9,
+   "check_item": "specialist",
+   "service_name": "Specialist Consult",
+   "cost": 25000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 35,
+   "provider_id": 10,
+   "check_item": "general_checkup",
+   "service_name": "Annual Physical Exam",
+   "cost": 15000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 36,
+   "provider_id": 10,
+   "check_item": "vision",
+   "service_name": "Comprehensive Eye Exam",
+   "cost": 9500,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 37,
+   "provider_id": 10,
+   "check_item": "lab",
+   "service_name": "Standard Blood Panel",
+   "cost": 8000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 38,
+   "provider_id": 10,
+   "check_item": "imaging",
+   "service_name": "Diagnostic X-Ray",
+   "cost": 22000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 39,
+   "provider_id": 11,
+   "check_item": "general_checkup",
+   "service_name": "Annual Physical Exam",
+   "cost": 15000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 40,
+   "provider_id": 11,
+   "check_item": "dental",
+   "service_name": "Routine Cleaning",
+   "cost": 12000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 41,
+   "provider_id": 11,
+   "check_item": "vision",
+   "service_name": "Comprehensive Eye Exam",
+   "cost": 9500,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 42,
+   "provider_id": 11,
+   "check_item": "lab",
+   "service_name": "Standard Blood Panel",
+   "cost": 8000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 43,
+   "provider_id": 11,
+   "check_item": "specialist",
+   "service_name": "Specialist Consult",
+   "cost": 25000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 44,
+   "provider_id": 12,
+   "check_item": "general_checkup",
+   "service_name": "Annual Physical Exam",
+   "cost": 15000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 45,
+   "provider_id": 12,
+   "check_item": "dental",
+   "service_name": "Routine Cleaning",
+   "cost": 12000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 46,
+   "provider_id": 12,
+   "check_item": "vision",
+   "service_name": "Comprehensive Eye Exam",
+   "cost": 9500,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 47,
+   "provider_id": 12,
+   "check_item": "lab",
+   "service_name": "Standard Blood Panel",
+   "cost": 8000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 48,
+   "provider_id": 13,
+   "check_item": "general_checkup",
+   "service_name": "Annual Physical Exam",
+   "cost": 15000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 49,
+   "provider_id": 13,
+   "check_item": "dental",
+   "service_name": "Routine Cleaning",
+   "cost": 12000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 50,
+   "provider_id": 13,
+   "check_item": "vision",
+   "service_name": "Comprehensive Eye Exam",
+   "cost": 9500,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 51,
+   "provider_id": 13,
+   "check_item": "lab",
+   "service_name": "Standard Blood Panel",
+   "cost": 8000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 52,
+   "provider_id": 13,
+   "check_item": "imaging",
+   "service_name": "Diagnostic X-Ray",
+   "cost": 22000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 53,
+   "provider_id": 14,
+   "check_item": "general_checkup",
+   "service_name": "Annual Physical Exam",
+   "cost": 15000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 54,
+   "provider_id": 14,
+   "check_item": "dental",
+   "service_name": "Routine Cleaning",
+   "cost": 12000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 55,
+   "provider_id": 14,
+   "check_item": "vision",
+   "service_name": "Comprehensive Eye Exam",
+   "cost": 9500,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 56,
+   "provider_id": 14,
+   "check_item": "lab",
+   "service_name": "Standard Blood Panel",
+   "cost": 8000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 57,
+   "provider_id": 14,
+   "check_item": "specialist",
+   "service_name": "Specialist Consult",
+   "cost": 25000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 58,
+   "provider_id": 15,
+   "check_item": "general_checkup",
+   "service_name": "Annual Physical Exam",
+   "cost": 15000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 59,
+   "provider_id": 15,
+   "check_item": "specialist",
+   "service_name": "Specialist Consult",
+   "cost": 25000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 60,
+   "provider_id": 16,
+   "check_item": "general_checkup",
+   "service_name": "Annual Physical Exam",
+   "cost": 15000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 61,
+   "provider_id": 16,
+   "check_item": "dental",
+   "service_name": "Routine Cleaning",
+   "cost": 12000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 62,
+   "provider_id": 16,
+   "check_item": "imaging",
+   "service_name": "Diagnostic X-Ray",
+   "cost": 22000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 63,
+   "provider_id": 17,
+   "check_item": "specialist",
+   "service_name": "Specialist Consult",
+   "cost": 25000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 64,
+   "provider_id": 17,
+   "check_item": "lab",
+   "service_name": "Standard Blood Panel",
+   "cost": 8000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 65,
+   "provider_id": 17,
+   "check_item": "imaging",
+   "service_name": "Diagnostic X-Ray",
+   "cost": 22000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 66,
+   "provider_id": 18,
+   "check_item": "general_checkup",
+   "service_name": "Annual Physical Exam",
+   "cost": 15000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 67,
+   "provider_id": 18,
+   "check_item": "dental",
+   "service_name": "Routine Cleaning",
+   "cost": 12000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 68,
+   "provider_id": 18,
+   "check_item": "vision",
+   "service_name": "Comprehensive Eye Exam",
+   "cost": 9500,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 69,
+   "provider_id": 18,
+   "check_item": "lab",
+   "service_name": "Standard Blood Panel",
+   "cost": 8000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 70,
+   "provider_id": 18,
+   "check_item": "imaging",
+   "service_name": "Diagnostic X-Ray",
+   "cost": 22000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 71,
+   "provider_id": 18,
+   "check_item": "specialist",
+   "service_name": "Specialist Consult",
+   "cost": 25000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "appointment_slot": [
+  {
+   "id": 1,
+   "provider_service_id": 1,
+   "start_time": "2026-04-04T09:00:00.000Z",
+   "end_time": "2026-04-04T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "provider_service_id": 1,
+   "start_time": "2026-04-08T10:00:00.000Z",
+   "end_time": "2026-04-08T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "provider_service_id": 1,
+   "start_time": "2026-04-12T11:00:00.000Z",
+   "end_time": "2026-04-12T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "provider_service_id": 2,
+   "start_time": "2026-04-07T10:00:00.000Z",
+   "end_time": "2026-04-07T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "provider_service_id": 2,
+   "start_time": "2026-04-11T11:00:00.000Z",
+   "end_time": "2026-04-11T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "provider_service_id": 2,
+   "start_time": "2026-04-15T13:00:00.000Z",
+   "end_time": "2026-04-15T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 7,
+   "provider_service_id": 2,
+   "start_time": "2026-04-05T14:00:00.000Z",
+   "end_time": "2026-04-05T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 8,
+   "provider_service_id": 3,
+   "start_time": "2026-04-10T11:00:00.000Z",
+   "end_time": "2026-04-10T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 9,
+   "provider_service_id": 3,
+   "start_time": "2026-04-14T13:00:00.000Z",
+   "end_time": "2026-04-14T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 10,
+   "provider_service_id": 3,
+   "start_time": "2026-04-04T14:00:00.000Z",
+   "end_time": "2026-04-04T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 11,
+   "provider_service_id": 3,
+   "start_time": "2026-04-08T15:00:00.000Z",
+   "end_time": "2026-04-08T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 12,
+   "provider_service_id": 3,
+   "start_time": "2026-04-12T09:00:00.000Z",
+   "end_time": "2026-04-12T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 13,
+   "provider_service_id": 4,
+   "start_time": "2026-04-13T13:00:00.000Z",
+   "end_time": "2026-04-13T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 14,
+   "provider_service_id": 4,
+   "start_time": "2026-04-17T14:00:00.000Z",
+   "end_time": "2026-04-17T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 15,
+   "provider_service_id": 4,
+   "start_time": "2026-04-07T15:00:00.000Z",
+   "end_time": "2026-04-07T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 16,
+   "provider_service_id": 5,
+   "start_time": "2026-04-16T14:00:00.000Z",
+   "end_time": "2026-04-16T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 17,
+   "provider_service_id": 5,
+   "start_time": "2026-04-06T15:00:00.000Z",
+   "end_time": "2026-04-06T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 18,
+   "provider_service_id": 5,
+   "start_time": "2026-04-10T09:00:00.000Z",
+   "end_time": "2026-04-10T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 19,
+   "provider_service_id": 5,
+   "start_time": "2026-04-14T10:00:00.000Z",
+   "end_time": "2026-04-14T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 20,
+   "provider_service_id": 6,
+   "start_time": "2026-04-05T15:00:00.000Z",
+   "end_time": "2026-04-05T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 21,
+   "provider_service_id": 6,
+   "start_time": "2026-04-09T09:00:00.000Z",
+   "end_time": "2026-04-09T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 22,
+   "provider_service_id": 6,
+   "start_time": "2026-04-13T10:00:00.000Z",
+   "end_time": "2026-04-13T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 23,
+   "provider_service_id": 6,
+   "start_time": "2026-04-17T11:00:00.000Z",
+   "end_time": "2026-04-17T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 24,
+   "provider_service_id": 6,
+   "start_time": "2026-04-07T13:00:00.000Z",
+   "end_time": "2026-04-07T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 25,
+   "provider_service_id": 7,
+   "start_time": "2026-04-08T09:00:00.000Z",
+   "end_time": "2026-04-08T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 26,
+   "provider_service_id": 7,
+   "start_time": "2026-04-12T10:00:00.000Z",
+   "end_time": "2026-04-12T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 27,
+   "provider_service_id": 7,
+   "start_time": "2026-04-16T11:00:00.000Z",
+   "end_time": "2026-04-16T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 28,
+   "provider_service_id": 8,
+   "start_time": "2026-04-11T10:00:00.000Z",
+   "end_time": "2026-04-11T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 29,
+   "provider_service_id": 8,
+   "start_time": "2026-04-15T11:00:00.000Z",
+   "end_time": "2026-04-15T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 30,
+   "provider_service_id": 8,
+   "start_time": "2026-04-05T13:00:00.000Z",
+   "end_time": "2026-04-05T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 31,
+   "provider_service_id": 8,
+   "start_time": "2026-04-09T14:00:00.000Z",
+   "end_time": "2026-04-09T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 32,
+   "provider_service_id": 9,
+   "start_time": "2026-04-14T11:00:00.000Z",
+   "end_time": "2026-04-14T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 33,
+   "provider_service_id": 9,
+   "start_time": "2026-04-04T13:00:00.000Z",
+   "end_time": "2026-04-04T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 34,
+   "provider_service_id": 9,
+   "start_time": "2026-04-08T14:00:00.000Z",
+   "end_time": "2026-04-08T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 35,
+   "provider_service_id": 9,
+   "start_time": "2026-04-12T15:00:00.000Z",
+   "end_time": "2026-04-12T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 36,
+   "provider_service_id": 9,
+   "start_time": "2026-04-16T09:00:00.000Z",
+   "end_time": "2026-04-16T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 37,
+   "provider_service_id": 10,
+   "start_time": "2026-04-17T13:00:00.000Z",
+   "end_time": "2026-04-17T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 38,
+   "provider_service_id": 10,
+   "start_time": "2026-04-07T14:00:00.000Z",
+   "end_time": "2026-04-07T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 39,
+   "provider_service_id": 10,
+   "start_time": "2026-04-11T15:00:00.000Z",
+   "end_time": "2026-04-11T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 40,
+   "provider_service_id": 11,
+   "start_time": "2026-04-06T14:00:00.000Z",
+   "end_time": "2026-04-06T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 41,
+   "provider_service_id": 11,
+   "start_time": "2026-04-10T15:00:00.000Z",
+   "end_time": "2026-04-10T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 42,
+   "provider_service_id": 11,
+   "start_time": "2026-04-14T09:00:00.000Z",
+   "end_time": "2026-04-14T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 43,
+   "provider_service_id": 11,
+   "start_time": "2026-04-04T10:00:00.000Z",
+   "end_time": "2026-04-04T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 44,
+   "provider_service_id": 12,
+   "start_time": "2026-04-09T15:00:00.000Z",
+   "end_time": "2026-04-09T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 45,
+   "provider_service_id": 12,
+   "start_time": "2026-04-13T09:00:00.000Z",
+   "end_time": "2026-04-13T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 46,
+   "provider_service_id": 12,
+   "start_time": "2026-04-17T10:00:00.000Z",
+   "end_time": "2026-04-17T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 47,
+   "provider_service_id": 12,
+   "start_time": "2026-04-07T11:00:00.000Z",
+   "end_time": "2026-04-07T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 48,
+   "provider_service_id": 12,
+   "start_time": "2026-04-11T13:00:00.000Z",
+   "end_time": "2026-04-11T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 49,
+   "provider_service_id": 13,
+   "start_time": "2026-04-12T09:00:00.000Z",
+   "end_time": "2026-04-12T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 50,
+   "provider_service_id": 13,
+   "start_time": "2026-04-16T10:00:00.000Z",
+   "end_time": "2026-04-16T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 51,
+   "provider_service_id": 13,
+   "start_time": "2026-04-06T11:00:00.000Z",
+   "end_time": "2026-04-06T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 52,
+   "provider_service_id": 14,
+   "start_time": "2026-04-15T10:00:00.000Z",
+   "end_time": "2026-04-15T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 53,
+   "provider_service_id": 14,
+   "start_time": "2026-04-05T11:00:00.000Z",
+   "end_time": "2026-04-05T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 54,
+   "provider_service_id": 14,
+   "start_time": "2026-04-09T13:00:00.000Z",
+   "end_time": "2026-04-09T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 55,
+   "provider_service_id": 14,
+   "start_time": "2026-04-13T14:00:00.000Z",
+   "end_time": "2026-04-13T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 56,
+   "provider_service_id": 15,
+   "start_time": "2026-04-04T11:00:00.000Z",
+   "end_time": "2026-04-04T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 57,
+   "provider_service_id": 15,
+   "start_time": "2026-04-08T13:00:00.000Z",
+   "end_time": "2026-04-08T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 58,
+   "provider_service_id": 15,
+   "start_time": "2026-04-12T14:00:00.000Z",
+   "end_time": "2026-04-12T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 59,
+   "provider_service_id": 15,
+   "start_time": "2026-04-16T15:00:00.000Z",
+   "end_time": "2026-04-16T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 60,
+   "provider_service_id": 15,
+   "start_time": "2026-04-06T09:00:00.000Z",
+   "end_time": "2026-04-06T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 61,
+   "provider_service_id": 16,
+   "start_time": "2026-04-07T13:00:00.000Z",
+   "end_time": "2026-04-07T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 62,
+   "provider_service_id": 16,
+   "start_time": "2026-04-11T14:00:00.000Z",
+   "end_time": "2026-04-11T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 63,
+   "provider_service_id": 16,
+   "start_time": "2026-04-15T15:00:00.000Z",
+   "end_time": "2026-04-15T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 64,
+   "provider_service_id": 17,
+   "start_time": "2026-04-10T14:00:00.000Z",
+   "end_time": "2026-04-10T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 65,
+   "provider_service_id": 17,
+   "start_time": "2026-04-14T15:00:00.000Z",
+   "end_time": "2026-04-14T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 66,
+   "provider_service_id": 17,
+   "start_time": "2026-04-04T09:00:00.000Z",
+   "end_time": "2026-04-04T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 67,
+   "provider_service_id": 17,
+   "start_time": "2026-04-08T10:00:00.000Z",
+   "end_time": "2026-04-08T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 68,
+   "provider_service_id": 18,
+   "start_time": "2026-04-13T15:00:00.000Z",
+   "end_time": "2026-04-13T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 69,
+   "provider_service_id": 18,
+   "start_time": "2026-04-17T09:00:00.000Z",
+   "end_time": "2026-04-17T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 70,
+   "provider_service_id": 18,
+   "start_time": "2026-04-07T10:00:00.000Z",
+   "end_time": "2026-04-07T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 71,
+   "provider_service_id": 18,
+   "start_time": "2026-04-11T11:00:00.000Z",
+   "end_time": "2026-04-11T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 72,
+   "provider_service_id": 18,
+   "start_time": "2026-04-15T13:00:00.000Z",
+   "end_time": "2026-04-15T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 73,
+   "provider_service_id": 19,
+   "start_time": "2026-04-16T09:00:00.000Z",
+   "end_time": "2026-04-16T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 74,
+   "provider_service_id": 19,
+   "start_time": "2026-04-06T10:00:00.000Z",
+   "end_time": "2026-04-06T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 75,
+   "provider_service_id": 19,
+   "start_time": "2026-04-10T11:00:00.000Z",
+   "end_time": "2026-04-10T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 76,
+   "provider_service_id": 20,
+   "start_time": "2026-04-05T10:00:00.000Z",
+   "end_time": "2026-04-05T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 77,
+   "provider_service_id": 20,
+   "start_time": "2026-04-09T11:00:00.000Z",
+   "end_time": "2026-04-09T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 78,
+   "provider_service_id": 20,
+   "start_time": "2026-04-13T13:00:00.000Z",
+   "end_time": "2026-04-13T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 79,
+   "provider_service_id": 20,
+   "start_time": "2026-04-17T14:00:00.000Z",
+   "end_time": "2026-04-17T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 80,
+   "provider_service_id": 21,
+   "start_time": "2026-04-08T11:00:00.000Z",
+   "end_time": "2026-04-08T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 81,
+   "provider_service_id": 21,
+   "start_time": "2026-04-12T13:00:00.000Z",
+   "end_time": "2026-04-12T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 82,
+   "provider_service_id": 21,
+   "start_time": "2026-04-16T14:00:00.000Z",
+   "end_time": "2026-04-16T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 83,
+   "provider_service_id": 21,
+   "start_time": "2026-04-06T15:00:00.000Z",
+   "end_time": "2026-04-06T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 84,
+   "provider_service_id": 21,
+   "start_time": "2026-04-10T09:00:00.000Z",
+   "end_time": "2026-04-10T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 85,
+   "provider_service_id": 22,
+   "start_time": "2026-04-11T13:00:00.000Z",
+   "end_time": "2026-04-11T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 86,
+   "provider_service_id": 22,
+   "start_time": "2026-04-15T14:00:00.000Z",
+   "end_time": "2026-04-15T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 87,
+   "provider_service_id": 22,
+   "start_time": "2026-04-05T15:00:00.000Z",
+   "end_time": "2026-04-05T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 88,
+   "provider_service_id": 23,
+   "start_time": "2026-04-14T14:00:00.000Z",
+   "end_time": "2026-04-14T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 89,
+   "provider_service_id": 23,
+   "start_time": "2026-04-04T15:00:00.000Z",
+   "end_time": "2026-04-04T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 90,
+   "provider_service_id": 23,
+   "start_time": "2026-04-08T09:00:00.000Z",
+   "end_time": "2026-04-08T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 91,
+   "provider_service_id": 23,
+   "start_time": "2026-04-12T10:00:00.000Z",
+   "end_time": "2026-04-12T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 92,
+   "provider_service_id": 24,
+   "start_time": "2026-04-17T15:00:00.000Z",
+   "end_time": "2026-04-17T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 93,
+   "provider_service_id": 24,
+   "start_time": "2026-04-07T09:00:00.000Z",
+   "end_time": "2026-04-07T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 94,
+   "provider_service_id": 24,
+   "start_time": "2026-04-11T10:00:00.000Z",
+   "end_time": "2026-04-11T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 95,
+   "provider_service_id": 24,
+   "start_time": "2026-04-15T11:00:00.000Z",
+   "end_time": "2026-04-15T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 96,
+   "provider_service_id": 24,
+   "start_time": "2026-04-05T13:00:00.000Z",
+   "end_time": "2026-04-05T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 97,
+   "provider_service_id": 25,
+   "start_time": "2026-04-06T09:00:00.000Z",
+   "end_time": "2026-04-06T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 98,
+   "provider_service_id": 25,
+   "start_time": "2026-04-10T10:00:00.000Z",
+   "end_time": "2026-04-10T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 99,
+   "provider_service_id": 25,
+   "start_time": "2026-04-14T11:00:00.000Z",
+   "end_time": "2026-04-14T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 100,
+   "provider_service_id": 26,
+   "start_time": "2026-04-09T10:00:00.000Z",
+   "end_time": "2026-04-09T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 101,
+   "provider_service_id": 26,
+   "start_time": "2026-04-13T11:00:00.000Z",
+   "end_time": "2026-04-13T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 102,
+   "provider_service_id": 26,
+   "start_time": "2026-04-17T13:00:00.000Z",
+   "end_time": "2026-04-17T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 103,
+   "provider_service_id": 26,
+   "start_time": "2026-04-07T14:00:00.000Z",
+   "end_time": "2026-04-07T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 104,
+   "provider_service_id": 27,
+   "start_time": "2026-04-12T11:00:00.000Z",
+   "end_time": "2026-04-12T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 105,
+   "provider_service_id": 27,
+   "start_time": "2026-04-16T13:00:00.000Z",
+   "end_time": "2026-04-16T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 106,
+   "provider_service_id": 27,
+   "start_time": "2026-04-06T14:00:00.000Z",
+   "end_time": "2026-04-06T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 107,
+   "provider_service_id": 27,
+   "start_time": "2026-04-10T15:00:00.000Z",
+   "end_time": "2026-04-10T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 108,
+   "provider_service_id": 27,
+   "start_time": "2026-04-14T09:00:00.000Z",
+   "end_time": "2026-04-14T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 109,
+   "provider_service_id": 28,
+   "start_time": "2026-04-15T13:00:00.000Z",
+   "end_time": "2026-04-15T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 110,
+   "provider_service_id": 28,
+   "start_time": "2026-04-05T14:00:00.000Z",
+   "end_time": "2026-04-05T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 111,
+   "provider_service_id": 28,
+   "start_time": "2026-04-09T15:00:00.000Z",
+   "end_time": "2026-04-09T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 112,
+   "provider_service_id": 29,
+   "start_time": "2026-04-04T14:00:00.000Z",
+   "end_time": "2026-04-04T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 113,
+   "provider_service_id": 29,
+   "start_time": "2026-04-08T15:00:00.000Z",
+   "end_time": "2026-04-08T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 114,
+   "provider_service_id": 29,
+   "start_time": "2026-04-12T09:00:00.000Z",
+   "end_time": "2026-04-12T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 115,
+   "provider_service_id": 29,
+   "start_time": "2026-04-16T10:00:00.000Z",
+   "end_time": "2026-04-16T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 116,
+   "provider_service_id": 30,
+   "start_time": "2026-04-07T15:00:00.000Z",
+   "end_time": "2026-04-07T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 117,
+   "provider_service_id": 30,
+   "start_time": "2026-04-11T09:00:00.000Z",
+   "end_time": "2026-04-11T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 118,
+   "provider_service_id": 30,
+   "start_time": "2026-04-15T10:00:00.000Z",
+   "end_time": "2026-04-15T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 119,
+   "provider_service_id": 30,
+   "start_time": "2026-04-05T11:00:00.000Z",
+   "end_time": "2026-04-05T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 120,
+   "provider_service_id": 30,
+   "start_time": "2026-04-09T13:00:00.000Z",
+   "end_time": "2026-04-09T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 121,
+   "provider_service_id": 31,
+   "start_time": "2026-04-10T09:00:00.000Z",
+   "end_time": "2026-04-10T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 122,
+   "provider_service_id": 31,
+   "start_time": "2026-04-14T10:00:00.000Z",
+   "end_time": "2026-04-14T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 123,
+   "provider_service_id": 31,
+   "start_time": "2026-04-04T11:00:00.000Z",
+   "end_time": "2026-04-04T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 124,
+   "provider_service_id": 32,
+   "start_time": "2026-04-13T10:00:00.000Z",
+   "end_time": "2026-04-13T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 125,
+   "provider_service_id": 32,
+   "start_time": "2026-04-17T11:00:00.000Z",
+   "end_time": "2026-04-17T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 126,
+   "provider_service_id": 32,
+   "start_time": "2026-04-07T13:00:00.000Z",
+   "end_time": "2026-04-07T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 127,
+   "provider_service_id": 32,
+   "start_time": "2026-04-11T14:00:00.000Z",
+   "end_time": "2026-04-11T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 128,
+   "provider_service_id": 33,
+   "start_time": "2026-04-16T11:00:00.000Z",
+   "end_time": "2026-04-16T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 129,
+   "provider_service_id": 33,
+   "start_time": "2026-04-06T13:00:00.000Z",
+   "end_time": "2026-04-06T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 130,
+   "provider_service_id": 33,
+   "start_time": "2026-04-10T14:00:00.000Z",
+   "end_time": "2026-04-10T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 131,
+   "provider_service_id": 33,
+   "start_time": "2026-04-14T15:00:00.000Z",
+   "end_time": "2026-04-14T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 132,
+   "provider_service_id": 33,
+   "start_time": "2026-04-04T09:00:00.000Z",
+   "end_time": "2026-04-04T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 133,
+   "provider_service_id": 34,
+   "start_time": "2026-04-05T13:00:00.000Z",
+   "end_time": "2026-04-05T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 134,
+   "provider_service_id": 34,
+   "start_time": "2026-04-09T14:00:00.000Z",
+   "end_time": "2026-04-09T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 135,
+   "provider_service_id": 34,
+   "start_time": "2026-04-13T15:00:00.000Z",
+   "end_time": "2026-04-13T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 136,
+   "provider_service_id": 35,
+   "start_time": "2026-04-08T14:00:00.000Z",
+   "end_time": "2026-04-08T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 137,
+   "provider_service_id": 35,
+   "start_time": "2026-04-12T15:00:00.000Z",
+   "end_time": "2026-04-12T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 138,
+   "provider_service_id": 35,
+   "start_time": "2026-04-16T09:00:00.000Z",
+   "end_time": "2026-04-16T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 139,
+   "provider_service_id": 35,
+   "start_time": "2026-04-06T10:00:00.000Z",
+   "end_time": "2026-04-06T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 140,
+   "provider_service_id": 36,
+   "start_time": "2026-04-11T15:00:00.000Z",
+   "end_time": "2026-04-11T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 141,
+   "provider_service_id": 36,
+   "start_time": "2026-04-15T09:00:00.000Z",
+   "end_time": "2026-04-15T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 142,
+   "provider_service_id": 36,
+   "start_time": "2026-04-05T10:00:00.000Z",
+   "end_time": "2026-04-05T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 143,
+   "provider_service_id": 36,
+   "start_time": "2026-04-09T11:00:00.000Z",
+   "end_time": "2026-04-09T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 144,
+   "provider_service_id": 36,
+   "start_time": "2026-04-13T13:00:00.000Z",
+   "end_time": "2026-04-13T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 145,
+   "provider_service_id": 37,
+   "start_time": "2026-04-14T09:00:00.000Z",
+   "end_time": "2026-04-14T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 146,
+   "provider_service_id": 37,
+   "start_time": "2026-04-04T10:00:00.000Z",
+   "end_time": "2026-04-04T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 147,
+   "provider_service_id": 37,
+   "start_time": "2026-04-08T11:00:00.000Z",
+   "end_time": "2026-04-08T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 148,
+   "provider_service_id": 38,
+   "start_time": "2026-04-17T10:00:00.000Z",
+   "end_time": "2026-04-17T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 149,
+   "provider_service_id": 38,
+   "start_time": "2026-04-07T11:00:00.000Z",
+   "end_time": "2026-04-07T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 150,
+   "provider_service_id": 38,
+   "start_time": "2026-04-11T13:00:00.000Z",
+   "end_time": "2026-04-11T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 151,
+   "provider_service_id": 38,
+   "start_time": "2026-04-15T14:00:00.000Z",
+   "end_time": "2026-04-15T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 152,
+   "provider_service_id": 39,
+   "start_time": "2026-04-06T11:00:00.000Z",
+   "end_time": "2026-04-06T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 153,
+   "provider_service_id": 39,
+   "start_time": "2026-04-10T13:00:00.000Z",
+   "end_time": "2026-04-10T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 154,
+   "provider_service_id": 39,
+   "start_time": "2026-04-14T14:00:00.000Z",
+   "end_time": "2026-04-14T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 155,
+   "provider_service_id": 39,
+   "start_time": "2026-04-04T15:00:00.000Z",
+   "end_time": "2026-04-04T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 156,
+   "provider_service_id": 39,
+   "start_time": "2026-04-08T09:00:00.000Z",
+   "end_time": "2026-04-08T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 157,
+   "provider_service_id": 40,
+   "start_time": "2026-04-09T13:00:00.000Z",
+   "end_time": "2026-04-09T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 158,
+   "provider_service_id": 40,
+   "start_time": "2026-04-13T14:00:00.000Z",
+   "end_time": "2026-04-13T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 159,
+   "provider_service_id": 40,
+   "start_time": "2026-04-17T15:00:00.000Z",
+   "end_time": "2026-04-17T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 160,
+   "provider_service_id": 41,
+   "start_time": "2026-04-12T14:00:00.000Z",
+   "end_time": "2026-04-12T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 161,
+   "provider_service_id": 41,
+   "start_time": "2026-04-16T15:00:00.000Z",
+   "end_time": "2026-04-16T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 162,
+   "provider_service_id": 41,
+   "start_time": "2026-04-06T09:00:00.000Z",
+   "end_time": "2026-04-06T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 163,
+   "provider_service_id": 41,
+   "start_time": "2026-04-10T10:00:00.000Z",
+   "end_time": "2026-04-10T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 164,
+   "provider_service_id": 42,
+   "start_time": "2026-04-15T15:00:00.000Z",
+   "end_time": "2026-04-15T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 165,
+   "provider_service_id": 42,
+   "start_time": "2026-04-05T09:00:00.000Z",
+   "end_time": "2026-04-05T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 166,
+   "provider_service_id": 42,
+   "start_time": "2026-04-09T10:00:00.000Z",
+   "end_time": "2026-04-09T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 167,
+   "provider_service_id": 42,
+   "start_time": "2026-04-13T11:00:00.000Z",
+   "end_time": "2026-04-13T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 168,
+   "provider_service_id": 42,
+   "start_time": "2026-04-17T13:00:00.000Z",
+   "end_time": "2026-04-17T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 169,
+   "provider_service_id": 43,
+   "start_time": "2026-04-04T09:00:00.000Z",
+   "end_time": "2026-04-04T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 170,
+   "provider_service_id": 43,
+   "start_time": "2026-04-08T10:00:00.000Z",
+   "end_time": "2026-04-08T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 171,
+   "provider_service_id": 43,
+   "start_time": "2026-04-12T11:00:00.000Z",
+   "end_time": "2026-04-12T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 172,
+   "provider_service_id": 44,
+   "start_time": "2026-04-07T10:00:00.000Z",
+   "end_time": "2026-04-07T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 173,
+   "provider_service_id": 44,
+   "start_time": "2026-04-11T11:00:00.000Z",
+   "end_time": "2026-04-11T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 174,
+   "provider_service_id": 44,
+   "start_time": "2026-04-15T13:00:00.000Z",
+   "end_time": "2026-04-15T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 175,
+   "provider_service_id": 44,
+   "start_time": "2026-04-05T14:00:00.000Z",
+   "end_time": "2026-04-05T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 176,
+   "provider_service_id": 45,
+   "start_time": "2026-04-10T11:00:00.000Z",
+   "end_time": "2026-04-10T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 177,
+   "provider_service_id": 45,
+   "start_time": "2026-04-14T13:00:00.000Z",
+   "end_time": "2026-04-14T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 178,
+   "provider_service_id": 45,
+   "start_time": "2026-04-04T14:00:00.000Z",
+   "end_time": "2026-04-04T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 179,
+   "provider_service_id": 45,
+   "start_time": "2026-04-08T15:00:00.000Z",
+   "end_time": "2026-04-08T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 180,
+   "provider_service_id": 45,
+   "start_time": "2026-04-12T09:00:00.000Z",
+   "end_time": "2026-04-12T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 181,
+   "provider_service_id": 46,
+   "start_time": "2026-04-13T13:00:00.000Z",
+   "end_time": "2026-04-13T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 182,
+   "provider_service_id": 46,
+   "start_time": "2026-04-17T14:00:00.000Z",
+   "end_time": "2026-04-17T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 183,
+   "provider_service_id": 46,
+   "start_time": "2026-04-07T15:00:00.000Z",
+   "end_time": "2026-04-07T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 184,
+   "provider_service_id": 47,
+   "start_time": "2026-04-16T14:00:00.000Z",
+   "end_time": "2026-04-16T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 185,
+   "provider_service_id": 47,
+   "start_time": "2026-04-06T15:00:00.000Z",
+   "end_time": "2026-04-06T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 186,
+   "provider_service_id": 47,
+   "start_time": "2026-04-10T09:00:00.000Z",
+   "end_time": "2026-04-10T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 187,
+   "provider_service_id": 47,
+   "start_time": "2026-04-14T10:00:00.000Z",
+   "end_time": "2026-04-14T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 188,
+   "provider_service_id": 48,
+   "start_time": "2026-04-05T15:00:00.000Z",
+   "end_time": "2026-04-05T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 189,
+   "provider_service_id": 48,
+   "start_time": "2026-04-09T09:00:00.000Z",
+   "end_time": "2026-04-09T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 190,
+   "provider_service_id": 48,
+   "start_time": "2026-04-13T10:00:00.000Z",
+   "end_time": "2026-04-13T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 191,
+   "provider_service_id": 48,
+   "start_time": "2026-04-17T11:00:00.000Z",
+   "end_time": "2026-04-17T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 192,
+   "provider_service_id": 48,
+   "start_time": "2026-04-07T13:00:00.000Z",
+   "end_time": "2026-04-07T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 193,
+   "provider_service_id": 49,
+   "start_time": "2026-04-08T09:00:00.000Z",
+   "end_time": "2026-04-08T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 194,
+   "provider_service_id": 49,
+   "start_time": "2026-04-12T10:00:00.000Z",
+   "end_time": "2026-04-12T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 195,
+   "provider_service_id": 49,
+   "start_time": "2026-04-16T11:00:00.000Z",
+   "end_time": "2026-04-16T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 196,
+   "provider_service_id": 50,
+   "start_time": "2026-04-11T10:00:00.000Z",
+   "end_time": "2026-04-11T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 197,
+   "provider_service_id": 50,
+   "start_time": "2026-04-15T11:00:00.000Z",
+   "end_time": "2026-04-15T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 198,
+   "provider_service_id": 50,
+   "start_time": "2026-04-05T13:00:00.000Z",
+   "end_time": "2026-04-05T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 199,
+   "provider_service_id": 50,
+   "start_time": "2026-04-09T14:00:00.000Z",
+   "end_time": "2026-04-09T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 200,
+   "provider_service_id": 51,
+   "start_time": "2026-04-14T11:00:00.000Z",
+   "end_time": "2026-04-14T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 201,
+   "provider_service_id": 51,
+   "start_time": "2026-04-04T13:00:00.000Z",
+   "end_time": "2026-04-04T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 202,
+   "provider_service_id": 51,
+   "start_time": "2026-04-08T14:00:00.000Z",
+   "end_time": "2026-04-08T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 203,
+   "provider_service_id": 51,
+   "start_time": "2026-04-12T15:00:00.000Z",
+   "end_time": "2026-04-12T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 204,
+   "provider_service_id": 51,
+   "start_time": "2026-04-16T09:00:00.000Z",
+   "end_time": "2026-04-16T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 205,
+   "provider_service_id": 52,
+   "start_time": "2026-04-17T13:00:00.000Z",
+   "end_time": "2026-04-17T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 206,
+   "provider_service_id": 52,
+   "start_time": "2026-04-07T14:00:00.000Z",
+   "end_time": "2026-04-07T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 207,
+   "provider_service_id": 52,
+   "start_time": "2026-04-11T15:00:00.000Z",
+   "end_time": "2026-04-11T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 208,
+   "provider_service_id": 53,
+   "start_time": "2026-04-06T14:00:00.000Z",
+   "end_time": "2026-04-06T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 209,
+   "provider_service_id": 53,
+   "start_time": "2026-04-10T15:00:00.000Z",
+   "end_time": "2026-04-10T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 210,
+   "provider_service_id": 53,
+   "start_time": "2026-04-14T09:00:00.000Z",
+   "end_time": "2026-04-14T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 211,
+   "provider_service_id": 53,
+   "start_time": "2026-04-04T10:00:00.000Z",
+   "end_time": "2026-04-04T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 212,
+   "provider_service_id": 54,
+   "start_time": "2026-04-09T15:00:00.000Z",
+   "end_time": "2026-04-09T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 213,
+   "provider_service_id": 54,
+   "start_time": "2026-04-13T09:00:00.000Z",
+   "end_time": "2026-04-13T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 214,
+   "provider_service_id": 54,
+   "start_time": "2026-04-17T10:00:00.000Z",
+   "end_time": "2026-04-17T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 215,
+   "provider_service_id": 54,
+   "start_time": "2026-04-07T11:00:00.000Z",
+   "end_time": "2026-04-07T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 216,
+   "provider_service_id": 54,
+   "start_time": "2026-04-11T13:00:00.000Z",
+   "end_time": "2026-04-11T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 217,
+   "provider_service_id": 55,
+   "start_time": "2026-04-12T09:00:00.000Z",
+   "end_time": "2026-04-12T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 218,
+   "provider_service_id": 55,
+   "start_time": "2026-04-16T10:00:00.000Z",
+   "end_time": "2026-04-16T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 219,
+   "provider_service_id": 55,
+   "start_time": "2026-04-06T11:00:00.000Z",
+   "end_time": "2026-04-06T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 220,
+   "provider_service_id": 56,
+   "start_time": "2026-04-15T10:00:00.000Z",
+   "end_time": "2026-04-15T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 221,
+   "provider_service_id": 56,
+   "start_time": "2026-04-05T11:00:00.000Z",
+   "end_time": "2026-04-05T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 222,
+   "provider_service_id": 56,
+   "start_time": "2026-04-09T13:00:00.000Z",
+   "end_time": "2026-04-09T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 223,
+   "provider_service_id": 56,
+   "start_time": "2026-04-13T14:00:00.000Z",
+   "end_time": "2026-04-13T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 224,
+   "provider_service_id": 57,
+   "start_time": "2026-04-04T11:00:00.000Z",
+   "end_time": "2026-04-04T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 225,
+   "provider_service_id": 57,
+   "start_time": "2026-04-08T13:00:00.000Z",
+   "end_time": "2026-04-08T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 226,
+   "provider_service_id": 57,
+   "start_time": "2026-04-12T14:00:00.000Z",
+   "end_time": "2026-04-12T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 227,
+   "provider_service_id": 57,
+   "start_time": "2026-04-16T15:00:00.000Z",
+   "end_time": "2026-04-16T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 228,
+   "provider_service_id": 57,
+   "start_time": "2026-04-06T09:00:00.000Z",
+   "end_time": "2026-04-06T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 229,
+   "provider_service_id": 58,
+   "start_time": "2026-04-07T13:00:00.000Z",
+   "end_time": "2026-04-07T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 230,
+   "provider_service_id": 58,
+   "start_time": "2026-04-11T14:00:00.000Z",
+   "end_time": "2026-04-11T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 231,
+   "provider_service_id": 58,
+   "start_time": "2026-04-15T15:00:00.000Z",
+   "end_time": "2026-04-15T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 232,
+   "provider_service_id": 59,
+   "start_time": "2026-04-10T14:00:00.000Z",
+   "end_time": "2026-04-10T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 233,
+   "provider_service_id": 59,
+   "start_time": "2026-04-14T15:00:00.000Z",
+   "end_time": "2026-04-14T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 234,
+   "provider_service_id": 59,
+   "start_time": "2026-04-04T09:00:00.000Z",
+   "end_time": "2026-04-04T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 235,
+   "provider_service_id": 59,
+   "start_time": "2026-04-08T10:00:00.000Z",
+   "end_time": "2026-04-08T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 236,
+   "provider_service_id": 60,
+   "start_time": "2026-04-13T15:00:00.000Z",
+   "end_time": "2026-04-13T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 237,
+   "provider_service_id": 60,
+   "start_time": "2026-04-17T09:00:00.000Z",
+   "end_time": "2026-04-17T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 238,
+   "provider_service_id": 60,
+   "start_time": "2026-04-07T10:00:00.000Z",
+   "end_time": "2026-04-07T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 239,
+   "provider_service_id": 60,
+   "start_time": "2026-04-11T11:00:00.000Z",
+   "end_time": "2026-04-11T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 240,
+   "provider_service_id": 60,
+   "start_time": "2026-04-15T13:00:00.000Z",
+   "end_time": "2026-04-15T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 241,
+   "provider_service_id": 61,
+   "start_time": "2026-04-16T09:00:00.000Z",
+   "end_time": "2026-04-16T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 242,
+   "provider_service_id": 61,
+   "start_time": "2026-04-06T10:00:00.000Z",
+   "end_time": "2026-04-06T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 243,
+   "provider_service_id": 61,
+   "start_time": "2026-04-10T11:00:00.000Z",
+   "end_time": "2026-04-10T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 244,
+   "provider_service_id": 62,
+   "start_time": "2026-04-05T10:00:00.000Z",
+   "end_time": "2026-04-05T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 245,
+   "provider_service_id": 62,
+   "start_time": "2026-04-09T11:00:00.000Z",
+   "end_time": "2026-04-09T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 246,
+   "provider_service_id": 62,
+   "start_time": "2026-04-13T13:00:00.000Z",
+   "end_time": "2026-04-13T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 247,
+   "provider_service_id": 62,
+   "start_time": "2026-04-17T14:00:00.000Z",
+   "end_time": "2026-04-17T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 248,
+   "provider_service_id": 63,
+   "start_time": "2026-04-08T11:00:00.000Z",
+   "end_time": "2026-04-08T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 249,
+   "provider_service_id": 63,
+   "start_time": "2026-04-12T13:00:00.000Z",
+   "end_time": "2026-04-12T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 250,
+   "provider_service_id": 63,
+   "start_time": "2026-04-16T14:00:00.000Z",
+   "end_time": "2026-04-16T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 251,
+   "provider_service_id": 63,
+   "start_time": "2026-04-06T15:00:00.000Z",
+   "end_time": "2026-04-06T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 252,
+   "provider_service_id": 63,
+   "start_time": "2026-04-10T09:00:00.000Z",
+   "end_time": "2026-04-10T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 253,
+   "provider_service_id": 64,
+   "start_time": "2026-04-11T13:00:00.000Z",
+   "end_time": "2026-04-11T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 254,
+   "provider_service_id": 64,
+   "start_time": "2026-04-15T14:00:00.000Z",
+   "end_time": "2026-04-15T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 255,
+   "provider_service_id": 64,
+   "start_time": "2026-04-05T15:00:00.000Z",
+   "end_time": "2026-04-05T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 256,
+   "provider_service_id": 65,
+   "start_time": "2026-04-14T14:00:00.000Z",
+   "end_time": "2026-04-14T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 257,
+   "provider_service_id": 65,
+   "start_time": "2026-04-04T15:00:00.000Z",
+   "end_time": "2026-04-04T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 258,
+   "provider_service_id": 65,
+   "start_time": "2026-04-08T09:00:00.000Z",
+   "end_time": "2026-04-08T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 259,
+   "provider_service_id": 65,
+   "start_time": "2026-04-12T10:00:00.000Z",
+   "end_time": "2026-04-12T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 260,
+   "provider_service_id": 66,
+   "start_time": "2026-04-17T15:00:00.000Z",
+   "end_time": "2026-04-17T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 261,
+   "provider_service_id": 66,
+   "start_time": "2026-04-07T09:00:00.000Z",
+   "end_time": "2026-04-07T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 262,
+   "provider_service_id": 66,
+   "start_time": "2026-04-11T10:00:00.000Z",
+   "end_time": "2026-04-11T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 263,
+   "provider_service_id": 66,
+   "start_time": "2026-04-15T11:00:00.000Z",
+   "end_time": "2026-04-15T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 264,
+   "provider_service_id": 66,
+   "start_time": "2026-04-05T13:00:00.000Z",
+   "end_time": "2026-04-05T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 265,
+   "provider_service_id": 67,
+   "start_time": "2026-04-06T09:00:00.000Z",
+   "end_time": "2026-04-06T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 266,
+   "provider_service_id": 67,
+   "start_time": "2026-04-10T10:00:00.000Z",
+   "end_time": "2026-04-10T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 267,
+   "provider_service_id": 67,
+   "start_time": "2026-04-14T11:00:00.000Z",
+   "end_time": "2026-04-14T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 268,
+   "provider_service_id": 68,
+   "start_time": "2026-04-09T10:00:00.000Z",
+   "end_time": "2026-04-09T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 269,
+   "provider_service_id": 68,
+   "start_time": "2026-04-13T11:00:00.000Z",
+   "end_time": "2026-04-13T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 270,
+   "provider_service_id": 68,
+   "start_time": "2026-04-17T13:00:00.000Z",
+   "end_time": "2026-04-17T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 271,
+   "provider_service_id": 68,
+   "start_time": "2026-04-07T14:00:00.000Z",
+   "end_time": "2026-04-07T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 272,
+   "provider_service_id": 69,
+   "start_time": "2026-04-12T11:00:00.000Z",
+   "end_time": "2026-04-12T11:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 273,
+   "provider_service_id": 69,
+   "start_time": "2026-04-16T13:00:00.000Z",
+   "end_time": "2026-04-16T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 274,
+   "provider_service_id": 69,
+   "start_time": "2026-04-06T14:00:00.000Z",
+   "end_time": "2026-04-06T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 275,
+   "provider_service_id": 69,
+   "start_time": "2026-04-10T15:00:00.000Z",
+   "end_time": "2026-04-10T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 276,
+   "provider_service_id": 69,
+   "start_time": "2026-04-14T09:00:00.000Z",
+   "end_time": "2026-04-14T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 277,
+   "provider_service_id": 70,
+   "start_time": "2026-04-15T13:00:00.000Z",
+   "end_time": "2026-04-15T13:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 278,
+   "provider_service_id": 70,
+   "start_time": "2026-04-05T14:00:00.000Z",
+   "end_time": "2026-04-05T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 279,
+   "provider_service_id": 70,
+   "start_time": "2026-04-09T15:00:00.000Z",
+   "end_time": "2026-04-09T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 280,
+   "provider_service_id": 71,
+   "start_time": "2026-04-04T14:00:00.000Z",
+   "end_time": "2026-04-04T14:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 281,
+   "provider_service_id": 71,
+   "start_time": "2026-04-08T15:00:00.000Z",
+   "end_time": "2026-04-08T15:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 282,
+   "provider_service_id": 71,
+   "start_time": "2026-04-12T09:00:00.000Z",
+   "end_time": "2026-04-12T09:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 283,
+   "provider_service_id": 71,
+   "start_time": "2026-04-16T10:00:00.000Z",
+   "end_time": "2026-04-16T10:30:00.000Z",
+   "is_available": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "appointment": [],
+ "insurance_plan": [
+  {
+   "id": 1,
+   "code": "A",
+   "name": "Budget HDHP",
+   "description": "High-deductible plan for healthy individuals seeking the lowest monthly premium.",
+   "effective_year": 2027,
+   "premium_monthly": 18000,
+   "deductible": 600000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "code": "B",
+   "name": "Balanced Silver",
+   "description": "Balanced coverage with moderate premiums and deductibles, suitable for typical families.",
+   "effective_year": 2027,
+   "premium_monthly": 32000,
+   "deductible": 250000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "code": "C",
+   "name": "Premier Gold",
+   "description": "Comprehensive coverage with a low deductible and a broad provider network.",
+   "effective_year": 2027,
+   "premium_monthly": 52000,
+   "deductible": 100000,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "plan_benefit": [
+  {
+   "id": 1,
+   "plan_id": 1,
+   "benefit_category": "preventative",
+   "coverage_type": "full_coverage",
+   "coverage_value": null,
+   "notes": "Annual physicals and screenings covered in full.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "plan_id": 1,
+   "benefit_category": "specialist",
+   "coverage_type": "percentage_after_deductible",
+   "coverage_value": 70,
+   "notes": "70% coverage once the deductible is met.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "plan_id": 1,
+   "benefit_category": "other_services",
+   "coverage_type": "percentage_after_deductible",
+   "coverage_value": 60,
+   "notes": "Diagnostics, imaging, and lab work after deductible.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "plan_id": 1,
+   "benefit_category": "drug",
+   "coverage_type": "percentage_after_deductible",
+   "coverage_value": 60,
+   "notes": "Generic and brand-name prescriptions after deductible.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "plan_id": 1,
+   "benefit_category": "emergency",
+   "coverage_type": "percentage_after_deductible",
+   "coverage_value": 70,
+   "notes": "ER visits after deductible.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "plan_id": 1,
+   "benefit_category": "hospitalization",
+   "coverage_type": "percentage_after_deductible",
+   "coverage_value": 70,
+   "notes": "Inpatient stays after deductible.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 7,
+   "plan_id": 2,
+   "benefit_category": "preventative",
+   "coverage_type": "full_coverage",
+   "coverage_value": null,
+   "notes": "Preventative care covered in full.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 8,
+   "plan_id": 2,
+   "benefit_category": "specialist",
+   "coverage_type": "flat_copay",
+   "coverage_value": 5000,
+   "notes": "$50 copay per specialist visit.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 9,
+   "plan_id": 2,
+   "benefit_category": "other_services",
+   "coverage_type": "percentage_after_deductible",
+   "coverage_value": 80,
+   "notes": "80% coverage after deductible.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 10,
+   "plan_id": 2,
+   "benefit_category": "drug",
+   "coverage_type": "flat_copay",
+   "coverage_value": 2500,
+   "notes": "$25 generic / $50 brand-name copay.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 11,
+   "plan_id": 2,
+   "benefit_category": "emergency",
+   "coverage_type": "percentage_after_deductible",
+   "coverage_value": 85,
+   "notes": "85% coverage after deductible.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 12,
+   "plan_id": 2,
+   "benefit_category": "hospitalization",
+   "coverage_type": "percentage_after_deductible",
+   "coverage_value": 85,
+   "notes": "85% coverage after deductible.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 13,
+   "plan_id": 3,
+   "benefit_category": "preventative",
+   "coverage_type": "full_coverage",
+   "coverage_value": null,
+   "notes": "Preventative care covered in full.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 14,
+   "plan_id": 3,
+   "benefit_category": "specialist",
+   "coverage_type": "flat_copay",
+   "coverage_value": 2500,
+   "notes": "$25 copay per specialist visit.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 15,
+   "plan_id": 3,
+   "benefit_category": "other_services",
+   "coverage_type": "percentage_after_deductible",
+   "coverage_value": 90,
+   "notes": "90% coverage after deductible.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 16,
+   "plan_id": 3,
+   "benefit_category": "drug",
+   "coverage_type": "flat_copay",
+   "coverage_value": 1500,
+   "notes": "$15 generic / $30 brand-name copay.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 17,
+   "plan_id": 3,
+   "benefit_category": "emergency",
+   "coverage_type": "full_coverage",
+   "coverage_value": null,
+   "notes": "ER visits covered in full.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 18,
+   "plan_id": 3,
+   "benefit_category": "hospitalization",
+   "coverage_type": "full_coverage",
+   "coverage_value": null,
+   "notes": "Inpatient stays covered in full.",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "current_policy": [
+  {
+   "id": 1,
+   "user_id": 1,
+   "plan_id": 1,
+   "status": "active",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "plan_selection": [],
+ "_file": []
+}

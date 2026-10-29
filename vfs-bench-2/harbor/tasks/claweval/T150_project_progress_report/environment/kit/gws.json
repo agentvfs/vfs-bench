@@ -1,0 +1,183 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 0
+  },
+  {
+   "kind": "event",
+   "n": 8
+  }
+ ],
+ "calendars": [
+  {
+   "id": "integ@example.com",
+   "summary": "me@company.com",
+   "timeZone": "Asia/Shanghai",
+   "accessRole": "owner",
+   "primary": true,
+   "events": [
+    {
+     "id": "evt_601",
+     "status": "confirmed",
+     "summary": "Alpha Project Requirements Review",
+     "description": "Alpha project requirements review, discuss Q2 feature planning, related notes NOTE-601",
+     "location": "Meeting Room A",
+     "startDateTime": "2026-03-17T10:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-17T11:30:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"Wang Ming\", \"organizer\": true}, {\"displayName\": \"Li Hua\"}]",
+     "created": "2026-03-24T09:00:00.000Z",
+     "updated": "2026-03-24T09:00:00.000Z"
+    },
+    {
+     "id": "evt_602",
+     "status": "confirmed",
+     "summary": "Alpha Project Technical Design",
+     "description": "Alpha project technical architecture design discussion, related notes NOTE-602",
+     "location": "Tech Area",
+     "startDateTime": "2026-03-20T14:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-20T16:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"Li Hua\", \"organizer\": true}, {\"displayName\": \"Ma Qiang\"}]",
+     "created": "2026-03-24T09:00:00.000Z",
+     "updated": "2026-03-24T09:00:00.000Z"
+    },
+    {
+     "id": "evt_603",
+     "status": "confirmed",
+     "summary": "Beta Project Kickoff",
+     "description": "Beta project official kickoff, task assignment and scheduling, related notes NOTE-603",
+     "location": "Meeting Room B",
+     "startDateTime": "2026-03-18T09:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-18T10:30:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"Zhao Lei\", \"organizer\": true}, {\"displayName\": \"Zhang Wei\"}, {\"displayName\": \"Zhou Ming\"}]",
+     "created": "2026-03-24T09:00:00.000Z",
+     "updated": "2026-03-24T09:00:00.000Z"
+    },
+    {
+     "id": "evt_604",
+     "status": "confirmed",
+     "summary": "Beta Project Progress Check",
+     "description": "Beta project first progress check, related notes NOTE-604",
+     "location": "Meeting Room B",
+     "startDateTime": "2026-03-22T10:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-22T11:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"Zhao Lei\", \"organizer\": true}, {\"displayName\": \"Zhang Wei\"}]",
+     "created": "2026-03-24T09:00:00.000Z",
+     "updated": "2026-03-24T09:00:00.000Z"
+    },
+    {
+     "id": "evt_605",
+     "status": "confirmed",
+     "summary": "Gamma Project Client Meeting",
+     "description": "Gamma project client requirements confirmation, related notes NOTE-605",
+     "location": "Online Meeting",
+     "startDateTime": "2026-03-19T15:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-19T16:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"Zhao Lei\"}, {\"displayName\": \"Wang Ming\", \"organizer\": true}]",
+     "created": "2026-03-24T09:00:00.000Z",
+     "updated": "2026-03-24T09:00:00.000Z"
+    },
+    {
+     "id": "evt_606",
+     "status": "confirmed",
+     "summary": "Gamma Project Delivery Review",
+     "description": "Gamma project deliverables review, acceptance criteria confirmation",
+     "location": "Meeting Room A",
+     "startDateTime": "2026-03-24T14:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-24T16:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"Wang Ming\", \"organizer\": true}, {\"displayName\": \"Zhao Lei\"}, {\"displayName\": \"Li Hua\"}]",
+     "created": "2026-03-24T09:00:00.000Z",
+     "updated": "2026-03-24T09:00:00.000Z"
+    },
+    {
+     "id": "evt_607",
+     "status": "confirmed",
+     "summary": "All-Hands Weekly Meeting",
+     "description": "Weekly all-hands meeting, company updates",
+     "location": "Main Conference Room",
+     "startDateTime": "2026-03-21T10:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-21T11:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"HR\", \"organizer\": true}, {\"displayName\": \"All Staff\"}]",
+     "created": "2026-03-24T09:00:00.000Z",
+     "updated": "2026-03-24T09:00:00.000Z"
+    },
+    {
+     "id": "evt_608",
+     "status": "confirmed",
+     "summary": "Team-Building Activity Planning",
+     "description": "Q2 team-building activity preliminary planning",
+     "location": "Break Area",
+     "startDateTime": "2026-03-23T12:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-23T13:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"Zhou Ming\", \"organizer\": true}]",
+     "created": "2026-03-24T09:00:00.000Z",
+     "updated": "2026-03-24T09:00:00.000Z"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,283 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_801",
+   "threadId": "msg_801",
+   "internalDate": 1774317600000,
+   "bodyText": "Hello, we are your VIP client Dingxin Software. We would like to invite you to our Shanghai office on April 2 to discuss our cooperation plan for the second half of the year. This meeting is very important to us, please make sure to attend. Contact: Manager Chen at the Shanghai office.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "chen@vip-client.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Invitation to visit Shanghai on April 2"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 10:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_802",
+   "threadId": "msg_802",
+   "internalDate": 1774332000000,
+   "bodyText": "Hi team, the Shenzhen branch is planning a technical exchange event from April 2 to 3, focusing on microservice architecture upgrade. HQ colleagues are welcome to attend. Contact: Li Wei at the Shenzhen office.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "liwei@shenzhen-branch.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Shenzhen Tech Exchange 4/2-4/3"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 14:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_803",
+   "threadId": "msg_803",
+   "internalDate": 1774227600000,
+   "bodyText": "Company-wide notice: The annual strategy meeting will be held at Beijing HQ on April 5. All department heads must attend. Round-trip flights have been booked for all regional colleagues, please confirm your itinerary.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "hr@company.com"
+    },
+    {
+     "name": "To",
+     "value": "all@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Beijing HQ Annual Meeting April 5"
+    },
+    {
+     "name": "Date",
+     "value": "Mon, 23 Mar 2026 09:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    }
+   ]
+  },
+  {
+   "id": "msg_804",
+   "threadId": "msg_804",
+   "internalDate": 1774429200000,
+   "bodyText": "Please submit your weekly report before end of business Friday.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "weekly@company.com"
+    },
+    {
+     "name": "To",
+     "value": "all@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Weekly report reminder"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Mar 2026 17:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  },
+  {
+   "id": "msg_805",
+   "threadId": "msg_805",
+   "internalDate": 1774411200000,
+   "bodyText": "Team dinner this weekend, are you coming?",
+   "headers": [
+    {
+     "name": "From",
+     "value": "zhaolei@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Weekend dinner"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Mar 2026 12:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 5
+  },
+  {
+   "kind": "event",
+   "n": 4
+  }
+ ],
+ "calendars": [
+  {
+   "id": "integ@example.com",
+   "summary": "me@company.com",
+   "timeZone": "Asia/Shanghai",
+   "accessRole": "owner",
+   "primary": true,
+   "events": [
+    {
+     "id": "evt_401",
+     "status": "confirmed",
+     "summary": "Product Review Meeting",
+     "description": "Q2 product review, discuss new feature priorities",
+     "location": "Local - Conference Room A",
+     "startDateTime": "2026-04-02T09:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-04-02T12:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"me\"}, {\"displayName\": \"Wang Ming\", \"organizer\": true}, {\"displayName\": \"Zhou Ming\"}]",
+     "created": "2026-03-25T09:00:00.000Z",
+     "updated": "2026-03-25T09:00:00.000Z"
+    },
+    {
+     "id": "evt_402",
+     "status": "confirmed",
+     "summary": "No plans",
+     "description": "Free day",
+     "startDateTime": "2026-04-03T00:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-04-03T23:59:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "created": "2026-03-25T09:00:00.000Z",
+     "updated": "2026-03-25T09:00:00.000Z"
+    },
+    {
+     "id": "evt_403",
+     "status": "confirmed",
+     "summary": "Beijing Annual Meeting",
+     "description": "Flight booked: depart 4/4, return 4/6",
+     "location": "Beijing HQ",
+     "startDateTime": "2026-04-05T09:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-04-05T18:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"HR\", \"organizer\": true}, {\"displayName\": \"All department heads\"}]",
+     "created": "2026-03-25T09:00:00.000Z",
+     "updated": "2026-03-25T09:00:00.000Z"
+    },
+    {
+     "id": "evt_404",
+     "status": "confirmed",
+     "summary": "Team Building Activity",
+     "description": "Q2 team building",
+     "location": "Local - Company grounds",
+     "startDateTime": "2026-04-07T14:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-04-07T18:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"HR\", \"organizer\": true}, {\"displayName\": \"All staff\"}]",
+     "created": "2026-03-25T09:00:00.000Z",
+     "updated": "2026-03-25T09:00:00.000Z"
+    }
+   ]
+  }
+ ]
+}

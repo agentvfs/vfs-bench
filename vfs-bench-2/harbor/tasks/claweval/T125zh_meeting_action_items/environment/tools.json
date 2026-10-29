@@ -1,0 +1,95 @@
+[
+ {
+  "name": "notes",
+  "description": "The notes service's tools.",
+  "tools": [
+   {
+    "name": "list",
+    "call": "notes_list",
+    "description": "列出会议纪要",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "tag": {
+       "type": "string",
+       "description": "按标签筛选"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9105/notes/list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get",
+    "call": "notes_get",
+    "description": "获取纪要详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "note_id": {
+       "type": "string",
+       "description": "纪要ID"
+      }
+     },
+     "required": [
+      "note_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9105/notes/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "todo",
+  "description": "The todo service's tools.",
+  "tools": [
+   {
+    "name": "list_tasks",
+    "call": "todo_list_tasks",
+    "description": "查看待办事项列表",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "状态筛选(pending/completed/all)",
+       "default": "all"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9102/todo/tasks",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_task",
+    "call": "todo_get_task",
+    "description": "获取待办详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "待办ID"
+      }
+     },
+     "required": [
+      "task_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9102/todo/tasks/get",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

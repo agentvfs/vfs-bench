@@ -22,9 +22,14 @@
  * no per-workspace hook for this, so a daemon shared by trials could not
  * give each its own.
  *
+ * The daemon's clock is the run's (clock.ts), and a task's tools become
+ * CLIs here too (tools.ts), when it names some.
+ *
  * The daemon stops, as on SIGTERM, when its stdin closes: the environment
  * that started it is gone.
  */
+import './clock.ts'
+
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 
@@ -99,6 +104,8 @@ const routed = ((input: RequestInfo | URL, init?: RequestInit): Promise<Response
 
 globalThis.fetch = routed
 registerInsecureFetch(routed)
+
+if (process.env.VFSBENCH_TOOLS !== undefined) await import('./tools.ts')
 
 process.stdin.on('close', () => process.kill(process.pid, 'SIGTERM'))
 process.stdin.resume()

@@ -1,0 +1,141 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 0
+  },
+  {
+   "kind": "event",
+   "n": 5
+  }
+ ],
+ "calendars": [
+  {
+   "id": "integ@example.com",
+   "summary": "me@company.com",
+   "timeZone": "Asia/Shanghai",
+   "accessRole": "owner",
+   "primary": true,
+   "events": [
+    {
+     "id": "evt_301",
+     "status": "confirmed",
+     "summary": "Full-day training: Project Management Methodology",
+     "description": "Mandatory training, full day, attendance required",
+     "location": "Training Center",
+     "startDateTime": "2026-03-27T09:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-27T17:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"HR Dept\", \"organizer\": true}, {\"displayName\": \"me\"}, {\"displayName\": \"entire team\"}]",
+     "created": "2026-03-27T09:00:00.000Z",
+     "updated": "2026-03-27T09:00:00.000Z"
+    },
+    {
+     "id": "evt_302",
+     "status": "confirmed",
+     "summary": "All-hands meeting",
+     "description": "Q1 summary meeting + Q2 planning, mandatory attendance",
+     "location": "Main Auditorium",
+     "startDateTime": "2026-03-28T14:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-28T17:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"CEO Office\", \"organizer\": true}, {\"displayName\": \"all employees\"}]",
+     "created": "2026-03-27T09:00:00.000Z",
+     "updated": "2026-03-27T09:00:00.000Z"
+    },
+    {
+     "id": "evt_303",
+     "status": "confirmed",
+     "summary": "Client visit: Wantong Logistics",
+     "description": "Important VIP client on-site visit, full-day business trip",
+     "location": "Wantong Logistics HQ (offsite)",
+     "startDateTime": "2026-03-30T08:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-30T18:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"me\"}, {\"displayName\": \"Zhao Lei\", \"organizer\": true}]",
+     "created": "2026-03-27T09:00:00.000Z",
+     "updated": "2026-03-27T09:00:00.000Z"
+    },
+    {
+     "id": "evt_304",
+     "status": "confirmed",
+     "summary": "Tech sharing session",
+     "description": "Internal team tech sharing",
+     "location": "Meeting Room A",
+     "startDateTime": "2026-03-29T14:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-29T15:30:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"Li Hua\", \"organizer\": true}, {\"displayName\": \"R&D team\"}]",
+     "created": "2026-03-27T09:00:00.000Z",
+     "updated": "2026-03-27T09:00:00.000Z"
+    },
+    {
+     "id": "evt_305",
+     "status": "confirmed",
+     "summary": "Lunch meeting: new employee introductions",
+     "description": "Welcome lunch for newly onboarded colleagues",
+     "location": "Cafeteria private room",
+     "startDateTime": "2026-03-31T12:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-31T13:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"HR\", \"organizer\": true}, {\"displayName\": \"management\"}]",
+     "created": "2026-03-27T09:00:00.000Z",
+     "updated": "2026-03-27T09:00:00.000Z"
+    }
+   ]
+  }
+ ]
+}

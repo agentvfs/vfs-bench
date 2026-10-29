@@ -1,0 +1,29 @@
+[
+ {
+  "name": "ocr-paper",
+  "description": "The ocr_paper service's tools.",
+  "tools": [
+   {
+    "name": "ocr_extract_text",
+    "call": "ocr_extract_text",
+    "description": "Extract text from an image using OCR. Returns the recognized text content.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "image_path": {
+       "type": "string",
+       "description": "Path to the image file to process"
+      }
+     },
+     "required": [
+      "image_path"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9117/ocr/extract",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

@@ -1,0 +1,124 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_1201",
+   "threadId": "msg_1201",
+   "internalDate": 1774314000000,
+   "bodyText": "市场团队好，请在本周五前提交Q1市场研究报告。重点关注以下方面：\n1. AI技术对我们目标行业（制造/医疗/教育）的影响\n2. 各目标行业的最新市场动态和政策变化\n3. 结合我们的客户数据，给出下一阶段的市场策略建议\n\n报告需要发给全体管理层（CEO/CTO/CMO/VP Sales），请准备邮件草稿。\n\n张总",
+   "headers": [
+    {
+     "name": "From",
+     "value": "zhangceo@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "请提交Q1市场研究报告"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 09:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_1202",
+   "threadId": "msg_1202",
+   "internalDate": 1774418400000,
+   "bodyText": "补充一下市场报告的参考信息：\n\n最近拜访制造业客户时，多个客户主动询问我们的AI功能规划，尤其是AI质检和预测性维护方面。鼎盛机械（VIP客户）的CTO甚至在评估竞品A的AI模块。\n\n建议市场报告重点关注AI对制造业客户的影响，以及我们的AI能力建设进度能否满足客户需求。这直接关系到下半年的续约。\n\n赵总",
+   "headers": [
+    {
+     "name": "From",
+     "value": "zhaovp@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "市场报告补充：制造业客户AI需求"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Mar 2026 14:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 2
+  }
+ ]
+}

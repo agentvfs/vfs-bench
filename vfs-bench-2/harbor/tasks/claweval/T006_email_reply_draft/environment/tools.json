@@ -1,0 +1,43 @@
+[
+ {
+  "name": "gmail",
+  "description": "The gmail service's tools.",
+  "tools": [
+   {
+    "name": "save_draft",
+    "call": "gmail_save_draft",
+    "description": "Save an email as a draft",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "to": {
+       "type": "string",
+       "description": "Recipient email address"
+      },
+      "subject": {
+       "type": "string",
+       "description": "Email subject"
+      },
+      "body": {
+       "type": "string",
+       "description": "Email body"
+      },
+      "reply_to_message_id": {
+       "type": "string",
+       "description": "Original message ID if this is a reply"
+      }
+     },
+     "required": [
+      "to",
+      "subject",
+      "body"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9100/gmail/drafts/save",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

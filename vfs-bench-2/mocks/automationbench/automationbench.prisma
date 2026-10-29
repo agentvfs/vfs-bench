@@ -1,0 +1,27 @@
+// The AutomationBench fake's store: one task's world per run.
+//
+// Upstream keeps a task's world as one Pydantic `WorldState` in memory. Here
+// it is the `doc` row named `world`, its `model_dump(mode="json")` (`meta`
+// and the services the task is subscribed to) as Python's `json.dumps`
+// writes it; and `meta`, the task's name, its clock's epoch, the number of
+// `api_fetch` calls made (each a second on that clock), and the states of the
+// generators its ids are drawn from. The verifier reads `world`.
+//
+// No tenant column: a run is one task (tenantKind 'none').
+
+datasource db {
+  provider = "sqlite"
+  url      = env("INTEG_DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "client"
+}
+
+model Doc {
+  name String @id
+  doc  String
+
+  @@map("doc")
+}

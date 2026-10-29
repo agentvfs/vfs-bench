@@ -1,0 +1,282 @@
+[
+ {
+  "name": "gmail",
+  "description": "The gmail service's tools.",
+  "tools": [
+   {
+    "name": "save_draft",
+    "call": "gmail_save_draft",
+    "description": "将邮件保存为草稿",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "to": {
+       "type": "string",
+       "description": "收件人邮箱地址"
+      },
+      "subject": {
+       "type": "string",
+       "description": "邮件主题"
+      },
+      "body": {
+       "type": "string",
+       "description": "邮件正文"
+      },
+      "reply_to_message_id": {
+       "type": "string",
+       "description": "如果是回复邮件，原邮件ID"
+      }
+     },
+     "required": [
+      "to",
+      "subject",
+      "body"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9100/gmail/drafts/save",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "contacts",
+  "description": "The contacts service's tools.",
+  "tools": [
+   {
+    "name": "search",
+    "call": "contacts_search",
+    "description": "搜索通讯录中的联系人",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "搜索关键词（姓名、部门等）"
+      },
+      "department": {
+       "type": "string",
+       "description": "按部门筛选"
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9103/contacts/search",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get",
+    "call": "contacts_get",
+    "description": "获取联系人详细信息",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contact_id": {
+       "type": "string",
+       "description": "联系人ID"
+      }
+     },
+     "required": [
+      "contact_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9103/contacts/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "helpdesk",
+  "description": "The helpdesk service's tools.",
+  "tools": [
+   {
+    "name": "list_tickets",
+    "call": "helpdesk_list_tickets",
+    "description": "获取工单列表",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "按状态筛选 (open/closed/all)",
+       "default": "open"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9107/helpdesk/tickets",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_ticket",
+    "call": "helpdesk_get_ticket",
+    "description": "获取工单详细信息",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticket_id": {
+       "type": "string",
+       "description": "工单ID"
+      }
+     },
+     "required": [
+      "ticket_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9107/helpdesk/tickets/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_ticket",
+    "call": "helpdesk_update_ticket",
+    "description": "更新工单信息",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticket_id": {
+       "type": "string",
+       "description": "工单ID"
+      },
+      "priority": {
+       "type": "string",
+       "description": "优先级 (low/medium/high/critical)"
+      },
+      "tags": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "标签列表"
+      },
+      "category": {
+       "type": "string",
+       "description": "工单分类"
+      }
+     },
+     "required": [
+      "ticket_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9107/helpdesk/tickets/update",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "crm",
+  "description": "The crm service's tools.",
+  "tools": [
+   {
+    "name": "list_customers",
+    "call": "crm_list_customers",
+    "description": "获取客户列表",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "按状态筛选 (active/churned)"
+      },
+      "tier": {
+       "type": "string",
+       "description": "按等级筛选 (vip/standard)"
+      },
+      "industry": {
+       "type": "string",
+       "description": "按行业筛选"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_customer",
+    "call": "crm_get_customer",
+    "description": "获取客户详细信息",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "customer_id": {
+       "type": "string",
+       "description": "客户ID"
+      }
+     },
+     "required": [
+      "customer_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "finance",
+  "description": "The finance service's tools.",
+  "tools": [
+   {
+    "name": "list_transactions",
+    "call": "finance_list_transactions",
+    "description": "获取财务交易记录列表",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "start_date": {
+       "type": "string",
+       "description": "开始日期 (YYYY-MM-DD)"
+      },
+      "end_date": {
+       "type": "string",
+       "description": "结束日期 (YYYY-MM-DD)"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9104/finance/transactions",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_transaction",
+    "call": "finance_get_transaction",
+    "description": "获取财务交易详情",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "transaction_id": {
+       "type": "string",
+       "description": "交易ID"
+      }
+     },
+     "required": [
+      "transaction_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9104/finance/transactions/get",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

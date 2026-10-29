@@ -1,0 +1,213 @@
+{
+ "_env": [
+  {
+   "name": "TASK_NAME",
+   "value": "workspace-task-record-batch"
+  }
+ ],
+ "_schema": [
+  {
+   "type": "table",
+   "name": "user",
+   "sql": "CREATE TABLE user (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      username TEXT NOT NULL UNIQUE,\n      password TEXT NOT NULL,\n      display_name TEXT NOT NULL DEFAULT '',\n      role TEXT NOT NULL DEFAULT 'user' CHECK(role IN ('admin', 'user')),\n      is_active INTEGER NOT NULL DEFAULT 1,\n      created_at TEXT NOT NULL DEFAULT '2026-04-03 09:00:00',\n      updated_at TEXT NOT NULL DEFAULT '2026-04-03 09:00:00'\n    )"
+  },
+  {
+   "type": "table",
+   "name": "note",
+   "sql": "CREATE TABLE note (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      owner_user_id INTEGER NOT NULL,\n      title TEXT NOT NULL,\n      content TEXT NOT NULL DEFAULT '',\n      content_type TEXT NOT NULL DEFAULT 'plain_text' CHECK(content_type IN ('plain_text', 'markdown', 'brief')),\n      preview_text TEXT NOT NULL DEFAULT '',\n      is_seeded INTEGER NOT NULL DEFAULT 0,\n      save_count INTEGER NOT NULL DEFAULT 0,\n      created_at TEXT NOT NULL DEFAULT '2026-04-03 09:00:00',\n      updated_at TEXT NOT NULL DEFAULT '2026-04-03 09:00:00',\n      FOREIGN KEY (owner_user_id) REFERENCES user(id) ON DELETE RESTRICT\n    )"
+  },
+  {
+   "type": "table",
+   "name": "note_revision",
+   "sql": "CREATE TABLE note_revision (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      note_id INTEGER NOT NULL,\n      revision_no INTEGER NOT NULL,\n      content_snapshot TEXT NOT NULL,\n      change_summary TEXT NOT NULL DEFAULT '',\n      edited_by_user_id INTEGER NOT NULL,\n      edited_at TEXT NOT NULL DEFAULT '2026-04-03 09:00:00',\n      UNIQUE(note_id, revision_no),\n      FOREIGN KEY (note_id) REFERENCES note(id) ON DELETE CASCADE,\n      FOREIGN KEY (edited_by_user_id) REFERENCES user(id) ON DELETE RESTRICT\n    )"
+  },
+  {
+   "type": "table",
+   "name": "brief_entry",
+   "sql": "CREATE TABLE brief_entry (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      note_id INTEGER NOT NULL UNIQUE,\n      key_updates TEXT NOT NULL DEFAULT '',\n      evidence_bullets TEXT NOT NULL DEFAULT '[]',\n      action_items TEXT NOT NULL DEFAULT '[]',\n      citations TEXT NOT NULL DEFAULT '[]',\n      status TEXT NOT NULL DEFAULT 'draft' CHECK(status IN ('draft', 'final')),\n      created_at TEXT NOT NULL DEFAULT '2026-04-03 09:00:00',\n      updated_at TEXT NOT NULL DEFAULT '2026-04-03 09:00:00',\n      FOREIGN KEY (note_id) REFERENCES note(id) ON DELETE CASCADE\n    )"
+  },
+  {
+   "type": "table",
+   "name": "task_record",
+   "sql": "CREATE TABLE task_record (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      note_id INTEGER NOT NULL UNIQUE,\n      record_type TEXT NOT NULL DEFAULT 'summary' CHECK(record_type IN ('communication', 'summary', 'tracker_update')),\n      source_channel TEXT NOT NULL DEFAULT 'manual' CHECK(source_channel IN ('manual', 'email', 'meeting', 'incident')),\n      summary_text TEXT NOT NULL DEFAULT '',\n      status TEXT NOT NULL DEFAULT 'open' CHECK(status IN ('open', 'in_progress', 'done', 'cancelled')),\n      created_at TEXT NOT NULL DEFAULT '2026-04-03 09:00:00',\n      updated_at TEXT NOT NULL DEFAULT '2026-04-03 09:00:00',\n      FOREIGN KEY (note_id) REFERENCES note(id) ON DELETE CASCADE\n    )"
+  }
+ ],
+ "user": [
+  {
+   "id": 1,
+   "username": "demo",
+   "password": "$2a$10$jN6zvAUK11N6xoY8FL18z.HK6POGR4zAqNYDD6SkFtOpN29LJ0dpS",
+   "display_name": "Demo User",
+   "role": "user",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "note": [
+  {
+   "id": 1,
+   "owner_user_id": 1,
+   "title": "Project Kickoff Meeting Notes",
+   "content": "Discussed project scope, timeline, and team assignments.\nAction items assigned to each member.\nNext review scheduled for Friday.",
+   "content_type": "plain_text",
+   "preview_text": "Discussed project scope, timeline, and team assignments. Action items assigned to each member. Next review scheduled for Friday.",
+   "is_seeded": 1,
+   "save_count": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "owner_user_id": 1,
+   "title": "Weekly Report Template",
+   "content": "# Weekly Report\n\n## Achievements\n- Completed feature X\n- Fixed bug Y\n\n## Plans\n- Start feature Z\n- Code review session",
+   "content_type": "markdown",
+   "preview_text": "# Weekly Report ## Achievements - Completed feature X - Fixed bug Y",
+   "is_seeded": 1,
+   "save_count": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "owner_user_id": 1,
+   "title": "Q2 OKR Tracker",
+   "content": "Objective 1: Improve user engagement\nKey Result 1: Increase DAU by 20%\nKey Result 2: Reduce churn by 10%\n\nObjective 2: Technical debt reduction",
+   "content_type": "plain_text",
+   "preview_text": "Objective 1: Improve user engagement Key Result 1: Increase DAU by 20% Key Result 2: Reduce churn by 10% Objective 2: Technical debt reduction",
+   "is_seeded": 1,
+   "save_count": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "owner_user_id": 1,
+   "title": "Q3 Product Strategy Brief",
+   "content": "Key Updates:\n1. Launch mobile app v2. 2. Expand to EU market.\n\nEvidence:\n- User surveys show 68% demand mobile\n\nAction Items:\n- [todo] Finalize EU compliance docs\n\nCitations:\n- Q3 Market Research Report",
+   "content_type": "brief",
+   "preview_text": "1. Launch mobile app v2. 2. Expand to EU market.",
+   "is_seeded": 1,
+   "save_count": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "owner_user_id": 1,
+   "title": "Incident Report #42",
+   "content": "Service degradation on 2024-07-15 due to DB connection pool exhaustion. Root cause: max_connections set too low. Mitigation: raised pool size; added monitoring alert.",
+   "content_type": "plain_text",
+   "preview_text": "Service degradation on 2024-07-15 due to DB connection pool exhaustion. Root cause: max_connections set too low. Mitigation: raised pool size; added monitoring alert.",
+   "is_seeded": 1,
+   "save_count": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "owner_user_id": 1,
+   "title": "Customer Complaint — Refund Delay",
+   "content": "Customer emailed support complaining that their refund for order #8821 has not been processed after 14 business days. They requested escalation to the billing team.",
+   "content_type": "plain_text",
+   "preview_text": "Customer emailed support complaining that their refund for order #8821 has not been processed after 14 business days. They requested escalation to the billing team.",
+   "is_seeded": 1,
+   "save_count": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 7,
+   "owner_user_id": 1,
+   "title": "Deployment Incident — DB Latency Spike",
+   "content": "On 2024-08-01, production DB latency spiked to 4.2s average. Root cause: missing index on the events table. Mitigation: index added at 14:30 UTC; monitoring alert created.",
+   "content_type": "plain_text",
+   "preview_text": "On 2024-08-01, production DB latency spiked to 4.2s average. Root cause: missing index on the events table. Mitigation: index added at 14:30 UTC; monitoring alert created.",
+   "is_seeded": 1,
+   "save_count": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "note_revision": [
+  {
+   "id": 1,
+   "note_id": 1,
+   "revision_no": 1,
+   "content_snapshot": "Discussed project scope, timeline, and team assignments.\nAction items assigned to each member.\nNext review scheduled for Friday.",
+   "change_summary": "",
+   "edited_by_user_id": 1,
+   "edited_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "note_id": 2,
+   "revision_no": 1,
+   "content_snapshot": "# Weekly Report\n\n## Achievements\n- Completed feature X\n- Fixed bug Y\n\n## Plans\n- Start feature Z\n- Code review session",
+   "change_summary": "",
+   "edited_by_user_id": 1,
+   "edited_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "note_id": 3,
+   "revision_no": 1,
+   "content_snapshot": "Objective 1: Improve user engagement\nKey Result 1: Increase DAU by 20%\nKey Result 2: Reduce churn by 10%\n\nObjective 2: Technical debt reduction",
+   "change_summary": "",
+   "edited_by_user_id": 1,
+   "edited_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "note_id": 4,
+   "revision_no": 1,
+   "content_snapshot": "Key Updates:\n1. Launch mobile app v2. 2. Expand to EU market.\n\nEvidence:\n- User surveys show 68% demand mobile\n\nAction Items:\n- [todo] Finalize EU compliance docs\n\nCitations:\n- Q3 Market Research Report",
+   "change_summary": "",
+   "edited_by_user_id": 1,
+   "edited_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "note_id": 5,
+   "revision_no": 1,
+   "content_snapshot": "Service degradation on 2024-07-15 due to DB connection pool exhaustion. Root cause: max_connections set too low. Mitigation: raised pool size; added monitoring alert.",
+   "change_summary": "",
+   "edited_by_user_id": 1,
+   "edited_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "note_id": 6,
+   "revision_no": 1,
+   "content_snapshot": "Customer emailed support complaining that their refund for order #8821 has not been processed after 14 business days. They requested escalation to the billing team.",
+   "change_summary": "",
+   "edited_by_user_id": 1,
+   "edited_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 7,
+   "note_id": 7,
+   "revision_no": 1,
+   "content_snapshot": "On 2024-08-01, production DB latency spiked to 4.2s average. Root cause: missing index on the events table. Mitigation: index added at 14:30 UTC; monitoring alert created.",
+   "change_summary": "",
+   "edited_by_user_id": 1,
+   "edited_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "brief_entry": [
+  {
+   "id": 1,
+   "note_id": 4,
+   "key_updates": "1. Launch mobile app v2. 2. Expand to EU market.",
+   "evidence_bullets": "[{\"text\":\"User surveys show 68% demand mobile\",\"source\":\"document\"}]",
+   "action_items": "[{\"text\":\"Finalize EU compliance docs\",\"status\":\"todo\",\"priority\":\"high\"}]",
+   "citations": "[{\"title\":\"Q3 Market Research Report\",\"note\":\"Internal slide deck\"}]",
+   "status": "draft",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "task_record": [],
+ "_file": []
+}

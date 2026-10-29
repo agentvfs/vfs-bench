@@ -1,0 +1,7547 @@
+[
+ {
+  "name": "math-server",
+  "description": "MathServer's tools.",
+  "tools": [
+   {
+    "name": "add",
+    "call": "add",
+    "description": "Adds a and b together.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      },
+      "b": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a",
+      "b"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/add",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "sub",
+    "call": "sub",
+    "description": "Subtracts b from a.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      },
+      "b": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a",
+      "b"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/sub",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "mul",
+    "call": "mul",
+    "description": "Multiplies two numbers together.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      },
+      "b": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a",
+      "b"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/mul",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "div",
+    "call": "div",
+    "description": "Divides a by b.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      },
+      "b": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a",
+      "b"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/div",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "pow",
+    "call": "pow",
+    "description": "Raises a to the power of b.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      },
+      "b": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a",
+      "b"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/pow",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "sqrt",
+    "call": "sqrt",
+    "description": "Calculates the square root of a.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/sqrt",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "abs_val",
+    "call": "abs_val",
+    "description": "Returns the absolute value of a.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/abs_val",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "mod",
+    "call": "mod",
+    "description": "Finds the remainder of a divided by b.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      },
+      "b": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a",
+      "b"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/mod",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "floor_div",
+    "call": "floor_div",
+    "description": "Performs floor division of a by b.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      },
+      "b": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a",
+      "b"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/floor_div",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "max_val",
+    "call": "max_val",
+    "description": "Returns the maximum of a and b.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      },
+      "b": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a",
+      "b"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/max_val",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "min_val",
+    "call": "min_val",
+    "description": "Returns the minimum of a and b.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      },
+      "b": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a",
+      "b"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/min_val",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "round_val",
+    "call": "round_val",
+    "description": "Rounds a to the given number of decimal places.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      },
+      "ndigits": {
+       "default": 0,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/round_val",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "log",
+    "call": "log",
+    "description": "Calculates the logarithm of a with the given base.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      },
+      "base": {
+       "default": 10,
+       "type": "number"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/log",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "exp",
+    "call": "exp",
+    "description": "Calculates e raised to the power of a.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/exp",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "sin",
+    "call": "sin",
+    "description": "Calculates the sine of a (in radians).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/sin",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "cos",
+    "call": "cos",
+    "description": "Calculates the cosine of a (in radians).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/cos",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "tan",
+    "call": "tan",
+    "description": "Calculates the tangent of a (in radians).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/tan",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "asin",
+    "call": "asin",
+    "description": "Calculates the arcsine of a.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/asin",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "acos",
+    "call": "acos",
+    "description": "Calculates the arccosine of a.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/acos",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "atan",
+    "call": "atan",
+    "description": "Calculates the arctangent of a.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/atan",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "sinh",
+    "call": "sinh",
+    "description": "Calculates the hyperbolic sine of a.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/sinh",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "cosh",
+    "call": "cosh",
+    "description": "Calculates the hyperbolic cosine of a.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/cosh",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "tanh",
+    "call": "tanh",
+    "description": "Calculates the hyperbolic tangent of a.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/tanh",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "factorial",
+    "call": "factorial",
+    "description": "Calculates the factorial of a.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "integer"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/factorial",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "gcd",
+    "call": "gcd",
+    "description": "Calculates the greatest common divisor of a and b.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "integer"
+      },
+      "b": {
+       "type": "integer"
+      }
+     },
+     "required": [
+      "a",
+      "b"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/gcd",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "lcm",
+    "call": "lcm",
+    "description": "Calculates the least common multiple of a and b.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "integer"
+      },
+      "b": {
+       "type": "integer"
+      }
+     },
+     "required": [
+      "a",
+      "b"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/lcm",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "deg_to_rad",
+    "call": "deg_to_rad",
+    "description": "Converts degrees to radians.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/deg_to_rad",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "rad_to_deg",
+    "call": "rad_to_deg",
+    "description": "Converts radians to degrees.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/rad_to_deg",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "is_even",
+    "call": "is_even",
+    "description": "Checks if a number is even.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "integer"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/is_even",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "is_odd",
+    "call": "is_odd",
+    "description": "Checks if a number is odd.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "integer"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/is_odd",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "is_prime",
+    "call": "is_prime",
+    "description": "Checks if a number is prime.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "integer"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/is_prime",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "nth_fibonacci",
+    "call": "nth_fibonacci",
+    "description": "Calculates the nth Fibonacci number.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "n": {
+       "type": "integer"
+      }
+     },
+     "required": [
+      "n"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/nth_fibonacci",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "sum_of_list",
+    "call": "sum_of_list",
+    "description": "Calculates the sum of a list of numbers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "numbers": {
+       "items": {
+        "type": "number"
+       },
+       "type": "array",
+       "default": []
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/sum_of_list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "product_of_list",
+    "call": "product_of_list",
+    "description": "Calculates the product of a list of numbers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "numbers": {
+       "items": {
+        "type": "number"
+       },
+       "type": "array",
+       "default": []
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/product_of_list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "mean",
+    "call": "mean",
+    "description": "Calculates the mean of a list of numbers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "numbers": {
+       "items": {
+        "type": "number"
+       },
+       "type": "array",
+       "default": []
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/mean",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "median",
+    "call": "median",
+    "description": "Calculates the median of a list of numbers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "numbers": {
+       "items": {
+        "type": "number"
+       },
+       "type": "array",
+       "default": []
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/median",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "mode",
+    "call": "mode",
+    "description": "Calculates the mode of a list of numbers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "numbers": {
+       "items": {
+        "type": "number"
+       },
+       "type": "array",
+       "default": []
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/mode",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "variance",
+    "call": "variance",
+    "description": "Calculates the variance of a list of numbers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "numbers": {
+       "items": {
+        "type": "number"
+       },
+       "type": "array",
+       "default": []
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/variance",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "standard_deviation",
+    "call": "standard_deviation",
+    "description": "Calculates the standard deviation of a list of numbers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "numbers": {
+       "items": {
+        "type": "number"
+       },
+       "type": "array",
+       "default": []
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/standard_deviation",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "clamp",
+    "call": "clamp",
+    "description": "Clamps a value between min_val and max_val.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "value": {
+       "type": "number"
+      },
+      "min_val": {
+       "type": "number"
+      },
+      "max_val": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "value",
+      "min_val",
+      "max_val"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/clamp",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "hypot",
+    "call": "hypot",
+    "description": "Calculates the hypotenuse of a right triangle with sides a and b.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      },
+      "b": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a",
+      "b"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/hypot",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "cbrt",
+    "call": "cbrt",
+    "description": "Calculates the cube root of a.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "a"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8000/cbrt",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "unit-server",
+  "description": "UnitServer's tools.",
+  "tools": [
+   {
+    "name": "convert_temperature",
+    "call": "convert_temperature",
+    "description": "Convert temperature between units.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "value": {
+       "description": "Temperature value to convert",
+       "type": "number"
+      },
+      "from_unit": {
+       "description": "Source unit",
+       "enum": [
+        "celsius",
+        "fahrenheit",
+        "kelvin"
+       ],
+       "type": "string"
+      },
+      "to_unit": {
+       "description": "Target unit",
+       "enum": [
+        "celsius",
+        "fahrenheit",
+        "kelvin"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "value",
+      "from_unit",
+      "to_unit"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/convert_temperature",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "convert_angle",
+    "call": "convert_angle",
+    "description": "Convert angle between units.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "value": {
+       "description": "Angle value to convert",
+       "type": "number"
+      },
+      "from_unit": {
+       "description": "Source unit",
+       "enum": [
+        "degrees",
+        "radians",
+        "arcmin",
+        "arcsec",
+        "turns",
+        "gons"
+       ],
+       "type": "string"
+      },
+      "to_unit": {
+       "description": "Target unit",
+       "enum": [
+        "degrees",
+        "radians",
+        "arcmin",
+        "arcsec",
+        "turns",
+        "gons"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "value",
+      "from_unit",
+      "to_unit"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/convert_angle",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "convert_length",
+    "call": "convert_length",
+    "description": "Convert length between units.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "value": {
+       "description": "Length value to convert",
+       "type": "number"
+      },
+      "from_unit": {
+       "description": "Source unit",
+       "enum": [
+        "angstrom",
+        "astronomical unit",
+        "cable",
+        "centimeter",
+        "chain (surveyors)",
+        "decimeter",
+        "em (pica)",
+        "fathom",
+        "foot",
+        "foot (US survey)",
+        "furlong",
+        "hand",
+        "hectometer",
+        "inch",
+        "kilometer",
+        "light year",
+        "meter",
+        "micrometer",
+        "mil",
+        "mile",
+        "nautical mile",
+        "nautical mile (UK)",
+        "millimeter",
+        "nanometer",
+        "parsec",
+        "picometer",
+        "Scandinavian mile",
+        "thou",
+        "yard"
+       ],
+       "type": "string"
+      },
+      "to_unit": {
+       "description": "Target unit",
+       "enum": [
+        "angstrom",
+        "astronomical unit",
+        "cable",
+        "centimeter",
+        "chain (surveyors)",
+        "decimeter",
+        "em (pica)",
+        "fathom",
+        "foot",
+        "foot (US survey)",
+        "furlong",
+        "hand",
+        "hectometer",
+        "inch",
+        "kilometer",
+        "light year",
+        "meter",
+        "micrometer",
+        "mil",
+        "mile",
+        "nautical mile",
+        "nautical mile (UK)",
+        "millimeter",
+        "nanometer",
+        "parsec",
+        "picometer",
+        "Scandinavian mile",
+        "thou",
+        "yard"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "value",
+      "from_unit",
+      "to_unit"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/convert_length",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "convert_energy",
+    "call": "convert_energy",
+    "description": "Convert energy between units.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "value": {
+       "description": "Energy value to convert",
+       "type": "number"
+      },
+      "from_unit": {
+       "description": "Source unit",
+       "enum": [
+        "joule",
+        "kilojoule",
+        "megajoule",
+        "gigajoule",
+        "terajoule",
+        "petajoule",
+        "exajoule",
+        "watt hour",
+        "kilowatt hour",
+        "megawatt hour",
+        "gigawatt hour",
+        "terawatt hour",
+        "Btu",
+        "calorie",
+        "kilocalorie",
+        "therm",
+        "foot‑pound force",
+        "inch‑pound force",
+        "erg",
+        "electron volt"
+       ],
+       "type": "string"
+      },
+      "to_unit": {
+       "description": "Target unit",
+       "enum": [
+        "joule",
+        "kilojoule",
+        "megajoule",
+        "gigajoule",
+        "terajoule",
+        "petajoule",
+        "exajoule",
+        "watt hour",
+        "kilowatt hour",
+        "megawatt hour",
+        "gigawatt hour",
+        "terawatt hour",
+        "Btu",
+        "calorie",
+        "kilocalorie",
+        "therm",
+        "foot‑pound force",
+        "inch‑pound force",
+        "erg",
+        "electron volt"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "value",
+      "from_unit",
+      "to_unit"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/convert_energy",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "convert_force",
+    "call": "convert_force",
+    "description": "Convert force between units.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "value": {
+       "description": "Force value to convert",
+       "type": "number"
+      },
+      "from_unit": {
+       "description": "Source unit",
+       "enum": [
+        "dynes",
+        "kilograms force",
+        "kilonewtons",
+        "kips",
+        "meganewtons",
+        "newtons",
+        "pounds force",
+        "tonnes force",
+        "long tons force",
+        "short tons force"
+       ],
+       "type": "string"
+      },
+      "to_unit": {
+       "description": "Target unit",
+       "enum": [
+        "dynes",
+        "kilograms force",
+        "kilonewtons",
+        "kips",
+        "meganewtons",
+        "newtons",
+        "pounds force",
+        "tonnes force",
+        "long tons force",
+        "short tons force"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "value",
+      "from_unit",
+      "to_unit"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/convert_force",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "convert_pressure",
+    "call": "convert_pressure",
+    "description": "Convert pressure between units.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "value": {
+       "description": "Pressure value to convert",
+       "type": "number"
+      },
+      "from_unit": {
+       "description": "Source unit",
+       "enum": [
+        "pascal",
+        "hectopascal",
+        "kilopascal",
+        "megapascal",
+        "bar",
+        "atmosphere",
+        "centimeters of water",
+        "inches of water",
+        "feet of water",
+        "meters of water",
+        "millimeters of mercury",
+        "inches of mercury",
+        "kilogram force per square centimeter",
+        "newtons per square centimeter",
+        "newtons per square millimeter",
+        "psi",
+        "psf"
+       ],
+       "type": "string"
+      },
+      "to_unit": {
+       "description": "Target unit",
+       "enum": [
+        "pascal",
+        "hectopascal",
+        "kilopascal",
+        "megapascal",
+        "bar",
+        "atmosphere",
+        "centimeters of water",
+        "inches of water",
+        "feet of water",
+        "meters of water",
+        "millimeters of mercury",
+        "inches of mercury",
+        "kilogram force per square centimeter",
+        "newtons per square centimeter",
+        "newtons per square millimeter",
+        "psi",
+        "psf"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "value",
+      "from_unit",
+      "to_unit"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/convert_pressure",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "convert_power",
+    "call": "convert_power",
+    "description": "Convert power between units.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "value": {
+       "description": "Power value to convert",
+       "type": "number"
+      },
+      "from_unit": {
+       "description": "Source unit",
+       "enum": [
+        "Btu per hour",
+        "foot pound‑force per second",
+        "ton of refrigeration",
+        "calorie per hour",
+        "kilocalorie per hour",
+        "horsepower",
+        "horsepower (metric)",
+        "kilogram‑force meter per second",
+        "watt",
+        "kilowatt",
+        "megawatt",
+        "gigawatt",
+        "terawatt",
+        "petawatt"
+       ],
+       "type": "string"
+      },
+      "to_unit": {
+       "description": "Target unit",
+       "enum": [
+        "Btu per hour",
+        "foot pound‑force per second",
+        "ton of refrigeration",
+        "calorie per hour",
+        "kilocalorie per hour",
+        "horsepower",
+        "horsepower (metric)",
+        "kilogram‑force meter per second",
+        "watt",
+        "kilowatt",
+        "megawatt",
+        "gigawatt",
+        "terawatt",
+        "petawatt"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "value",
+      "from_unit",
+      "to_unit"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/convert_power",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "convert_speed",
+    "call": "convert_speed",
+    "description": "Convert speed between units.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "value": {
+       "description": "Speed value to convert",
+       "type": "number"
+      },
+      "from_unit": {
+       "description": "Source unit",
+       "enum": [
+        "centimeters per minute",
+        "centimeters per second",
+        "feet per hour",
+        "feet per minute",
+        "feet per second",
+        "inches per minute",
+        "inches per second",
+        "kilometers per hour",
+        "kilometers per second",
+        "knots",
+        "Mach (ISA sea level)",
+        "speed of sound",
+        "meters per hour",
+        "meters per minute",
+        "meters per second",
+        "miles per hour",
+        "miles per minute",
+        "miles per second",
+        "yards per hour",
+        "yards per minute",
+        "yards per second",
+        "speed of light"
+       ],
+       "type": "string"
+      },
+      "to_unit": {
+       "description": "Target unit",
+       "enum": [
+        "centimeters per minute",
+        "centimeters per second",
+        "feet per hour",
+        "feet per minute",
+        "feet per second",
+        "inches per minute",
+        "inches per second",
+        "kilometers per hour",
+        "kilometers per second",
+        "knots",
+        "Mach (ISA sea level)",
+        "speed of sound",
+        "meters per hour",
+        "meters per minute",
+        "meters per second",
+        "miles per hour",
+        "miles per minute",
+        "miles per second",
+        "yards per hour",
+        "yards per minute",
+        "yards per second",
+        "speed of light"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "value",
+      "from_unit",
+      "to_unit"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/convert_speed",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "convert_area",
+    "call": "convert_area",
+    "description": "Convert area between units.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "value": {
+       "description": "Area value to convert",
+       "type": "number"
+      },
+      "from_unit": {
+       "description": "Source unit",
+       "enum": [
+        "acre",
+        "are",
+        "hectare",
+        "square centimeter",
+        "square foot",
+        "square inch",
+        "square kilometer",
+        "square meter",
+        "square mile",
+        "square millimeter",
+        "square yard"
+       ],
+       "type": "string"
+      },
+      "to_unit": {
+       "description": "Target unit",
+       "enum": [
+        "acre",
+        "are",
+        "hectare",
+        "square centimeter",
+        "square foot",
+        "square inch",
+        "square kilometer",
+        "square meter",
+        "square mile",
+        "square millimeter",
+        "square yard"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "value",
+      "from_unit",
+      "to_unit"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/convert_area",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "convert_mass",
+    "call": "convert_mass",
+    "description": "Convert weight between units.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "value": {
+       "description": "Weight value to convert",
+       "type": "number"
+      },
+      "from_unit": {
+       "description": "Source unit",
+       "enum": [
+        "carat",
+        "decagram",
+        "hectogram",
+        "gram",
+        "milligram",
+        "microgram",
+        "nanogram",
+        "picogram",
+        "femtogram",
+        "grain",
+        "ounce",
+        "troy ounce",
+        "pound",
+        "stone",
+        "short ton (US)",
+        "long ton (UK)",
+        "tonne",
+        "kilotonne",
+        "megatonne",
+        "kilogram"
+       ],
+       "type": "string"
+      },
+      "to_unit": {
+       "description": "Target unit",
+       "enum": [
+        "carat",
+        "decagram",
+        "hectogram",
+        "gram",
+        "milligram",
+        "microgram",
+        "nanogram",
+        "picogram",
+        "femtogram",
+        "grain",
+        "ounce",
+        "troy ounce",
+        "pound",
+        "stone",
+        "short ton (US)",
+        "long ton (UK)",
+        "tonne",
+        "kilotonne",
+        "megatonne",
+        "kilogram"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "value",
+      "from_unit",
+      "to_unit"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/convert_mass",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "convert_volume",
+    "call": "convert_volume",
+    "description": "Convert volume between units.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "value": {
+       "description": "Volume value to convert",
+       "type": "number"
+      },
+      "from_unit": {
+       "description": "Source unit",
+       "enum": [
+        "acre foot",
+        "barrel (oil)",
+        "bushel (UK)",
+        "bushel (US)",
+        "bushel",
+        "centiliter",
+        "cubic centimeter",
+        "cubic decimeter",
+        "cubic foot",
+        "cubic inch",
+        "cubic kilometer",
+        "cubic meter",
+        "cubic mile",
+        "cubic millimeter",
+        "cubic yard",
+        "cup",
+        "deciliter",
+        "fluid ounce (imperial)",
+        "fluid ounce (US)",
+        "fluid ounce",
+        "gallon (imperial)",
+        "gallon (US)",
+        "gallon",
+        "kiloliter",
+        "liter",
+        "milliliter",
+        "microliter",
+        "nanoliter",
+        "picoliter",
+        "pint (imperial)",
+        "pint (US)",
+        "pint",
+        "quart (imperial)",
+        "quart (US)",
+        "quart",
+        "tablespoon",
+        "teaspoon"
+       ],
+       "type": "string"
+      },
+      "to_unit": {
+       "description": "Target unit",
+       "enum": [
+        "acre foot",
+        "barrel (oil)",
+        "bushel (UK)",
+        "bushel (US)",
+        "bushel",
+        "centiliter",
+        "cubic centimeter",
+        "cubic decimeter",
+        "cubic foot",
+        "cubic inch",
+        "cubic kilometer",
+        "cubic meter",
+        "cubic mile",
+        "cubic millimeter",
+        "cubic yard",
+        "cup",
+        "deciliter",
+        "fluid ounce (imperial)",
+        "fluid ounce (US)",
+        "fluid ounce",
+        "gallon (imperial)",
+        "gallon (US)",
+        "gallon",
+        "kiloliter",
+        "liter",
+        "milliliter",
+        "microliter",
+        "nanoliter",
+        "picoliter",
+        "pint (imperial)",
+        "pint (US)",
+        "pint",
+        "quart (imperial)",
+        "quart (US)",
+        "quart",
+        "tablespoon",
+        "teaspoon"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "value",
+      "from_unit",
+      "to_unit"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/convert_volume",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "convert_computer_data",
+    "call": "convert_computer_data",
+    "description": "Convert computer storage between units.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "value": {
+       "description": "Computer storage value to convert",
+       "type": "number"
+      },
+      "from_unit": {
+       "description": "Source unit",
+       "enum": [
+        "bits",
+        "bytes",
+        "kilobytes",
+        "megabytes",
+        "gigabytes",
+        "terabytes",
+        "petabytes",
+        "exabytes"
+       ],
+       "type": "string"
+      },
+      "to_unit": {
+       "description": "Target unit",
+       "enum": [
+        "bits",
+        "bytes",
+        "kilobytes",
+        "megabytes",
+        "gigabytes",
+        "terabytes",
+        "petabytes",
+        "exabytes"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "value",
+      "from_unit",
+      "to_unit"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/convert_computer_data",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "convert_density",
+    "call": "convert_density",
+    "description": "Convert density between units.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "value": {
+       "description": "Density value to convert",
+       "type": "number"
+      },
+      "from_unit": {
+       "description": "Source unit",
+       "enum": [
+        "grains per gallon (UK)",
+        "grains per gallon (US)",
+        "grains per gallon",
+        "grams per cubic centimeter",
+        "grams per liter",
+        "kilograms per liter",
+        "kilograms per cubic meter",
+        "milligrams per liter",
+        "ounces per gallon (UK)",
+        "ounces per gallon (US)",
+        "ounces per gallon",
+        "pounds per cubic foot",
+        "pounds per gallon (UK)",
+        "pounds per gallon (US)",
+        "pounds per gallon",
+        "tonnes per cubic meter",
+        "tons per cubic yard (UK)",
+        "tons per cubic yard (US)",
+        "tons per cubic yard"
+       ],
+       "type": "string"
+      },
+      "to_unit": {
+       "description": "Target unit",
+       "enum": [
+        "grains per gallon (UK)",
+        "grains per gallon (US)",
+        "grains per gallon",
+        "grams per cubic centimeter",
+        "grams per liter",
+        "kilograms per liter",
+        "kilograms per cubic meter",
+        "milligrams per liter",
+        "ounces per gallon (UK)",
+        "ounces per gallon (US)",
+        "ounces per gallon",
+        "pounds per cubic foot",
+        "pounds per gallon (UK)",
+        "pounds per gallon (US)",
+        "pounds per gallon",
+        "tonnes per cubic meter",
+        "tons per cubic yard (UK)",
+        "tons per cubic yard (US)",
+        "tons per cubic yard"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "value",
+      "from_unit",
+      "to_unit"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/convert_density",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "convert_time",
+    "call": "convert_time",
+    "description": "Convert time between units.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "value": {
+       "description": "Time value to convert",
+       "type": "number"
+      },
+      "from_unit": {
+       "description": "Source unit",
+       "enum": [
+        "picoseconds",
+        "femtoseconds",
+        "nanoseconds",
+        "microseconds",
+        "milliseconds",
+        "seconds",
+        "minutes",
+        "hours",
+        "days",
+        "weeks",
+        "fortnights",
+        "months",
+        "quarters",
+        "synodic months",
+        "years",
+        "decades",
+        "centuries",
+        "millennia"
+       ],
+       "type": "string"
+      },
+      "to_unit": {
+       "description": "Target unit",
+       "enum": [
+        "picoseconds",
+        "femtoseconds",
+        "nanoseconds",
+        "microseconds",
+        "milliseconds",
+        "seconds",
+        "minutes",
+        "hours",
+        "days",
+        "weeks",
+        "fortnights",
+        "months",
+        "quarters",
+        "synodic months",
+        "years",
+        "decades",
+        "centuries",
+        "millennia"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "value",
+      "from_unit",
+      "to_unit"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/convert_time",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "convert_batch",
+    "call": "convert_batch",
+    "description": "Perform multiple unit conversions in a single batch request.\n\nEach request in the batch should contain:\n- value: The numeric value to convert\n- from_unit: Source unit for conversion\n- to_unit: Target unit for conversion\n- conversion_type: Type of conversion (temperature, length, mass, etc.)\n- request_id: Optional identifier for tracking individual requests\n\nReturns a structured response with individual results for each conversion,\nincluding success/failure status and either converted values or error messages.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "requests": {
+       "description": "List of conversion requests. Each request should contain: value (float), from_unit (str), to_unit (str), conversion_type (str), and optionally request_id (str)",
+       "items": {
+        "additionalProperties": true,
+        "type": "object"
+       },
+       "type": "array"
+      }
+     },
+     "required": [
+      "requests"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/convert_batch",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_supported_units",
+    "call": "list_supported_units",
+    "description": "List all supported units for each conversion type or for a specific type.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "unit_type": {
+       "anyOf": [
+        {
+         "enum": [
+          "angle",
+          "area",
+          "computer_data",
+          "density",
+          "energy",
+          "force",
+          "length",
+          "mass",
+          "power",
+          "pressure",
+          "speed",
+          "temperature",
+          "time",
+          "volume"
+         ],
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "default": null,
+       "description": "Specific unit type to get supported units for. If not specified, returns all supported units."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/list_supported_units",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "osint-server",
+  "description": "OSINTServer's tools.",
+  "tools": [
+   {
+    "name": "whois_lookup",
+    "call": "whois_lookup",
+    "description": null,
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "target": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "target"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8002/whois_lookup",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "nmap_scan",
+    "call": "nmap_scan",
+    "description": null,
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "target": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "target"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8002/nmap_scan",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "dnsrecon_lookup",
+    "call": "dnsrecon_lookup",
+    "description": null,
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "target": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "target"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8002/dnsrecon_lookup",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "dnstwist_lookup",
+    "call": "dnstwist_lookup",
+    "description": null,
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "domain": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "domain"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8002/dnstwist_lookup",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "dig_lookup",
+    "call": "dig_lookup",
+    "description": null,
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "target": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "target"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8002/dig_lookup",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "host_lookup",
+    "call": "host_lookup",
+    "description": null,
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "target": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "target"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8002/host_lookup",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "osint_overview",
+    "call": "osint_overview",
+    "description": null,
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "target": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "target"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8002/osint_overview",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "time-server",
+  "description": "TimeServer's tools.",
+  "tools": [
+   {
+    "name": "days_diff",
+    "call": "days_diff",
+    "description": "Calculate the day difference between two dates in \"YYYY-MM-DD\" format.\n\nArgs:\n    t1: Start date in \"YYYY-MM-DD\".\n    t2: End date in \"YYYY-MM-DD\".\n\nReturns:\n    A dict containing status and the day difference (t2 - t1) in days.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "t1": {
+       "type": "string"
+      },
+      "t2": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "t1",
+      "t2"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8003/days_diff",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "date_to_weekday",
+    "call": "date_to_weekday",
+    "description": "Convert a date string into a weekday name.\n\nNotes:\n    - This function uses English weekday names only (locale parameter is reserved\n      for future extension).\n    - Input format: \"YYYY-MM-DD\".\n\nArgs:\n    d: Date string in \"YYYY-MM-DD\".\n    locale: Reserved; currently only \"en\" is supported.\n    short: If True, return abbreviated weekday (e.g., \"Mon\"); otherwise full name.\n\nReturns:\n    A dict containing status and weekday name.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "d": {
+       "type": "string"
+      },
+      "locale": {
+       "default": "en",
+       "type": "string"
+      },
+      "short": {
+       "default": false,
+       "type": "boolean"
+      }
+     },
+     "required": [
+      "d"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8003/date_to_weekday",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "iso_seconds_diff",
+    "call": "iso_seconds_diff",
+    "description": "Calculate the seconds difference between two ISO-8601 datetime strings.\n\nSupported examples:\n    - \"2026-01-14T12:30:00\"\n    - \"2026-01-14T12:30:00Z\"\n    - \"2026-01-14T12:30:00+08:00\"\n\nInterpretation:\n    - If timezone info is present, it is respected.\n    - If timezone info is absent, the datetime is treated as naive local time.\n\nArgs:\n    t1: ISO datetime string.\n    t2: ISO datetime string.\n\nReturns:\n    A dict containing status and the seconds difference (t2 - t1) in seconds.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "t1": {
+       "type": "string"
+      },
+      "t2": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "t1",
+      "t2"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8003/iso_seconds_diff",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "convert_time_units",
+    "call": "convert_time_units",
+    "description": "Convert between common time units.\n\nSupported units:\n    - \"ms\" (milliseconds)\n    - \"s\"  (seconds)\n    - \"min\" (minutes)\n    - \"h\"  (hours)\n    - \"d\"  (days)\n    - \"w\"  (weeks)\n\nArgs:\n    value: Numeric value to convert.\n    from_unit: Source unit.\n    to_unit: Target unit.\n\nReturns:\n    A dict containing status and the converted value.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "value": {
+       "type": "number"
+      },
+      "from_unit": {
+       "type": "string"
+      },
+      "to_unit": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "value",
+      "from_unit",
+      "to_unit"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8003/convert_time_units",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "add_seconds_iso",
+    "call": "add_seconds_iso",
+    "description": "Add seconds to an ISO-8601 datetime string and return an ISO string.\n\nNotes:\n    - If input ends with \"Z\", it is treated as UTC.\n    - Output uses ISO format; if timezone-aware, includes offset.\n\nArgs:\n    t: ISO datetime string.\n    seconds: Seconds to add (can be negative).\n\nReturns:\n    A dict containing status and the resulting ISO datetime string.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "t": {
+       "type": "string"
+      },
+      "seconds": {
+       "type": "integer"
+      }
+     },
+     "required": [
+      "t",
+      "seconds"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8003/add_seconds_iso",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "lang-server",
+  "description": "LangServer's tools.",
+  "tools": [
+   {
+    "name": "tokenize",
+    "call": "tokenize",
+    "description": "Simple whitespace-and-punctuation tokenizer.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/tokenize",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "detokenize",
+    "call": "detokenize",
+    "description": "Join tokens with spaces, simple heuristic.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "tokens": {
+       "items": {
+        "type": "string"
+       },
+       "type": "array",
+       "default": []
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/detokenize",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "normalize_whitespace",
+    "call": "normalize_whitespace",
+    "description": "Collapse consecutive whitespace into a single space and trim ends.\n\nReturns a cleaned string with normalized spacing suitable for downstream NLP tasks.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/normalize_whitespace",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "remove_punctuation",
+    "call": "remove_punctuation",
+    "description": "Remove punctuation characters from `text`, leaving words and whitespace.\n\nUseful for simple token-counting or normalization when punctuation is not needed.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/remove_punctuation",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "count_words",
+    "call": "count_words",
+    "description": "Return the number of word tokens in `text` using the server tokenizer.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/count_words",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "word_freq",
+    "call": "word_freq",
+    "description": "Return a frequency mapping (word -> count) for tokens in `text`.\n\nTokens are lowercased so counts are case-insensitive.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/word_freq",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "sentence_split",
+    "call": "sentence_split",
+    "description": "Split `text` into sentences using a simple punctuation-based heuristic.\n\nReturns a list of sentence strings (may not handle all edge cases).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/sentence_split",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "simple_summarize",
+    "call": "simple_summarize",
+    "description": "Very small extractive summarizer by sentence length heuristic.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      },
+      "max_sentences": {
+       "default": 3,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/simple_summarize",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "levenshtein",
+    "call": "levenshtein",
+    "description": "Compute the Levenshtein edit distance between strings `a` and `b`.\n\nThis implementation is memory-efficient (row-wise DP).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "string"
+      },
+      "b": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "a",
+      "b"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/levenshtein",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "jaccard_similarity",
+    "call": "jaccard_similarity",
+    "description": "Compute Jaccard similarity between token sets of `a` and `b`.\n\nReturns a float in [0, 1], 1.0 when both inputs have identical token sets.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "string"
+      },
+      "b": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "a",
+      "b"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/jaccard_similarity",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "ngrams",
+    "call": "ngrams",
+    "description": "Return a list of n-grams (as space-joined strings) from `text` tokens.\n\nIf there are fewer than `n` tokens an empty list is returned.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      },
+      "n": {
+       "default": 2,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/ngrams",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "to_lower",
+    "call": "to_lower",
+    "description": "Return `text` converted to lowercase.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/to_lower",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "to_upper",
+    "call": "to_upper",
+    "description": "Return `text` converted to uppercase.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/to_upper",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "title_case",
+    "call": "title_case",
+    "description": "Return `text` converted to title case.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/title_case",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "snake_case",
+    "call": "snake_case",
+    "description": "Convert `text` to `snake_case` by lowercasing and joining word tokens with underscores.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/snake_case",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "camel_case",
+    "call": "camel_case",
+    "description": "Convert `text` to `camelCase` using word tokens (lower-first, capitalize-following).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/camel_case",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "slugify",
+    "call": "slugify",
+    "description": "Create a URL-friendly slug from `text`: lowercase, remove punctuation, replace spaces with hyphens.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/slugify",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "extract_numbers",
+    "call": "extract_numbers",
+    "description": "Extract all integers and decimal numbers from `text` and return them as floats.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/extract_numbers",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "hash_text",
+    "call": "hash_text",
+    "description": "Return a hexadecimal digest of `text` using the specified hashing `algo`.\n\nThe default algorithm is `sha256`.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      },
+      "algo": {
+       "default": "sha256",
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/hash_text",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "base64_encode",
+    "call": "base64_encode",
+    "description": "Encode `text` to standard Base64 and return the ASCII string.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/base64_encode",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "base64_decode",
+    "call": "base64_decode",
+    "description": "Decode a Base64-encoded ASCII string and return the UTF-8 text.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "b64": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "b64"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/base64_decode",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "is_palindrome",
+    "call": "is_palindrome",
+    "description": "Return True if `text` is a palindrome when lowercased and alphanumerics only.\n\nIgnores punctuation and spacing when checking the palindrome property.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/is_palindrome",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "regex_search",
+    "call": "regex_search",
+    "description": "Return all non-overlapping matches of `pattern` in `text` using `re.findall`.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "pattern": {
+       "type": "string"
+      },
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "pattern",
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/regex_search",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "replace",
+    "call": "replace",
+    "description": "Replace occurrences of `pattern` in `text` with `repl` using regular expressions.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "pattern": {
+       "type": "string"
+      },
+      "repl": {
+       "type": "string"
+      },
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "pattern",
+      "repl",
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/replace",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "truncate",
+    "call": "truncate",
+    "description": "Truncate `text` to `length` characters, appending ellipsis if truncated.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      },
+      "length": {
+       "default": 100,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/truncate",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "read_time_estimate",
+    "call": "read_time_estimate",
+    "description": "Estimate reading time in minutes for `text` assuming `wpm` words per minute.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      },
+      "wpm": {
+       "default": 200,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/read_time_estimate",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "remove_stopwords",
+    "call": "remove_stopwords",
+    "description": "Remove a small set of common English stopwords from `text` and return the filtered text.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/remove_stopwords",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "simple_paraphrase",
+    "call": "simple_paraphrase",
+    "description": "A tiny rule-based paraphrase that substitutes a few common words with synonyms.\n\nThis is placeholder, rule-based, and not a replacement for a full paraphrasing model.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/simple_paraphrase",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "syllable_estimate",
+    "call": "syllable_estimate",
+    "description": "Estimate the number of syllables in `word` using a simple vowel-group heuristic.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "word": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "word"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/syllable_estimate",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "ordinal",
+    "call": "ordinal",
+    "description": "Return the ordinal string for integer `n`, e.g. 1 -> '1st', 2 -> '2nd'.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "n": {
+       "type": "integer"
+      }
+     },
+     "required": [
+      "n"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/ordinal",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "count_chars",
+    "call": "count_chars",
+    "description": "Return the number of characters in `text` (including whitespace).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/count_chars",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "template_render",
+    "call": "template_render",
+    "description": "Render a simple Python `str.format` template using `values` mapping.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "template": {
+       "type": "string"
+      },
+      "values": {
+       "additionalProperties": true,
+       "type": "object"
+      }
+     },
+     "required": [
+      "template",
+      "values"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8004/template_render",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "crypto-server",
+  "description": "CryptoServer's tools.",
+  "tools": [
+   {
+    "name": "sha256",
+    "call": "sha256",
+    "description": "Return the SHA-256 hex digest of the given `text`.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/sha256",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "sha1",
+    "call": "sha1",
+    "description": "Return the SHA-1 hex digest of the given `text`.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/sha1",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "md5",
+    "call": "md5",
+    "description": "Return the MD5 hex digest of the given `text` (legacy/compatibility).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/md5",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "hmac_sha256",
+    "call": "hmac_sha256",
+    "description": "Compute HMAC-SHA256 of `message` using `key`, returning a hex digest.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "key": {
+       "type": "string"
+      },
+      "message": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "key",
+      "message"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/hmac_sha256",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "pbkdf2_hex",
+    "call": "pbkdf2_hex",
+    "description": "Derive a key from `password` and `salt` using PBKDF2-HMAC-SHA256.\n\nReturns the derived key as a hex string.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "password": {
+       "type": "string"
+      },
+      "salt": {
+       "type": "string"
+      },
+      "iterations": {
+       "default": 100000,
+       "type": "integer"
+      },
+      "dklen": {
+       "default": 32,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "password",
+      "salt"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/pbkdf2_hex",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "random_bytes",
+    "call": "random_bytes",
+    "description": "Return `n` cryptographically-secure random bytes encoded as a hex string.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "n": {
+       "default": 32,
+       "type": "integer"
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/random_bytes",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "random_hex",
+    "call": "random_hex",
+    "description": "Return `nbytes` random bytes encoded as a hex string (alias of `random_bytes`).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "nbytes": {
+       "default": 16,
+       "type": "integer"
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/random_hex",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "base64_encode",
+    "call": "base64_encode",
+    "description": "Encode `text` to Base64 and return the encoded string.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/base64_encode",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "base64_decode",
+    "call": "base64_decode",
+    "description": "Decode a Base64-encoded string and return the decoded text.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "b64": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "b64"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/base64_decode",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "xor_cipher",
+    "call": "xor_cipher",
+    "description": "Apply a repeating-key XOR of `text` with `key` and return hex-encoded ciphertext.\n\nNote: this is not secure encryption; provided for toy/offline uses only.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      },
+      "key": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text",
+      "key"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/xor_cipher",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "xor_dec",
+    "call": "xor_dec",
+    "description": "Decode a hex-encoded XOR ciphertext produced by `xor_cipher` using the same `key`.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "hextext": {
+       "type": "string"
+      },
+      "key": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "hextext",
+      "key"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/xor_dec",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "simple_caesar",
+    "call": "simple_caesar",
+    "description": "Apply a simple Caesar cipher shifting alphabetic characters by `shift` positions.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      },
+      "shift": {
+       "default": 3,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/simple_caesar",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "rot13",
+    "call": "rot13",
+    "description": "Return ROT13 transformation of `text` (a reversible letter substitution).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/rot13",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "timing_safe_compare",
+    "call": "timing_safe_compare",
+    "description": "Compare two strings in a timing-safe way to mitigate timing attacks.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a": {
+       "type": "string"
+      },
+      "b": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "a",
+      "b"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/timing_safe_compare",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "derive_key",
+    "call": "derive_key",
+    "description": "Convenience wrapper returning a PBKDF2-derived key hex string for `password` and `salt`.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "password": {
+       "type": "string"
+      },
+      "salt": {
+       "type": "string"
+      },
+      "iterations": {
+       "default": 100000,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "password",
+      "salt"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/derive_key",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "entropy_estimate_hex",
+    "call": "entropy_estimate_hex",
+    "description": "Estimate the Shannon entropy (bits per symbol) of hex-encoded `hexstr`.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "hexstr": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "hexstr"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/entropy_estimate_hex",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "uuid4",
+    "call": "uuid4",
+    "description": "Return a random UUID4 string.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/uuid4",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "hex_to_bytes",
+    "call": "hex_to_bytes",
+    "description": "Convert a hex string into raw bytes.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "hexstr": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "hexstr"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/hex_to_bytes",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "bytes_to_hex",
+    "call": "bytes_to_hex",
+    "description": "Convert raw bytes to a lowercase hex string.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "b": {
+       "format": "binary",
+       "type": "string"
+      }
+     },
+     "required": [
+      "b"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/bytes_to_hex",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "urlsafe_b64_encode",
+    "call": "urlsafe_b64_encode",
+    "description": "Encode `text` as URL-safe Base64 string.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/urlsafe_b64_encode",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "urlsafe_b64_decode",
+    "call": "urlsafe_b64_decode",
+    "description": "Decode a URL-safe Base64 string and return the decoded text.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/urlsafe_b64_decode",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "hmac_sign_hex",
+    "call": "hmac_sign_hex",
+    "description": "Return HMAC-SHA256 signature (hex) for `message` with `key`.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "key": {
+       "type": "string"
+      },
+      "message": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "key",
+      "message"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/hmac_sign_hex",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "hmac_verify_hex",
+    "call": "hmac_verify_hex",
+    "description": "Verify that `signature` matches HMAC-SHA256(message,key) in a timing-safe way.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "key": {
+       "type": "string"
+      },
+      "message": {
+       "type": "string"
+      },
+      "signature": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "key",
+      "message",
+      "signature"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/hmac_verify_hex",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "checksum_sha256_hex",
+    "call": "checksum_sha256_hex",
+    "description": "Alias for SHA-256 digest of `text` (hex string).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/checksum_sha256_hex",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "random_choice",
+    "call": "random_choice",
+    "description": "Return a cryptographically-secure random element from `seq`.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "seq": {
+       "items": {},
+       "type": "array"
+      }
+     },
+     "required": [
+      "seq"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/random_choice",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "secure_token_urlsafe",
+    "call": "secure_token_urlsafe",
+    "description": "Return a URL-safe secure token with the specified `length` (approx bytes).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "length": {
+       "default": 32,
+       "type": "integer"
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/secure_token_urlsafe",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "file_digest",
+    "call": "file_digest",
+    "description": "Compute the digest of a file at `path` using hash `algo` and return hex digest.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "path": {
+       "type": "string"
+      },
+      "algo": {
+       "default": "sha256",
+       "type": "string"
+      }
+     },
+     "required": [
+      "path"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/file_digest",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "xor_bytes_hex",
+    "call": "xor_bytes_hex",
+    "description": "XOR two equal-length hex-encoded byte strings and return hex-encoded result.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "a_hex": {
+       "type": "string"
+      },
+      "b_hex": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "a_hex",
+      "b_hex"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8005/xor_bytes_hex",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "graph-server",
+  "description": "GraphServer's tools.",
+  "tools": [
+   {
+    "name": "bfs",
+    "call": "bfs",
+    "description": "Perform breadth-first search on `adj` from `start` and return visit order.\n\n`adj` is expected to be a mapping node -> iterable of neighbors.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "adj": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "start": {
+       "title": "Start"
+      }
+     },
+     "required": [
+      "adj",
+      "start"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8006/bfs",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "dfs",
+    "call": "dfs",
+    "description": "Perform depth-first search on `adj` from `start` and return visit order.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "adj": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "start": {
+       "title": "Start"
+      }
+     },
+     "required": [
+      "adj",
+      "start"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8006/dfs",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "shortest_path_dijkstra",
+    "call": "shortest_path_dijkstra",
+    "description": "Compute shortest-path distances from `source` using Dijkstra's algorithm.\n\n`adj` should map nodes to an iterable of `(neighbor, weight)` pairs.\nReturns a mapping node -> distance.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "adj": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "source": {
+       "title": "Source"
+      }
+     },
+     "required": [
+      "adj",
+      "source"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8006/shortest_path_dijkstra",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "is_bipartite",
+    "call": "is_bipartite",
+    "description": "Return True if graph `adj` is bipartite (2-colorable), False otherwise.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "adj": {
+       "additionalProperties": true,
+       "type": "object"
+      }
+     },
+     "required": [
+      "adj"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8006/is_bipartite",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "connected_components",
+    "call": "connected_components",
+    "description": "Return a list of connected components (each a list of nodes) in `adj`.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "adj": {
+       "additionalProperties": true,
+       "type": "object"
+      }
+     },
+     "required": [
+      "adj"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8006/connected_components",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "topological_sort",
+    "call": "topological_sort",
+    "description": "Return a topological ordering of `adj` if it is a DAG; raises on cycles.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "adj": {
+       "additionalProperties": true,
+       "type": "object"
+      }
+     },
+     "required": [
+      "adj"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8006/topological_sort",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "mst_kruskal",
+    "call": "mst_kruskal",
+    "description": "Compute a Minimum Spanning Tree using Kruskal's algorithm.\n\n`edges` is a list of `(weight, u, v)` triples and `nodes` lists all nodes.\nReturns a list of edges included in the MST.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "edges": {
+       "items": {},
+       "type": "array"
+      },
+      "nodes": {
+       "items": {},
+       "type": "array"
+      }
+     },
+     "required": [
+      "edges",
+      "nodes"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8006/mst_kruskal",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "shortest_path_unweighted",
+    "call": "shortest_path_unweighted",
+    "description": "Compute shortest path distances in an unweighted graph (BFS distances).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "adj": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "source": {
+       "title": "Source"
+      }
+     },
+     "required": [
+      "adj",
+      "source"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8006/shortest_path_unweighted",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "path_exists",
+    "call": "path_exists",
+    "description": "Return True if there exists a path from node `a` to node `b` in `adj`.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "adj": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "a": {
+       "title": "A"
+      },
+      "b": {
+       "title": "B"
+      }
+     },
+     "required": [
+      "adj",
+      "a",
+      "b"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8006/path_exists",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "adjacency_matrix",
+    "call": "adjacency_matrix",
+    "description": "Build an adjacency matrix for `nodes` from adjacency mapping `adj`.\n\nReturns a square matrix of 0/1 ints where entry [i][j] is 1 if there is an edge.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "adj": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "nodes": {
+       "items": {},
+       "type": "array"
+      }
+     },
+     "required": [
+      "adj",
+      "nodes"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8006/adjacency_matrix",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "adjacency_list_to_matrix",
+    "call": "adjacency_list_to_matrix",
+    "description": "Convert adjacency list mapping to an adjacency matrix using the list of keys as nodes.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "adj": {
+       "additionalProperties": true,
+       "type": "object"
+      }
+     },
+     "required": [
+      "adj"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8006/adjacency_list_to_matrix",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "degree_centrality",
+    "call": "degree_centrality",
+    "description": "Return the degree (number of neighbors) for each node in `adj`.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "adj": {
+       "additionalProperties": true,
+       "type": "object"
+      }
+     },
+     "required": [
+      "adj"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8006/degree_centrality",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "is_connected",
+    "call": "is_connected",
+    "description": "Return True if the graph `adj` is connected (single component).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "adj": {
+       "additionalProperties": true,
+       "type": "object"
+      }
+     },
+     "required": [
+      "adj"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8006/is_connected",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "graph_complement",
+    "call": "graph_complement",
+    "description": "Return the complement graph of `adj` over the provided `nodes`.\n\nNodes not present in `adj` are treated as having no neighbors.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "adj": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "nodes": {
+       "items": {},
+       "type": "array"
+      }
+     },
+     "required": [
+      "adj",
+      "nodes"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8006/graph_complement",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "random_erdos_renyi",
+    "call": "random_erdos_renyi",
+    "description": "Generate a random undirected Erdos-Renyi graph with `n` nodes and edge probability `p`.\n\nReturns an adjacency mapping node -> list of neighbors.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "n": {
+       "type": "integer"
+      },
+      "p": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "n",
+      "p"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8006/random_erdos_renyi",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "chem-server",
+  "description": "ChemServer's tools.",
+  "tools": [
+   {
+    "name": "molar_mass",
+    "call": "molar_mass",
+    "description": "Compute an approximate molar mass for `formula` using a small periodic table.\n\nThis is a naive parser that matches element symbols followed by optional integer counts.\nUnknown elements contribute 0.0.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "formula": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "formula"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8007/molar_mass",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "empirical_formula",
+    "call": "empirical_formula",
+    "description": "Return the empirical (reduced) formula for `formula` by dividing element counts by their GCD.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "formula": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "formula"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8007/empirical_formula",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "percent_composition",
+    "call": "percent_composition",
+    "description": "Return percent by mass composition for each element in `formula`.\n\nPercentages sum to (approximately) 100 for known elements in the small periodic table.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "formula": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "formula"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8007/percent_composition",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "balance_simple_reaction",
+    "call": "balance_simple_reaction",
+    "description": "Placeholder reaction balancer: returns input mapping unchanged.\n\nThis function is a stub for offline use and does not perform true balancing.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "reactants": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "products": {
+       "additionalProperties": true,
+       "type": "object"
+      }
+     },
+     "required": [
+      "reactants",
+      "products"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8007/balance_simple_reaction",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "is_balanced",
+    "call": "is_balanced",
+    "description": "Placeholder validator that currently always returns True for a formula's balance.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "formula": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "formula"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8007/is_balanced",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "ph_from_concentration",
+    "call": "ph_from_concentration",
+    "description": "Convert hydrogen ion concentration `h_conc` (mol/L) to pH value.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "h_conc": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "h_conc"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8007/ph_from_concentration",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "concentration_from_ph",
+    "call": "concentration_from_ph",
+    "description": "Convert pH value back to hydrogen ion concentration (mol/L).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ph": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "ph"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8007/concentration_from_ph",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "ideal_gas_pressure",
+    "call": "ideal_gas_pressure",
+    "description": "Compute pressure (in SI units of kPa equivalently via ideal gas law) for given moles, temperature, and volume.\n\nNote: this uses a simple ideal gas approximation and performs unit conversions from liters.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "n_moles": {
+       "type": "number"
+      },
+      "temp_k": {
+       "type": "number"
+      },
+      "volume_l": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "n_moles",
+      "temp_k",
+      "volume_l"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8007/ideal_gas_pressure",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "convert_moles_to_grams",
+    "call": "convert_moles_to_grams",
+    "description": "Convert an amount in `moles` of a substance with `formula` to mass in grams (approx).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "moles": {
+       "type": "number"
+      },
+      "formula": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "moles",
+      "formula"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8007/convert_moles_to_grams",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "convert_grams_to_moles",
+    "call": "convert_grams_to_moles",
+    "description": "Convert `grams` of a substance with `formula` to moles using approximate molar mass.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "grams": {
+       "type": "number"
+      },
+      "formula": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "grams",
+      "formula"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8007/convert_grams_to_moles",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "normalize_formula",
+    "call": "normalize_formula",
+    "description": "Return `formula` with whitespace removed for normalization.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "formula": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "formula"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8007/normalize_formula",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "element_list",
+    "call": "element_list",
+    "description": "Return a list of element symbols present in `formula` in the order they appear.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "formula": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "formula"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8007/element_list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "combustion_products",
+    "call": "combustion_products",
+    "description": "Naive estimator of complete combustion products (CO2 and H2O) from a hydrocarbon `fuel_formula`.\n\nThis is a heuristic estimator that assumes integer counts and complete combustion.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "fuel_formula": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "fuel_formula"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8007/combustion_products",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "is_organic",
+    "call": "is_organic",
+    "description": "Return True if `formula` contains carbon (simple organic check).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "formula": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "formula"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8007/is_organic",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "simple_smiles_validate",
+    "call": "simple_smiles_validate",
+    "description": "Very small validator for a SMILES-like string: checks balanced parentheses only.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "smiles": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "smiles"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8007/simple_smiles_validate",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "mole_fraction",
+    "call": "mole_fraction",
+    "description": "Compute a mole fraction given `partial_moles` and `total_moles` (returns 0 if total is zero).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "partial_moles": {
+       "type": "number"
+      },
+      "total_moles": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "partial_moles",
+      "total_moles"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8007/mole_fraction",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "clamp",
+    "call": "clamp",
+    "description": "Clamp `value` between `lo` and `hi` and return the clamped float.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "value": {
+       "type": "number"
+      },
+      "lo": {
+       "type": "number"
+      },
+      "hi": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "value",
+      "lo",
+      "hi"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8007/clamp",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "light-system",
+  "description": "LightSystem's tools.",
+  "tools": [
+   {
+    "name": "now",
+    "call": "now",
+    "description": "Get the current time",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9000/now",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "health",
+    "call": "health",
+    "description": "Check if this LightSystem is work",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9000/health",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "light-talk",
+  "description": "LightTalk's tools.",
+  "tools": [
+   {
+    "name": "get_all_contacts",
+    "call": "get_all_contacts",
+    "description": "Get the information of all contacts in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/get_all_contacts",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_uid_from_name",
+    "call": "get_uid_from_name",
+    "description": "Look up a user's unique ID (UID) by their display name in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "The display name of the contact in LightTalk."
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/get_uid_from_name",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "fuzzy_search_uids_from_name",
+    "call": "fuzzy_search_uids_from_name",
+    "description": "Perform a fuzzy (approximate) search to find user IDs (UIDs) in LightTalk based on a partial or misspelled contact name.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "The contact name or partial name to perform fuzzy matching on (e.g., handles typos, nicknames, or similar spellings)."
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/fuzzy_search_uids_from_name",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "send_message",
+    "call": "send_message",
+    "description": "Send a message to a specific contact in LightTalk using their UID.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the recipient in LightTalk."
+      },
+      "content": {
+       "type": "string",
+       "description": "The text content of the message to send."
+      }
+     },
+     "required": [
+      "uid",
+      "content"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/send_message",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_myuid",
+    "call": "get_myuid",
+    "description": "Retrieve the current user's own unique ID (UID) in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/get_myuid",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_chat_history",
+    "call": "get_chat_history",
+    "description": "Fetch the chat history with a specific contact in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact whose chat history to retrieve."
+      }
+     },
+     "required": [
+      "uid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/get_chat_history",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_contacts",
+    "call": "get_contacts",
+    "description": "Retrieve a paginated list of contacts from LightTalk. Each page contains up to 10 contacts.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "page": {
+       "type": "integer",
+       "description": "The page number (starting from 1) to fetch contacts from. Each page returns at most 10 contacts."
+      }
+     },
+     "required": [
+      "page"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/get_contacts",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "delete_chat_history",
+    "call": "delete_chat_history",
+    "description": "Delete the entire chat history with a specific contact in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact whose chat history should be deleted."
+      }
+     },
+     "required": [
+      "uid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/delete_chat_history",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "delete_message",
+    "call": "delete_message",
+    "description": "Delete a specific message in a chat with a contact in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact whose chat contains the message."
+      },
+      "mid": {
+       "type": "string",
+       "description": "The unique message ID (MID) of the message to delete."
+      }
+     },
+     "required": [
+      "uid",
+      "mid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/delete_message",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "block",
+    "call": "block",
+    "description": "Block a contact in LightTalk by their unique ID (UID).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact to block."
+      }
+     },
+     "required": [
+      "uid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/block",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "unblock",
+    "call": "unblock",
+    "description": "Unblock a contact in LightTalk by their unique ID (UID).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact to unblock."
+      }
+     },
+     "required": [
+      "uid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/unblock",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_contact_info",
+    "call": "get_contact_info",
+    "description": "Retrieve detailed information about a specific contact in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact."
+      }
+     },
+     "required": [
+      "uid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/get_contact_info",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_all_moments",
+    "call": "get_all_moments",
+    "description": "Fetch all public moments (posts) published by a specific contact in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact whose moments to retrieve."
+      }
+     },
+     "required": [
+      "uid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/get_all_moments",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_last_k_moments",
+    "call": "get_last_k_moments",
+    "description": "Retrieve the most recent K moments published by a specific contact in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact whose moments to retrieve."
+      },
+      "k": {
+       "type": "integer",
+       "description": "The number of latest moments to fetch (must be a positive integer)."
+      }
+     },
+     "required": [
+      "uid",
+      "k"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/get_last_k_moments",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_moment",
+    "call": "get_moment",
+    "description": "Fetch a specific moment by its index from a contact's timeline in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact who posted the moment."
+      },
+      "index": {
+       "type": "integer",
+       "description": "The zero-based index of the moment in the contact's moment list."
+      }
+     },
+     "required": [
+      "uid",
+      "index"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/get_moment",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "like_moment",
+    "call": "like_moment",
+    "description": "Like a specific moment posted by a contact in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact who posted the moment."
+      },
+      "moid": {
+       "type": "string",
+       "description": "The unique moment ID (MOID) of the moment to like."
+      }
+     },
+     "required": [
+      "uid",
+      "moid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/like_moment",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "unlike_moment",
+    "call": "unlike_moment",
+    "description": "Remove your like from a specific moment posted by a contact in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact who posted the moment."
+      },
+      "moid": {
+       "type": "string",
+       "description": "The unique moment ID (MOID) of the moment to unlike."
+      }
+     },
+     "required": [
+      "uid",
+      "moid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/unlike_moment",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "comment_moment",
+    "call": "comment_moment",
+    "description": "Post a comment on a specific moment in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact who posted the moment."
+      },
+      "moid": {
+       "type": "string",
+       "description": "The unique moment ID (MOID) of the moment to comment on."
+      },
+      "content": {
+       "type": "string",
+       "description": "The text content of the comment."
+      }
+     },
+     "required": [
+      "uid",
+      "moid",
+      "content"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/comment_moment",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "comment_comment",
+    "call": "comment_comment",
+    "description": "Post a nested reply (comment on a comment) under a specific moment in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact who posted the original moment."
+      },
+      "moid": {
+       "type": "string",
+       "description": "The unique moment ID (MOID) of the moment being commented on."
+      },
+      "cid": {
+       "type": "string"
+      },
+      "content": {
+       "type": "string",
+       "description": "The text content of the nested comment."
+      }
+     },
+     "required": [
+      "uid",
+      "moid",
+      "cid",
+      "content"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/comment_comment",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_all_tags",
+    "call": "list_all_tags",
+    "description": "Retrieve a list of all available contact tags in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/list_all_tags",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_contacts_by_tag",
+    "call": "get_contacts_by_tag",
+    "description": "Find all contacts in LightTalk that are labeled with a specific tag.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "tag": {
+       "type": "string",
+       "description": "The tag name to filter contacts by (e.g., 'family', 'work')."
+      }
+     },
+     "required": [
+      "tag"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/get_contacts_by_tag",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_contacts_by_gender",
+    "call": "get_contacts_by_gender",
+    "description": "Retrieve all contacts in LightTalk filtered by gender.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "gender": {
+       "type": "string",
+       "description": "The gender to filter by (e.g., 'male', 'female', 'other')."
+      }
+     },
+     "required": [
+      "gender"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/get_contacts_by_gender",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "withdraw_comment_moment",
+    "call": "withdraw_comment_moment",
+    "description": "Delete (withdraw) your own comment on a moment in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact who posted the moment."
+      },
+      "moid": {
+       "type": "string",
+       "description": "The unique moment ID (MOID) of the moment the comment belongs to."
+      },
+      "my_cid": {
+       "type": "string",
+       "description": "The unique comment ID (CID) of your own comment to withdraw."
+      }
+     },
+     "required": [
+      "uid",
+      "moid",
+      "my_cid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/withdraw_comment_moment",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "withdraw_comment_comment",
+    "call": "withdraw_comment_comment",
+    "description": "Delete (withdraw) your own nested comment (reply to a comment) under a specific moment in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact who posted the original moment."
+      },
+      "moid": {
+       "type": "string",
+       "description": "The unique moment ID (MOID) of the moment the comment thread belongs to."
+      },
+      "cid": {
+       "type": "string",
+       "description": "The comment ID (CID) of the parent comment that your nested comment replies to."
+      },
+      "my_cid": {
+       "type": "string",
+       "description": "The unique comment ID (CID) of your own nested comment to withdraw."
+      }
+     },
+     "required": [
+      "uid",
+      "moid",
+      "cid",
+      "my_cid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/withdraw_comment_comment",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "mark_as_read",
+    "call": "mark_as_read",
+    "description": "Mark the chat with a specific contact as read in LightTalk, clearing any unread message indicators.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact whose chat should be marked as read."
+      }
+     },
+     "required": [
+      "uid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/mark_as_read",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "mark_as_unread",
+    "call": "mark_as_unread",
+    "description": "Mark the chat with a specific contact as unread in LightTalk, so it appears as having new messages.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact whose chat should be marked as unread."
+      }
+     },
+     "required": [
+      "uid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/mark_as_unread",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_my_moments",
+    "call": "get_my_moments",
+    "description": "Retrieve all moments (posts) that you have published in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/get_my_moments",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "post_moment",
+    "call": "post_moment",
+    "description": "Publish a new moment (post) in LightTalk with optional images.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "content": {
+       "type": "string",
+       "description": "The text content of the moment to post."
+      },
+      "img_urls": {
+       "items": {
+        "type": "string"
+       },
+       "type": "array",
+       "description": "A list of image URLs to attach to the moment. Can be empty if no images.",
+       "default": []
+      }
+     },
+     "required": [
+      "content"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/post_moment",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "delete_moment",
+    "call": "delete_moment",
+    "description": "Delete one of your own moments (posts) in LightTalk by its unique ID.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "moid": {
+       "type": "string",
+       "description": "The unique moment ID (MOID) of the moment to delete."
+      }
+     },
+     "required": [
+      "moid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/delete_moment",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_shared_url_of_moment",
+    "call": "get_shared_url_of_moment",
+    "description": "Generate a shareable URL for a specific moment posted by a contact in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact who posted the moment."
+      },
+      "moid": {
+       "type": "string",
+       "description": "The unique moment ID (MOID) of the moment to share."
+      }
+     },
+     "required": [
+      "uid",
+      "moid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/get_shared_url_of_moment",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_shared_url_of_contact",
+    "call": "get_shared_url_of_contact",
+    "description": "Generate a shareable profile URL for a contact in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact whose profile URL to generate."
+      }
+     },
+     "required": [
+      "uid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/get_shared_url_of_contact",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "delete_contact",
+    "call": "delete_contact",
+    "description": "Remove a contact from your contact list in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact to delete."
+      }
+     },
+     "required": [
+      "uid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/delete_contact",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "ask_for_privilege",
+    "call": "ask_for_privilege",
+    "description": "Request elevated privileges or special access permissions in LightTalk (e.g., for deletion, moderation, API access, or advanced features).",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/ask_for_privilege",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_ip_choices",
+    "call": "list_ip_choices",
+    "description": "List available IP/address choices that can be used by the current LightTalk session.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/list_ip_choices",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "change_my_ip",
+    "call": "change_my_ip",
+    "description": "Change the current session's IP/address to one of the available choices.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "where": {
+       "type": "string",
+       "description": "The identifier or label of the target IP/address choice to switch to."
+      }
+     },
+     "required": [
+      "where"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/change_my_ip",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "edit_remark",
+    "call": "edit_remark",
+    "description": "Edit the remark/note associated with a contact in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact whose remark will be edited."
+      },
+      "remark": {
+       "type": "string",
+       "description": "The new remark text to store for the contact."
+      }
+     },
+     "required": [
+      "uid",
+      "remark"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/edit_remark",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "delete_remark",
+    "call": "delete_remark",
+    "description": "Remove the remark/note associated with a contact in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the contact whose remark will be removed."
+      }
+     },
+     "required": [
+      "uid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/delete_remark",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "create_group_chat",
+    "call": "create_group_chat",
+    "description": "Create a new group chat with a list of participants in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uids": {
+       "items": {
+        "type": "string"
+       },
+       "type": "array",
+       "description": "A list of UIDs to include as initial members of the group chat.",
+       "default": []
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/create_group_chat",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "send_message_to_group",
+    "call": "send_message_to_group",
+    "description": "Send a text message to a group chat, optionally addressing specific members.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "gid": {
+       "type": "string",
+       "description": "The unique identifier of the group to send the message to."
+      },
+      "content": {
+       "type": "string",
+       "description": "The text content of the message to send to the group."
+      },
+      "at": {
+       "anyOf": [
+        {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        {
+         "type": "string"
+        }
+       ],
+       "default": [],
+       "description": "Optional list of UIDs to mention in the message; can be empty or omitted, or 'all' if mention all members"
+      }
+     },
+     "required": [
+      "gid",
+      "content"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/send_message_to_group",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_group_chat_history",
+    "call": "get_group_chat_history",
+    "description": "Retrieve the chat history of a specific group in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "gid": {
+       "type": "string",
+       "description": "The unique identifier of the group whose history to retrieve."
+      }
+     },
+     "required": [
+      "gid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/get_group_chat_history",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "send_image",
+    "call": "send_image",
+    "description": "Send an image to a specific contact in LightTalk by URL.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "uid": {
+       "type": "string",
+       "description": "The unique identifier of the recipient contact."
+      },
+      "img_url": {
+       "type": "string",
+       "description": "A publicly accessible URL pointing to the image to send."
+      }
+     },
+     "required": [
+      "uid",
+      "img_url"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/send_image",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "send_image_to_group",
+    "call": "send_image_to_group",
+    "description": "Send an image to a group chat by URL, optionally mentioning members.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "gid": {
+       "type": "string",
+       "description": "The unique identifier of the group to send the image to."
+      },
+      "img_url": {
+       "type": "string",
+       "description": "A publicly accessible URL pointing to the image to send."
+      },
+      "at": {
+       "anyOf": [
+        {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        {
+         "type": "string"
+        }
+       ],
+       "default": [],
+       "description": "Optional list of UIDs to mention in the message; can be empty or omitted, or 'all' if mention all members"
+      }
+     },
+     "required": [
+      "gid",
+      "img_url"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/send_image_to_group",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "rename_group",
+    "call": "rename_group",
+    "description": "Change the display name of an existing group chat in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "gid": {
+       "type": "string",
+       "description": "The unique identifier of the group to rename."
+      },
+      "name": {
+       "type": "string",
+       "description": "The new name to assign to the group."
+      }
+     },
+     "required": [
+      "gid",
+      "name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/rename_group",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "delete_group",
+    "call": "delete_group",
+    "description": "Delete an existing group chat in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "gid": {
+       "type": "string",
+       "description": "The unique identifier of the group to delete."
+      }
+     },
+     "required": [
+      "gid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/delete_group",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "change_owner_of_group",
+    "call": "change_owner_of_group",
+    "description": "Transfer group ownership to another member in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "gid": {
+       "type": "string",
+       "description": "The unique identifier of the group."
+      },
+      "uid": {
+       "type": "string",
+       "description": "The UID of the member who should become the new owner."
+      }
+     },
+     "required": [
+      "gid",
+      "uid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/change_owner_of_group",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "quit_group",
+    "call": "quit_group",
+    "description": "Leave a group chat in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "gid": {
+       "type": "string",
+       "description": "The unique identifier of the group to quit."
+      }
+     },
+     "required": [
+      "gid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/quit_group",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "invite_new_member",
+    "call": "invite_new_member",
+    "description": "Invite a new member into an existing group chat in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "gid": {
+       "type": "string",
+       "description": "The unique identifier of the group to invite the member into."
+      },
+      "uid": {
+       "type": "string",
+       "description": "The UID of the contact to invite."
+      }
+     },
+     "required": [
+      "gid",
+      "uid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/invite_new_member",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_all_groups",
+    "call": "list_all_groups",
+    "description": "List all group chats that the current user is a member of in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/list_all_groups",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_group_info",
+    "call": "get_group_info",
+    "description": "Retrieve detailed information about a specific group chat in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "gid": {
+       "type": "string",
+       "description": "The unique identifier of the group whose info to retrieve."
+      }
+     },
+     "required": [
+      "gid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/get_group_info",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "mark_as_read_in_group",
+    "call": "mark_as_read_in_group",
+    "description": "Mark a group's chat as read for the current user in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "gid": {
+       "type": "string",
+       "description": "The unique identifier of the group to mark as read."
+      }
+     },
+     "required": [
+      "gid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/mark_as_read_in_group",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "mark_as_unread_in_group",
+    "call": "mark_as_unread_in_group",
+    "description": "Mark a group's chat as unread so it appears to have new messages in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "gid": {
+       "type": "string",
+       "description": "The unique identifier of the group to mark as unread."
+      }
+     },
+     "required": [
+      "gid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/mark_as_unread_in_group",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "acc_network",
+    "call": "acc_network",
+    "description": "Optimize and accelerate the network connection for LightTalk to reduce latency and improve responsiveness.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/acc_network",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_my_name",
+    "call": "get_my_name",
+    "description": "Retrieve your own display name in LightTalk.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9001/get_my_name",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "light-shop",
+  "description": "LightShop's tools.",
+  "tools": [
+   {
+    "name": "list_all_shop_categories",
+    "call": "list_all_shop_categories",
+    "description": "Retrieve a list of all available shop categories in LightShop.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/list_all_shop_categories",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_shop_id_by_name",
+    "call": "get_shop_id_by_name",
+    "description": "Look up a shop's unique ID (SID) by its display name in LightShop.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "shop_name": {
+       "type": "string",
+       "description": "The display name of the shop to search for."
+      }
+     },
+     "required": [
+      "shop_name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/get_shop_id_by_name",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_items",
+    "call": "list_items",
+    "description": "List all items available in a specific shop in LightShop.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "sid": {
+       "type": "string",
+       "description": "The unique shop ID (SID) of the shop whose items to list."
+      }
+     },
+     "required": [
+      "sid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/list_items",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "add_to_cart",
+    "call": "add_to_cart",
+    "description": "Add a specified quantity of an item from a shop to your shopping cart in LightShop.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "sid": {
+       "type": "string",
+       "description": "The unique shop ID (SID) where the item is sold."
+      },
+      "tid": {
+       "type": "string",
+       "description": "The unique item ID (TID) of the product to add."
+      },
+      "cnt": {
+       "type": "integer",
+       "description": "The number of units to add to the cart (must be a positive integer)."
+      }
+     },
+     "required": [
+      "sid",
+      "tid",
+      "cnt"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/add_to_cart",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_item_info",
+    "call": "get_item_info",
+    "description": "Retrieve detailed information about a specific item in a shop in LightShop.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "sid": {
+       "type": "string",
+       "description": "The unique shop ID (SID) that sells the item."
+      },
+      "tid": {
+       "type": "string",
+       "description": "The unique item ID (TID) of the product to query."
+      }
+     },
+     "required": [
+      "sid",
+      "tid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/get_item_info",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "delete_item_in_cart",
+    "call": "delete_item_in_cart",
+    "description": "Remove a specific item from your shopping cart in LightShop.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "caid": {
+       "type": "string",
+       "description": "The unique cart item ID (CAID) of the item to remove from the cart."
+      }
+     },
+     "required": [
+      "caid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/delete_item_in_cart",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "check_balance",
+    "call": "check_balance",
+    "description": "Check your current account balance in LightShop.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/check_balance",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "checkout_all",
+    "call": "checkout_all",
+    "description": "Complete the purchase of all items currently in your shopping cart in LightShop.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/checkout_all",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_trans_history",
+    "call": "get_trans_history",
+    "description": "Retrieve your transaction history in LightShop, including purchased items and quantities.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/get_trans_history",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_all_shops_by_category",
+    "call": "list_all_shops_by_category",
+    "description": "List all shops in LightShop that belong to a specific category.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "category": {
+       "type": "string",
+       "description": "The shop category to filter by."
+      }
+     },
+     "required": [
+      "category"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/list_all_shops_by_category",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_cart_summary",
+    "call": "get_cart_summary",
+    "description": "Retrieve a summary of the current shopping cart in LightShop, including total price and item counts.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/get_cart_summary",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search_shops",
+    "call": "search_shops",
+    "description": "Search for shops in LightShop by exact or partial name match (case-insensitive).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "shop_name": {
+       "type": "string",
+       "description": "The shop name or partial name to search for."
+      }
+     },
+     "required": [
+      "shop_name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/search_shops",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "fuzzy_search_shops",
+    "call": "fuzzy_search_shops",
+    "description": "Perform a fuzzy (approximate) search for shops in LightShop based on shop name.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "shop_name": {
+       "type": "string",
+       "description": "The shop name to perform fuzzy matching on (e.g., handles typos or similar spellings)."
+      }
+     },
+     "required": [
+      "shop_name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/fuzzy_search_shops",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search_items",
+    "call": "search_items",
+    "description": "Search for items across all shops in LightShop by item name (exact or partial match).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "item_name": {
+       "type": "string",
+       "description": "The item name or keyword to search for."
+      }
+     },
+     "required": [
+      "item_name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/search_items",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "fuzzy_search_items",
+    "call": "fuzzy_search_items",
+    "description": "Perform a fuzzy (approximate) search for items across all shops in LightShop by item name.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "item_name": {
+       "type": "string",
+       "description": "The item name to perform fuzzy matching on (e.g., tolerant to spelling errors)."
+      }
+     },
+     "required": [
+      "item_name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/fuzzy_search_items",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search_items_in_shop",
+    "call": "search_items_in_shop",
+    "description": "Search for items within a specific shop in LightShop by item name (exact or partial match).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "sid": {
+       "type": "string",
+       "description": "The unique shop ID (SID) to search within."
+      },
+      "item_name": {
+       "type": "string",
+       "description": "The item name or keyword to search for in the specified shop."
+      }
+     },
+     "required": [
+      "sid",
+      "item_name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/search_items_in_shop",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "fuzzy_search_items_in_shop",
+    "call": "fuzzy_search_items_in_shop",
+    "description": "Perform a fuzzy search for items within a specific shop in LightShop by item name.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "sid": {
+       "type": "string",
+       "description": "The unique shop ID (SID) to search within."
+      },
+      "item_name": {
+       "type": "string",
+       "description": "The item name to perform fuzzy matching on inside the specified shop."
+      }
+     },
+     "required": [
+      "sid",
+      "item_name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/fuzzy_search_items_in_shop",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_trans_info",
+    "call": "get_trans_info",
+    "description": "Retrieve detailed information about a specific transaction in LightShop.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "trid": {
+       "type": "string",
+       "description": "The unique transaction ID (TRID) to look up."
+      }
+     },
+     "required": [
+      "trid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/get_trans_info",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "delete_trans_history",
+    "call": "delete_trans_history",
+    "description": "Delete a specific transaction record from your transaction history in LightShop.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "trid": {
+       "type": "string",
+       "description": "The unique transaction ID (TRID) of the record to delete."
+      }
+     },
+     "required": [
+      "trid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/delete_trans_history",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "star_shop",
+    "call": "star_shop",
+    "description": "Mark a shop as starred (favorited) in LightShop for quick access.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "sid": {
+       "type": "string",
+       "description": "The unique shop ID (SID) to star."
+      }
+     },
+     "required": [
+      "sid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/star_shop",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "unstar_shop",
+    "call": "unstar_shop",
+    "description": "Remove a shop from your starred (favorited) list in LightShop.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "sid": {
+       "type": "string",
+       "description": "The unique shop ID (SID) to unstar."
+      }
+     },
+     "required": [
+      "sid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/unstar_shop",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "star_item",
+    "call": "star_item",
+    "description": "Mark a specific item as starred (favorited) in LightShop.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "sid": {
+       "type": "string",
+       "description": "The unique shop ID (SID) where the item is sold."
+      },
+      "tid": {
+       "type": "string",
+       "description": "The unique item ID (TID) to star."
+      }
+     },
+     "required": [
+      "sid",
+      "tid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/star_item",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "unstar_item",
+    "call": "unstar_item",
+    "description": "Remove a specific item from your starred (favorited) list in LightShop.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "sid": {
+       "type": "string",
+       "description": "The unique shop ID (SID) where the item is sold."
+      },
+      "tid": {
+       "type": "string",
+       "description": "The unique item ID (TID) to unstar."
+      }
+     },
+     "required": [
+      "sid",
+      "tid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/unstar_item",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_starred_shops",
+    "call": "get_starred_shops",
+    "description": "Retrieve a list of all shops you have starred (favorited) in LightShop.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/get_starred_shops",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_my_starred_items",
+    "call": "get_my_starred_items",
+    "description": "Retrieve a list of all items you have starred (favorited) in LightShop.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/get_my_starred_items",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "wait_payment_password",
+    "call": "wait_payment_password",
+    "description": "Prompt the user to enter or verify their payment password in LightShop. This step is required before proceeding with checkout.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9002/wait_payment_password",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "light-weather",
+  "description": "LightWeather's tools.",
+  "tools": [
+   {
+    "name": "list_cities",
+    "call": "list_cities",
+    "description": "List all cities supported by LightWeather.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/list_cities",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_current_weather",
+    "call": "get_current_weather",
+    "description": "Get the current weather observation for a city.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location": {
+       "type": "string",
+       "description": "The name of the city to query."
+      }
+     },
+     "required": [
+      "location"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/get_current_weather",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_forecast",
+    "call": "get_forecast",
+    "description": "Get a multi-day weather forecast for a city.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location": {
+       "type": "string",
+       "description": "The name of the city to forecast."
+      },
+      "days": {
+       "type": "integer",
+       "description": "Number of days to include in the forecast (must be a positive integer)."
+      }
+     },
+     "required": [
+      "location",
+      "days"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/get_forecast",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_hourly_forecast",
+    "call": "get_hourly_forecast",
+    "description": "Get an hourly weather forecast for a city.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location": {
+       "type": "string",
+       "description": "The name of the city to forecast."
+      },
+      "hours": {
+       "type": "integer",
+       "description": "Number of hours to include in the forecast (must be a positive integer)."
+      }
+     },
+     "required": [
+      "location",
+      "hours"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/get_hourly_forecast",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_stations",
+    "call": "list_stations",
+    "description": "List all available weather stations in LightWeather.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/list_stations",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_station_info",
+    "call": "get_station_info",
+    "description": "Get metadata for a specific weather station.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "station_id": {
+       "type": "string",
+       "description": "The unique identifier of the weather station."
+      }
+     },
+     "required": [
+      "station_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/get_station_info",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_station_observation",
+    "call": "get_station_observation",
+    "description": "Get the latest weather observation from a specific weather station.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "station_id": {
+       "type": "string",
+       "description": "The unique identifier of the weather station."
+      }
+     },
+     "required": [
+      "station_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/get_station_observation",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_historical_weather",
+    "call": "get_historical_weather",
+    "description": "Fetch historical weather records for a location over a specified date range.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location": {
+       "type": "string",
+       "description": "The name of the city or location."
+      },
+      "start": {
+       "type": "string",
+       "description": "Start date in 'YYYY-MM-DD' format."
+      },
+      "end": {
+       "type": "string",
+       "description": "End date in 'YYYY-MM-DD' format."
+      }
+     },
+     "required": [
+      "location",
+      "start",
+      "end"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/get_historical_weather",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_weather_alerts",
+    "call": "get_weather_alerts",
+    "description": "Retrieve active weather alerts (e.g., storms, heatwaves) for a location.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location": {
+       "type": "string",
+       "description": "The name of the city or region."
+      }
+     },
+     "required": [
+      "location"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/get_weather_alerts",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "create_alert",
+    "call": "create_alert",
+    "description": "Create a custom weather alert for a location based on a condition and threshold.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location": {
+       "type": "string",
+       "description": "The name of the city to monitor."
+      },
+      "condition": {
+       "type": "string",
+       "description": "The weather condition to monitor (e.g., 'temperature', 'rainfall', 'wind_speed')."
+      },
+      "threshold": {
+       "type": "number",
+       "description": "The numeric threshold that triggers the alert."
+      }
+     },
+     "required": [
+      "location",
+      "condition",
+      "threshold"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/create_alert",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "delete_alert",
+    "call": "delete_alert",
+    "description": "Delete an existing custom weather alert by its ID.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "alert_id": {
+       "type": "string",
+       "description": "The unique identifier of the alert to delete."
+      }
+     },
+     "required": [
+      "alert_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/delete_alert",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_alerts",
+    "call": "list_alerts",
+    "description": "List all custom weather alerts created during the current session.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/list_alerts",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_uv_index",
+    "call": "get_uv_index",
+    "description": "Get the current UV index and risk level for a location.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location": {
+       "type": "string",
+       "description": "The name of the city or location."
+      }
+     },
+     "required": [
+      "location"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/get_uv_index",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_air_quality",
+    "call": "get_air_quality",
+    "description": "Get the current air quality index (AQI) and category for a location.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location": {
+       "type": "string",
+       "description": "The name of the city or location."
+      }
+     },
+     "required": [
+      "location"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/get_air_quality",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_sun_times",
+    "call": "get_sun_times",
+    "description": "Get sunrise and sunset times for a location on the current date.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location": {
+       "type": "string",
+       "description": "The name of the city or location."
+      }
+     },
+     "required": [
+      "location"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/get_sun_times",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "convert_temperature",
+    "call": "convert_temperature",
+    "description": "Convert a temperature value between Celsius, Fahrenheit, and Kelvin.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "value": {
+       "type": "number",
+       "description": "The numeric temperature value to convert."
+      },
+      "from_unit": {
+       "type": "string",
+       "description": "Source unit: 'C', 'F', or 'K'."
+      },
+      "to_unit": {
+       "type": "string",
+       "description": "Target unit: 'C', 'F', or 'K'."
+      }
+     },
+     "required": [
+      "value",
+      "from_unit",
+      "to_unit"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/convert_temperature",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "estimate_travel_weather",
+    "call": "estimate_travel_weather",
+    "description": "Estimate current weather conditions along a travel route consisting of multiple cities.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "route": {
+       "items": {
+        "type": "string"
+       },
+       "type": "array",
+       "description": "An ordered list of city names representing the travel route.",
+       "default": []
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/estimate_travel_weather",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "compare_climate",
+    "call": "compare_climate",
+    "description": "Compare average climate conditions (e.g., temperature, rainfall) between two locations.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location1": {
+       "type": "string",
+       "description": "The first location to compare."
+      },
+      "location2": {
+       "type": "string",
+       "description": "The second location to compare."
+      }
+     },
+     "required": [
+      "location1",
+      "location2"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/compare_climate",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_precip_probability",
+    "call": "get_precip_probability",
+    "description": "Get the probability of precipitation for each hour over the next N hours in a location.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location": {
+       "type": "string",
+       "description": "The name of the city or location."
+      },
+      "next_hours": {
+       "type": "integer",
+       "description": "Number of upcoming hours to forecast (must be a positive integer)."
+      }
+     },
+     "required": [
+      "location",
+      "next_hours"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/get_precip_probability",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_wind_forecast",
+    "call": "get_wind_forecast",
+    "description": "Get a wind speed and direction forecast for a location over the next N hours.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location": {
+       "type": "string",
+       "description": "The name of the city or location."
+      },
+      "hours": {
+       "type": "integer",
+       "description": "Number of hours to include in the wind forecast."
+      }
+     },
+     "required": [
+      "location",
+      "hours"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/get_wind_forecast",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_climate_summary",
+    "call": "get_climate_summary",
+    "description": "Get an annual climate summary for a location and year, including temperature and precipitation trends.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location": {
+       "type": "string",
+       "description": "The name of the city or location."
+      },
+      "year": {
+       "type": "integer",
+       "description": "The year for which to retrieve the climate summary."
+      }
+     },
+     "required": [
+      "location",
+      "year"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/get_climate_summary",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "set_primary_location",
+    "call": "set_primary_location",
+    "description": "Set a default primary location for weather queries in the current session.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location": {
+       "type": "string",
+       "description": "The name of the city to set as primary."
+      }
+     },
+     "required": [
+      "location"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/set_primary_location",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_primary_location",
+    "call": "get_primary_location",
+    "description": "Retrieve the current session's primary location, if one has been set.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9003/get_primary_location",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "light-flight",
+  "description": "LightFlight's tools.",
+  "tools": [
+   {
+    "name": "list_all_cities",
+    "call": "list_all_cities",
+    "description": "Retrieve a list of all cities that have airports in LightFlight.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/list_all_cities",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_airports_by_city",
+    "call": "list_airports_by_city",
+    "description": "List all airports located in a specific city in LightFlight.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "city": {
+       "type": "string",
+       "description": "The name of the city to query for airports."
+      }
+     },
+     "required": [
+      "city"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/list_airports_by_city",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_flight_details",
+    "call": "get_flight_details",
+    "description": "Get detailed information about a specific flight in LightFlight using its unique flight ID (FID).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "fid": {
+       "type": "string",
+       "description": "The unique flight ID (FID) of the flight to retrieve details for."
+      }
+     },
+     "required": [
+      "fid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/get_flight_details",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search_flights",
+    "call": "search_flights",
+    "description": "Search for available flights between two cities on a specific date in LightFlight.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "departure": {
+       "type": "string",
+       "description": "The departure city name."
+      },
+      "arrival": {
+       "type": "string",
+       "description": "The destination city name."
+      },
+      "date": {
+       "type": "string",
+       "description": "The travel date in 'YYYY-MM-DD' format (e.g., '2026-01-02')."
+      }
+     },
+     "required": [
+      "departure",
+      "arrival",
+      "date"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/search_flights",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "check_seat_availability",
+    "call": "check_seat_availability",
+    "description": "Check the number of remaining seats for a specific cabin class on a given flight in LightFlight.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "fid": {
+       "type": "string",
+       "description": "The unique flight ID (FID)."
+      },
+      "seat_class": {
+       "type": "string",
+       "description": "The cabin class to check (e.g., 'economy', 'business', 'first')."
+      }
+     },
+     "required": [
+      "fid",
+      "seat_class"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/check_seat_availability",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "check_passengers",
+    "call": "check_passengers",
+    "description": "List all passengers currently registered in your LightFlight profile.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/check_passengers",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "add_passenger",
+    "call": "add_passenger",
+    "description": "Add a new passenger to your LightFlight profile for booking purposes.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "The full name of the passenger."
+      },
+      "light_talk_uid": {
+       "type": "string",
+       "description": "Optional LightTalk user ID associated with this passenger (can be any string, including 'empty')."
+      }
+     },
+     "required": [
+      "name",
+      "light_talk_uid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/add_passenger",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "remove_passenger",
+    "call": "remove_passenger",
+    "description": "Remove a passenger from your LightFlight profile by their index.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "passenger_idx": {
+       "type": "integer",
+       "description": "The zero-based index of the passenger to remove."
+      }
+     },
+     "required": [
+      "passenger_idx"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/remove_passenger",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "add_to_booking",
+    "call": "add_to_booking",
+    "description": "Add a flight seat for a specific passenger to your current booking cart in LightFlight.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "fid": {
+       "type": "string",
+       "description": "The unique flight ID (FID)."
+      },
+      "seat_class": {
+       "type": "string",
+       "description": "The cabin class (e.g., 'economy', 'business', 'first')."
+      },
+      "passenger_idx": {
+       "type": "integer",
+       "description": "The index of the passenger (from your passenger list) to book for."
+      }
+     },
+     "required": [
+      "fid",
+      "seat_class",
+      "passenger_idx"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/add_to_booking",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "check_bookings",
+    "call": "check_bookings",
+    "description": "View all flight bookings currently in your cart (both paid and unpaid) in LightFlight.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/check_bookings",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "remove_from_booking",
+    "call": "remove_from_booking",
+    "description": "Remove an unpaid booking item from your cart using its booking ID (BID) in LightFlight.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "bid": {
+       "type": "string",
+       "description": "The unique booking ID (BID) of the item to remove."
+      }
+     },
+     "required": [
+      "bid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/remove_from_booking",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "wait_payment_password",
+    "call": "wait_payment_password",
+    "description": "Prompt the user to enter their payment password in LightFlight. This step is required before checkout.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/wait_payment_password",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "checkout_bookings",
+    "call": "checkout_bookings",
+    "description": "Complete payment for all unpaid bookings in your cart in LightFlight.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/checkout_bookings",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "check_balance",
+    "call": "check_balance",
+    "description": "Check your current account balance in LightFlight.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/check_balance",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_booking_history",
+    "call": "get_booking_history",
+    "description": "Retrieve your historical flight booking records in LightFlight.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/get_booking_history",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "cancel_booking",
+    "call": "cancel_booking",
+    "description": "Cancel one or more paid bookings and receive a 95% refund in LightFlight.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "bids": {
+       "items": {
+        "type": "string"
+       },
+       "type": "array",
+       "description": "A list of booking IDs (BIDs) to cancel. All must be paid.",
+       "default": []
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/cancel_booking",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search_airports",
+    "call": "search_airports",
+    "description": "Search for airports by name (partial match) in LightFlight.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "airport_name": {
+       "type": "string",
+       "description": "The airport name or partial name to search for."
+      }
+     },
+     "required": [
+      "airport_name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/search_airports",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "star_airport",
+    "call": "star_airport",
+    "description": "Mark an airport as starred (favorited) in LightFlight for quick access.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "aid": {
+       "type": "string",
+       "description": "The unique airport ID (AID) to star."
+      }
+     },
+     "required": [
+      "aid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/star_airport",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "unstar_airport",
+    "call": "unstar_airport",
+    "description": "Remove an airport from your starred list in LightFlight.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "aid": {
+       "type": "string",
+       "description": "The unique airport ID (AID) to unstar."
+      }
+     },
+     "required": [
+      "aid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/unstar_airport",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_my_starred_airports",
+    "call": "get_my_starred_airports",
+    "description": "Retrieve a list of all airports you have starred in LightFlight.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/get_my_starred_airports",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_fids_by_arrival",
+    "call": "get_fids_by_arrival",
+    "description": "Retrieve all flight IDs (FIDs) that arrive at a specific destination city in LightFlight.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "arrival": {
+       "type": "string",
+       "description": "The name of the destination city to query for arriving flights."
+      }
+     },
+     "required": [
+      "arrival"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/get_fids_by_arrival",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_fids_by_departure",
+    "call": "get_fids_by_departure",
+    "description": "Retrieve all flight IDs (FIDs) that depart from a specific origin city in LightFlight.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "departure": {
+       "type": "string",
+       "description": "The name of the origin city to query for departing flights."
+      }
+     },
+     "required": [
+      "departure"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9004/get_fids_by_departure",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "light-stock",
+  "description": "LightStock's tools.",
+  "tools": [
+   {
+    "name": "get_account_summary",
+    "call": "get_account_summary",
+    "description": "Retrieve a summary of your account status in LightStock, including user tier and balances.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/get_account_summary",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_all_sectors",
+    "call": "list_all_sectors",
+    "description": "List all industry sectors available in LightStock.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/list_all_sectors",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_all_tickers_by_sector",
+    "call": "list_all_tickers_by_sector",
+    "description": "List all stock tickers belonging to a specific industry sector in LightStock.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "sector": {
+       "type": "string",
+       "description": "The name of the sector (case-insensitive)."
+      }
+     },
+     "required": [
+      "sector"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/list_all_tickers_by_sector",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search_stocks",
+    "call": "search_stocks",
+    "description": "Search for stocks by ticker symbol or company name in LightStock.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "The keyword to search for in ticker symbols or company names."
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/search_stocks",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_stock_details",
+    "call": "get_stock_details",
+    "description": "Get detailed information about a specific stock, including price, P/E ratio, market cap, and description.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticker": {
+       "type": "string",
+       "description": "The stock ticker symbol (e.g., 'AAPL')."
+      }
+     },
+     "required": [
+      "ticker"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/get_stock_details",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "wait_trade_password",
+    "call": "wait_trade_password",
+    "description": "Authenticate the user by entering the trading password. Required before placing orders or upgrading to VIP.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/wait_trade_password",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "transfer_funds",
+    "call": "transfer_funds",
+    "description": "Transfer funds between your trading account and savings account in LightStock.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "amount": {
+       "type": "number",
+       "description": "The amount to transfer (must be positive)."
+      },
+      "direction": {
+       "type": "string",
+       "description": "Transfer direction: 's2t' (savings to trading) or 't2s' (trading to savings)."
+      }
+     },
+     "required": [
+      "amount",
+      "direction"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/transfer_funds",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "place_market_order",
+    "call": "place_market_order",
+    "description": "Place a market order to buy or sell a stock at the current market price.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticker": {
+       "type": "string",
+       "description": "The stock ticker symbol."
+      },
+      "side": {
+       "type": "string",
+       "description": "Order side: 'buy' or 'sell'."
+      },
+      "quantity": {
+       "type": "integer",
+       "description": "Number of shares to trade (must be positive)."
+      }
+     },
+     "required": [
+      "ticker",
+      "side",
+      "quantity"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/place_market_order",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "place_limit_order",
+    "call": "place_limit_order",
+    "description": "Place a limit order to buy or sell a stock only at a specified price or better.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticker": {
+       "type": "string",
+       "description": "The stock ticker symbol."
+      },
+      "side": {
+       "type": "string",
+       "description": "Order side: 'buy' or 'sell'."
+      },
+      "quantity": {
+       "type": "integer",
+       "description": "Number of shares to trade."
+      },
+      "limit_price": {
+       "type": "number",
+       "description": "The limit price for the order."
+      }
+     },
+     "required": [
+      "ticker",
+      "side",
+      "quantity",
+      "limit_price"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/place_limit_order",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "place_stop_loss_order",
+    "call": "place_stop_loss_order",
+    "description": "Place a stop-loss order to automatically sell a stock when its price falls to a specified level. (VIP-only feature)",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticker": {
+       "type": "string",
+       "description": "The stock ticker symbol."
+      },
+      "quantity": {
+       "type": "integer",
+       "description": "Number of shares to sell."
+      },
+      "stop_price": {
+       "type": "number",
+       "description": "The trigger price (must be below current market price)."
+      }
+     },
+     "required": [
+      "ticker",
+      "quantity",
+      "stop_price"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/place_stop_loss_order",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_portfolio",
+    "call": "get_portfolio",
+    "description": "Retrieve your current stock holdings (positions) in LightStock.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/get_portfolio",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_pending_orders",
+    "call": "get_pending_orders",
+    "description": "List all active pending orders (limit or stop-loss) in your account.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/get_pending_orders",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "cancel_order",
+    "call": "cancel_order",
+    "description": "Cancel a pending order by its unique order ID and release any frozen funds.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "oid": {
+       "type": "string",
+       "description": "The unique order ID to cancel."
+      }
+     },
+     "required": [
+      "oid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/cancel_order",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_trade_history",
+    "call": "get_trade_history",
+    "description": "Retrieve a complete history of all executed trades in your account.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/get_trade_history",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "toggle_watchlist",
+    "call": "toggle_watchlist",
+    "description": "Add or remove a stock from your watchlist in LightStock.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticker": {
+       "type": "string",
+       "description": "The stock ticker symbol to toggle."
+      }
+     },
+     "required": [
+      "ticker"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/toggle_watchlist",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_watchlist_details",
+    "call": "get_watchlist_details",
+    "description": "Get current price and key metrics for all stocks in your watchlist.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/get_watchlist_details",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "check_vip_price",
+    "call": "check_vip_price",
+    "description": "Check the current fee required to upgrade your account to VIP status in LightStock.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/check_vip_price",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "upgrade_to_vip",
+    "call": "upgrade_to_vip",
+    "description": "Upgrade your account to VIP status to unlock advanced features like short selling and unlimited day trades.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/upgrade_to_vip",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_day_trades_remaining",
+    "call": "get_day_trades_remaining",
+    "description": "Check how many day trades you have left today. Basic users have a daily limit; VIP users have unlimited trades.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/get_day_trades_remaining",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "set_price_alert",
+    "call": "set_price_alert",
+    "description": "Set a price alert for a stock to notify you when it reaches a target price.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticker": {
+       "type": "string",
+       "description": "The stock ticker symbol."
+      },
+      "price": {
+       "type": "number",
+       "description": "The target price that triggers the alert."
+      }
+     },
+     "required": [
+      "ticker",
+      "price"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/set_price_alert",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "remove_price_alert",
+    "call": "remove_price_alert",
+    "description": "Remove an existing price alert for a stock.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticker": {
+       "type": "string",
+       "description": "The stock ticker symbol to remove the alert for."
+      }
+     },
+     "required": [
+      "ticker"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9005/remove_price_alert",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "light-news",
+  "description": "LightNews's tools.",
+  "tools": [
+   {
+    "name": "list_all_sections",
+    "call": "list_all_sections",
+    "description": "Retrieve a list of all available news sections (categories) in LightNews, such as 'World', 'Technology', 'Sports', etc.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    },
+    "endpoint": {
+     "url": "http://localhost:9006/list_all_sections",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_last_k_news",
+    "call": "get_last_k_news",
+    "description": "Fetch the most recent K news articles from a specific section in LightNews.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "section": {
+       "type": "string",
+       "description": "The name of the news section to fetch articles from (e.g., 'Politics', 'Entertainment')."
+      },
+      "k": {
+       "type": "integer",
+       "description": "The number of latest news articles to retrieve (must be a positive integer)."
+      }
+     },
+     "required": [
+      "section",
+      "k"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9006/get_last_k_news",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search",
+    "call": "search",
+    "description": "Search for news articles in a specific section using keywords, with optional date range filtering.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "section": {
+       "type": "string",
+       "description": "The news section to search within."
+      },
+      "query": {
+       "type": "string",
+       "description": "The keyword or phrase to search for in article titles and content."
+      },
+      "maxn": {
+       "type": "integer",
+       "description": "Maximum number of results to return (must be a positive integer)."
+      },
+      "begin_date": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "default": null,
+       "description": "Optional start date for the search range in ISO format (YYYY-MM-DD). If omitted, no lower bound is applied."
+      },
+      "end_date": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "default": null,
+       "description": "Optional end date for the search range in ISO format (YYYY-MM-DD). If omitted, no upper bound is applied."
+      }
+     },
+     "required": [
+      "section",
+      "query",
+      "maxn"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9006/search",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_details",
+    "call": "get_details",
+    "description": "Retrieve the full content and metadata of a specific news article in LightNews using its unique ID.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "nid": {
+       "type": "string",
+       "description": "The unique news article ID (NID) of the article to fetch details for."
+      }
+     },
+     "required": [
+      "nid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9006/get_details",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_news_url",
+    "call": "get_news_url",
+    "description": "Retrieve the shareable URL for a specific news article in LightNews using its unique ID.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "nid": {
+       "type": "string",
+       "description": "The unique news article ID (NID) of the article to get the URL for."
+      }
+     },
+     "required": [
+      "nid"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9006/get_news_url",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

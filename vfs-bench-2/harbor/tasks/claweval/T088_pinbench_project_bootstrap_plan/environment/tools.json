@@ -1,0 +1,55 @@
+[
+ {
+  "name": "todo",
+  "description": "The todo service's tools.",
+  "tools": [
+   {
+    "name": "create_task",
+    "call": "todo_create_task",
+    "description": "Create a new todo task",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "title": {
+       "type": "string"
+      },
+      "description": {
+       "type": "string"
+      },
+      "priority": {
+       "type": "string"
+      },
+      "due_date": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "title"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9102/todo/tasks/create",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_tasks",
+    "call": "todo_list_tasks",
+    "description": "List todo tasks",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9102/todo/tasks",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]
