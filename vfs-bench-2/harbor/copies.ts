@@ -38,7 +38,8 @@ export function copiedPath(copies: Copy[], path: string): string | undefined {
   let under: string | undefined
   for (const { to, from } of latest) {
     if (from === null) continue
-    if (path === to) return from
+    // A file copied onto a directory goes inside it, as Docker puts it.
+    if (path === to || (path === `${to}/${basename(from)}` && statSync(from).isFile())) return from
     if (path.startsWith(`${to}/`)) {
       const host = join(from, path.slice(to.length + 1))
       if (existsSync(host)) return host
@@ -48,12 +49,17 @@ export function copiedPath(copies: Copy[], path: string): string | undefined {
   return under
 }
 
-/** Lay the copies out in order, each workspace path through `host` to its directory. */
+/**
+ * Lay the copies out in order, each workspace path through `host` to its
+ * directory; a file onto a directory that is there goes inside it.
+ */
 export function copyInto(copies: Copy[], host: (path: string) => string | undefined, task: string): void {
   for (const { to, from } of copies) {
     const target = host(to)
     if (target === undefined) throw new Error(`${task}: COPY to ${to}, which is outside the workspace's mounts`)
     if (from === null) mkdirSync(target, { recursive: true })
+    else if (statSync(from).isFile() && existsSync(target) && statSync(target).isDirectory())
+      cpSync(from, join(target, basename(from)))
     else cpSync(from, target, { recursive: true })
   }
 }

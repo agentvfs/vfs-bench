@@ -140,8 +140,12 @@ workspace (`workspace`). `copy` takes `COPY . <dir>` as the entries of
 to `environment/` (`/workspace/policies: policies/`). Several COPYs to one
 destination are a list of them in the Dockerfile's order (`- {src:
 policies/}`, `- {src: ., entries: [notes]}`), each merged into what the
-ones before left, as Docker does; export.py fails a `copy` that names a
-destination twice or states fewer COPYs than the Dockerfile has.
+ones before left, as Docker does. Destinations are laid out in the order
+`copy` lists them, and a file copied onto a directory already there goes
+inside it. export.py fails a `copy` that names a destination twice, states
+fewer COPYs than the Dockerfile has, lists destinations in another order,
+or drops a file's destination `/`; and a Dockerfile whose COPYs to one
+destination have another between them, which `copy` cannot state.
 `mirage.ts`'s header describes each key.
 
 A fixture comes from upstream's own seed (`fixtures/main.ts`). The mock's

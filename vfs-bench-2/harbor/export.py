@@ -232,28 +232,47 @@ def agrees(task: str, mirage: dict) -> list[str]:
     environment = sorted(p.name
                          for p in (UPSTREAM / task / "environment").iterdir()
                          if p.name != "Dockerfile")
+
     # `COPY . <dir>` is the entries of environment/; `COPY <src> <dest>`,
-    # its source; several COPYs to one destination, each in order, so that
-    # none of them is lost.
-    by_dest: dict[str, list[str]] = {}
+    # its source. COPYs in a row to one destination are a list, in order;
+    # the destinations stay in the Dockerfile's order, as mirage.ts lays
+    # them out. A file's destination keeps its `/`, which puts the file
+    # inside it; a directory's is the same either way.
+    def key(dest: str, src: str) -> str:
+        is_file = src != "." and (UPSTREAM / task / "environment" /
+                                  src).is_file()
+        return dest if is_file else dest.rstrip("/")
+
+    runs: list[tuple[str, list[str]]] = []
     for src, dest in docker["copy"]:
-        by_dest.setdefault(dest.rstrip("/"), []).append(src)
-    copies = {
-        dest: (environment if srcs[0] == "." else srcs[0])
-        if len(srcs) == 1 else [{
-            "src": ".",
-            "entries": environment
-        } if src == "." else {
-            "src": src
-        } for src in srcs]
-        for dest, srcs in by_dest.items()
-    }
+        k = key(dest, src)
+        if runs and runs[-1][0] == k:
+            runs[-1][1].append(src)
+        elif any(k == done for done, _ in runs):
+            problems.append(f"the COPYs to {k} have another between them, "
+                            "whose order mirage.yaml cannot state")
+        else:
+            runs.append((k, [src]))
+    copies = [(dest, (environment if srcs[0] == "." else srcs[0])
+               if len(srcs) == 1 else [{
+                   "src": ".",
+                   "entries": environment
+               } if src == "." else {
+                   "src": src
+               } for src in srcs]) for dest, srcs in runs]
+
+    def sources(value) -> list[str]:
+        if isinstance(value, str):
+            return [value]
+        return [v["src"] if isinstance(v, dict) else "." for v in value]
+
     raw = mirage.get("copy") or {}
-    stated = {k.rstrip("/"): v for k, v in raw.items()}
-    if len(stated) != len(raw):
+    stated = [(key(k, (sources(v) or ["."])[0]), v) for k, v in raw.items()]
+    if len({k for k, _ in stated}) != len(stated):
         problems.append("copy names one destination twice")
     if stated != copies:
-        problems.append(f"copy is not the Dockerfile's COPY lines {copies}")
+        problems.append(
+            f"copy is not the Dockerfile's COPY lines, in order {copies}")
     return problems
 
 

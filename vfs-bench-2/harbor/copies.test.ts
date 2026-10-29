@@ -32,9 +32,10 @@ function taskDir(files: Record<string, string>): string {
   return dir
 }
 
-/** The copies laid out under a scratch `/workspace`, and what each file there holds. */
+/** The copies laid out under a scratch `/workspace`, there first as the workspace makes it, and what each file there holds. */
 function laid(copies: Parameters<typeof copyInto>[0]): Record<string, string> {
   const root = mkdtempSync(join(tmpdir(), 'vfsbench-copies-ws-'))
+  mkdirSync(join(root, 'workspace'))
   try {
     copyInto(copies, (path) => (path === '/workspace' || path.startsWith('/workspace/') ? join(root, path.slice(1)) : undefined), 'test')
     const out: Record<string, string> = {}
@@ -122,6 +123,18 @@ test("mirage.yaml's several COPYs to one destination arrive in order", () => {
       ['/workspace', '/workspace', '/workspace/seed.sql'],
     )
     assert.deepEqual(laid(plan.copies), { 'policy.md': 'policy\n', 'note.md': 'note\n', 'shared.md': 'from notes\n', 'seed.sql': '-- seed\n' })
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('a file COPY onto a directory that is there goes inside it, and an ENV naming it is the host file', () => {
+  const dir = taskDir({})
+  try {
+    const seed = join(dir, 'environment', 'seed.sql')
+    const copies = [{ to: '/workspace', from: seed }]
+    assert.deepEqual(laid(copies), { 'seed.sql': '-- seed\n' })
+    assert.equal(copiedPath(copies, '/workspace/seed.sql'), seed)
   } finally {
     rmSync(dir, { recursive: true, force: true })
   }

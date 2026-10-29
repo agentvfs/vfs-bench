@@ -3,7 +3,9 @@
     uv run --project harbor python -I harbor/test_export.py
 
 Two COPYs to one destination are two entries, in order: a ``copy`` that
-states one of them, or names the destination twice, fails the check.
+states one of them, or names the destination twice, fails the check. So
+does one that states destinations out of the Dockerfile's order, or a
+file's destination without its ``/``.
 """
 import sys
 import tempfile
@@ -18,6 +20,11 @@ import export  # noqa: E402
 DOCKERFILE = """FROM liveclawbench-example-base:latest
 COPY policies/ /workspace/
 COPY notes/ /workspace/
+"""
+
+OVERLAPPING = """FROM liveclawbench-example-base:latest
+COPY base/ /workspace/
+COPY patch/ /workspace/policies/
 """
 
 
@@ -35,9 +42,48 @@ class CopyCheck(unittest.TestCase):
         export.UPSTREAM = self.upstream
         self.root.cleanup()
 
-    def problems(self, copy: dict) -> list[str]:
+    def problems(self, copy: dict, dockerfile: str | None = None) -> list[str]:
+        environment = Path(self.root.name, "example", "environment")
+        if dockerfile is not None:
+            (environment / "Dockerfile").write_text(dockerfile)
+            (environment / "base").mkdir(exist_ok=True)
+            (environment / "patch").mkdir(exist_ok=True)
+            (environment / "seed.sql").write_text("")
         mirage = {"env": {"TASK_NAME": "example"}, "copy": copy}
-        return [p for p in export.agrees("example", mirage) if "copy" in p]
+        return [
+            p for p in export.agrees("example", mirage)
+            if "copy" in p or "COPY" in p
+        ]
+
+    def test_destinations_in_order_agree(self) -> None:
+        self.assertEqual(
+            self.problems(
+                {
+                    "/workspace": "base/",
+                    "/workspace/policies": "patch/"
+                }, OVERLAPPING), [])
+
+    def test_destinations_out_of_order_disagree(self) -> None:
+        # mirage.ts lays them out in this order, so the base would replace
+        # the patch.
+        self.assertNotEqual(
+            self.problems(
+                {
+                    "/workspace/policies": "patch/",
+                    "/workspace": "base/"
+                }, OVERLAPPING), [])
+
+    def test_split_copies_to_one_destination_disagree(self) -> None:
+        self.assertNotEqual(
+            self.problems({"/workspace": "base/"},
+                          OVERLAPPING + "COPY base/ /workspace/\n"), [])
+
+    def test_a_file_keeps_its_destination_slash(self) -> None:
+        dockerfile = "FROM x\nCOPY seed.sql /workspace/config/\n"
+        self.assertEqual(
+            self.problems({"/workspace/config/": "seed.sql"}, dockerfile), [])
+        self.assertNotEqual(
+            self.problems({"/workspace/config": "seed.sql"}, dockerfile), [])
 
     def test_both_copies_in_order_agree(self) -> None:
         self.assertEqual(
