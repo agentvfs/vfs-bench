@@ -1,0 +1,7 @@
+{
+  "task": "finance-monthly-close",
+  "mocks": ["finance"],
+  "rewrite": {
+    "(http://localhost:1235/)": "(the `finance` CLI)"
+  }
+}
