@@ -21,3 +21,12 @@ state/
 # Run transcripts, kept local.
 dumps/
 fakes/*/generated/
+# The kit fakes' Prisma clients, generated on first start (harbor/fakes.ts):
+# one per schema, the link to the current one, a launcher's staging, and the
+# link to Mirage's integ packages Prisma resolves them through. `generated*`
+# is what earlier revisions of this layout left, now unused.
+mocks/*/client
+mocks/*/client-*/
+mocks/*/client.*
+mocks/*/generated*
+mocks/node_modules

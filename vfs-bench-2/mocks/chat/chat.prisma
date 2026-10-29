@@ -1,0 +1,119 @@
+// The chat fake's store: LiveClawBench's chat mock (Mosi-AI/LiveClawBench @
+// 303dc77, MIT, mock-platform/mocks/chat/src/db/schema.ts), one SQLite file
+// per run.
+//
+// Each table and column is upstream's, by name, type, nullability and
+// default, so upstream's verify.py reads a run's file unchanged. Fields keep
+// upstream's snake_case column names for that reason; only the models are
+// renamed, with @@map. Two things Prisma cannot say are left to the routes:
+// the CHECK lists on `kind`, `message_kind`, `category` and `mime_type`.
+//
+// `_sticker_file` is the fake's own: the bytes behind each sticker's
+// `storage_path`, which upstream keeps as files on disk. Held here, a run is
+// one file, and a reset or a dropped run takes its stickers with it. The
+// leading underscore marks it internal.
+//
+// No tenant column: a run is one user's world (tenantKind 'none'), as
+// upstream's mock is.
+
+datasource db {
+  provider = "sqlite"
+  url      = env("INTEG_DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "client"
+}
+
+model MockUser {
+  id           Int     @id @default(autoincrement())
+  display_name String?
+
+  channels Channel[]
+  stickers UserSticker[]
+  packs    UserStickerPack[]
+
+  @@map("mock_user")
+}
+
+model Channel {
+  id                   Int     @id @default(autoincrement())
+  user_id              Int
+  name                 String
+  kind                 String  @default("group")
+  last_message_preview String?
+  updated_at           String
+  unread_count         Int?    @default(0)
+
+  user     MockUser  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  messages Message[]
+
+  @@map("channel")
+}
+
+model Message {
+  id           Int     @id @default(autoincrement())
+  channel_id   Int
+  sender       String
+  body         String
+  sent_at      String
+  message_kind String  @default("chat")
+  source_ref   String?
+
+  channel Channel @relation(fields: [channel_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("message")
+}
+
+model StickerPack {
+  id            Int    @id @default(autoincrement())
+  title         String
+  provider_name String
+  sort_order    Int?   @default(0)
+  previews_json String
+
+  stickers UserSticker[]
+  owners   UserStickerPack[]
+
+  @@map("sticker_pack")
+}
+
+model UserSticker {
+  id           Int     @id @default(autoincrement())
+  user_id      Int
+  pack_id      Int?
+  category     String  @default("custom")
+  storage_path String
+  mime_type    String
+  created_at   String
+  sort_order   Int?    @default(0)
+
+  user MockUser     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  pack StickerPack? @relation(fields: [pack_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+
+  @@map("user_sticker")
+}
+
+model UserStickerPack {
+  id              Int    @id @default(autoincrement())
+  user_id         Int
+  sticker_pack_id Int
+  acquired_at     String
+
+  user MockUser    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  pack StickerPack @relation(fields: [sticker_pack_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([user_id, sticker_pack_id])
+  @@map("user_sticker_pack")
+}
+
+// A sticker file, by the `storage_path` that serves it. `data` is base64,
+// since an upload may be any image.
+model StickerFile {
+  storage_path String @id
+  mime_type    String
+  data         String
+
+  @@map("_sticker_file")
+}

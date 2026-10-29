@@ -1,0 +1,514 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg0001",
+   "threadId": "msg0001",
+   "internalDate": 1774774800000,
+   "bodyText": "Hi Peter,\n\nI hope this email finds you well. I wanted to follow up on the project proposal we discussed last week.\n\nThe key points we covered were:\n- Timeline adjustment for Q2 deliverables\n- Budget allocation for the new features\n- Resource requirements for the development team\n\nI've attached the updated proposal document for your review. Please let me know if you have any questions or need any clarifications.\n\nLooking forward to your feedback.\n\nBest regards,\nJohn Smith\nProject Manager",
+   "headers": [
+    {
+     "name": "From",
+     "value": "\"john.smith\" <john.smith@gmail.com>"
+    },
+    {
+     "name": "To",
+     "value": "peter.griffin@work.mosi.inc"
+    },
+    {
+     "name": "Subject",
+     "value": "Project Proposal Review"
+    },
+    {
+     "name": "Date",
+     "value": "Sun, 29 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  },
+  {
+   "id": "msg0002",
+   "threadId": "msg0002",
+   "internalDate": 1774947600000,
+   "bodyText": "Dear Peter,\n\nThis is a confirmation that your quarterly review meeting has been scheduled for:\n\nDate: March 20, 2026\nTime: 2:00 PM - 3:30 PM\nLocation: Conference Room B\nZoom Link: https://zoom.us/j/123456789\n\nPlease come prepared with your Q1 achievements and Q2 goals. If you need to reschedule, please let me know at least 24 hours in advance.\n\nBest,\nSarah Jones\nHR Department",
+   "headers": [
+    {
+     "name": "From",
+     "value": "\"sarah.jones\" <sarah.jones@zai.org>"
+    },
+    {
+     "name": "To",
+     "value": "peter.griffin@work.mosi.inc"
+    },
+    {
+     "name": "Subject",
+     "value": "Meeting Scheduled: Quarterly Review"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 31 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg0003",
+   "threadId": "msg0003",
+   "internalDate": 1775034000000,
+   "bodyText": "Hey Peter,\n\nThanks for the detailed analysis on the microservices architecture. I've reviewed your suggestions and I think we should proceed with the following approach:\n\n1. Start with the user authentication service\n2. Migrate the notification system next\n3. Keep the legacy monolith running for 6 months as backup\n\nI've discussed this with the team and everyone is on board. Let's sync up early next week to create a detailed implementation plan.\n\nCheers,\nMike",
+   "headers": [
+    {
+     "name": "From",
+     "value": "\"mike.wilson\" <mike.wilson@work.mosi.inc>"
+    },
+    {
+     "name": "To",
+     "value": "peter.griffin@work.mosi.inc"
+    },
+    {
+     "name": "Subject",
+     "value": "Re: Technical Architecture Discussion"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 01 Apr 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  },
+  {
+   "id": "msg0004",
+   "threadId": "msg0004",
+   "internalDate": 1775120400000,
+   "bodyText": "Hi Peter,\n\nI'm writing to request a new feature for our user dashboard. Based on customer feedback, we've identified the following requirements:\n\nRequirements:\n- Real-time analytics display\n- Customizable widget layout\n- Export functionality for reports\n- Dark mode support\n\nPriority: High\nTarget Release: v2.5\n\nCould you provide an estimate on development time and any technical constraints we should be aware of?\n\nThanks,\nLisa Chen\nProduct Manager",
+   "headers": [
+    {
+     "name": "From",
+     "value": "\"lisa.chen\" <lisa.chen@hitech.com>"
+    },
+    {
+     "name": "To",
+     "value": "peter.griffin@work.mosi.inc"
+    },
+    {
+     "name": "Subject",
+     "value": "New Feature Request - User Dashboard"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 02 Apr 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg0005",
+   "threadId": "msg0005",
+   "internalDate": 1775206800000,
+   "bodyText": "Dear Peter Griffin,\n\nPlease find attached the invoice for services rendered in February 2026.\n\nInvoice Details:\n- Invoice Number: INV-2026-0342\n- Amount Due: $4,500.00\n- Due Date: March 25, 2026\n- Payment Terms: Net 30\n\nPayment Methods:\n- Bank Transfer (Preferred)\n- Credit Card (3% processing fee applies)\n- PayPal\n\nIf you have any questions about this invoice, please don't hesitate to contact our billing department.\n\nThank you for your business.\n\nBest regards,\nDavid Brown\nFinance Department\nCreative Agency Inc.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "\"david.brown\" <david.brown@outlook.com>"
+    },
+    {
+     "name": "To",
+     "value": "peter.griffin@work.mosi.inc"
+    },
+    {
+     "name": "Subject",
+     "value": "Invoice #INV-2026-0342 - Due March 25"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 03 Apr 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg0006",
+   "threadId": "msg0006",
+   "internalDate": 1775120400000,
+   "bodyText": "Hi Peter,\n\nWe can offer LaptopX1 at USD 1180 per unit. Delivery: 5 business days from PO confirmation.\n\nBest,\nAsterByte sales",
+   "headers": [
+    {
+     "name": "From",
+     "value": "\"asterbyte_sales\" <sales@asterbyte.io>"
+    },
+    {
+     "name": "To",
+     "value": "peter.griffin@work.mosi.inc"
+    },
+    {
+     "name": "Subject",
+     "value": "Re: Procurement RFQ -- 24 x LaptopX1"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 02 Apr 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg0007",
+   "threadId": "msg0007",
+   "internalDate": 1775120400000,
+   "bodyText": "Peter,\n\nOur unit price is USD 1090. Delivery: 6 weeks (we are out of stock; next batch from factory).\n\nThanks,\nNorthPeak",
+   "headers": [
+    {
+     "name": "From",
+     "value": "\"northpeak_quotes\" <quotes@northpeak.tech>"
+    },
+    {
+     "name": "To",
+     "value": "peter.griffin@work.mosi.inc"
+    },
+    {
+     "name": "Subject",
+     "value": "Re: Procurement RFQ -- 24 x LaptopX1"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 02 Apr 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg0008",
+   "threadId": "msg0008",
+   "internalDate": 1775120400000,
+   "bodyText": "Hello,\n\nLatticePro can deliver LaptopX1 at USD 1240 per unit. Delivery: 4 business days. Premium support included.\n\nLatticePro desk",
+   "headers": [
+    {
+     "name": "From",
+     "value": "\"latticepro_desk\" <desk@latticepro.ai>"
+    },
+    {
+     "name": "To",
+     "value": "peter.griffin@work.mosi.inc"
+    },
+    {
+     "name": "Subject",
+     "value": "Re: Procurement RFQ -- 24 x LaptopX1"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 02 Apr 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg0009",
+   "threadId": "msg0009",
+   "internalDate": 1774602000000,
+   "bodyText": "Dear Client,\n\nThank you for the opportunity to submit our proposal for the Q2 partnership initiative.\n\nExecutive Summary:\nOur proposal outlines a comprehensive strategy to enhance collaboration and drive mutual growth. Key highlights include:\n\n- Joint marketing campaigns\n- Shared technology infrastructure\n- Revenue-sharing model\n- 24/7 dedicated support team\n\nWe believe this partnership will create significant value for both organizations. I'm available for a call next week to discuss the details.\n\nLooking forward to your response.\n\nBest regards,\nPeter Griffin\nBusiness Development Manager",
+   "headers": [
+    {
+     "name": "From",
+     "value": "\"peter\" <peter.griffin@work.mosi.inc>"
+    },
+    {
+     "name": "To",
+     "value": "client@bigcorporation.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Proposal Submission - Q2 Partnership"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 27 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "SENT"
+    }
+   ]
+  },
+  {
+   "id": "msg0010",
+   "threadId": "msg0010",
+   "internalDate": 1774861200000,
+   "bodyText": "Dear HR Team,\n\nThank you for reaching out regarding the Senior Developer position at TechCompany.\n\nI'm excited about this opportunity and would like to confirm my availability for the technical interview:\n\nAvailable Time Slots:\n- Monday, March 18: 10:00 AM - 2:00 PM\n- Tuesday, March 19: 1:00 PM - 5:00 PM\n- Thursday, March 21: 9:00 AM - 12:00 PM\n\nI've attached my updated resume and portfolio for your reference. Please let me know which time slot works best for your team.\n\nThank you for your consideration.\n\nBest regards,\nPeter Griffin",
+   "headers": [
+    {
+     "name": "From",
+     "value": "\"peter\" <peter.griffin@work.mosi.inc>"
+    },
+    {
+     "name": "To",
+     "value": "hr@techcompany.io"
+    },
+    {
+     "name": "Subject",
+     "value": "Re: Job Application - Senior Developer Position"
+    },
+    {
+     "name": "Date",
+     "value": "Mon, 30 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "SENT"
+    }
+   ]
+  },
+  {
+   "id": "msg0011",
+   "threadId": "msg0011",
+   "internalDate": 1775034000000,
+   "bodyText": "Hello Support Team,\n\nI'm experiencing an issue with my software license and would appreciate your assistance.\n\nIssue Details:\n- License Key: XXXX-XXXX-XXXX-XXXX\n- Error Message: \"License validation failed: Connection timeout\"\n- Software Version: v3.2.1\n- Operating System: Windows 11 Pro\n\nSteps Already Tried:\n1. Restarted the application\n2. Checked firewall settings\n3. Verified internet connectivity\n4. Reinstalled the software\n\nI've been unable to use the software for the past 2 days, which is impacting my work. Could you please help resolve this issue as soon as possible?\n\nThank you,\nPeter Griffin",
+   "headers": [
+    {
+     "name": "From",
+     "value": "\"peter\" <peter.griffin@work.mosi.inc>"
+    },
+    {
+     "name": "To",
+     "value": "support@software-vendor.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Technical Support Request - License Issue"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 01 Apr 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "SENT"
+    }
+   ]
+  },
+  {
+   "id": "msg0012",
+   "threadId": "msg0012",
+   "internalDate": 1775120400000,
+   "bodyText": "Hi Team,\n\nHere's our monthly progress report for March 2026:\n\n## Accomplishments\n- Successfully launched v2.0 of our product\n- Onboarded 150 new users\n- Reduced system latency by 40%\n- Completed security audit with zero critical issues\n\n## Metrics\n- User Engagement: +35% month-over-month\n- Revenue: $45,000 (exceeded target by 12%)\n- Customer Satisfaction: 4.8/5.0\n- Bug Resolution Time: 2.3 days (improved from 4.1 days)\n\n## Next Month Goals\n- Expand to European market\n- Implement AI-powered recommendations\n- Hire 2 additional developers\n- Launch mobile app beta\n\nFull report attached. Let me know if you have any questions.\n\nBest,\nPeter Griffin\nFounder & CEO",
+   "headers": [
+    {
+     "name": "From",
+     "value": "\"peter\" <peter.griffin@work.mosi.inc>"
+    },
+    {
+     "name": "To",
+     "value": "team@startup-incubator.org"
+    },
+    {
+     "name": "Subject",
+     "value": "Monthly Progress Report - March 2026"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 02 Apr 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "SENT"
+    }
+   ]
+  },
+  {
+   "id": "msg0013",
+   "threadId": "msg0013",
+   "internalDate": 1775206800000,
+   "bodyText": "Hey!\n\nSounds like a great plan! I'm definitely up for the hiking trip on Saturday.\n\nQuick questions:\n- What time should we meet?\n- Do I need to bring anything specific?\n- Should we carpool?\n\nI can bring some snacks and water for everyone. Also, I have an extra backpack if anyone needs one.\n\nLooking forward to it!\n\nPeter",
+   "headers": [
+    {
+     "name": "From",
+     "value": "\"peter\" <peter.griffin@work.mosi.inc>"
+    },
+    {
+     "name": "To",
+     "value": "friend.personal@email.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Re: Weekend Plans"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 03 Apr 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "SENT"
+    }
+   ]
+  },
+  {
+   "id": "msg0014",
+   "threadId": "msg0014",
+   "internalDate": 1775034000000,
+   "bodyText": "Hello vendors,\n\nPlease quote on 24 units of LaptopX1 (16GB RAM, 512GB SSD).\nBudget cap: USD 1200 per unit.\nDelivery expected within 7 business days.\nPlease reply with unit price and delivery commitment.\n\nQuote needed by 2026-04-04.\n\nThanks,\nPeter",
+   "headers": [
+    {
+     "name": "From",
+     "value": "\"peter\" <peter.griffin@work.mosi.inc>"
+    },
+    {
+     "name": "To",
+     "value": "sales@asterbyte.io"
+    },
+    {
+     "name": "Subject",
+     "value": "Procurement RFQ -- 24 x LaptopX1"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 01 Apr 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "SENT"
+    }
+   ]
+  },
+  {
+   "id": "msg0015",
+   "threadId": "msg0015",
+   "internalDate": 1775034000000,
+   "bodyText": "Hello vendors,\n\nPlease quote on 24 units of LaptopX1 (16GB RAM, 512GB SSD).\nBudget cap: USD 1200 per unit.\nDelivery expected within 7 business days.\nPlease reply with unit price and delivery commitment.\n\nQuote needed by 2026-04-04.\n\nThanks,\nPeter",
+   "headers": [
+    {
+     "name": "From",
+     "value": "\"peter\" <peter.griffin@work.mosi.inc>"
+    },
+    {
+     "name": "To",
+     "value": "quotes@northpeak.tech"
+    },
+    {
+     "name": "Subject",
+     "value": "Procurement RFQ -- 24 x LaptopX1"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 01 Apr 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "SENT"
+    }
+   ]
+  },
+  {
+   "id": "msg0016",
+   "threadId": "msg0016",
+   "internalDate": 1775034000000,
+   "bodyText": "Hello vendors,\n\nPlease quote on 24 units of LaptopX1 (16GB RAM, 512GB SSD).\nBudget cap: USD 1200 per unit.\nDelivery expected within 7 business days.\nPlease reply with unit price and delivery commitment.\n\nQuote needed by 2026-04-04.\n\nThanks,\nPeter",
+   "headers": [
+    {
+     "name": "From",
+     "value": "\"peter\" <peter.griffin@work.mosi.inc>"
+    },
+    {
+     "name": "To",
+     "value": "desk@latticepro.ai"
+    },
+    {
+     "name": "Subject",
+     "value": "Procurement RFQ -- 24 x LaptopX1"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 01 Apr 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "SENT"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 16
+  }
+ ]
+}

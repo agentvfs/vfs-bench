@@ -1,14 +1,16 @@
-# LiveClawBench tasks that run unchanged on the mirage environment, from
-# upstream's own directories: the oracle reaches 1.0 and nop does not. From
-# vfs-bench-2/:
+# The LiveClawBench tasks committed under harbor/tasks/, on the mirage
+# environment and the kit fakes the job shares: the oracle reaches 1.0 and
+# nop does not. From vfs-bench-2/:
 #   uv run --project harbor harbor run -c harbor/liveclawbench.yaml -a oracle -o state/harbor/jobs
+# An upstream task directory runs as it is with
+#   -p state/liveclawbench/src/tasks/<task> --env vfsbench_harbor:MirageEnvironment
 environment:
   import_path: vfsbench_harbor:MirageEnvironment
 tasks:
-  - path: state/liveclawbench/src/tasks/chat-sticker-engagement
-  - path: state/liveclawbench/src/tasks/sticker-store-acquire
-  - path: state/liveclawbench/src/tasks/weather-aqi-report
-  - path: state/liveclawbench/src/tasks/newsletter-digest-forward
-  - path: state/liveclawbench/src/tasks/procurement-quote-compare-reply
-  - path: state/liveclawbench/src/tasks/stale-client-escalation
-  - path: state/liveclawbench/src/tasks/vendor-requirement-followup
+  - path: harbor/tasks/liveclawbench/chat-sticker-engagement
+  - path: harbor/tasks/liveclawbench/sticker-store-acquire
+  - path: harbor/tasks/liveclawbench/weather-aqi-report
+  - path: harbor/tasks/liveclawbench/newsletter-digest-forward
+  - path: harbor/tasks/liveclawbench/procurement-quote-compare-reply
+  - path: harbor/tasks/liveclawbench/stale-client-escalation
+  - path: harbor/tasks/liveclawbench/vendor-requirement-followup

@@ -1,18 +1,26 @@
 """A Harbor environment served from a Mirage workspace instead of a container.
 
-``harbor run --env vfsbench_harbor:MirageEnvironment`` builds nothing. For
-each trial, ``start()`` runs ``harbor/mocks.ts``, which starts the task's
-mocks and lays out its workspace, then starts a Mirage daemon of the
-trial's own and creates the workspace through the daemon's HTTP API.
-``exec`` is the daemon's ``/shell``. Every path Harbor uses is a disk mount,
-so uploads and downloads are copies into and out of the mounts' host
-directories.
+``harbor run --env vfsbench_harbor:MirageEnvironment`` builds nothing. A
+task states its environment in one of two ways:
+
+- ``environment/mirage.yaml`` (the tasks under ``harbor/tasks/``): its
+  services are kit fakes the whole job shares (``fakes.py``). For each
+  trial, ``start()`` seeds a run of its own on each fake, from the task's
+  fixture, then runs ``harbor/mocks.ts`` to lay out its workspace.
+- ``environment/Dockerfile`` (an upstream LiveClawBench task): ``mocks.ts``
+  starts the trial's own copy of upstream's mocks.
+
+Either way the trial then gets a Mirage daemon of its own, and its
+workspace is created through the daemon's HTTP API. ``exec`` is the
+daemon's ``/shell``. Every path Harbor uses is a disk mount, so uploads and
+downloads are copies into and out of the mounts' host directories.
 
 One daemon per trial keeps trials apart: each has its own network (its
-``localhost:<port>`` reaches only its own mocks), event loop and crashes.
-``--ek daemon_url=<url>`` points the environment at a shared daemon
-instead, which cannot route each trial to its own mocks until Mirage has a
-per-workspace network map (see the README).
+``localhost:<port>`` reaches only its own mocks, or its own runs of the
+shared fakes), event loop and crashes. ``--ek daemon_url=<url>`` points the
+environment at a shared daemon instead, which cannot route each trial to
+its own mocks until Mirage has a per-workspace network map (see the
+README).
 """
 import asyncio
 import json
@@ -27,12 +35,14 @@ import time
 from pathlib import Path, PurePosixPath
 
 import httpx
+import yaml
 from harbor.environments.base import BaseEnvironment, ExecResult
 from harbor.environments.capabilities import (EnvironmentCapabilities,
                                               EnvironmentResourceCapabilities)
 from harbor.models.task.config import NetworkMode
 from harbor.models.trial.paths import EnvironmentPaths
 from harbor.utils.path_filter import filter_paths_by_patterns
+from vfsbench_harbor import fakes
 
 HARBOR = Path(__file__).resolve().parents[2]
 ROOT = HARBOR.parent
@@ -109,12 +119,17 @@ class MirageEnvironment(BaseEnvironment):
         self._workspace_id = ""
         self._mounts: dict[str, dict[str, str]] = {}
         self._state: list[tuple[Path, Path]] = []
+        self._runs: list[fakes.Run] = []
         # One refresh at a time: overlapping ones would share each state
         # file's temporary copy.
         self._refreshing = asyncio.Lock()
         self._workdir = "/"
         super().__init__(*args, **kwargs)
         self._run_dir = (self.trial_paths.trial_dir / "mirage").resolve()
+        # The shared fakes' logs go in the job's directory, as files: Harbor
+        # takes every directory there for a trial (and removes one with no
+        # result when it resumes the job).
+        self._fake_logs = self.trial_paths.trial_dir.parent.resolve()
 
     @staticmethod
     def type() -> str:
@@ -130,12 +145,21 @@ class MirageEnvironment(BaseEnvironment):
         # No CPU or memory is reserved or capped for the task.
         return EnvironmentResourceCapabilities()
 
+    @property
+    def _mirage_yaml(self) -> Path:
+        return self.environment_dir / "mirage.yaml"
+
     def _validate_definition(self):
+        if self._mirage_yaml.is_file():
+            if self.task_env_config.docker_image:
+                raise ValueError("a mirage.yaml task names no image")
+            return
         dockerfile = self.environment_dir / "Dockerfile"
         if not dockerfile.is_file():
             raise FileNotFoundError(
-                f"{dockerfile} not found: the mirage environment runs "
-                "LiveClawBench tasks, whose environment/Dockerfile is FROM "
+                f"{dockerfile} not found: the mirage environment runs a task "
+                "with an environment/mirage.yaml, or a LiveClawBench task, "
+                "whose environment/Dockerfile is FROM "
                 "liveclawbench-<task>-base")
         lines = [
             line.strip() for line in dockerfile.read_text().splitlines()
@@ -181,7 +205,30 @@ class MirageEnvironment(BaseEnvironment):
         self._processes.append(process)
         return process
 
-    async def _plan(self) -> dict:
+    async def _open_runs(self) -> dict[str, dict[str, str]]:
+        """Seed this trial's run on each shared fake its mirage.yaml names.
+
+        Each fake starts on the first trial that needs it, seeded from that
+        trial's fixture; every trial then resets a run of its own from its
+        task's fixture, at the task's epoch.
+        """
+        spec = yaml.safe_load(self._mirage_yaml.read_text()) or {}
+        shared = fakes.pool()
+        name = fakes.run_name(self.session_id)
+        task = self.environment_dir.parent.name
+        runs: dict[str, dict[str, str]] = {}
+        for service, block in (spec.get("fakes") or {}).items():
+            fixture = shared.register(service, task,
+                                      self.environment_dir / block["fixture"])
+            fake = await asyncio.to_thread(shared.fake,
+                                           service, fixture, self._node,
+                                           self._host_env(), self._fake_logs)
+            run = await shared.open(fake, name, fixture, block.get("epoch"))
+            self._runs.append(run)
+            runs[service] = {"url": run.url, "db": str(run.db)}
+        return runs
+
+    async def _plan(self, runs: dict[str, dict[str, str]]) -> dict:
         """Start the mocks and read the plan ``mocks.ts`` writes."""
         mocks = await self._spawn(
             "mocks",
@@ -191,6 +238,7 @@ class MirageEnvironment(BaseEnvironment):
             str(self.environment_dir.parent.resolve()),
             "--run",
             str(self._run_dir),
+            *(["--fakes", json.dumps(runs)] if runs else []),
             env=self._host_env(),
             ready_line=True,
         )
@@ -206,7 +254,8 @@ class MirageEnvironment(BaseEnvironment):
                 return json.loads(
                     Path(line.removeprefix("PLAN=").strip()).read_text())
 
-    async def _start_daemon(self, routes: dict[str, str]) -> str:
+    async def _start_daemon(self, routes: dict[str, str],
+                            allow: list[str]) -> str:
         """Start the trial's own daemon, routing its network; wait for it."""
         port = _free_port()
         daemon = await self._spawn(
@@ -225,6 +274,8 @@ class MirageEnvironment(BaseEnvironment):
                 str(port),
                 "VFSBENCH_ROUTES":
                 json.dumps(routes),
+                "VFSBENCH_ALLOW":
+                json.dumps(allow),
             },
         )
         url = f"http://127.0.0.1:{port}"
@@ -254,7 +305,8 @@ class MirageEnvironment(BaseEnvironment):
                 "and reaches only its mocks",
                 self.environment_name,
             )
-        plan = await self._plan()
+        runs = await self._open_runs() if self._mirage_yaml.is_file() else {}
+        plan = await self._plan(runs)
         self._mounts = plan["mounts"]
         # Where Harbor's agents and verifier write, which Docker mounts.
         paths = EnvironmentPaths.for_os(self.os)
@@ -265,7 +317,10 @@ class MirageEnvironment(BaseEnvironment):
                        for view, live in plan["state"]]
         self._workdir = self.task_env_config.workdir or plan["workdir"]
         routes = {} if self._network_disabled else plan["routes"]
-        url = self._daemon_url or await self._start_daemon(routes)
+        # A mount or CLI reaches its service at the trial's run directly,
+        # so these stay reachable with the network off.
+        allow = plan.get("allow", [])
+        url = self._daemon_url or await self._start_daemon(routes, allow)
         self._client = httpx.AsyncClient(base_url=url,
                                          timeout=httpx.Timeout(60, read=None))
         self._workspace_id = re.sub(r"[^A-Za-z0-9_-]", "-", self.session_id)
@@ -308,6 +363,13 @@ class MirageEnvironment(BaseEnvironment):
                     except TimeoutError:
                         process.kill()
             self._processes = []
+            # The trial's runs of the shared fakes, which stay up.
+            for run in self._runs:
+                try:
+                    await fakes.pool().drop(run)
+                except httpx.HTTPError:
+                    pass
+            self._runs = []
         if delete:
             # The logs and the plan stay; the workspace's files go.
             for child in self._run_dir.iterdir():

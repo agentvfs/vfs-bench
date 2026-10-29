@@ -1,0 +1,1 @@
+Please go through my company email system (at /gmail, or through the gws CLI) and make sure no important client issue has been left unanswered for more than 48 hours. If you find one, send an escalation email to ops@work.mosi.inc with the thread summary and the client name, and update the existing escalation log in my workspace at `/workspace/notes/client-escalation-log.md`.

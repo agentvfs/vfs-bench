@@ -1,0 +1,131 @@
+{
+ "mock_user": [
+  {
+   "id": 1,
+   "display_name": "You"
+  }
+ ],
+ "channel": [
+  {
+   "id": 1,
+   "user_id": 1,
+   "name": "#general",
+   "kind": "group",
+   "last_message_preview": null,
+   "updated_at": "2026-04-03T09:00:00.000Z",
+   "unread_count": 0
+  },
+  {
+   "id": 2,
+   "user_id": 1,
+   "name": "#pets",
+   "kind": "group",
+   "last_message_preview": null,
+   "updated_at": "2026-04-03T09:00:00.000Z",
+   "unread_count": 0
+  },
+  {
+   "id": 3,
+   "user_id": 1,
+   "name": "#space",
+   "kind": "group",
+   "last_message_preview": null,
+   "updated_at": "2026-04-03T09:00:00.000Z",
+   "unread_count": 0
+  }
+ ],
+ "message": [
+  {
+   "id": 1,
+   "channel_id": 2,
+   "sender": "Alice",
+   "body": "I love cats, send me a cat sticker!",
+   "sent_at": "2026-04-03T09:00:00.000Z",
+   "message_kind": "chat",
+   "source_ref": null
+  },
+  {
+   "id": 2,
+   "channel_id": 2,
+   "sender": "Bob",
+   "body": "Dogs are great too!",
+   "sent_at": "2026-04-03T09:00:00.000Z",
+   "message_kind": "chat",
+   "source_ref": null
+  },
+  {
+   "id": 3,
+   "channel_id": 3,
+   "sender": "Charlie",
+   "body": "Show me a rocket sticker!",
+   "sent_at": "2026-04-03T09:00:00.000Z",
+   "message_kind": "chat",
+   "source_ref": null
+  }
+ ],
+ "sticker_pack": [
+  {
+   "id": 1,
+   "title": "Cute Cats",
+   "provider_name": "Meow Studios",
+   "sort_order": 1,
+   "previews_json": "[{\"filename\":\"cat-1.svg\",\"label\":\"Sleepy Cat\"},{\"filename\":\"cat-2.svg\",\"label\":\"Playful Cat\"},{\"filename\":\"cat-3.svg\",\"label\":\"Curious Cat\"}]"
+  },
+  {
+   "id": 2,
+   "title": "Space Adventure",
+   "provider_name": "Cosmic Co",
+   "sort_order": 2,
+   "previews_json": "[{\"filename\":\"space-1.svg\",\"label\":\"Rocket\"},{\"filename\":\"space-2.svg\",\"label\":\"Astronaut\"},{\"filename\":\"space-3.svg\",\"label\":\"Planet\"}]"
+  },
+  {
+   "id": 3,
+   "title": "Happy Dogs",
+   "provider_name": "Bark Inc",
+   "sort_order": 3,
+   "previews_json": "[{\"filename\":\"dog-1.svg\",\"label\":\"Puppy\"},{\"filename\":\"dog-2.svg\",\"label\":\"Running Dog\"},{\"filename\":\"dog-3.svg\",\"label\":\"Sleepy Dog\"}]"
+  },
+  {
+   "id": 4,
+   "title": "Foodie Fun",
+   "provider_name": "Yummy Arts",
+   "sort_order": 4,
+   "previews_json": "[{\"filename\":\"food-1.svg\",\"label\":\"Pizza\"},{\"filename\":\"food-2.svg\",\"label\":\"Burger\"},{\"filename\":\"food-3.svg\",\"label\":\"Ice Cream\"}]"
+  }
+ ],
+ "user_sticker": [
+  {
+   "id": 1,
+   "user_id": 1,
+   "pack_id": null,
+   "category": "recent",
+   "storage_path": "/static/chat/stickers/5eed0000-0000-4000-8000-000000000001.svg",
+   "mime_type": "image/svg+xml",
+   "created_at": "2026-04-03T09:00:00.000Z",
+   "sort_order": 0
+  },
+  {
+   "id": 2,
+   "user_id": 1,
+   "pack_id": null,
+   "category": "recent",
+   "storage_path": "/static/chat/stickers/5eed0000-0000-4000-8000-000000000002.svg",
+   "mime_type": "image/svg+xml",
+   "created_at": "2026-04-03T09:00:00.000Z",
+   "sort_order": 1
+  }
+ ],
+ "user_sticker_pack": [],
+ "_sticker_file": [
+  {
+   "storage_path": "/static/chat/stickers/5eed0000-0000-4000-8000-000000000001.svg",
+   "mime_type": "image/svg+xml",
+   "data": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDY0IDY0Ij48Y2lyY2xlIGN4PSIzMiIgY3k9IjMyIiByPSIyOCIgZmlsbD0iI0ZGRjNFMCIvPjxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjIwIiBmaWxsPSIjRkY5ODAwIi8+PGNpcmNsZSBjeD0iMjYiIGN5PSIyNiIgcj0iNCIgZmlsbD0iI0ZGNTcyMiIvPjxjaXJjbGUgY3g9IjM4IiBjeT0iMjQiIHI9IjMiIGZpbGw9IiNGRjU3MjIiLz48Y2lyY2xlIGN4PSIzNCIgY3k9IjM2IiByPSIzIiBmaWxsPSIjRkY1NzIyIi8+PGNpcmNsZSBjeD0iMjgiIGN5PSIzNCIgcj0iMiIgZmlsbD0iI0ZGNTcyMiIvPjxwYXRoIGQ9Ik0zMiAxMiBMMzIgOCIgc3Ryb2tlPSIjNENBRjUwIiBzdHJva2Utd2lkdGg9IjMiLz48L3N2Zz4="
+  },
+  {
+   "storage_path": "/static/chat/stickers/5eed0000-0000-4000-8000-000000000002.svg",
+   "mime_type": "image/svg+xml",
+   "data": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDY0IDY0Ij48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9IiNGRkY4RTEiLz48cmVjdCB4PSIxMiIgeT0iMjQiIHdpZHRoPSI0MCIgaGVpZ2h0PSIyMCIgcng9IjEwIiBmaWxsPSIjNzk1NTQ4Ii8+PHJlY3QgeD0iMTYiIHk9IjI4IiB3aWR0aD0iMzIiIGhlaWdodD0iMTIiIHJ4PSI2IiBmaWxsPSIjQTE4ODdGIi8+PHJlY3QgeD0iMjAiIHk9IjIwIiB3aWR0aD0iMjQiIGhlaWdodD0iOCIgcng9IjQiIGZpbGw9IiNGRkNDODAiLz48cmVjdCB4PSIxOCIgeT0iNDQiIHdpZHRoPSIyOCIgaGVpZ2h0PSI0IiBmaWxsPSIjRkZDMTA3Ii8+PC9zdmc+"
+  }
+ ]
+}

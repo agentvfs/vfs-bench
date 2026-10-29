@@ -2,16 +2,21 @@
  * Start one Harbor trial's mocks and lay out its workspace, for
  * vfsbench_harbor's MirageEnvironment.
  *
- *     node harbor/mocks.ts --task <task dir> --run <run dir>
+ *     node harbor/mocks.ts --task <task dir> --run <run dir> [--fakes <json>]
  *
- * An adapter (`liveclawbench.ts`) reads the task directory into a `Plan`.
- * This starts the plan's fakes with harness/fakes.ts, each on a free port,
- * fills the run's directories, and writes `<run>/plan.json`: the Mirage
- * workspace config to create, each mount's host directory, the mocks'
- * state files, the routes from upstream's ports to the mocks and the
- * Dockerfile's `RUN` lines. It prints `PLAN=<path>` once the mocks are
- * listening, as a fake prints its URL, and stops them on SIGTERM or when
- * its stdin closes (its parent is gone).
+ * An adapter reads the task directory into a `Plan`: `mirage.ts` a task
+ * with an `environment/mirage.yaml` (the tasks under harbor/tasks/), and
+ * `liveclawbench.ts` an upstream task's Dockerfile. This starts the plan's
+ * own fakes with harness/fakes.ts, each on a free port, fills the run's
+ * directories, and writes `<run>/plan.json`: the Mirage workspace config to
+ * create, each mount's host directory, the mocks' state files, the routes
+ * from upstream's ports to the mocks and the `RUN` lines. It prints
+ * `PLAN=<path>` once the mocks are listening, as a fake prints its URL, and
+ * stops them on SIGTERM or when its stdin closes (its parent is gone).
+ *
+ * A mirage.yaml task's fakes are shared by the job and already running:
+ * `--fakes` names each one's run for this trial, its base URL
+ * (`<fake>/_run/<run>`) and its SQLite file, and this starts none.
  */
 import { cpSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, dirname, join, relative, resolve } from 'node:path'
@@ -24,6 +29,7 @@ import { type FakeSpec, start } from '../harness/fakes.ts'
 import { STATE } from '../harness/paths.ts'
 import { Run } from '../harness/runs.ts'
 import * as liveclawbench from './liveclawbench.ts'
+import * as mirage from './mirage.ts'
 
 /** What a task's environment needs, as an adapter reads it from the task. */
 export interface Plan {
@@ -36,8 +42,8 @@ export interface Plan {
   state: Record<string, string>
   /** The environment every command sees, as the container's. */
   env: Record<string, string>
-  /** Host directories copied into the workspace, by workspace path. */
-  copies: Record<string, string>
+  /** Host directories copied into the workspace, by workspace path; null makes it empty. */
+  copies: Record<string, string | null>
   /**
    * The Dockerfile's `RUN` lines, each with the directory it runs in, which
    * run in the workspace once it opens, as a build's would.
@@ -45,13 +51,15 @@ export interface Plan {
   run: { cwd: string; line: string }[]
   /** Where a command runs when Harbor names no directory. */
   workdir?: string
+  /** Mounts and CLIs the task adds to the workspace config. */
+  workspace?: Record<string, unknown>
 }
 
 interface MountBlock {
   vfs: string
   mode: string
-  read: string
-  config: { root: string }
+  read?: string
+  config: { root?: string }
 }
 
 const HERE = dirname(fileURLToPath(import.meta.url))
@@ -70,23 +78,31 @@ function interpolate<T>(value: T, vars: Record<string, string>): T {
   ) as T
 }
 
-/** A workspace path's host file, through the mount it is in. */
+/** The mounts with a host directory: disk mounts, not a service's (`/gmail`). */
+function onDisk(mounts: Record<string, MountBlock>): [string, MountBlock & { config: { root: string } }][] {
+  return Object.entries(mounts).filter((e): e is [string, MountBlock & { config: { root: string } }] => e[1].vfs === 'disk')
+}
+
+/** A workspace path's host file, through the disk mount it is in. */
 function hostPath(mounts: Record<string, MountBlock>, path: string): string | undefined {
-  const prefix = Object.keys(mounts)
-    .filter((m) => path === m || path.startsWith(`${m}/`))
-    .sort((a, b) => b.length - a.length)[0]
-  return prefix === undefined ? undefined : join(mounts[prefix]!.config.root, relative(prefix, path))
+  const [prefix, mount] =
+    onDisk(mounts)
+      .filter(([m]) => path === m || path.startsWith(`${m}/`))
+      .sort(([a], [b]) => b.length - a.length)[0] ?? []
+  return prefix === undefined ? undefined : join(mount!.config.root, relative(prefix, path))
 }
 
 async function main(): Promise<void> {
   // Every run is in UTC, as harness/execute.ts runs it; the fakes inherit it.
   process.env.TZ = 'UTC'
-  const { values } = parseArgs({ options: { task: { type: 'string' }, run: { type: 'string' } } })
-  if (values.task === undefined || values.run === undefined) throw new Error('usage: mocks.ts --task <dir> --run <dir>')
+  const { values } = parseArgs({ options: { task: { type: 'string' }, run: { type: 'string' }, fakes: { type: 'string' } } })
+  if (values.task === undefined || values.run === undefined) throw new Error('usage: mocks.ts --task <dir> --run <dir> [--fakes <json>]')
   const runDir = resolve(values.run)
   mkdirSync(runDir, { recursive: true })
   const run = new Run(basename(runDir), runDir)
-  const plan = liveclawbench.plan(resolve(values.task), run)
+  const task = resolve(values.task)
+  const external = JSON.parse(values.fakes ?? '{}') as Record<string, mirage.External>
+  const plan = mirage.file(task) === undefined ? liveclawbench.plan(task, run) : mirage.plan(task, run, external)
 
   // Stop the fakes and keep their logs, once, however the run ends.
   let stopping: Promise<void> | undefined
@@ -102,7 +118,7 @@ async function main(): Promise<void> {
   process.stdin.on('close', () => void stop().finally(() => process.exit(0)))
   process.stdin.resume()
   try {
-    await prepare(plan, run)
+    await prepare(plan, run, external)
   } catch (error) {
     await stop()
     throw error
@@ -110,13 +126,19 @@ async function main(): Promise<void> {
 }
 
 /** Lay out the run's directories, start the fakes and write the plan. */
-async function prepare(plan: Plan, run: Run): Promise<void> {
+async function prepare(plan: Plan, run: Run, external: Record<string, mirage.External>): Promise<void> {
   const runDir = run.dir
   const config = interpolate(parse(readFileSync(join(HERE, 'workspace.yaml'), 'utf8')) as Record<string, unknown>, {
     RUN_DIR: runDir,
     PYTHON_PACKAGES: join(STATE, 'python'),
   })
   const mounts = config.mounts as Record<string, MountBlock>
+  const { mounts: added = {}, ...rest } = (plan.workspace ?? {}) as { mounts?: Record<string, MountBlock> }
+  for (const [path, mount] of Object.entries(added)) {
+    if (mounts[path] !== undefined) throw new Error(`${plan.name}: the task's mount ${path} is already workspace.yaml's`)
+    mounts[path] = mount
+  }
+  Object.assign(config, rest)
   // A state file outside every mount gets its directory mounted read-only,
   // parents first, so a nested one lands in its parent's mount.
   const state: [string, string][] = []
@@ -126,11 +148,12 @@ async function prepare(plan: Plan, run: Run): Promise<void> {
     }
     state.push([hostPath(mounts, path)!, live])
   }
-  for (const mount of Object.values(mounts)) mkdirSync(mount.config.root, { recursive: true })
+  for (const [, mount] of onDisk(mounts)) mkdirSync(mount.config.root, { recursive: true })
   for (const [path, from] of Object.entries(plan.copies)) {
     const to = hostPath(mounts, path)
     if (to === undefined) throw new Error(`${plan.name}: COPY to ${path}, which is outside the workspace's mounts`)
-    cpSync(from, to, { recursive: true })
+    if (from === null) mkdirSync(to, { recursive: true })
+    else cpSync(from, to, { recursive: true })
   }
   config.env = plan.env
   writeFileSync(join(runDir, 'workspace.yaml'), `# ${plan.name}, generated by harbor/mocks.ts.\n${stringify(config)}`)
@@ -143,9 +166,14 @@ async function prepare(plan: Plan, run: Run): Promise<void> {
       {
         task: plan.name,
         config,
-        mounts: Object.fromEntries(Object.entries(mounts).map(([path, m]) => [path, { root: m.config.root, mode: m.mode }])),
+        mounts: Object.fromEntries(onDisk(mounts).map(([path, m]) => [path, { root: m.config.root, mode: m.mode }])),
         state,
-        routes: Object.fromEntries(Object.entries(plan.routes).map(([port, name]) => [port, run.fakes.get(name)!.url])),
+        routes: Object.fromEntries(
+          Object.entries(plan.routes).map(([port, name]) => [port, run.fakes.get(name)?.url ?? external[name]!.url]),
+        ),
+        // The shared fakes' runs, which this trial's mounts and CLIs reach
+        // directly; nothing else on those ports is reachable.
+        allow: Object.values(external).map((e) => e.url),
         run: plan.run,
         workdir: plan.workdir ?? '/',
       },
