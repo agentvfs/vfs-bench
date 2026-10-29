@@ -1,0 +1,97 @@
+/**
+ * Start one kit fake that every trial of a Harbor job shares, for
+ * vfsbench_harbor's MirageEnvironment.
+ *
+ *     node harbor/fakes.ts --service chat --root <dir> --fixture <name>
+ *
+ * A service is this repo's fake under `mocks/<service>/` (chat, weather)
+ * or, failing that, Mirage's own integ fake (gws). It starts with
+ * harness/fakes.ts on a free port, seeding from `<root>/fixtures/<service>/`,
+ * and its run `default` from `--fixture`; no trial uses that run. Each trial
+ * is a run of its own (`POST /reset {"run": ...}`), its SQLite file under
+ * the fake's state directory. Once the fake listens this prints
+ * `FAKE={"url": ..., "state": ...}`, and it stops the fake on SIGTERM or
+ * when its stdin closes (its parent is gone).
+ */
+import { execFileSync } from 'node:child_process'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join, resolve } from 'node:path'
+import { parseArgs } from 'node:util'
+
+import { type Fake, kit, start } from '../harness/fakes.ts'
+import { INTEG, ROOT } from '../harness/paths.ts'
+import { Run } from '../harness/runs.ts'
+
+/** This repo's kit fakes, one directory each. */
+export const MOCKS = join(ROOT, 'mocks')
+
+/**
+ * Generate a fake's Prisma client if it is missing or older than its
+ * schema. It is generated beside, then moved into place, so a second
+ * launcher never loads a half-written one.
+ */
+function ensureClient(service: string): void {
+  const schema = join(MOCKS, service, `${service}.prisma`)
+  const out = join(MOCKS, service, 'generated')
+  const index = join(out, 'index.js')
+  if (existsSync(index) && statSync(index).mtimeMs >= statSync(schema).mtimeMs) return
+  const scratch = mkdtempSync(join(tmpdir(), `vfsbench-prisma-${service}-`))
+  const staged = join(MOCKS, service, `generated.${process.pid}`)
+  try {
+    const text = readFileSync(schema, 'utf8').replace(/output\s*=\s*"generated"/, `output = ${JSON.stringify(staged)}`)
+    writeFileSync(join(scratch, 'schema.prisma'), text)
+    execFileSync(process.execPath, [join(INTEG, 'node_modules', 'prisma', 'build', 'index.js'), 'generate', '--schema', join(scratch, 'schema.prisma')], {
+      env: { ...process.env, INTEG_DB_URL: `file:${join(scratch, 'generate.db')}` },
+      stdio: 'pipe',
+      timeout: 120_000,
+    })
+    rmSync(out, { recursive: true, force: true })
+    renameSync(staged, out)
+  } finally {
+    rmSync(scratch, { recursive: true, force: true })
+    rmSync(staged, { recursive: true, force: true })
+  }
+}
+
+async function main(): Promise<void> {
+  // Every run is in UTC, as harness/execute.ts runs it; the fake inherits it.
+  process.env.TZ = 'UTC'
+  const { values } = parseArgs({ options: { service: { type: 'string' }, root: { type: 'string' }, fixture: { type: 'string' } } })
+  const { service, fixture } = values
+  if (service === undefined || values.root === undefined || fixture === undefined) {
+    throw new Error('usage: fakes.ts --service <name> --root <dir> --fixture <name>')
+  }
+  const root = resolve(values.root)
+  mkdirSync(join(root, 'fixtures', service), { recursive: true })
+  const ours = existsSync(join(MOCKS, service, 'main.ts'))
+  if (ours) ensureClient(service)
+  const run = new Run(`fakes-${service}`, root)
+  const spec = kit(run, service, fixture, ours ? join(MOCKS, service, 'main.ts') : undefined)
+
+  let fake: Fake | undefined
+  let stopping: Promise<void> | undefined
+  const stop = () =>
+    (stopping ??= (async () => {
+      try {
+        await run.stop()
+      } finally {
+        if (fake !== undefined) writeFileSync(join(root, `${service}.log`), fake.log.join('\n'))
+      }
+    })())
+  for (const signal of ['SIGTERM', 'SIGINT'] as const) process.on(signal, () => void stop().finally(() => process.exit(0)))
+  process.stdin.on('close', () => void stop().finally(() => process.exit(0)))
+  process.stdin.resume()
+  try {
+    fake = await start(spec, run)
+  } catch (error) {
+    await stop()
+    throw error
+  }
+  console.log(`FAKE=${JSON.stringify({ url: fake.url, state: fake.stateDir })}`)
+}
+
+main().catch((error: unknown) => {
+  console.error((error as Error).stack ?? String(error))
+  process.exit(1)
+})
