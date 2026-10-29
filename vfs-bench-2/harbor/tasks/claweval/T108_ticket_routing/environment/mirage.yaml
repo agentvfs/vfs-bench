@@ -1,0 +1,54 @@
+# T108_ticket_routing, on vfsbench_harbor's mirage environment (harbor/claweval.py writes it).
+#
+# Each service is its kit fake at upstream's port, its tools CLIs
+# (harbor/tools.ts), and the verifier's VM gets upstream's grader and
+# the judge's host (claweval_grade.py).
+fakes:
+  claweval_helpdesk:
+    fixture: kit/claweval_helpdesk.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports:
+    - 9107
+  claweval_kb:
+    fixture: kit/claweval_kb.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports:
+    - 9106
+  claweval_crm:
+    fixture: kit/claweval_crm.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports:
+    - 9110
+tools:
+  file: tools.json
+  dispatches: /var/lib/mock-data/claweval/dispatches.jsonl
+workspace:
+  profiles:
+    default:
+      commands:
+        deny:
+        - commands:
+          - curl
+          - wget
+          reason: the services are reached through their tools
+  clis:
+    helpdesk:
+      cli: helpdesk
+      config:
+        url: ${CLAWEVAL_HELPDESK_URL}
+    kb:
+      cli: kb
+      config:
+        url: ${CLAWEVAL_KB_URL}
+    crm:
+      cli: crm
+      config:
+        url: ${CLAWEVAL_CRM_URL}
+verifier:
+  copy:
+    /opt/claweval/src: ${STATE}/claweval/src/src
+    /opt/claweval/site: ${STATE}/harbor/site/claweval
+    /opt/claweval/tasks/T108_ticket_routing: ${STATE}/claweval/src/tasks/T108_ticket_routing
+    /opt/claweval/tasks/T107zh_ticket_routing: ${STATE}/claweval/src/tasks/T107zh_ticket_routing
+  egress:
+  - OPENAI_BASE_URL

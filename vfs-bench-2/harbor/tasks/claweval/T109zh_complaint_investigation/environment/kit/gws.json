@@ -1,0 +1,185 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_601",
+   "threadId": "msg_601",
+   "internalDate": 1774396800000,
+   "bodyText": "你好，我是中和集团的李伟。我们购买的标准版服务，合同约定月费12万元，但2月和3月的账单都显示24万元，整整翻了一倍。我已经向销售反映过但没有回应，如果这周不解决我们会考虑终止合同。请尽快处理。",
+   "headers": [
+    {
+     "name": "From",
+     "value": "liwei@zhonghe-group.com"
+    },
+    {
+     "name": "To",
+     "value": "support@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "紧急投诉：连续两个月账单金额翻倍"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Mar 2026 08:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_602",
+   "threadId": "msg_602",
+   "internalDate": 1774341000000,
+   "bodyText": "您好，我是前锋科技的王敏。上个月我们在使用过程中遇到了连续3天的服务中断（3月1日-3月3日），导致我们损失了约5万元的订单。当时客服承诺给予补偿，但至今没有收到退款。我们的客户ID是CUS-602，请帮忙跟进。",
+   "headers": [
+    {
+     "name": "From",
+     "value": "wangmin@qianfeng-tech.com"
+    },
+    {
+     "name": "To",
+     "value": "support@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "关于退款申请的跟进"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 16:30:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_603",
+   "threadId": "msg_603",
+   "internalDate": 1774404000000,
+   "bodyText": "你好，阳光传媒这边。我们的高级功能在3月15日被降级为基础版，但直到3月20日我们自己发现才知道，没有收到任何通知。希望了解原因并恢复功能。我们的客户ID是CUS-603。",
+   "headers": [
+    {
+     "name": "From",
+     "value": "zhanghua@sunlight-media.com"
+    },
+    {
+     "name": "To",
+     "value": "support@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "功能降级通知不及时"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Mar 2026 10:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_604",
+   "threadId": "msg_604",
+   "internalDate": 1774393200000,
+   "bodyText": "本期热点：企业SaaS续约率下降5%...",
+   "headers": [
+    {
+     "name": "From",
+     "value": "newsletter@industry-weekly.com"
+    },
+    {
+     "name": "To",
+     "value": "support@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "SaaS行业周报 - 2026年第12期"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Mar 2026 07:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 4
+  }
+ ]
+}

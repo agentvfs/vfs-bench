@@ -1,0 +1,78 @@
+[
+ {
+  "name": "notes",
+  "description": "The notes service's tools.",
+  "tools": [
+   {
+    "name": "list",
+    "call": "notes_list",
+    "description": "Get the list of meeting notes",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "max_results": {
+       "type": "integer",
+       "description": "Maximum number of results to return",
+       "default": 10
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9105/notes/list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get",
+    "call": "notes_get",
+    "description": "Get the detailed content of a meeting note by ID",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "note_id": {
+       "type": "string",
+       "description": "Meeting note ID"
+      }
+     },
+     "required": [
+      "note_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9105/notes/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "share",
+    "call": "notes_share",
+    "description": "Share meeting notes with other people",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "note_id": {
+       "type": "string",
+       "description": "Meeting note ID"
+      },
+      "recipients": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "List of recipients"
+      }
+     },
+     "required": [
+      "note_id",
+      "recipients"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9105/notes/share",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

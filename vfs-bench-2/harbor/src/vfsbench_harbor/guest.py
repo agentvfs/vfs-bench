@@ -17,6 +17,9 @@ leaves a command unrun, and the host boots another VM then. It reads
   a tmpfs that hides anything copied there before boot.
 - ``command``, ``cwd`` and ``env``: the test script's command line, run with
   ``/bin/sh -c`` once the ports listen; this exits with its status.
+- ``now``: where given, the trial's time (its run's clock, as the
+  workspace reads it), to which the VM's clock is set before the command
+  runs (``verifier.clock`` in the task's mirage.yaml).
 - ``pull``: a directory (``/logs/verifier``) written to stdout as a tar once
   the command ends, its regular files and directories only. The command's
   own output goes to stderr then.
@@ -31,6 +34,7 @@ import shutil
 import socket
 import sys
 import tarfile
+import time
 
 CONFIG = "/.vfsbench/config.json"
 HOST = "host.microsandbox.internal"
@@ -93,6 +97,8 @@ async def main() -> int:
                         "/tmp",
                         symlinks=True,
                         dirs_exist_ok=True)
+    if config.get("now") is not None:
+        time.clock_settime(time.CLOCK_REALTIME, config["now"])
     probe = len(sys.argv) > 1
     pull = None if probe else config.get("pull")
     process = await asyncio.create_subprocess_exec(

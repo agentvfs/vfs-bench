@@ -1,0 +1,86 @@
+// The todolist fake's store: LiveClawBench's todolist mock (Mosi-AI/LiveClawBench
+// @ 303dc77, MIT, mock-platform/mocks/todolist), one SQLite file per run.
+//
+// Generated with `prisma db pull` from upstream's own CREATE TABLE and
+// CREATE INDEX statements (each fixture's `_schema`), so each table, column,
+// key, foreign key and index is upstream's, by name and in order, and
+// upstream's verify.py and its own statements read a run's file as they
+// read upstream's. Column types are as SQLite keeps them (text, integer,
+// real); a default of SQLite's 'now' is `datetime('now')`, which each run
+// answers with its clock. Prisma cannot state upstream's CHECKs: each run
+// gets them as triggers (mocks/upstream/checks.ts). The last four models
+// are the fake's own (mocks/upstream).
+//
+// No tenant column: a run is one world, as upstream's mock is one.
+
+datasource db {
+  provider = "sqlite"
+  url      = env("INTEG_DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "client"
+}
+
+model migrations {
+  id         Int     @id @default(autoincrement())
+  name       String  @unique
+  applied_at String? @default(dbgenerated("(datetime('now'))"))
+
+  @@map("_migrations")
+}
+
+model todos {
+  id          Int     @id @default(autoincrement())
+  title       String
+  date        String
+  time        String?
+  location    String?
+  person      String?
+  description String?
+  created_at  String  @default(dbgenerated("(datetime('now'))"))
+  updated_at  String  @default(dbgenerated("(datetime('now'))"))
+
+  @@index([created_at], map: "idx_todos_created_at")
+  @@index([date], map: "idx_todos_date")
+}
+
+// The environment upstream's mock reads from its process (`TASK_NAME`),
+// which a fake every task of a job shares cannot take from its own: each
+// task's fixture states it.
+model vfsbench_env {
+  name  String @id
+  value String
+
+  @@map("_env")
+}
+
+// Each file the mock keeps on disk upstream, by its path in the image, and
+// the task's assets: text as it is, anything else as base64.
+model vfsbench_file {
+  path     String @id
+  data     String
+  encoding String @default("utf8")
+
+  @@map("_file")
+}
+
+// The rows of upstream's tables Prisma cannot key (marked @@ignore above),
+// which the fake inserts itself, in order, once the kit has seeded the rest.
+model vfsbench_row {
+  seq   Int    @id
+  table String
+  data  String
+
+  @@map("_row")
+}
+
+// Upstream's CREATE TABLE and CREATE INDEX statements, as its seed ran them.
+model vfsbench_schema {
+  name String @id
+  type String
+  sql  String
+
+  @@map("_schema")
+}

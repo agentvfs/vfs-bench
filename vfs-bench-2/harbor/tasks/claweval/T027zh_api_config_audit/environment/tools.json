@@ -1,0 +1,108 @@
+[
+ {
+  "name": "config",
+  "description": "The config service's tools.",
+  "tools": [
+   {
+    "name": "list_integrations",
+    "call": "config_list_integrations",
+    "description": "获取所有第三方集成的列表（概览信息）",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "按状态筛选：active, degraded, expired"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9111/config/integrations",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_integration",
+    "call": "config_get_integration",
+    "description": "获取单个集成的完整配置信息（含敏感凭证）",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "integration_id": {
+       "type": "string",
+       "description": "集成ID"
+      }
+     },
+     "required": [
+      "integration_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9111/config/integrations/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_integration",
+    "call": "config_update_integration",
+    "description": "更新集成的状态或备注",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "integration_id": {
+       "type": "string",
+       "description": "集成ID"
+      },
+      "status": {
+       "type": "string",
+       "description": "新状态"
+      },
+      "notes": {
+       "type": "string",
+       "description": "备注"
+      }
+     },
+     "required": [
+      "integration_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9111/config/integrations/update",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "send_notification",
+    "call": "config_send_notification",
+    "description": "发送通知邮件给团队成员",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "to": {
+       "type": "string",
+       "description": "收件人邮箱"
+      },
+      "subject": {
+       "type": "string",
+       "description": "邮件主题"
+      },
+      "body": {
+       "type": "string",
+       "description": "邮件正文"
+      }
+     },
+     "required": [
+      "to",
+      "subject",
+      "body"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9111/config/notify",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

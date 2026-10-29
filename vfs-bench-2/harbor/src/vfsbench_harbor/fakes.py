@@ -145,16 +145,22 @@ class SharedFakes:
                    run: str,
                    fixture: str,
                    epoch: str | None,
-                   faults: list[dict] | None = None) -> Run:
+                   faults: list[dict] | None = None,
+                   extras: dict | None = None) -> Run:
         """Seed a trial's run from its fixture; the run's URL and file.
 
         ``faults`` are kit fault plans (``POST /_kit/faults``), armed on the
         run once it is seeded, since a reset disarms them: each answers the
-        next requests to its route in place of the fake.
+        next requests to its route in place of the fake. ``extras`` go with
+        the reset, to the fake's ``afterSeed``.
         """
         body = {"run": run, "fixture": fixture}
         if epoch is not None:
             body["epoch"] = epoch
+        # What the fake's seed takes besides the fixture (the kit's
+        # `afterSeed`): a Gaia2 app's run its trial's drive.
+        if extras:
+            body["extras"] = extras
         try:
             async with httpx.AsyncClient(timeout=120) as client:
                 reply = await client.post(f"{fake.url}/reset", json=body)

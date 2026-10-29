@@ -1,0 +1,232 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_301",
+   "threadId": "msg_301",
+   "internalDate": 1772172000000,
+   "bodyText": "Hello,\n\nWe would like to schedule a joint project review meeting next week to discuss Q1 progress and Q2 plans.\n\nPlease invite the following people to attend:\n- Leo Zhao from your Engineering department\n- Mike Li from your Product department\n- 3 people will attend from our side\n\nThe meeting will be approximately 2 hours. Please check everyone's availability next Wednesday (March 4, 2026) afternoon and let us know a feasible time slot.\n\nIf Wednesday doesn't work, Thursday afternoon is also an option.\n\nThank you,\nDirector Chen\nPartner Corp",
+   "headers": [
+    {
+     "name": "From",
+     "value": "director@partner-corp.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Project Review Meeting Invitation"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 27 Feb 2026 14:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_302",
+   "threadId": "msg_302",
+   "internalDate": 1772181000000,
+   "bodyText": "Noted, weekly summary has been submitted.\n\nAlso, a heads up: I have an internal tech sharing session next Wednesday afternoon from 2 to 3 PM. I'm available at all other times.\n\nLeo Zhao",
+   "headers": [
+    {
+     "name": "From",
+     "value": "leozhao@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Re: Weekly Work Summary"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 27 Feb 2026 16:30:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  },
+  {
+   "id": "msg_303",
+   "threadId": "msg_303",
+   "internalDate": 1772240400000,
+   "bodyText": "Hi,\n\nI'm free all day next Wednesday. On Thursday, I have a client visit after 3 PM, so anytime before 3 PM works.\n\nMike Li",
+   "headers": [
+    {
+     "name": "From",
+     "value": "mikeli@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Next Week's Schedule"
+    },
+    {
+     "name": "Date",
+     "value": "Sat, 28 Feb 2026 09:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 3
+  },
+  {
+   "kind": "event",
+   "n": 5
+  }
+ ],
+ "calendars": [
+  {
+   "id": "integ@example.com",
+   "summary": "me@company.com",
+   "timeZone": "Asia/Shanghai",
+   "accessRole": "owner",
+   "primary": true,
+   "events": [
+    {
+     "id": "evt_401",
+     "status": "confirmed",
+     "summary": "Product Department Weekly Meeting",
+     "location": "Meeting Room A",
+     "startDateTime": "2026-03-04T09:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-04T10:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"email\": \"mikeli@company.com\", \"organizer\": true}, {\"email\": \"wangfang@company.com\"}]",
+     "created": "2026-03-03T09:00:00.000Z",
+     "updated": "2026-03-03T09:00:00.000Z"
+    },
+    {
+     "id": "evt_402",
+     "status": "confirmed",
+     "summary": "Internal Tech Sharing Session",
+     "location": "Meeting Room B",
+     "startDateTime": "2026-03-04T14:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-04T15:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"email\": \"leozhao@company.com\"}, {\"email\": \"zhangwei@company.com\", \"organizer\": true}]",
+     "created": "2026-03-03T09:00:00.000Z",
+     "updated": "2026-03-03T09:00:00.000Z"
+    },
+    {
+     "id": "evt_403",
+     "status": "confirmed",
+     "summary": "Lunch",
+     "startDateTime": "2026-03-04T12:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-04T13:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"email\": \"mikeli@company.com\", \"organizer\": true}]",
+     "created": "2026-03-03T09:00:00.000Z",
+     "updated": "2026-03-03T09:00:00.000Z"
+    },
+    {
+     "id": "evt_404",
+     "status": "confirmed",
+     "summary": "Client Visit",
+     "location": "Client Office",
+     "startDateTime": "2026-03-05T15:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-05T17:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"email\": \"mikeli@company.com\", \"organizer\": true}]",
+     "created": "2026-03-03T09:00:00.000Z",
+     "updated": "2026-03-03T09:00:00.000Z"
+    },
+    {
+     "id": "evt_405",
+     "status": "confirmed",
+     "summary": "Team 1-on-1",
+     "location": "Online",
+     "startDateTime": "2026-03-04T10:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-04T11:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"email\": \"leozhao@company.com\", \"organizer\": true}, {\"email\": \"zhangwei@company.com\"}]",
+     "created": "2026-03-03T09:00:00.000Z",
+     "updated": "2026-03-03T09:00:00.000Z"
+    }
+   ]
+  }
+ ]
+}

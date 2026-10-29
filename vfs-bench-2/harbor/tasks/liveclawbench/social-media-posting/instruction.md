@@ -1,0 +1,1 @@
+Hey, could you help me get started on the Mosi Social platform? I just signed up at http://localhost:5008/ and want to put up a quick public post saying "Hello from the test!" so people know I'm around. My account login is alice / demo123. Just make sure it's actually published and showing up in the public feed.

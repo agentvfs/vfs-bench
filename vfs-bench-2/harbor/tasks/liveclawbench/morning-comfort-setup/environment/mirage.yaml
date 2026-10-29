@@ -1,0 +1,29 @@
+# morning-comfort-setup, on vfsbench_harbor's mirage environment.
+#
+# In place of upstream's environment/Dockerfile: the mocks of its base
+# image are the fakes below, and its COPY, RUN, ENV and WORKDIR lines are
+# `copy`, `run`, `env` and `workdir`.
+#
+# Rule B: Mirage has no such service, so each upstream mock is this repo's
+# kit fake that runs upstream's own app: smarthome (mocks/smarthome).
+# One fake of each serves the whole job; this trial is a run of its own on
+# each.
+fakes:
+  smarthome:
+    # Upstream's smarthome seed for the task, the seed.sql below
+    # (harbor/export.py writes it).
+    fixture: fixtures/smarthome.json
+    epoch: '2026-05-09T07:30:00Z'
+    ports: [5004]
+    # Where verify.py reads the mock's SQLite (upstream's image links it
+    # there).
+    state: /tmp/mosi_smart_home.sqlite
+env:
+  TASK_NAME: morning-comfort-setup
+copy:
+  /opt/mock/data/smarthome.sql: seed.sql
+# The COPYs land on a disk of the trial's own, as in upstream's image; the
+# fakes read their seed from the fixtures, not from there.
+workspace:
+  mounts:
+    /opt/mock: {vfs: disk, mode: exec, read: fresh, config: {root: '${RUN_DIR}/opt/mock'}}

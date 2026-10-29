@@ -1,0 +1,331 @@
+[
+ {
+  "name": "config",
+  "description": "The config service's tools.",
+  "tools": [
+   {
+    "name": "list_integrations",
+    "call": "config_list_integrations",
+    "description": "List all third-party integrations (overview information)",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "Filter by status: active, degraded, expired"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9111/config/integrations",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_integration",
+    "call": "config_get_integration",
+    "description": "Get full configuration details for a single integration",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "integration_id": {
+       "type": "string",
+       "description": "Integration ID"
+      }
+     },
+     "required": [
+      "integration_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9111/config/integrations/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "helpdesk",
+  "description": "The helpdesk service's tools.",
+  "tools": [
+   {
+    "name": "list_tickets",
+    "call": "helpdesk_list_tickets",
+    "description": "List helpdesk tickets",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "Filter by status: open, closed, all"
+      },
+      "priority": {
+       "type": "string",
+       "description": "Filter by priority: high, medium, low"
+      },
+      "category": {
+       "type": "string",
+       "description": "Filter by category"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9107/helpdesk/tickets",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_ticket",
+    "call": "helpdesk_get_ticket",
+    "description": "Get detailed information for a single ticket",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ticket_id": {
+       "type": "string",
+       "description": "Ticket ID"
+      }
+     },
+     "required": [
+      "ticket_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9107/helpdesk/tickets/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "inventory",
+  "description": "The inventory service's tools.",
+  "tools": [
+   {
+    "name": "list_products",
+    "call": "inventory_list_products",
+    "description": "List product inventory",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "category": {
+       "type": "string",
+       "description": "Filter by category"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9108/inventory/products",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_product",
+    "call": "inventory_get_product",
+    "description": "Get detailed inventory information for a single product",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "product_id": {
+       "type": "string",
+       "description": "Product ID"
+      }
+     },
+     "required": [
+      "product_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9108/inventory/products/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "crm",
+  "description": "The crm service's tools.",
+  "tools": [
+   {
+    "name": "list_customers",
+    "call": "crm_list_customers",
+    "description": "List customers",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "tier": {
+       "type": "string",
+       "description": "Filter by customer tier: vip, standard"
+      },
+      "status": {
+       "type": "string",
+       "description": "Filter by status: active, inactive"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_customer",
+    "call": "crm_get_customer",
+    "description": "Get detailed information for a single customer",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "customer_id": {
+       "type": "string",
+       "description": "Customer ID"
+      }
+     },
+     "required": [
+      "customer_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "kb",
+  "description": "The kb service's tools.",
+  "tools": [
+   {
+    "name": "search",
+    "call": "kb_search",
+    "description": "Search knowledge base articles",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "Search keywords"
+      },
+      "category": {
+       "type": "string",
+       "description": "Filter by category"
+      },
+      "max_results": {
+       "type": "integer",
+       "description": "Maximum number of results to return",
+       "default": 5
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9106/kb/search",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_article",
+    "call": "kb_get_article",
+    "description": "Get knowledge base article details",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "article_id": {
+       "type": "string",
+       "description": "Article ID"
+      }
+     },
+     "required": [
+      "article_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9106/kb/articles/get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "scheduler",
+  "description": "The scheduler service's tools.",
+  "tools": [
+   {
+    "name": "list_jobs",
+    "call": "scheduler_list_jobs",
+    "description": "List all scheduled jobs",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "Filter by last run status (success/failed)"
+      },
+      "enabled": {
+       "type": "boolean",
+       "description": "Filter by enabled status"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9112/scheduler/jobs",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_job",
+    "call": "scheduler_get_job",
+    "description": "Get scheduled job details",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "job_id": {
+       "type": "string",
+       "description": "Job ID"
+      }
+     },
+     "required": [
+      "job_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9112/scheduler/jobs/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "job_history",
+    "call": "scheduler_job_history",
+    "description": "View scheduled job execution history",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "job_id": {
+       "type": "string",
+       "description": "Job ID"
+      },
+      "limit": {
+       "type": "integer",
+       "description": "Number of records to return",
+       "default": 10
+      }
+     },
+     "required": [
+      "job_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9112/scheduler/jobs/history",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

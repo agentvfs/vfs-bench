@@ -1,0 +1,529 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  },
+  {
+   "id": "Label_1",
+   "name": "automated",
+   "type": "user"
+  },
+  {
+   "id": "Label_2",
+   "name": "client",
+   "type": "user"
+  },
+  {
+   "id": "Label_3",
+   "name": "social",
+   "type": "user"
+  },
+  {
+   "id": "Label_4",
+   "name": "security",
+   "type": "user"
+  },
+  {
+   "id": "Label_5",
+   "name": "newsletter",
+   "type": "user"
+  },
+  {
+   "id": "Label_6",
+   "name": "promotional",
+   "type": "user"
+  },
+  {
+   "id": "Label_7",
+   "name": "alert",
+   "type": "user"
+  }
+ ],
+ "messages": [
+  {
+   "id": "pb17_001",
+   "threadId": "pb17_001",
+   "internalDate": 1771333320000,
+   "bodyText": "Primary production database cluster went down at 7:45am EST. Customer-facing services are returning 500 errors. Join the war room immediately. This is a P0 incident.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "cto@mycompany.com"
+    },
+    {
+     "name": "To",
+     "value": "me@mycompany.com"
+    },
+    {
+     "name": "Subject",
+     "value": "URGENT: Production database outage - all hands needed"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 17 Feb 2026 13:02:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "pb17_002",
+   "threadId": "pb17_002",
+   "internalDate": 1771337700000,
+   "bodyText": "Please review a 1,200-word blog post for technical accuracy. End of day Wednesday is fine.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "sarah.marketing@mycompany.com"
+    },
+    {
+     "name": "To",
+     "value": "me@mycompany.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Blog post review needed by EOD Wednesday"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 17 Feb 2026 14:15:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "pb17_003",
+   "threadId": "pb17_003",
+   "internalDate": 1771331400000,
+   "bodyText": "Dependabot opened PR #482 with express, lodash, and @types/node updates. CI is passing.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "noreply@github.com"
+    },
+    {
+     "name": "To",
+     "value": "me@mycompany.com"
+    },
+    {
+     "name": "Subject",
+     "value": "[mycompany/api-gateway] Pull request #482: Dependency updates (Dependabot)"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 17 Feb 2026 12:30:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "pb17_004",
+   "threadId": "pb17_004",
+   "internalDate": 1771102800000,
+   "bodyText": "Benefits enrollment closes February 28. Please review health insurance, 401(k), FSA/HSA, and beneficiary updates.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "jenna.hr@mycompany.com"
+    },
+    {
+     "name": "To",
+     "value": "all-staff@mycompany.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Reminder: Benefits enrollment deadline is Feb 28"
+    },
+    {
+     "name": "Date",
+     "value": "Sat, 14 Feb 2026 21:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "pb17_005",
+   "threadId": "pb17_005",
+   "internalDate": 1771335900000,
+   "bodyText": "Our board approved the integration project. We need to finalize the API contract and staging credentials ASAP. Tuesday or Thursday afternoon works for a call. This is a $2M annual contract.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "mike.chen@bigclient.com"
+    },
+    {
+     "name": "To",
+     "value": "me@mycompany.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Re: API integration timeline"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 17 Feb 2026 13:45:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_2"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "pb17_006",
+   "threadId": "pb17_006",
+   "internalDate": 1771269720000,
+   "bodyText": "You have new connection requests from Alex Turner, Maria Santos, and Kevin Park.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "noreply@linkedin.com"
+    },
+    {
+     "name": "To",
+     "value": "me@mycompany.com"
+    },
+    {
+     "name": "Subject",
+     "value": "You have 3 new connection requests"
+    },
+    {
+     "name": "Date",
+     "value": "Mon, 16 Feb 2026 19:22:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_3"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "pb17_007",
+   "threadId": "pb17_007",
+   "internalDate": 1771338600000,
+   "bodyText": "Reminder: your annual performance review self-assessment is due Friday, Feb 21.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "team-lead@mycompany.com"
+    },
+    {
+     "name": "To",
+     "value": "me@mycompany.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Performance review self-assessment due Friday"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 17 Feb 2026 14:30:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "pb17_008",
+   "threadId": "pb17_008",
+   "internalDate": 1771329600000,
+   "bodyText": "All engineering team members must rotate passwords and SSH keys by February 19 and confirm completion by replying.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "security@mycompany.com"
+    },
+    {
+     "name": "To",
+     "value": "engineering@mycompany.com"
+    },
+    {
+     "name": "Subject",
+     "value": "IMPORTANT: Mandatory password rotation by Feb 19"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 17 Feb 2026 12:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_4"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "pb17_009",
+   "threadId": "pb17_009",
+   "internalDate": 1771326000000,
+   "bodyText": "This week in tech: AI coding agents, remote work productivity, Rust adoption, GPT-5, and Kubernetes updates.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "newsletter@techdigest.io"
+    },
+    {
+     "name": "To",
+     "value": "me@mycompany.com"
+    },
+    {
+     "name": "Subject",
+     "value": "TechDigest Weekly: AI agents are reshaping software development"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 17 Feb 2026 11:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_5"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "pb17_010",
+   "threadId": "pb17_010",
+   "internalDate": 1771339800000,
+   "bodyText": "Please review the auth service refactor for OAuth2 PKCE flow. It blocks the mobile app release and I'd like to merge by Thursday.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "alice.wong@mycompany.com"
+    },
+    {
+     "name": "To",
+     "value": "me@mycompany.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Code review request - auth service refactor"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 17 Feb 2026 14:50:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "pb17_011",
+   "threadId": "pb17_011",
+   "internalDate": 1771167600000,
+   "bodyText": "Limited time offer on SaaSTools Pro. Flash sale ends Monday at midnight.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "deals@saastools.com"
+    },
+    {
+     "name": "To",
+     "value": "me@mycompany.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Flash Sale: 60% off all annual plans - 48 hours only!"
+    },
+    {
+     "name": "Date",
+     "value": "Sun, 15 Feb 2026 15:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_6"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "pb17_012",
+   "threadId": "pb17_012",
+   "internalDate": 1771335000000,
+   "bodyText": "Finance needs each team to confirm Jan-Feb spending and March overruns by Thursday, Feb 20.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "cfo@mycompany.com"
+    },
+    {
+     "name": "To",
+     "value": "engineering-leads@mycompany.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Q1 budget reconciliation - action needed by Thursday"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 17 Feb 2026 13:30:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "pb17_013",
+   "threadId": "pb17_013",
+   "internalDate": 1771332480000,
+   "bodyText": "API gateway p99 latency is 3,247ms. This alert correlates with the ongoing database incident INC-20260217-001.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "automated-alerts@monitoring.mycompany.com"
+    },
+    {
+     "name": "To",
+     "value": "oncall@mycompany.com"
+    },
+    {
+     "name": "Subject",
+     "value": "[ALERT] API latency exceeding threshold - p99 > 2000ms"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 17 Feb 2026 12:48:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_7"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 13
+  }
+ ]
+}

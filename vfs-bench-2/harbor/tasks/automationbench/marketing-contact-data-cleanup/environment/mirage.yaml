@@ -1,0 +1,28 @@
+# marketing.contact_data_cleanup, on vfsbench_harbor's mirage environment (harbor/automationbench.py writes it).
+#
+# The task's world is the automationbench kit fake (mocks/automationbench),
+# seeded with the world upstream builds for the task (kit/, written from
+# upstream, not committed), its clock at the task's epoch. Its tools are the
+# api CLI (tools.json, harbor/tools.ts). The verifier's VM gets the run's
+# SQLite and upstream's rubric (automationbench_grade.py).
+fakes:
+  automationbench:
+    fixture: kit/automationbench.json
+    epoch: '2026-01-27T09:00:00Z'
+    state: /var/lib/mock-data/automationbench/automationbench.db
+tools:
+  file: tools.json
+  dispatches: /var/lib/mock-data/automationbench/dispatches.jsonl
+workspace:
+  profiles:
+    default:
+      commands:
+        deny:
+        - commands: [curl, wget]
+          reason: the world is reached through the api CLI
+  clis:
+    api: {cli: api, config: {url: '${AUTOMATIONBENCH_URL}'}}
+verifier:
+  copy:
+    /opt/automationbench/site: ${STATE}/harbor/site/automationbench
+  omit: [/workspace]

@@ -1,0 +1,8 @@
+{
+ "login": [
+  {
+   "seed": 11,
+   "apps": "[\"LightTalk\", \"LightWeather\"]"
+  }
+ ]
+}

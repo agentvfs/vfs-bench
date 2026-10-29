@@ -1,0 +1,38 @@
+# pre-meeting-research-brief, on vfsbench_harbor's mirage environment.
+#
+# In place of upstream's environment/Dockerfile: the mocks of its base
+# image are the fakes below, and its COPY, RUN, ENV and WORKDIR lines are
+# `copy`, `run`, `env` and `workdir`.
+#
+# Rule B: Mirage has no such service, so each upstream mock is this repo's
+# kit fake that runs upstream's own app: todolist (mocks/todolist).
+# One fake of each serves the whole job; this trial is a run of its own on
+# each.
+fakes:
+  todolist:
+    # Upstream's todolist seed for the task (harbor/export.py writes
+    # it); 3000 is the image's proxy to it.
+    fixture: fixtures/todolist.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports: [5002, 3000]
+    # Where upstream's image keeps its SQLite, which verify.py reads.
+    state: /var/lib/mock-data/todolist/todolist.db
+env:
+  TASK_NAME: pre-meeting-research-brief
+  HOME: /home/node
+  OPENCLAW_ARK_BASE_URL: https://ark.cn-beijing.volces.com/api/coding/v3
+  OPENCLAW_ARK_MODEL: kimi-k2.5
+copy:
+  /home/node/.openclaw/corpus: corpus/
+run:
+  - mkdir -p /home/node/.openclaw/output /home/node/.openclaw/workspace/memory && chown -R node:node /home/node
+workdir: /home/node/.openclaw
+workspace:
+  mounts:
+    /home/node: {vfs: disk, mode: exec, read: fresh, config: {root: '${RUN_DIR}/home/node'}}
+# The verifier is an LLM judge (tests/llm_judge.py): it reads the calendar
+# over HTTP and asks the judge at $JUDGE_BASE_URL with $JUDGE_API_KEY, so it
+# runs only in a microVM (MicrosandboxVerifier), with both set in the
+# verifier's environment; Pyodide has no network.
+verifier:
+  egress: [JUDGE_BASE_URL]

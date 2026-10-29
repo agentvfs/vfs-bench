@@ -1,0 +1,121 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_1401",
+   "threadId": "msg_1401",
+   "internalDate": 1774493100000,
+   "bodyText": "Hello, this is Director Zhao from Wantong Logistics. Our warehouse management system has been reporting frequent errors since 10:00 AM today, and for the past 30+ minutes it has been completely unusable. Real-time scheduling for over 200 warehouses is fully interrupted, delivery vehicles cannot receive dispatch instructions, estimated direct economic losses exceed 500,000 CNY per hour.\n\nWe are a VIP customer of your company, and our contract clearly stipulates 1-hour response and 4-hour resolution SLA standards. Please immediately initiate the emergency response process. I need to receive a resolution plan and estimated recovery time within 1 hour.\n\nIf this cannot be resolved today, we will pursue breach of contract liability per our agreement.\n\nWantong Logistics, Director Zhao\nPhone: 13900140001",
+   "headers": [
+    {
+     "name": "From",
+     "value": "zhao@wantong-logistics.com"
+    },
+    {
+     "name": "To",
+     "value": "support@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "URGENT: System unavailable for over 30 minutes, severely impacting warehouse dispatch"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 26 Mar 2026 10:45:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_1402",
+   "threadId": "msg_1402",
+   "internalDate": 1774486800000,
+   "bodyText": "This week's tech department work summary:\n1. Completed v3.2 canary release\n2. Database primary-replica failover drill completed successfully\n3. Next week plan: API gateway upgrade, report module optimization\n\nAll teams please update JIRA progress promptly.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "weekly-report@company.com"
+    },
+    {
+     "name": "To",
+     "value": "all-staff@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Tech Department Weekly Report — 2026 Week 12"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 26 Mar 2026 09:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 2
+  }
+ ]
+}

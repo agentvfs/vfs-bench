@@ -1,0 +1,122 @@
+[
+ {
+  "name": "todo",
+  "description": "The todo service's tools.",
+  "tools": [
+   {
+    "name": "list_tasks",
+    "call": "todo_list_tasks",
+    "description": "获取所有待办事项",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "按状态筛选 (pending/completed/all)",
+       "default": "all"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9102/todo/tasks",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_task",
+    "call": "todo_update_task",
+    "description": "更新待办事项",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "任务ID"
+      },
+      "title": {
+       "type": "string",
+       "description": "新标题"
+      },
+      "priority": {
+       "type": "string",
+       "description": "优先级 (high/medium/low)"
+      },
+      "status": {
+       "type": "string",
+       "description": "状态 (pending/completed)"
+      },
+      "tags": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "标签列表"
+      }
+     },
+     "required": [
+      "task_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9102/todo/tasks/update",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "create_task",
+    "call": "todo_create_task",
+    "description": "创建新的待办事项",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "title": {
+       "type": "string",
+       "description": "任务标题"
+      },
+      "description": {
+       "type": "string",
+       "description": "任务描述"
+      },
+      "priority": {
+       "type": "string",
+       "description": "优先级"
+      },
+      "due_date": {
+       "type": "string",
+       "description": "截止日期 (YYYY-MM-DD)"
+      }
+     },
+     "required": [
+      "title"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9102/todo/tasks/create",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "delete_task",
+    "call": "todo_delete_task",
+    "description": "永久删除待办事项",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "任务ID"
+      }
+     },
+     "required": [
+      "task_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9102/todo/tasks/delete",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

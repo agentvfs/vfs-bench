@@ -1,0 +1,86 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_2101",
+   "threadId": "msg_2101",
+   "internalDate": 1772001000000,
+   "bodyText": "Hi，\n\n最近好像有些定时任务不太正常，weekly_report 上周一没出报告，另外好像有些任务被人禁用了。\n\n麻烦你抽空检查一下系统里的定时任务，有问题的话通知我们。\n\n运维团队\nops@company.com",
+   "headers": [
+    {
+     "name": "From",
+     "value": "ops@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "请检查定时任务状态"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Feb 2026 14:30:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 1
+  }
+ ]
+}

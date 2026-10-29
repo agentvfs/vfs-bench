@@ -1,0 +1,192 @@
+{
+ "_env": [
+  {
+   "name": "TASK_NAME",
+   "value": "expense-submit-verify"
+  }
+ ],
+ "_schema": [
+  {
+   "type": "table",
+   "name": "_migrations",
+   "sql": "CREATE TABLE _migrations (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      name TEXT NOT NULL UNIQUE,\n      applied_at TEXT DEFAULT (datetime('2026-04-03 09:00:00'))\n    )"
+  },
+  {
+   "type": "table",
+   "name": "user",
+   "sql": "CREATE TABLE user (\n        id INTEGER PRIMARY KEY AUTOINCREMENT,\n        full_name TEXT NOT NULL,\n        email TEXT NOT NULL UNIQUE,\n        password TEXT NOT NULL,\n        department TEXT NOT NULL,\n        role TEXT NOT NULL CHECK(role IN ('employee', 'manager', 'admin')) DEFAULT 'employee',\n        preferred_currency TEXT NOT NULL CHECK(preferred_currency IN ('USD', 'CNY', 'EUR', 'GBP', 'JPY')) DEFAULT 'USD',\n        avatar_url TEXT,\n        is_active INTEGER NOT NULL DEFAULT 1,\n        created_at TEXT NOT NULL DEFAULT (datetime('2026-04-03 09:00:00')),\n        last_login_at TEXT\n      )"
+  },
+  {
+   "type": "index",
+   "name": "idx_user_email",
+   "sql": "CREATE INDEX idx_user_email ON user(email)"
+  },
+  {
+   "type": "table",
+   "name": "expense_draft",
+   "sql": "CREATE TABLE expense_draft (\n        id INTEGER PRIMARY KEY AUTOINCREMENT,\n        draft_code TEXT NOT NULL UNIQUE,\n        user_id INTEGER NOT NULL REFERENCES user(id) ON DELETE CASCADE,\n        vendor_name TEXT NOT NULL,\n        category TEXT CHECK(category IN ('travel', 'meals', 'office_supplies', 'software', 'lodging', 'transport', 'other')),\n        amount REAL NOT NULL,\n        currency TEXT NOT NULL CHECK(currency IN ('USD', 'CNY', 'EUR', 'GBP', 'JPY')) DEFAULT 'USD',\n        invoice_date TEXT NOT NULL,\n        expense_date TEXT,\n        notes TEXT,\n        source_type TEXT NOT NULL CHECK(source_type IN ('manual', 'email', 'imported')) DEFAULT 'manual',\n        status TEXT NOT NULL CHECK(status IN ('draft', 'submitted', 'approved', 'rejected', 'reimbursed')) DEFAULT 'draft',\n        attachment_ref TEXT,\n        created_at TEXT NOT NULL DEFAULT (datetime('2026-04-03 09:00:00')),\n        updated_at TEXT NOT NULL DEFAULT (datetime('2026-04-03 09:00:00')),\n        submitted_at TEXT\n      )"
+  },
+  {
+   "type": "index",
+   "name": "idx_draft_user_id",
+   "sql": "CREATE INDEX idx_draft_user_id ON expense_draft(user_id)"
+  },
+  {
+   "type": "index",
+   "name": "idx_draft_status",
+   "sql": "CREATE INDEX idx_draft_status ON expense_draft(status)"
+  },
+  {
+   "type": "index",
+   "name": "idx_draft_code",
+   "sql": "CREATE INDEX idx_draft_code ON expense_draft(draft_code)"
+  },
+  {
+   "type": "index",
+   "name": "idx_draft_attachment_ref",
+   "sql": "CREATE INDEX idx_draft_attachment_ref ON expense_draft(attachment_ref)"
+  },
+  {
+   "type": "table",
+   "name": "expense_activity",
+   "sql": "CREATE TABLE expense_activity (\n        id INTEGER PRIMARY KEY AUTOINCREMENT,\n        draft_id INTEGER NOT NULL REFERENCES expense_draft(id) ON DELETE CASCADE,\n        actor_user_id INTEGER REFERENCES user(id) ON DELETE SET NULL,\n        action_type TEXT NOT NULL CHECK(action_type IN ('created', 'edited', 'attachment_added', 'submitted', 'status_changed')),\n        field_name TEXT,\n        old_value TEXT,\n        new_value TEXT,\n        created_at TEXT NOT NULL DEFAULT (datetime('2026-04-03 09:00:00'))\n      )"
+  },
+  {
+   "type": "index",
+   "name": "idx_activity_draft_id",
+   "sql": "CREATE INDEX idx_activity_draft_id ON expense_activity(draft_id)"
+  },
+  {
+   "type": "index",
+   "name": "idx_activity_created_at",
+   "sql": "CREATE INDEX idx_activity_created_at ON expense_activity(created_at)"
+  },
+  {
+   "type": "table",
+   "name": "expense_attachment",
+   "sql": "CREATE TABLE expense_attachment (\n        id INTEGER PRIMARY KEY AUTOINCREMENT,\n        draft_id INTEGER NOT NULL REFERENCES expense_draft(id) ON DELETE CASCADE,\n        attachment_ref TEXT NOT NULL UNIQUE,\n        original_filename TEXT NOT NULL,\n        storage_path TEXT NOT NULL,\n        mime_type TEXT NOT NULL CHECK(mime_type IN ('application/pdf', 'image/png', 'image/jpeg', 'text/plain', 'text/html', 'text/csv')),\n        file_size_bytes INTEGER NOT NULL DEFAULT 0,\n        page_count INTEGER,\n        preview_text TEXT,\n        extracted_vendor_name TEXT,\n        extracted_amount REAL,\n        extracted_currency TEXT CHECK(extracted_currency IN ('USD', 'CNY', 'EUR', 'GBP', 'JPY')),\n        extracted_invoice_date TEXT,\n        created_at TEXT NOT NULL DEFAULT (datetime('2026-04-03 09:00:00'))\n      )"
+  },
+  {
+   "type": "index",
+   "name": "idx_attachment_draft_id",
+   "sql": "CREATE INDEX idx_attachment_draft_id ON expense_attachment(draft_id)"
+  },
+  {
+   "type": "index",
+   "name": "idx_attachment_ref",
+   "sql": "CREATE INDEX idx_attachment_ref ON expense_attachment(attachment_ref)"
+  }
+ ],
+ "_migrations": [
+  {
+   "id": 1,
+   "name": "001_create_user",
+   "applied_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "name": "002_create_expense_draft",
+   "applied_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "name": "003_create_expense_activity",
+   "applied_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "name": "004_create_expense_attachment",
+   "applied_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "user": [
+  {
+   "id": 1,
+   "full_name": "Alice Chen",
+   "email": "alice@mosi.inc",
+   "password": "password123",
+   "department": "Operations",
+   "role": "employee",
+   "preferred_currency": "USD",
+   "avatar_url": null,
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "last_login_at": null
+  },
+  {
+   "id": 2,
+   "full_name": "Bob Smith",
+   "email": "bob@mosi.inc",
+   "password": "password123",
+   "department": "Finance",
+   "role": "manager",
+   "preferred_currency": "USD",
+   "avatar_url": null,
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "last_login_at": null
+  }
+ ],
+ "expense_draft": [
+  {
+   "id": 1,
+   "draft_code": "EXP-001",
+   "user_id": 1,
+   "vendor_name": "Cloudflare",
+   "category": "software",
+   "amount": 150,
+   "currency": "USD",
+   "invoice_date": "2026-04-15",
+   "expense_date": "2026-04-15",
+   "notes": "April software",
+   "source_type": "manual",
+   "status": "draft",
+   "attachment_ref": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00",
+   "submitted_at": null
+  },
+  {
+   "id": 2,
+   "draft_code": "EXP-002",
+   "user_id": 1,
+   "vendor_name": "AWS",
+   "category": "transport",
+   "amount": 89.5,
+   "currency": "USD",
+   "invoice_date": "2026-04-20",
+   "expense_date": "2026-04-20",
+   "notes": "April cloud",
+   "source_type": "manual",
+   "status": "draft",
+   "attachment_ref": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00",
+   "submitted_at": null
+  }
+ ],
+ "expense_activity": [
+  {
+   "id": 1,
+   "draft_id": 1,
+   "actor_user_id": 1,
+   "action_type": "created",
+   "field_name": null,
+   "old_value": null,
+   "new_value": null,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "draft_id": 2,
+   "actor_user_id": 1,
+   "action_type": "created",
+   "field_name": null,
+   "old_value": null,
+   "new_value": null,
+   "created_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "expense_attachment": [],
+ "_file": []
+}

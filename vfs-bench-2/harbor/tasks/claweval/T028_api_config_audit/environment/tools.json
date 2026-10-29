@@ -1,0 +1,108 @@
+[
+ {
+  "name": "config",
+  "description": "The config service's tools.",
+  "tools": [
+   {
+    "name": "list_integrations",
+    "call": "config_list_integrations",
+    "description": "Get a list of all third-party integrations (overview)",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "Filter by status: active, degraded, expired"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9111/config/integrations",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_integration",
+    "call": "config_get_integration",
+    "description": "Get the full configuration of a single integration (includes sensitive credentials)",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "integration_id": {
+       "type": "string",
+       "description": "Integration ID"
+      }
+     },
+     "required": [
+      "integration_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9111/config/integrations/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_integration",
+    "call": "config_update_integration",
+    "description": "Update an integration's status or notes",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "integration_id": {
+       "type": "string",
+       "description": "Integration ID"
+      },
+      "status": {
+       "type": "string",
+       "description": "New status"
+      },
+      "notes": {
+       "type": "string",
+       "description": "Notes"
+      }
+     },
+     "required": [
+      "integration_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9111/config/integrations/update",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "send_notification",
+    "call": "config_send_notification",
+    "description": "Send a notification email to a team member",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "to": {
+       "type": "string",
+       "description": "Recipient email address"
+      },
+      "subject": {
+       "type": "string",
+       "description": "Email subject"
+      },
+      "body": {
+       "type": "string",
+       "description": "Email body"
+      }
+     },
+     "required": [
+      "to",
+      "subject",
+      "body"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9111/config/notify",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

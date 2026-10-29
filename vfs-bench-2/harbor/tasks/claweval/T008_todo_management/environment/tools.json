@@ -1,0 +1,122 @@
+[
+ {
+  "name": "todo",
+  "description": "The todo service's tools.",
+  "tools": [
+   {
+    "name": "list_tasks",
+    "call": "todo_list_tasks",
+    "description": "Get all to-do items",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "Filter by status (pending/completed/all)",
+       "default": "all"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9102/todo/tasks",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_task",
+    "call": "todo_update_task",
+    "description": "Update a to-do item",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Task ID"
+      },
+      "title": {
+       "type": "string",
+       "description": "New title"
+      },
+      "priority": {
+       "type": "string",
+       "description": "Priority (high/medium/low)"
+      },
+      "status": {
+       "type": "string",
+       "description": "Status (pending/completed)"
+      },
+      "tags": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "Tag list"
+      }
+     },
+     "required": [
+      "task_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9102/todo/tasks/update",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "create_task",
+    "call": "todo_create_task",
+    "description": "Create a new to-do item",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "title": {
+       "type": "string",
+       "description": "Task title"
+      },
+      "description": {
+       "type": "string",
+       "description": "Task description"
+      },
+      "priority": {
+       "type": "string",
+       "description": "Priority"
+      },
+      "due_date": {
+       "type": "string",
+       "description": "Due date (YYYY-MM-DD)"
+      }
+     },
+     "required": [
+      "title"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9102/todo/tasks/create",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "delete_task",
+    "call": "todo_delete_task",
+    "description": "Permanently delete a to-do item",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Task ID"
+      }
+     },
+     "required": [
+      "task_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9102/todo/tasks/delete",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

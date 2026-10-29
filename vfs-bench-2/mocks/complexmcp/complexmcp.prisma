@@ -1,0 +1,36 @@
+// A ComplexMCP server's store: one of ATH-MaaS/complex-mcp's MCP servers
+// (@ 7c01f92, MIT), one SQLite file per run. Each server's fake links its
+// `<service>.prisma` here.
+//
+// Upstream's servers keep each login's session in their process; a run is
+// one session here. `login` is the task's login, as upstream's client logs
+// in: the seed and the apps, in order. `session` is what the fake made of
+// it, its app's session as JSON, one row per field (`key`), with `_login`,
+// what login answered, beside it. The plain servers keep nothing.
+//
+// No tenant column: a run is one session (tenantKind 'none').
+
+datasource db {
+  provider = "sqlite"
+  url      = env("INTEG_DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "client"
+}
+
+model Login {
+  id   Int    @id @default(1)
+  seed Int
+  apps String
+
+  @@map("login")
+}
+
+model Session {
+  key   String @id
+  value String
+
+  @@map("session")
+}

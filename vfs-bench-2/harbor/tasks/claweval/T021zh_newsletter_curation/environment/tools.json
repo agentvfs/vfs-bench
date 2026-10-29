@@ -1,0 +1,109 @@
+[
+ {
+  "name": "rss",
+  "description": "The rss service's tools.",
+  "tools": [
+   {
+    "name": "list_feeds",
+    "call": "rss_list_feeds",
+    "description": "获取所有RSS订阅源",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "category": {
+       "type": "string",
+       "description": "按类别筛选"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9109/rss/feeds",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_articles",
+    "call": "rss_list_articles",
+    "description": "获取文章列表",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "source": {
+       "type": "string",
+       "description": "按来源筛选"
+      },
+      "category": {
+       "type": "string",
+       "description": "按类别筛选"
+      },
+      "max_results": {
+       "type": "integer",
+       "description": "最大返回数量",
+       "default": 20
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9109/rss/articles",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_article",
+    "call": "rss_get_article",
+    "description": "获取文章完整内容",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "article_id": {
+       "type": "string",
+       "description": "文章ID"
+      }
+     },
+     "required": [
+      "article_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9109/rss/articles/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "publish",
+    "call": "rss_publish",
+    "description": "发布Newsletter",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "title": {
+       "type": "string",
+       "description": "Newsletter标题"
+      },
+      "content": {
+       "type": "string",
+       "description": "Newsletter内容"
+      },
+      "recipients": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "接收者列表"
+      }
+     },
+     "required": [
+      "title",
+      "content"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9109/rss/publish",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

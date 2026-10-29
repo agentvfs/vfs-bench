@@ -1,0 +1,51 @@
+# social-pinned-post-update, on vfsbench_harbor's mirage environment.
+#
+# In place of upstream's environment/Dockerfile: the mocks of its base
+# image are the fakes below, and its COPY line is `copy`, without what
+# its .dockerignore leaves out.
+#
+# Rule B for the social network: Mirage has none, so the social mock is
+# this repo's kit fake (mocks/social), with upstream's API, pages and
+# cookie login at localhost:5008. Rule A for email and the calendar:
+# Mirage fakes Gmail and Google Calendar, so their mocks become Mirage's
+# own gws fake. The mailbox is the /gmail mount and the calendar the
+# /calendar mount, with the gws CLI for both, all at this trial's run of
+# it; nothing listens on upstream's ports 5001, 5174 and 5006. One fake
+# of each serves the whole job.
+fakes:
+  social:
+    # Upstream's social seed and the task's seed.json, as its image loads
+    # it (harbor/export.py writes it).
+    fixture: fixtures/social.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports: [5008]
+    # Where upstream's image keeps it, which verify.py reads.
+    state: /var/lib/mock-data/social/social.db
+  gws:
+    # Upstream's email and calendar seeds for the task, as Gmail messages
+    # and Peter's calendar (harbor/export.py writes it).
+    fixture: fixtures/gws.json
+    epoch: '2026-04-03T09:00:00Z'
+    # The run's SQLite, which the ported verify.py reads.
+    state: /var/lib/mock-data/gws/gws.db
+env:
+  TASK_NAME: social-pinned-post-update
+copy:
+  /workspace/environment: [.dockerignore]
+# gws-integ-token is the gws fake's own fixed credential; ${GWS_URL} is this
+# trial's run. The calendar's default listing reaches 90 days past `today`,
+# the epoch's date rather than the host's.
+workspace:
+  mounts:
+    /gmail:
+      vfs: gmail
+      mode: read
+      config: {accessToken: gws-integ-token, apiBase: '${GWS_URL}'}
+    /calendar:
+      vfs: gcal
+      mode: read
+      config: {accessToken: gws-integ-token, apiBase: '${GWS_URL}', today: '2026-04-03'}
+  clis:
+    gws:
+      cli: gws
+      config: {accessToken: gws-integ-token, apiBase: '${GWS_URL}'}

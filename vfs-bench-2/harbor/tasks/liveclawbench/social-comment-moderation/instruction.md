@@ -1,0 +1,1 @@
+There's an email in peter's inbox (at /gmail, or through the gws CLI) from the Community Management team about some issues with comments on our Mosi Social platform (http://localhost:5008/). I have a few accounts there — mosi_brand, alice, and bob_creator (all passwords demo123). Could you look into it and handle things appropriately?

@@ -1,0 +1,214 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_701",
+   "threadId": "msg_701",
+   "internalDate": 1774314000000,
+   "bodyText": "Hello, this is Zhang Wei. My total travel expenses for the Beijing business trip came to 3200 CNY, invoice number INV-001. Please review. Attached are the itemized costs for flights, hotel, and transportation.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "zhangwei@company.com"
+    },
+    {
+     "name": "To",
+     "value": "finance@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Reimbursement Request: Travel Expenses 3200 CNY"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 09:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_702",
+   "threadId": "msg_702",
+   "internalDate": 1774319400000,
+   "bodyText": "Hello Finance Department, I purchased a batch of office supplies (stapler, printing paper, file folders, etc.) totaling 850 CNY, invoice number INV-002. Please approve the reimbursement.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "lihua@company.com"
+    },
+    {
+     "name": "To",
+     "value": "finance@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Reimbursement Request: Office Supplies 850 CNY"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 10:30:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_703",
+   "threadId": "msg_703",
+   "internalDate": 1774321200000,
+   "bodyText": "Hello, I attended the 'Cloud-Native Architecture' external training course on March 20th, costing 5000 CNY, invoice number INV-003. Department manager approval has been obtained. Please process.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "wangming@company.com"
+    },
+    {
+     "name": "To",
+     "value": "finance@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Reimbursement Request: External Training Fee 5000 CNY"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 11:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_704",
+   "threadId": "msg_704",
+   "internalDate": 1774332000000,
+   "bodyText": "Hello, the meal expenses for entertaining clients on March 22nd totaled 420 CNY, invoice number INV-004. Attendees: Chen Jing and 2 people from the client side. Please process the reimbursement.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "chenjing@company.com"
+    },
+    {
+     "name": "To",
+     "value": "finance@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Reimbursement Request: Client Entertainment Meal 420 CNY"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 14:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_705",
+   "threadId": "msg_705",
+   "internalDate": 1774339200000,
+   "bodyText": "Attention all colleagues, a team building event will be held next Wednesday at 2 PM downstairs from the office building. Please attend on time. See attachment for details.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "hr@company.com"
+    },
+    {
+     "name": "To",
+     "value": "all@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Administrative Notice: Team Building Event Next Wednesday Afternoon"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 16:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 5
+  }
+ ]
+}

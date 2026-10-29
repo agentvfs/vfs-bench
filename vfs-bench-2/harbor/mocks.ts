@@ -31,6 +31,7 @@ import { Run } from '../harness/runs.ts'
 import { type Copy, copyInto } from './copies.ts'
 import * as liveclawbench from './liveclawbench.ts'
 import * as mirage from './mirage.ts'
+import type { Verifier } from './mirage.ts'
 
 /** What a task's environment needs, as an adapter reads it from the task. */
 export interface Plan {
@@ -54,6 +55,15 @@ export interface Plan {
   workdir?: string
   /** Mounts and CLIs the task adds to the workspace config. */
   workspace?: Record<string, unknown>
+  /**
+   * The task's tools as CLIs (tools.ts): its tools file, and the workspace
+   * path the verifier reads their dispatch log at.
+   */
+  tools?: { file: string; dispatches: string }
+  /** What a verifier outside the workspace gets besides the trial's files. */
+  verifier?: Verifier
+  /** The run's epoch, which the workspace's clock starts at (clock.ts). */
+  epoch?: string
 }
 
 interface MountBlock {
@@ -134,14 +144,34 @@ async function prepare(plan: Plan, run: Run, external: Record<string, mirage.Ext
     PYTHON_PACKAGES: join(STATE, 'python'),
   })
   const mounts = config.mounts as Record<string, MountBlock>
-  const { mounts: added = {}, ...rest } = (plan.workspace ?? {}) as { mounts?: Record<string, MountBlock> }
+  // A task's mount at a path of workspace.yaml's replaces it only where its
+  // `replace` names the path (DataSpace's read-only `/workspace`).
+  type Added = { mounts?: Record<string, MountBlock>; replace?: string[] }
+  const { mounts: added = {}, replace = [], ...rest } = (plan.workspace ?? {}) as Added
+  for (const path of replace) {
+    if (added[path] === undefined) throw new Error(`${plan.name}: the task replaces ${path} with no mount of its own`)
+  }
   for (const [path, mount] of Object.entries(added)) {
-    if (mounts[path] !== undefined) throw new Error(`${plan.name}: the task's mount ${path} is already workspace.yaml's`)
+    if (mounts[path] !== undefined && !replace.includes(path)) {
+      throw new Error(`${plan.name}: the task's mount ${path} is already workspace.yaml's`)
+    }
     mounts[path] = mount
   }
   Object.assign(config, rest)
   // A state file outside every mount gets its directory mounted read-only,
   // parents first, so a nested one lands in its parent's mount.
+  // The tools' dispatch log, which the daemon appends to, is read as a
+  // service's state file is.
+  const dispatches = join(runDir, 'dispatches.jsonl')
+  if (plan.tools !== undefined) {
+    writeFileSync(dispatches, '')
+    plan.state[plan.tools.dispatches] = dispatches
+  }
+  // Files a shared fake keeps beside its run (mocks/upstream), read as a
+  // service's state file is.
+  for (const fake of Object.values(external) as (mirage.External & { files?: Record<string, string> })[]) {
+    for (const [view, live] of Object.entries(fake.files ?? {})) plan.state[view] = live
+  }
   const state: [string, string][] = []
   for (const [path, live] of Object.entries(plan.state).sort(([a], [b]) => dirname(a).length - dirname(b).length)) {
     if (hostPath(mounts, path) === undefined) {
@@ -172,6 +202,9 @@ async function prepare(plan: Plan, run: Run, external: Record<string, mirage.Ext
         allow: Object.values(external).map((e) => e.url),
         run: plan.run,
         workdir: plan.workdir ?? '/',
+        ...(plan.tools === undefined ? {} : { tools: { file: plan.tools.file, dispatches } }),
+        ...(plan.verifier === undefined ? {} : { verifier: plan.verifier }),
+        ...(plan.epoch === undefined ? {} : { epoch: plan.epoch }),
       },
       null,
       1,

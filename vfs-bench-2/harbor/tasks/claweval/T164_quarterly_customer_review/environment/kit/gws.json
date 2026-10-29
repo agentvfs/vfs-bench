@@ -1,0 +1,395 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  },
+  {
+   "id": "Label_1",
+   "name": "customer",
+   "type": "user"
+  },
+  {
+   "id": "Label_2",
+   "name": "complaint",
+   "type": "user"
+  },
+  {
+   "id": "Label_3",
+   "name": "notice",
+   "type": "user"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_1601",
+   "threadId": "msg_1601",
+   "internalDate": 1773997200000,
+   "bodyText": "Hello, our current contract expires at the end of September and we would like to discuss renewal terms in advance. Dingxin Software has seen strong business growth this year, and we hope to expand to additional modules upon renewal. Please arrange a time to meet. — Li Na, Dingxin Software",
+   "headers": [
+    {
+     "name": "From",
+     "value": "dingxin_lina@dingxin.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Discussion on Renewal Terms"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 20 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1602",
+   "threadId": "msg_1602",
+   "internalDate": 1771146000000,
+   "bodyText": "Hello, here is a quick update on the new module launched in January: the system has been running smoothly, user feedback has been positive, and daily active users are up 15%. We are very confident about our continued partnership. — Li Na, Dingxin Software",
+   "headers": [
+    {
+     "name": "From",
+     "value": "dingxin_lina@dingxin.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Q1 Project Progress Report"
+    },
+    {
+     "name": "Date",
+     "value": "Sun, 15 Feb 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1603",
+   "threadId": "msg_1603",
+   "internalDate": 1773824400000,
+   "bodyText": "Hello, I need to raise an issue: over the past two weeks we submitted 3 tickets and the average response time exceeded 48 hours, which has seriously impacted our operations. Hanhai E-commerce is very dissatisfied with the current service quality and expects prompt improvement. — Zhang Qiang, Hanhai E-commerce",
+   "headers": [
+    {
+     "name": "From",
+     "value": "hanhai_zhangqiang@hanhai.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Complaint Regarding Service Response Time"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 18 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    },
+    {
+     "labelId": "Label_2"
+    }
+   ]
+  },
+  {
+   "id": "msg_1604",
+   "threadId": "msg_1604",
+   "internalDate": 1772701200000,
+   "bodyText": "Hello, we heard you recently launched a data analytics module and we are very interested. Could you arrange a demo? Although our budget is limited, we would consider upgrading if the results are good. — Zhang Qiang, Hanhai E-commerce",
+   "headers": [
+    {
+     "name": "From",
+     "value": "hanhai_zhangqiang@hanhai.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Inquiry About Data Analytics Feature"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 05 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1605",
+   "threadId": "msg_1605",
+   "internalDate": 1774170000000,
+   "bodyText": "Hello, Wantong Logistics has been using your system for two years now, and our Q1 operational efficiency improved by 20%. We especially appreciate the technical team's quick response to our customization requests. We plan to further expand the scope of our partnership in Q2. — Liu Wei, Wantong Logistics",
+   "headers": [
+    {
+     "name": "From",
+     "value": "wantong_liuwei@wantong.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Thank You for Your Excellent Service"
+    },
+    {
+     "name": "Date",
+     "value": "Sun, 22 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1606",
+   "threadId": "msg_1606",
+   "internalDate": 1772269200000,
+   "bodyText": "Hello, we are planning our Q2 IT investment and would like to extend your system to our South China branch. Please provide an expansion proposal and quote. — Liu Wei, Wantong Logistics",
+   "headers": [
+    {
+     "name": "From",
+     "value": "wantong_liuwei@wantong.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Discussion on Q2 Expansion Plan"
+    },
+    {
+     "name": "Date",
+     "value": "Sat, 28 Feb 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1607",
+   "threadId": "msg_1607",
+   "internalDate": 1768899600000,
+   "bodyText": "Hello, we have been experiencing some issues with the system — occasional slowdowns and lag. Additionally, we are internally reassessing our IT spending and may need to adjust our partnership arrangement. — Wang Li, Qianfeng Technology",
+   "headers": [
+    {
+     "name": "From",
+     "value": "qianfeng_wangli@qianfeng.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "System Usage Issue Inquiry"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 20 Jan 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1608",
+   "threadId": "msg_1608",
+   "internalDate": 1773565200000,
+   "bodyText": "Hello, Sunshine Media exceeded Q1 performance expectations, and the AI content tools have delivered outstanding results. We plan to increase our investment further in Q2 and would like additional technical support and customized solutions. — Chen Yu, Sunshine Media",
+   "headers": [
+    {
+     "name": "From",
+     "value": "yangguang_chenyu@yangguang.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Q1 Business Review and Q2 Planning"
+    },
+    {
+     "name": "Date",
+     "value": "Sun, 15 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1609",
+   "threadId": "msg_1609",
+   "internalDate": 1770714000000,
+   "bodyText": "Hello, our agency is preparing the 2026 annual informatization budget and requires quotes for different configuration options from your company. Please submit by the end of February. — Liu Jian, Public Institution IT Division",
+   "headers": [
+    {
+     "name": "From",
+     "value": "gonggong_liujian@gov-agency.cn"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Inquiry Regarding 2026 Annual Budget Plan"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 10 Feb 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1610",
+   "threadId": "msg_1610",
+   "internalDate": 1774429200000,
+   "bodyText": "All colleagues: The Q2 team building event is scheduled for mid-April. Please ensure your departments arrange work in advance. Detailed plans will be announced next week. — Admin Department",
+   "headers": [
+    {
+     "name": "From",
+     "value": "admin@company.com"
+    },
+    {
+     "name": "To",
+     "value": "all@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Notice Regarding Q2 Team Building Event"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_3"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 10
+  }
+ ]
+}

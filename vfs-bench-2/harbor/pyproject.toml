@@ -3,8 +3,12 @@ name = "vfsbench-harbor"
 version = "0.1.0"
 description = "A Harbor environment served from a Mirage workspace instead of a container"
 requires-python = ">=3.12"
-# h11, httpx and pyyaml come with harbor; this package imports them itself.
-dependencies = ["harbor==0.25.0", "h11", "httpx", "pyyaml"]
+# aiohttp, certifi, cryptography, h11, httpx and pyyaml come with harbor; this
+# package imports them itself.
+dependencies = [
+    "harbor==0.25.0", "aiohttp", "certifi", "cryptography", "h11", "httpx",
+    "pyyaml"
+]
 
 [project.optional-dependencies]
 # Harbor's dspy-rlm agent, which runs on the host and drives the

@@ -2625,6 +2625,9 @@ name = "vfsbench-harbor"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "aiohttp" },
+    { name = "certifi" },
+    { name = "cryptography" },
     { name = "h11" },
     { name = "harbor" },
     { name = "httpx" },
@@ -2640,6 +2643,9 @@ dspy = [
 
 [package.metadata]
 requires-dist = [
+    { name = "aiohttp" },
+    { name = "certifi" },
+    { name = "cryptography" },
     { name = "deno", marker = "extra == 'dspy'" },
     { name = "dspy", marker = "extra == 'dspy'", specifier = "==3.2.1" },
     { name = "h11" },

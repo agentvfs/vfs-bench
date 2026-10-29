@@ -1,0 +1,25 @@
+# expense-submit-verify, on vfsbench_harbor's mirage environment.
+#
+# In place of upstream's environment/Dockerfile: the mocks of its base
+# image are the fakes below, and its COPY, RUN, ENV and WORKDIR lines are
+# `copy`, `run`, `env` and `workdir`.
+#
+# Rule B: Mirage has no such service, so each upstream mock is this repo's
+# kit fake that runs upstream's own app: expense (mocks/expense).
+# One fake of each serves the whole job; this trial is a run of its own on
+# each.
+fakes:
+  expense:
+    # Upstream's expense seed (harbor/export.py writes it). Its C2
+    # fault (c2-skip-submit) is upstream's own, keyed by the fixture's
+    # TASK_NAME: the first submit answers as submitted and changes
+    # nothing, once per run.
+    fixture: fixtures/expense.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports: [5005]
+    # Where upstream's image keeps its SQLite, which verify.py reads.
+    state: /var/lib/mock-data/expense/expense.db
+env:
+  TASK_NAME: expense-submit-verify
+copy:
+  /workspace/environment: []

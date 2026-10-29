@@ -1,0 +1,107 @@
+{
+ "gmail": [
+  {
+   "message_id": "msg_301",
+   "from": "director@partner-corp.com",
+   "to": "me@company.com",
+   "subject": "Project Review Meeting Invitation",
+   "date": "2026-02-27T14:00:00+08:00",
+   "is_read": false,
+   "labels": [
+    "inbox",
+    "important"
+   ],
+   "body": "Hello,\n\nWe would like to schedule a joint project review meeting next week to discuss Q1 progress and Q2 plans.\n\nPlease invite the following people to attend:\n- Leo Zhao from your Engineering department\n- Mike Li from your Product department\n- 3 people will attend from our side\n\nThe meeting will be approximately 2 hours. Please check everyone's availability next Wednesday (March 4, 2026) afternoon and let us know a feasible time slot.\n\nIf Wednesday doesn't work, Thursday afternoon is also an option.\n\nThank you,\nDirector Chen\nPartner Corp"
+  },
+  {
+   "message_id": "msg_302",
+   "from": "leozhao@company.com",
+   "to": "me@company.com",
+   "subject": "Re: Weekly Work Summary",
+   "date": "2026-02-27T16:30:00+08:00",
+   "is_read": true,
+   "labels": [
+    "inbox"
+   ],
+   "body": "Noted, weekly summary has been submitted.\n\nAlso, a heads up: I have an internal tech sharing session next Wednesday afternoon from 2 to 3 PM. I'm available at all other times.\n\nLeo Zhao"
+  },
+  {
+   "message_id": "msg_303",
+   "from": "mikeli@company.com",
+   "to": "me@company.com",
+   "subject": "Next Week's Schedule",
+   "date": "2026-02-28T09:00:00+08:00",
+   "is_read": false,
+   "labels": [
+    "inbox"
+   ],
+   "body": "Hi,\n\nI'm free all day next Wednesday. On Thursday, I have a client visit after 3 PM, so anytime before 3 PM works.\n\nMike Li"
+  }
+ ],
+ "calendar": [
+  {
+   "event_id": "evt_401",
+   "title": "Product Department Weekly Meeting",
+   "organizer": "mikeli@company.com",
+   "attendees": [
+    "mikeli@company.com",
+    "wangfang@company.com"
+   ],
+   "start_time": "2026-03-04T09:00:00+08:00",
+   "end_time": "2026-03-04T10:00:00+08:00",
+   "location": "Meeting Room A",
+   "status": "confirmed"
+  },
+  {
+   "event_id": "evt_402",
+   "title": "Internal Tech Sharing Session",
+   "organizer": "zhangwei@company.com",
+   "attendees": [
+    "leozhao@company.com",
+    "zhangwei@company.com"
+   ],
+   "start_time": "2026-03-04T14:00:00+08:00",
+   "end_time": "2026-03-04T15:00:00+08:00",
+   "location": "Meeting Room B",
+   "status": "confirmed"
+  },
+  {
+   "event_id": "evt_403",
+   "title": "Lunch",
+   "organizer": "mikeli@company.com",
+   "attendees": [
+    "mikeli@company.com"
+   ],
+   "start_time": "2026-03-04T12:00:00+08:00",
+   "end_time": "2026-03-04T13:00:00+08:00",
+   "location": "",
+   "status": "confirmed"
+  },
+  {
+   "event_id": "evt_404",
+   "title": "Client Visit",
+   "organizer": "mikeli@company.com",
+   "attendees": [
+    "mikeli@company.com"
+   ],
+   "start_time": "2026-03-05T15:00:00+08:00",
+   "end_time": "2026-03-05T17:00:00+08:00",
+   "location": "Client Office",
+   "status": "confirmed"
+  },
+  {
+   "event_id": "evt_405",
+   "title": "Team 1-on-1",
+   "organizer": "leozhao@company.com",
+   "attendees": [
+    "leozhao@company.com",
+    "zhangwei@company.com"
+   ],
+   "start_time": "2026-03-04T10:00:00+08:00",
+   "end_time": "2026-03-04T11:00:00+08:00",
+   "location": "Online",
+   "status": "confirmed"
+  }
+ ],
+ "epoch": "2026-03-03T09:00:00Z"
+}

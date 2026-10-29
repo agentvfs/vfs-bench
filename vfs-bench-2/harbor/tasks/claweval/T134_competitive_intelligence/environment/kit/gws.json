@@ -1,0 +1,124 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_901",
+   "threadId": "msg_901",
+   "internalDate": 1774314000000,
+   "bodyText": "Hi team, please complete the latest analysis report on Competitor A and Competitor B by this Friday. Key focus areas: 1. The threat posed by Competitor A's new version to us 2. Competitor B's market strategy after funding 3. Our recommended responses. Send the report to management.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "product-manager@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Please submit competitor analysis report by Friday"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 09:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_902",
+   "threadId": "msg_902",
+   "internalDate": 1774407600000,
+   "bodyText": "During today's visit to Wantong Logistics, Director Zhao mentioned that Competitor A just released an AI assistant feature and asked when we would have something similar. I replied that it's in planning. Please include a focused analysis of this competitive threat in the report.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "sales-rep@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Client mentioned Competitor A's AI features"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Mar 2026 11:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 2
+  }
+ ]
+}

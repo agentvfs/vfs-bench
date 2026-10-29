@@ -1,0 +1,15 @@
+# The scanned PDFs some tasks give the agent (250 MB), which
+# harbor/claweval.py writes from upstream.
+*.pdf
+
+# The config-audit fixtures, which plant example credentials for the agent to
+# find (Stripe's documented test key, a Twilio account SID). GitHub's push
+# protection refuses them, so harbor/claweval.py writes them from upstream too.
+/T027zh_api_config_audit/environment/kit/claweval_config.json
+/T027zh_api_config_audit/environment/workspace/fixtures/config/integrations.json
+/T028_api_config_audit/environment/kit/claweval_config.json
+/T028_api_config_audit/environment/workspace/fixtures/config/integrations.json
+/T089_pinbench_config_workflow_notes/environment/kit/claweval_config.json
+/T089_pinbench_config_workflow_notes/environment/workspace/tasks/T027zh_api_config_audit/fixtures/config/integrations.json
+/T090_pinbench_config_change_plan/environment/kit/claweval_config.json
+/T090_pinbench_config_change_plan/environment/workspace/tasks/T027zh_api_config_audit/fixtures/config/integrations.json

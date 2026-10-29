@@ -1,0 +1,194 @@
+// The smarthome fake's store: LiveClawBench's smarthome mock (Mosi-AI/LiveClawBench
+// @ 303dc77, MIT, mock-platform/mocks/smarthome), one SQLite file per run.
+//
+// Generated with `prisma db pull` from upstream's own CREATE TABLE and
+// CREATE INDEX statements (each fixture's `_schema`), so each table, column,
+// key, foreign key and index is upstream's, by name and in order, and
+// upstream's verify.py and its own statements read a run's file as they
+// read upstream's. Column types are as SQLite keeps them (text, integer,
+// real); a default of SQLite's 'now' is `datetime('now')`, which each run
+// answers with its clock. Prisma cannot state upstream's CHECKs: each run
+// gets them as triggers (mocks/upstream/checks.ts). The last four models
+// are the fake's own (mocks/upstream).
+//
+// No tenant column: a run is one world, as upstream's mock is one.
+
+datasource db {
+  provider = "sqlite"
+  url      = env("INTEG_DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "client"
+}
+
+model benchmark_clock {
+  id         Int    @id @default(autoincrement())
+  clock_time String
+}
+
+model calendar_event {
+  id           Int     @id @default(autoincrement())
+  title        String
+  start_time   String
+  event_type   String?
+  workout_type String?
+  updated_at   String
+}
+
+model coffee_schedule {
+  id          Int    @id @default(autoincrement())
+  start_time  String
+  beans_grams Int?   @default(20)
+  cancelled   Int?   @default(0)
+  updated_at  String
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model grocery_product {
+  product_id     String? @id
+  name           String
+  quantity       Float
+  unit           String
+  stock_status   String
+  substitute_for String?
+  reference      String?
+
+  @@ignore
+}
+
+model inventory_item {
+  id          Int     @id @default(autoincrement())
+  item_name   String
+  quantity    Float
+  unit        String
+  location    String
+  expiry_date String?
+  category    String?
+  updated_at  String?
+}
+
+model inventory_snapshot {
+  id          Int     @id @default(autoincrement())
+  item_name   String
+  quantity    Float
+  unit        String
+  location    String?
+  captured_at String
+}
+
+model meal_plan {
+  id         Int    @id @default(autoincrement())
+  plan_id    String
+  created_at String
+  plan_data  String
+}
+
+model recipe {
+  id               Int                @id @default(autoincrement())
+  name             String
+  meal_type        String
+  ingredients      String
+  calories_total   Float
+  allergens        String?
+  recipe_nutrition recipe_nutrition[]
+}
+
+model recipe_nutrition {
+  id              Int    @id @default(autoincrement())
+  meal_id         Int
+  ingredient_name String
+  quantity        Float
+  unit            String
+  calories        Float
+  protein_g       Float?
+  carbs_g         Float?
+  fat_g           Float?
+  recipe          recipe @relation(fields: [meal_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model room {
+  id   Int    @id @default(autoincrement())
+  name String
+}
+
+model room_metrics {
+  id          Int    @id @default(autoincrement())
+  temperature Float
+  humidity    Float
+  unit_temp   String
+  noise       Float?
+  light       Float?
+  air_quality Float?
+}
+
+model substitution_mapping {
+  id                 Int     @id @default(autoincrement())
+  original_item      String
+  substitute_item    String
+  substitution_ratio Float
+  category           String?
+}
+
+model thermostat_settings {
+  id          Int    @id @default(autoincrement())
+  mode        String
+  temperature Float
+  updated_at  String
+}
+
+model user_constraints {
+  id                  Int    @id @default(autoincrement())
+  calorie_target      Float
+  macro_targets       String
+  allergy_constraints String
+  weekly_budget_limit Float
+}
+
+model wearable_recovery_state {
+  id                 Int   @id @default(autoincrement())
+  sleep_hours        Float
+  sleep_score        Float
+  readiness          Float
+  resting_heart_rate Float
+}
+
+// The environment upstream's mock reads from its process (`TASK_NAME`),
+// which a fake every task of a job shares cannot take from its own: each
+// task's fixture states it.
+model vfsbench_env {
+  name  String @id
+  value String
+
+  @@map("_env")
+}
+
+// Each file the mock keeps on disk upstream, by its path in the image, and
+// the task's assets: text as it is, anything else as base64.
+model vfsbench_file {
+  path     String @id
+  data     String
+  encoding String @default("utf8")
+
+  @@map("_file")
+}
+
+// The rows of upstream's tables Prisma cannot key (marked @@ignore above),
+// which the fake inserts itself, in order, once the kit has seeded the rest.
+model vfsbench_row {
+  seq   Int    @id
+  table String
+  data  String
+
+  @@map("_row")
+}
+
+// Upstream's CREATE TABLE and CREATE INDEX statements, as its seed ran them.
+model vfsbench_schema {
+  name String @id
+  type String
+  sql  String
+
+  @@map("_schema")
+}

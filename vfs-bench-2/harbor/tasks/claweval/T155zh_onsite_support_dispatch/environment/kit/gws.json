@@ -1,0 +1,198 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  },
+  {
+   "id": "Label_1",
+   "name": "urgent",
+   "type": "user"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_1201",
+   "threadId": "msg_1201",
+   "internalDate": 1774498200000,
+   "bodyText": "你好，我是万通物流的王总经理。\n\n我们的生产系统从今天上午10点开始就完全无法使用了，到现在已经超过2个小时！全公司200多人的工作全部停滞，物流调度完全中断，每小时损失预估超过5万元。\n\n我们已经提交了工单TK-1201，但到现在还没有收到任何实质性的响应。我们的合同明确约定了4小时现场响应SLA，请立即安排技术人员到我们浦东的办公室进行现场支持！\n\n如果在下午2点前没有技术人员到达现场，我们将正式发起SLA违约投诉。\n\n请尽快回复确认派遣安排。\n\n王总经理\n万通物流\n地址：上海浦东新区张江高科技园区xxx路xxx号",
+   "headers": [
+    {
+     "name": "From",
+     "value": "wangzong@wantong-logistics.com"
+    },
+    {
+     "name": "To",
+     "value": "support@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "紧急！生产系统宕机已超2小时，严重影响业务"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 26 Mar 2026 12:10:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "Label_1"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_1202",
+   "threadId": "msg_1202",
+   "internalDate": 1774483200000,
+   "bodyText": "本周热点：1. Kubernetes 1.30新特性解读 2. AIOps在大规模系统中的应用 3. 数据库高可用方案对比...",
+   "headers": [
+    {
+     "name": "From",
+     "value": "newsletter@tech-weekly.com"
+    },
+    {
+     "name": "To",
+     "value": "support@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "本周技术趋势：云原生架构演进与AI运维实践"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 26 Mar 2026 08:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 2
+  },
+  {
+   "kind": "event",
+   "n": 4
+  }
+ ],
+ "calendars": [
+  {
+   "id": "integ@example.com",
+   "summary": "me@company.com",
+   "timeZone": "Asia/Shanghai",
+   "accessRole": "owner",
+   "primary": true,
+   "events": [
+    {
+     "id": "evt_1201",
+     "status": "confirmed",
+     "summary": "技术部周例会",
+     "description": "技术部门每周例会，回顾上周工作和本周计划",
+     "location": "会议室A",
+     "startDateTime": "2026-03-26T09:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-26T10:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"马强\"}, {\"displayName\": \"李华\"}, {\"displayName\": \"周明\"}, {\"displayName\": \"王明\", \"organizer\": true}]",
+     "created": "2026-03-26T09:00:00.000Z",
+     "updated": "2026-03-26T09:00:00.000Z"
+    },
+    {
+     "id": "evt_1202",
+     "status": "confirmed",
+     "summary": "系统架构评审",
+     "description": "新微服务架构方案评审，马强和李华参加",
+     "location": "会议室B",
+     "startDateTime": "2026-03-26T10:30:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-26T12:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"马强\"}, {\"displayName\": \"李华\", \"organizer\": true}]",
+     "created": "2026-03-26T09:00:00.000Z",
+     "updated": "2026-03-26T09:00:00.000Z"
+    },
+    {
+     "id": "evt_1203",
+     "status": "confirmed",
+     "summary": "深圳客户现场实施",
+     "description": "周明全天在深圳客户现场进行系统部署实施，无法远程调配",
+     "location": "深圳南山区-客户现场",
+     "startDateTime": "2026-03-26T09:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-26T17:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"周明\", \"organizer\": true}]",
+     "created": "2026-03-26T09:00:00.000Z",
+     "updated": "2026-03-26T09:00:00.000Z"
+    },
+    {
+     "id": "evt_1204",
+     "status": "confirmed",
+     "summary": "午餐",
+     "description": "午休时间",
+     "startDateTime": "2026-03-26T12:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-26T13:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "created": "2026-03-26T09:00:00.000Z",
+     "updated": "2026-03-26T09:00:00.000Z"
+    }
+   ]
+  }
+ ]
+}

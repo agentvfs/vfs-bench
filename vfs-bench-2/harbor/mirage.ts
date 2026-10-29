@@ -23,16 +23,32 @@
  *     workspace:                 # added to harbor/workspace.yaml
  *       mounts: {/gmail: {vfs: gmail, config: {apiBase: '${GWS_URL}'}}}
  *       clis: {gws: {cli: gws, config: {apiBase: '${GWS_URL}'}}}
+ *     tools:                     # the task's own tools, as CLIs (tools.ts)
+ *       file: tools.json         # in environment/; `clis:` installs each
+ *       dispatches: /var/lib/mock-data/tools/dispatches.jsonl
+ *                                # where the verifier reads their calls
+ *     verifier:                  # for MicrosandboxVerifier's VM
+ *       copy: {/opt/claweval: '${STATE}/claweval/src'}
+ *                                # host directories it gets, by VM path
+ *       egress: [OPENAI_BASE_URL]  # variables whose URLs' hosts it reaches
+ *
+ * The fakes' epoch (one for all) is the run's, which the workspace's clock
+ * starts at too (clock.ts).
  *
  * The environment starts the fakes and resets this trial's run on each
  * before mocks.ts runs, and hands their run URLs and files in (`external`).
- * `${<SERVICE>_URL}` in `workspace` is that service's run URL.
+ * `${<SERVICE>_URL}` in `workspace` is that service's run URL, and
+ * `${RUN_DIR}` the trial's run dir, under which a mount the task adds keeps
+ * its files (`/home/node: {vfs: disk, config: {root: '${RUN_DIR}/home'}}`).
+ * `${STATE}` in `verifier.copy` is vfs-bench-2's `state/`, where setup
+ * downloads upstream.
  */
 import { existsSync, readFileSync } from 'node:fs'
 import { basename, join, relative } from 'node:path'
 
 import { parse } from 'yaml'
 
+import { STATE } from '../harness/paths.ts'
 import type { Run } from '../harness/runs.ts'
 import { type Copy, copyTarget } from './copies.ts'
 import type { Plan } from './mocks.ts'
@@ -61,6 +77,14 @@ interface MirageYaml {
   run?: string[]
   workdir?: string
   workspace?: Record<string, unknown>
+  tools?: { file: string; dispatches: string }
+  verifier?: Verifier
+}
+
+/** What a verifier outside the workspace gets besides the trial's files (microsandbox.py). */
+export interface Verifier {
+  copy?: Record<string, string>
+  egress?: string[]
 }
 
 /**
@@ -69,7 +93,7 @@ interface MirageYaml {
  */
 type CopyValue = string[] | string | { src: string; entries?: string[] }[]
 
-const KEYS = new Set(['fakes', 'env', 'copy', 'run', 'workdir', 'workspace'])
+const KEYS = new Set(['fakes', 'env', 'copy', 'run', 'workdir', 'workspace', 'tools', 'verifier'])
 
 /** The task's mirage.yaml, if it has one. */
 export function file(taskDir: string): string | undefined {
@@ -83,7 +107,7 @@ function interpolate<T>(value: T, vars: Record<string, string>, where: string): 
     JSON.stringify(value, (_key, v: unknown) =>
       typeof v === 'string'
         ? v.replace(/\$\{([A-Z0-9_]+)\}/g, (_m, name: string) => {
-            if (vars[name] === undefined) throw new Error(`${where} names \${${name}}, which is no fake's run`)
+            if (vars[name] === undefined) throw new Error(`${where} names \${${name}}, which is not a fake's run, RUN_DIR or STATE`)
             return vars[name]!
           })
         : v,
@@ -110,7 +134,7 @@ function copiesOf(dest: string, value: CopyValue, environmentDir: string, where:
 }
 
 /** The plan for a task with a mirage.yaml, over its fakes' runs. */
-export function plan(taskDir: string, _run: Run, external: Record<string, External>): Plan {
+export function plan(taskDir: string, run: Run, external: Record<string, External>): Plan {
   const path = file(taskDir)!
   const spec = parse(readFileSync(path, 'utf8')) as MirageYaml
   const unknown = Object.keys(spec).filter((k) => !KEYS.has(k))
@@ -127,8 +151,15 @@ export function plan(taskDir: string, _run: Run, external: Record<string, Extern
     }
     if (fake.state !== undefined) state[fake.state] = run.db
   }
+  // The run's clock, which the workspace's follows: every fake's is one.
+  const epochs = [...new Set(Object.values(spec.fakes).flatMap((fake) => (fake.epoch === undefined ? [] : [fake.epoch])))]
+  if (epochs.length > 1) throw new Error(`${path}: the fakes' epochs differ (${epochs.join(', ')})`)
   const copies = Object.entries(spec.copy ?? {}).flatMap(([dest, value]) => copiesOf(dest, value, environmentDir, path))
-  const vars = Object.fromEntries(Object.entries(external).map(([service, run]) => [`${service.toUpperCase()}_URL`, run.url]))
+  const vars: Record<string, string> = {
+    ...Object.fromEntries(Object.entries(external).map(([service, fake]) => [`${service.toUpperCase()}_URL`, fake.url])),
+    RUN_DIR: run.dir,
+    STATE,
+  }
   return {
     name: spec.env?.TASK_NAME ?? basename(taskDir),
     fakes: [],
@@ -139,5 +170,10 @@ export function plan(taskDir: string, _run: Run, external: Record<string, Extern
     run: (spec.run ?? []).map((line) => ({ cwd: spec.workdir ?? '/', line })),
     ...(spec.workdir === undefined ? {} : { workdir: spec.workdir }),
     ...(spec.workspace === undefined ? {} : { workspace: interpolate(spec.workspace, vars, path) }),
+    ...(spec.tools === undefined
+      ? {}
+      : { tools: { file: join(environmentDir, spec.tools.file), dispatches: spec.tools.dispatches } }),
+    ...(spec.verifier === undefined ? {} : { verifier: interpolate(spec.verifier, vars, path) }),
+    ...(epochs.length === 0 ? {} : { epoch: epochs[0] }),
   }
 }

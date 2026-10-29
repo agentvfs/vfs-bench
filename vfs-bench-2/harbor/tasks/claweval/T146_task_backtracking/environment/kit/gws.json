@@ -1,0 +1,232 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  },
+  {
+   "id": "Label_1",
+   "name": "follow-up",
+   "type": "user"
+  },
+  {
+   "id": "Label_2",
+   "name": "client",
+   "type": "user"
+  },
+  {
+   "id": "Label_3",
+   "name": "notification",
+   "type": "user"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_1001",
+   "threadId": "msg_1001",
+   "internalDate": 1774429200000,
+   "bodyText": "I need this report by Monday next week. Please give me a progress update ASAP. -- Director Wang",
+   "headers": [
+    {
+     "name": "From",
+     "value": "boss@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "How is the Q1 summary report coming along?"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1002",
+   "threadId": "msg_1002",
+   "internalDate": 1774429200000,
+   "bodyText": "Hello, the customization proposal we discussed at our last meeting was originally due on March 20, but we still haven't received it. Please confirm the delivery date as soon as possible. -- Zhang Ming, Dingxin Software",
+   "headers": [
+    {
+     "name": "From",
+     "value": "client_zhangming@dingxin.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "When can the customization proposal be delivered?"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_2"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1003",
+   "threadId": "msg_1003",
+   "internalDate": 1774342800000,
+   "bodyText": "Please note that the deadline for this quarter's performance evaluation form is March 25, and yours has not been submitted yet. Please complete it as soon as possible. -- Li Wei, HR Department",
+   "headers": [
+    {
+     "name": "From",
+     "value": "hr_liwei@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Performance evaluation form not yet submitted"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1004",
+   "threadId": "msg_1004",
+   "internalDate": 1774342800000,
+   "bodyText": "I recommend you check out this article about AI trends, very interesting.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "colleague@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Sharing a great article"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  },
+  {
+   "id": "msg_1005",
+   "threadId": "msg_1005",
+   "internalDate": 1774256400000,
+   "bodyText": "System maintenance this Sunday from 2:00 AM to 6:00 AM.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "system@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "System maintenance notice"
+    },
+    {
+     "name": "Date",
+     "value": "Mon, 23 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_3"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 5
+  }
+ ]
+}

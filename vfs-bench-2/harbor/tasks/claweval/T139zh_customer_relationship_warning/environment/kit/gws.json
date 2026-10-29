@@ -1,0 +1,163 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  },
+  {
+   "id": "Label_1",
+   "name": "客户",
+   "type": "user"
+  },
+  {
+   "id": "Label_2",
+   "name": "通知",
+   "type": "user"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_901",
+   "threadId": "msg_901",
+   "internalDate": 1773997200000,
+   "bodyText": "您好，我们的合同快到期了，想提前了解一下续约的条款和价格。我们对目前的服务比较满意，但希望能在价格上有些优惠。请尽快安排时间沟通。——刘卫，万通物流",
+   "headers": [
+    {
+     "name": "From",
+     "value": "wangtong_liuwei@wantong.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "关于续约条款的咨询"
+    },
+    {
+     "name": "Date",
+     "value": "Fri, 20 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_902",
+   "threadId": "msg_902",
+   "internalDate": 1770714000000,
+   "bodyText": "你好，我们一直在使用贵公司的产品，想了解一下是否有更高级的服务方案。我们的业务规模在扩大，现有方案可能不够用了。——李娜，鼎新软件",
+   "headers": [
+    {
+     "name": "From",
+     "value": "dingxin_lina@dingxin.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "服务升级意向"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 10 Feb 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_903",
+   "threadId": "msg_903",
+   "internalDate": 1774429200000,
+   "bodyText": "全体同事：清明节放假安排为4月4日-4月6日，共3天。请提前安排好工作。——行政部",
+   "headers": [
+    {
+     "name": "From",
+     "value": "admin@company.com"
+    },
+    {
+     "name": "To",
+     "value": "all@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "清明节放假通知"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_2"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 3
+  }
+ ]
+}

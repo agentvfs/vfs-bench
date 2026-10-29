@@ -1,0 +1,90 @@
+[
+ {
+  "name": "crm",
+  "description": "The crm service's tools.",
+  "tools": [
+   {
+    "name": "list_customers",
+    "call": "crm_list_customers",
+    "description": "获取CRM客户列表，可按状态、等级、行业筛选",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "客户状态筛选：active, inactive, churned"
+      },
+      "tier": {
+       "type": "string",
+       "description": "客户等级筛选：VIP, standard"
+      },
+      "industry": {
+       "type": "string",
+       "description": "按行业筛选"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_customer",
+    "call": "crm_get_customer",
+    "description": "获取单个客户的完整详细信息",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "customer_id": {
+       "type": "string",
+       "description": "客户ID"
+      }
+     },
+     "required": [
+      "customer_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "export_report",
+    "call": "crm_export_report",
+    "description": "导出客户汇总报告",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "title": {
+       "type": "string",
+       "description": "报告标题"
+      },
+      "customer_ids": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "要包含的客户ID列表"
+      },
+      "summary": {
+       "type": "string",
+       "description": "报告摘要内容"
+      }
+     },
+     "required": [
+      "title",
+      "customer_ids",
+      "summary"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/export",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

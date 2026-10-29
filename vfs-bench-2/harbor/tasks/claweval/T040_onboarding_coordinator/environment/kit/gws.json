@@ -1,0 +1,178 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_2001",
+   "threadId": "msg_2001",
+   "internalDate": 1772676000000,
+   "bodyText": "Hi,\n\nThree new employees are starting next Monday (March 9). Please help coordinate the onboarding arrangements:\n\n1. **Xiaoming Wang** — Engineering, Frontend Developer\n   - Department Manager: Zhang Wei\n   - Needs: MacBook Pro, workstation assignment, GitLab account\n   - Training: Should attend new employee onboarding training (suggested 10:00-12:00)\n\n2. **Xiaoting Liu** — Marketing, Marketing Specialist\n   - Department Manager: Zhang Wei\n   - Needs: MacBook Air, workstation assignment, marketing tools account\n   - Training: Same as above\n\n3. **Haoran Chen** — Data, Data Engineer\n   - Needs: High-performance workstation, workstation assignment, database access permissions\n   - Training: Same as above\n   - Special: Requires security clearance before database permissions can be granted\n\nPlease note: For departments without a manager, only save the onboarding notification as a draft — do not send it directly.\n\nThanks!\nFang Wang",
+   "headers": [
+    {
+     "name": "From",
+     "value": "wangfang@company.com"
+    },
+    {
+     "name": "To",
+     "value": "user@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "New Employee Onboarding Next Monday"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 05 Mar 2026 10:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_2002",
+   "threadId": "msg_2002",
+   "internalDate": 1772690400000,
+   "bodyText": "Just a heads-up: MacBook Pro is currently well-stocked, but MacBook Air is out of stock — expected to arrive on March 10. High-performance workstations are in stock.",
+   "headers": [
+    {
+     "name": "From",
+     "value": "chenjing@company.com"
+    },
+    {
+     "name": "To",
+     "value": "user@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "IT Equipment Inventory Update"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 05 Mar 2026 14:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 2
+  },
+  {
+   "kind": "event",
+   "n": 3
+  }
+ ],
+ "calendars": [
+  {
+   "id": "integ@example.com",
+   "summary": "me@company.com",
+   "timeZone": "Asia/Shanghai",
+   "accessRole": "owner",
+   "primary": true,
+   "events": [
+    {
+     "id": "evt_501",
+     "status": "confirmed",
+     "summary": "Tech Review Meeting",
+     "location": "Conference Room B",
+     "startDateTime": "2026-03-09T10:30:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-09T11:30:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"email\": \"liming@company.com\", \"organizer\": true}, {\"email\": \"zhangwei_eng@company.com\"}]",
+     "created": "2026-03-05T09:00:00.000Z",
+     "updated": "2026-03-05T09:00:00.000Z"
+    },
+    {
+     "id": "evt_502",
+     "status": "confirmed",
+     "summary": "All-Hands Weekly Meeting",
+     "location": "Main Conference Room",
+     "startDateTime": "2026-03-09T09:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-09T09:30:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"email\": \"ceo@company.com\", \"organizer\": true}, {\"email\": \"all@company.com\"}]",
+     "created": "2026-03-05T09:00:00.000Z",
+     "updated": "2026-03-05T09:00:00.000Z"
+    },
+    {
+     "id": "evt_503",
+     "status": "confirmed",
+     "summary": "Marketing Strategy Discussion",
+     "location": "Conference Room A",
+     "startDateTime": "2026-03-09T14:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-09T15:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"email\": \"zhangwei_mkt@company.com\", \"organizer\": true}]",
+     "created": "2026-03-05T09:00:00.000Z",
+     "updated": "2026-03-05T09:00:00.000Z"
+    }
+   ]
+  }
+ ]
+}

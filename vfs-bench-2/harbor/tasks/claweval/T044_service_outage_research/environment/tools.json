@@ -1,0 +1,93 @@
+[
+ {
+  "name": "web",
+  "description": "The web service's tools.",
+  "tools": [
+   {
+    "name": "search",
+    "call": "web_search",
+    "description": "Search the internet and return a list of relevant web page results (title, URL, snippet)",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "Search keywords or query string"
+      },
+      "max_results": {
+       "type": "integer",
+       "description": "Maximum number of results to return",
+       "default": 10
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9113/web/search",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "fetch",
+    "call": "web_fetch",
+    "description": "Fetch the full content of a web page at a given URL",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "url": {
+       "type": "string",
+       "description": "The URL to fetch"
+      },
+      "timeout_seconds": {
+       "type": "integer",
+       "description": "Request timeout in seconds",
+       "default": 30
+      }
+     },
+     "required": [
+      "url"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9113/web/fetch",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "send_notification",
+    "call": "send_notification",
+    "description": "Send a notification message to a specified channel (email, Slack, SMS, etc.)",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "channel": {
+       "type": "string",
+       "description": "Notification channel: email, slack, sms"
+      },
+      "message": {
+       "type": "string",
+       "description": "Notification content"
+      },
+      "recipients": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "List of recipients"
+      }
+     },
+     "required": [
+      "channel",
+      "message"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9113/web/notify",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

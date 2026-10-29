@@ -1,0 +1,141 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 0
+  },
+  {
+   "kind": "event",
+   "n": 5
+  }
+ ],
+ "calendars": [
+  {
+   "id": "integ@example.com",
+   "summary": "me@company.com",
+   "timeZone": "Asia/Shanghai",
+   "accessRole": "owner",
+   "primary": true,
+   "events": [
+    {
+     "id": "evt_501",
+     "status": "confirmed",
+     "summary": "Product Requirements Weekly Meeting",
+     "description": "Weekly product requirements review, linked to minutes NOTE-501",
+     "location": "Meeting Room A",
+     "startDateTime": "2026-03-16T10:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-16T11:30:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"Wang Ming\", \"organizer\": true}, {\"displayName\": \"Li Hua\"}, {\"displayName\": \"Zhao Lei\"}]",
+     "created": "2026-03-26T09:00:00.000Z",
+     "updated": "2026-03-26T09:00:00.000Z"
+    },
+    {
+     "id": "evt_502",
+     "status": "confirmed",
+     "summary": "Technical Review Meeting",
+     "description": "Architecture review, linked to minutes NOTE-502",
+     "location": "Tech Area",
+     "startDateTime": "2026-03-18T14:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-18T16:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"Li Hua\", \"organizer\": true}, {\"displayName\": \"Ma Qiang\"}, {\"displayName\": \"Zhou Ming\"}]",
+     "created": "2026-03-26T09:00:00.000Z",
+     "updated": "2026-03-26T09:00:00.000Z"
+    },
+    {
+     "id": "evt_503",
+     "status": "confirmed",
+     "summary": "Customer Progress Sync Meeting",
+     "description": "Key customer progress sync, linked to minutes NOTE-503",
+     "location": "Meeting Room B",
+     "startDateTime": "2026-03-20T09:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-20T10:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"Zhao Lei\", \"organizer\": true}, {\"displayName\": \"Wang Ming\"}]",
+     "created": "2026-03-26T09:00:00.000Z",
+     "updated": "2026-03-26T09:00:00.000Z"
+    },
+    {
+     "id": "evt_504",
+     "status": "confirmed",
+     "summary": "All-Hands Standup",
+     "description": "Daily standup, no minutes",
+     "location": "Open Area",
+     "startDateTime": "2026-03-17T10:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-17T10:15:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"Wang Ming\", \"organizer\": true}, {\"displayName\": \"All\"}]",
+     "created": "2026-03-26T09:00:00.000Z",
+     "updated": "2026-03-26T09:00:00.000Z"
+    },
+    {
+     "id": "evt_505",
+     "status": "confirmed",
+     "summary": "Lunch Sharing Session",
+     "description": "Tech lunch sharing, no minutes",
+     "location": "Cafeteria",
+     "startDateTime": "2026-03-19T12:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-19T13:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"displayName\": \"HR\", \"organizer\": true}, {\"displayName\": \"Voluntary\"}]",
+     "created": "2026-03-26T09:00:00.000Z",
+     "updated": "2026-03-26T09:00:00.000Z"
+    }
+   ]
+  }
+ ]
+}

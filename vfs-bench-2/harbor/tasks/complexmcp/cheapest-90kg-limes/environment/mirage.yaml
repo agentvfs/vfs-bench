@@ -1,0 +1,96 @@
+# cheapest-90kg-limes, ComplexMCP's row 27, on vfsbench_harbor's mirage environment
+# (harbor/complexmcp.py writes it).
+#
+# Each of upstream's servers is its kit fake at upstream's port, its tools a
+# CLI (harbor/tools.ts) whose calls reach this trial's run of it. A Light app
+# logs in as upstream's client logs in: seed 7, then LightShop,
+# each fake making its session from kit/login.json; the others answer that
+# they were not logged into. A Light app's CLI names the trial's run of
+# LightSystem, whose clock every app steps, as upstream's connector does.
+# The trial's clock starts at LightSystem's time at login. The verifier's VM
+# gets upstream's checkout and rows, and the judge's packages.
+fakes:
+  complexmcp_math:
+    fixture: kit/none.json
+    epoch: '2026-05-06T18:20:24Z'
+    ports: [8000]
+  complexmcp_unit:
+    fixture: kit/none.json
+    epoch: '2026-05-06T18:20:24Z'
+    ports: [8001]
+  complexmcp_osint:
+    fixture: kit/none.json
+    epoch: '2026-05-06T18:20:24Z'
+    ports: [8002]
+  complexmcp_time:
+    fixture: kit/none.json
+    epoch: '2026-05-06T18:20:24Z'
+    ports: [8003]
+  complexmcp_lang:
+    fixture: kit/none.json
+    epoch: '2026-05-06T18:20:24Z'
+    ports: [8004]
+  complexmcp_crypto:
+    fixture: kit/none.json
+    epoch: '2026-05-06T18:20:24Z'
+    ports: [8005]
+  complexmcp_graph:
+    fixture: kit/none.json
+    epoch: '2026-05-06T18:20:24Z'
+    ports: [8006]
+  complexmcp_chem:
+    fixture: kit/none.json
+    epoch: '2026-05-06T18:20:24Z'
+    ports: [8007]
+  complexmcp_system:
+    fixture: kit/login.json
+    epoch: '2026-05-06T18:20:24Z'
+    ports: [9000]
+  complexmcp_talk:
+    fixture: kit/login.json
+    epoch: '2026-05-06T18:20:24Z'
+    ports: [9001]
+  complexmcp_shop:
+    fixture: kit/login.json
+    epoch: '2026-05-06T18:20:24Z'
+    ports: [9002]
+  complexmcp_weather:
+    fixture: kit/login.json
+    epoch: '2026-05-06T18:20:24Z'
+    ports: [9003]
+  complexmcp_flight:
+    fixture: kit/login.json
+    epoch: '2026-05-06T18:20:24Z'
+    ports: [9004]
+  complexmcp_stock:
+    fixture: kit/login.json
+    epoch: '2026-05-06T18:20:24Z'
+    ports: [9005]
+  complexmcp_news:
+    fixture: kit/login.json
+    epoch: '2026-05-06T18:20:24Z'
+    ports: [9006]
+tools:
+  file: tools.json
+  dispatches: /var/lib/mock-data/complexmcp/dispatches.jsonl
+workspace:
+  clis:
+    math-server: {cli: math-server, config: {url: '${COMPLEXMCP_MATH_URL}'}}
+    unit-server: {cli: unit-server, config: {url: '${COMPLEXMCP_UNIT_URL}'}}
+    osint-server: {cli: osint-server, config: {url: '${COMPLEXMCP_OSINT_URL}'}}
+    time-server: {cli: time-server, config: {url: '${COMPLEXMCP_TIME_URL}'}}
+    lang-server: {cli: lang-server, config: {url: '${COMPLEXMCP_LANG_URL}'}}
+    crypto-server: {cli: crypto-server, config: {url: '${COMPLEXMCP_CRYPTO_URL}'}}
+    graph-server: {cli: graph-server, config: {url: '${COMPLEXMCP_GRAPH_URL}'}}
+    chem-server: {cli: chem-server, config: {url: '${COMPLEXMCP_CHEM_URL}'}}
+    light-system: {cli: light-system, config: {url: '${COMPLEXMCP_SYSTEM_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
+    light-talk: {cli: light-talk, config: {url: '${COMPLEXMCP_TALK_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
+    light-shop: {cli: light-shop, config: {url: '${COMPLEXMCP_SHOP_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
+    light-weather: {cli: light-weather, config: {url: '${COMPLEXMCP_WEATHER_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
+    light-flight: {cli: light-flight, config: {url: '${COMPLEXMCP_FLIGHT_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
+    light-stock: {cli: light-stock, config: {url: '${COMPLEXMCP_STOCK_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
+    light-news: {cli: light-news, config: {url: '${COMPLEXMCP_NEWS_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
+verifier:
+  copy:
+    /opt/complexmcp: '${STATE}/complexmcp'
+    /opt/complexmcp-site: '${STATE}/harbor/site/complexmcp'

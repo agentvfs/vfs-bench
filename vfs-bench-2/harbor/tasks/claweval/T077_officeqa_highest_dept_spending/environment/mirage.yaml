@@ -1,0 +1,37 @@
+# T077_officeqa_highest_dept_spending, on vfsbench_harbor's mirage environment (harbor/claweval.py writes it).
+#
+# Each service is its kit fake at upstream's port, its tools CLIs
+# (harbor/tools.ts), and the verifier's VM gets upstream's grader and
+# the judge's host (claweval_grade.py).
+fakes:
+  claweval_ocr:
+    fixture: kit/claweval_ocr.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports:
+    - 9121
+copy:
+  /workspace: workspace/
+tools:
+  file: tools.json
+  dispatches: /var/lib/mock-data/claweval/dispatches.jsonl
+workspace:
+  profiles:
+    default:
+      commands:
+        deny:
+        - commands:
+          - curl
+          - wget
+          reason: the services are reached through their tools
+  clis:
+    ocr-t51:
+      cli: ocr-t51
+      config:
+        url: ${CLAWEVAL_OCR_URL}
+verifier:
+  copy:
+    /opt/claweval/src: ${STATE}/claweval/src/src
+    /opt/claweval/site: ${STATE}/harbor/site/claweval
+    /opt/claweval/tasks/T077_officeqa_highest_dept_spending: ${STATE}/claweval/src/tasks/T077_officeqa_highest_dept_spending
+  egress:
+  - OPENAI_BASE_URL

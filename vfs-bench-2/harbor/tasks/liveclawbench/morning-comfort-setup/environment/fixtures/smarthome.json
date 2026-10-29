@@ -1,0 +1,444 @@
+{
+ "_env": [
+  {
+   "name": "TASK_NAME",
+   "value": "morning-comfort-setup"
+  }
+ ],
+ "_schema": [
+  {
+   "type": "table",
+   "name": "thermostat_settings",
+   "sql": "CREATE TABLE thermostat_settings (\n      id INTEGER PRIMARY KEY CHECK (id = 1),\n      mode TEXT NOT NULL CHECK (mode IN ('comfort', 'eco', 'off')),\n      temperature REAL NOT NULL,\n      updated_at TEXT NOT NULL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "coffee_schedule",
+   "sql": "CREATE TABLE coffee_schedule (\n      id INTEGER PRIMARY KEY CHECK (id = 1),\n      start_time TEXT NOT NULL,\n      beans_grams INTEGER DEFAULT 20,\n      cancelled INTEGER DEFAULT 0,\n      updated_at TEXT NOT NULL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "benchmark_clock",
+   "sql": "CREATE TABLE benchmark_clock (\n      id INTEGER PRIMARY KEY CHECK (id = 1),\n      clock_time TEXT NOT NULL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "room_metrics",
+   "sql": "CREATE TABLE room_metrics (\n      id INTEGER PRIMARY KEY,\n      temperature REAL NOT NULL,\n      humidity REAL NOT NULL,\n      unit_temp TEXT NOT NULL,\n      noise REAL,\n      light REAL,\n      air_quality REAL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "room",
+   "sql": "CREATE TABLE room (\n      id INTEGER PRIMARY KEY,\n      name TEXT NOT NULL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "inventory_item",
+   "sql": "CREATE TABLE inventory_item (\n      id INTEGER PRIMARY KEY,\n      item_name TEXT NOT NULL,\n      quantity REAL NOT NULL,\n      unit TEXT NOT NULL,\n      location TEXT NOT NULL,\n      expiry_date TEXT,\n      category TEXT,\n      updated_at TEXT\n    )"
+  },
+  {
+   "type": "table",
+   "name": "inventory_snapshot",
+   "sql": "CREATE TABLE inventory_snapshot (\n      id INTEGER PRIMARY KEY,\n      item_name TEXT NOT NULL,\n      quantity REAL NOT NULL,\n      unit TEXT NOT NULL,\n      location TEXT,\n      captured_at TEXT NOT NULL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "grocery_product",
+   "sql": "CREATE TABLE grocery_product (\n      product_id TEXT PRIMARY KEY,\n      name TEXT NOT NULL,\n      quantity REAL NOT NULL,\n      unit TEXT NOT NULL,\n      stock_status TEXT NOT NULL CHECK (stock_status IN ('sufficient', 'insufficient', 'unavailable')),\n      substitute_for TEXT,\n      reference TEXT\n    )"
+  },
+  {
+   "type": "table",
+   "name": "wearable_recovery_state",
+   "sql": "CREATE TABLE wearable_recovery_state (\n      id INTEGER PRIMARY KEY CHECK (id = 1),\n      sleep_hours REAL NOT NULL,\n      sleep_score REAL NOT NULL,\n      readiness REAL NOT NULL,\n      resting_heart_rate REAL NOT NULL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "calendar_event",
+   "sql": "CREATE TABLE calendar_event (\n      id INTEGER PRIMARY KEY,\n      title TEXT NOT NULL,\n      start_time TEXT NOT NULL,\n      event_type TEXT,\n      workout_type TEXT CHECK (workout_type IN ('hiit', 'yoga', 'walking', 'cycling', 'strength', 'stretching', 'swimming', 'rest') OR workout_type IS NULL),\n      updated_at TEXT NOT NULL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "user_constraints",
+   "sql": "CREATE TABLE user_constraints (\n      id INTEGER PRIMARY KEY CHECK (id = 1),\n      calorie_target REAL NOT NULL,\n      macro_targets TEXT NOT NULL,\n      allergy_constraints TEXT NOT NULL,\n      weekly_budget_limit REAL NOT NULL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "recipe",
+   "sql": "CREATE TABLE recipe (\n      id INTEGER PRIMARY KEY,\n      name TEXT NOT NULL,\n      meal_type TEXT NOT NULL CHECK (meal_type IN ('breakfast', 'lunch', 'dinner')),\n      ingredients TEXT NOT NULL,\n      calories_total REAL NOT NULL,\n      allergens TEXT\n    )"
+  },
+  {
+   "type": "table",
+   "name": "recipe_nutrition",
+   "sql": "CREATE TABLE recipe_nutrition (\n      id INTEGER PRIMARY KEY,\n      meal_id INTEGER NOT NULL,\n      ingredient_name TEXT NOT NULL,\n      quantity REAL NOT NULL,\n      unit TEXT NOT NULL,\n      calories REAL NOT NULL,\n      protein_g REAL,\n      carbs_g REAL,\n      fat_g REAL,\n      FOREIGN KEY (meal_id) REFERENCES recipe(id)\n    )"
+  },
+  {
+   "type": "table",
+   "name": "meal_plan",
+   "sql": "CREATE TABLE meal_plan (\n      id INTEGER PRIMARY KEY,\n      plan_id TEXT NOT NULL,\n      created_at TEXT NOT NULL,\n      plan_data TEXT NOT NULL\n    )"
+  },
+  {
+   "type": "table",
+   "name": "substitution_mapping",
+   "sql": "CREATE TABLE substitution_mapping (\n      id INTEGER PRIMARY KEY,\n      original_item TEXT NOT NULL,\n      substitute_item TEXT NOT NULL,\n      substitution_ratio REAL NOT NULL,\n      category TEXT\n    )"
+  }
+ ],
+ "thermostat_settings": [
+  {
+   "id": 1,
+   "mode": "off",
+   "temperature": 95,
+   "updated_at": "2026-05-09T06:00:00Z"
+  }
+ ],
+ "coffee_schedule": [
+  {
+   "id": 1,
+   "start_time": "08:00",
+   "beans_grams": 20,
+   "cancelled": 0,
+   "updated_at": "2026-05-09T06:00:00Z"
+  }
+ ],
+ "benchmark_clock": [
+  {
+   "id": 1,
+   "clock_time": "2026-05-09T07:30:00Z"
+  }
+ ],
+ "room_metrics": [
+  {
+   "id": 1,
+   "temperature": 86,
+   "humidity": 999,
+   "unit_temp": "F",
+   "noise": 25,
+   "light": 120,
+   "air_quality": 88
+  }
+ ],
+ "room": [
+  {
+   "id": 1,
+   "name": "Living Room"
+  }
+ ],
+ "inventory_item": [
+  {
+   "id": 1,
+   "item_name": "Blue Mountain Coffee Beans",
+   "quantity": 100,
+   "unit": "grams",
+   "location": "fridge",
+   "expiry_date": "2026-05-01",
+   "category": "coffee",
+   "updated_at": null
+  },
+  {
+   "id": 2,
+   "item_name": "Blue Mountain Coffee Beans",
+   "quantity": 150,
+   "unit": "grams",
+   "location": "fridge",
+   "expiry_date": "2026-05-05",
+   "category": "coffee",
+   "updated_at": null
+  },
+  {
+   "id": 3,
+   "item_name": "Kenya AA",
+   "quantity": 12,
+   "unit": "grams",
+   "location": "pantry",
+   "expiry_date": "2026-12-01",
+   "category": "coffee",
+   "updated_at": null
+  },
+  {
+   "id": 4,
+   "item_name": "Milk",
+   "quantity": 0.5,
+   "unit": "gallons",
+   "location": "fridge",
+   "expiry_date": "2026-05-15",
+   "category": "dairy",
+   "updated_at": null
+  },
+  {
+   "id": 5,
+   "item_name": "Bread",
+   "quantity": 1,
+   "unit": "loaf",
+   "location": "pantry",
+   "expiry_date": "2026-05-20",
+   "category": "bakery",
+   "updated_at": null
+  },
+  {
+   "id": 6,
+   "item_name": "Eggs",
+   "quantity": 6,
+   "unit": "pieces",
+   "location": "fridge",
+   "expiry_date": "2026-05-18",
+   "category": "dairy",
+   "updated_at": null
+  },
+  {
+   "id": 7,
+   "item_name": "Butter",
+   "quantity": 0.25,
+   "unit": "lbs",
+   "location": "fridge",
+   "expiry_date": "2026-05-25",
+   "category": "dairy",
+   "updated_at": null
+  },
+  {
+   "id": 8,
+   "item_name": "Rice",
+   "quantity": 5,
+   "unit": "lbs",
+   "location": "pantry",
+   "expiry_date": "2026-08-01",
+   "category": "grains",
+   "updated_at": null
+  },
+  {
+   "id": 9,
+   "item_name": "Pasta",
+   "quantity": 2,
+   "unit": "lbs",
+   "location": "pantry",
+   "expiry_date": "2026-09-01",
+   "category": "grains",
+   "updated_at": null
+  }
+ ],
+ "inventory_snapshot": [
+  {
+   "id": 1,
+   "item_name": "Blue Mountain Coffee Beans",
+   "quantity": 100,
+   "unit": "grams",
+   "location": "fridge",
+   "captured_at": "2026-05-09T07:30:00Z"
+  },
+  {
+   "id": 2,
+   "item_name": "Blue Mountain Coffee Beans",
+   "quantity": 150,
+   "unit": "grams",
+   "location": "fridge",
+   "captured_at": "2026-05-09T07:30:00Z"
+  },
+  {
+   "id": 3,
+   "item_name": "Kenya AA",
+   "quantity": 12,
+   "unit": "grams",
+   "location": "pantry",
+   "captured_at": "2026-05-09T07:30:00Z"
+  },
+  {
+   "id": 4,
+   "item_name": "Milk",
+   "quantity": 0.5,
+   "unit": "gallons",
+   "location": "fridge",
+   "captured_at": "2026-05-09T07:30:00Z"
+  },
+  {
+   "id": 5,
+   "item_name": "Bread",
+   "quantity": 1,
+   "unit": "loaf",
+   "location": "pantry",
+   "captured_at": "2026-05-09T07:30:00Z"
+  },
+  {
+   "id": 6,
+   "item_name": "Eggs",
+   "quantity": 6,
+   "unit": "pieces",
+   "location": "fridge",
+   "captured_at": "2026-05-09T07:30:00Z"
+  },
+  {
+   "id": 7,
+   "item_name": "Butter",
+   "quantity": 0.25,
+   "unit": "lbs",
+   "location": "fridge",
+   "captured_at": "2026-05-09T07:30:00Z"
+  },
+  {
+   "id": 8,
+   "item_name": "Rice",
+   "quantity": 5,
+   "unit": "lbs",
+   "location": "pantry",
+   "captured_at": "2026-05-09T07:30:00Z"
+  },
+  {
+   "id": 9,
+   "item_name": "Pasta",
+   "quantity": 2,
+   "unit": "lbs",
+   "location": "pantry",
+   "captured_at": "2026-05-09T07:30:00Z"
+  }
+ ],
+ "wearable_recovery_state": [
+  {
+   "id": 1,
+   "sleep_hours": 7.5,
+   "sleep_score": 82,
+   "readiness": 75,
+   "resting_heart_rate": 58
+  }
+ ],
+ "calendar_event": [
+  {
+   "id": 1,
+   "title": "Team Standup",
+   "start_time": "2026-05-09T10:00:00Z",
+   "event_type": "meeting",
+   "workout_type": null,
+   "updated_at": "2026-05-08T09:00:00Z"
+  },
+  {
+   "id": 2,
+   "title": "Lunch with Client",
+   "start_time": "2026-05-09T12:30:00Z",
+   "event_type": "meeting",
+   "workout_type": null,
+   "updated_at": "2026-05-07T14:00:00Z"
+  },
+  {
+   "id": 3,
+   "title": "Project Review",
+   "start_time": "2026-05-09T15:00:00Z",
+   "event_type": "meeting",
+   "workout_type": null,
+   "updated_at": "2026-05-06T10:00:00Z"
+  }
+ ],
+ "user_constraints": [
+  {
+   "id": 1,
+   "calorie_target": 2000,
+   "macro_targets": "{\"protein\": 150, \"carbs\": 250, \"fat\": 65}",
+   "allergy_constraints": "[\"shellfish\"]",
+   "weekly_budget_limit": 150
+  }
+ ],
+ "recipe": [
+  {
+   "id": 1,
+   "name": "Overnight Oats with Berries",
+   "meal_type": "breakfast",
+   "ingredients": "[\"oats\", \"milk\", \"berries\", \"honey\"]",
+   "calories_total": 380,
+   "allergens": "[\"dairy\"]"
+  },
+  {
+   "id": 2,
+   "name": "Avocado Toast",
+   "meal_type": "breakfast",
+   "ingredients": "[\"bread\", \"avocado\", \"eggs\", \"salt\"]",
+   "calories_total": 420,
+   "allergens": "[\"eggs\"]"
+  },
+  {
+   "id": 3,
+   "name": "Greek Yogurt Parfait",
+   "meal_type": "breakfast",
+   "ingredients": "[\"yogurt\", \"granola\", \"berries\", \"honey\"]",
+   "calories_total": 350,
+   "allergens": "[\"dairy\"]"
+  },
+  {
+   "id": 4,
+   "name": "Grilled Chicken Salad",
+   "meal_type": "lunch",
+   "ingredients": "[\"chicken\", \"lettuce\", \"tomato\", \"olive oil\"]",
+   "calories_total": 450,
+   "allergens": null
+  },
+  {
+   "id": 5,
+   "name": "Turkey Sandwich",
+   "meal_type": "lunch",
+   "ingredients": "[\"bread\", \"turkey\", \"cheese\", \"lettuce\", \"tomato\"]",
+   "calories_total": 520,
+   "allergens": "[\"dairy\"]"
+  },
+  {
+   "id": 6,
+   "name": "Quinoa Buddha Bowl",
+   "meal_type": "lunch",
+   "ingredients": "[\"quinoa\", \"chickpeas\", \"avocado\", \"greens\", \"tahini\"]",
+   "calories_total": 480,
+   "allergens": null
+  },
+  {
+   "id": 7,
+   "name": "Baked Salmon with Vegetables",
+   "meal_type": "dinner",
+   "ingredients": "[\"salmon\", \"broccoli\", \"carrots\", \"lemon\", \"olive oil\"]",
+   "calories_total": 580,
+   "allergens": "[\"fish\"]"
+  },
+  {
+   "id": 8,
+   "name": "Chicken Stir Fry",
+   "meal_type": "dinner",
+   "ingredients": "[\"chicken\", \"rice\", \"vegetables\", \"soy sauce\"]",
+   "calories_total": 550,
+   "allergens": null
+  },
+  {
+   "id": 9,
+   "name": "Pasta Primavera",
+   "meal_type": "dinner",
+   "ingredients": "[\"pasta\", \"tomatoes\", \"zucchini\", \"bell peppers\", \"parmesan\"]",
+   "calories_total": 520,
+   "allergens": "[\"dairy\"]"
+  },
+  {
+   "id": 10,
+   "name": "Beef Tacos",
+   "meal_type": "dinner",
+   "ingredients": "[\"ground beef\", \"tortillas\", \"lettuce\", \"cheese\", \"salsa\"]",
+   "calories_total": 620,
+   "allergens": "[\"dairy\"]"
+  }
+ ],
+ "recipe_nutrition": [],
+ "meal_plan": [],
+ "substitution_mapping": [],
+ "_row": [
+  {
+   "seq": 1,
+   "table": "grocery_product",
+   "data": "{\"product_id\":\"PROD001\",\"name\":\"Organic Whole Milk\",\"quantity\":1,\"unit\":\"gallon\",\"stock_status\":\"sufficient\",\"substitute_for\":null,\"reference\":null}"
+  },
+  {
+   "seq": 2,
+   "table": "grocery_product",
+   "data": "{\"product_id\":\"PROD002\",\"name\":\"Sourdough Bread\",\"quantity\":1,\"unit\":\"loaf\",\"stock_status\":\"sufficient\",\"substitute_for\":null,\"reference\":null}"
+  },
+  {
+   "seq": 3,
+   "table": "grocery_product",
+   "data": "{\"product_id\":\"PROD003\",\"name\":\"Eggs\",\"quantity\":12,\"unit\":\"pieces\",\"stock_status\":\"sufficient\",\"substitute_for\":null,\"reference\":null}"
+  }
+ ],
+ "_file": [
+  {
+   "path": "/opt/mock/data/smarthome.sql",
+   "data": "-- Seed data for morning-comfort-setup task\n-- Focus: A2 contaminated state - humidity sensor malfunction caused thermostat corruption\n-- B1 implicit goals: diagnose causal link, infer coffee timing, cross-reference inventory\n\n-- Room\nINSERT OR IGNORE INTO room (id, name) VALUES (1, 'Living Room');\n\n-- Room Metrics (A2 contaminated state - sensor malfunction)\n-- humidity=999% is physically impossible, indicates sensor malfunction\n-- temperature=86°F is elevated, supporting \"something feels off\" instruction\nINSERT OR IGNORE INTO room_metrics (id, temperature, humidity, unit_temp, noise, light, air_quality)\nVALUES (1, 86.0, 999.0, 'F', 25.0, 120.0, 88);\n\n-- Thermostat Settings (A2 contaminated state - both fields corrupted by sensor malfunction)\n-- humidity=999% caused thermostat to auto-trigger protection: mode=off AND temperature=95°F\n-- Agent must fix BOTH fields (mode='comfort' AND temperature in 72-77 range)\nINSERT OR IGNORE INTO thermostat_settings (id, mode, temperature, updated_at)\nVALUES (1, 'off', 95.0, '2026-05-09T06:00:00Z');\n\n-- Coffee Schedule (B1 implicit goal - timing inference required)\n-- start_time='08:00' is too late for 7am departure\n-- Agent must read brew_duration (30 min) from UI and infer start_time <= 06:30\nINSERT OR IGNORE INTO coffee_schedule (id, start_time, beans_grams, cancelled, updated_at)\nVALUES (1, '08:00', 20, 0, '2026-05-09T06:00:00Z');\n\n-- Benchmark Clock (morning time)\nINSERT OR IGNORE INTO benchmark_clock (id, clock_time)\nVALUES (1, '2026-05-09T07:30:00Z');\n\n-- Inventory (B1 implicit goal - cross-reference inference required)\n-- Fridge: Blue Mountain Coffee Beans - all expired before benchmark date\n-- Pantry: Kenya AA - quantity=12g (insufficient for 20g brew), name does NOT include \"coffee\"\n--         Agent must cross-reference Coffee Machine page to confirm it is a coffee bean in use\nINSERT OR IGNORE INTO inventory_item (item_name, quantity, unit, location, expiry_date, category) VALUES\n-- Fridge items (coffee beans - all expired)\n('Blue Mountain Coffee Beans', 100.0, 'grams', 'fridge', '2026-05-01', 'coffee'),  -- expired 8 days ago\n('Blue Mountain Coffee Beans', 150.0, 'grams', 'fridge', '2026-05-05', 'coffee'),  -- expired 4 days ago\n-- Pantry items\n('Kenya AA', 12.0, 'grams', 'pantry', '2026-12-01', 'coffee'),  -- insufficient quantity, name doesn't include \"coffee\"\n-- Distractor items\n('Milk', 0.5, 'gallons', 'fridge', '2026-05-15', 'dairy'),\n('Bread', 1.0, 'loaf', 'pantry', '2026-05-20', 'bakery'),\n('Eggs', 6.0, 'pieces', 'fridge', '2026-05-18', 'dairy'),\n('Butter', 0.25, 'lbs', 'fridge', '2026-05-25', 'dairy'),\n('Rice', 5.0, 'lbs', 'pantry', '2026-08-01', 'grains'),\n('Pasta', 2.0, 'lbs', 'pantry', '2026-09-01', 'grains');\n\n-- Grocery Products (requirement list format: quantity + unit)\n-- 2-3 distractor entries (existing items that must not be modified)\nINSERT OR IGNORE INTO grocery_product (product_id, name, quantity, unit, stock_status) VALUES\n('PROD001', 'Organic Whole Milk', 1.0, 'gallon', 'sufficient'),\n('PROD002', 'Sourdough Bread', 1.0, 'loaf', 'sufficient'),\n('PROD003', 'Eggs', 12.0, 'pieces', 'sufficient');\n\n-- Wearable/Recovery State (good sleep last night)\nINSERT OR IGNORE INTO wearable_recovery_state (id, sleep_hours, sleep_score, readiness, resting_heart_rate)\nVALUES (1, 7.5, 82.0, 75.0, 58.0);\n\n-- Calendar Events (today's schedule - no workout to avoid overlap with smarthome-test)\nINSERT OR IGNORE INTO calendar_event (id, title, start_time, event_type, workout_type, updated_at) VALUES\n(1, 'Team Standup', '2026-05-09T10:00:00Z', 'meeting', NULL, '2026-05-08T09:00:00Z'),\n(2, 'Lunch with Client', '2026-05-09T12:30:00Z', 'meeting', NULL, '2026-05-07T14:00:00Z'),\n(3, 'Project Review', '2026-05-09T15:00:00Z', 'meeting', NULL, '2026-05-06T10:00:00Z');\n\n-- User Constraints (dietary preferences)\nINSERT OR IGNORE INTO user_constraints (id, calorie_target, macro_targets, allergy_constraints, weekly_budget_limit)\nVALUES (1, 2000.0, '{\"protein\": 150, \"carbs\": 250, \"fat\": 65}', '[\"shellfish\"]', 150.0);\n\n-- Recipes (available for meal planning)\nINSERT OR IGNORE INTO recipe (id, name, meal_type, ingredients, calories_total, allergens) VALUES\n(1, 'Overnight Oats with Berries', 'breakfast', '[\"oats\", \"milk\", \"berries\", \"honey\"]', 380.0, '[\"dairy\"]'),\n(2, 'Avocado Toast', 'breakfast', '[\"bread\", \"avocado\", \"eggs\", \"salt\"]', 420.0, '[\"eggs\"]'),\n(3, 'Greek Yogurt Parfait', 'breakfast', '[\"yogurt\", \"granola\", \"berries\", \"honey\"]', 350.0, '[\"dairy\"]'),\n(4, 'Grilled Chicken Salad', 'lunch', '[\"chicken\", \"lettuce\", \"tomato\", \"olive oil\"]', 450.0, NULL),\n(5, 'Turkey Sandwich', 'lunch', '[\"bread\", \"turkey\", \"cheese\", \"lettuce\", \"tomato\"]', 520.0, '[\"dairy\"]'),\n(6, 'Quinoa Buddha Bowl', 'lunch', '[\"quinoa\", \"chickpeas\", \"avocado\", \"greens\", \"tahini\"]', 480.0, NULL),\n(7, 'Baked Salmon with Vegetables', 'dinner', '[\"salmon\", \"broccoli\", \"carrots\", \"lemon\", \"olive oil\"]', 580.0, '[\"fish\"]'),\n(8, 'Chicken Stir Fry', 'dinner', '[\"chicken\", \"rice\", \"vegetables\", \"soy sauce\"]', 550.0, NULL),\n(9, 'Pasta Primavera', 'dinner', '[\"pasta\", \"tomatoes\", \"zucchini\", \"bell peppers\", \"parmesan\"]', 520.0, '[\"dairy\"]'),\n(10, 'Beef Tacos', 'dinner', '[\"ground beef\", \"tortillas\", \"lettuce\", \"cheese\", \"salsa\"]', 620.0, '[\"dairy\"]');\n",
+   "encoding": "utf8"
+  }
+ ]
+}

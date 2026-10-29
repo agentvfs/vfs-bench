@@ -1,0 +1,1 @@
+I suspect there might be some data quality issues on our Mosi Social platform (http://localhost:5008/, mosi_brand / demo123). I got an email about it in peter's inbox (at /gmail, or through the gws CLI). Could you dig into it and send a report to the data team? Let me know what you find.

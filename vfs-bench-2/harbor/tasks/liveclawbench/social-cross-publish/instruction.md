@@ -1,0 +1,1 @@
+We need to publish a promotional post on our Mosi Social account (http://localhost:5008/, mosi_brand / demo123). The campaign details were sent to peter's email (at /gmail, or through the gws CLI), and there's also some relevant info on the company calendar (at /calendar, or through the gws CLI). Could you pull everything together and get the post published?

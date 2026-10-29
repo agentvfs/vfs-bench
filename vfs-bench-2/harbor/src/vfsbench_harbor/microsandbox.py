@@ -39,6 +39,7 @@ its peak memory and each request its proxies passed.
 import asyncio
 import contextlib
 import json
+import os
 import re
 import secrets
 import shlex
@@ -65,6 +66,8 @@ from vfsbench_harbor.environment import MirageEnvironment
 from vfsbench_harbor.fakes import run_name
 
 IMAGE = "python:3.12-slim-bookworm"
+# The host's name in a guest (guest.py's HOST).
+HOST_NAME = "host.microsandbox.internal"
 GUEST = Path(__file__).with_name("guest.py")
 # Where the VM keeps the runner, its config and the trial's /tmp.
 STAGE = "/.vfsbench"
@@ -606,7 +609,19 @@ class MicrosandboxVerifier(Verifier):
         env = self._mirage()
         # The services' state as the agent left it.
         await env.refresh_state()
-        mounts = env.disk_mounts
+        # The workspace's shell history, Mirage's /.bash_history, which is a
+        # view rather than a file the VM gets: where a safety audit reads it
+        # (harbor/export.py's HISTORY copies it there in the workspace).
+        history = await env.exec("cat /.bash_history")
+        if history.return_code == 0 and history.stdout:
+            saved = env.host_path("/logs/verifier/bash_history", write=True)
+            saved.parent.mkdir(parents=True, exist_ok=True)
+            saved.write_text(history.stdout)
+        # Less the mounts the task's verifier never reads (``verifier.omit``),
+        # such as DataSpace's read-only context, which can be too large for
+        # msb's copies.
+        omit = set(env.verifier.get("omit", []))
+        mounts = {p: r for p, r in env.disk_mounts.items() if p not in omit}
         stage = Path(tempfile.mkdtemp(prefix="vfsbench-msb-"))
         try:
             async with proxies(env.routes, requests) as ports:
@@ -617,10 +632,19 @@ class MicrosandboxVerifier(Verifier):
                             str(k): v
                             for k, v in ports.items()
                         },
-                        "tmp": f"{STAGE}/tmp" if "/tmp" in mounts else None,
-                        "command": command,
-                        "pull": pull,
-                        "cwd": env.workdir,
+                        "tmp":
+                        f"{STAGE}/tmp" if "/tmp" in mounts else None,
+                        "command":
+                        command,
+                        # The trial's time, for a verifier that reads the
+                        # date (``verifier.clock``): the VM's is the host's.
+                        "now":
+                        env.now().timestamp()
+                        if env.verifier.get("clock") else None,
+                        "pull":
+                        pull,
+                        "cwd":
+                        env.workdir,
                         "env": {
                             **env.container_env,
                             **self._env()
@@ -629,7 +653,8 @@ class MicrosandboxVerifier(Verifier):
                 copies = [(stage, STAGE)] + [
                     (root, f"{STAGE}/tmp" if path == "/tmp" else path)
                     for path, root in mounts.items()
-                ]
+                ] + [(Path(root), path)
+                     for path, root in env.verifier.get("copy", {}).items()]
                 copies.sort(key=lambda c: len(PurePosixPath(c[1]).parts))
                 log.append(f"image {self._image}, {self._cpus} CPUs, "
                            f"{self._memory_mb} MiB; ports {ports}")
@@ -642,6 +667,7 @@ class MicrosandboxVerifier(Verifier):
                     f"{self._storage_mb}M",
                     "--max-duration",
                     self._max_duration(),
+                    *self._egress(log),
                 ]
                 async with Sandbox.boot(
                         self._msb,
@@ -730,6 +756,33 @@ class MicrosandboxVerifier(Verifier):
                     exclude=self.exclude_logs,
                     protect=(self.trial_paths.reward_text_path.name,
                              self.trial_paths.reward_json_path.name))
+
+    def _egress(self, log: list[str]) -> list[str]:
+        """msb's rules for the hosts the task's verifier reaches beyond the
+        trial (``verifier.egress``: variables holding a URL, such as a
+        judge's API, read from the verifier's environment, then Harbor's).
+        Its key reaches the VM as Harbor passes any verifier variable, in
+        the task's ``[verifier.env]``."""
+        spec = self._mirage().verifier
+        env = {**os.environ, **self._env()}
+        options: list[str] = []
+        hosts: list[str] = []
+        for name in spec.get("egress", []):
+            if not env.get(name):
+                raise ValueError(
+                    f"the verifier reaches ${name}, which is unset")
+            url = urlsplit(env[name])
+            if url.hostname is None:
+                raise ValueError(f"${name} is not a URL: {env[name]!r}")
+            port = url.port or (443 if url.scheme == "https" else 80)
+            hosts.append(url.hostname)
+            # The host's own name in the guest is msb's `host` in a rule,
+            # as the proxies' are: a judge served on the host's loopback.
+            rule = "host" if url.hostname == HOST_NAME else url.hostname
+            options += ["--net-rule", f"allow@{rule}:tcp:{port}"]
+        if hosts:
+            log.append(f"egress {hosts}")
+        return options
 
     def _max_duration(self) -> str:
         """A backstop for a VM whose Harbor process is gone: four times the

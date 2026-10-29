@@ -1,0 +1,1258 @@
+{
+ "_env": [
+  {
+   "name": "TASK_NAME",
+   "value": "social-comment-moderation"
+  }
+ ],
+ "account": [
+  {
+   "id": 1,
+   "username": "mosi_brand",
+   "password": "demo123",
+   "display_name": "Mosi Brand",
+   "account_type": "company",
+   "bio": null,
+   "avatar_url": null,
+   "banner_url": null,
+   "website_url": null,
+   "location": null,
+   "timezone": "Asia/Shanghai",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00",
+   "last_login_at": null
+  },
+  {
+   "id": 2,
+   "username": "alice",
+   "password": "demo123",
+   "display_name": "Alice",
+   "account_type": "personal",
+   "bio": null,
+   "avatar_url": null,
+   "banner_url": null,
+   "website_url": null,
+   "location": null,
+   "timezone": "America/New_York",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00",
+   "last_login_at": null
+  },
+  {
+   "id": 3,
+   "username": "bob_creator",
+   "password": "demo123",
+   "display_name": "Bob Creator",
+   "account_type": "creator",
+   "bio": null,
+   "avatar_url": null,
+   "banner_url": null,
+   "website_url": null,
+   "location": null,
+   "timezone": "Europe/London",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00",
+   "last_login_at": null
+  },
+  {
+   "id": 4,
+   "username": "carol_ops",
+   "password": "demo123",
+   "display_name": "Carol Ops",
+   "account_type": "personal",
+   "bio": null,
+   "avatar_url": null,
+   "banner_url": null,
+   "website_url": null,
+   "location": null,
+   "timezone": "UTC",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00",
+   "last_login_at": null
+  }
+ ],
+ "post": [
+  {
+   "id": 1,
+   "author_account_id": 1,
+   "content": "Welcome to Mosi Social! This is our official launch post. #MosiLaunch #SocialMedia",
+   "status": "published",
+   "visibility": "public",
+   "moderation_state": "clear",
+   "scheduled_for": null,
+   "scheduled_timezone": null,
+   "published_at": "2026-01-15 09:00:00",
+   "deleted_at": null,
+   "is_pinned": 1,
+   "has_event_cta": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "author_account_id": 1,
+   "content": "Join us at the Mosi Annual Conference 2026! Register now for early bird tickets. #Conference #Tech",
+   "status": "published",
+   "visibility": "public",
+   "moderation_state": "clear",
+   "scheduled_for": null,
+   "scheduled_timezone": null,
+   "published_at": "2026-01-20 10:00:00",
+   "deleted_at": null,
+   "is_pinned": 0,
+   "has_event_cta": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "author_account_id": 2,
+   "content": "Just exploring this new platform. The UI looks clean! #NewPlatform",
+   "status": "published",
+   "visibility": "public",
+   "moderation_state": "clear",
+   "scheduled_for": null,
+   "scheduled_timezone": null,
+   "published_at": "2026-01-22 14:30:00",
+   "deleted_at": null,
+   "is_pinned": 0,
+   "has_event_cta": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "author_account_id": 3,
+   "content": "Check out my latest content creation tips. Thread below! #CreatorTips #Content",
+   "status": "published",
+   "visibility": "public",
+   "moderation_state": "clear",
+   "scheduled_for": null,
+   "scheduled_timezone": null,
+   "published_at": "2026-01-25 11:00:00",
+   "deleted_at": null,
+   "is_pinned": 0,
+   "has_event_cta": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "author_account_id": 1,
+   "content": "Product update: Our new analytics dashboard is now live. #ProductUpdate",
+   "status": "scheduled",
+   "visibility": "public",
+   "moderation_state": "clear",
+   "scheduled_for": "2026-12-01 08:00:00",
+   "scheduled_timezone": null,
+   "published_at": null,
+   "deleted_at": null,
+   "is_pinned": 0,
+   "has_event_cta": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "author_account_id": 2,
+   "content": "Working on a new blog post about social media strategy. Stay tuned!",
+   "status": "draft",
+   "visibility": "public",
+   "moderation_state": "clear",
+   "scheduled_for": null,
+   "scheduled_timezone": null,
+   "published_at": null,
+   "deleted_at": null,
+   "is_pinned": 0,
+   "has_event_cta": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 7,
+   "author_account_id": 3,
+   "content": "Live streaming session tonight at 8PM GMT. Don't miss it! #LiveStream",
+   "status": "published",
+   "visibility": "followers_only",
+   "moderation_state": "clear",
+   "scheduled_for": null,
+   "scheduled_timezone": null,
+   "published_at": "2026-02-01 19:00:00",
+   "deleted_at": null,
+   "is_pinned": 0,
+   "has_event_cta": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 8,
+   "author_account_id": 4,
+   "content": "Internal ops memo: Q2 planning starts next week.",
+   "status": "deleted",
+   "visibility": "public",
+   "moderation_state": "clear",
+   "scheduled_for": null,
+   "scheduled_timezone": null,
+   "published_at": "2026-02-05 09:00:00",
+   "deleted_at": null,
+   "is_pinned": 0,
+   "has_event_cta": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 9,
+   "author_account_id": 1,
+   "content": "Thank you all for 10K followers! Here's a giveaway announcement. #Giveaway #Milestone",
+   "status": "published",
+   "visibility": "public",
+   "moderation_state": "clear",
+   "scheduled_for": null,
+   "scheduled_timezone": null,
+   "published_at": "2026-02-10 12:00:00",
+   "deleted_at": null,
+   "is_pinned": 0,
+   "has_event_cta": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 10,
+   "author_account_id": 2,
+   "content": "Testing the scheduled post feature. This should go live tomorrow morning.",
+   "status": "scheduled",
+   "visibility": "public",
+   "moderation_state": "clear",
+   "scheduled_for": "2026-12-15 07:00:00",
+   "scheduled_timezone": null,
+   "published_at": null,
+   "deleted_at": null,
+   "is_pinned": 0,
+   "has_event_cta": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 101,
+   "author_account_id": 1,
+   "content": "Our latest product update brings improved performance and new features! What do you think?",
+   "status": "published",
+   "visibility": "public",
+   "moderation_state": "clear",
+   "scheduled_for": null,
+   "scheduled_timezone": null,
+   "published_at": "2026-03-01 10:00:00",
+   "deleted_at": null,
+   "is_pinned": 0,
+   "has_event_cta": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "post_asset": [
+  {
+   "id": 1,
+   "post_id": 1,
+   "asset_type": "image",
+   "asset_url": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23e0e0e0' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999'%3EImage%3C/text%3E%3C/svg%3E",
+   "preview_text": null,
+   "alt_text": null,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "post_id": 2,
+   "asset_type": "link_preview",
+   "asset_url": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%23f0f0f0' width='400' height='200'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999'%3ELink Preview%3C/text%3E%3C/svg%3E",
+   "preview_text": null,
+   "alt_text": null,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "post_id": 4,
+   "asset_type": "image",
+   "asset_url": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23e0e0e0' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999'%3EImage%3C/text%3E%3C/svg%3E",
+   "preview_text": null,
+   "alt_text": null,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "post_id": 4,
+   "asset_type": "image",
+   "asset_url": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23e0e0e0' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999'%3EImage%3C/text%3E%3C/svg%3E",
+   "preview_text": null,
+   "alt_text": null,
+   "sort_order": 1,
+   "created_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "tag": [
+  {
+   "id": 1,
+   "label_text": "#MosiLaunch",
+   "normalized_name": "mosilaunch",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "label_text": "#SocialMedia",
+   "normalized_name": "socialmedia",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "label_text": "#Conference",
+   "normalized_name": "conference",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "label_text": "#Tech",
+   "normalized_name": "tech",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "label_text": "#NewPlatform",
+   "normalized_name": "newplatform",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "label_text": "#CreatorTips",
+   "normalized_name": "creatortips",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 7,
+   "label_text": "#Content",
+   "normalized_name": "content",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 8,
+   "label_text": "#ProductUpdate",
+   "normalized_name": "productupdate",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 9,
+   "label_text": "#LiveStream",
+   "normalized_name": "livestream",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 10,
+   "label_text": "#Giveaway",
+   "normalized_name": "giveaway",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 11,
+   "label_text": "#Milestone",
+   "normalized_name": "milestone",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "post_tag": [
+  {
+   "id": 1,
+   "post_id": 1,
+   "tag_id": 1,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "post_id": 1,
+   "tag_id": 2,
+   "sort_order": 1,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "post_id": 2,
+   "tag_id": 3,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "post_id": 2,
+   "tag_id": 4,
+   "sort_order": 1,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "post_id": 3,
+   "tag_id": 5,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "post_id": 4,
+   "tag_id": 6,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 7,
+   "post_id": 4,
+   "tag_id": 7,
+   "sort_order": 1,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 8,
+   "post_id": 5,
+   "tag_id": 8,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 9,
+   "post_id": 7,
+   "tag_id": 9,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 10,
+   "post_id": 9,
+   "tag_id": 10,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 11,
+   "post_id": 9,
+   "tag_id": 11,
+   "sort_order": 1,
+   "created_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "post_action_log": [
+  {
+   "id": 1,
+   "post_id": 1,
+   "actor_account_id": 1,
+   "action_type": "published",
+   "old_value": null,
+   "new_value": "published",
+   "note": null,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "post_id": 2,
+   "actor_account_id": 1,
+   "action_type": "published",
+   "old_value": null,
+   "new_value": "published",
+   "note": null,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "post_id": 3,
+   "actor_account_id": 2,
+   "action_type": "published",
+   "old_value": null,
+   "new_value": "published",
+   "note": null,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "post_id": 4,
+   "actor_account_id": 3,
+   "action_type": "published",
+   "old_value": null,
+   "new_value": "published",
+   "note": null,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "post_id": 7,
+   "actor_account_id": 3,
+   "action_type": "published",
+   "old_value": null,
+   "new_value": "published",
+   "note": null,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "post_id": 9,
+   "actor_account_id": 1,
+   "action_type": "published",
+   "old_value": null,
+   "new_value": "published",
+   "note": null,
+   "created_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "comment": [
+  {
+   "id": 1,
+   "post_id": 1,
+   "author_account_id": 2,
+   "author_name": "Alice",
+   "body": "Great launch! Looking forward to using this platform.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "post_id": 1,
+   "author_account_id": 3,
+   "author_name": "Bob Creator",
+   "body": "Thanks Alice! Excited to create content here.",
+   "status": "visible",
+   "parent_comment_id": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "post_id": 1,
+   "author_account_id": 4,
+   "author_name": "Carol Ops",
+   "body": "Will there be analytics tools for brands?",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "post_id": 1,
+   "author_account_id": 1,
+   "author_name": "Mosi Brand",
+   "body": "Yes! Check out our Analytics page.",
+   "status": "visible",
+   "parent_comment_id": 3,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "post_id": 2,
+   "author_account_id": 2,
+   "author_name": "Alice",
+   "body": "Already registered! Can't wait for the conference.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 101,
+   "post_id": 101,
+   "author_account_id": 2,
+   "author_name": "Anonymous User",
+   "body": "This is a scam! Don't trust this company!",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 102,
+   "post_id": 101,
+   "author_account_id": 3,
+   "author_name": "Happy Customer",
+   "body": "I love the new features! When will the mobile app be updated?",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 103,
+   "post_id": 101,
+   "author_account_id": 3,
+   "author_name": "Troll Account",
+   "body": "fake news! This product is garbage",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 104,
+   "post_id": 1,
+   "author_account_id": 2,
+   "author_name": "Spam Bot",
+   "body": "Free money! Click here for spam offers!",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 201,
+   "post_id": 101,
+   "author_account_id": 2,
+   "author_name": "Curious User",
+   "body": "Is this a scam? I'm genuinely asking because I heard mixed reviews.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 202,
+   "post_id": 101,
+   "author_account_id": 3,
+   "author_name": "Skeptical Viewer",
+   "body": "This looks like fake news quality to me. Where are the sources?",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 203,
+   "post_id": 101,
+   "author_account_id": 2,
+   "author_name": "Honest Reviewer",
+   "body": "I hate spam, but this post is actually legit. Good work team.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 204,
+   "post_id": 101,
+   "author_account_id": 4,
+   "author_name": "Carol Ops",
+   "body": "Great update! When will the API documentation be released?",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 205,
+   "post_id": 101,
+   "author_account_id": 2,
+   "author_name": "Alice",
+   "body": "Can you share more details about the performance improvements?",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 206,
+   "post_id": 101,
+   "author_account_id": 3,
+   "author_name": "Bob Creator",
+   "body": "Love the new features! The UI feels much smoother now.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 207,
+   "post_id": 101,
+   "author_account_id": 2,
+   "author_name": "Confused User",
+   "body": "Not sure I understand the pricing change. Could you clarify?",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 208,
+   "post_id": 101,
+   "author_account_id": 4,
+   "author_name": "Carol Ops",
+   "body": "The analytics dashboard is a game changer. Well done team!",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 209,
+   "post_id": 101,
+   "author_account_id": 3,
+   "author_name": "Bob Creator",
+   "body": "Is there a roadmap for mobile app improvements? Looking forward to it.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 210,
+   "post_id": 101,
+   "author_account_id": 2,
+   "author_name": "Angry User",
+   "body": "This is disappointing. I expected better quality from this company.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 211,
+   "post_id": 101,
+   "author_account_id": 3,
+   "author_name": "Troll Account",
+   "body": "This product feels overpriced compared to alternatives on the market.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 212,
+   "post_id": 101,
+   "author_account_id": 2,
+   "author_name": "Spam Bot",
+   "body": "Great update! Looking forward to the next feature release.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 301,
+   "post_id": 101,
+   "author_account_id": 2,
+   "author_name": "Careful Reader",
+   "body": "This is NOT a scam — I've been using it for weeks and it works great.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 302,
+   "post_id": 101,
+   "author_account_id": 3,
+   "author_name": "Questioning User",
+   "body": "How is this fake news? The announcement seems well-sourced to me.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 303,
+   "post_id": 101,
+   "author_account_id": 4,
+   "author_name": "Carol Ops",
+   "body": "I don't see any spam here. This looks like a genuine product update.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 304,
+   "post_id": 101,
+   "author_account_id": 2,
+   "author_name": "Alice",
+   "body": "The new dashboard is exactly what we needed. Thanks for listening to feedback!",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 305,
+   "post_id": 101,
+   "author_account_id": 3,
+   "author_name": "Bob Creator",
+   "body": "Any plans to add dark mode? That would be a huge quality-of-life improvement.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 306,
+   "post_id": 101,
+   "author_account_id": 2,
+   "author_name": "Concerned User",
+   "body": "I saw some scam reports about similar products. Is Mosi different?",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 307,
+   "post_id": 101,
+   "author_account_id": 4,
+   "author_name": "Carol Ops",
+   "body": "Fake news or not, the pricing seems competitive compared to alternatives.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 308,
+   "post_id": 101,
+   "author_account_id": 3,
+   "author_name": "Spam Hunter",
+   "body": "This thread is spam-free so far. Moderation seems to be working.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 309,
+   "post_id": 101,
+   "author_account_id": 2,
+   "author_name": "Alice",
+   "body": "Can someone explain the difference between v1 and v2? The changelog is vague.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 310,
+   "post_id": 101,
+   "author_account_id": 3,
+   "author_name": "Bob Creator",
+   "body": "Love the direction. Hope you keep the spam filters strong.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 311,
+   "post_id": 101,
+   "author_account_id": 4,
+   "author_name": "Carol Ops",
+   "body": "When will the SSO integration be available? Our team is waiting.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 312,
+   "post_id": 101,
+   "author_account_id": 2,
+   "author_name": "Alice",
+   "body": "This looks like a scam at first glance but I trust the Mosi brand.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 313,
+   "post_id": 101,
+   "author_account_id": 3,
+   "author_name": "Bob Creator",
+   "body": "Not fake news — I verified the claims with the official docs.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 314,
+   "post_id": 101,
+   "author_account_id": 2,
+   "author_name": "Alice",
+   "body": "Please don't let this thread turn into spam. Keep it on topic.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 315,
+   "post_id": 101,
+   "author_account_id": 4,
+   "author_name": "Carol Ops",
+   "body": "Great update overall. One question: will there be a webinar to walk through v2?",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 316,
+   "post_id": 101,
+   "author_account_id": 2,
+   "author_name": "Alice",
+   "body": "I heard this was a scam from a friend, but trying it myself changed my mind.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 317,
+   "post_id": 101,
+   "author_account_id": 3,
+   "author_name": "Bob Creator",
+   "body": "The fake news claims don't hold up. I've tested every feature.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 318,
+   "post_id": 101,
+   "author_account_id": 4,
+   "author_name": "Carol Ops",
+   "body": "This is not spam. This is a legitimate product announcement.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 319,
+   "post_id": 101,
+   "author_account_id": 2,
+   "author_name": "Alice",
+   "body": "Can you add export functionality? That's the only thing missing for us.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 320,
+   "post_id": 101,
+   "author_account_id": 3,
+   "author_name": "Bob Creator",
+   "body": "Overall impressed. Just fix the onboarding flow and it's perfect.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 321,
+   "post_id": 101,
+   "author_account_id": 4,
+   "author_name": "Carol Ops",
+   "body": "Scam accusations are unfounded. I've done the due diligence.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 322,
+   "post_id": 101,
+   "author_account_id": 2,
+   "author_name": "Alice",
+   "body": "How do I upgrade from v1? The migration guide isn't clear.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 323,
+   "post_id": 101,
+   "author_account_id": 3,
+   "author_name": "Bob Creator",
+   "body": "This is fake news territory? No way. Solid release.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 324,
+   "post_id": 101,
+   "author_account_id": 2,
+   "author_name": "Alice",
+   "body": "Please stop calling everything spam. This is a real update.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 325,
+   "post_id": 101,
+   "author_account_id": 4,
+   "author_name": "Carol Ops",
+   "body": "Will there be team pricing? We'd love to roll this out company-wide.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "follow_relation": [
+  {
+   "id": 1,
+   "follower_account_id": 2,
+   "target_account_id": 1,
+   "status": "following",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "follower_account_id": 3,
+   "target_account_id": 1,
+   "status": "following",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "follower_account_id": 2,
+   "target_account_id": 3,
+   "status": "following",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "follower_account_id": 4,
+   "target_account_id": 1,
+   "status": "following",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "follower_account_id": 4,
+   "target_account_id": 2,
+   "status": "blocked",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "keyword_rule": [
+  {
+   "id": 1,
+   "owner_account_id": 1,
+   "phrase": "spam",
+   "match_mode": "contains",
+   "scope": "post",
+   "action": "block",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "owner_account_id": 1,
+   "phrase": "fake news",
+   "match_mode": "contains",
+   "scope": "post",
+   "action": "hide",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "owner_account_id": 1,
+   "phrase": "scam",
+   "match_mode": "exact",
+   "scope": "comment",
+   "action": "block",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "owner_account_id": 1,
+   "phrase": "fake news",
+   "match_mode": "contains",
+   "scope": "comment",
+   "action": "hide",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "owner_account_id": 1,
+   "phrase": "spam",
+   "match_mode": "contains",
+   "scope": "comment",
+   "action": "block",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "post_metric": [
+  {
+   "id": 1,
+   "post_id": 1,
+   "impressions": 15420,
+   "likes": 892,
+   "replies": 45,
+   "reposts": 234,
+   "clicks": 120,
+   "profile_visits": 567,
+   "new_followers": 45,
+   "last_synced_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "post_id": 2,
+   "impressions": 8750,
+   "likes": 456,
+   "replies": 12,
+   "reposts": 89,
+   "clicks": 340,
+   "profile_visits": 234,
+   "new_followers": 23,
+   "last_synced_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "post_id": 3,
+   "impressions": 3200,
+   "likes": 178,
+   "replies": 3,
+   "reposts": 45,
+   "clicks": 12,
+   "profile_visits": 89,
+   "new_followers": 8,
+   "last_synced_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "post_id": 4,
+   "impressions": 5600,
+   "likes": 312,
+   "replies": 8,
+   "reposts": 67,
+   "clicks": 23,
+   "profile_visits": 156,
+   "new_followers": 15,
+   "last_synced_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "post_id": 5,
+   "impressions": 0,
+   "likes": 0,
+   "replies": 0,
+   "reposts": 0,
+   "clicks": 0,
+   "profile_visits": 0,
+   "new_followers": 0,
+   "last_synced_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "post_id": 7,
+   "impressions": 2100,
+   "likes": 145,
+   "replies": 6,
+   "reposts": 34,
+   "clicks": 8,
+   "profile_visits": 67,
+   "new_followers": 5,
+   "last_synced_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 7,
+   "post_id": 9,
+   "impressions": 12300,
+   "likes": 756,
+   "replies": 28,
+   "reposts": 156,
+   "clicks": 89,
+   "profile_visits": 445,
+   "new_followers": 34,
+   "last_synced_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 8,
+   "post_id": 10,
+   "impressions": 0,
+   "likes": 0,
+   "replies": 0,
+   "reposts": 0,
+   "clicks": 0,
+   "profile_visits": 0,
+   "new_followers": 0,
+   "last_synced_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 9,
+   "post_id": 101,
+   "impressions": 500,
+   "likes": 10,
+   "replies": 40,
+   "reposts": 2,
+   "clicks": 0,
+   "profile_visits": 0,
+   "new_followers": 0,
+   "last_synced_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "event_campaign": [
+  {
+   "id": 1,
+   "post_id": 2,
+   "event_title": "Mosi Annual Conference 2026",
+   "start_at": "2026-06-15 09:00:00",
+   "end_at": "2026-06-17 18:00:00",
+   "registration_url": "https://conference.mosi.inc/register",
+   "registrations_count": 156,
+   "attendance_goal": 500,
+   "status": "open",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "post_like": [
+  {
+   "id": 1,
+   "post_id": 1,
+   "account_id": 2,
+   "created_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "post_repost": []
+}

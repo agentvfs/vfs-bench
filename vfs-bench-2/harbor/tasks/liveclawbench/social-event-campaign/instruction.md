@@ -1,0 +1,1 @@
+The Events Team sent an urgent email to peter's inbox (at /gmail, or through the gws CLI) about getting an event campaign live on our Mosi Social platform (http://localhost:5008/, company account is mosi_brand / demo123). Could you take care of it and follow up with them once it's done?

@@ -1,0 +1,232 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  },
+  {
+   "id": "Label_1",
+   "name": "催办",
+   "type": "user"
+  },
+  {
+   "id": "Label_2",
+   "name": "客户",
+   "type": "user"
+  },
+  {
+   "id": "Label_3",
+   "name": "通知",
+   "type": "user"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_1001",
+   "threadId": "msg_1001",
+   "internalDate": 1774429200000,
+   "bodyText": "这个报告下周一要用，请尽快给我一个进度更新。——王总",
+   "headers": [
+    {
+     "name": "From",
+     "value": "boss@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "Q1总结报告进度如何？"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1002",
+   "threadId": "msg_1002",
+   "internalDate": 1774429200000,
+   "bodyText": "您好，我们上次会议讨论的定制方案，原定3月20日交付，但到现在还没收到。请尽快确认交付时间。——张明，鼎新软件",
+   "headers": [
+    {
+     "name": "From",
+     "value": "client_zhangming@dingxin.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "定制方案什么时候能交付？"
+    },
+    {
+     "name": "Date",
+     "value": "Wed, 25 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_2"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1003",
+   "threadId": "msg_1003",
+   "internalDate": 1774342800000,
+   "bodyText": "请注意，本季度绩效评估表的截止日期是3月25日，你的还没有提交。请尽快完成。——李维，HR部",
+   "headers": [
+    {
+     "name": "From",
+     "value": "hr_liwei@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "绩效评估表还没提交"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_1"
+    }
+   ]
+  },
+  {
+   "id": "msg_1004",
+   "threadId": "msg_1004",
+   "internalDate": 1774342800000,
+   "bodyText": "推荐你看看这个关于AI趋势的文章，很有意思。",
+   "headers": [
+    {
+     "name": "From",
+     "value": "colleague@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "分享一篇好文章"
+    },
+    {
+     "name": "Date",
+     "value": "Tue, 24 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    }
+   ]
+  },
+  {
+   "id": "msg_1005",
+   "threadId": "msg_1005",
+   "internalDate": 1774256400000,
+   "bodyText": "本周日凌晨2:00-6:00进行系统维护。",
+   "headers": [
+    {
+     "name": "From",
+     "value": "system@company.com"
+    },
+    {
+     "name": "To",
+     "value": "me@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "系统维护通知"
+    },
+    {
+     "name": "Date",
+     "value": "Mon, 23 Mar 2026 09:00:00 +0000"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "Label_3"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 5
+  }
+ ]
+}

@@ -1,0 +1,2882 @@
+"""Probes for ComplexMCP's plain servers: calls that check each fake against
+upstream's server, tool by tool.
+
+``PROBES`` maps each plain server (upstream's name) to ``(tool, arguments)``
+calls that together reach every tool: typical values, edge values (zero,
+negatives, ints past 2**53, floats that print with an exponent, unicode),
+each error path, and a wrong type and a missing argument for some. A
+float argument is written with its point (``2.0``), as the JSON a model
+sends would carry it.
+
+``NONDETERMINISTIC`` lists the tools whose replies may differ between two
+runs of upstream itself (random draws, Python's per-process str hashing),
+so a comparison may only expect the same shape of them.
+
+Upstream's OSINT tools run whois, nmap and the like, which its sandbox image
+(``src/Dockerfile``) does not install: compare against upstream run with no
+such binaries on its PATH.
+"""
+
+PROBES: dict[str, list[tuple[str, dict]]] = {
+    "MathServer": [
+        ("add", {
+            "a": 1,
+            "b": 2
+        }),
+        ("add", {
+            "a": 0.1,
+            "b": 0.2
+        }),
+        ("add", {
+            "a": 1e308,
+            "b": 1e308
+        }),
+        ("add", {
+            "a": "3.5",
+            "b": True
+        }),
+        ("add", {
+            "a": [1],
+            "b": 1
+        }),
+        ("add", {
+            "a": None,
+            "b": 1
+        }),
+        ("add", {
+            "a": 1
+        }),
+        ("add", {
+            "a": 1,
+            "b": 2,
+            "c": 3
+        }),
+        ("sub", {
+            "a": 1e-7,
+            "b": 3e-7
+        }),
+        ("sub", {
+            "a": -0.0,
+            "b": 0.0
+        }),
+        ("mul", {
+            "a": 1e200,
+            "b": 1e200
+        }),
+        ("mul", {
+            "a": -2.5,
+            "b": 4
+        }),
+        ("mul", {
+            "a": 123456789,
+            "b": 987654321
+        }),
+        ("div", {
+            "a": 1,
+            "b": 3
+        }),
+        ("div", {
+            "a": 1,
+            "b": 0
+        }),
+        ("div", {
+            "a": 1e-300,
+            "b": 1e300
+        }),
+        ("div", {
+            "a": 1e300,
+            "b": 1e-300
+        }),
+        ("pow", {
+            "a": 2,
+            "b": 10
+        }),
+        ("pow", {
+            "a": 2,
+            "b": 0.5
+        }),
+        ("pow", {
+            "a": 10,
+            "b": -5
+        }),
+        ("pow", {
+            "a": 1.0001,
+            "b": 12345.678
+        }),
+        ("pow", {
+            "a": -8,
+            "b": 2
+        }),
+        ("pow", {
+            "a": -8,
+            "b": 3
+        }),
+        ("pow", {
+            "a": -8,
+            "b": 0.5
+        }),
+        ("pow", {
+            "a": 0,
+            "b": -1
+        }),
+        ("pow", {
+            "a": 0,
+            "b": 0
+        }),
+        ("pow", {
+            "a": 10,
+            "b": 400
+        }),
+        ("pow", {
+            "a": 10,
+            "b": -400
+        }),
+        ("sqrt", {
+            "a": 2
+        }),
+        ("sqrt", {
+            "a": 0
+        }),
+        ("sqrt", {
+            "a": 1e-320
+        }),
+        ("sqrt", {
+            "a": -4
+        }),
+        ("abs_val", {
+            "a": -3.25
+        }),
+        ("abs_val", {
+            "a": "-0"
+        }),
+        ("mod", {
+            "a": 7,
+            "b": 3
+        }),
+        ("mod", {
+            "a": -7,
+            "b": 3
+        }),
+        ("mod", {
+            "a": 7,
+            "b": -3
+        }),
+        ("mod", {
+            "a": 5.5,
+            "b": 2
+        }),
+        ("mod", {
+            "a": -0.0,
+            "b": 3
+        }),
+        ("mod", {
+            "a": 1,
+            "b": 0
+        }),
+        ("mod", {
+            "a": 1e308,
+            "b": 1e-308
+        }),
+        ("floor_div", {
+            "a": 7,
+            "b": 2
+        }),
+        ("floor_div", {
+            "a": -7,
+            "b": 2
+        }),
+        ("floor_div", {
+            "a": 7.5,
+            "b": -2
+        }),
+        ("floor_div", {
+            "a": 0,
+            "b": -3
+        }),
+        ("floor_div", {
+            "a": 1,
+            "b": 0
+        }),
+        ("floor_div", {
+            "a": 1e308,
+            "b": 0.1
+        }),
+        ("max_val", {
+            "a": 1,
+            "b": 2
+        }),
+        ("max_val", {
+            "a": -0.0,
+            "b": 0.0
+        }),
+        ("min_val", {
+            "a": 1,
+            "b": 2
+        }),
+        ("min_val", {
+            "a": 0.0,
+            "b": -0.0
+        }),
+        ("round_val", {
+            "a": 2.5
+        }),
+        ("round_val", {
+            "a": 3.5
+        }),
+        ("round_val", {
+            "a": 2.675,
+            "ndigits": 2
+        }),
+        ("round_val", {
+            "a": 1234.5678,
+            "ndigits": -2
+        }),
+        ("round_val", {
+            "a": 1250.0,
+            "ndigits": -2
+        }),
+        ("round_val", {
+            "a": -0.5
+        }),
+        ("round_val", {
+            "a": 1.5,
+            "ndigits": 400
+        }),
+        ("round_val", {
+            "a": 1.5,
+            "ndigits": -400
+        }),
+        ("round_val", {
+            "a": 1.7976931348623157e308,
+            "ndigits": -308
+        }),
+        ("round_val", {
+            "a": 1e-10,
+            "ndigits": 12
+        }),
+        ("round_val", {
+            "a": 0.1,
+            "ndigits": 1.5
+        }),
+        ("round_val", {
+            "a": 0.1,
+            "ndigits": "2"
+        }),
+        ("log", {
+            "a": 100
+        }),
+        ("log", {
+            "a": 8,
+            "base": 2
+        }),
+        ("log", {
+            "a": 1000
+        }),
+        ("log", {
+            "a": 2.718281828459045,
+            "base": 2.718281828459045
+        }),
+        ("log", {
+            "a": 5,
+            "base": 1
+        }),
+        ("log", {
+            "a": 5,
+            "base": 0
+        }),
+        ("log", {
+            "a": 5,
+            "base": -2
+        }),
+        ("log", {
+            "a": 0
+        }),
+        ("log", {
+            "a": -1
+        }),
+        ("log", {
+            "a": 1e-300,
+            "base": 10
+        }),
+        ("exp", {
+            "a": 1
+        }),
+        ("exp", {
+            "a": 0
+        }),
+        ("exp", {
+            "a": 709
+        }),
+        ("exp", {
+            "a": 710
+        }),
+        ("exp", {
+            "a": -1000
+        }),
+        ("exp", {
+            "a": 1e-10
+        }),
+        ("sin", {
+            "a": 0
+        }),
+        ("sin", {
+            "a": 3.141592653589793
+        }),
+        ("sin", {
+            "a": 1
+        }),
+        ("sin", {
+            "a": 1e22
+        }),
+        ("cos", {
+            "a": 0
+        }),
+        ("cos", {
+            "a": 1.5707963267948966
+        }),
+        ("cos", {
+            "a": -2.5
+        }),
+        ("tan", {
+            "a": 0.7853981633974483
+        }),
+        ("tan", {
+            "a": 1.5707963267948966
+        }),
+        ("asin", {
+            "a": 1
+        }),
+        ("asin", {
+            "a": 0.25
+        }),
+        ("asin", {
+            "a": 1.0000001
+        }),
+        ("acos", {
+            "a": -1
+        }),
+        ("acos", {
+            "a": 0.6
+        }),
+        ("acos", {
+            "a": -2
+        }),
+        ("atan", {
+            "a": 1
+        }),
+        ("atan", {
+            "a": -1e300
+        }),
+        ("sinh", {
+            "a": 1
+        }),
+        ("sinh", {
+            "a": 1000
+        }),
+        ("sinh", {
+            "a": 1e-20
+        }),
+        ("cosh", {
+            "a": 2
+        }),
+        ("cosh", {
+            "a": -1000
+        }),
+        ("tanh", {
+            "a": 0.5
+        }),
+        ("tanh", {
+            "a": 100
+        }),
+        ("factorial", {
+            "a": 0
+        }),
+        ("factorial", {
+            "a": 5
+        }),
+        ("factorial", {
+            "a": 25
+        }),
+        ("factorial", {
+            "a": 100
+        }),
+        ("factorial", {
+            "a": -1
+        }),
+        ("factorial", {
+            "a": 5.0
+        }),
+        ("factorial", {
+            "a": 5.5
+        }),
+        ("factorial", {
+            "a": "7"
+        }),
+        ("factorial", {
+            "a": "1e3"
+        }),
+        ("factorial", {
+            "a": 30.0
+        }),
+        ("factorial", {}),
+        ("gcd", {
+            "a": 12,
+            "b": 18
+        }),
+        ("gcd", {
+            "a": -12,
+            "b": 18
+        }),
+        ("gcd", {
+            "a": 0,
+            "b": 0
+        }),
+        ("gcd", {
+            "a": 1e15,
+            "b": 1e12
+        }),
+        ("lcm", {
+            "a": 4,
+            "b": 6
+        }),
+        ("lcm", {
+            "a": -4,
+            "b": 6
+        }),
+        ("lcm", {
+            "a": 0,
+            "b": 6
+        }),
+        ("lcm", {
+            "a": 99999989,
+            "b": 99999971
+        }),
+        ("lcm", {
+            "a": 1e18,
+            "b": 7
+        }),
+        ("deg_to_rad", {
+            "a": 180
+        }),
+        ("deg_to_rad", {
+            "a": -45.5
+        }),
+        ("rad_to_deg", {
+            "a": 3.141592653589793
+        }),
+        ("rad_to_deg", {
+            "a": 1
+        }),
+        ("is_even", {
+            "a": 4
+        }),
+        ("is_even", {
+            "a": -3
+        }),
+        ("is_even", {
+            "a": 0
+        }),
+        ("is_odd", {
+            "a": -3
+        }),
+        ("is_odd", {
+            "a": 1e15
+        }),
+        ("is_odd", {
+            "a": "x"
+        }),
+        ("is_prime", {
+            "a": 2
+        }),
+        ("is_prime", {
+            "a": 1
+        }),
+        ("is_prime", {
+            "a": -7
+        }),
+        ("is_prime", {
+            "a": 97
+        }),
+        ("is_prime", {
+            "a": 1000000007
+        }),
+        ("is_prime", {
+            "a": 1000000008
+        }),
+        ("is_prime", {
+            "a": 1e18
+        }),
+        ("nth_fibonacci", {
+            "n": 1
+        }),
+        ("nth_fibonacci", {
+            "n": 2
+        }),
+        ("nth_fibonacci", {
+            "n": 10
+        }),
+        ("nth_fibonacci", {
+            "n": 100
+        }),
+        ("nth_fibonacci", {
+            "n": 0
+        }),
+        ("nth_fibonacci", {
+            "n": -5
+        }),
+        ("sum_of_list", {
+            "numbers": [1, 2, 3]
+        }),
+        ("sum_of_list", {
+            "numbers": [0.1] * 10
+        }),
+        ("sum_of_list", {
+            "numbers": [1e100, 1.0, -1e100]
+        }),
+        ("sum_of_list", {
+            "numbers": []
+        }),
+        ("sum_of_list", {
+            "numbers": [-0.0]
+        }),
+        ("sum_of_list", {
+            "numbers": [1e308, 1e308]
+        }),
+        ("sum_of_list", {
+            "numbers": "1,2"
+        }),
+        ("sum_of_list", {
+            "numbers": [1, "x"]
+        }),
+        ("product_of_list", {
+            "numbers": [1.5, 2, 4]
+        }),
+        ("product_of_list", {
+            "numbers": []
+        }),
+        ("product_of_list", {
+            "numbers": [1e200, 1e200]
+        }),
+        ("mean", {
+            "numbers": [1, 2, 3, 4]
+        }),
+        ("mean", {
+            "numbers": [0.1, 0.2, 0.3]
+        }),
+        ("mean", {
+            "numbers": []
+        }),
+        ("median", {
+            "numbers": [3, 1, 2]
+        }),
+        ("median", {
+            "numbers": [4, 1, 3, 2]
+        }),
+        ("median", {
+            "numbers": [-1.5]
+        }),
+        ("median", {
+            "numbers": []
+        }),
+        ("mode", {
+            "numbers": [1, 2, 2, 3]
+        }),
+        ("mode", {
+            "numbers": [2, 3, 3, 2, 9, 9]
+        }),
+        ("mode", {
+            "numbers": [0.1, 0.2, 0.2, 0.1]
+        }),
+        ("mode", {
+            "numbers": [5, -1, 17, 33, -1, 5, 33, 17, 1e20, 0.5]
+        }),
+        ("mode", {
+            "numbers": [7.25]
+        }),
+        ("mode", {
+            "numbers": []
+        }),
+        ("variance", {
+            "numbers": [1, 2, 3, 4]
+        }),
+        ("variance", {
+            "numbers": [2.5]
+        }),
+        ("variance", {
+            "numbers": [1e200, -1e200]
+        }),
+        ("variance", {
+            "numbers": []
+        }),
+        ("standard_deviation", {
+            "numbers": [1, 2, 3]
+        }),
+        ("standard_deviation", {
+            "numbers": []
+        }),
+        ("standard_deviation", {
+            "numbers": None
+        }),
+        ("clamp", {
+            "value": 5,
+            "min_val": 0,
+            "max_val": 10
+        }),
+        ("clamp", {
+            "value": -5,
+            "min_val": 0,
+            "max_val": 10
+        }),
+        ("clamp", {
+            "value": 15,
+            "min_val": 0,
+            "max_val": 10
+        }),
+        ("clamp", {
+            "value": 5,
+            "min_val": 10,
+            "max_val": 1
+        }),
+        ("clamp", {
+            "value": 5,
+            "min_val": 0
+        }),
+        ("hypot", {
+            "a": 3,
+            "b": 4
+        }),
+        ("hypot", {
+            "a": 1e300,
+            "b": 1e300
+        }),
+        ("hypot", {
+            "a": 1e-320,
+            "b": 1e-320
+        }),
+        ("hypot", {
+            "a": 0.1,
+            "b": 0.7
+        }),
+        ("hypot", {
+            "a": -5,
+            "b": 0
+        }),
+        ("cbrt", {
+            "a": 27
+        }),
+        ("cbrt", {
+            "a": 1000
+        }),
+        ("cbrt", {
+            "a": -27
+        }),
+        ("cbrt", {
+            "a": 0
+        }),
+    ],
+    "UnitServer": [
+        ("convert_temperature", {
+            "value": 100,
+            "from_unit": "celsius",
+            "to_unit": "fahrenheit"
+        }),
+        ("convert_temperature", {
+            "value": 98.6,
+            "from_unit": "fahrenheit",
+            "to_unit": "celsius"
+        }),
+        ("convert_temperature", {
+            "value": 0,
+            "from_unit": "kelvin",
+            "to_unit": "fahrenheit"
+        }),
+        ("convert_temperature", {
+            "value": -40,
+            "from_unit": "celsius",
+            "to_unit": "kelvin"
+        }),
+        ("convert_temperature", {
+            "value": -1,
+            "from_unit": "kelvin",
+            "to_unit": "celsius"
+        }),
+        ("convert_temperature", {
+            "value": 20,
+            "from_unit": "celsius",
+            "to_unit": "celsius"
+        }),
+        ("convert_temperature", {
+            "value": 20,
+            "from_unit": "Celsius",
+            "to_unit": "kelvin"
+        }),
+        ("convert_temperature", {
+            "value": "hot",
+            "from_unit": "celsius"
+        }),
+        ("convert_angle", {
+            "value": 180,
+            "from_unit": "degrees",
+            "to_unit": "radians"
+        }),
+        ("convert_angle", {
+            "value": 1,
+            "from_unit": "radians",
+            "to_unit": "gons"
+        }),
+        ("convert_angle", {
+            "value": 90,
+            "from_unit": "arcmin",
+            "to_unit": "arcsec"
+        }),
+        ("convert_angle", {
+            "value": 0.25,
+            "from_unit": "turns",
+            "to_unit": "degrees"
+        }),
+        ("convert_angle", {
+            "value": 1,
+            "from_unit": "degrees",
+            "to_unit": "grad"
+        }),
+        ("convert_length", {
+            "value": 1,
+            "from_unit": "mile",
+            "to_unit": "kilometer"
+        }),
+        ("convert_length", {
+            "value": 1,
+            "from_unit": "light year",
+            "to_unit": "parsec"
+        }),
+        ("convert_length", {
+            "value": 1e-5,
+            "from_unit": "angstrom",
+            "to_unit": "picometer"
+        }),
+        ("convert_length", {
+            "value": 1e308,
+            "from_unit": "parsec",
+            "to_unit": "angstrom"
+        }),
+        ("convert_length", {
+            "value": -3,
+            "from_unit": "foot (US survey)",
+            "to_unit": "chain (surveyors)"
+        }),
+        ("convert_length", {
+            "value": 1,
+            "from_unit": "miles",
+            "to_unit": "meter"
+        }),
+        ("convert_energy", {
+            "value": 1,
+            "from_unit": "kilowatt hour",
+            "to_unit": "Btu"
+        }),
+        ("convert_energy", {
+            "value": 1,
+            "from_unit": "foot\u2011pound force",
+            "to_unit": "electron volt"
+        }),
+        ("convert_energy", {
+            "value": 1,
+            "from_unit": "foot-pound force",
+            "to_unit": "joule"
+        }),
+        ("convert_force", {
+            "value": 1,
+            "from_unit": "kips",
+            "to_unit": "newtons"
+        }),
+        ("convert_force", {
+            "value": 3,
+            "from_unit": "long tons force",
+            "to_unit": "dynes"
+        }),
+        ("convert_pressure", {
+            "value": 1,
+            "from_unit": "atmosphere",
+            "to_unit": "psi"
+        }),
+        ("convert_pressure", {
+            "value": 760,
+            "from_unit": "millimeters of mercury",
+            "to_unit": "bar"
+        }),
+        ("convert_power", {
+            "value": 1,
+            "from_unit": "horsepower",
+            "to_unit": "kilogram\u2011force meter per second"
+        }),
+        ("convert_power", {
+            "value": 12000,
+            "from_unit": "Btu per hour",
+            "to_unit": "ton of refrigeration"
+        }),
+        ("convert_speed", {
+            "value": 100,
+            "from_unit": "kilometers per hour",
+            "to_unit": "miles per hour"
+        }),
+        ("convert_speed", {
+            "value": 1,
+            "from_unit": "speed of light",
+            "to_unit": "Mach (ISA sea level)"
+        }),
+        ("convert_area", {
+            "value": 1,
+            "from_unit": "acre",
+            "to_unit": "square meter"
+        }),
+        ("convert_area", {
+            "value": 2.5,
+            "from_unit": "hectare",
+            "to_unit": "square mile"
+        }),
+        ("convert_mass", {
+            "value": 1,
+            "from_unit": "pound",
+            "to_unit": "kilogram"
+        }),
+        ("convert_mass", {
+            "value": 1,
+            "from_unit": "femtogram",
+            "to_unit": "megatonne"
+        }),
+        ("convert_volume", {
+            "value": 1,
+            "from_unit": "gallon",
+            "to_unit": "liter"
+        }),
+        ("convert_volume", {
+            "value": 3,
+            "from_unit": "cubic mile",
+            "to_unit": "teaspoon"
+        }),
+        ("convert_computer_data", {
+            "value": 1,
+            "from_unit": "gigabytes",
+            "to_unit": "megabytes"
+        }),
+        ("convert_computer_data", {
+            "value": 8,
+            "from_unit": "bits",
+            "to_unit": "bytes"
+        }),
+        ("convert_computer_data", {
+            "value": 1,
+            "from_unit": "exabytes",
+            "to_unit": "bits"
+        }),
+        ("convert_density", {
+            "value": 1,
+            "from_unit": "grams per cubic centimeter",
+            "to_unit": "pounds per cubic foot"
+        }),
+        ("convert_density", {
+            "value": 10,
+            "from_unit": "grains per gallon (UK)",
+            "to_unit": "milligrams per liter"
+        }),
+        ("convert_time", {
+            "value": 1,
+            "from_unit": "years",
+            "to_unit": "days"
+        }),
+        ("convert_time", {
+            "value": 1,
+            "from_unit": "millennia",
+            "to_unit": "femtoseconds"
+        }),
+        ("convert_time", {
+            "value": 90,
+            "from_unit": "minutes",
+            "to_unit": "hours"
+        }),
+        ("convert_time", {
+            "value": 1,
+            "from_unit": "hours"
+        }),
+        ("convert_batch", {
+            "requests": [
+                {
+                    "value": 1,
+                    "from_unit": "meter",
+                    "to_unit": "foot",
+                    "conversion_type": "length",
+                    "request_id": "r1"
+                },
+                {
+                    "value": "2.5",
+                    "from_unit": "kilogram",
+                    "to_unit": "pound",
+                    "conversion_type": "mass",
+                    "request_id": "r2"
+                },
+                {
+                    "value": 300,
+                    "from_unit": "kelvin",
+                    "to_unit": "celsius",
+                    "conversion_type": "temperature",
+                    "request_id": "r3"
+                },
+                {
+                    "value": -5,
+                    "from_unit": "kelvin",
+                    "to_unit": "celsius",
+                    "conversion_type": "temperature",
+                    "request_id": "r4"
+                },
+                {
+                    "value": 1,
+                    "from_unit": "meterx",
+                    "to_unit": "foot",
+                    "conversion_type": "length",
+                    "request_id": "r5"
+                },
+                {
+                    "value": 1,
+                    "from_unit": "meter",
+                    "to_unit": "footx",
+                    "conversion_type": "length",
+                    "request_id": "r6"
+                },
+                {
+                    "value": 1,
+                    "from_unit": "a",
+                    "to_unit": "b",
+                    "conversion_type": "bogus",
+                    "request_id": 7
+                },
+                {
+                    "value": "abc",
+                    "from_unit": "meter",
+                    "to_unit": "foot",
+                    "conversion_type": "length"
+                },
+                {
+                    "from_unit": "meter",
+                    "to_unit": "foot",
+                    "conversion_type": "length",
+                    "request_id": None
+                },
+                {
+                    "value": 1,
+                    "to_unit": "foot",
+                    "conversion_type": "length",
+                    "request_id": "r10"
+                },
+                {
+                    "value": 1,
+                    "from_unit": "meter",
+                    "to_unit": "",
+                    "conversion_type": "length"
+                },
+                {
+                    "value": 1,
+                    "from_unit": "meter",
+                    "to_unit": "foot"
+                },
+                {
+                    "value": [1],
+                    "from_unit": "meter",
+                    "to_unit": "foot",
+                    "conversion_type": "length",
+                    "request_id": "r13"
+                },
+                {
+                    "value": True,
+                    "from_unit": "turns",
+                    "to_unit": "degrees",
+                    "conversion_type": "angle",
+                    "request_id": "r14"
+                },
+                {
+                    "value": " 1_000 ",
+                    "from_unit": 5,
+                    "to_unit": "foot",
+                    "conversion_type": "length",
+                    "request_id": "r15"
+                },
+                {
+                    "value": 1,
+                    "from_unit": "meter",
+                    "to_unit": "foot",
+                    "conversion_type": ["length"],
+                    "request_id": "r16"
+                },
+                {
+                    "value": "1e400",
+                    "from_unit": "meter",
+                    "to_unit": "foot",
+                    "conversion_type": "length",
+                    "request_id": "r17"
+                },
+            ]
+        }),
+        ("convert_batch", {
+            "requests": []
+        }),
+        ("convert_batch", {
+            "requests": "length"
+        }),
+        ("convert_batch", {
+            "requests": [{
+                "value": 1
+            }, 2]
+        }),
+        ("list_supported_units", {}),
+        ("list_supported_units", {
+            "unit_type": "energy"
+        }),
+        ("list_supported_units", {
+            "unit_type": None
+        }),
+        ("list_supported_units", {
+            "unit_type": "weight"
+        }),
+        ("list_supported_units", {
+            "unit_type": 3
+        }),
+    ],
+    "OSINTServer": [
+        ("whois_lookup", {
+            "target": "example.com"
+        }),
+        ("whois_lookup", {
+            "target": ""
+        }),
+        ("whois_lookup", {
+            "target": "a\x00b"
+        }),
+        ("whois_lookup", {}),
+        ("nmap_scan", {
+            "target": "192.168.0.1"
+        }),
+        ("nmap_scan", {
+            "target": 42
+        }),
+        ("dnsrecon_lookup", {
+            "target": "example.org"
+        }),
+        ("dnstwist_lookup", {
+            "domain": "example.com"
+        }),
+        ("dnstwist_lookup", {
+            "target": "example.com"
+        }),
+        ("dig_lookup", {
+            "target": "例え.jp"
+        }),
+        ("host_lookup", {
+            "target": "localhost"
+        }),
+        ("osint_overview", {
+            "target": "example.com"
+        }),
+        ("osint_overview", {
+            "target": None
+        }),
+    ],
+    "TimeServer": [
+        ("days_diff", {
+            "t1": "2026-01-01",
+            "t2": "2026-01-14"
+        }),
+        ("days_diff", {
+            "t1": "2026-01-14",
+            "t2": "2026-01-01"
+        }),
+        ("days_diff", {
+            "t1": "1989-06-04",
+            "t2": "2026-01-14"
+        }),
+        ("days_diff", {
+            "t1": "0001-01-01",
+            "t2": "9999-12-31"
+        }),
+        ("days_diff", {
+            "t1": "2024-2-29",
+            "t2": "2024-03-1"
+        }),
+        ("days_diff", {
+            "t1": "2026-01- 5",
+            "t2": "2026-01-05"
+        }),
+        ("days_diff", {
+            "t1": "\uff12\uff10\uff12\uff16-01-05",
+            "t2": "2026-01-01"
+        }),
+        ("days_diff", {
+            "t1": "2026-02-30",
+            "t2": "2026-01-01"
+        }),
+        ("days_diff", {
+            "t1": "2025-02-29",
+            "t2": "2026-01-01"
+        }),
+        ("days_diff", {
+            "t1": "0000-01-01",
+            "t2": "2026-01-01"
+        }),
+        ("days_diff", {
+            "t1": "2026-13-05",
+            "t2": "2026-01-01"
+        }),
+        ("days_diff", {
+            "t1": "2026-01-35",
+            "t2": "2026-01-01"
+        }),
+        ("days_diff", {
+            "t1": "2026-01-01T10:00",
+            "t2": "2026-01-01"
+        }),
+        ("days_diff", {
+            "t1": "26-01-05",
+            "t2": "2026-01-01"
+        }),
+        ("days_diff", {
+            "t1": " 2026-01-05",
+            "t2": "2026-01-01"
+        }),
+        ("days_diff", {
+            "t1": "2026-01-05"
+        }),
+        ("days_diff", {
+            "t1": 20260105,
+            "t2": "2026-01-01"
+        }),
+        ("date_to_weekday", {
+            "d": "2026-01-14"
+        }),
+        ("date_to_weekday", {
+            "d": "2026-01-14",
+            "short": True
+        }),
+        ("date_to_weekday", {
+            "d": "1989-06-04",
+            "locale": "fr"
+        }),
+        ("date_to_weekday", {
+            "d": "0001-01-01"
+        }),
+        ("date_to_weekday", {
+            "d": "9999-12-31",
+            "short": False
+        }),
+        ("date_to_weekday", {
+            "d": "2026/01/14"
+        }),
+        ("date_to_weekday", {
+            "d": "2026-01-14",
+            "short": [True]
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T00:00:00",
+            "t2": "2026-01-14T00:00:10"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T00:00:00Z",
+            "t2": "2026-01-14T00:01:00Z"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T00:00:00+00:00",
+            "t2": "2026-01-14T08:00:00+08:00"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T00:00:00+08:00",
+            "t2": "2026-01-14T00:00:30+08:00"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T10:00:00",
+            "t2": "2026-01-14T09:59:59.5"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T00:00:00Z",
+            "t2": "2026-01-14T00:00:10"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "20260114T000000",
+            "t2": "2026-W03-3 00:00:10.5"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026W033",
+            "t2": "2026-W03"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T00:00:00.9999999+0800",
+            "t2": "2026-01-14T00:00:00-01:30:15"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T10",
+            "t2": "2026-01-14 10:20"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T1020",
+            "t2": "2026-01-14x10:20:30,25"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T24:00:00",
+            "t2": "2026-01-14"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-12-31T24:00",
+            "t2": "2026-01-01"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T24:00:01",
+            "t2": "2026-01-14"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "0001-01-01",
+            "t2": "9999-12-31T23:59:59.999999"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T25:00",
+            "t2": "2026-01-14"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-02-30",
+            "t2": "2026-01-14"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-W53",
+            "t2": "2026-01-14"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T10:00+25:00",
+            "t2": "2026-01-14"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T10:00Zx",
+            "t2": "2026-01-14"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T10:0",
+            "t2": "2026-01-14"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T",
+            "t2": "2026-01-14"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01",
+            "t2": "2026-01-14"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "bad",
+            "t2": "x"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T10:00:00",
+            "t2": "2026-01-14\u00e910:00:00"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026W03\U0001f600"
+            "10",
+            "t2": "2026-01-14T10:00:00.+01:00"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T10:00+00:00:61",
+            "t2": "2026-01-14T10:00+00:00:00.5"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T10:00-25:00",
+            "t2": "2026-01-14T10:00Z"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T10:00+24:00",
+            "t2": "2026-01-14T10:00Z"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T10:61",
+            "t2": "2026-01-14T10:00:00."
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T10:00:60",
+            "t2": "2026-01-14"
+        }),
+        ("iso_seconds_diff", {
+            "t1": "2026-01-14T10:00:00",
+            "t2": "2026-01-14T10:00:00+05:3"
+        }),
+        ("convert_time_units", {
+            "value": 1500,
+            "from_unit": "ms",
+            "to_unit": "s"
+        }),
+        ("convert_time_units", {
+            "value": 2,
+            "from_unit": "h",
+            "to_unit": "min"
+        }),
+        ("convert_time_units", {
+            "value": 1,
+            "from_unit": " W ",
+            "to_unit": "D"
+        }),
+        ("convert_time_units", {
+            "value": 0.1,
+            "from_unit": "s",
+            "to_unit": "ms"
+        }),
+        ("convert_time_units", {
+            "value": 1e308,
+            "from_unit": "w",
+            "to_unit": "ms"
+        }),
+        ("convert_time_units", {
+            "value": 1,
+            "from_unit": "yr",
+            "to_unit": "ms"
+        }),
+        ("convert_time_units", {
+            "value": 1,
+            "from_unit": "s",
+            "to_unit": "years"
+        }),
+        ("convert_time_units", {
+            "value": "x",
+            "from_unit": "s",
+            "to_unit": "ms"
+        }),
+        ("add_seconds_iso", {
+            "t": "2026-01-14T00:00:00",
+            "seconds": 90
+        }),
+        ("add_seconds_iso", {
+            "t": "2026-01-14T00:00:00Z",
+            "seconds": 90
+        }),
+        ("add_seconds_iso", {
+            "t": "2026-01-14T23:59:30+00:00",
+            "seconds": 90
+        }),
+        ("add_seconds_iso", {
+            "t": "2026-01-14T00:00:30+08:00",
+            "seconds": -60
+        }),
+        ("add_seconds_iso", {
+            "t": "2026-01-14T00:00:00.5Z",
+            "seconds": 0
+        }),
+        ("add_seconds_iso", {
+            "t": "2026-01-14",
+            "seconds": -1
+        }),
+        ("add_seconds_iso", {
+            "t": "2026-01-14T00:00+05:45",
+            "seconds": 31536000
+        }),
+        ("add_seconds_iso", {
+            "t": "2026-01-14T00:00:00+00:00:30.25",
+            "seconds": 5
+        }),
+        ("add_seconds_iso", {
+            "t": "2026-01-14T00:00:00-00:00:30.25",
+            "seconds": 5
+        }),
+        ("add_seconds_iso", {
+            "t": "2026-01-14T00:00:00-00:00",
+            "seconds": 5
+        }),
+        ("add_seconds_iso", {
+            "t": "9999-12-31T23:59:59",
+            "seconds": 1
+        }),
+        ("add_seconds_iso", {
+            "t": "0001-01-01T00:00:00",
+            "seconds": -1
+        }),
+        ("add_seconds_iso", {
+            "t": "2026-01-14T00:00",
+            "seconds": 100000000000000
+        }),
+        ("add_seconds_iso", {
+            "t": "2026-01-14T00:00",
+            "seconds": -100000000000000
+        }),
+        ("add_seconds_iso", {
+            "t": "2026-01-14T00:00",
+            "seconds": 1.5
+        }),
+        ("add_seconds_iso", {
+            "t": "2026-01-14T00:00"
+        }),
+        ("add_seconds_iso", {
+            "t": "Jan 14 2026",
+            "seconds": 1
+        }),
+    ],
+    "LangServer": [
+        ("tokenize", {
+            "text": "Hello, world! It's 3.14 o'clock."
+        }),
+        ("tokenize", {
+            "text": "naïve café\r\n x y ½ é \U0001F600 日本語"
+        }),
+        ("tokenize", {
+            "text": ""
+        }),
+        ("tokenize", {
+            "text": "   \t\n "
+        }),
+        ("tokenize", {
+            "text": 42
+        }),
+        ("detokenize", {
+            "tokens": ["Hello", ",", "world"]
+        }),
+        ("detokenize", {
+            "tokens": []
+        }),
+        ("detokenize", {
+            "tokens": "abc"
+        }),
+        ("detokenize", {
+            "tokens": ["a", 1]
+        }),
+        ("normalize_whitespace", {
+            "text": "  a \t\n b　c\u001c\u0085d﻿e  "
+        }),
+        ("normalize_whitespace", {
+            "text": ""
+        }),
+        ("remove_punctuation", {
+            "text": "Hello, world! a_b-c (ok) ¿qué? «x»"
+        }),
+        ("count_words", {
+            "text": "a b c"
+        }),
+        ("count_words", {}),
+        ("word_freq", {
+            "text": "A a B"
+        }),
+        ("sentence_split", {
+            "text": "Hi. Hello there!  Ok? yes...no"
+        }),
+        ("sentence_split", {
+            "text": "  "
+        }),
+        ("sentence_split", {
+            "text": "One sentence"
+        }),
+        ("simple_summarize", {
+            "text": "A. B.",
+            "max_sentences": 1
+        }),
+        ("levenshtein", {
+            "a": "kitten",
+            "b": "sitting"
+        }),
+        ("levenshtein", {
+            "a": "",
+            "b": "abc"
+        }),
+        ("levenshtein", {
+            "a": "same",
+            "b": "same"
+        }),
+        ("levenshtein", {
+            "a": "\U0001F600a",
+            "b": "a\U0001F600"
+        }),
+        ("jaccard_similarity", {
+            "a": "x",
+            "b": "y"
+        }),
+        ("ngrams", {
+            "text": "a b c",
+            "n": 2
+        }),
+        ("to_lower", {
+            "text": "HeLLo ΣΑΣ İ ǅ"
+        }),
+        ("to_upper", {
+            "text": "straße ﬁ ǆ ŉ"
+        }),
+        ("title_case", {
+            "text": "hello WORLD ǆx ßa ﬁx 3rd o'neil ΣΑΣ σ"
+        }),
+        ("title_case", {
+            "text": "they're bill's friends from the UK"
+        }),
+        ("snake_case", {
+            "text": "Hello World"
+        }),
+        ("camel_case", {
+            "text": "hello world"
+        }),
+        ("slugify", {
+            "text": "Hello World!"
+        }),
+        ("extract_numbers", {
+            "text": "a -3.5 b 4. c ١٢ d 1e5 -0 007"
+        }),
+        ("extract_numbers", {
+            "text": "no numbers"
+        }),
+        ("extract_numbers", {
+            "text": "9" * 400
+        }),
+        ("hash_text", {
+            "text": "hello"
+        }),
+        ("hash_text", {
+            "text": "héllo",
+            "algo": "md5"
+        }),
+        ("hash_text", {
+            "text": "x",
+            "algo": "SHA-512"
+        }),
+        ("hash_text", {
+            "text": "x",
+            "algo": "sha3_256"
+        }),
+        ("hash_text", {
+            "text": "x",
+            "algo": "blake2b"
+        }),
+        ("hash_text", {
+            "text": "x",
+            "algo": "blake2s"
+        }),
+        ("hash_text", {
+            "text": "x",
+            "algo": "sha512_224"
+        }),
+        ("hash_text", {
+            "text": "x",
+            "algo": "KECCAK-256"
+        }),
+        ("hash_text", {
+            "text": "x",
+            "algo": "ripemd160"
+        }),
+        ("hash_text", {
+            "text": "x",
+            "algo": "sm3"
+        }),
+        ("hash_text", {
+            "text": "x",
+            "algo": "md5-sha1"
+        }),
+        ("hash_text", {
+            "text": "x",
+            "algo": "SHA2-256/192"
+        }),
+        ("hash_text", {
+            "text": "x",
+            "algo": "null"
+        }),
+        ("hash_text", {
+            "text": "x",
+            "algo": "md5 "
+        }),
+        ("hash_text", {
+            "text": "x",
+            "algo": "shake_128"
+        }),
+        ("hash_text", {
+            "text": "x",
+            "algo": "md4"
+        }),
+        ("hash_text", {
+            "text": "x",
+            "algo": "BLAKE2B"
+        }),
+        ("hash_text", {
+            "text": "x",
+            "algo": "RSA-SHA256"
+        }),
+        ("base64_encode", {
+            "text": "hello 世界"
+        }),
+        ("base64_encode", {
+            "text": ""
+        }),
+        ("base64_decode", {
+            "b64": "aGVsbG8g5LiW55WM"
+        }),
+        ("base64_decode", {
+            "b64": "aGVsbG8"
+        }),
+        ("base64_decode", {
+            "b64": "a"
+        }),
+        ("base64_decode", {
+            "b64": "aGk=!!trailing"
+        }),
+        ("base64_decode", {
+            "b64": "/w=="
+        }),
+        ("base64_decode", {
+            "b64": "4oI="
+        }),
+        ("base64_decode", {
+            "b64": "é"
+        }),
+        ("base64_decode", {
+            "b64": "ab\U0001F600é"
+        }),
+        ("is_palindrome", {
+            "text": "A man, a plan, a canal: Panama"
+        }),
+        ("is_palindrome", {
+            "text": "Ésé"
+        }),
+        ("is_palindrome", {
+            "text": "abc"
+        }),
+        ("regex_search", {
+            "pattern": r"\d+",
+            "text": "a1b22c333"
+        }),
+        ("regex_search", {
+            "pattern": r"(\w+)@(\w+)\.com",
+            "text": "ann@site.com bob@web.com"
+        }),
+        ("regex_search", {
+            "pattern": r"(?P<y>\d{4})",
+            "text": "in 2024 and 1999"
+        }),
+        ("regex_search", {
+            "pattern": r"\bcat\b",
+            "text": "cat concat cat."
+        }),
+        ("regex_search", {
+            "pattern": r"(?i)é+",
+            "text": "ÉéE"
+        }),
+        ("regex_search", {
+            "pattern": r"x*",
+            "text": "axxb"
+        }),
+        ("regex_search", {
+            "pattern": r"\w+$",
+            "text": "line1\nline2\n"
+        }),
+        ("regex_search", {
+            "pattern": r"zzz",
+            "text": "abc"
+        }),
+        ("regex_search", {
+            "pattern": "(",
+            "text": "abc"
+        }),
+        ("regex_search", {
+            "pattern": r"a**",
+            "text": "abc"
+        }),
+        ("regex_search", {
+            "pattern": r"\q",
+            "text": "abc"
+        }),
+        ("regex_search", {
+            "pattern": r"(?<=a+)b",
+            "text": "ab"
+        }),
+        ("regex_search", {
+            "pattern": "a\n(",
+            "text": "ab"
+        }),
+        ("replace", {
+            "pattern": r"(\w)(\w*)",
+            "repl": r"\2\1",
+            "text": "hello world"
+        }),
+        ("replace", {
+            "pattern": r"(?P<y>\d{4})-(?P<m>\d\d)",
+            "repl": r"\g<m>/\g<y>",
+            "text": "2024-01, 1999-12"
+        }),
+        ("replace", {
+            "pattern": r"\s+",
+            "repl": "_",
+            "text": " a  b\tc\n"
+        }),
+        ("replace", {
+            "pattern": r"x*",
+            "repl": "-",
+            "text": "abxd"
+        }),
+        ("replace", {
+            "pattern": r"a",
+            "repl": r"\n\t\\",
+            "text": "banana"
+        }),
+        ("replace", {
+            "pattern": r"(a)",
+            "repl": r"\2",
+            "text": "a"
+        }),
+        ("replace", {
+            "pattern": r"(a)",
+            "repl": r"\q",
+            "text": "a"
+        }),
+        ("replace", {
+            "pattern": r"(a)",
+            "repl": r"\g<x>",
+            "text": "a"
+        }),
+        ("replace", {
+            "pattern": r"[",
+            "repl": "x",
+            "text": "a"
+        }),
+        ("truncate", {
+            "text": "abcdef",
+            "length": 2
+        }),
+        ("truncate", {
+            "text": "abcdef",
+            "length": 5
+        }),
+        ("truncate", {
+            "text": "abcdef"
+        }),
+        ("truncate", {
+            "text": "a\U0001F600bcdef",
+            "length": 4
+        }),
+        ("truncate", {
+            "text": "abcdef",
+            "length": -1
+        }),
+        ("read_time_estimate", {
+            "text": "a b c",
+            "wpm": 0
+        }),
+        ("remove_stopwords", {
+            "text": "the cat"
+        }),
+        ("simple_paraphrase", {
+            "text": "quick"
+        }),
+        ("syllable_estimate", {
+            "word": "Cake"
+        }),
+        ("syllable_estimate", {
+            "word": "rhythm"
+        }),
+        ("syllable_estimate", {
+            "word": "beautiful"
+        }),
+        ("syllable_estimate", {
+            "word": "free\n"
+        }),
+        ("syllable_estimate", {
+            "word": ""
+        }),
+        ("ordinal", {
+            "n": 1
+        }),
+        ("ordinal", {
+            "n": 2
+        }),
+        ("ordinal", {
+            "n": 3
+        }),
+        ("ordinal", {
+            "n": 11
+        }),
+        ("ordinal", {
+            "n": 112
+        }),
+        ("ordinal", {
+            "n": 121
+        }),
+        ("ordinal", {
+            "n": -1
+        }),
+        ("ordinal", {
+            "n": -11
+        }),
+        ("ordinal", {
+            "n": 0
+        }),
+        ("ordinal", {
+            "n": "4"
+        }),
+        ("count_chars", {
+            "text": "\U0001F600é́"
+        }),
+        ("count_chars", {
+            "text": ""
+        }),
+        ("template_render", {
+            "template": "Hello {name}!",
+            "values": {
+                "name": "Ann"
+            }
+        }),
+        ("template_render", {
+            "template": "{a} {b!r} {c:>5} {d:.2f} {e:,} {f:08.3e} {g:%}",
+            "values": {
+                "a": 1,
+                "b": "x",
+                "c": "y",
+                "d": 2.5,
+                "e": 1234567,
+                "f": -0.000123,
+                "g": 0.25
+            }
+        }),
+        ("template_render", {
+            "template": "{x[0]} {x[1]} {y[k]} {z.real}",
+            "values": {
+                "x": [1, "two"],
+                "y": {
+                    "k": None
+                },
+                "z": 3
+            }
+        }),
+        ("template_render", {
+            "template": "{{literal}} {a!a} {b:^9} {c:#x} {d:_b}",
+            "values": {
+                "a": "é",
+                "b": True,
+                "c": 255,
+                "d": 1023
+            }
+        }),
+        ("template_render", {
+            "template": "{0}",
+            "values": {}
+        }),
+        ("template_render", {
+            "template": "{x}",
+            "values": {}
+        }),
+        ("template_render", {
+            "template": "{",
+            "values": {}
+        }),
+        ("template_render", {
+            "template": "}",
+            "values": {}
+        }),
+        ("template_render", {
+            "template": "{a:d}",
+            "values": {
+                "a": 1.5
+            }
+        }),
+        ("template_render", {
+            "template": "{a:.2f}",
+            "values": {
+                "a": "s"
+            }
+        }),
+        ("template_render", {
+            "template": "{a:>4}",
+            "values": {
+                "a": None
+            }
+        }),
+        ("template_render", {
+            "template": "{a:{w}}",
+            "values": {
+                "a": 7,
+                "w": 6
+            }
+        }),
+        ("template_render", {
+            "template": "{a.b}",
+            "values": {
+                "a": 1
+            }
+        }),
+        ("template_render", {
+            "template": "x",
+            "values": []
+        }),
+        ("template_render", {
+            "template": "x"
+        }),
+    ],
+    "CryptoServer": [
+        ("sha256", {
+            "text": "hello"
+        }),
+        ("sha256", {
+            "text": ""
+        }),
+        ("sha256", {
+            "text": "héllo \U0001F600"
+        }),
+        ("sha256", {
+            "text": None
+        }),
+        ("sha1", {
+            "text": "hello"
+        }),
+        ("md5", {
+            "text": "hello"
+        }),
+        ("hmac_sha256", {
+            "key": "secret",
+            "message": "msg"
+        }),
+        ("hmac_sha256", {
+            "key": "",
+            "message": ""
+        }),
+        ("hmac_sha256", {
+            "key": "k" * 100,
+            "message": "ünïcode"
+        }),
+        ("hmac_sha256", {
+            "key": "k"
+        }),
+        ("pbkdf2_hex", {
+            "password": "pw",
+            "salt": "salt"
+        }),
+        ("pbkdf2_hex", {
+            "password": "pw",
+            "salt": "salt",
+            "iterations": 1,
+            "dklen": 64
+        }),
+        ("pbkdf2_hex", {
+            "password": "",
+            "salt": "",
+            "iterations": 2,
+            "dklen": 1
+        }),
+        ("pbkdf2_hex", {
+            "password": "pw",
+            "salt": "s",
+            "iterations": 0
+        }),
+        ("pbkdf2_hex", {
+            "password": "pw",
+            "salt": "s",
+            "iterations": 1,
+            "dklen": 0
+        }),
+        ("pbkdf2_hex", {
+            "password": "pw",
+            "salt": "s",
+            "iterations": 3000000000
+        }),
+        ("random_bytes", {
+            "n": 0
+        }),
+        ("random_bytes", {
+            "n": -1
+        }),
+        ("random_bytes", {
+            "n": 8
+        }),
+        ("random_bytes", {}),
+        ("random_hex", {
+            "nbytes": 0
+        }),
+        ("random_hex", {
+            "nbytes": -5
+        }),
+        ("random_hex", {}),
+        ("base64_encode", {
+            "text": "hello 世界"
+        }),
+        ("base64_decode", {
+            "b64": "aGVsbG8="
+        }),
+        ("base64_decode", {
+            "b64": "aGVsbG8"
+        }),
+        ("base64_decode", {
+            "b64": "a"
+        }),
+        ("base64_decode", {
+            "b64": "é"
+        }),
+        ("base64_decode", {
+            "b64": "/w=="
+        }),
+        ("base64_decode", {
+            "b64": "4oKs4o=="
+        }),
+        ("xor_cipher", {
+            "text": "hello",
+            "key": "k"
+        }),
+        ("xor_cipher", {
+            "text": "héllo",
+            "key": "key"
+        }),
+        ("xor_cipher", {
+            "text": "",
+            "key": ""
+        }),
+        ("xor_cipher", {
+            "text": "a",
+            "key": ""
+        }),
+        ("xor_dec", {
+            "hextext": "030e0707",
+            "key": "k"
+        }),
+        ("xor_dec", {
+            "hextext": "ff",
+            "key": "a"
+        }),
+        ("xor_dec", {
+            "hextext": "abc",
+            "key": "a"
+        }),
+        ("xor_dec", {
+            "hextext": "zz",
+            "key": "a"
+        }),
+        ("xor_dec", {
+            "hextext": "é0",
+            "key": "a"
+        }),
+        ("xor_dec", {
+            "hextext": "00",
+            "key": ""
+        }),
+        ("simple_caesar", {
+            "text": "Hello, World!"
+        }),
+        ("simple_caesar", {
+            "text": "xyz XYZ",
+            "shift": -29
+        }),
+        ("simple_caesar", {
+            "text": "abc é",
+            "shift": 123456789012
+        }),
+        ("rot13", {
+            "text": "Hello, World! ünï"
+        }),
+        ("timing_safe_compare", {
+            "a": "abc",
+            "b": "abc"
+        }),
+        ("timing_safe_compare", {
+            "a": "abc",
+            "b": "abd"
+        }),
+        ("timing_safe_compare", {
+            "a": "é",
+            "b": "é"
+        }),
+        ("derive_key", {
+            "password": "pw",
+            "salt": "s"
+        }),
+        ("derive_key", {
+            "password": "pw"
+        }),
+        ("entropy_estimate_hex", {
+            "hexstr": "00112233"
+        }),
+        ("entropy_estimate_hex", {
+            "hexstr": "0000ff"
+        }),
+        ("entropy_estimate_hex", {
+            "hexstr": "01020304050607080901020304"
+        }),
+        ("entropy_estimate_hex", {
+            "hexstr": ""
+        }),
+        ("entropy_estimate_hex", {
+            "hexstr": "0"
+        }),
+        ("entropy_estimate_hex", {
+            "hexstr": "gg"
+        }),
+        ("uuid4", {}),
+        ("uuid4", {
+            "x": 1
+        }),
+        ("hex_to_bytes", {
+            "hexstr": "4142"
+        }),
+        ("hex_to_bytes", {
+            "hexstr": ""
+        }),
+        ("hex_to_bytes", {
+            "hexstr": "ff00"
+        }),
+        ("hex_to_bytes", {
+            "hexstr": "41e2"
+        }),
+        ("hex_to_bytes", {
+            "hexstr": "e282ac"
+        }),
+        ("hex_to_bytes", {
+            "hexstr": "c0af"
+        }),
+        ("hex_to_bytes", {
+            "hexstr": "abc"
+        }),
+        ("bytes_to_hex", {
+            "b": "héllo"
+        }),
+        ("bytes_to_hex", {
+            "b": ""
+        }),
+        ("bytes_to_hex", {
+            "b": 5
+        }),
+        ("urlsafe_b64_encode", {
+            "text": "??>>"
+        }),
+        ("urlsafe_b64_decode", {
+            "text": "Pz8-Pg=="
+        }),
+        ("urlsafe_b64_decode", {
+            "text": "-_8"
+        }),
+        ("urlsafe_b64_decode", {
+            "text": "_w=="
+        }),
+        ("hmac_sign_hex", {
+            "key": "secret",
+            "message": "msg"
+        }),
+        ("hmac_verify_hex", {
+            "key": "k",
+            "message": "m",
+            "signature": "s"
+        }),
+        ("checksum_sha256_hex", {
+            "text": "abc"
+        }),
+        ("random_choice", {
+            "seq": ["only"]
+        }),
+        ("random_choice", {
+            "seq": [3.5]
+        }),
+        ("random_choice", {
+            "seq": [{
+                "a": [1, 2.0]
+            }]
+        }),
+        ("random_choice", {
+            "seq": [None]
+        }),
+        ("random_choice", {
+            "seq": [[]]
+        }),
+        ("random_choice", {
+            "seq": []
+        }),
+        ("random_choice", {
+            "seq": "abc"
+        }),
+        ("random_choice", {
+            "seq": [1, 2, 3]
+        }),
+        ("secure_token_urlsafe", {
+            "length": 0
+        }),
+        ("secure_token_urlsafe", {
+            "length": -1
+        }),
+        ("secure_token_urlsafe", {}),
+        ("file_digest", {
+            "path": "/nonexistent/file.txt"
+        }),
+        ("file_digest", {
+            "path": "",
+            "algo": "md5"
+        }),
+        ("file_digest", {
+            "path": "a\x00b"
+        }),
+        ("xor_bytes_hex", {
+            "a_hex": "ff00",
+            "b_hex": "0f0f"
+        }),
+        ("xor_bytes_hex", {
+            "a_hex": "ff",
+            "b_hex": "0f0f"
+        }),
+        ("xor_bytes_hex", {
+            "a_hex": "f",
+            "b_hex": "0f"
+        }),
+    ],
+    "GraphServer": [
+        ("bfs", {
+            "adj": {
+                "a": ["b", "c"],
+                "b": ["d"],
+                "c": ["d"],
+                "d": []
+            },
+            "start": "a"
+        }),
+        ("bfs", {
+            "adj": {
+                "1": [2, 3],
+                "2": [4]
+            },
+            "start": 1
+        }),
+        ("bfs", {
+            "adj": {
+                "1": ["2", "3"],
+                "2": ["4"]
+            },
+            "start": "1"
+        }),
+        ("bfs", {
+            "adj": {
+                "1": "23",
+                "2": ["1"]
+            },
+            "start": "1"
+        }),
+        ("bfs", {
+            "adj": {
+                "a": {
+                    "b": 1,
+                    "c": 2
+                },
+                "b": ["a"]
+            },
+            "start": "a"
+        }),
+        ("bfs", {
+            "adj": {},
+            "start": "x"
+        }),
+        ("bfs", {
+            "adj": {
+                "1": 5
+            },
+            "start": "1"
+        }),
+        ("bfs", {
+            "adj": {
+                "1": [[1]]
+            },
+            "start": "1"
+        }),
+        ("bfs", {
+            "adj": {},
+            "start": [1]
+        }),
+        ("bfs", {
+            "adj": {
+                "a": ["b"]
+            },
+            "start": None
+        }),
+        ("bfs", {
+            "adj": {
+                "a": [1, 1.0, True, "1"]
+            },
+            "start": "a"
+        }),
+        ("bfs", {
+            "adj": {
+                "a": ["b"]
+            }
+        }),
+        ("bfs", {
+            "adj": [["a", "b"]],
+            "start": "a"
+        }),
+        ("dfs", {
+            "adj": {
+                "a": ["b", "c"],
+                "b": ["d"],
+                "c": ["d"],
+                "d": ["a"]
+            },
+            "start": "a"
+        }),
+        ("dfs", {
+            "adj": {
+                "a": ["b"]
+            },
+            "start": "z"
+        }),
+        ("dfs", {
+            "adj": {
+                "a": None
+            },
+            "start": "a"
+        }),
+        ("shortest_path_dijkstra", {
+            "adj": {
+                "a": [["b", 1], ["c", 4]],
+                "b": [["c", 2], ["d", 5]],
+                "c": [["d", 1]]
+            },
+            "source": "a"
+        }),
+        ("shortest_path_dijkstra", {
+            "adj": {
+                "a": [["b", 1.5], ["c", 1.5]],
+                "b": [["c", 0]]
+            },
+            "source": "a"
+        }),
+        ("shortest_path_dijkstra", {
+            "adj": {
+                "a": [["b", 1], ["c", 1]],
+                "b": [],
+                "c": []
+            },
+            "source": "a"
+        }),
+        ("shortest_path_dijkstra", {
+            "adj": {
+                "1": [[2, 1]]
+            },
+            "source": 1
+        }),
+        ("shortest_path_dijkstra", {
+            "adj": {
+                "a": [["b"]]
+            },
+            "source": "a"
+        }),
+        ("shortest_path_dijkstra", {
+            "adj": {
+                "a": [["b", 1, 2]]
+            },
+            "source": "a"
+        }),
+        ("shortest_path_dijkstra", {
+            "adj": {
+                "a": ["bc"]
+            },
+            "source": "a"
+        }),
+        ("shortest_path_dijkstra", {
+            "adj": {
+                "a": [5]
+            },
+            "source": "a"
+        }),
+        ("shortest_path_dijkstra", {
+            "adj": {
+                "a": [["b", "x"]]
+            },
+            "source": "a"
+        }),
+        ("shortest_path_dijkstra", {
+            "adj": {
+                "a": [[1, 1], ["b", 1]]
+            },
+            "source": "a"
+        }),
+        ("shortest_path_dijkstra", {
+            "adj": {
+                "a": [["b", 1], [2, 1]]
+            },
+            "source": "a"
+        }),
+        ("shortest_path_dijkstra", {
+            "adj": {
+                "a": [["b", True], ["c", -2]]
+            },
+            "source": "a"
+        }),
+        ("shortest_path_dijkstra", {
+            "adj": {},
+            "source": [1]
+        }),
+        ("is_bipartite", {
+            "adj": {
+                "a": ["b"],
+                "b": ["c"],
+                "c": ["a"]
+            }
+        }),
+        ("is_bipartite", {
+            "adj": {
+                "a": ["b"],
+                "b": ["a"],
+                "c": []
+            }
+        }),
+        ("is_bipartite", {
+            "adj": {}
+        }),
+        ("is_bipartite", {
+            "adj": {
+                "a": [["x"]]
+            }
+        }),
+        ("connected_components", {
+            "adj": {
+                "a": ["b"],
+                "c": [],
+                "b": ["a"],
+                "d": ["e"]
+            }
+        }),
+        ("connected_components", {
+            "adj": {}
+        }),
+        ("topological_sort", {
+            "adj": {
+                "a": ["b", "c"],
+                "b": ["d"],
+                "c": ["d"],
+                "d": []
+            }
+        }),
+        ("topological_sort", {
+            "adj": {
+                "a": ["b"],
+                "b": ["a"]
+            }
+        }),
+        ("topological_sort", {
+            "adj": {
+                "a": "bc"
+            }
+        }),
+        ("topological_sort", {
+            "adj": {
+                "x": [1, 2]
+            }
+        }),
+        ("topological_sort", {
+            "adj": {}
+        }),
+        ("topological_sort", {
+            "adj": {
+                "a": 3
+            }
+        }),
+        ("mst_kruskal", {
+            "edges": [[1, "a", "b"], [2, "b", "c"], [3, "a", "c"]],
+            "nodes": ["a", "b", "c"]
+        }),
+        ("mst_kruskal", {
+            "edges": [[4, "a", "b"], [1, "b", "c"], [3, "a", "c"],
+                      [2, "c", "d"], [1, "a", "d"]],
+            "nodes": ["a", "b", "c", "d"]
+        }),
+        ("mst_kruskal", {
+            "edges": [[2.5, 1, 2], [1, 2, 3]],
+            "nodes": [1, 2, 3]
+        }),
+        ("mst_kruskal", {
+            "edges": [[1, "a", "z"]],
+            "nodes": ["a"]
+        }),
+        ("mst_kruskal", {
+            "edges": [[1, "a"]],
+            "nodes": ["a"]
+        }),
+        ("mst_kruskal", {
+            "edges": [[1, "a", "b"], ["x", "b", "c"]],
+            "nodes": ["a", "b", "c"]
+        }),
+        ("mst_kruskal", {
+            "edges": [[3, "a", "b"], [2, "b", "c"], [1, "c", "a"], [1, 5,
+                                                                    "d"]],
+            "nodes": ["a", "b", "c"]
+        }),
+        ("mst_kruskal", {
+            "edges": ["abc"],
+            "nodes": ["b", "c"]
+        }),
+        ("mst_kruskal", {
+            "edges": [],
+            "nodes": []
+        }),
+        ("mst_kruskal", {
+            "edges": [[1, "a", "b"]],
+            "nodes": [["a"]]
+        }),
+        ("shortest_path_unweighted", {
+            "adj": {
+                "a": ["b", "c"],
+                "b": ["d"],
+                "c": ["d"]
+            },
+            "source": "a"
+        }),
+        ("shortest_path_unweighted", {
+            "adj": {
+                "a": ["b"]
+            },
+            "source": 5
+        }),
+        ("path_exists", {
+            "adj": {
+                "a": ["b"]
+            },
+            "a": "a",
+            "b": "b"
+        }),
+        ("path_exists", {
+            "adj": {
+                "a": ["b"]
+            },
+            "a": "a"
+        }),
+        ("adjacency_matrix", {
+            "adj": {
+                "a": ["b"],
+                "b": ["a", "z"]
+            },
+            "nodes": ["a", "b"]
+        }),
+        ("adjacency_matrix", {
+            "adj": {
+                "a": ["b"]
+            },
+            "nodes": ["a", "b", "a"]
+        }),
+        ("adjacency_matrix", {
+            "adj": {
+                "z": [["x"]],
+                "a": [["y"]]
+            },
+            "nodes": ["a"]
+        }),
+        ("adjacency_matrix", {
+            "adj": {
+                "a": ["b"]
+            },
+            "nodes": []
+        }),
+        ("adjacency_list_to_matrix", {
+            "adj": {
+                "a": ["b"]
+            }
+        }),
+        ("degree_centrality", {
+            "adj": {
+                "a": ["b", "c"],
+                "b": "xyz",
+                "c": {}
+            }
+        }),
+        ("degree_centrality", {
+            "adj": {
+                "a": 5
+            }
+        }),
+        ("degree_centrality", {
+            "adj": {}
+        }),
+        ("is_connected", {
+            "adj": {}
+        }),
+        ("is_connected", {
+            "adj": {
+                "a": []
+            }
+        }),
+        ("graph_complement", {
+            "adj": {
+                "1": [2]
+            },
+            "nodes": [1, 2, 3, 4]
+        }),
+        ("graph_complement", {
+            "adj": {},
+            "nodes": [0.5, 2, 10, -1, True]
+        }),
+        ("graph_complement", {
+            "adj": {},
+            "nodes": list(range(20))
+        }),
+        ("graph_complement", {
+            "adj": {},
+            "nodes": []
+        }),
+        ("graph_complement", {
+            "adj": {},
+            "nodes": [[1]]
+        }),
+        ("random_erdos_renyi", {
+            "n": 4,
+            "p": 0
+        }),
+        ("random_erdos_renyi", {
+            "n": 4,
+            "p": 1
+        }),
+        ("random_erdos_renyi", {
+            "n": -2,
+            "p": 1
+        }),
+        ("random_erdos_renyi", {
+            "n": 0,
+            "p": 0.5
+        }),
+        ("random_erdos_renyi", {
+            "n": 5,
+            "p": 0.5
+        }),
+        ("random_erdos_renyi", {
+            "n": 2.5,
+            "p": 0.5
+        }),
+    ],
+    "ChemServer": [
+        ("molar_mass", {
+            "formula": "H2O"
+        }),
+        ("molar_mass", {
+            "formula": "C6H12O6"
+        }),
+        ("molar_mass", {
+            "formula": "NaCl"
+        }),
+        ("molar_mass", {
+            "formula": "XyZ"
+        }),
+        ("molar_mass", {
+            "formula": ""
+        }),
+        ("molar_mass", {
+            "formula": "C９H"
+        }),
+        ("molar_mass", {
+            "formula": "H" + "9" * 400
+        }),
+        ("molar_mass", {
+            "formula": "h2o"
+        }),
+        ("molar_mass", {
+            "formula": 18
+        }),
+        ("empirical_formula", {
+            "formula": "C6H12O6"
+        }),
+        ("empirical_formula", {
+            "formula": "H2O2"
+        }),
+        ("empirical_formula", {
+            "formula": "OHCl"
+        }),
+        ("empirical_formula", {
+            "formula": "C2H4C2"
+        }),
+        ("empirical_formula", {
+            "formula": ""
+        }),
+        ("empirical_formula", {
+            "formula": "H0"
+        }),
+        ("empirical_formula", {
+            "formula": "Zz4Aa8"
+        }),
+        ("percent_composition", {
+            "formula": "H2O"
+        }),
+        ("percent_composition", {
+            "formula": "CH3CH2OH"
+        }),
+        ("percent_composition", {
+            "formula": "XyZ"
+        }),
+        ("percent_composition", {
+            "formula": ""
+        }),
+        ("balance_simple_reaction", {
+            "reactants": {
+                "H2": 2,
+                "O2": 1.0
+            },
+            "products": {
+                "H2O": 2
+            }
+        }),
+        ("balance_simple_reaction", {
+            "reactants": {},
+            "products": {
+                "x": [1, 2.5, None, "é"]
+            }
+        }),
+        ("balance_simple_reaction", {
+            "reactants": {
+                "H2": 2
+            },
+            "products": ["H2O"]
+        }),
+        ("balance_simple_reaction", {
+            "reactants": {
+                "H2": 2
+            }
+        }),
+        ("is_balanced", {
+            "formula": "anything"
+        }),
+        ("ph_from_concentration", {
+            "h_conc": 1e-7
+        }),
+        ("ph_from_concentration", {
+            "h_conc": 0.01
+        }),
+        ("ph_from_concentration", {
+            "h_conc": 3.2e-5
+        }),
+        ("ph_from_concentration", {
+            "h_conc": 1
+        }),
+        ("ph_from_concentration", {
+            "h_conc": 0
+        }),
+        ("ph_from_concentration", {
+            "h_conc": -1
+        }),
+        ("concentration_from_ph", {
+            "ph": 7
+        }),
+        ("concentration_from_ph", {
+            "ph": 2.5
+        }),
+        ("concentration_from_ph", {
+            "ph": -400
+        }),
+        ("concentration_from_ph", {
+            "ph": 400
+        }),
+        ("ideal_gas_pressure", {
+            "n_moles": 1,
+            "temp_k": 273.15,
+            "volume_l": 22.4
+        }),
+        ("ideal_gas_pressure", {
+            "n_moles": 2.5,
+            "temp_k": 300,
+            "volume_l": 0.5
+        }),
+        ("ideal_gas_pressure", {
+            "n_moles": 1,
+            "temp_k": 300,
+            "volume_l": 0
+        }),
+        ("convert_moles_to_grams", {
+            "moles": 2,
+            "formula": "H2O"
+        }),
+        ("convert_moles_to_grams", {
+            "moles": 2,
+            "formula": "Xx"
+        }),
+        ("convert_grams_to_moles", {
+            "grams": 36.03,
+            "formula": "H2O"
+        }),
+        ("convert_grams_to_moles", {
+            "grams": 10,
+            "formula": "Xx"
+        }),
+        ("normalize_formula", {
+            "formula": " C 6 H12\tO6 "
+        }),
+        ("element_list", {
+            "formula": "C6H12O6Na"
+        }),
+        ("element_list", {
+            "formula": "abc"
+        }),
+        ("combustion_products", {
+            "fuel_formula": "C8H18"
+        }),
+        ("combustion_products", {
+            "fuel_formula": "C3H8C2"
+        }),
+        ("combustion_products", {
+            "fuel_formula": "H2"
+        }),
+        ("combustion_products", {
+            "fuel_formula": "C２H6"
+        }),
+        ("combustion_products", {
+            "fuel_formula": "CH4"
+        }),
+        ("combustion_products", {
+            "fuel_formula": "C2H"
+        }),
+        ("combustion_products", {
+            "fuel_formula": "O2"
+        }),
+        ("is_organic", {
+            "formula": "CH4"
+        }),
+        ("is_organic", {
+            "formula": "H2O"
+        }),
+        ("is_organic", {
+            "formula": "Cl2"
+        }),
+        ("simple_smiles_validate", {
+            "smiles": "CC(=O)O"
+        }),
+        ("simple_smiles_validate", {
+            "smiles": "CC(=O"
+        }),
+        ("simple_smiles_validate", {
+            "smiles": "C)C("
+        }),
+        ("simple_smiles_validate", {
+            "smiles": ""
+        }),
+        ("mole_fraction", {
+            "partial_moles": 1,
+            "total_moles": 4
+        }),
+        ("mole_fraction", {
+            "partial_moles": 1,
+            "total_moles": 0
+        }),
+        ("mole_fraction", {
+            "partial_moles": 1e-300,
+            "total_moles": 1e300
+        }),
+        ("clamp", {
+            "value": 5,
+            "lo": 0,
+            "hi": 10
+        }),
+        ("clamp", {
+            "value": -5,
+            "lo": 0,
+            "hi": 10
+        }),
+        ("clamp", {
+            "value": 50,
+            "lo": 0,
+            "hi": 10
+        }),
+        ("clamp", {
+            "value": 5,
+            "lo": 10,
+            "hi": 0
+        }),
+        ("clamp", {
+            "value": 5,
+            "lo": "x",
+            "hi": 0
+        }),
+    ],
+}
+
+NONDETERMINISTIC: set[tuple[str, str]] = {
+    ("CryptoServer", "random_bytes"),
+    ("CryptoServer", "random_hex"),
+    ("CryptoServer", "uuid4"),
+    ("CryptoServer", "random_choice"),
+    ("CryptoServer", "secure_token_urlsafe"),
+    # Random edges, unless p <= 0 or p >= 1.
+    ("GraphServer", "random_erdos_renyi"),
+    # Lists Python sets, whose order for strs follows the per-process hash.
+    ("GraphServer", "graph_complement"),
+}

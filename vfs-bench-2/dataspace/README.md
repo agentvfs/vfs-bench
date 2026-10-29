@@ -15,7 +15,10 @@ Upstream ships its tasks as one 2.9 GB zip, and setup doesn't download all
 of it. It reads only the ported tasks' entries, by HTTP range requests, and
 checks each file against the archive's own `checksums.sha256`. The tasks'
 inputs, gold CSVs and configs land in `state/dataspace/benchmark`, and
-setup also fetches upstream's `evaluation/evaluate.py`.
+setup also fetches upstream's `evaluation/evaluate.py` into
+`state/dataspace/evaluation/`. The tasks are this directory's and the
+Harbor port's (`harbor/tasks/dataspace/`, 45 tasks; see `harbor/README.md`),
+or the task ids named on the command line.
 
 ## How it maps
 

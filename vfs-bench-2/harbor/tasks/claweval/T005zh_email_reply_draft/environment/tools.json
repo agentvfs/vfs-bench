@@ -1,0 +1,43 @@
+[
+ {
+  "name": "gmail",
+  "description": "The gmail service's tools.",
+  "tools": [
+   {
+    "name": "save_draft",
+    "call": "gmail_save_draft",
+    "description": "将邮件保存为草稿",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "to": {
+       "type": "string",
+       "description": "收件人邮箱地址"
+      },
+      "subject": {
+       "type": "string",
+       "description": "邮件主题"
+      },
+      "body": {
+       "type": "string",
+       "description": "邮件正文"
+      },
+      "reply_to_message_id": {
+       "type": "string",
+       "description": "如果是回复邮件，原邮件ID"
+      }
+     },
+     "required": [
+      "to",
+      "subject",
+      "body"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9100/gmail/drafts/save",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

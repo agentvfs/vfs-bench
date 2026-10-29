@@ -1,0 +1,757 @@
+{
+ "_env": [
+  {
+   "name": "TASK_NAME",
+   "value": "social-media-posting"
+  }
+ ],
+ "account": [
+  {
+   "id": 1,
+   "username": "mosi_brand",
+   "password": "demo123",
+   "display_name": "Mosi Brand",
+   "account_type": "company",
+   "bio": null,
+   "avatar_url": null,
+   "banner_url": null,
+   "website_url": null,
+   "location": null,
+   "timezone": "Asia/Shanghai",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00",
+   "last_login_at": null
+  },
+  {
+   "id": 2,
+   "username": "alice",
+   "password": "demo123",
+   "display_name": "Alice",
+   "account_type": "personal",
+   "bio": null,
+   "avatar_url": null,
+   "banner_url": null,
+   "website_url": null,
+   "location": null,
+   "timezone": "America/New_York",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00",
+   "last_login_at": null
+  },
+  {
+   "id": 3,
+   "username": "bob_creator",
+   "password": "demo123",
+   "display_name": "Bob Creator",
+   "account_type": "creator",
+   "bio": null,
+   "avatar_url": null,
+   "banner_url": null,
+   "website_url": null,
+   "location": null,
+   "timezone": "Europe/London",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00",
+   "last_login_at": null
+  },
+  {
+   "id": 4,
+   "username": "carol_ops",
+   "password": "demo123",
+   "display_name": "Carol Ops",
+   "account_type": "personal",
+   "bio": null,
+   "avatar_url": null,
+   "banner_url": null,
+   "website_url": null,
+   "location": null,
+   "timezone": "UTC",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00",
+   "last_login_at": null
+  }
+ ],
+ "post": [
+  {
+   "id": 1,
+   "author_account_id": 1,
+   "content": "Welcome to Mosi Social! This is our official launch post. #MosiLaunch #SocialMedia",
+   "status": "published",
+   "visibility": "public",
+   "moderation_state": "clear",
+   "scheduled_for": null,
+   "scheduled_timezone": null,
+   "published_at": "2026-01-15 09:00:00",
+   "deleted_at": null,
+   "is_pinned": 1,
+   "has_event_cta": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "author_account_id": 1,
+   "content": "Join us at the Mosi Annual Conference 2026! Register now for early bird tickets. #Conference #Tech",
+   "status": "published",
+   "visibility": "public",
+   "moderation_state": "clear",
+   "scheduled_for": null,
+   "scheduled_timezone": null,
+   "published_at": "2026-01-20 10:00:00",
+   "deleted_at": null,
+   "is_pinned": 0,
+   "has_event_cta": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "author_account_id": 2,
+   "content": "Just exploring this new platform. The UI looks clean! #NewPlatform",
+   "status": "published",
+   "visibility": "public",
+   "moderation_state": "clear",
+   "scheduled_for": null,
+   "scheduled_timezone": null,
+   "published_at": "2026-01-22 14:30:00",
+   "deleted_at": null,
+   "is_pinned": 0,
+   "has_event_cta": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "author_account_id": 3,
+   "content": "Check out my latest content creation tips. Thread below! #CreatorTips #Content",
+   "status": "published",
+   "visibility": "public",
+   "moderation_state": "clear",
+   "scheduled_for": null,
+   "scheduled_timezone": null,
+   "published_at": "2026-01-25 11:00:00",
+   "deleted_at": null,
+   "is_pinned": 0,
+   "has_event_cta": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "author_account_id": 1,
+   "content": "Product update: Our new analytics dashboard is now live. #ProductUpdate",
+   "status": "scheduled",
+   "visibility": "public",
+   "moderation_state": "clear",
+   "scheduled_for": "2026-12-01 08:00:00",
+   "scheduled_timezone": null,
+   "published_at": null,
+   "deleted_at": null,
+   "is_pinned": 0,
+   "has_event_cta": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "author_account_id": 2,
+   "content": "Working on a new blog post about social media strategy. Stay tuned!",
+   "status": "draft",
+   "visibility": "public",
+   "moderation_state": "clear",
+   "scheduled_for": null,
+   "scheduled_timezone": null,
+   "published_at": null,
+   "deleted_at": null,
+   "is_pinned": 0,
+   "has_event_cta": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 7,
+   "author_account_id": 3,
+   "content": "Live streaming session tonight at 8PM GMT. Don't miss it! #LiveStream",
+   "status": "published",
+   "visibility": "followers_only",
+   "moderation_state": "clear",
+   "scheduled_for": null,
+   "scheduled_timezone": null,
+   "published_at": "2026-02-01 19:00:00",
+   "deleted_at": null,
+   "is_pinned": 0,
+   "has_event_cta": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 8,
+   "author_account_id": 4,
+   "content": "Internal ops memo: Q2 planning starts next week.",
+   "status": "deleted",
+   "visibility": "public",
+   "moderation_state": "clear",
+   "scheduled_for": null,
+   "scheduled_timezone": null,
+   "published_at": "2026-02-05 09:00:00",
+   "deleted_at": null,
+   "is_pinned": 0,
+   "has_event_cta": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 9,
+   "author_account_id": 1,
+   "content": "Thank you all for 10K followers! Here's a giveaway announcement. #Giveaway #Milestone",
+   "status": "published",
+   "visibility": "public",
+   "moderation_state": "clear",
+   "scheduled_for": null,
+   "scheduled_timezone": null,
+   "published_at": "2026-02-10 12:00:00",
+   "deleted_at": null,
+   "is_pinned": 0,
+   "has_event_cta": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 10,
+   "author_account_id": 2,
+   "content": "Testing the scheduled post feature. This should go live tomorrow morning.",
+   "status": "scheduled",
+   "visibility": "public",
+   "moderation_state": "clear",
+   "scheduled_for": "2026-12-15 07:00:00",
+   "scheduled_timezone": null,
+   "published_at": null,
+   "deleted_at": null,
+   "is_pinned": 0,
+   "has_event_cta": 0,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "post_asset": [
+  {
+   "id": 1,
+   "post_id": 1,
+   "asset_type": "image",
+   "asset_url": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23e0e0e0' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999'%3EImage%3C/text%3E%3C/svg%3E",
+   "preview_text": null,
+   "alt_text": null,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "post_id": 2,
+   "asset_type": "link_preview",
+   "asset_url": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%23f0f0f0' width='400' height='200'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999'%3ELink Preview%3C/text%3E%3C/svg%3E",
+   "preview_text": null,
+   "alt_text": null,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "post_id": 4,
+   "asset_type": "image",
+   "asset_url": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23e0e0e0' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999'%3EImage%3C/text%3E%3C/svg%3E",
+   "preview_text": null,
+   "alt_text": null,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "post_id": 4,
+   "asset_type": "image",
+   "asset_url": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23e0e0e0' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999'%3EImage%3C/text%3E%3C/svg%3E",
+   "preview_text": null,
+   "alt_text": null,
+   "sort_order": 1,
+   "created_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "tag": [
+  {
+   "id": 1,
+   "label_text": "#MosiLaunch",
+   "normalized_name": "mosilaunch",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "label_text": "#SocialMedia",
+   "normalized_name": "socialmedia",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "label_text": "#Conference",
+   "normalized_name": "conference",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "label_text": "#Tech",
+   "normalized_name": "tech",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "label_text": "#NewPlatform",
+   "normalized_name": "newplatform",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "label_text": "#CreatorTips",
+   "normalized_name": "creatortips",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 7,
+   "label_text": "#Content",
+   "normalized_name": "content",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 8,
+   "label_text": "#ProductUpdate",
+   "normalized_name": "productupdate",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 9,
+   "label_text": "#LiveStream",
+   "normalized_name": "livestream",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 10,
+   "label_text": "#Giveaway",
+   "normalized_name": "giveaway",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 11,
+   "label_text": "#Milestone",
+   "normalized_name": "milestone",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "post_tag": [
+  {
+   "id": 1,
+   "post_id": 1,
+   "tag_id": 1,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "post_id": 1,
+   "tag_id": 2,
+   "sort_order": 1,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "post_id": 2,
+   "tag_id": 3,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "post_id": 2,
+   "tag_id": 4,
+   "sort_order": 1,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "post_id": 3,
+   "tag_id": 5,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "post_id": 4,
+   "tag_id": 6,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 7,
+   "post_id": 4,
+   "tag_id": 7,
+   "sort_order": 1,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 8,
+   "post_id": 5,
+   "tag_id": 8,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 9,
+   "post_id": 7,
+   "tag_id": 9,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 10,
+   "post_id": 9,
+   "tag_id": 10,
+   "sort_order": 0,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 11,
+   "post_id": 9,
+   "tag_id": 11,
+   "sort_order": 1,
+   "created_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "post_action_log": [
+  {
+   "id": 1,
+   "post_id": 1,
+   "actor_account_id": 1,
+   "action_type": "published",
+   "old_value": null,
+   "new_value": "published",
+   "note": null,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "post_id": 2,
+   "actor_account_id": 1,
+   "action_type": "published",
+   "old_value": null,
+   "new_value": "published",
+   "note": null,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "post_id": 3,
+   "actor_account_id": 2,
+   "action_type": "published",
+   "old_value": null,
+   "new_value": "published",
+   "note": null,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "post_id": 4,
+   "actor_account_id": 3,
+   "action_type": "published",
+   "old_value": null,
+   "new_value": "published",
+   "note": null,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "post_id": 7,
+   "actor_account_id": 3,
+   "action_type": "published",
+   "old_value": null,
+   "new_value": "published",
+   "note": null,
+   "created_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "post_id": 9,
+   "actor_account_id": 1,
+   "action_type": "published",
+   "old_value": null,
+   "new_value": "published",
+   "note": null,
+   "created_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "comment": [
+  {
+   "id": 1,
+   "post_id": 1,
+   "author_account_id": 2,
+   "author_name": "Alice",
+   "body": "Great launch! Looking forward to using this platform.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "post_id": 1,
+   "author_account_id": 3,
+   "author_name": "Bob Creator",
+   "body": "Thanks Alice! Excited to create content here.",
+   "status": "visible",
+   "parent_comment_id": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "post_id": 1,
+   "author_account_id": 4,
+   "author_name": "Carol Ops",
+   "body": "Will there be analytics tools for brands?",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "post_id": 1,
+   "author_account_id": 1,
+   "author_name": "Mosi Brand",
+   "body": "Yes! Check out our Analytics page.",
+   "status": "visible",
+   "parent_comment_id": 3,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "post_id": 2,
+   "author_account_id": 2,
+   "author_name": "Alice",
+   "body": "Already registered! Can't wait for the conference.",
+   "status": "visible",
+   "parent_comment_id": null,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "follow_relation": [
+  {
+   "id": 1,
+   "follower_account_id": 2,
+   "target_account_id": 1,
+   "status": "following",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "follower_account_id": 3,
+   "target_account_id": 1,
+   "status": "following",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "follower_account_id": 2,
+   "target_account_id": 3,
+   "status": "following",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "follower_account_id": 4,
+   "target_account_id": 1,
+   "status": "following",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "follower_account_id": 4,
+   "target_account_id": 2,
+   "status": "blocked",
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "keyword_rule": [
+  {
+   "id": 1,
+   "owner_account_id": 1,
+   "phrase": "spam",
+   "match_mode": "contains",
+   "scope": "post",
+   "action": "block",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "owner_account_id": 1,
+   "phrase": "fake news",
+   "match_mode": "contains",
+   "scope": "post",
+   "action": "hide",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "owner_account_id": 1,
+   "phrase": "scam",
+   "match_mode": "exact",
+   "scope": "comment",
+   "action": "block",
+   "is_active": 1,
+   "created_at": "2026-04-03 09:00:00",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "post_metric": [
+  {
+   "id": 1,
+   "post_id": 1,
+   "impressions": 15420,
+   "likes": 892,
+   "replies": 45,
+   "reposts": 234,
+   "clicks": 120,
+   "profile_visits": 567,
+   "new_followers": 45,
+   "last_synced_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 2,
+   "post_id": 2,
+   "impressions": 8750,
+   "likes": 456,
+   "replies": 12,
+   "reposts": 89,
+   "clicks": 340,
+   "profile_visits": 234,
+   "new_followers": 23,
+   "last_synced_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 3,
+   "post_id": 3,
+   "impressions": 3200,
+   "likes": 178,
+   "replies": 3,
+   "reposts": 45,
+   "clicks": 12,
+   "profile_visits": 89,
+   "new_followers": 8,
+   "last_synced_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 4,
+   "post_id": 4,
+   "impressions": 5600,
+   "likes": 312,
+   "replies": 8,
+   "reposts": 67,
+   "clicks": 23,
+   "profile_visits": 156,
+   "new_followers": 15,
+   "last_synced_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 5,
+   "post_id": 5,
+   "impressions": 0,
+   "likes": 0,
+   "replies": 0,
+   "reposts": 0,
+   "clicks": 0,
+   "profile_visits": 0,
+   "new_followers": 0,
+   "last_synced_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 6,
+   "post_id": 7,
+   "impressions": 2100,
+   "likes": 145,
+   "replies": 6,
+   "reposts": 34,
+   "clicks": 8,
+   "profile_visits": 67,
+   "new_followers": 5,
+   "last_synced_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 7,
+   "post_id": 9,
+   "impressions": 12300,
+   "likes": 756,
+   "replies": 28,
+   "reposts": 156,
+   "clicks": 89,
+   "profile_visits": 445,
+   "new_followers": 34,
+   "last_synced_at": "2026-04-03 09:00:00"
+  },
+  {
+   "id": 8,
+   "post_id": 10,
+   "impressions": 0,
+   "likes": 0,
+   "replies": 0,
+   "reposts": 0,
+   "clicks": 0,
+   "profile_visits": 0,
+   "new_followers": 0,
+   "last_synced_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "event_campaign": [
+  {
+   "id": 1,
+   "post_id": 2,
+   "event_title": "Mosi Annual Conference 2026",
+   "start_at": "2026-06-15 09:00:00",
+   "end_at": "2026-06-17 18:00:00",
+   "registration_url": "https://conference.mosi.inc/register",
+   "registrations_count": 156,
+   "attendance_goal": 500,
+   "status": "open",
+   "updated_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "post_like": [
+  {
+   "id": 1,
+   "post_id": 1,
+   "account_id": 2,
+   "created_at": "2026-04-03 09:00:00"
+  }
+ ],
+ "post_repost": []
+}

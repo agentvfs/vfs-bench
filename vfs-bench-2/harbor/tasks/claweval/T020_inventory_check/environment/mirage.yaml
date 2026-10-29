@@ -1,0 +1,38 @@
+# T020_inventory_check, on vfsbench_harbor's mirage environment (harbor/claweval.py writes it).
+#
+# Each service is its kit fake at upstream's port, its tools CLIs
+# (harbor/tools.ts), and the verifier's VM gets upstream's grader and
+# the judge's host (claweval_grade.py).
+fakes:
+  claweval_inventory:
+    fixture: kit/claweval_inventory.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports:
+    - 9108
+copy:
+  /workspace: workspace/
+tools:
+  file: tools.json
+  dispatches: /var/lib/mock-data/claweval/dispatches.jsonl
+workspace:
+  profiles:
+    default:
+      commands:
+        deny:
+        - commands:
+          - curl
+          - wget
+          reason: the services are reached through their tools
+  clis:
+    inventory:
+      cli: inventory
+      config:
+        url: ${CLAWEVAL_INVENTORY_URL}
+verifier:
+  copy:
+    /opt/claweval/src: ${STATE}/claweval/src/src
+    /opt/claweval/site: ${STATE}/harbor/site/claweval
+    /opt/claweval/tasks/T020_inventory_check: ${STATE}/claweval/src/tasks/T020_inventory_check
+    /opt/claweval/tasks/T019zh_inventory_check: ${STATE}/claweval/src/tasks/T019zh_inventory_check
+  egress:
+  - OPENAI_BASE_URL

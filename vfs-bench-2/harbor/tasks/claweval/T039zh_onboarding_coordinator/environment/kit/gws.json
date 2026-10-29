@@ -1,0 +1,178 @@
+{
+ "labels": [
+  {
+   "id": "INBOX",
+   "name": "INBOX",
+   "type": "system"
+  },
+  {
+   "id": "SENT",
+   "name": "SENT",
+   "type": "system"
+  },
+  {
+   "id": "DRAFT",
+   "name": "DRAFT",
+   "type": "system"
+  },
+  {
+   "id": "UNREAD",
+   "name": "UNREAD",
+   "type": "system"
+  },
+  {
+   "id": "IMPORTANT",
+   "name": "IMPORTANT",
+   "type": "system"
+  },
+  {
+   "id": "STARRED",
+   "name": "STARRED",
+   "type": "system"
+  },
+  {
+   "id": "TRASH",
+   "name": "TRASH",
+   "type": "system"
+  },
+  {
+   "id": "SPAM",
+   "name": "SPAM",
+   "type": "system"
+  },
+  {
+   "id": "CATEGORY_UPDATES",
+   "name": "CATEGORY_UPDATES",
+   "type": "system"
+  }
+ ],
+ "messages": [
+  {
+   "id": "msg_2001",
+   "threadId": "msg_2001",
+   "internalDate": 1772676000000,
+   "bodyText": "Hi，\n\n下周一（3月9日）有3位新员工入职，请帮忙协调安排：\n\n1. **王小明** — 工程部，前端开发工程师\n   - 部门经理：张伟\n   - 需要：MacBook Pro、工位安排、GitLab账号\n   - 培训：需要参加新员工入职培训（建议10:00-12:00）\n\n2. **刘晓婷** — 市场部，市场专员\n   - 部门经理：张伟\n   - 需要：MacBook Air、工位安排、营销工具账号\n   - 培训：同上\n\n3. **陈浩然** — 数据部，数据工程师\n   - 需要：高配工作站、工位安排、数据库访问权限\n   - 培训：同上\n   - 特殊：需要安全审查通过后才能获得数据库权限\n\n请注意：对于没有部门经理的部门，入职通知只保存草稿，不要直接发送。\n\n谢谢！\n王芳",
+   "headers": [
+    {
+     "name": "From",
+     "value": "wangfang@company.com"
+    },
+    {
+     "name": "To",
+     "value": "user@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "下周一新员工入职安排"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 05 Mar 2026 10:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "IMPORTANT"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  },
+  {
+   "id": "msg_2002",
+   "threadId": "msg_2002",
+   "internalDate": 1772690400000,
+   "bodyText": "通知一下，MacBook Pro目前库存充足，但MacBook Air缺货，预计3月10日到货。高配工作站有库存。",
+   "headers": [
+    {
+     "name": "From",
+     "value": "chenjing@company.com"
+    },
+    {
+     "name": "To",
+     "value": "user@company.com"
+    },
+    {
+     "name": "Subject",
+     "value": "IT设备库存更新"
+    },
+    {
+     "name": "Date",
+     "value": "Thu, 05 Mar 2026 14:00:00 +0800"
+    }
+   ],
+   "labels": [
+    {
+     "labelId": "INBOX"
+    },
+    {
+     "labelId": "UNREAD"
+    }
+   ]
+  }
+ ],
+ "counters": [
+  {
+   "kind": "msg",
+   "n": 2
+  },
+  {
+   "kind": "event",
+   "n": 3
+  }
+ ],
+ "calendars": [
+  {
+   "id": "integ@example.com",
+   "summary": "me@company.com",
+   "timeZone": "Asia/Shanghai",
+   "accessRole": "owner",
+   "primary": true,
+   "events": [
+    {
+     "id": "evt_501",
+     "status": "confirmed",
+     "summary": "Tech Review会议",
+     "location": "会议室B",
+     "startDateTime": "2026-03-09T10:30:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-09T11:30:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"email\": \"liming@company.com\", \"organizer\": true}, {\"email\": \"zhangwei_eng@company.com\"}]",
+     "created": "2026-03-05T09:00:00.000Z",
+     "updated": "2026-03-05T09:00:00.000Z"
+    },
+    {
+     "id": "evt_502",
+     "status": "confirmed",
+     "summary": "全员周会",
+     "location": "大会议室",
+     "startDateTime": "2026-03-09T09:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-09T09:30:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"email\": \"ceo@company.com\", \"organizer\": true}, {\"email\": \"all@company.com\"}]",
+     "created": "2026-03-05T09:00:00.000Z",
+     "updated": "2026-03-05T09:00:00.000Z"
+    },
+    {
+     "id": "evt_503",
+     "status": "confirmed",
+     "summary": "市场策略讨论",
+     "location": "会议室A",
+     "startDateTime": "2026-03-09T14:00:00+08:00",
+     "startTimeZone": "Asia/Shanghai",
+     "endDateTime": "2026-03-09T15:00:00+08:00",
+     "endTimeZone": "Asia/Shanghai",
+     "attendees": "[{\"email\": \"zhangwei_mkt@company.com\", \"organizer\": true}]",
+     "created": "2026-03-05T09:00:00.000Z",
+     "updated": "2026-03-05T09:00:00.000Z"
+    }
+   ]
+  }
+ ]
+}

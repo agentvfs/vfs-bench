@@ -1,0 +1,167 @@
+// The mintdiet fake's store: LiveClawBench's mint-diet mock (Mosi-AI/LiveClawBench
+// @ 303dc77, MIT, mock-platform/mocks/mint-diet), one SQLite file per run.
+//
+// Generated with `prisma db pull` from upstream's own CREATE TABLE and
+// CREATE INDEX statements (each fixture's `_schema`), so each table, column,
+// key, foreign key and index is upstream's, by name and in order, and
+// upstream's verify.py and its own statements read a run's file as they
+// read upstream's. Column types are as SQLite keeps them (text, integer,
+// real); a default of SQLite's 'now' is `datetime('now')`, which each run
+// answers with its clock. Prisma cannot state upstream's CHECKs: each run
+// gets them as triggers (mocks/upstream/checks.ts). The last four models
+// are the fake's own (mocks/upstream).
+//
+// No tenant column: a run is one world, as upstream's mock is one.
+
+datasource db {
+  provider = "sqlite"
+  url      = env("INTEG_DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "client"
+}
+
+model daily_log {
+  id                  Int          @id @default(autoincrement())
+  log_date            String       @unique
+  calorie_budget_kcal Float        @default(1500)
+  total_calories_kcal Float        @default(0)
+  total_protein_g     Float        @default(0)
+  total_carbs_g       Float        @default(0)
+  total_fat_g         Float        @default(0)
+  created_at          String       @default(dbgenerated("(strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime'))"))
+  updated_at          String       @default(dbgenerated("(strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime'))"))
+  food_entry          food_entry[]
+}
+
+model food_catalog {
+  id                 Int          @id @default(autoincrement())
+  name               String
+  serving_size_value Float
+  serving_size_unit  String
+  calories_kcal      Float?
+  protein_g          Float?
+  carbs_g            Float?
+  fat_g              Float?
+  created_at         String       @default(dbgenerated("(strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime'))"))
+  updated_at         String       @default(dbgenerated("(strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime'))"))
+  food_entry         food_entry[]
+
+  @@index([name], map: "idx_food_catalog_name")
+}
+
+model food_entry {
+  id              Int           @id @default(autoincrement())
+  daily_log_id    Int
+  food_catalog_id Int?
+  meal_slot       String
+  food_name       String
+  quantity_value  Float
+  quantity_unit   String
+  calories_kcal   Float         @default(0)
+  protein_g       Float         @default(0)
+  carbs_g         Float         @default(0)
+  fat_g           Float         @default(0)
+  sort_order      Int           @default(0)
+  created_at      String        @default(dbgenerated("(strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime'))"))
+  updated_at      String        @default(dbgenerated("(strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime'))"))
+  food_catalog    food_catalog? @relation(fields: [food_catalog_id], references: [id], onUpdate: NoAction)
+  daily_log       daily_log     @relation(fields: [daily_log_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([daily_log_id, meal_slot, sort_order], map: "idx_food_entry_slot")
+}
+
+model ingredient_item {
+  id             Int       @id @default(autoincrement())
+  meal_plan_id   Int
+  name           String
+  quantity_value Float     @default(0)
+  quantity_unit  String    @default("g")
+  notes          String?
+  created_at     String    @default(dbgenerated("(strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime'))"))
+  updated_at     String    @default(dbgenerated("(strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime'))"))
+  meal_plan      meal_plan @relation(fields: [meal_plan_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([meal_plan_id], map: "idx_ingredient_plan")
+}
+
+model meal_plan {
+  id                   Int               @id @default(autoincrement())
+  title                String
+  start_date           String
+  end_date             String
+  status               String            @default("draft")
+  target_calories_kcal Float?
+  notes                String?
+  created_at           String            @default(dbgenerated("(strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime'))"))
+  updated_at           String            @default(dbgenerated("(strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime'))"))
+  ingredient_item      ingredient_item[]
+  meal_plan_day        meal_plan_day[]
+
+  @@index([start_date, end_date], map: "idx_meal_plan_dates")
+}
+
+model meal_plan_day {
+  id             Int              @id @default(autoincrement())
+  meal_plan_id   Int
+  plan_date      String
+  created_at     String           @default(dbgenerated("(strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime'))"))
+  updated_at     String           @default(dbgenerated("(strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime'))"))
+  meal_plan      meal_plan        @relation(fields: [meal_plan_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  meal_plan_item meal_plan_item[]
+
+  @@unique([meal_plan_id, plan_date])
+}
+
+model meal_plan_item {
+  id               Int           @id @default(autoincrement())
+  meal_plan_day_id Int
+  meal_slot        String
+  dish_name        String
+  notes            String?
+  sort_order       Int           @default(0)
+  created_at       String        @default(dbgenerated("(strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime'))"))
+  updated_at       String        @default(dbgenerated("(strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime'))"))
+  meal_plan_day    meal_plan_day @relation(fields: [meal_plan_day_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+// The environment upstream's mock reads from its process (`TASK_NAME`),
+// which a fake every task of a job shares cannot take from its own: each
+// task's fixture states it.
+model vfsbench_env {
+  name  String @id
+  value String
+
+  @@map("_env")
+}
+
+// Each file the mock keeps on disk upstream, by its path in the image, and
+// the task's assets: text as it is, anything else as base64.
+model vfsbench_file {
+  path     String @id
+  data     String
+  encoding String @default("utf8")
+
+  @@map("_file")
+}
+
+// The rows of upstream's tables Prisma cannot key (marked @@ignore above),
+// which the fake inserts itself, in order, once the kit has seeded the rest.
+model vfsbench_row {
+  seq   Int    @id
+  table String
+  data  String
+
+  @@map("_row")
+}
+
+// Upstream's CREATE TABLE and CREATE INDEX statements, as its seed ran them.
+model vfsbench_schema {
+  name String @id
+  type String
+  sql  String
+
+  @@map("_schema")
+}

@@ -1,0 +1,281 @@
+// The social fake's store: LiveClawBench's social mock (Mosi-AI/LiveClawBench
+// @ 303dc77, MIT, mock-platform/mocks/social/src/db.ts), one SQLite file per
+// run.
+//
+// Each table and column is upstream's, by name, type, nullability, default,
+// key, foreign key action and index, in upstream's column order, so
+// upstream's verify.py reads a run's file unchanged and upstream's own
+// statements, which the fake runs (app.ts), find the same rows in the same
+// order. Fields keep upstream's snake_case column names; only the models are
+// renamed, with @@map. Prisma cannot state upstream's CHECK constraints;
+// each run's file gets them as triggers that abort the same writes
+// (fake.ts). Upstream's foreign keys have no ON UPDATE action, which
+// `onUpdate: NoAction` states.
+//
+// Upstream's timestamps default to SQLite's `datetime('now')`, which the
+// fake's connection answers with the run's frozen clock (sqlite.ts).
+// `_env` is the fake's own (below).
+//
+// No tenant column: a run is one platform's world (tenantKind 'none'), as
+// upstream's mock is.
+
+datasource db {
+  provider = "sqlite"
+  url      = env("INTEG_DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "client"
+}
+
+// The environment upstream's mock reads (`TASK_NAME`, for its two faults),
+// which one fake that every task of a job shares cannot take from its own:
+// each task's fixture states it. The table is the fake's own; upstream has
+// none.
+model RunEnv {
+  name  String @id
+  value String
+
+  @@map("_env")
+}
+
+model Account {
+  id            Int     @id @default(autoincrement())
+  username      String  @unique
+  password      String
+  display_name  String
+  account_type  String  @default("personal")
+  bio           String?
+  avatar_url    String?
+  banner_url    String?
+  website_url   String?
+  location      String?
+  timezone      String  @default("UTC")
+  is_active     Int     @default(1)
+  created_at    String  @default(dbgenerated("(datetime('now'))"))
+  updated_at    String  @default(dbgenerated("(datetime('now'))"))
+  last_login_at String?
+
+  posts       Post[]
+  actions     PostActionLog[]
+  comments    Comment[]
+  following   FollowRelation[] @relation("follower")
+  followers   FollowRelation[] @relation("target")
+  rules       KeywordRule[]
+  likes       PostLike[]
+  reposts     PostRepost[]
+
+  @@map("account")
+}
+
+model Post {
+  id                 Int     @id @default(autoincrement())
+  author_account_id  Int
+  content            String
+  status             String  @default("draft")
+  visibility         String  @default("public")
+  moderation_state   String  @default("clear")
+  scheduled_for      String?
+  scheduled_timezone String?
+  published_at       String?
+  deleted_at         String?
+  is_pinned          Int     @default(0)
+  has_event_cta      Int     @default(0)
+  created_at         String  @default(dbgenerated("(datetime('now'))"))
+  updated_at         String  @default(dbgenerated("(datetime('now'))"))
+
+  author   Account          @relation(fields: [author_account_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  assets   PostAsset[]
+  tags     PostTag[]
+  actions  PostActionLog[]
+  comments Comment[]
+  metric   PostMetric?
+  campaign EventCampaign?
+  likes    PostLike[]
+  reposts  PostRepost[]
+
+  @@index([author_account_id], map: "idx_post_author")
+  @@index([author_account_id, status, created_at(sort: Desc)], map: "idx_post_author_status_created")
+  @@index([scheduled_for], map: "idx_post_scheduled")
+  @@map("post")
+}
+
+model PostAsset {
+  id           Int     @id @default(autoincrement())
+  post_id      Int
+  asset_type   String
+  asset_url    String
+  preview_text String?
+  alt_text     String?
+  sort_order   Int     @default(0)
+  created_at   String  @default(dbgenerated("(datetime('now'))"))
+
+  post Post @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("post_asset")
+}
+
+model Tag {
+  id              Int    @id @default(autoincrement())
+  label_text      String
+  normalized_name String @unique
+  created_at      String @default(dbgenerated("(datetime('now'))"))
+  updated_at      String @default(dbgenerated("(datetime('now'))"))
+
+  posts PostTag[]
+
+  @@map("tag")
+}
+
+model PostTag {
+  id         Int    @id @default(autoincrement())
+  post_id    Int
+  tag_id     Int
+  sort_order Int    @default(0)
+  created_at String @default(dbgenerated("(datetime('now'))"))
+
+  post Post @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  tag  Tag  @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([post_id], map: "idx_post_tag_post")
+  @@index([tag_id], map: "idx_post_tag_tag")
+  @@map("post_tag")
+}
+
+model PostActionLog {
+  id               Int     @id @default(autoincrement())
+  post_id          Int
+  actor_account_id Int?
+  action_type      String
+  old_value        String?
+  new_value        String?
+  note             String?
+  created_at       String  @default(dbgenerated("(datetime('now'))"))
+
+  post  Post     @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  actor Account? @relation(fields: [actor_account_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+
+  @@map("post_action_log")
+}
+
+model Comment {
+  id                Int     @id @default(autoincrement())
+  post_id           Int
+  author_account_id Int?
+  author_name       String
+  body              String
+  status            String  @default("visible")
+  parent_comment_id Int?
+  created_at        String  @default(dbgenerated("(datetime('now'))"))
+  updated_at        String  @default(dbgenerated("(datetime('now'))"))
+
+  post    Post      @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  author  Account?  @relation(fields: [author_account_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  parent  Comment?  @relation("replies", fields: [parent_comment_id], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  replies Comment[] @relation("replies")
+
+  @@index([post_id], map: "idx_comment_post")
+  @@index([parent_comment_id], map: "idx_comment_parent")
+  @@index([author_account_id], map: "idx_comment_author")
+  @@map("comment")
+}
+
+model FollowRelation {
+  id                  Int    @id @default(autoincrement())
+  follower_account_id Int
+  target_account_id   Int
+  status              String @default("following")
+  created_at          String @default(dbgenerated("(datetime('now'))"))
+  updated_at          String @default(dbgenerated("(datetime('now'))"))
+
+  follower Account @relation("follower", fields: [follower_account_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  target   Account @relation("target", fields: [target_account_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([follower_account_id, target_account_id])
+  @@index([follower_account_id, target_account_id], map: "idx_follow_relation")
+  @@map("follow_relation")
+}
+
+model KeywordRule {
+  id               Int    @id @default(autoincrement())
+  owner_account_id Int
+  phrase           String
+  match_mode       String @default("contains")
+  scope            String @default("post")
+  action           String @default("warn")
+  is_active        Int    @default(1)
+  created_at       String @default(dbgenerated("(datetime('now'))"))
+  updated_at       String @default(dbgenerated("(datetime('now'))"))
+
+  owner Account @relation(fields: [owner_account_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([owner_account_id, phrase, scope])
+  @@index([owner_account_id], map: "idx_keyword_rule_owner")
+  @@index([owner_account_id, is_active], map: "idx_keyword_rule_owner_active")
+  @@map("keyword_rule")
+}
+
+model PostMetric {
+  id             Int    @id @default(autoincrement())
+  post_id        Int    @unique
+  impressions    Int    @default(0)
+  likes          Int    @default(0)
+  replies        Int    @default(0)
+  reposts        Int    @default(0)
+  clicks         Int    @default(0)
+  profile_visits Int    @default(0)
+  new_followers  Int    @default(0)
+  last_synced_at String @default(dbgenerated("(datetime('now'))"))
+
+  post Post @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("post_metric")
+}
+
+model EventCampaign {
+  id                  Int     @id @default(autoincrement())
+  post_id             Int     @unique
+  event_title         String
+  start_at            String
+  end_at              String?
+  registration_url    String
+  registrations_count Int     @default(0)
+  attendance_goal     Int     @default(0)
+  status              String  @default("draft")
+  updated_at          String  @default(dbgenerated("(datetime('now'))"))
+
+  post Post @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("event_campaign")
+}
+
+model PostLike {
+  id         Int    @id @default(autoincrement())
+  post_id    Int
+  account_id Int
+  created_at String @default(dbgenerated("(datetime('now'))"))
+
+  post    Post    @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  account Account @relation(fields: [account_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([post_id, account_id])
+  @@index([post_id], map: "idx_post_like_post")
+  @@index([account_id], map: "idx_post_like_account")
+  @@map("post_like")
+}
+
+model PostRepost {
+  id         Int    @id @default(autoincrement())
+  post_id    Int
+  account_id Int
+  created_at String @default(dbgenerated("(datetime('now'))"))
+
+  post    Post    @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  account Account @relation(fields: [account_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([post_id, account_id])
+  @@index([post_id], map: "idx_post_repost_post")
+  @@index([account_id], map: "idx_post_repost_account")
+  @@map("post_repost")
+}

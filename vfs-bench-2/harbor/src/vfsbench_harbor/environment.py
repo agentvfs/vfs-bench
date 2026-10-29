@@ -17,12 +17,16 @@ downloads are copies into and out of the mounts' host directories.
 
 One daemon per trial keeps trials apart: each has its own network (its
 ``localhost:<port>`` reaches only its own mocks, or its own runs of the
-shared fakes), event loop and crashes. ``--ek daemon_url=<url>`` points the
-environment at a shared daemon instead, which cannot route each trial to
-its own mocks until Mirage has a per-workspace network map (see the
-README).
+shared fakes), event loop and crashes. Each daemon also listens for SSH on
+the loopback, for the job's key alone, which is how a coding agent on the
+host runs its tools in the workspace (agents.py).
+``--ek daemon_url=<url>`` points the environment at a shared daemon
+instead, which cannot route each trial to its own mocks until Mirage has a
+per-workspace network map (see the README).
 """
 import asyncio
+import atexit
+import functools
 import json
 import os
 import re
@@ -31,8 +35,12 @@ import shutil
 import signal
 import socket
 import sqlite3
+import subprocess
+import tempfile
 import time
+from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
+from urllib.parse import quote
 
 import httpx
 import yaml
@@ -59,6 +67,10 @@ MODEL_ENV = re.compile(r".*_API_KEY|OPENAI_BASE_URL|OPENAI_API_BASE")
 NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 SQLITE = b"SQLite format 3\x00"
 DONE = {"done", "failed", "canceled"}
+
+# The characters JavaScript's encodeURIComponent leaves as they are, as the
+# fake escapes a file's path (mocks/upstream/fake.ts).
+URI_SAFE = "-_.!~*'()"
 
 
 def _free_port() -> int:
@@ -97,6 +109,25 @@ def _snapshot(view: Path, live: Path) -> None:
     os.replace(temp, view)
 
 
+@functools.cache
+def ssh_key() -> tuple[Path, Path]:
+    """The job's SSH key and the authorized_keys file holding it: one
+    for the Harbor process, removed when it exits. Every trial's daemon
+    admits it, and nothing else, on its own loopback port."""
+    directory = Path(tempfile.mkdtemp(prefix="vfsbench-ssh-"))
+    atexit.register(shutil.rmtree, directory, ignore_errors=True)
+    key = directory / "id_ed25519"
+    subprocess.run([
+        "ssh-keygen", "-q", "-t", "ed25519", "-N", "", "-C", "vfsbench-harbor",
+        "-f",
+        str(key)
+    ],
+                   check=True)
+    authorized = directory / "authorized_keys"
+    shutil.copyfile(key.with_suffix(".pub"), authorized)
+    return key, authorized
+
+
 class MirageEnvironment(BaseEnvironment):
     """A trial's environment as a workspace on a Mirage daemon.
 
@@ -118,10 +149,17 @@ class MirageEnvironment(BaseEnvironment):
         self._client: httpx.AsyncClient | None = None
         self._workspace_id = ""
         self._mounts: dict[str, dict[str, str]] = {}
+        self._verifier: dict = {}
         self._state: list[tuple[Path, Path]] = []
         self._routes: dict[str, str] = {}
         self._env: dict[str, str] = {}
         self._runs: list[fakes.Run] = []
+        self._url = ""
+        self._ssh_port: int | None = None
+        # The run's epoch and when the trial started, in ms, which together
+        # are its clock: None where the task has no fakes, and the host's.
+        self._epoch: int | None = None
+        self._started = 0
         # One refresh at a time: overlapping ones would share each state
         # file's temporary copy.
         self._refreshing = asyncio.Lock()
@@ -207,7 +245,7 @@ class MirageEnvironment(BaseEnvironment):
         self._processes.append(process)
         return process
 
-    async def _open_runs(self) -> dict[str, dict[str, str]]:
+    async def _open_runs(self) -> dict[str, dict]:
         """Seed this trial's run on each shared fake its mirage.yaml names.
 
         Each fake starts on the first trial that needs it, seeded from that
@@ -218,20 +256,32 @@ class MirageEnvironment(BaseEnvironment):
         shared = fakes.pool()
         name = fakes.run_name(self.session_id)
         task = self.environment_dir.parent.name
-        runs: dict[str, dict[str, str]] = {}
+        runs: dict[str, dict] = {}
         for service, block in (spec.get("fakes") or {}).items():
             fixture = shared.register(service, task,
                                       self.environment_dir / block["fixture"])
             fake = await asyncio.to_thread(shared.fake,
                                            service, fixture, self._node,
                                            self._host_env(), self._fake_logs)
+            # A fake's `extras` may name the trial's run dir, `${RUN_DIR}`.
+            extras = json.loads(
+                json.dumps(block.get("extras")
+                           or {}).replace("${RUN_DIR}", str(self._run_dir)))
             run = await shared.open(fake, name, fixture, block.get("epoch"),
-                                    block.get("faults"))
+                                    block.get("faults"), extras)
             self._runs.append(run)
             runs[service] = {"url": run.url, "db": str(run.db)}
+            # Files a fake keeps beside the run's SQLite as upstream's mock
+            # keeps them on disk (mocks/upstream), by the workspace path
+            # the task reads each at: `<run>.db.files/<path, escaped>`.
+            if block.get("files"):
+                runs[service]["files"] = {
+                    view: f"{run.db}.files/{quote(path, safe=URI_SAFE)}"
+                    for view, path in block["files"].items()
+                }
         return runs
 
-    async def _plan(self, runs: dict[str, dict[str, str]]) -> dict:
+    async def _plan(self, runs: dict[str, dict]) -> dict:
         """Start the mocks and read the plan ``mocks.ts`` writes."""
         mocks = await self._spawn(
             "mocks",
@@ -257,10 +307,13 @@ class MirageEnvironment(BaseEnvironment):
                 return json.loads(
                     Path(line.removeprefix("PLAN=").strip()).read_text())
 
-    async def _start_daemon(self, routes: dict[str, str],
-                            allow: list[str]) -> str:
-        """Start the trial's own daemon, routing its network; wait for it."""
+    async def _start_daemon(self, routes: dict[str, str], allow: list[str],
+                            tools: dict | None) -> str:
+        """Start the trial's own daemon, routing its network and with the
+        task's tools as CLIs, if it has some; wait for it."""
         port = _free_port()
+        self._ssh_port = _free_port()
+        _, authorized = ssh_key()
         daemon = await self._spawn(
             "daemon",
             self._node,
@@ -275,10 +328,24 @@ class MirageEnvironment(BaseEnvironment):
                 str(self._run_dir / "mirage-home"),
                 "MIRAGE_DAEMON_PORT":
                 str(port),
+                "MIRAGE_SSH_HOST":
+                "127.0.0.1",
+                "MIRAGE_SSH_PORT":
+                str(self._ssh_port),
+                "MIRAGE_SSH_AUTHORIZED_KEYS":
+                str(authorized),
                 "VFSBENCH_ROUTES":
                 json.dumps(routes),
                 "VFSBENCH_ALLOW":
                 json.dumps(allow),
+                **({} if tools is None else {
+                       "VFSBENCH_TOOLS": tools["file"],
+                       "VFSBENCH_DISPATCHES": tools["dispatches"],
+                   }),
+                **({} if self._epoch is None else {
+                       "VFSBENCH_EPOCH": str(self._epoch),
+                       "VFSBENCH_STARTED": str(self._started),
+                   }),
             },
         )
         url = f"http://127.0.0.1:{port}"
@@ -311,6 +378,12 @@ class MirageEnvironment(BaseEnvironment):
         runs = await self._open_runs() if self._mirage_yaml.is_file() else {}
         plan = await self._plan(runs)
         self._mounts = plan["mounts"]
+        self._verifier = plan.get("verifier") or {}
+        if plan.get("epoch"):
+            self._epoch = int(
+                datetime.fromisoformat(plan["epoch"].replace(
+                    "Z", "+00:00")).timestamp() * 1000)
+            self._started = int(time.time() * 1000)
         # Where Harbor's agents and verifier write, which Docker mounts.
         paths = EnvironmentPaths.for_os(self.os)
         for path in (paths.agent_dir, paths.verifier_dir, paths.artifacts_dir):
@@ -325,7 +398,9 @@ class MirageEnvironment(BaseEnvironment):
         # A mount or CLI reaches its service at the trial's run directly,
         # so these stay reachable with the network off.
         allow = plan.get("allow", [])
-        url = self._daemon_url or await self._start_daemon(routes, allow)
+        url = self._daemon_url or await self._start_daemon(
+            routes, allow, plan.get("tools"))
+        self._url = url
         self._client = httpx.AsyncClient(base_url=url,
                                          timeout=httpx.Timeout(60, read=None))
         self._workspace_id = re.sub(r"[^A-Za-z0-9_-]", "-", self.session_id)
@@ -488,6 +563,41 @@ class MirageEnvironment(BaseEnvironment):
     def container_env(self) -> dict[str, str]:
         """The environment every command sees, as the container's ``ENV``."""
         return dict(self._env)
+
+    @property
+    def ssh(self) -> dict | None:
+        """How an agent on the host reaches the workspace over SSH: the
+        trial's daemon's loopback port, the workspace as the user, and the
+        job's key. None on a daemon the environment did not start."""
+        if self._ssh_port is None:
+            return None
+        return {
+            "host": "127.0.0.1",
+            "port": self._ssh_port,
+            "user": self._workspace_id,
+            "key": str(ssh_key()[0]),
+        }
+
+    def now(self) -> datetime:
+        """The trial's time, as its workspace and services read it: the
+        run's epoch when the trial started, moving on since; the host's
+        where the task has no epoch."""
+        now = time.time() * 1000
+        if self._epoch is not None:
+            now += self._epoch - self._started
+        return datetime.fromtimestamp(now / 1000, timezone.utc)
+
+    @property
+    def mcp_url(self) -> str:
+        """The workspace's MCP endpoint on its daemon (streamable HTTP)."""
+        return f"{self._url}/v1/workspaces/{self._workspace_id}/mcp"
+
+    @property
+    def verifier(self) -> dict:
+        """What the task gives a verifier outside the workspace besides its
+        files (mirage.ts's ``Verifier``): host directories to copy in, by VM
+        path, and the variables whose URLs' hosts it reaches."""
+        return self._verifier
 
     @property
     def workdir(self) -> str:

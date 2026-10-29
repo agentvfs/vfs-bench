@@ -1,0 +1,59 @@
+# The ComplexMCP tasks (harbor/tasks/complexmcp/, harbor/complexmcp.py writes
+# them), each verifier in a microVM of its own (microsandbox's msb): upstream's
+# judge, in CPython with python-Levenshtein, reads each app's login and logout
+# from the trial's fakes at upstream's ports. From vfs-bench-2/, after
+# `uv run --project complexmcp python -I complexmcp/setup.py` and
+# `uv run --project complexmcp python -I harbor/complexmcp.py --site`:
+#   uv run --project harbor harbor run -c harbor/complexmcp.yaml -a oracle -n 8 -o state/harbor/jobs-complexmcp
+environment:
+  import_path: vfsbench_harbor:MirageEnvironment
+verifier:
+  import_path: vfsbench_harbor:MicrosandboxVerifier
+tasks:
+  - path: harbor/tasks/complexmcp/mark-sean-baker-read
+  - path: harbor/tasks/complexmcp/good-morning-paisley
+  - path: harbor/tasks/complexmcp/family-group-airpods
+  - path: harbor/tasks/complexmcp/mila-garza-unread
+  - path: harbor/tasks/complexmcp/like-jeremy-latest-moment
+  - path: harbor/tasks/complexmcp/neighbors-group-silas-owner
+  - path: harbor/tasks/complexmcp/share-dennis-contact-jonah
+  - path: harbor/tasks/complexmcp/delete-deborah-chat
+  - path: harbor/tasks/complexmcp/remove-silent-classmates
+  - path: harbor/tasks/complexmcp/unblock-relatives
+  - path: harbor/tasks/complexmcp/new-york-ip-hello-moment
+  - path: harbor/tasks/complexmcp/like-dennis-singapore-posts
+  - path: harbor/tasks/complexmcp/family-and-classmate-groups
+  - path: harbor/tasks/complexmcp/gcd-to-hayden-parker
+  - path: harbor/tasks/complexmcp/inches-to-cm-to-self
+  - path: harbor/tasks/complexmcp/ten-kg-seedless-grapes
+  - path: harbor/tasks/complexmcp/max-seedless-grapes-star
+  - path: harbor/tasks/complexmcp/max-grapes-star-seedless-shop
+  - path: harbor/tasks/complexmcp/apple-watch-delete-history
+  - path: harbor/tasks/complexmcp/hello-contacts-with-x
+  - path: harbor/tasks/complexmcp/sha256-uid-moment
+  - path: harbor/tasks/complexmcp/business-flight-sf-ny
+  - path: harbor/tasks/complexmcp/banana-peppers-per-neighbor
+  - path: harbor/tasks/complexmcp/larsson-book-per-teammate
+  - path: harbor/tasks/complexmcp/cheapest-black-apples
+  - path: harbor/tasks/complexmcp/sony-headphones-star
+  - path: harbor/tasks/complexmcp/date-depot-dates
+  - path: harbor/tasks/complexmcp/cheapest-90kg-limes
+  - path: harbor/tasks/complexmcp/cheapest-mini-steamer
+  - path: harbor/tasks/complexmcp/mint-100g
+  - path: harbor/tasks/complexmcp/gala-apples-per-relative
+  - path: harbor/tasks/complexmcp/priciest-pineapple-per-classmate
+  - path: harbor/tasks/complexmcp/fashion-brand-days-chickpeas
+  - path: harbor/tasks/complexmcp/replace-broken-mouse
+  - path: harbor/tasks/complexmcp/cheapest-4-person-tent
+  - path: harbor/tasks/complexmcp/mangosteen-and-mango
+  - path: harbor/tasks/complexmcp/ipad-m-series
+  - path: harbor/tasks/complexmcp/homecoming-play-endive
+  - path: harbor/tasks/complexmcp/macbook-air-if-affordable
+  - path: harbor/tasks/complexmcp/nikon-camera
+  - path: harbor/tasks/complexmcp/cheapest-arugula
+  - path: harbor/tasks/complexmcp/new-york-sun-rate
+  - path: harbor/tasks/complexmcp/singapore-flight-by-weather
+  - path: harbor/tasks/complexmcp/nike-to-20-shares
+  - path: harbor/tasks/complexmcp/tech-stocks-flight-bitter-gourd
+  - path: harbor/tasks/complexmcp/liquidate-short-news-flight
+  - path: harbor/tasks/complexmcp/butternut-new-year-messages

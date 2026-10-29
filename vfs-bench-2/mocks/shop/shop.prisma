@@ -1,0 +1,61 @@
+// The shop fake's store: LiveClawBench's shop mock (Mosi-AI/LiveClawBench
+// @ 303dc77, MIT, mock-platform/mocks/shop), one SQLite file per run.
+//
+// The shop keeps no SQLite upstream: its cart, user and orders are JSON
+// files (mock-lib's JsonStore), which here are rows of `_file`, kept as
+// files beside the run too, where the verifiers read them
+// (mocks/upstream). Its product catalog is the task's products.json, a
+// `_file` row too. Every model here is the fake's own.
+//
+// No tenant column: a run is one world, as upstream's mock is one.
+
+datasource db {
+  provider = "sqlite"
+  url      = env("INTEG_DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "client"
+}
+
+
+
+// The environment upstream's mock reads from its process (`TASK_NAME`),
+// which a fake every task of a job shares cannot take from its own: each
+// task's fixture states it.
+model vfsbench_env {
+  name  String @id
+  value String
+
+  @@map("_env")
+}
+
+// Each file the mock keeps on disk upstream, by its path in the image, and
+// the task's assets: text as it is, anything else as base64.
+model vfsbench_file {
+  path     String @id
+  data     String
+  encoding String @default("utf8")
+
+  @@map("_file")
+}
+
+// The rows of upstream's tables Prisma cannot key (marked @@ignore above),
+// which the fake inserts itself, in order, once the kit has seeded the rest.
+model vfsbench_row {
+  seq   Int    @id
+  table String
+  data  String
+
+  @@map("_row")
+}
+
+// Upstream's CREATE TABLE and CREATE INDEX statements, as its seed ran them.
+model vfsbench_schema {
+  name String @id
+  type String
+  sql  String
+
+  @@map("_schema")
+}

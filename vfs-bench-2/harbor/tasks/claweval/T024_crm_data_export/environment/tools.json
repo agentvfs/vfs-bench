@@ -1,0 +1,90 @@
+[
+ {
+  "name": "crm",
+  "description": "The crm service's tools.",
+  "tools": [
+   {
+    "name": "list_customers",
+    "call": "crm_list_customers",
+    "description": "Get the CRM customer list, filterable by status, tier, or industry",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "status": {
+       "type": "string",
+       "description": "Filter by customer status: active, inactive, churned"
+      },
+      "tier": {
+       "type": "string",
+       "description": "Filter by customer tier: VIP, standard"
+      },
+      "industry": {
+       "type": "string",
+       "description": "Filter by industry"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_customer",
+    "call": "crm_get_customer",
+    "description": "Get full details for a single customer",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "customer_id": {
+       "type": "string",
+       "description": "Customer ID"
+      }
+     },
+     "required": [
+      "customer_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/customers/get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "export_report",
+    "call": "crm_export_report",
+    "description": "Export a customer summary report",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "title": {
+       "type": "string",
+       "description": "Report title"
+      },
+      "customer_ids": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "List of customer IDs to include"
+      },
+      "summary": {
+       "type": "string",
+       "description": "Report summary content"
+      }
+     },
+     "required": [
+      "title",
+      "customer_ids",
+      "summary"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:9110/crm/export",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]
