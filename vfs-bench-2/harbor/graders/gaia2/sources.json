@@ -1,0 +1,12 @@
+{
+  "upstream_commit": "a9fd2edccb4bc7e22fbf45c8482a5fef30a2a5a4",
+  "reference": {
+    "checkers.py": "1fc6fcf5c58040a857456912388f0d543e5c30ea7f7b8d383927dd5262dda75b",
+    "config.py": "4bc65ebafd73b40226d6ee54a2ecaf1037634b35f08261607292ec2d485150da",
+    "judge.py": "7a76ef25c0dc3d764cc76e3643462da8e8c9d6a1fe24ce94c68032305fd391e7",
+    "loader.py": "814a6eab1d707d495e9e0d30cf37358303001a5df605cadf6f0231ff012c4b6a",
+    "prompts.py": "c23e599d4d29ff6b283398e77fa85960de7f23e2ed3d6f4a4b522e5640da2152",
+    "types.py": "19dd5adfb94ce2b0aa446dc42141175d5401529379a3af312af4f8f66dc0e12e"
+  },
+  "port_sha256": "7c299fb774b1087997063072ffd5ec5337d5310d30764ee19cbbb14106da4425"
+}
