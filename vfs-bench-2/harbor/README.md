@@ -2459,6 +2459,13 @@ reference, preserves the processor's timestamp ordering and turn boundary,
 and runs the pinned judge over those frozen inputs. Fake-service storage stays
 as it is; the verifier opens no SQLite files and starts no daemon or microVM.
 
+Before grading, the verifier preserves `gaia2-inputs.json` (service state,
+events, trajectory and any replay oracle order) and `gaia2-scenario.json`
+(the exact pinned scenario bytes) in its host-only log directory. Together
+with `reward_details.json`'s recorded judge calls, these survive staging and
+fake-run cleanup for replay. Harbor's log include/exclude filters apply;
+these files contain no judge credentials and are never mounted for the agent.
+
 `graders/gaia2/reference/` preserves the MIT upstream sources at `a9fd2ed`.
 `build.py` produces `port.py`: Pydantic models become dataclasses, enum members
 become strings, properties become methods, static text dedenting happens at

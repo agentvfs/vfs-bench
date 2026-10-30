@@ -68,6 +68,13 @@ async def freeze(verifier, definition, stage, budget):
                 ]
         budget.write_json(target, state)
         target.chmod(0o400)
+        # Keep replay evidence after temporary staging and fake runs are
+        # removed. These host-only logs obey Harbor's output filters.
+        verifier._log(verifier.trial_paths.verifier_dir / 'gaia2-inputs.json',
+                      target.read_text())
+        verifier._log(
+            verifier.trial_paths.verifier_dir / 'gaia2-scenario.json',
+            source.decode('utf-8'))
         return frozen
 
     return await verifier._background(snapshot, budget=budget)

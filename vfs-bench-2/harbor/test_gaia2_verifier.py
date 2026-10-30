@@ -46,10 +46,14 @@ class Gaia2VerifierTests(unittest.IsolatedAsyncioTestCase):
             disk_mounts={'/logs/agent': self.logs})
         self.verifier = SimpleNamespace(
             environment=env,
+            trial_paths=SimpleNamespace(verifier_dir=self.root / 'verifier'),
+            include_logs=None,
+            exclude_logs=None,
             task=SimpleNamespace(config=SimpleNamespace(
                 verifier=SimpleNamespace(timeout_sec=10))))
         self.verifier._background = MirageVerifier._background.__get__(
             self.verifier)
+        self.verifier._log = MirageVerifier._log.__get__(self.verifier)
         self.enterContext(
             patch('vfsbench_harbor.gaia2_verifier.ROOT', self.root))
 
@@ -71,6 +75,70 @@ class Gaia2VerifierTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result['states'], {})
         snapshot = self.verifier.environment.snapshot_verifier_states
         snapshot.assert_awaited_once_with(self.definition['native_state'])
+
+    async def test_replay_inputs_survive_cleanup(self):
+        self.states['gaia2_contacts'] = {
+            'doc': [{
+                'name': 'state',
+                'doc': json.dumps({'contacts': {
+                    'me': {
+                        'is_user': True
+                    }
+                }})
+            }],
+            'event': [{
+                'wall':
+                1730000000.125,
+                'seq':
+                1,
+                'entry':
+                json.dumps({
+                    't': 1720000000,
+                    'app': 'Contacts',
+                    'fn': 'add_contact',
+                    'args': {
+                        'first_name': 'Alice'
+                    },
+                    'ret': {
+                        'id': 'created-contact'
+                    }
+                })
+            }]
+        }
+        self.trajectory.write_text(
+            '{"steps": [{"source": "agent", "message": "Done"}]}')
+        self.verifier.verifier_env = {'OPENAI_API_KEY': 'never-log-this-key'}
+        frozen = await self.snapshot()
+        expected_state = Path(
+            frozen['files']['/input/state.json']).read_bytes()
+        expected_scenario = self.scenario.read_bytes()
+        self.states.clear()
+        self.trajectory.unlink()
+        self.scenario.unlink()
+        shutil.rmtree(self.stage)
+
+        logs = self.verifier.trial_paths.verifier_dir
+        self.assertEqual((logs / 'gaia2-inputs.json').read_bytes(),
+                         expected_state)
+        self.assertEqual((logs / 'gaia2-scenario.json').read_bytes(),
+                         expected_scenario)
+        self.assertNotIn(b'never-log-this-key',
+                         expected_state + expected_scenario)
+        self.assertFalse(logs.is_relative_to(self.logs))
+
+    async def test_replay_logs_obey_include_filter(self):
+        self.verifier.include_logs = ['gaia2-inputs.json']
+        await self.snapshot()
+        logs = self.verifier.trial_paths.verifier_dir
+        self.assertTrue((logs / 'gaia2-inputs.json').is_file())
+        self.assertFalse((logs / 'gaia2-scenario.json').exists())
+
+    async def test_replay_logs_obey_exclude_filter(self):
+        self.verifier.exclude_logs = ['gaia2-*.json']
+        await self.snapshot()
+        logs = self.verifier.trial_paths.verifier_dir
+        self.assertFalse((logs / 'gaia2-inputs.json').exists())
+        self.assertFalse((logs / 'gaia2-scenario.json').exists())
 
     async def test_missing_reply_remains_missing(self):
         self.trajectory.unlink()
@@ -98,10 +166,24 @@ class Gaia2VerifierTests(unittest.IsolatedAsyncioTestCase):
         self.verifier.gaia2_judge_replay = recording
         with self.assertRaisesRegex(ValueError, 'recorded judge calls'):
             await self.snapshot()
-        recording.write_text('{"judge_calls": []}')
+        recording.write_text(
+            json.dumps({
+                'judge_calls': [],
+                'judgments': [{
+                    'oracle_events': [{
+                        'id': 'second'
+                    }, {
+                        'id': 'first'
+                    }]
+                }]
+            }))
         for file in self.stage.iterdir():
             file.unlink()
         self.assertEqual((await self.snapshot())['judgeReplay'], [])
+        logged = self.verifier.trial_paths.verifier_dir / 'gaia2-inputs.json'
+        self.assertEqual(
+            json.loads(logged.read_text())['oracle_order'],
+            ['second', 'first'])
 
     async def test_staging_limit_is_enforced(self):
         with patch('vfsbench_harbor.mirage_verifier.MAX_STAGING_BYTES', 1):
