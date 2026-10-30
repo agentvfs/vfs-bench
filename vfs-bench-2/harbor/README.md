@@ -64,6 +64,8 @@ uv run --project harbor python -I harbor/test_environment.py
 # Rewrite the committed tasks from upstream, or check them against it.
 uv run --project harbor python -I harbor/export.py [--check]
 uv run --project harbor python -I harbor/test_export.py
+# MicrosandboxVerifier's reading of guest.py's beats, against a stand-in msb.
+uv run --project harbor python -I harbor/test_microsandbox.py
 
 # The finance fake against upstream's finance mock (Bun), the social
 # fake against upstream's social mock, and each fake that runs an upstream
@@ -1020,15 +1022,56 @@ score 1.0 in it. Copying in costs little: a 300 MB workspace of 3,000
 files boots in 0.5 s. A job of the seven at `-n 7` takes about 10 s, as on
 Pyodide.
 
-msb 0.5.10 now and then hangs. A create never returns: 2 of 175 in a
-stress test, concurrent or one at a time, and 1 of about 125 in the jobs
-here. Or a running VM leaves a command unrun, and every later one: once in
-`isolation.py`'s runs. Both are caught before `test.sh` starts. A create
-has 30 s (it takes a third of one), and `guest.py`'s first line,
-`STARTED`, has 15 s to come. Past either, the VM is removed and the
-verification starts again in a new one, up to three times, so a hang
-costs 15 to 30 s. Once `STARTED` has come, a hang cannot be told from a
-slow test, and Harbor's timeout ends it.
+### When msb hangs
+
+msb 0.5.10's guest now and then stops for good: the VM's vCPU thread
+spins at 100% in the guest (`Hv::Vcpu::run` in a `sample` of `msb
+sandbox`), the guest kernel prints nothing to `kernel.log`, and no `msb
+exec` into it answers again. It stops in its first two seconds or so: in
+boot, so the create never returns; before `guest.py` runs; or within a
+second of its `STARTED` (never later, in the stress test below). Waiting
+three seconds before the first `exec` does not help: the VM then stops
+before it, so the `exec` does not cause it. Every such trial passed when run again. Once, in the
+LiveClawBench run below, a guest stalled otherwise: weather-outdoor-window's
+`test.sh`, a second's work, sent nothing through its proxy for 30 s while
+`guest.py` beat, and then the beats stopped too.
+
+A stress test of our own (`msb create` with a copy, `guest.py` running a
+few seconds of Python, `msb rm`, 120 to 192 VMs per run, with the host's
+load at 10 to 30 from other jobs):
+
+| | VMs | Hung |
+|---|---|---|
+| 4 at once | 128 | 1 |
+| 12 at once | 432 | 37 (8.6%): 20 creates, 17 later |
+| 12 at once, 2 vCPUs each | 192 | 17 |
+| 12 at once, one create at a time | 672 | 16 (2.4%): 5 creates, 11 later |
+| 12 at once, `true` as the test | 64 | 0 |
+
+So it grows with how many VMs boot and run at once, more vCPUs do not
+help, and overlapping creates hang far more often, as in microsandbox#1041.
+The verifier works around it:
+- **One create at a time** per Harbor process. A create takes 0.4 s, and
+  at most 1.0 s with the host loaded twice over.
+- **Short timeouts.** A create has 15 s, and `guest.py`'s `STARTED` 15 s.
+- **Beats.** While `test.sh` runs, `guest.py` writes `BEAT` every second,
+  from a thread of its own, and `END` before the tar. 15 s with no beat is
+  a hung VM, which a slow test cannot be.
+- Past any of these, the VM is removed and the verification starts again
+  in a new one, up to five times. `mirage/verifier.log` names each
+  attempt. A hang after `STARTED` runs `test.sh` again from the start; the
+  VM's files are fresh copies, and only what it sent through the proxies or
+  to a judge happened twice.
+
+A hang so costs 15 s rather than Harbor's verifier timeout. With these, the
+LiveClawBench oracle (`liveclawbench-msb.yaml`) at `-n 12` scores 1.0 on
+all 63 tasks, with no exceptions, in 1 min 49 s for the job. 4 of its 63
+verifications started again once: two creates, one `STARTED` and the
+stall above. The ComplexMCP oracle (`complexmcp.yaml`) at `-n 12` scores
+1 on all 47, with no exceptions, in about a minute; 6 of its 47 started
+again once (a create, and five VMs that stopped right after `STARTED`).
+microsandbox 0.7 updates the guest kernel (6.12.68 to 6.12.113) and fixes
+relay stalls; whether it hangs less is not tested here.
 
 ### Isolation
 
