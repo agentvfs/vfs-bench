@@ -18,11 +18,12 @@ and as the CLI sends it to the fake, and:
 
 A timestamp only one side's clock could make (upstream's is the wall
 clock, the fake's the run's ``--epoch``) is compared as ``<now>``, unless
-it is the seed's own value. Every
+it is the seed's own value or one a call supplied. Every
 difference is printed, and the script exits 1 on any.
 """
 import argparse
 import asyncio
+import fcntl
 import json
 import os
 import re
@@ -65,8 +66,18 @@ def server_of(domain: str) -> dict:
 
 def container(spec: dict) -> tuple[str, str]:
     """Upstream's server for the spec, running: its container and URL. A
-    running container is reused only if it runs the pinned image."""
+    running container is reused only if it runs the pinned image. A lock
+    per domain holds from the check until it answers, so comparisons
+    started together share one container rather than replace each
+    other's."""
     name = f"eog-{spec['domain']}"
+    lock = Path(tempfile.gettempdir()) / f"{name}.lock"
+    with lock.open("w") as held:
+        fcntl.flock(held, fcntl.LOCK_EX)
+        return started(spec, name)
+
+
+def started(spec: dict, name: str) -> tuple[str, str]:
     image = ["docker", "image", "inspect", "-f", "{{.Id}}", spec["image"]]
     if subprocess.run(image, capture_output=True).returncode != 0:
         subprocess.run(
@@ -186,13 +197,31 @@ def tables(path: Path) -> dict[str, list[dict]]:
     return out
 
 
-def masker(start: datetime, end: datetime):
-    """A value as compared: a timestamp in [start, end] is `<now>`."""
+def stamps(value) -> set[str]:
+    """Every timestamp in a call's arguments, to the second: values the
+    caller supplied, which a clock mask leaves alone."""
+    if isinstance(value, dict):
+        return set().union(*map(stamps, value.values()))
+    if isinstance(value, list):
+        return set().union(*map(stamps, value))
+    if isinstance(value, str):
+        return {
+            m.group(0)[:19].replace("T", " ")
+            for m in STAMP_IN_TEXT.finditer(value)
+        }
+    return set()
+
+
+def masker(start: datetime, end: datetime, supplied: set[str]):
+    """A value as compared: a timestamp in [start, end] is `<now>`, unless
+    a call supplied it (``supplied``), when both sides keep it."""
 
     def mask(value):
         if isinstance(value, str):
             m = STAMP.match(value)
-            if m:
+            if m and f"{m[1]} {m[2]}" in supplied:
+                pass
+            elif m:
                 try:
                     at = datetime.fromisoformat(f"{m[1]} {m[2]}").replace(
                         tzinfo=timezone.utc)
@@ -203,7 +232,8 @@ def masker(start: datetime, end: datetime):
                     return "<now>"
             return STAMP_IN_TEXT.sub(
                 lambda t: "<now>"
-                if within(t.group(0), start, end) else t.group(0), value)
+                if within(t.group(0), start, end) and t.group(0)[:19].replace(
+                    "T", " ") not in supplied else t.group(0), value)
         return value
 
     return mask
@@ -302,14 +332,16 @@ async def main() -> int:
         # seed has it is compared as it is, never masked.
         seeded = tables(run.db)
         epoch = datetime.fromisoformat(args.epoch.replace("Z", "+00:00"))
-        fake_mask = masker(epoch, epoch + timedelta(seconds=len(calls) + 5))
-        started = datetime.now(timezone.utc)
+        supplied = stamps([call.get("args") for call in calls])
+        fake_mask = masker(epoch, epoch + timedelta(seconds=len(calls) + 5),
+                           supplied)
+        began = datetime.now(timezone.utc)
         try:
             for n, call in enumerate(calls):
                 a = await up.call(call["tool"], call.get("args") or {})
                 a = (a[0].replace(db, stem), a[1])
                 b = await fk.call(call["tool"], call.get("args") or {})
-                up_mask = masker(started, datetime.now(timezone.utc))
+                up_mask = masker(began, datetime.now(timezone.utc), supplied)
                 same = (masked_text(a[0], up_mask) == masked_text(
                     b[0], fake_mask) and a[1] == b[1])
                 if args.verbose or not same:
@@ -321,7 +353,7 @@ async def main() -> int:
                           f"{a[0][:1500]}")
                     print(f"    fake     ({'error' if b[1] else 'ok'}): "
                           f"{b[0][:1500]}")
-            up_mask = masker(started, datetime.now(timezone.utc))
+            up_mask = masker(began, datetime.now(timezone.utc), supplied)
             path = Path(tmp) / "upstream.sqlite"
             found = subprocess.run([
                 "docker", "exec", name, "sh", "-c",
