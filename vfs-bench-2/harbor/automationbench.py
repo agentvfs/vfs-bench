@@ -12,8 +12,9 @@ tools, ``api_search``, ``api_fetch`` and ``base64_encode``, and graded on
 the world's end state. Here the world is one kit fake,
 ``mocks/automationbench/``, a TypeScript port of upstream's API routes and
 handlers over the world's JSON; the tools are the ``api`` CLI
-(``harbor/tools.ts``); upstream's own rubric grades the world the fake
-dumps, in the verifier's VM.
+(``harbor/tools.ts``); the pinned rubric grades the world's JSON in a
+separate Mirage VFS/Monty workspace. The original tests remain available for
+the reference VM.
 
 Each task under ``harbor/tasks/automationbench/<task>/`` (the task's name,
 ``<domain>.<name>``, with ``.`` as ``-`` and ``_`` as ``-``) has:
@@ -708,21 +709,13 @@ GITIGNORE = """\
 
 def job_yaml(tasks: list[str]) -> str:
     lines = [
-        "# The AutomationBench tasks (harbor/tasks/automationbench/, which",
-        ("# harbor/automationbench.py writes), on the mirage environment, "
-         "each trial's"),
-        ("# verifier in a microVM of its own: upstream's rubric on the world "
-         "the trial's"),
-        "# run of the fake ends with. From vfs-bench-2/, after",
-        ("# `uv run --project automationbench python -I "
-         "harbor/automationbench.py [--site]`:"),
-        ("#   uv run --project harbor harbor run -y -c "
-         "harbor/automationbench.yaml -a oracle -n 8 -o "
-         "state/harbor/jobs-automationbench"),
+        "# All 600 tasks: Mirage agent + separate Mirage VFS/Monty verifier.",
+        "# Generate fixtures with harbor/automationbench.py first.",
+        "# The unchanged VM reference config is automationbench-msb.yaml.",
         "environment:",
         "  import_path: vfsbench_harbor:MirageEnvironment",
         "verifier:",
-        "  import_path: vfsbench_harbor:MicrosandboxVerifier",
+        "  import_path: vfsbench_harbor:MirageVerifier",
         "tasks:",
     ]
     lines += [

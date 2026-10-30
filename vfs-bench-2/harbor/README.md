@@ -101,7 +101,7 @@ configuration and the existing fake services' storage are unchanged.
 The original Python and shell graders are preserved, with source hashes in
 `graders/manifest.json`. `liveclawbench-pyodide.yaml` explicitly runs those
 references; `MirageParityVerifier` runs both and keeps the reference rewards
-authoritative. Coverage across the six Mirage-agent job configs is:
+authoritative. Coverage across the seven Mirage-agent job configs is:
 
 | Dataset | Tasks | Preserved reference backend | Native ports |
 |---|---:|---|---:|
@@ -109,12 +109,12 @@ authoritative. Coverage across the six Mirage-agent job configs is:
 | DataSpace | 46 | microVM | 46 (Monty 1.4.0) |
 | Claw-Eval | 126 | microVM | 0 |
 | ComplexMCP | 47 | microVM | 47 (Monty 1.4.0) |
-| AutomationBench | 600 | microVM | 0 |
+| AutomationBench | 600 | microVM | 600 (Monty 1.4.0) |
 | Gaia2 | 460 | microVM | 0 |
 | EnterpriseOps-Gym | 103 | microVM | 103 |
-| Total | 1,452 | | 266 |
+| Total | 1,452 | | 866 |
 
-The other 1,186 tasks retain microVM grading and report `unported` in parity
+The other 586 tasks retain microVM grading and report `unported` in parity
 mode.
 
 EnterpriseOps-Gym's upstream verifier asks each server's SQL runner, so its
@@ -265,7 +265,7 @@ inside Monty; the host only services Mirage VFS operations.
 
 Mirage is pinned to `9dd69a316242deddee79b40ce41aafaa2be6065c`, whose
 runtime dependency is also Monty **1.4.0**. No module-resolution override is
-used. All 47 ComplexMCP and 46 DataSpace tasks now use this runtime through
+used. All 47 ComplexMCP, 46 DataSpace and 600 AutomationBench tasks now use this runtime through
 `MirageVerifier`;
 the 70 LiveClawBench tasks retain their native TypeScript graders.
 
@@ -275,7 +275,7 @@ Proposed migration order, one dataset per follow-up PR:
 |---|---|---:|---|
 | 1 | ComplexMCP | 47 | Freeze initial/final/expected JSON in a verifier-only VFS; retain the shared judge, port Levenshtein to pure Python, and preserve six-place rounding and ignored IDs. Implemented: 47 oracle and 47 no-op trials match the original CPython judge on all four reward fields. |
 | 2 | DataSpace | 46 | Implemented: shared relation evaluator over frozen prediction/config/gold bytes. Strict CSV, Decimal, Unicode, ISO date normalization and column permutations are compared with the pinned CPython 3.12 reference; all 46 tasks are covered. |
-| 3 | AutomationBench | 600 | Export world/hidden state as JSON; port the Pydantic-dependent world/rubric behavior by assertion family, preserving exclusions and partial-credit weights. |
+| 3 | AutomationBench | 600 | Implemented: private fake JSON snapshot, generated rubric/schema adapter, and all 600 task definitions. Per-assertion results, free-assertion exclusions and partial credit match the pinned Python reference. |
 | 4 | Claw-Eval | 126 | Port task graders and trace/audit assembly over JSON. Preserve required LLM judgments through an explicit recorded service interface. |
 | 5 | Gaia2 | 460 | Port event/state assembly and the judge without its daemon or SQLite; preserve event ordering and required LLM judgments through the same interface. |
 
@@ -2242,9 +2242,11 @@ own, a TypeScript port of upstream's API routes and handlers.
 
 ```sh
 uv run --project automationbench python -I harbor/automationbench.py [--check] [task ...]
+python3 harbor/automationbench_manifest.py --check
+uv run --project harbor harbor run -y -c harbor/automationbench-oracle.yaml -a oracle -n 11 -r 0 --no-delete --enable-verification -o state/harbor/automationbench-oracle
+uv run --project harbor harbor run -y -c harbor/automationbench.yaml -a nop -n 32 -r 0 --no-delete --enable-verification -o state/harbor/automationbench-nop
+# Optional preserved VM reference (native grading does not need --site):
 uv run --project automationbench python -I harbor/automationbench.py --site
-uv run --project harbor harbor run -y -c harbor/automationbench.yaml -a oracle -n 4 -o state/harbor/jobs-automationbench
-uv run --project harbor harbor run -y -c harbor/automationbench.yaml -a nop -n 4 -o state/harbor/jobs-automationbench
 # The fake against upstream's world, every service's calls on its tasks:
 env -u OPENAI_API_KEY uv run --project automationbench python -I harbor/automationbench_compare.py [service ...] [--task <name>] [--per N]
 ```
@@ -2258,7 +2260,7 @@ env -u OPENAI_API_KEY uv run --project automationbench python -I harbor/automati
 | The routers and handlers of `tools/api/`, the `tools/zapier` functions they call, the schemas' methods, defaults and validators | One port per service (`app_<service>.ts`), statement for statement; records built and validated by `models.ts` from every model's fields, types and default factories (`data/models.json`, written from the models), as Pydantic's lax mode does, with its 422s |
 | `api_search`'s BM25 over the API schemas | The same scorer over the same index (`data/endpoints.json`, written from upstream's schemas) |
 | The system prompt, then the user message; the tools' schemas | `instruction.md`: the system prompt, the tools as the CLI carries them, then the user message, verbatim |
-| `partial_credit` (reward), `task_completed_correctly` (pass/fail) | Upstream's rubric, unchanged, in the verifier's VM (`tests/grade.py`, `automationbench_grade.py`): `reward.json` is `partial_credit`, `reward_details.json` each assertion and the pass/fail |
+| `partial_credit` (reward), `task_completed_correctly` (pass/fail) | Generated Monty port of the pinned rubric and model read helpers in a separate Mirage VFS. `reward.json` is partial credit; `reward_details.json` retains each assertion and pass/fail. Original `tests/grade.py` files remain unchanged for reference grading. |
 
 **One fake for all 47 apps.** Upstream's world is one object: `api_fetch`
 maps a URL to an app's router, gates it by the task's subscribed services
@@ -2286,15 +2288,52 @@ errors with Python's positions (`pyjson.ts`), Python's argument binding and
 its `TypeError`s (`world.ts`'s `bind`), `query.ts` for the SOQL, QuickBooks
 and GAQL query engine, and a Python `Decimal` for the ledgers.
 
-**The verifier.** `tests/grade.py` needs `MicrosandboxVerifier`: the VM
-gets upstream's package and Pydantic for its Linux (`--site`,
-`state/harbor/site/automationbench`; `pydantic_core` is native, so it is
-installed for `aarch64-manylinux_2_28`, CPython 3.12; and upstream's pinned
-`openai`, never called, which `google_sheets_row_updated` imports through
-`automationbench.tools`) and the run's SQLite.
-It validates the `world` doc back into a `WorldState` (services outside the
-task's world take their defaults) and runs `partial_credit` with the task's
-assertions and `initial_state` (`tests/task.json`).
+**The verifier.** `automationbench.yaml` selects `MirageVerifier`. The host
+uses the fake's authenticated, read-only JSON endpoint to freeze the `world`
+and `meta` doc strings, including hidden Sheets row-update keys. It mounts these
+bytes and the hash-pinned task definition into a fresh Mirage VFS workspace.
+Monty 1.4.0 runs the trusted generated grader there; inputs are read-only,
+code has a separate executable RAM mount, and rewards go to a RAM output mount.
+No host filesystem or grading callback, SQLite engine, Pyodide, Pydantic, network,
+container or microVM is available inside grading. Existing fake storage remains
+separate. Monty still uses native worker processes, with a 512 MiB memory limit
+per workspace (a cap, not a measured per-trial footprint).
+
+`automationbench_port.py` mechanically translates the pinned rubric and schema
+read helpers into namespaced functions and tagged records. It includes all 597
+registered assertion types and the field descriptions for 249 models. The model
+adapter handles the JSON states used by these tasks: upstream before validators,
+aliases, defaults, typed fields, properties and lookups. It is not a general
+Pydantic implementation. The original scoring branches are retained, including
+free checks, broken guards, `scored: false`, and explicit `excluded` overrides.
+All 335 assertion types present in the 600 task definitions are covered by the
+parity audit. Task graders and `test.sh` files are unchanged; their hashes and
+`task.json` hashes are in `graders/automationbench/manifest.json`.
+
+`automationbench-msb.yaml` keeps the original microVM path. Only that reference
+needs `--site` and the SQLite copy. `MirageParityVerifier` preserves its rewards
+and additionally compares every assertion result in `reward_details.json`.
+The offline audit uses vendored, hash-pinned upstream Python on CPython 3.12
+and Pydantic 2.12.5, matching the existing reference VM. It never participates
+in production grading:
+
+```sh
+uv venv --python 3.12 state/automationbench-reference-venv
+uv pip install --python state/automationbench-reference-venv/bin/python pydantic==2.12.5
+state/automationbench-reference-venv/bin/python -I harbor/audit_automationbench.py \
+  --mutations --output state/harbor/automationbench-parity.json JOB_DIRECTORY...
+# Replay only saved states, without regenerating the mutation cases:
+state/automationbench-reference-venv/bin/python -I harbor/audit_automationbench.py \
+  --saved-only --output state/harbor/automationbench-saved-parity.json JOB_DIRECTORY...
+```
+
+The audit compares partial credit, task completion, assertion booleans, exclusion
+flags and parameters, and checks saved rewards against fresh evaluations. It
+retains every frozen snapshot as `verifier/automationbench-inputs.json`, so
+replay survives trial cleanup. Synthetic writes exercise requested and forbidden
+mail, Slack, Sheets and operations-app actions; they are not oracle solutions.
+The stdlib-only `automationbench_manifest.py --check-port` hook always runs in CI,
+including when only the excluded generated/reference files change.
 
 Files:
 - `automationbench.py`: writes the tasks, the fake's data, the job config
@@ -2302,7 +2341,11 @@ Files:
 - `automationbench_grade.py`: each task's `tests/grade.py`.
 - `automationbench_compare.py`, `automationbench_calls/<service>.py`: the
   compare, and each service's calls (`common.py`: the tools and the routing).
-- `automationbench.yaml`: the 600 tasks as a job, each verifier in a microVM.
+- `automationbench.yaml`: all 600 tasks with Mirage/Monty grading.
+- `automationbench-oracle.yaml`: the eleven real oracle tasks.
+- `automationbench-msb.yaml`: all 600 tasks with the preserved VM reference.
+- `verify-automationbench.ts`, `graders/automationbench/`: native runtime, generated code, model adapter and pinned reference source.
+- `automationbench_manifest.py`, `automationbench_port.py`, `audit_automationbench.py`: generation, integrity checks and differential replay.
 - `../mocks/automationbench/`: the fake. `fake.ts` (the tools), `fetch.ts`,
   `search.ts`, `world.ts`, `models.ts`, `py.ts`, `pydt.ts`, `pyjson.ts`,
   `pyrandom.ts`, `query.ts`, `app_<service>.ts` and their helpers, and
@@ -2312,6 +2355,24 @@ Files:
   `tests/task.json` (11 MB).
 
 ### Results
+
+Native verifier validation (2026-10-30):
+
+- **Parity:** 3,611 evaluations across all 600 tasks, with 58,009 per-assertion
+  comparisons and zero mismatches. Includes no-op, empty, removed/duplicated
+  records, synthetic writes, 11 saved real oracle runs and 600 saved Harbor
+  no-op runs. Synthetic writes
+  produced partial credit on 527 tasks, exercising nonbinary scoring.
+- **Harbor oracle + verifier:** all 11 real oracle scripts scored 1.0 in one
+  job at `-n 11`, with no errors or retries (about 6 seconds).
+- **Harbor no-op + verifier:** all 600 tasks scored 0.0 at `-n 32`, with no
+  errors or retries (4m17s while other validation was running). This is an
+  integration check, not an isolated throughput benchmark.
+- **Isolation/regressions:** concurrent independent workspaces, source tampering,
+  read-only inputs, hidden update tracking, unavailable host capabilities,
+  malformed inputs, timeout handling and assertion-level parity reporting.
+
+Earlier fake/reference validation:
 
 - **Compare.** Every service against upstream's world on its tasks: about
   124,000 calls while porting (each service over every task subscribed to
@@ -2364,8 +2425,9 @@ every service a task subscribes to has a port.
 - **Unicode corners**: Python's case mapping, `isdigit` and `\w` on
   non-ASCII text are JavaScript's here; Gmail does not uu-decode an
   `x-uuencode` part.
-- **The verifier** runs the rubric on CPython 3.12, upstream's on 3.13, and
-  validates the world from its JSON, where upstream's is the live object.
+- **The reference verifier** uses CPython 3.12 (upstream uses 3.13). Native
+  grading uses Monty 1.4.0 and is compared against that preserved reference. Both
+  reconstruct the world from JSON, where upstream grades a live object.
 - **The tools** are a CLI: a model calls `api fetch --method ... --url ...`
   in a shell, where upstream's calls a function; `curl` and `wget` are off.
 - **BambooHR's reads** look up action kinds no route records, so they are

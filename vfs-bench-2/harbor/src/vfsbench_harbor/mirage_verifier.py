@@ -21,6 +21,10 @@ from harbor.models.verifier.result import VerifierResult
 from harbor.utils.env import resolve_env_vars
 from harbor.utils.path_filter import filter_paths_by_patterns
 from harbor.verifier.verifier import Verifier
+from vfsbench_harbor.automationbench_verifier import \
+    definitions as automationbench_definitions
+from vfsbench_harbor.automationbench_verifier import \
+    freeze as freeze_automationbench
 from vfsbench_harbor.complexmcp_verifier import definitions
 from vfsbench_harbor.complexmcp_verifier import freeze as freeze_complexmcp
 from vfsbench_harbor.dataspace_verifier import \
@@ -112,8 +116,8 @@ class MirageVerifier(Verifier):
 
     A disposable Node process gives timeout/cancellation a hard stop. This
     is trusted host code, not an isolation boundary for arbitrary scripts.
-    LiveClawBench uses the workspace runtime; ComplexMCP and DataSpace use
-    Monty.
+    LiveClawBench uses the workspace runtime; ComplexMCP, DataSpace and
+    AutomationBench use Monty.
     Each grader reads declared JSON and file bytes through read-only VFS
     mounts and writes rewards to a separate RAM output mount.
     """
@@ -186,6 +190,7 @@ class MirageVerifier(Verifier):
         manifest = json.loads(MANIFEST.read_text())
         manifest.update(definitions())
         manifest.update(dataspace_definitions())
+        manifest.update(automationbench_definitions())
         manifest.update(enterpriseops())
         definition = manifest.get(task)
         if definition is None:
@@ -299,6 +304,9 @@ class MirageVerifier(Verifier):
         Safety directory scans skip symlinks as the reference's os.walk does.
         """
         budget = _Staging(self.task.config.verifier.timeout_sec)
+        if definition.get("runtime") == "automationbench-monty":
+            return await freeze_automationbench(self, definition, stage,
+                                                budget)
         if definition.get("runtime") == "dataspace-monty":
             return await freeze_dataspace(self, definition, stage, budget)
         if definition.get("runtime") == "complexmcp-monty":
@@ -401,7 +409,8 @@ class MirageVerifier(Verifier):
         runners = {
             "typescript": RUNNER,
             "complexmcp-monty": HARBOR / "verify-complexmcp.ts",
-            "dataspace-monty": HARBOR / "verify-dataspace.ts"
+            "dataspace-monty": HARBOR / "verify-dataspace.ts",
+            "automationbench-monty": HARBOR / "verify-automationbench.ts"
         }
         if runtime not in runners:
             raise ValueError(f"Unknown verifier runtime: {runtime}")

@@ -18,6 +18,9 @@ def inventory(root: Path = ROOT) -> dict:
          "harbor/graders/complexmcp/manifest.json").read_text())["tasks"]
     dataspace = json.loads(
         (root / "harbor/graders/dataspace/manifest.json").read_text())["tasks"]
+    automationbench = json.loads(
+        (root /
+         "harbor/graders/automationbench/manifest.json").read_text())["tasks"]
     datasets = {}
     seen = set()
     for dataset, backend in REFERENCE_BACKENDS.items():
@@ -36,6 +39,8 @@ def inventory(root: Path = ROOT) -> dict:
             ported = ((dataset == "liveclawbench" and task.name in manifest)
                       or (dataset == "complexmcp" and task.name in complexmcp)
                       or (dataset == "dataspace" and task.name in dataspace)
+                      or (dataset == "automationbench"
+                          and task.name in automationbench)
                       or (dataset == "enterpriseops"
                           and task.name in enterpriseops()))
             if ported:

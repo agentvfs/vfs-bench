@@ -57,7 +57,7 @@
 # file upstream's bytes or an edit of them; `harbor/export.py --check` holds
 # them to upstream, and a formatter's rewrite of a verify.py fails it.
 exclude: |
-  (?x)^vfs-bench-2/harbor/graders/dataspace/port\.py$|^vfs-bench-2/harbor/tasks/.*$|^vfs-bench-2/harbor/graders/[^/]+/reference/.*$|^vfs-bench-1/(
+  (?x)^vfs-bench-2/harbor/graders/(dataspace|automationbench)/port\.py$|^vfs-bench-2/harbor/tasks/.*$|^vfs-bench-2/harbor/graders/[^/]+/reference/.*$|^vfs-bench-1/(
       task/[^/]+/.*/vfs/.*\.md|
       task/[^/]+/.*/shared/task\.md|
       task/[^/]+/.*/shared/system_prompt\.md|
@@ -173,6 +173,13 @@ repos:
         entry: python vfs-bench-2/harbor/dataspace_manifest.py --check-port
         language: python
         files: ^vfs-bench-2/harbor/(dataspace_manifest\.py|graders/dataspace/)
+        pass_filenames: false
+        always_run: true
+      - id: automationbench-grader-pin
+        name: Check pinned AutomationBench verifier port
+        entry: python vfs-bench-2/harbor/automationbench_manifest.py --check-port
+        language: python
+        files: ^vfs-bench-2/harbor/(automationbench_(port|manifest)\.py|graders/automationbench/)
         pass_filenames: false
         always_run: true
       - id: fixture-lineage

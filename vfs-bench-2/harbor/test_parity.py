@@ -1,4 +1,4 @@
-"""Reference preservation and rollout gates across all six Harbor datasets."""
+"""Reference preservation and rollout gates across seven Harbor datasets."""
 import importlib.util
 import json
 import shutil
@@ -69,7 +69,8 @@ class ParityTests(helpers.MirageVerifierTests):
 
     async def test_every_unported_dataset_preserves_its_backend(self):
         for dataset, kind in REFERENCE_BACKENDS.items():
-            if dataset in ("complexmcp", "dataspace", "enterpriseops"):
+            if dataset in ("complexmcp", "dataspace", "automationbench",
+                           "enterpriseops"):
                 # Their registered ports are covered separately.
                 continue
             with self.subTest(dataset=dataset):
@@ -216,7 +217,7 @@ class ParityTests(helpers.MirageVerifierTests):
             "gaia2": 460,
             "enterpriseops": 103,
         })
-        self.assertEqual(result["native_candidates"], 266)
+        self.assertEqual(result["native_candidates"], 866)
 
 
 if __name__ == "__main__":

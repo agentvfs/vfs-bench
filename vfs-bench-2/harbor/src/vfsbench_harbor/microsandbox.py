@@ -800,12 +800,16 @@ class MicrosandboxVerifier(Verifier):
             started = time.monotonic()
         timings["remove_s"] = time.monotonic() - started
         with out:
-            extract(out,
-                    self.trial_paths.verifier_dir,
-                    include=self.include_logs,
-                    exclude=self.exclude_logs,
-                    protect=(self.trial_paths.reward_text_path.name,
-                             self.trial_paths.reward_json_path.name))
+            extract(
+                out,
+                self.trial_paths.verifier_dir,
+                include=self.include_logs,
+                exclude=self.exclude_logs,
+                # Assertion results are scoring output too: parity
+                # needs them even when ordinary logs are filtered out.
+                protect=(self.trial_paths.reward_text_path.name,
+                         self.trial_paths.reward_json_path.name,
+                         "reward_details.json"))
 
     def _egress(self, log: list[str]) -> list[str]:
         """msb's rules for the hosts the task's verifier reaches beyond the
