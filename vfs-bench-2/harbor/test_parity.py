@@ -69,7 +69,7 @@ class ParityTests(helpers.MirageVerifierTests):
 
     async def test_every_unported_dataset_preserves_its_backend(self):
         for dataset, kind in REFERENCE_BACKENDS.items():
-            if dataset == "complexmcp":
+            if dataset in ("complexmcp", "dataspace"):
                 continue  # Its registered Monty port is covered separately.
             with self.subTest(dataset=dataset):
                 task_dir = next((HARBOR / "tasks" / dataset).iterdir())
@@ -214,7 +214,7 @@ class ParityTests(helpers.MirageVerifierTests):
             "automationbench": 600,
             "gaia2": 460,
         })
-        self.assertEqual(result["native_candidates"], 117)
+        self.assertEqual(result["native_candidates"], 163)
 
 
 if __name__ == "__main__":

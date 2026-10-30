@@ -50,12 +50,14 @@
 # stripping it edits the value, and dvc rewrites the file back on the next
 # repro either way, so the two would fight over every commit.
 # vfs-bench-2/harbor/graders/*/reference/ contains hash-pinned upstream
-# judge source. Keep its bytes intact; the manifest check detects drift.
+# judge source. DataSpace port.py is generated from that source and checked
+# by dataspace_manifest.py --check-port in CI. Keep their bytes intact;
+# the manifest check detects drift.
 # vfs-bench-2/harbor/tasks/ holds LiveClawBench's task directories, each
 # file upstream's bytes or an edit of them; `harbor/export.py --check` holds
 # them to upstream, and a formatter's rewrite of a verify.py fails it.
 exclude: |
-  (?x)^vfs-bench-2/harbor/tasks/.*$|^vfs-bench-2/harbor/graders/[^/]+/reference/.*$|^vfs-bench-1/(
+  (?x)^vfs-bench-2/harbor/graders/dataspace/port\.py$|^vfs-bench-2/harbor/tasks/.*$|^vfs-bench-2/harbor/graders/[^/]+/reference/.*$|^vfs-bench-1/(
       task/[^/]+/.*/vfs/.*\.md|
       task/[^/]+/.*/shared/task\.md|
       task/[^/]+/.*/shared/system_prompt\.md|
@@ -166,6 +168,12 @@ repos:
 
   - repo: local
     hooks:
+      - id: dataspace-grader-pin
+        name: Check pinned DataSpace evaluator port
+        entry: python vfs-bench-2/harbor/dataspace_manifest.py --check-port
+        language: python
+        files: ^vfs-bench-2/harbor/(dataspace_manifest\.py|graders/dataspace/)
+        pass_filenames: false
       - id: fixture-lineage
         name: Check all DVC lock edges
         entry: bash -c 'cd vfs-bench-1 && uv run python setup/lineage.py'
