@@ -195,8 +195,16 @@ export function round(value: number, digits = 0): number {
 export const lower = (value: any): string => String(value ?? '').toLowerCase()
 export const containsAny = (text: string, needles: string[]) => needles.some((s) => text.includes(s))
 // Python str.strip includes the information separators and NEL, but not BOM.
-export const strip = (text: string) =>
-  text.replace(/^[\p{White_Space}\u001c-\u001f]+|[\p{White_Space}\u001c-\u001f]+$/gu, '')
+const pythonWhitespace = /[\p{White_Space}\u001c-\u001f]/u
+export function strip(text: string): string {
+  let start = 0,
+    end = text.length
+  // All Python whitespace is in the BMP. Inspect only boundary characters:
+  // an unanchored trailing-whitespace regex retries long internal runs.
+  while (start < end && pythonWhitespace.test(text[start]!)) start++
+  while (end > start && pythonWhitespace.test(text[end - 1]!)) end--
+  return text.slice(start, end)
+}
 function splitLines(text: string, separator: RegExp): string[] {
   if (!text) return []
   const result = text.split(separator)

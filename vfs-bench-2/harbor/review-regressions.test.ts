@@ -413,3 +413,36 @@ print(json.dumps([[s, s.strip(), s.splitlines(), [line.removesuffix('\\n') for l
     assert.deepEqual(fileLines(value), read, JSON.stringify(value))
   }
 })
+
+test('long internal whitespace cannot exhaust the grading time budget', async () => {
+  // A separate process imposes a real deadline even if strip blocks its event
+  // loop. This is deliberately a broad budget, not a microbenchmark threshold.
+  const helper = new URL('./graders/context.ts', import.meta.url).href
+  const child = spawnSync(
+    process.execPath,
+    [
+      '--input-type=module',
+      '-e',
+      `
+import assert from 'node:assert/strict'
+import { strip } from ${JSON.stringify(helper)}
+for (const space of [' ', '\\u0085', '\\u001f', '\\u3000']) {
+  const text = '😀' + space.repeat(1_000_000) + 'x'
+  assert.equal(strip(text), text)
+  assert.equal(strip(space.repeat(200_000) + text + space.repeat(200_000)), text)
+  assert.equal(strip(space.repeat(200_000)), '')
+}
+`,
+    ],
+    { encoding: 'utf8', timeout: 5000 }
+  )
+  assert.equal(child.status, 0, child.error?.message ?? child.stderr)
+
+  await fixture(async (dir, db, database) => {
+    sent(db, 'new', 'Project proposal', '', 'john.smith@gmail.com')
+    for (const space of [' ', '\u0085', '\u001f', '\u3000']) {
+      db.prepare('UPDATE Message SET bodyText=?').run('\u0085x' + space.repeat(160_000) + 'x\u001f')
+      assert.equal((await compare('email-sending-verify', dir, database)).score, 1)
+    }
+  })
+})
