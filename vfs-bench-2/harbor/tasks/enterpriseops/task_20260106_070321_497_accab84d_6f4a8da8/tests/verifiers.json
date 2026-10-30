@@ -1,0 +1,24 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Successfully Updated Cases",
+  "description": "Verify Successfully Updated Cases",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT count(*) AS successful_updates\nFROM customer_case\nWHERE case_id IN (397, 398, 399, 415, 416, 400, 401, 402, 403, 404, 405)\n  AND priority = 'critical'\n  AND assigned_to = 4;",
+   "expected_value": 11,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "No open Spencer Inc / New York primary-contact case left unassigned to Joanne",
+  "description": "No open Spencer Inc / New York primary-contact case left unassigned to Joanne",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM customer_case cc JOIN account a ON cc.account_id = a.account_id WHERE a.name = 'Spencer Inc' AND cc.contact_id = 30 AND cc.state IN ('new', 'in_progress', 'pending') AND cc.assigned_to <> 4;",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ }
+]

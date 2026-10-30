@@ -1,0 +1,79 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "update_user_details",
+  "description": "Verify Thomas Green is now active and maintains correct role/details.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user WHERE user_id = 1 AND first_name = 'Thomas' AND last_name = 'Green' AND email = 'thomas.green@servicenow.com' AND role = 'agent' AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "add_new_product",
+  "description": "Verify the new product 'Integrated Security Policy Audit' was created correctly.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM product WHERE product_id = 241 AND name = 'Integrated Security Policy Audit' AND category = 'service' AND lifecycle_state = 'active';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "create_knowledge",
+  "description": "Verify the new knowledge article (KB-0000370) is created, published, and linked to the new product (241) and owner (1).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM knowledge WHERE knowledge_id = 370 AND kb_number = 'KB000370' AND state = 'published' AND visibility = 'internal' AND product_id = 241 AND owner_id = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_case",
+  "description": "Verify Case CS-0000197 has been canceled.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 197 AND number = 'CS-0000197' AND account_id = 8 AND state = 'canceled';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "customer_case",
+  "description": "Verify Case CS-0001233 is created, set to critical priority, in_progress state, assigned to group 2, and escalated.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 1233 AND number = 'CS-0001233' AND account_id = 8 AND contact_id = 10 AND product_id = 241 AND channel = 'phone' AND priority = 'critical' AND state = 'in_progress' AND assignment_group_id = 2 AND escalation = 1 AND escalation_reason = 'impact';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_case_knowledge",
+  "description": "Verify the new knowledge article (KB 370) is linked to the new case (1233) as 'suggested'.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 1233 AND knowledge_id = 370 AND used_as = 'suggested';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_new_case_sla",
+  "description": "Verify the critical SLA (ID 1) is correctly linked to Case 1233 in the in_progress stage.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla WHERE case_sla_id = 2465 AND case_id = 1233 AND sla_def_id = 1 AND stage = 'in_progress' AND has_breached = 0;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

@@ -1,0 +1,570 @@
+[
+ {
+  "name": "sn-csm-server",
+  "description": "sn-csm-server's tools.",
+  "tools": [
+   {
+    "name": "list_user_groups",
+    "call": "list_user_groups",
+    "description": "List user groups with optional filters.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "group_id": {
+       "type": "integer",
+       "description": "Filter by unique group identifier."
+      },
+      "name": {
+       "type": "string",
+       "description": "Filter by group name (exact match, unique)."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Filter by active status (true = active, false = inactive)."
+      },
+      "type": {
+       "type": "string",
+       "enum": [
+        "support",
+        "backoffice",
+        "field",
+        "vendor"
+       ],
+       "description": "Filter by group type (support, backoffice, field, vendor)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return only groups created after this timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return only groups created before this timestamp (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/list_user_groups",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_group_members",
+    "call": "list_group_members",
+    "description": "List user group members with optional filters. Combination of group_id and user_id is unique.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "member_id": {
+       "type": "integer",
+       "description": "Filter by unique membership identifier."
+      },
+      "group_id": {
+       "type": "integer",
+       "description": "Filter by group identifier."
+      },
+      "user_id": {
+       "type": "integer",
+       "description": "Filter by user identifier."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return only memberships created after this timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return only memberships created before this timestamp (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/list_group_members",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_sla_definitions",
+    "call": "find_sla_definitions",
+    "description": "Find SLA definitions with filters. All inputs are optional; not providing any filter will return all SLA definitions. An SLA definition outlines the expected service levels for response and resolution times based on case priority.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "sla_def_id": {
+       "type": "integer",
+       "description": "Unique identifier of the SLA definition."
+      },
+      "name": {
+       "type": "string",
+       "description": "Name of the SLA definition (e.g., 'SLA Response - Critical').",
+       "minLength": 1
+      },
+      "metric": {
+       "type": "string",
+       "enum": [
+        "response",
+        "resolution"
+       ],
+       "description": "SLA metric type. 'response' = first response SLA, 'resolution' = issue resolution SLA."
+      },
+      "target_mins": {
+       "type": "integer",
+       "description": "Target duration for the SLA in minutes."
+      },
+      "pause_on_pending": {
+       "type": "boolean",
+       "description": "Whether the SLA timer pauses when the case is in a pending state."
+      },
+      "applies_to_priority": {
+       "type": "string",
+       "enum": [
+        "critical",
+        "high",
+        "moderate",
+        "low"
+       ],
+       "description": "Priority level this SLA definition applies to."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Whether the SLA definition is active (true) or inactive (false)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return SLA definitions created before this date (YYYY-MM-DD format)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return SLA definitions created after this date (YYYY-MM-DD format)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_sla_definitions",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search_cases",
+    "call": "search_cases",
+    "description": "Search cases with rich filters and date bounds on sys_created_on. All inputs are optional; not providing any filter will return all cases. A case represents a customer-reported issue or request that requires tracking and resolution.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case."
+      },
+      "number": {
+       "type": "string",
+       "description": "Case number (unique human-readable reference)."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Filter by account ID. An account represents a business entity or organization."
+      },
+      "contact_id": {
+       "type": "integer",
+       "description": "Filter by contact ID."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Filter by product ID. Unique identifier which relates to the product table record."
+      },
+      "installed_product_id": {
+       "type": "integer",
+       "description": "Filter by installed product ID. Unique identifier which relates to the installed product table record."
+      },
+      "channel": {
+       "type": "string",
+       "enum": [
+        "web",
+        "email",
+        "phone",
+        "chat",
+        "social",
+        "alert",
+        "community"
+       ],
+       "description": "Channel through which the case was communicated/created."
+      },
+      "priority": {
+       "type": "string",
+       "enum": [
+        "critical",
+        "high",
+        "moderate",
+        "low"
+       ],
+       "description": "Priority of the case."
+      },
+      "state": {
+       "type": "string",
+       "enum": [
+        "new",
+        "in_progress",
+        "pending",
+        "resolved",
+        "closed",
+        "canceled"
+       ],
+       "description": "State of the case."
+      },
+      "short_description": {
+       "type": "string",
+       "description": "Short description of the case."
+      },
+      "escalation": {
+       "type": "boolean",
+       "description": "Whether the case is escalated."
+      },
+      "escalation_reason": {
+       "type": "string",
+       "enum": [
+        "urgency",
+        "vip",
+        "impact",
+        "breach_risk",
+        "customer_request"
+       ],
+       "description": "Reason for escalation."
+      },
+      "reopen_count": {
+       "type": "integer",
+       "description": "Filter by number of times the case was reopened."
+      },
+      "closed_on": {
+       "type": "string",
+       "description": "Filter cases closed on a specific date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return cases created before this date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return cases created after this date (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/search_cases",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_case_slas",
+    "call": "find_case_slas",
+    "description": "Find case_sla rows with flexible filters. All inputs are optional; not providing any filter will return all case_sla records. A case_sla record tracks the SLA status for a specific case based on the applied SLA definition.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_sla_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case_sla record."
+      },
+      "case_id": {
+       "type": "integer",
+       "description": "ID of the case linked to this SLA record."
+      },
+      "sla_def_id": {
+       "type": "integer",
+       "description": "ID of the SLA definition applied to the case."
+      },
+      "stage": {
+       "type": "string",
+       "enum": [
+        "in_progress",
+        "paused",
+        "completed",
+        "canceled"
+       ],
+       "description": "Current stage of the SLA tracking."
+      },
+      "start_time": {
+       "type": "string",
+       "description": "Timestamp when SLA tracking started (YYYY-MM-DD HH:MM:SS)."
+      },
+      "breach_time": {
+       "type": "string",
+       "description": "Expected SLA breach timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "has_breached": {
+       "type": "boolean",
+       "description": "Indicates whether the SLA was breached (true/false)."
+      },
+      "completed_time": {
+       "type": "string",
+       "description": "Timestamp when SLA was completed, if applicable."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_case_slas",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_case",
+    "call": "update_case",
+    "description": "Update an existing case (partial updates). A case represents a customer issue or request that needs to be tracked and resolved.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case to update."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Update the associated account ID."
+      },
+      "contact_id": {
+       "type": "integer",
+       "description": "Update the associated contact ID."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Update the product ID associated with the case."
+      },
+      "installed_product_id": {
+       "type": "integer",
+       "description": "Update the installed product ID."
+      },
+      "channel": {
+       "type": "string",
+       "enum": [
+        "web",
+        "email",
+        "phone",
+        "chat",
+        "social",
+        "alert",
+        "community"
+       ],
+       "description": "Update the channel used to create the case."
+      },
+      "priority": {
+       "type": "string",
+       "enum": [
+        "critical",
+        "high",
+        "moderate",
+        "low"
+       ],
+       "description": "Update the case priority."
+      },
+      "state": {
+       "type": "string",
+       "enum": [
+        "new",
+        "in_progress",
+        "pending",
+        "resolved",
+        "closed",
+        "canceled"
+       ],
+       "description": "Update the case state."
+      },
+      "short_description": {
+       "type": "string",
+       "description": "Update the case short description.",
+       "minLength": 1,
+       "maxLength": 500
+      },
+      "escalation": {
+       "type": "boolean",
+       "description": "Update whether the case is escalated."
+      },
+      "escalation_reason": {
+       "type": "string",
+       "enum": [
+        "urgency",
+        "vip",
+        "impact",
+        "breach_risk",
+        "customer_request"
+       ],
+       "description": "Update the escalation reason.",
+       "minLength": 1
+      },
+      "reopen_count": {
+       "type": "integer",
+       "description": "Update the reopen count."
+      },
+      "closed_on": {
+       "type": "string",
+       "description": "Update the closed date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "assignment_group_id": {
+       "type": "integer",
+       "description": "Update the assignment group ID."
+      },
+      "assigned_to": {
+       "type": "integer",
+       "description": "Update the assigned user ID."
+      }
+     },
+     "required": [
+      "case_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_case",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "link_new_case_sla",
+    "call": "link_new_case_sla",
+    "description": "Create a case_sla linkage record. A case_sla links a support case to a specific SLA definition, tracking the SLA status for that case.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "ID of the case being linked to an SLA."
+      },
+      "sla_def_id": {
+       "type": "integer",
+       "description": "ID of the SLA definition to apply."
+      },
+      "stage": {
+       "type": "string",
+       "enum": [
+        "in_progress",
+        "paused",
+        "completed",
+        "canceled"
+       ],
+       "description": "Initial stage of SLA tracking."
+      },
+      "start_time": {
+       "type": "string",
+       "description": "Start time of SLA tracking. If omitted, defaults to current timestamp."
+      },
+      "breach_time": {
+       "type": "string",
+       "description": "Expected SLA breach timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "has_breached": {
+       "type": "boolean",
+       "description": "Whether the SLA was already breached at creation (true/false)."
+      },
+      "completed_time": {
+       "type": "string",
+       "description": "Completion timestamp if the SLA is already completed."
+      }
+     },
+     "required": [
+      "case_id",
+      "sla_def_id",
+      "stage"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/link_new_case_sla",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_case_sla_details",
+    "call": "update_case_sla_details",
+    "description": "Update a case_sla record (partial updates). A case_sla links a support case to a specific SLA definition, tracking the SLA status for that case.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_sla_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case_sla record to update."
+      },
+      "case_id": {
+       "type": "integer",
+       "description": "Update the case ID linked to the SLA."
+      },
+      "sla_def_id": {
+       "type": "integer",
+       "description": "Update the SLA definition ID."
+      },
+      "stage": {
+       "type": "string",
+       "enum": [
+        "in_progress",
+        "paused",
+        "completed",
+        "canceled"
+       ],
+       "description": "Update the stage of SLA tracking."
+      },
+      "start_time": {
+       "type": "string",
+       "description": "Update the SLA start time."
+      },
+      "breach_time": {
+       "type": "string",
+       "description": "Update the expected breach time."
+      },
+      "has_breached": {
+       "type": "boolean",
+       "description": "Update whether the SLA is breached."
+      },
+      "completed_time": {
+       "type": "string",
+       "description": "Update the completion time."
+      }
+     },
+     "required": [
+      "case_sla_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_case_sla_details",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "send_notification",
+    "call": "send_notification",
+    "description": "Create a notification for a case (optionally tied to knowledge). Returns the created notification record. A notification represents a message sent to a customer or user regarding updates, alerts, or information related to a support case.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "Case ID this notification is related to."
+      },
+      "knowledge_id": {
+       "type": "integer",
+       "description": "Optional knowledge article ID linked to this notification."
+      },
+      "email": {
+       "type": "string",
+       "description": "Recipient email address of the notification.",
+       "minLength": 1
+      },
+      "type": {
+       "type": "string",
+       "enum": [
+        "report",
+        "update",
+        "alert",
+        "reminder",
+        "solution_proposal",
+        "next_steps",
+        "other"
+       ],
+       "description": "Type of notification being sent."
+      }
+     },
+     "required": [
+      "case_id",
+      "email",
+      "type"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/send_notification",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

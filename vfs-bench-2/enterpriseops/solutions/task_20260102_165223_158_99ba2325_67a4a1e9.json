@@ -1,0 +1,10 @@
+[
+ {"tool": "find_account", "args": {"name": "Zebra Partners"}},
+ {"tool": "find_contracts", "args": {"account_id": 2, "contract_type": "subscription"}},
+ {"tool": "update_contract", "args": {"contract_id": 3, "contract_price": 25798}},
+ {"tool": "find_contacts", "args": {"account_id": 2, "is_primary": true}},
+ {"tool": "list_users", "args": {"user_id": 802}},
+ {"tool": "find_locations", "args": {"location_id": 802}},
+ {"tool": "find_locations", "args": {"street": "Janice Landing", "city": "tokyo", "country": "japan"}},
+ {"tool": "update_user_details", "args": {"user_id": 802, "location_id": 803}}
+]

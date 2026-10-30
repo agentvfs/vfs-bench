@@ -1,0 +1,11 @@
+[
+ {"tool": "find_account", "args": {"name": "Acme Systems"}},
+ {"tool": "retrieve_installed_products", "args": {"account_id": 3}},
+ {"tool": "find_entitlements", "args": {"account_id": 3}},
+ {"tool": "find_contracts", "args": {"account_id": 3}},
+ {"tool": "search_cases", "args": {"account_id": 3, "product_id": 25}},
+ {"tool": "search_cases", "args": {"account_id": 3, "product_id": 159}},
+ {"tool": "update_contract", "args": {"contract_id": 133, "status": "active", "end_date": "2029-07-07"}},
+ {"tool": "update_entitlement", "args": {"entitlement_id": 26, "active": true}},
+ {"tool": "update_entitlement", "args": {"entitlement_id": 27, "active": true}}
+]

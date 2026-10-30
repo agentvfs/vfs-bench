@@ -1,0 +1,10 @@
+[
+ {"tool": "find_user_group", "args": {"name": "Installed Base Support"}},
+ {"tool": "search_cases", "args": {"number": "CS-0001179"}},
+ {"tool": "find_case_slas", "args": {"case_id": 1179}},
+ {"tool": "find_case_knowledge_linkages", "args": {"case_id": 1179}},
+ {"tool": "retrieve_knowledge", "args": {"product_id": 137, "state": "published"}},
+ {"tool": "update_case", "args": {"case_id": 1179, "state": "in_progress", "escalation": true, "escalation_reason": "customer_request"}},
+ {"tool": "update_case_sla_details", "args": {"case_sla_id": 2358, "stage": "in_progress"}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 1179, "knowledge_id": 206, "used_as": "suggested"}}
+]

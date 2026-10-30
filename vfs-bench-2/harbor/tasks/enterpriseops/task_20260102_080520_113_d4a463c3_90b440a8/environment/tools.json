@@ -1,0 +1,248 @@
+[
+ {
+  "name": "sn-csm-server",
+  "description": "sn-csm-server's tools.",
+  "tools": [
+   {
+    "name": "find_account",
+    "call": "find_account",
+    "description": "Retrieve an account by its exact name. Account is a company or organization that has a relationship with the business.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "Exact account name, e.g., 'Wood and Sons'.",
+       "minLength": 1
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_account",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_locations",
+    "call": "find_locations",
+    "description": "Find locations with optional filters. All the inputs are optional, not providing any filter will return all locations. Location represents a physical site or campus or user's location where services or products are installed or the user resides.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location_id": {
+       "type": "integer",
+       "description": "Unique identifier of the location."
+      },
+      "name": {
+       "type": "string",
+       "description": "Name of the location."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Whether the location is currently active."
+      },
+      "plot_no": {
+       "type": "string",
+       "description": "Plot number of the location."
+      },
+      "street": {
+       "type": "string",
+       "description": "Street address of the location."
+      },
+      "city": {
+       "type": "string",
+       "description": "City where the location is situated."
+      },
+      "country": {
+       "type": "string",
+       "description": "Country where the location is situated."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Filter for locations created before this timestamp (ISO format)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Filter for locations created after this timestamp (ISO format)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_locations",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "retrieve_installed_products",
+    "call": "retrieve_installed_products",
+    "description": "Retrieve installed products with rich filters. All filters are optional. If no filters are provided, all installed products will be returned. Installed products are items that have been deployed or set up for use at specific locations or accounts.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "installed_product_id": {
+       "type": "integer",
+       "description": "Unique installed product ID."
+      },
+      "location_id": {
+       "type": "integer",
+       "description": "Filter by location/site ID. Unique identifier which relates to the location table record."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Filter by account ID. Unique identifier which relates to the account table record. An account represents a business entity or organization."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Filter by product ID. Unique identifier which relates to the product table record."
+      },
+      "serial_number": {
+       "type": "string",
+       "description": "Exact serial number of the installed product. Unique identifier assigned to the product by the manufacturer."
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "in_use",
+        "in_stock",
+        "repair",
+        "retired"
+       ],
+       "description": "Current status of the installed product."
+      },
+      "warranty_end": {
+       "type": "string",
+       "description": "Exact warranty end date (YYYY-MM-DD)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return products created before this date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return products created after this date (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/retrieve_installed_products",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_location",
+    "call": "update_location",
+    "description": "Update an existing location (partial updates allowed). A location represents a physical site or office associated with the organization, such as branch offices, warehouses, or service centers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location_id": {
+       "type": "integer",
+       "description": "Unique identifier of the location to update."
+      },
+      "name": {
+       "type": "string",
+       "description": "Updated name of the location/site.",
+       "minLength": 1
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Updated active status (true = active, false = inactive)."
+      },
+      "plot_no": {
+       "type": "string",
+       "description": "Updated plot number for the location."
+      },
+      "street": {
+       "type": "string",
+       "description": "Updated street address for the location."
+      },
+      "city": {
+       "type": "string",
+       "enum": [
+        "new_york",
+        "london",
+        "mumbai",
+        "tokyo",
+        "sydney"
+       ],
+       "description": "Updated city where the location is situated."
+      },
+      "country": {
+       "type": "string",
+       "enum": [
+        "usa",
+        "uk",
+        "india",
+        "japan",
+        "australia"
+       ],
+       "description": "Updated country where the location is situated."
+      }
+     },
+     "required": [
+      "location_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_location",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_installed_product_details",
+    "call": "update_installed_product_details",
+    "description": "Update an installed product (partial updates allowed). Combination of Account ID, Product ID, Serial Number should be unique.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "installed_product_id": {
+       "type": "integer",
+       "description": "Unique installed product ID (required)."
+      },
+      "location_id": {
+       "type": "integer",
+       "description": "Location/site ID where the product is installed."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Owning account ID for this installed product."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Product ID that was installed."
+      },
+      "serial_number": {
+       "type": "string",
+       "description": "Unique serial number of the installed product.",
+       "minLength": 1
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "in_use",
+        "in_stock",
+        "repair",
+        "retired"
+       ],
+       "description": "Status of the installed product."
+      },
+      "warranty_end": {
+       "type": "string",
+       "description": "Warranty end date (YYYY-MM-DD)."
+      }
+     },
+     "required": [
+      "installed_product_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_installed_product_details",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

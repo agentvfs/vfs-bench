@@ -1,0 +1,35 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Primary Contact Updated",
+  "description": "Confirms that portal_user_id = 539 (Natalie Sanders) is now the primary contact for account 26 (Ramos-Case).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM contact WHERE account_id = 26 AND portal_user_id = 539 AND is_primary = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Old Primary Contact No Longer Marked Primary",
+  "description": "Checks that contact_id = 50 is not primary anymore.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM contact WHERE account_id = 26 AND contact_id = 50 AND is_primary = 1;",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "New Case Created",
+  "description": "Checks that exactly one case was created for Ramos-Case (account_id = 26), with:  contact_id = 51 (Natalie Sanders)  product_id = 179 (Pure Storage FlashArray//X Variant 47)  installed_product_id = 139  channel = 'alert'  priority = 'moderate'  state = 'new'  short_description with correct format",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE account_id = 26 AND contact_id = 51 AND product_id = 179 AND installed_product_id = 139 AND channel = 'alert' AND priority = 'moderate' AND state = 'new' AND short_description LIKE '%Product: Pure Storage FlashArray//X Variant 47, Issue:%';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

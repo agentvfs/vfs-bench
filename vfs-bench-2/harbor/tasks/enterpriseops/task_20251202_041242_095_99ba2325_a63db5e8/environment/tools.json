@@ -1,0 +1,497 @@
+[
+ {
+  "name": "sn-csm-server",
+  "description": "sn-csm-server's tools.",
+  "tools": [
+   {
+    "name": "find_user",
+    "call": "find_user",
+    "description": "Look up a user (portal customer, portal user or internal agent) by full name.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "Full name of user, e.g., 'Harry Middleton'."
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_user",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_group_members",
+    "call": "list_group_members",
+    "description": "List user group members with optional filters. Combination of group_id and user_id is unique.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "member_id": {
+       "type": "integer",
+       "description": "Filter by unique membership identifier."
+      },
+      "group_id": {
+       "type": "integer",
+       "description": "Filter by group identifier."
+      },
+      "user_id": {
+       "type": "integer",
+       "description": "Filter by user identifier."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return only memberships created after this timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return only memberships created before this timestamp (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/list_group_members",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search_cases",
+    "call": "search_cases",
+    "description": "Search cases with rich filters and date bounds on sys_created_on. All inputs are optional; not providing any filter will return all cases. A case represents a customer-reported issue or request that requires tracking and resolution.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case."
+      },
+      "number": {
+       "type": "string",
+       "description": "Case number (unique human-readable reference)."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Filter by account ID. An account represents a business entity or organization."
+      },
+      "contact_id": {
+       "type": "integer",
+       "description": "Filter by contact ID."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Filter by product ID. Unique identifier which relates to the product table record."
+      },
+      "installed_product_id": {
+       "type": "integer",
+       "description": "Filter by installed product ID. Unique identifier which relates to the installed product table record."
+      },
+      "channel": {
+       "type": "string",
+       "enum": [
+        "web",
+        "email",
+        "phone",
+        "chat",
+        "social",
+        "alert",
+        "community"
+       ],
+       "description": "Channel through which the case was communicated/created."
+      },
+      "priority": {
+       "type": "string",
+       "enum": [
+        "critical",
+        "high",
+        "moderate",
+        "low"
+       ],
+       "description": "Priority of the case."
+      },
+      "state": {
+       "type": "string",
+       "enum": [
+        "new",
+        "in_progress",
+        "pending",
+        "resolved",
+        "closed",
+        "canceled"
+       ],
+       "description": "State of the case."
+      },
+      "short_description": {
+       "type": "string",
+       "description": "Short description of the case."
+      },
+      "escalation": {
+       "type": "boolean",
+       "description": "Whether the case is escalated."
+      },
+      "escalation_reason": {
+       "type": "string",
+       "enum": [
+        "urgency",
+        "vip",
+        "impact",
+        "breach_risk",
+        "customer_request"
+       ],
+       "description": "Reason for escalation."
+      },
+      "reopen_count": {
+       "type": "integer",
+       "description": "Filter by number of times the case was reopened."
+      },
+      "closed_on": {
+       "type": "string",
+       "description": "Filter cases closed on a specific date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return cases created before this date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return cases created after this date (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/search_cases",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "retrieve_knowledge",
+    "call": "retrieve_knowledge",
+    "description": "Retrieve knowledge articles with full-text search on title/body and structured filters. All inputs are optional; not providing any filter will return all knowledge articles. A knowledge article is a documented piece of information that provides solutions, answers, or guidance on specific topics to help users resolve issues or learn about products and services.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "search_text": {
+       "type": "string",
+       "description": "Full-text search across article title and body. Free form search."
+      },
+      "knowledge_id": {
+       "type": "integer",
+       "description": "Filter by unique knowledge article ID."
+      },
+      "kb_number": {
+       "type": "string",
+       "description": "Filter by knowledge base number."
+      },
+      "title": {
+       "type": "string",
+       "description": "Filter by article title."
+      },
+      "state": {
+       "type": "string",
+       "enum": [
+        "draft",
+        "published",
+        "retired"
+       ],
+       "description": "Filter by article lifecycle state."
+      },
+      "visibility": {
+       "type": "string",
+       "enum": [
+        "internal",
+        "external"
+       ],
+       "description": "Filter by article visibility. Internal for staff, external for customers/public."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Filter by related product ID."
+      },
+      "owner_id": {
+       "type": "integer",
+       "description": "Filter by user ID of the article owner. User who authored the article."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Retrieve articles created before this timestamp."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Retrieve articles created after this timestamp."
+      },
+      "limit": {
+       "type": "integer",
+       "description": "Limit the number of articles returned."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/retrieve_knowledge",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_user_details",
+    "call": "update_user_details",
+    "description": "Update an existing user (partial updates supported). A user represents an individual who interacts with the system, such as support agents, managers, or customers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_id": {
+       "type": "integer",
+       "description": "Unique identifier of the user to update."
+      },
+      "email": {
+       "type": "string",
+       "description": "New email address for the user.",
+       "minLength": 1
+      },
+      "first_name": {
+       "type": "string",
+       "description": "Updated first name of the user.",
+       "minLength": 1
+      },
+      "last_name": {
+       "type": "string",
+       "description": "Updated last name of the user.",
+       "minLength": 1
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Updated active status (true = active, false = inactive)."
+      },
+      "phone": {
+       "type": "string",
+       "description": "Updated phone number."
+      },
+      "role": {
+       "type": "string",
+       "enum": [
+        "admin",
+        "agent",
+        "manager",
+        "customer"
+       ],
+       "description": "Updated role of the user."
+      },
+      "location_id": {
+       "type": "integer",
+       "description": "Updated location identifier."
+      }
+     },
+     "required": [
+      "user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_user_details",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_case",
+    "call": "update_case",
+    "description": "Update an existing case (partial updates). A case represents a customer issue or request that needs to be tracked and resolved.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case to update."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Update the associated account ID."
+      },
+      "contact_id": {
+       "type": "integer",
+       "description": "Update the associated contact ID."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Update the product ID associated with the case."
+      },
+      "installed_product_id": {
+       "type": "integer",
+       "description": "Update the installed product ID."
+      },
+      "channel": {
+       "type": "string",
+       "enum": [
+        "web",
+        "email",
+        "phone",
+        "chat",
+        "social",
+        "alert",
+        "community"
+       ],
+       "description": "Update the channel used to create the case."
+      },
+      "priority": {
+       "type": "string",
+       "enum": [
+        "critical",
+        "high",
+        "moderate",
+        "low"
+       ],
+       "description": "Update the case priority."
+      },
+      "state": {
+       "type": "string",
+       "enum": [
+        "new",
+        "in_progress",
+        "pending",
+        "resolved",
+        "closed",
+        "canceled"
+       ],
+       "description": "Update the case state."
+      },
+      "short_description": {
+       "type": "string",
+       "description": "Update the case short description.",
+       "minLength": 1,
+       "maxLength": 500
+      },
+      "escalation": {
+       "type": "boolean",
+       "description": "Update whether the case is escalated."
+      },
+      "escalation_reason": {
+       "type": "string",
+       "enum": [
+        "urgency",
+        "vip",
+        "impact",
+        "breach_risk",
+        "customer_request"
+       ],
+       "description": "Update the escalation reason.",
+       "minLength": 1
+      },
+      "reopen_count": {
+       "type": "integer",
+       "description": "Update the reopen count."
+      },
+      "closed_on": {
+       "type": "string",
+       "description": "Update the closed date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "assignment_group_id": {
+       "type": "integer",
+       "description": "Update the assignment group ID."
+      },
+      "assigned_to": {
+       "type": "integer",
+       "description": "Update the assigned user ID."
+      }
+     },
+     "required": [
+      "case_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_case",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_knowledge",
+    "call": "update_knowledge",
+    "description": "Update a knowledge article (partial updates allowed). A knowledge article is a documented piece of information that provides solutions, guidelines, or answers to common questions for customers or internal staff.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "knowledge_id": {
+       "type": "integer",
+       "description": "Unique identifier of the knowledge article to update."
+      },
+      "kb_number": {
+       "type": "string",
+       "description": "Knowledge base number (system-generated unique reference)."
+      },
+      "title": {
+       "type": "string",
+       "description": "Update the title of the article.",
+       "minLength": 1
+      },
+      "state": {
+       "type": "string",
+       "enum": [
+        "draft",
+        "published",
+        "retired"
+       ],
+       "description": "Update the lifecycle state of the article."
+      },
+      "visibility": {
+       "type": "string",
+       "enum": [
+        "internal",
+        "external"
+       ],
+       "description": "Update the visibility of the article."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Update the related product ID."
+      },
+      "owner_id": {
+       "type": "integer",
+       "description": "Update the user ID of the article owner/author."
+      }
+     },
+     "required": [
+      "knowledge_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_knowledge",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "link_case_knowledge",
+    "call": "link_case_knowledge",
+    "description": "Link a case to a knowledge article. A case_knowledge linkage associates a support case with a specific knowledge article, indicating how the article is relevant to the case.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case being linked."
+      },
+      "knowledge_id": {
+       "type": "integer",
+       "description": "Unique identifier of the knowledge article to link."
+      },
+      "used_as": {
+       "type": "string",
+       "enum": [
+        "suggested",
+        "applied",
+        "resolution"
+       ],
+       "description": "Purpose of the knowledge article in context of the case: suggested, applied, or used as resolution."
+      }
+     },
+     "required": [
+      "case_id",
+      "knowledge_id",
+      "used_as"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/link_case_knowledge",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

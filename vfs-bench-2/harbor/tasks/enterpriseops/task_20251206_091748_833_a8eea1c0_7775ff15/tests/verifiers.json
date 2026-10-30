@@ -1,0 +1,112 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "update_case",
+  "description": "Verify Case 7 is assigned to Curtis Mccoy (ID 177).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT assigned_to FROM customer_case WHERE case_id = 7;",
+   "expected_value": 177,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_case",
+  "description": "Verify Case 7 priority was successfully escalated to critical.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT priority FROM customer_case WHERE case_id = 7;",
+   "expected_value": "critical",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_case",
+  "description": "Verify Case 7 escalation flag is set.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT escalation FROM customer_case WHERE case_id = 7;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_case",
+  "description": "Verify Case 7 escalation reason is correctly set to 'urgency'.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT escalation_reason FROM customer_case WHERE case_id = 7;",
+   "expected_value": "urgency",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_case",
+  "description": "Verify Case 7 is assigned to the Escalation Management group (ID 18).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT assignment_group_id FROM customer_case WHERE case_id = 7;",
+   "expected_value": 18,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_case",
+  "description": "Verify Case 7 state is successfully transitioned to 'resolved'.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT state FROM customer_case WHERE case_id = 7;",
+   "expected_value": "resolved",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_case_sla_details",
+  "description": "Verify the Response SLA (ID 13) stage is updated to 'completed'.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT stage FROM case_sla WHERE case_sla_id = 13;",
+   "expected_value": "completed",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_case_sla_details",
+  "description": "Verify the Resolution SLA (ID 14) stage is updated to 'completed'.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT stage FROM case_sla WHERE case_sla_id = 14;",
+   "expected_value": "completed",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_case_sla_details",
+  "description": "Verify the Response SLA (ID 13) status reflects no breach after resolution.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT has_breached FROM case_sla WHERE case_sla_id = 13;",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_case_sla_details",
+  "description": "Verify the Resolution SLA (ID 14) completed time has been recorded.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(completed_time) FROM case_sla WHERE case_sla_id = 14;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

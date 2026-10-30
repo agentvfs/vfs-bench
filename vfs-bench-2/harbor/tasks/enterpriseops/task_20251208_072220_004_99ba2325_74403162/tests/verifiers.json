@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify group membership",
+  "description": "Verify group membership",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM user_group_member WHERE group_id = 4 AND user_id = 803;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify case sla 1",
+  "description": "Verify case sla 1",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM case_sla WHERE case_sla_id = 1 AND stage = 'in_progress' AND has_breached = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify case update",
+  "description": "Verify case update",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM customer_case WHERE case_id = 1 AND state = 'in_progress' AND assignment_group_id = 4 AND assigned_to = 803;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify user creation",
+  "description": "Verify user creation",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM user WHERE email = 'oliver.oats@servicenow.com' AND role = 'agent' AND active = 1 AND location_id = 832;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify case sla 2",
+  "description": "Verify case sla 2",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM case_sla WHERE case_sla_id = 2 AND stage = 'in_progress' AND has_breached = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

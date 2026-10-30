@@ -1,0 +1,35 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Update case",
+  "description": "Validate case updates",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 1179 AND state = 'in_progress' AND escalation = 1 AND escalation_reason = 'customer_request';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Update sla ",
+  "description": "Validate sla updates",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT stage FROM case_sla WHERE case_sla_id = 2358;",
+   "expected_value": "in_progress",
+   "comparison_type": "contains"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Knowledge article link",
+  "description": "Validate article link",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 1179 AND knowledge_id = 206 AND used_as = 'suggested';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

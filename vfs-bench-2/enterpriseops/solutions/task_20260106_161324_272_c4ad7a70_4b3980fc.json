@@ -1,0 +1,12 @@
+[
+ {"tool": "find_account", "args": {"name": "Acme Systems"}},
+ {"tool": "find_user", "args": {"name": "Michael Ward"}},
+ {"tool": "find_contact_by_portal_user", "args": {"portal_user_id": 47}},
+ {"tool": "find_product", "args": {"name": "SUSE Linux Enterprise Server 15 Variant 5"}},
+ {"tool": "search_cases", "args": {"account_id": 3, "product_id": 25, "state": "new"}},
+ {"tool": "find_user_by_email", "args": {"email": "tabitha.bullock@servicenow.com"}},
+ {"tool": "list_user_groups", "args": {"group_id": 30}},
+ {"tool": "check_user_membership", "args": {"user_id": 3, "group_id": 30}},
+ {"tool": "add_new_group_member", "args": {"group_id": 30, "user_id": 3}},
+ {"tool": "update_case", "args": {"case_id": 71, "escalation": true, "escalation_reason": "vip", "assigned_to": 3}}
+]

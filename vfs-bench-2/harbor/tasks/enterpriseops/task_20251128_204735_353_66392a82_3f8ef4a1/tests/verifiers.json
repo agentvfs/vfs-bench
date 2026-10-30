@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Carrillo Jira variant 77 Case Created Correctly",
+  "description": "Check that a new High priority email case was created for Carrillo Inc and the correct installed Jira Variant 77 system",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS c FROM customer_case WHERE case_id = 1233 AND account_id = 19 AND contact_id = 31 AND product_id = 97 AND installed_product_id = 98 AND channel = 'email' AND priority = 'high' AND state = 'new';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Carrillo Jira variant 77 Case Knowledge Linkage",
+  "description": "Verify that the Jira Variant 77 troubleshooting article is linked to the new case as a suggested solution",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS c FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 1233 AND knowledge_id = 145 AND used_as = 'suggested';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Notification sent",
+  "description": "Verify that a solution proposal email was sent to Patricia with the correct article and case context",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS c FROM notification WHERE notification_id = 734 AND case_id = 1233 AND knowledge_id = 145 AND email = 'patricia.castro@carrilloinc.com' AND type = 'solution_proposal' AND status = 'success';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Response SLA linked to case",
+  "description": "Verify that response SLA is linked to case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla WHERE case_id = 1233 AND sla_def_id = 2 AND stage = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Resolution SLA linked to case",
+  "description": "Verify that resolution SLA is linked to case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla WHERE case_id = 1233 AND sla_def_id = 7 AND stage = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

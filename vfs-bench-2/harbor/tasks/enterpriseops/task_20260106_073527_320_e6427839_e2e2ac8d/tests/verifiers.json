@@ -1,0 +1,24 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the case escalated correctly.",
+  "description": "Verify if the case escalated correctly.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = '700' AND account_id = '31' AND product_id = '83' AND escalation = '1' AND escalation_reason = 'customer_request' AND priority = 'moderate';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify case is assigned to the correct user as requested.",
+  "description": "Verify case is assigned to the correct user as requested.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = '700' AND account_id = '31' AND product_id = '83' AND assigned_to = '103' AND priority = 'moderate';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

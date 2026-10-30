@@ -1,0 +1,9 @@
+[
+ {"tool": "find_contracts", "args": {"status": "active", "contract_type": "warranty"}},
+ {"tool": "update_contract", "args": {"contract_id": 100, "end_date": "2027-02-07"}},
+ {"tool": "update_contract", "args": {"contract_id": 115, "end_date": "2027-02-28"}},
+ {"tool": "update_contract", "args": {"contract_id": 33, "end_date": "2028-02-24"}},
+ {"tool": "update_contract", "args": {"contract_id": 56, "end_date": "2028-02-26"}},
+ {"tool": "update_contract", "args": {"contract_id": 60, "end_date": "2028-02-04"}},
+ {"tool": "update_contract", "args": {"contract_id": 117, "end_date": "2028-02-12"}}
+]

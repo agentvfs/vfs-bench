@@ -1,0 +1,133 @@
+[
+ {
+  "name": "sn-csm-server",
+  "description": "sn-csm-server's tools.",
+  "tools": [
+   {
+    "name": "find_contracts",
+    "call": "find_contracts",
+    "description": "Find contracts with multiple filters including price range. All inputs are optional; not providing any filter will return all contracts. A contract represents a formal agreement between two or more parties.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contract_id": {
+       "type": "integer",
+       "description": "Unique identifier of the contract."
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "draft",
+        "active",
+        "suspended",
+        "expired"
+       ],
+       "description": "Filter contracts by their current status."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Filter contracts by the owning account’s ID. An account represents a business entity or organization."
+      },
+      "contract_type": {
+       "type": "string",
+       "enum": [
+        "support",
+        "warranty",
+        "subscription"
+       ],
+       "description": "Filter by contract type."
+      },
+      "start_date": {
+       "type": "string",
+       "description": "Contract start date (YYYY-MM-DD)."
+      },
+      "end_date": {
+       "type": "string",
+       "description": "Contract end date (YYYY-MM-DD)."
+      },
+      "contract_price": {
+       "type": "integer",
+       "description": "Exact price of the contract in system currency."
+      },
+      "contract_price_range_start": {
+       "type": "integer",
+       "description": "Lower bound of contract price range filter."
+      },
+      "contract_price_range_end": {
+       "type": "integer",
+       "description": "Upper bound of contract price range filter."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Find contracts created before this timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Find contracts created after this timestamp (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_contracts",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_contract",
+    "call": "update_contract",
+    "description": "Update an existing contract (partial updates allowed). Contracts define the terms of service, support, or warranty agreements between the organization and its customers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contract_id": {
+       "type": "integer",
+       "description": "Unique identifier of the contract to update."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Update the account ID associated with this contract."
+      },
+      "contract_price": {
+       "type": "integer",
+       "description": "Update the price value of the contract."
+      },
+      "contract_type": {
+       "type": "string",
+       "enum": [
+        "support",
+        "warranty",
+        "subscription"
+       ],
+       "description": "Update the contract type."
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "draft",
+        "active",
+        "suspended",
+        "expired"
+       ],
+       "description": "Update the contract’s status."
+      },
+      "start_date": {
+       "type": "string",
+       "description": "Update the contract’s start date (YYYY-MM-DD)."
+      },
+      "end_date": {
+       "type": "string",
+       "description": "Update the contract’s end date (YYYY-MM-DD)."
+      }
+     },
+     "required": [
+      "contract_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_contract",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

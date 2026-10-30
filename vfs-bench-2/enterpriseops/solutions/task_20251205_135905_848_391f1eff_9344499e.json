@@ -1,0 +1,12 @@
+[
+ {"tool": "search_cases", "args": {"number": "CS-0000379"}},
+ {"tool": "find_user_group", "args": {"name": "Contact Center L2"}},
+ {"tool": "find_user_by_email", "args": {"email": "lisa.brown@servicenow.com"}},
+ {"tool": "check_user_membership", "args": {"user_id": 656, "group_id": 9}},
+ {"tool": "assign_case_to_user", "args": {"case_id": 379, "assigned_to_user_id": 656}},
+ {"tool": "update_case", "args": {"case_id": 379, "state": "in_progress"}},
+ {"tool": "find_case_slas", "args": {"case_id": 379}},
+ {"tool": "update_case_sla_details", "args": {"case_sla_id": 757, "stage": "in_progress"}},
+ {"tool": "retrieve_knowledge", "args": {"product_id": 38, "state": "published"}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 379, "knowledge_id": 57, "used_as": "suggested"}}
+]

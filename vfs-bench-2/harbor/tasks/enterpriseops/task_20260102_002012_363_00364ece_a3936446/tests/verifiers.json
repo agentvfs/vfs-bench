@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Validating notification. ",
+  "description": "Validating whether an update notification was successfully sent to Stephanie Clark. ",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM notification n\nJOIN user u ON n.email = u.email\nWHERE u.first_name = 'Stephanie'\n  AND u.last_name = 'Clark'\n  AND n.type = 'report'\n  AND n.status = 'success'\n  AND n.knowledge_id = 81;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating user deactivation. ",
+  "description": "Validating whether Mario Perry is inactive.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM user u\nWHERE u.first_name = 'Mario'\n  AND u.last_name = 'Perry'\n  AND u.active = 0;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating a new case assignment. ",
+  "description": "Validating whether a new high-priority case for Stephanie Clark via email for issue in Docker Enterprise Variant 35 has been created.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM customer_case cc\nJOIN contact c ON cc.contact_id = c.contact_id\nJOIN user u ON c.portal_user_id = u.user_id\nJOIN product p ON cc.product_id = p.product_id\nWHERE u.first_name = 'Stephanie'\n  AND u.last_name = 'Clark'\n  AND cc.channel = 'email'\n  AND p.name = 'Docker Enterprise Variant 35'\n  AND cc.state = 'new'\n  AND cc.priority = 'high';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating user and group assignment to the case.  ",
+  "description": "Validating whether Emily Moore is assigned to this case and Field Service Coordination_2 is the assignment group",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM customer_case cc\nJOIN user u ON cc.assigned_to = u.user_id\nJOIN user_group g ON cc.assignment_group_id = g.group_id\nWHERE u.first_name = 'Emily'\n  AND u.last_name = 'Moore'\n  AND g.name = 'Field Service Coordination_2';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating assignment policy. ",
+  "description": "Validate that Emily Moore is a member of Field Service Coordination_2.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM user_group_member ugm\nJOIN user u ON ugm.user_id = u.user_id\nJOIN user_group g ON ugm.group_id = g.group_id\nWHERE u.first_name = 'Emily'\n  AND u.last_name = 'Moore'\n  AND g.name = 'Field Service Coordination_2';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

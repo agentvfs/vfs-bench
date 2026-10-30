@@ -1,0 +1,14 @@
+[
+ {"tool": "find_user", "args": {"name": "Thomas Martin"}},
+ {"tool": "find_account", "args": {"name": "Morse-Gomez"}},
+ {"tool": "find_contacts", "args": {"account_id": 21}},
+ {"tool": "find_installed_product_by_serial", "args": {"serial_number": "P164-989725-4840"}},
+ {"tool": "find_product_by_id", "args": {"product_id": 164}},
+ {"tool": "find_entitlements", "args": {"account_id": 21, "active": true}},
+ {"tool": "search_cases", "args": {"account_id": 21, "product_id": 164, "state": "pending"}},
+ {"tool": "create_contact", "args": {"account_id": 21, "portal_user_id": 784, "active": true, "is_primary": false}},
+ {"tool": "create_new_case", "args": {"account_id": 21, "contact_id": 125, "product_id": 164, "channel": "email", "priority": "critical", "state": "new", "short_description": "Product: Palo Alto Networks PA-3220 Variant 32, Issue: device needs repair, hampering business."}},
+ {"tool": "retrieve_knowledge", "args": {"product_id": 164, "state": "published"}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 1233, "knowledge_id": 244, "used_as": "suggested"}},
+ {"tool": "update_case", "args": {"case_id": 463, "state": "canceled"}}
+]

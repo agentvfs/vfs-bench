@@ -1,0 +1,388 @@
+[
+ {
+  "name": "sn-csm-server",
+  "description": "sn-csm-server's tools.",
+  "tools": [
+   {
+    "name": "find_user",
+    "call": "find_user",
+    "description": "Look up a user (portal customer, portal user or internal agent) by full name.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "Full name of user, e.g., 'Harry Middleton'."
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_user",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "assign_case_to_user",
+    "call": "assign_case_to_user",
+    "description": "Assign an existing case to a specific user (agent). Case represents a support ticket or issue that needs to be resolved. The assigned user takes care of the lifecycle of the case to its closure.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case to be assigned."
+      },
+      "assigned_to_user_id": {
+       "type": "integer",
+       "description": "Unique identifier of the user (agent) to assign the case to. It is a user who is assigned to handle the case. The user has record in the user table with at least role 'agent'."
+      }
+     },
+     "required": [
+      "case_id",
+      "assigned_to_user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/assign_case_to_user",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_users",
+    "call": "list_users",
+    "description": "List users with optional filters. None of the filters are mandatory. If no filters are provided, all users will be returned.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "email": {
+       "type": "string",
+       "description": "Filter by user email address (exact match) (unique)."
+      },
+      "user_id": {
+       "type": "integer",
+       "description": "Filter by unique user identifier."
+      },
+      "first_name": {
+       "type": "string",
+       "description": "Filter by user's first name."
+      },
+      "last_name": {
+       "type": "string",
+       "description": "Filter by user's last name."
+      },
+      "phone": {
+       "type": "string",
+       "description": "Filter by phone number."
+      },
+      "role": {
+       "type": "string",
+       "enum": [
+        "admin",
+        "agent",
+        "manager",
+        "customer"
+       ],
+       "description": "Filter by user role (admin, agent, manager, or customer)."
+      },
+      "location_id": {
+       "type": "integer",
+       "description": "Filter by location identifier."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Filter by active status (true = active, false = inactive)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return only users created after this timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return only users created before this timestamp (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/list_users",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_locations",
+    "call": "find_locations",
+    "description": "Find locations with optional filters. All the inputs are optional, not providing any filter will return all locations. Location represents a physical site or campus or user's location where services or products are installed or the user resides.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location_id": {
+       "type": "integer",
+       "description": "Unique identifier of the location."
+      },
+      "name": {
+       "type": "string",
+       "description": "Name of the location."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Whether the location is currently active."
+      },
+      "plot_no": {
+       "type": "string",
+       "description": "Plot number of the location."
+      },
+      "street": {
+       "type": "string",
+       "description": "Street address of the location."
+      },
+      "city": {
+       "type": "string",
+       "description": "City where the location is situated."
+      },
+      "country": {
+       "type": "string",
+       "description": "Country where the location is situated."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Filter for locations created before this timestamp (ISO format)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Filter for locations created after this timestamp (ISO format)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_locations",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_cases_assigned_to",
+    "call": "get_cases_assigned_to",
+    "description": "List cases filtered by assignment_group_id and/or assigned_to.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "assignment_group_id": {
+       "type": "integer",
+       "description": "Filter by the assignment group responsible for the case."
+      },
+      "assigned_to": {
+       "type": "integer",
+       "description": "Filter by the specific user ID the case is assigned to."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/get_cases_assigned_to",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "add_new_user",
+    "call": "add_new_user",
+    "description": "Create a new user record. A user represents an individual who interacts with the system, such as support agents, managers, or customers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "first_name": {
+       "type": "string",
+       "description": "User's first name.",
+       "minLength": 1
+      },
+      "last_name": {
+       "type": "string",
+       "description": "User's last name.",
+       "minLength": 1
+      },
+      "email": {
+       "type": "string",
+       "description": "Unique email address of the user.",
+       "minLength": 1
+      },
+      "phone": {
+       "type": "string",
+       "description": "Contact phone number of the user."
+      },
+      "role": {
+       "type": "string",
+       "enum": [
+        "admin",
+        "agent",
+        "manager",
+        "customer"
+       ],
+       "description": "User role within the system."
+      },
+      "location_id": {
+       "type": "integer",
+       "description": "Associated location identifier. Optional. Location where user resides/works."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Whether the user is active (true) or inactive (false)."
+      }
+     },
+     "required": [
+      "first_name",
+      "last_name",
+      "email",
+      "role",
+      "active"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/add_new_user",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_user_details",
+    "call": "update_user_details",
+    "description": "Update an existing user (partial updates supported). A user represents an individual who interacts with the system, such as support agents, managers, or customers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_id": {
+       "type": "integer",
+       "description": "Unique identifier of the user to update."
+      },
+      "email": {
+       "type": "string",
+       "description": "New email address for the user.",
+       "minLength": 1
+      },
+      "first_name": {
+       "type": "string",
+       "description": "Updated first name of the user.",
+       "minLength": 1
+      },
+      "last_name": {
+       "type": "string",
+       "description": "Updated last name of the user.",
+       "minLength": 1
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Updated active status (true = active, false = inactive)."
+      },
+      "phone": {
+       "type": "string",
+       "description": "Updated phone number."
+      },
+      "role": {
+       "type": "string",
+       "enum": [
+        "admin",
+        "agent",
+        "manager",
+        "customer"
+       ],
+       "description": "Updated role of the user."
+      },
+      "location_id": {
+       "type": "integer",
+       "description": "Updated location identifier."
+      }
+     },
+     "required": [
+      "user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_user_details",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "add_new_group_member",
+    "call": "add_new_group_member",
+    "description": "Add a user to a group. Combination of group_id and user_id should be unique.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "group_id": {
+       "type": "integer",
+       "description": "Identifier of the group the user will be added to."
+      },
+      "user_id": {
+       "type": "integer",
+       "description": "Identifier of the user being added to the group."
+      }
+     },
+     "required": [
+      "group_id",
+      "user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/add_new_group_member",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "add_location",
+    "call": "add_location",
+    "description": "Create a new location (site). A location represents a physical site or office associated with the organization, such as branch offices, warehouses, or service centers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "Name of the location/site (e.g., 'Downtown HQ').",
+       "minLength": 1
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Whether the location is active (true) or inactive (false)."
+      },
+      "plot_no": {
+       "type": "string",
+       "description": "Plot number of the location (optional)."
+      },
+      "street": {
+       "type": "string",
+       "description": "Street address of the location (optional)."
+      },
+      "city": {
+       "type": "string",
+       "enum": [
+        "new_york",
+        "london",
+        "mumbai",
+        "tokyo",
+        "sydney"
+       ],
+       "description": "City where the location is situated."
+      },
+      "country": {
+       "type": "string",
+       "enum": [
+        "usa",
+        "uk",
+        "india",
+        "japan",
+        "australia"
+       ],
+       "description": "Country where the location is situated."
+      }
+     },
+     "required": [
+      "name",
+      "active",
+      "city",
+      "country"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/add_location",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

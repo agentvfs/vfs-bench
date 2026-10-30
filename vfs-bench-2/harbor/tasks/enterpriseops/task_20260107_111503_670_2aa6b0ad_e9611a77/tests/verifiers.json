@@ -1,0 +1,46 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify that new case is created without product in repair status added.",
+  "description": "Verify that new case is created without product in repair status added.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = '1233' AND account_id = '21' AND installed_product_id IS NULL AND channel = 'email' AND priority = 'critical' AND product_id = '164' AND state = 'new' AND contact_id = '125';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify that contact is created.",
+  "description": "Verify that contact is created.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM contact WHERE contact_id = '125' AND account_id = '21' AND portal_user_id = '784' AND is_primary = '0';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify that the previous case is cancelled.",
+  "description": "Verify that the previous case is cancelled.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = '463' AND state = 'canceled';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify KB article is added correctly.",
+  "description": "Verify KB article is added correctly.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge WHERE case_id = '1233' AND knowledge_id = '244' AND used_as = 'suggested';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

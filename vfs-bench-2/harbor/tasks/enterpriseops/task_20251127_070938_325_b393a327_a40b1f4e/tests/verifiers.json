@@ -1,0 +1,24 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify case closed",
+  "description": "Verify case closed, no reopen_count bump, not assigned to anyone, priority unchanged",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE number = 'CS-0001213' AND state = 'closed' AND reopen_count = 0 AND assigned_to IS NULL AND priority = 'moderate';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Notification",
+  "description": "Verify notification was sent",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM notification WHERE case_id = 1213 AND email = 'sheri.trujillo60@servicenow.com' AND type = 'alert';",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ }
+]

@@ -1,0 +1,477 @@
+[
+ {
+  "name": "sn-csm-server",
+  "description": "sn-csm-server's tools.",
+  "tools": [
+   {
+    "name": "find_product_by_id",
+    "call": "find_product_by_id",
+    "description": "Retrieve a product by product ID. Product represents an item or service offered by the company. Each Product has a unique identifier called product_id.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "product_id": {
+       "type": "integer",
+       "description": " Unique identifier of the product."
+      }
+     },
+     "required": [
+      "product_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_product_by_id",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_accounts",
+    "call": "get_accounts",
+    "description": "List accounts with optional filters. All the inputs are optional, not providing any filter will return all accounts. Account represents a business entity or organization.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "account_id": {
+       "type": "integer",
+       "description": "Filter by unique account identifier."
+      },
+      "name": {
+       "type": "string",
+       "description": "Filter by account name (e.g., 'Acme Systems') (unique). Name of the company/organization associated with the account.",
+       "minLength": 1
+      },
+      "email_domain": {
+       "type": "string",
+       "description": "Filter by account email domain (e.g., 'acme.com'). it is the domain part of email addresses associated with the account or the website.",
+       "minLength": 1
+      },
+      "account_types": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "enum": [
+         "customer",
+         "partner",
+         "internal"
+        ]
+       },
+       "description": "Filter by one or more account types (customer, partner, internal)."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Filter by active status (true = active, false = inactive)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return only accounts created after this timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return only accounts created before this timestamp (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/get_accounts",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_entitlements",
+    "call": "find_entitlements",
+    "description": "Find entitlements with filters. All inputs are optional; not providing any filter will return all entitlements. An entitlement represents a customer's right to receive specific services or support based on their agreement.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "entitlement_id": {
+       "type": "integer",
+       "description": "Unique identifier of the entitlement."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Filter entitlements by associated account ID. An account represents a business entity or organization."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Filter entitlements by product ID. Unique identifier which relates to the product table record."
+      },
+      "contract_id": {
+       "type": "integer",
+       "description": "Filter entitlements by contract ID. Unique identifier which relates to the contract table record."
+      },
+      "support_level": {
+       "type": "string",
+       "enum": [
+        "standard",
+        "premium",
+        "enterprise"
+       ],
+       "description": "Support level associated with the entitlement."
+      },
+      "coverage_hours": {
+       "type": "string",
+       "enum": [
+        "h8x5",
+        "h12x6",
+        "h24x7"
+       ],
+       "description": "Coverage hours offered under the entitlement (8x5, 12x6, 24x7)."
+      },
+      "max_cases_per_month": {
+       "type": "integer",
+       "description": "Maximum number of support cases allowed per month under this entitlement."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Filter by entitlement status (true = active, false = inactive)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return entitlements created before this date (YYYY-MM-DD format)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return entitlements created after this date (YYYY-MM-DD format)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_entitlements",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_sla_definitions",
+    "call": "find_sla_definitions",
+    "description": "Find SLA definitions with filters. All inputs are optional; not providing any filter will return all SLA definitions. An SLA definition outlines the expected service levels for response and resolution times based on case priority.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "sla_def_id": {
+       "type": "integer",
+       "description": "Unique identifier of the SLA definition."
+      },
+      "name": {
+       "type": "string",
+       "description": "Name of the SLA definition (e.g., 'SLA Response - Critical').",
+       "minLength": 1
+      },
+      "metric": {
+       "type": "string",
+       "enum": [
+        "response",
+        "resolution"
+       ],
+       "description": "SLA metric type. 'response' = first response SLA, 'resolution' = issue resolution SLA."
+      },
+      "target_mins": {
+       "type": "integer",
+       "description": "Target duration for the SLA in minutes."
+      },
+      "pause_on_pending": {
+       "type": "boolean",
+       "description": "Whether the SLA timer pauses when the case is in a pending state."
+      },
+      "applies_to_priority": {
+       "type": "string",
+       "enum": [
+        "critical",
+        "high",
+        "moderate",
+        "low"
+       ],
+       "description": "Priority level this SLA definition applies to."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Whether the SLA definition is active (true) or inactive (false)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return SLA definitions created before this date (YYYY-MM-DD format)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return SLA definitions created after this date (YYYY-MM-DD format)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_sla_definitions",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search_cases",
+    "call": "search_cases",
+    "description": "Search cases with rich filters and date bounds on sys_created_on. All inputs are optional; not providing any filter will return all cases. A case represents a customer-reported issue or request that requires tracking and resolution.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case."
+      },
+      "number": {
+       "type": "string",
+       "description": "Case number (unique human-readable reference)."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Filter by account ID. An account represents a business entity or organization."
+      },
+      "contact_id": {
+       "type": "integer",
+       "description": "Filter by contact ID."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Filter by product ID. Unique identifier which relates to the product table record."
+      },
+      "installed_product_id": {
+       "type": "integer",
+       "description": "Filter by installed product ID. Unique identifier which relates to the installed product table record."
+      },
+      "channel": {
+       "type": "string",
+       "enum": [
+        "web",
+        "email",
+        "phone",
+        "chat",
+        "social",
+        "alert",
+        "community"
+       ],
+       "description": "Channel through which the case was communicated/created."
+      },
+      "priority": {
+       "type": "string",
+       "enum": [
+        "critical",
+        "high",
+        "moderate",
+        "low"
+       ],
+       "description": "Priority of the case."
+      },
+      "state": {
+       "type": "string",
+       "enum": [
+        "new",
+        "in_progress",
+        "pending",
+        "resolved",
+        "closed",
+        "canceled"
+       ],
+       "description": "State of the case."
+      },
+      "short_description": {
+       "type": "string",
+       "description": "Short description of the case."
+      },
+      "escalation": {
+       "type": "boolean",
+       "description": "Whether the case is escalated."
+      },
+      "escalation_reason": {
+       "type": "string",
+       "enum": [
+        "urgency",
+        "vip",
+        "impact",
+        "breach_risk",
+        "customer_request"
+       ],
+       "description": "Reason for escalation."
+      },
+      "reopen_count": {
+       "type": "integer",
+       "description": "Filter by number of times the case was reopened."
+      },
+      "closed_on": {
+       "type": "string",
+       "description": "Filter cases closed on a specific date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return cases created before this date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return cases created after this date (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/search_cases",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_case",
+    "call": "update_case",
+    "description": "Update an existing case (partial updates). A case represents a customer issue or request that needs to be tracked and resolved.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case to update."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Update the associated account ID."
+      },
+      "contact_id": {
+       "type": "integer",
+       "description": "Update the associated contact ID."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Update the product ID associated with the case."
+      },
+      "installed_product_id": {
+       "type": "integer",
+       "description": "Update the installed product ID."
+      },
+      "channel": {
+       "type": "string",
+       "enum": [
+        "web",
+        "email",
+        "phone",
+        "chat",
+        "social",
+        "alert",
+        "community"
+       ],
+       "description": "Update the channel used to create the case."
+      },
+      "priority": {
+       "type": "string",
+       "enum": [
+        "critical",
+        "high",
+        "moderate",
+        "low"
+       ],
+       "description": "Update the case priority."
+      },
+      "state": {
+       "type": "string",
+       "enum": [
+        "new",
+        "in_progress",
+        "pending",
+        "resolved",
+        "closed",
+        "canceled"
+       ],
+       "description": "Update the case state."
+      },
+      "short_description": {
+       "type": "string",
+       "description": "Update the case short description.",
+       "minLength": 1,
+       "maxLength": 500
+      },
+      "escalation": {
+       "type": "boolean",
+       "description": "Update whether the case is escalated."
+      },
+      "escalation_reason": {
+       "type": "string",
+       "enum": [
+        "urgency",
+        "vip",
+        "impact",
+        "breach_risk",
+        "customer_request"
+       ],
+       "description": "Update the escalation reason.",
+       "minLength": 1
+      },
+      "reopen_count": {
+       "type": "integer",
+       "description": "Update the reopen count."
+      },
+      "closed_on": {
+       "type": "string",
+       "description": "Update the closed date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "assignment_group_id": {
+       "type": "integer",
+       "description": "Update the assignment group ID."
+      },
+      "assigned_to": {
+       "type": "integer",
+       "description": "Update the assigned user ID."
+      }
+     },
+     "required": [
+      "case_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_case",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "link_new_case_sla",
+    "call": "link_new_case_sla",
+    "description": "Create a case_sla linkage record. A case_sla links a support case to a specific SLA definition, tracking the SLA status for that case.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "ID of the case being linked to an SLA."
+      },
+      "sla_def_id": {
+       "type": "integer",
+       "description": "ID of the SLA definition to apply."
+      },
+      "stage": {
+       "type": "string",
+       "enum": [
+        "in_progress",
+        "paused",
+        "completed",
+        "canceled"
+       ],
+       "description": "Initial stage of SLA tracking."
+      },
+      "start_time": {
+       "type": "string",
+       "description": "Start time of SLA tracking. If omitted, defaults to current timestamp."
+      },
+      "breach_time": {
+       "type": "string",
+       "description": "Expected SLA breach timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "has_breached": {
+       "type": "boolean",
+       "description": "Whether the SLA was already breached at creation (true/false)."
+      },
+      "completed_time": {
+       "type": "string",
+       "description": "Completion timestamp if the SLA is already completed."
+      }
+     },
+     "required": [
+      "case_id",
+      "sla_def_id",
+      "stage"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/link_new_case_sla",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "SLA B transition",
+  "description": "validate sla B transition",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT stage FROM case_sla WHERE case_sla_id = 2;",
+   "expected_value": "in_progress",
+   "comparison_type": "contains"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "SLA A transition",
+  "description": "validate sla A transition",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT stage FROM case_sla WHERE case_sla_id = 1;",
+   "expected_value": "in_progress",
+   "comparison_type": "contains"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Send notification",
+  "description": "validate notification sent",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT type FROM notification WHERE notification_id = 734 AND case_id = 1 AND email = 'elizabeth.chase32@servicenow.com';",
+   "expected_value": "update",
+   "comparison_type": "contains"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Link knowledge",
+  "description": "validate knowledge link",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 1 AND used_as = 'resolution';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Case transition",
+  "description": "validate case transition",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT state FROM customer_case WHERE case_id = 1;",
+   "expected_value": "in_progress",
+   "comparison_type": "contains"
+  }
+ }
+]

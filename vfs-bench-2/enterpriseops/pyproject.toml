@@ -1,0 +1,11 @@
+[project]
+name = "vfs-bench-2-enterpriseops"
+version = "0.1.0"
+description = "EnterpriseOps-Gym's tasks and seeds, and the checks of its fakes against upstream's servers"
+requires-python = ">=3.11"
+dependencies = [
+    "pyarrow==22.0.0",
+]
+
+[tool.uv]
+package = false

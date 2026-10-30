@@ -1,0 +1,9 @@
+[
+ {"tool": "search_cases", "args": {"number": "CS-0000009"}},
+ {"tool": "list_users", "args": {"email": "anthony.peterson@servicenow.com"}},
+ {"tool": "find_product_by_id", "args": {"product_id": 163}},
+ {"tool": "retrieve_knowledge", "args": {"product_id": 163, "state": "published"}},
+ {"tool": "find_case_knowledge_linkages", "args": {"case_id": 9}},
+ {"tool": "update_case", "args": {"case_id": 9, "state": "in_progress"}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 9, "knowledge_id": 243, "used_as": "applied"}}
+]

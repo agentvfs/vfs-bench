@@ -1,0 +1,68 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Update case",
+  "description": "validate case updates",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 379 AND assigned_to = 656 AND state = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Update sla",
+  "description": "validate sla updates",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla WHERE case_sla_id = 757 AND stage = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Link Kb",
+  "description": "validate kb article link",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 379 AND knowledge_id = 57 AND used_as = 'suggested';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Update case",
+  "description": "validate case updates",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 379 AND assigned_to = 656 AND state = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Update sla",
+  "description": "validate sla updates",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla WHERE case_sla_id = 757 AND stage = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Link Kb",
+  "description": "validate kb article link",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 379 AND knowledge_id = 57 AND used_as = 'suggested';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

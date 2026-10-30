@@ -1,0 +1,46 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Interaction Verifier",
+  "description": "Verify the correct interaction is created ",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM Interaction WHERE case_id= 58 AND interaction_id = 1233 AND interacted_user= 47 AND status = \"open\" AND account_id = 3;",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Case update Verification",
+  "description": "Verify the case escalation is updated properly",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 58 AND state = 'in_progress' AND priority= 'critical' AND escalation_reason = 'customer_request' AND assigned_to= 59;",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify SLA updates",
+  "description": "SLA updates are properly done or not ",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla WHERE case_id = 58 AND stage = 'in_progress' AND ((sla_def_id = 4 AND case_sla_id = 115) OR (sla_def_id = 9 AND case_sla_id = 116));",
+   "expected_value": "2",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verification of Notification type ",
+  "description": "Verify the triggered notification type",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM notification WHERE notification_id = 734 AND case_id = 58 AND type = 'update' AND email = 'michael.ward53@acme.com';",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ }
+]

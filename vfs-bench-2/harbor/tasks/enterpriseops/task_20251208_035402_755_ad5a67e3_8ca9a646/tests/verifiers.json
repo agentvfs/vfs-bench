@@ -1,0 +1,24 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Case updated with correct product",
+  "description": "This verifier confirms that the previously created unresolved phone case for Thomas Bailey at Initech has been correctly updated with the missing product information. It validates that the case now references Docker Enterprise Variant 15, while still matching the original case attributes such as channel, state.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case c\nJOIN contact ct\n  ON ct.contact_id = c.contact_id\nJOIN account a\n  ON a.account_id = c.account_id\nJOIN \"user\" u\n  ON u.user_id = ct.portal_user_id\nJOIN product p\n  ON p.product_id = c.product_id\nWHERE u.first_name = 'Thomas'\n  AND u.last_name  = 'Bailey'\n  AND a.name       = 'Initech'\n  AND p.name       = 'Docker Enterprise Variant 15'\n  AND c.channel    = 'phone'\n  AND c.state      = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Knowledge Link Verification",
+  "description": "The unresolved phone case for Thomas Bailey at Initech is now associated with product Docker Enterprise Variant 15, and the linked knowledge article for that product is attached as a resolution to that same case.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM case_knowledge ck\nJOIN knowledge k\n  ON k.knowledge_id = ck.knowledge_id\nJOIN product p\n  ON p.product_id = k.product_id\nJOIN customer_case c\n  ON c.case_id = ck.case_id\nJOIN contact ct\n  ON ct.contact_id = c.contact_id\nJOIN account a\n  ON a.account_id = ct.account_id\nJOIN \"user\" u\n  ON u.user_id = ct.portal_user_id\nWHERE u.first_name = 'Thomas'\n  AND u.last_name  = 'Bailey'\n  AND a.name       = 'Initech'\n  AND c.channel    = 'phone'\n  AND c.state      = 'in_progress'\n  AND c.product_id = p.product_id\n  AND p.name       = 'Docker Enterprise Variant 15'\n  AND ck.used_as   = 'applied'\n  AND k.title LIKE '%Docker Enterprise Variant 15%';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

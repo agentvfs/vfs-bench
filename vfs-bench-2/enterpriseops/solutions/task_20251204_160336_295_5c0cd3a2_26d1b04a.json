@@ -1,0 +1,11 @@
+[
+ {"tool": "find_account", "args": {"name": "Globex"}},
+ {"tool": "find_location", "args": {"name": "Globex Hq - Sydney"}},
+ {"tool": "find_installed_product_by_serial", "args": {"serial_number": "P47-622334-4396"}},
+ {"tool": "find_contracts", "args": {"account_id": 4}},
+ {"tool": "find_entitlements", "args": {"account_id": 4}},
+ {"tool": "update_location", "args": {"location_id": 809, "name": "Globex HQ - Sydney", "plot_no": "114B"}},
+ {"tool": "update_installed_product_details", "args": {"installed_product_id": 20, "status": "repair", "warranty_end": "2029-09-14"}},
+ {"tool": "update_entitlement", "args": {"entitlement_id": 31, "contract_id": 10, "support_level": "premium", "coverage_hours": "h24x7"}},
+ {"tool": "update_contract", "args": {"contract_id": 10, "end_date": "2028-08-15"}}
+]

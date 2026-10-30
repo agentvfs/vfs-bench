@@ -1,0 +1,515 @@
+[
+ {
+  "name": "sn-csm-server",
+  "description": "sn-csm-server's tools.",
+  "tools": [
+   {
+    "name": "find_account",
+    "call": "find_account",
+    "description": "Retrieve an account by its exact name. Account is a company or organization that has a relationship with the business.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "Exact account name, e.g., 'Wood and Sons'.",
+       "minLength": 1
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_account",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_product_by_id",
+    "call": "find_product_by_id",
+    "description": "Retrieve a product by product ID. Product represents an item or service offered by the company. Each Product has a unique identifier called product_id.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "product_id": {
+       "type": "integer",
+       "description": " Unique identifier of the product."
+      }
+     },
+     "required": [
+      "product_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_product_by_id",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_accounts",
+    "call": "get_accounts",
+    "description": "List accounts with optional filters. All the inputs are optional, not providing any filter will return all accounts. Account represents a business entity or organization.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "account_id": {
+       "type": "integer",
+       "description": "Filter by unique account identifier."
+      },
+      "name": {
+       "type": "string",
+       "description": "Filter by account name (e.g., 'Acme Systems') (unique). Name of the company/organization associated with the account.",
+       "minLength": 1
+      },
+      "email_domain": {
+       "type": "string",
+       "description": "Filter by account email domain (e.g., 'acme.com'). it is the domain part of email addresses associated with the account or the website.",
+       "minLength": 1
+      },
+      "account_types": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "enum": [
+         "customer",
+         "partner",
+         "internal"
+        ]
+       },
+       "description": "Filter by one or more account types (customer, partner, internal)."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Filter by active status (true = active, false = inactive)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return only accounts created after this timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return only accounts created before this timestamp (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/get_accounts",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "retrieve_installed_products",
+    "call": "retrieve_installed_products",
+    "description": "Retrieve installed products with rich filters. All filters are optional. If no filters are provided, all installed products will be returned. Installed products are items that have been deployed or set up for use at specific locations or accounts.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "installed_product_id": {
+       "type": "integer",
+       "description": "Unique installed product ID."
+      },
+      "location_id": {
+       "type": "integer",
+       "description": "Filter by location/site ID. Unique identifier which relates to the location table record."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Filter by account ID. Unique identifier which relates to the account table record. An account represents a business entity or organization."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Filter by product ID. Unique identifier which relates to the product table record."
+      },
+      "serial_number": {
+       "type": "string",
+       "description": "Exact serial number of the installed product. Unique identifier assigned to the product by the manufacturer."
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "in_use",
+        "in_stock",
+        "repair",
+        "retired"
+       ],
+       "description": "Current status of the installed product."
+      },
+      "warranty_end": {
+       "type": "string",
+       "description": "Exact warranty end date (YYYY-MM-DD)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return products created before this date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return products created after this date (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/retrieve_installed_products",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_contracts",
+    "call": "find_contracts",
+    "description": "Find contracts with multiple filters including price range. All inputs are optional; not providing any filter will return all contracts. A contract represents a formal agreement between two or more parties.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contract_id": {
+       "type": "integer",
+       "description": "Unique identifier of the contract."
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "draft",
+        "active",
+        "suspended",
+        "expired"
+       ],
+       "description": "Filter contracts by their current status."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Filter contracts by the owning account’s ID. An account represents a business entity or organization."
+      },
+      "contract_type": {
+       "type": "string",
+       "enum": [
+        "support",
+        "warranty",
+        "subscription"
+       ],
+       "description": "Filter by contract type."
+      },
+      "start_date": {
+       "type": "string",
+       "description": "Contract start date (YYYY-MM-DD)."
+      },
+      "end_date": {
+       "type": "string",
+       "description": "Contract end date (YYYY-MM-DD)."
+      },
+      "contract_price": {
+       "type": "integer",
+       "description": "Exact price of the contract in system currency."
+      },
+      "contract_price_range_start": {
+       "type": "integer",
+       "description": "Lower bound of contract price range filter."
+      },
+      "contract_price_range_end": {
+       "type": "integer",
+       "description": "Upper bound of contract price range filter."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Find contracts created before this timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Find contracts created after this timestamp (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_contracts",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_entitlements",
+    "call": "find_entitlements",
+    "description": "Find entitlements with filters. All inputs are optional; not providing any filter will return all entitlements. An entitlement represents a customer's right to receive specific services or support based on their agreement.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "entitlement_id": {
+       "type": "integer",
+       "description": "Unique identifier of the entitlement."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Filter entitlements by associated account ID. An account represents a business entity or organization."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Filter entitlements by product ID. Unique identifier which relates to the product table record."
+      },
+      "contract_id": {
+       "type": "integer",
+       "description": "Filter entitlements by contract ID. Unique identifier which relates to the contract table record."
+      },
+      "support_level": {
+       "type": "string",
+       "enum": [
+        "standard",
+        "premium",
+        "enterprise"
+       ],
+       "description": "Support level associated with the entitlement."
+      },
+      "coverage_hours": {
+       "type": "string",
+       "enum": [
+        "h8x5",
+        "h12x6",
+        "h24x7"
+       ],
+       "description": "Coverage hours offered under the entitlement (8x5, 12x6, 24x7)."
+      },
+      "max_cases_per_month": {
+       "type": "integer",
+       "description": "Maximum number of support cases allowed per month under this entitlement."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Filter by entitlement status (true = active, false = inactive)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return entitlements created before this date (YYYY-MM-DD format)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return entitlements created after this date (YYYY-MM-DD format)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_entitlements",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search_cases",
+    "call": "search_cases",
+    "description": "Search cases with rich filters and date bounds on sys_created_on. All inputs are optional; not providing any filter will return all cases. A case represents a customer-reported issue or request that requires tracking and resolution.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case."
+      },
+      "number": {
+       "type": "string",
+       "description": "Case number (unique human-readable reference)."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Filter by account ID. An account represents a business entity or organization."
+      },
+      "contact_id": {
+       "type": "integer",
+       "description": "Filter by contact ID."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Filter by product ID. Unique identifier which relates to the product table record."
+      },
+      "installed_product_id": {
+       "type": "integer",
+       "description": "Filter by installed product ID. Unique identifier which relates to the installed product table record."
+      },
+      "channel": {
+       "type": "string",
+       "enum": [
+        "web",
+        "email",
+        "phone",
+        "chat",
+        "social",
+        "alert",
+        "community"
+       ],
+       "description": "Channel through which the case was communicated/created."
+      },
+      "priority": {
+       "type": "string",
+       "enum": [
+        "critical",
+        "high",
+        "moderate",
+        "low"
+       ],
+       "description": "Priority of the case."
+      },
+      "state": {
+       "type": "string",
+       "enum": [
+        "new",
+        "in_progress",
+        "pending",
+        "resolved",
+        "closed",
+        "canceled"
+       ],
+       "description": "State of the case."
+      },
+      "short_description": {
+       "type": "string",
+       "description": "Short description of the case."
+      },
+      "escalation": {
+       "type": "boolean",
+       "description": "Whether the case is escalated."
+      },
+      "escalation_reason": {
+       "type": "string",
+       "enum": [
+        "urgency",
+        "vip",
+        "impact",
+        "breach_risk",
+        "customer_request"
+       ],
+       "description": "Reason for escalation."
+      },
+      "reopen_count": {
+       "type": "integer",
+       "description": "Filter by number of times the case was reopened."
+      },
+      "closed_on": {
+       "type": "string",
+       "description": "Filter cases closed on a specific date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return cases created before this date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return cases created after this date (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/search_cases",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_contract",
+    "call": "update_contract",
+    "description": "Update an existing contract (partial updates allowed). Contracts define the terms of service, support, or warranty agreements between the organization and its customers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contract_id": {
+       "type": "integer",
+       "description": "Unique identifier of the contract to update."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Update the account ID associated with this contract."
+      },
+      "contract_price": {
+       "type": "integer",
+       "description": "Update the price value of the contract."
+      },
+      "contract_type": {
+       "type": "string",
+       "enum": [
+        "support",
+        "warranty",
+        "subscription"
+       ],
+       "description": "Update the contract type."
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "draft",
+        "active",
+        "suspended",
+        "expired"
+       ],
+       "description": "Update the contract’s status."
+      },
+      "start_date": {
+       "type": "string",
+       "description": "Update the contract’s start date (YYYY-MM-DD)."
+      },
+      "end_date": {
+       "type": "string",
+       "description": "Update the contract’s end date (YYYY-MM-DD)."
+      }
+     },
+     "required": [
+      "contract_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_contract",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_entitlement",
+    "call": "update_entitlement",
+    "description": "Update an entitlement (partial updates allowed). Entitlements define the support and service levels provided to an account for specific products or contracts.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "entitlement_id": {
+       "type": "integer",
+       "description": "Unique ID of the entitlement to update."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Update the associated account ID."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Update the product ID linked to the entitlement."
+      },
+      "contract_id": {
+       "type": "integer",
+       "description": "Update the contract ID linked to the entitlement."
+      },
+      "support_level": {
+       "type": "string",
+       "enum": [
+        "standard",
+        "premium",
+        "enterprise"
+       ],
+       "description": "Update the support level."
+      },
+      "coverage_hours": {
+       "type": "string",
+       "enum": [
+        "h8x5",
+        "h12x6",
+        "h24x7"
+       ],
+       "description": "Update the coverage hours."
+      },
+      "max_cases_per_month": {
+       "type": "integer",
+       "description": "Update the maximum number of support cases per month."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Set entitlement status as active (true) or inactive (false)."
+      }
+     },
+     "required": [
+      "entitlement_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_entitlement",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

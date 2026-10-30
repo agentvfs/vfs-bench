@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Derek Blake is the active primary contact for Globex",
+  "description": "Derek Blake is the active primary contact for Globex",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM \"user\" u\nJOIN contact c ON c.portal_user_id = u.user_id\nJOIN account a ON a.account_id = c.account_id\nWHERE u.user_id = 622\n  AND u.email = 'derek.blake7@globex.com'\n  AND a.account_id = 4\n  AND a.name = 'Globex'\n  AND c.contact_id = 3\n  AND c.active = 1\n  AND c.is_primary = 1;\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Previous primary contact for Globex is no longer marked primary",
+  "description": "Previous primary contact for Globex is no longer marked primary",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 2\n  AND account_id = 4\n  AND active = 1\n  AND is_primary = 0;\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Case opened for HPE ProLiant DL380 Gen10 with Derek as the contact",
+  "description": "Case opened for HPE ProLiant DL380 Gen10 with Derek as the contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE case_id = 1233\n  AND number = 'CS-0001233'\n  AND account_id = 4\n  AND contact_id = 3\n  AND product_id = 123\n  AND channel = 'email'\n  AND priority = 'moderate'\n  AND state = 'new';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Relevant KB for HPE ProLiant DL380 Gen10 is linked",
+  "description": "Relevant KB for HPE ProLiant DL380 Gen10 is linked",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM case_knowledge ck\nJOIN knowledge k ON k.knowledge_id = ck.knowledge_id\nWHERE ck.case_id = 1233\n  AND ck.knowledge_id = 189\n  AND ck.used_as = 'suggested'\n  AND k.product_id = 123\n  AND k.state = 'published';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Notification sent to Derek with the case and KB attached",
+  "description": "Notification sent to Derek with the case and KB attached",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE case_id = 1233\n  AND knowledge_id = 189\n  AND email = 'derek.blake7@globex.com'\n  AND type = 'solution_proposal'\n  AND status = 'success';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

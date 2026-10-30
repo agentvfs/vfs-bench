@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Validating user deactivation.",
+  "description": "Validating whether Diana Johnson is deactivated. ",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT count(*) as count\nFROM user\nWHERE first_name = 'Diana'\n  AND last_name = 'Johnson'\n  AND active = False;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validate case reassignment.",
+  "description": "Validating whether Diana Johnson's all active previous cases are assigned to Casey Green. ",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM customer_case c\nJOIN user u ON c.assigned_to = u.user_id\nWHERE c.number IN ('CS-0000115', 'CS-0000179')\n  AND c.state NOT IN ('canceled', 'closed', 'resolved')\n  AND u.first_name = 'Casey'\n  AND u.last_name = 'Green';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating latest case assignment.",
+  "description": "Validating Diana's latest case assignment to Casey Green and Case Assignment_3.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM customer_case c\nJOIN user u ON c.assigned_to = u.user_id\nJOIN user_group ug ON c.assignment_group_id = ug.group_id\nWHERE c.number = 'CS-0000179'\n  AND u.first_name = 'Casey'\n  AND u.last_name = 'Green'\n  AND ug.name = 'Case Assignment_3';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating group membership. ",
+  "description": "Validating whether Casey Green is assigned to Case Assignment_3.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM user u\nJOIN user_group_member ugm ON u.user_id = ugm.user_id\nJOIN user_group ug ON ugm.group_id = ug.group_id\nWHERE u.first_name = 'Casey'\n  AND u.last_name = 'Green'\n  AND ug.name = 'Case Assignment_3';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating notification.",
+  "description": "Validating successful report notification to the customer of Diana Johnson's latest case. ",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM notification n\nJOIN customer_case c ON n.case_id = c.case_id\nJOIN contact ct ON c.contact_id = ct.contact_id\nJOIN user u ON ct.portal_user_id = u.user_id\nWHERE c.number = 'CS-0000179'\n  AND n.status = 'success'\n  AND n.type = 'report';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

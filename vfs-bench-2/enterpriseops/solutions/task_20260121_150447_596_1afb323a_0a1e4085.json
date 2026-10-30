@@ -1,0 +1,19 @@
+[
+ {"tool": "find_account", "args": {"name": "Initech"}},
+ {"tool": "find_product", "args": {"name": "Cisco ASA 5525-X Variant 42"}},
+ {"tool": "search_cases", "args": {"account_id": 5, "product_id": 174, "state": "in_progress"}},
+ {"tool": "retrieve_installed_products", "args": {"installed_product_id": 25}},
+ {"tool": "find_locations", "args": {"location_id": 812}},
+ {"tool": "find_locations", "args": {"plot_no": "Plot 551", "city": "tokyo"}},
+ {"tool": "list_users", "args": {"location_id": 219, "role": "agent", "active": true}},
+ {"tool": "find_entitlements", "args": {"account_id": 5, "active": true}},
+ {"tool": "check_user_membership", "args": {"user_id": 219, "group_id": 36}},
+ {"tool": "add_new_group_member", "args": {"group_id": 36, "user_id": 219}},
+ {"tool": "update_case", "args": {"case_id": 122, "priority": "high", "escalation": true, "escalation_reason": "customer_request", "assigned_to": 219}},
+ {"tool": "find_case_slas", "args": {"case_id": 122}},
+ {"tool": "find_sla_definitions", "args": {"applies_to_priority": "high", "active": true}},
+ {"tool": "delete_case_slas", "args": {"case_sla_id": 243}},
+ {"tool": "delete_case_slas", "args": {"case_sla_id": 244}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 122, "sla_def_id": 11, "stage": "in_progress"}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 122, "sla_def_id": 7, "stage": "in_progress"}}
+]

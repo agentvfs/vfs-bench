@@ -1,0 +1,35 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Interaction Final State",
+  "description": "Verify Interaction Final State",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM interaction WHERE interaction_id = 80 AND status = 'handled';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify the notification",
+  "description": "Verify the notification",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM notification WHERE case_id = \"80\" AND type = 'solution_proposal' AND email = 'derek.blake7@globex.com' AND knowledge_id = '7';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Case-Knowledge Linkage",
+  "description": "Verify Case-Knowledge Linkage",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge WHERE case_id = 80 AND knowledge_id = 7 AND used_as = 'suggested';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

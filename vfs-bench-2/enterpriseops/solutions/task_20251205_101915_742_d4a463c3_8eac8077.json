@@ -1,0 +1,17 @@
+[
+ {"tool": "search_cases", "args": {"number": "CS-0000005"}},
+ {"tool": "find_product", "args": {"name": "Palo Alto Networks PA-3220"}},
+ {"tool": "list_users", "args": {"email": "jose.roberson@servicenow.com"}},
+ {"tool": "find_contacts", "args": {"account_id": 1}},
+ {"tool": "list_users", "args": {"user_id": 801}},
+ {"tool": "list_users", "args": {"user_id": 62}},
+ {"tool": "update_case", "args": {"case_id": 5, "state": "resolved"}},
+ {"tool": "create_knowledge", "args": {"title": "Restore PA-3220 connection queue and restart monitoring service", "state": "published", "visibility": "external", "product_id": 128, "owner_id": 32, "body": "Handled by Escalation Management, Ryan Allen. Steps: restore PA-3220 connection queue, restart monitoring service."}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 5, "knowledge_id": 370, "used_as": "resolution"}},
+ {"tool": "register_new_interaction", "args": {"channel": "email", "account_id": 1, "contact_id": 123, "case_id": 5, "interacted_user": 32, "status": "handled"}},
+ {"tool": "send_notification", "args": {"case_id": 5, "knowledge_id": 370, "email": "elizabeth.chase32@servicenow.com", "type": "solution_proposal"}},
+ {"tool": "search_cases", "args": {"account_id": 1, "state": "resolved"}},
+ {"tool": "find_interactions", "args": {"account_id": 1}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 10, "knowledge_id": 370, "used_as": "resolution"}},
+ {"tool": "update_case", "args": {"case_id": 10, "state": "closed"}}
+]

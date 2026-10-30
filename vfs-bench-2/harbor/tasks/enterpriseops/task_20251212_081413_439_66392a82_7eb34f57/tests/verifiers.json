@@ -1,0 +1,46 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Knowledge published state",
+  "description": "Checks that knowledge_id = 101 (KB-0000101) for product 67 (Microsoft SQL Server 2019 Patchset 47) is now in published state.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM knowledge WHERE knowledge_id = 101 AND product_id = 67 AND state = 'published';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Case Knowledge linkage",
+  "description": "Ensures that KB 101 is linked to case 26 and marked as used_as = 'applied'.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM case_knowledge WHERE case_id = 26 AND knowledge_id = 101 AND used_as = 'applied';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Confirm User Membership",
+  "description": "Confirms that Randy Martinez (user_id 37) is a member of the Knowledge Curation support group (group_id 13).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM user_group_member WHERE group_id = 13 AND user_id = 37;\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Case assigned to the user",
+  "description": "Verifies that case 26 is assigned to group 13 (Knowledge Curation), owned by user 37 (Randy), and is in 'in_progress' state.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM customer_case WHERE case_id = 26 AND assignment_group_id = 13 AND assigned_to = 37 AND state = 'in_progress';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

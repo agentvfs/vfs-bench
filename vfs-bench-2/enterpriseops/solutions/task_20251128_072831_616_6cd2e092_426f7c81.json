@@ -1,0 +1,12 @@
+[
+ {"tool": "find_account", "args": {"name": "Stark Industries"}},
+ {"tool": "find_locations", "args": {"city": "london", "country": "uk"}},
+ {"tool": "search_cases", "args": {"account_id": 8, "channel": "alert"}},
+ {"tool": "find_user", "args": {"name": "Tonya Stevens"}},
+ {"tool": "find_contact_by_portal_user", "args": {"portal_user_id": 287}},
+ {"tool": "list_user_groups", "args": {"name": "CSM Tier 2 Support"}},
+ {"tool": "find_sla_definitions", "args": {"metric": "response", "applies_to_priority": "high", "pause_on_pending": false}},
+ {"tool": "find_case_slas", "args": {"case_id": 184}},
+ {"tool": "update_case", "args": {"case_id": 184, "priority": "high", "contact_id": 11, "assignment_group_id": 2}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 184, "sla_def_id": 11, "stage": "in_progress"}}
+]

@@ -1,0 +1,24 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Case identified and reopened",
+  "description": "Verify Case identified and reopened",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM customer_case WHERE case_id = 62 AND account_id = 3 AND product_id = 97 AND state = 'in_progress' AND reopen_count = 1 AND assigned_to = 439 AND assignment_group_id = 4;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Case Knowledge",
+  "description": "Verify Case Knowledge",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM case_knowledge WHERE case_id = 62 AND knowledge_id = 145;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

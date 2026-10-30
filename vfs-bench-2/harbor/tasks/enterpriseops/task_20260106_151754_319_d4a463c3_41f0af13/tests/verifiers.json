@@ -1,0 +1,79 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Installed Product Retired",
+  "description": "Verify Installed Product Retired",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS ip_retired_cnt\nFROM installed_product ip\nWHERE ip.installed_product_id = 182\n  AND ip.status = 'retired';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Update Installed Product ID of Case",
+  "description": "Update Installed Product ID of Case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_747_ip_301_cnt\nFROM customer_case cc\nWHERE cc.case_id = 747\n  AND cc.installed_product_id = 301;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Update Installed Product ID of Case",
+  "description": "Update Installed Product ID of Case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_768_ip_301_cnt\nFROM customer_case cc\nWHERE cc.case_id = 768\n  AND cc.installed_product_id = 301;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Update Installed Product ID of Case",
+  "description": "Update Installed Product ID of Case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_769_ip_301_cnt\nFROM customer_case cc\nWHERE cc.case_id = 769\n  AND cc.installed_product_id = 301;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Notification Sent",
+  "description": "Verify Notification Sent",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS notif_747_cnt\nFROM notification n\nWHERE n.case_id = 747\n  AND n.email = 'angela.brooks@phillips-jones.com'\n  AND n.type  = 'update';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Notification Sent",
+  "description": "Verify Notification Sent",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS notif_768_cnt\nFROM notification n\nWHERE n.case_id = 768\n  AND n.email = 'angela.brooks@phillips-jones.com'\n  AND n.type  = 'update';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Notification Sent",
+  "description": "Verify Notification Sent",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS notif_769_cnt\nFROM notification n\nWHERE n.case_id = 769\n  AND n.email = 'angela.brooks@phillips-jones.com'\n  AND n.type  = 'update';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

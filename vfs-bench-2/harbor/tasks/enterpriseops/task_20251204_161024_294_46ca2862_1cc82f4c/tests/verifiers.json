@@ -1,0 +1,35 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "update_user_details",
+  "description": "create_new_case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM user WHERE user_id = 801 AND location_id = 804",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_installed_product_details",
+  "description": "update_installed_product_details",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT location_id FROM installed_product WHERE installed_product_id = 1 AND status ='in_use'",
+   "expected_value": 804,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_installed_product_details",
+  "description": "update_installed_product_details",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM installed_product WHERE installed_product_id = 1 AND status ='in_use'",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

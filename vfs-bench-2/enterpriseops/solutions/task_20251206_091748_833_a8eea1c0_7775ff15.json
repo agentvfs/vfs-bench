@@ -1,0 +1,13 @@
+[
+ {"tool": "search_cases", "args": {"number": "CS-0000007"}},
+ {"tool": "find_contacts", "args": {"contact_id": 123}},
+ {"tool": "find_user", "args": {"name": "Curtis Mccoy"}},
+ {"tool": "find_user_group", "args": {"name": "Escalation Management"}},
+ {"tool": "check_user_membership", "args": {"user_id": 177, "group_id": 18}},
+ {"tool": "update_case", "args": {"case_id": 7, "priority": "critical", "escalation": true, "escalation_reason": "urgency"}},
+ {"tool": "update_case", "args": {"case_id": 7, "assignment_group_id": 18, "assigned_to": 177}},
+ {"tool": "update_case", "args": {"case_id": 7, "state": "resolved"}},
+ {"tool": "find_case_slas", "args": {"case_id": 7}},
+ {"tool": "update_case_sla_details", "args": {"case_sla_id": 13, "stage": "completed", "has_breached": false, "completed_time": "2025-09-01 00:00:00"}},
+ {"tool": "update_case_sla_details", "args": {"case_sla_id": 14, "stage": "completed", "has_breached": false, "completed_time": "2025-09-01 00:00:00"}}
+]

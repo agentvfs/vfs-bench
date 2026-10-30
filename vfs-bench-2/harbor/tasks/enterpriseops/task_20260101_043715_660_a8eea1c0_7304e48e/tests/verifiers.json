@@ -1,0 +1,211 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "add_location",
+  "description": "Verify the geographical details for the new location (ID 907).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT city FROM location WHERE location_id = 907;",
+   "expected_value": "london",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_case_knowledge",
+  "description": "Verify the linked knowledge article is published.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT state FROM knowledge WHERE knowledge_id = 209;",
+   "expected_value": "published",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "register_new_installed_product",
+  "description": "Verify the new installed product (ID 301) linking to the location and product.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM installed_product WHERE installed_product_id = 301 AND location_id = 907 AND product_id = 139;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "add_location",
+  "description": "Verify the new London Lab location (ID 907) was created and is active.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM location WHERE location_id = 907 AND name = 'Stark Industries - New Lab' AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "register_new_installed_product",
+  "description": "Verify the status of the newly registered installed product (ID 301).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT status FROM installed_product WHERE installed_product_id = 301;",
+   "expected_value": "in_use",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "enlist_new_contract",
+  "description": "Verify the new contract (ID 154) was created and is active for Stark Industries.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM contract WHERE contract_id = 154 AND account_id = 8 AND status = 'active';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "enlist_new_contract",
+  "description": "Verify the end date for the new contract (ID 154).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT end_date FROM contract WHERE contract_id = 154;",
+   "expected_value": "2026-11-27",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "add_new_entitlement",
+  "description": "Verify the new enterprise 24x7 entitlement (ID 432) for the Juniper product (ID 139) under the new contract.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM entitlement WHERE entitlement_id = 432 AND product_id = 139 AND support_level = 'enterprise' AND coverage_hours = 'h24x7';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "add_new_entitlement",
+  "description": "Verify the linked contract (ID 154) and active status for the new entitlement (ID 432).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT contract_id FROM entitlement WHERE entitlement_id = 432;",
+   "expected_value": 154,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "create_new_case",
+  "description": "Verify the case (ID 1233) was created with critical priority and linked to the correct installed product.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 1233 AND priority = 'critical' AND installed_product_id = 301;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "create_new_case",
+  "description": "Verify the case details: contact.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT contact_id FROM customer_case WHERE case_id = 1233;",
+   "expected_value": 10,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "assign_case_to_user",
+  "description": "Verify the case was assigned to a specific user within the designated group.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT assigned_to FROM customer_case WHERE case_id = 1233;",
+   "expected_value": 127,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "assign_case_to_user",
+  "description": "Verify the user (ID 127) is a member of the target group (ID 2).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group_member WHERE user_id = 127 AND group_id = 2;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_case",
+  "description": "Verify the case was updated to 'in_progress'.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT state FROM customer_case WHERE case_id = 1233;",
+   "expected_value": "in_progress",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_new_case_sla",
+  "description": "Verify the Critical Resolution SLA was successfully applied and is currently in progress.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla WHERE case_id = 1233 AND sla_def_id = 6 AND stage = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_new_case_sla",
+  "description": "Verify the linked SLA definition applies to the critical priority.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT applies_to_priority FROM sla_definition WHERE sla_def_id = 6;",
+   "expected_value": "critical",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_case_knowledge",
+  "description": "Verify the troubleshooting guide (ID 209) was linked as 'suggested'.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge WHERE case_id = 1233 AND knowledge_id = 209 AND used_as = 'suggested';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "send_notification",
+  "description": "Verify the solution proposal notification was created for Marc Henry, referencing the case.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM notification WHERE case_id = 1233 AND email = 'marc.henry@stark-industries.com' AND type = 'solution_proposal';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "send_notification",
+  "description": "Verify the notification record links to the correct knowledge article ID (209).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT knowledge_id FROM notification WHERE case_id = 1233 AND email = 'marc.henry@stark-industries.com';",
+   "expected_value": 209,
+   "comparison_type": "equals"
+  }
+ }
+]

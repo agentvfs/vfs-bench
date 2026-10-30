@@ -1,0 +1,13 @@
+[
+ {"tool": "find_user", "args": {"name": "Stephanie Todd"}},
+ {"tool": "find_user", "args": {"name": "Robin Monroe"}},
+ {"tool": "get_cases_assigned_to", "args": {"assigned_to": 6}},
+ {"tool": "check_user_membership", "args": {"user_id": 31, "group_id": 50}},
+ {"tool": "add_new_group_member", "args": {"group_id": 50, "user_id": 31}},
+ {"tool": "assign_case_to_user", "args": {"case_id": 525, "assigned_to_user_id": 31}},
+ {"tool": "check_user_membership", "args": {"user_id": 6, "group_id": 50}},
+ {"tool": "remove_group_membership", "args": {"group_id": 50, "user_id": 6}},
+ {"tool": "check_user_membership", "args": {"user_id": 6, "group_id": 35}},
+ {"tool": "remove_group_membership", "args": {"group_id": 35, "user_id": 6}},
+ {"tool": "update_user_details", "args": {"user_id": 6, "active": false}}
+]

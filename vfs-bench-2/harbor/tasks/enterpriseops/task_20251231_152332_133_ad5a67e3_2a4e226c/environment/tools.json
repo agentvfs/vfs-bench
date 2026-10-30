@@ -1,0 +1,244 @@
+[
+ {
+  "name": "sn-csm-server",
+  "description": "sn-csm-server's tools.",
+  "tools": [
+   {
+    "name": "find_user",
+    "call": "find_user",
+    "description": "Look up a user (portal customer, portal user or internal agent) by full name.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "Full name of user, e.g., 'Harry Middleton'."
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_user",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_cases_assigned_to",
+    "call": "get_cases_assigned_to",
+    "description": "List cases filtered by assignment_group_id and/or assigned_to.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "assignment_group_id": {
+       "type": "integer",
+       "description": "Filter by the assignment group responsible for the case."
+      },
+      "assigned_to": {
+       "type": "integer",
+       "description": "Filter by the specific user ID the case is assigned to."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/get_cases_assigned_to",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "retrieve_knowledge",
+    "call": "retrieve_knowledge",
+    "description": "Retrieve knowledge articles with full-text search on title/body and structured filters. All inputs are optional; not providing any filter will return all knowledge articles. A knowledge article is a documented piece of information that provides solutions, answers, or guidance on specific topics to help users resolve issues or learn about products and services.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "search_text": {
+       "type": "string",
+       "description": "Full-text search across article title and body. Free form search."
+      },
+      "knowledge_id": {
+       "type": "integer",
+       "description": "Filter by unique knowledge article ID."
+      },
+      "kb_number": {
+       "type": "string",
+       "description": "Filter by knowledge base number."
+      },
+      "title": {
+       "type": "string",
+       "description": "Filter by article title."
+      },
+      "state": {
+       "type": "string",
+       "enum": [
+        "draft",
+        "published",
+        "retired"
+       ],
+       "description": "Filter by article lifecycle state."
+      },
+      "visibility": {
+       "type": "string",
+       "enum": [
+        "internal",
+        "external"
+       ],
+       "description": "Filter by article visibility. Internal for staff, external for customers/public."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Filter by related product ID."
+      },
+      "owner_id": {
+       "type": "integer",
+       "description": "Filter by user ID of the article owner. User who authored the article."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Retrieve articles created before this timestamp."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Retrieve articles created after this timestamp."
+      },
+      "limit": {
+       "type": "integer",
+       "description": "Limit the number of articles returned."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/retrieve_knowledge",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_case_knowledge_linkages",
+    "call": "find_case_knowledge_linkages",
+    "description": "Find case-knowledge linkages (case_knowledge). Combination of case id and knowledge id is unique. All inputs are optional; not providing any filter will return all case_knowledge linkages. A case_knowledge linkage represents the association between a specific case and a knowledge article, indicating how the article was utilized in relation to the case, such as being suggested, applied, or used as a resolution.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_kb_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case_knowledge linkage."
+      },
+      "case_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case."
+      },
+      "knowledge_id": {
+       "type": "integer",
+       "description": "Unique identifier of the knowledge article."
+      },
+      "used_as": {
+       "type": "string",
+       "enum": [
+        "suggested",
+        "applied",
+        "resolution"
+       ],
+       "description": "Filter by usage context: suggested, applied, or resolution."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_case_knowledge_linkages",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_knowledge",
+    "call": "update_knowledge",
+    "description": "Update a knowledge article (partial updates allowed). A knowledge article is a documented piece of information that provides solutions, guidelines, or answers to common questions for customers or internal staff.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "knowledge_id": {
+       "type": "integer",
+       "description": "Unique identifier of the knowledge article to update."
+      },
+      "kb_number": {
+       "type": "string",
+       "description": "Knowledge base number (system-generated unique reference)."
+      },
+      "title": {
+       "type": "string",
+       "description": "Update the title of the article.",
+       "minLength": 1
+      },
+      "state": {
+       "type": "string",
+       "enum": [
+        "draft",
+        "published",
+        "retired"
+       ],
+       "description": "Update the lifecycle state of the article."
+      },
+      "visibility": {
+       "type": "string",
+       "enum": [
+        "internal",
+        "external"
+       ],
+       "description": "Update the visibility of the article."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Update the related product ID."
+      },
+      "owner_id": {
+       "type": "integer",
+       "description": "Update the user ID of the article owner/author."
+      }
+     },
+     "required": [
+      "knowledge_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_knowledge",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "link_case_knowledge",
+    "call": "link_case_knowledge",
+    "description": "Link a case to a knowledge article. A case_knowledge linkage associates a support case with a specific knowledge article, indicating how the article is relevant to the case.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case being linked."
+      },
+      "knowledge_id": {
+       "type": "integer",
+       "description": "Unique identifier of the knowledge article to link."
+      },
+      "used_as": {
+       "type": "string",
+       "enum": [
+        "suggested",
+        "applied",
+        "resolution"
+       ],
+       "description": "Purpose of the knowledge article in context of the case: suggested, applied, or used as resolution."
+      }
+     },
+     "required": [
+      "case_id",
+      "knowledge_id",
+      "used_as"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/link_case_knowledge",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

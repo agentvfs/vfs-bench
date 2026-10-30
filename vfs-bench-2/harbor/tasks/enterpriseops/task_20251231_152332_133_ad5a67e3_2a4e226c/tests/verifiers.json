@@ -1,0 +1,24 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Link published KB",
+  "description": "validate kb linked",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 5 AND knowledge_id = 195 AND used_as = 'applied';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Updating knowledge state",
+  "description": "Updating knowledge state",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*)\nFROM knowledge\nWHERE knowledge_id = 195\n  AND state = 'published';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

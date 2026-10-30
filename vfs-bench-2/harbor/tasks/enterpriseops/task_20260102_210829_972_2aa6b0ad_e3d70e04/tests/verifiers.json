@@ -1,0 +1,68 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Validating whether new location is created. ",
+  "description": "Validating new location is created as Zee Building, Mumbai, India.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM location\nWHERE name = 'Zee Building'\n  AND city = 'mumbai'\n  AND country = 'india';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating new user creation.",
+  "description": "Validating whether new active admin user Abraham George is created with location details. ",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM user u\nJOIN location l ON u.location_id = l.location_id\nWHERE u.first_name = 'Abraham'\n  AND u.last_name = 'George'\n  AND u.email = 'abraham.george@servicenow.com'\n  AND u.role = 'admin'\n  AND u.active = 1\n  AND l.name = 'Zee Building'\n  AND l.city = 'mumbai'\n  AND l.country = 'india';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating user removal from group. ",
+  "description": "Validating whether Kurt Fritz is removed from Contact Center L2 group.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM user_group_member ugm\nJOIN user u ON ugm.user_id = u.user_id\nJOIN user_group g ON ugm.group_id = g.group_id\nWHERE u.first_name = 'Kurt'\n  AND u.last_name = 'Fritz'\n  AND g.name = 'Contact Center L2';",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating user deactivation. ",
+  "description": "Validating whether Kurt Fritz is deactivated.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM user\nWHERE first_name = 'Kurt'\n  AND last_name = 'Fritz'\n  AND active = 0;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating new group member addition. ",
+  "description": "Validating whether Abraham George and Aaron Le are added to Contact Center L2.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM user_group_member ugm\nJOIN user u ON ugm.user_id = u.user_id\nJOIN user_group g ON ugm.group_id = g.group_id\nWHERE g.name = 'Contact Center L2'\n  AND (\n        (u.first_name = 'Abraham' AND u.last_name = 'George')\n     OR (u.first_name = 'Aaron' AND u.last_name = 'Le')\n      );",
+   "expected_value": 2,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating user removal from other groups.",
+  "description": "Validating Aaron Le is removed from all other groups except Contact Center L2.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM user_group_member ugm\nJOIN user u ON ugm.user_id = u.user_id\nJOIN user_group g ON ugm.group_id = g.group_id\nWHERE u.first_name = 'Aaron'\n  AND u.last_name = 'Le'\n  AND g.name <> 'Contact Center L2';",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ }
+]

@@ -1,0 +1,46 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Contract",
+  "description": "Verify Contract",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM contract WHERE account_id = '45' AND start_date = '2025-11-15' AND end_date = '2026-11-15' AND status = 'active' AND contract_type = 'support' AND contract_price = '72000';",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify SLA definitions response",
+  "description": "Verify SLA definitions response",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM sla_definition WHERE metric = 'response' AND target_mins = 45 AND applies_to_priority = 'high' AND active = 1;",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify entitlement",
+  "description": "Verify entitlement",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM entitlement WHERE account_id = '45' AND product_id = '31' AND support_level = 'premium' AND coverage_hours = 'h24x7' AND max_cases_per_month = 15 AND active = 1;",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify SLA definitions resolution",
+  "description": "Verify SLA definitions resolution",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM sla_definition WHERE metric = 'resolution' AND target_mins = 240 AND applies_to_priority = 'high' AND active = 1;",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ }
+]

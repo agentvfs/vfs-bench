@@ -1,0 +1,46 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Case moved to Case Triage and in_progress",
+  "description": "Verify cases  53 are assigned to group 3, state=in_progress, with preserved assigned_to values ( 53=NULL), and no critical new cases remain for account 3",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 53 AND assignment_group_id = 3 AND state = 'in_progress';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "verify entitlements",
+  "description": "verify entitlements",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM entitlement\nWHERE account_id = 3\n  AND product_id = 159\n  AND active = 1\n  AND support_level = 'enterprise';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify under 6 open cases related to group",
+  "description": "Verify under 6 open cases for group",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS open_case_count\nFROM customer_case\nWHERE assignment_group_id = 3\n  AND state NOT IN ('closed', 'canceled', 'resolved');\n",
+   "expected_value": 5,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "No updation for case_id 52",
+  "description": "No updation for case_id 52",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 52 AND assignment_group_id = 3 AND state = 'in_progress';\n",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ }
+]

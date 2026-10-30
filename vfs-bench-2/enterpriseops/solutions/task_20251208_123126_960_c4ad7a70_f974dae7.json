@@ -1,0 +1,9 @@
+[
+ {"tool": "find_user", "args": {"name": "Andrew Bell"}},
+ {"tool": "find_account", "args": {"name": "Avery Ltd"}},
+ {"tool": "find_contacts", "args": {"account_id": 44, "portal_user_id": 21}},
+ {"tool": "find_product", "args": {"name": "Palo Alto Networks PA-3220 Variant 8"}},
+ {"tool": "retrieve_installed_products", "args": {"account_id": 44, "product_id": 140}},
+ {"tool": "create_new_case", "args": {"account_id": 44, "contact_id": 101, "product_id": 140, "installed_product_id": 243, "channel": "social", "priority": "moderate", "state": "new", "short_description": "Product: Palo Alto Networks PA-3220 Variant 8, Issue: unusually high operating noise"}},
+ {"tool": "register_new_interaction", "args": {"channel": "social", "account_id": 44, "contact_id": 101, "case_id": 1233, "interacted_user": 21, "status": "handled"}}
+]

@@ -1,0 +1,213 @@
+[
+ {
+  "name": "sn-csm-server",
+  "description": "sn-csm-server's tools.",
+  "tools": [
+   {
+    "name": "find_user",
+    "call": "find_user",
+    "description": "Look up a user (portal customer, portal user or internal agent) by full name.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "Full name of user, e.g., 'Harry Middleton'."
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_user",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "check_user_membership",
+    "call": "check_user_membership",
+    "description": "Verify that a user is a member of a specific user group. User Group represents a collection of users grouped together for assignment or organizational purposes.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_id": {
+       "type": "integer",
+       "description": "User's unique id to check"
+      },
+      "group_id": {
+       "type": "integer",
+       "description": "User group's unique id to check"
+      }
+     },
+     "required": [
+      "user_id",
+      "group_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/check_user_membership",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "assign_case_to_user",
+    "call": "assign_case_to_user",
+    "description": "Assign an existing case to a specific user (agent). Case represents a support ticket or issue that needs to be resolved. The assigned user takes care of the lifecycle of the case to its closure.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case to be assigned."
+      },
+      "assigned_to_user_id": {
+       "type": "integer",
+       "description": "Unique identifier of the user (agent) to assign the case to. It is a user who is assigned to handle the case. The user has record in the user table with at least role 'agent'."
+      }
+     },
+     "required": [
+      "case_id",
+      "assigned_to_user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/assign_case_to_user",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_cases_assigned_to",
+    "call": "get_cases_assigned_to",
+    "description": "List cases filtered by assignment_group_id and/or assigned_to.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "assignment_group_id": {
+       "type": "integer",
+       "description": "Filter by the assignment group responsible for the case."
+      },
+      "assigned_to": {
+       "type": "integer",
+       "description": "Filter by the specific user ID the case is assigned to."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/get_cases_assigned_to",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_user_details",
+    "call": "update_user_details",
+    "description": "Update an existing user (partial updates supported). A user represents an individual who interacts with the system, such as support agents, managers, or customers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_id": {
+       "type": "integer",
+       "description": "Unique identifier of the user to update."
+      },
+      "email": {
+       "type": "string",
+       "description": "New email address for the user.",
+       "minLength": 1
+      },
+      "first_name": {
+       "type": "string",
+       "description": "Updated first name of the user.",
+       "minLength": 1
+      },
+      "last_name": {
+       "type": "string",
+       "description": "Updated last name of the user.",
+       "minLength": 1
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Updated active status (true = active, false = inactive)."
+      },
+      "phone": {
+       "type": "string",
+       "description": "Updated phone number."
+      },
+      "role": {
+       "type": "string",
+       "enum": [
+        "admin",
+        "agent",
+        "manager",
+        "customer"
+       ],
+       "description": "Updated role of the user."
+      },
+      "location_id": {
+       "type": "integer",
+       "description": "Updated location identifier."
+      }
+     },
+     "required": [
+      "user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_user_details",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "add_new_group_member",
+    "call": "add_new_group_member",
+    "description": "Add a user to a group. Combination of group_id and user_id should be unique.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "group_id": {
+       "type": "integer",
+       "description": "Identifier of the group the user will be added to."
+      },
+      "user_id": {
+       "type": "integer",
+       "description": "Identifier of the user being added to the group."
+      }
+     },
+     "required": [
+      "group_id",
+      "user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/add_new_group_member",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "remove_group_membership",
+    "call": "remove_group_membership",
+    "description": "Remove a membership by member_id or by (group_id, user_id).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "member_id": {
+       "type": "integer",
+       "description": "Unique identifier of the membership to remove."
+      },
+      "group_id": {
+       "type": "integer",
+       "description": "Group identifier (used with user_id if member_id is not provided)."
+      },
+      "user_id": {
+       "type": "integer",
+       "description": "User identifier (used with group_id if member_id is not provided)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/remove_group_membership",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

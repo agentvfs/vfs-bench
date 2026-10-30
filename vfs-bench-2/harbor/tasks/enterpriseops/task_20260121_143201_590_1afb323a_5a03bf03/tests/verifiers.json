@@ -1,0 +1,79 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify User Location",
+  "description": "Verify User Location",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user WHERE user_id=11 AND location_id= 907",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify group member",
+  "description": "Verify group member",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group_member WHERE user_id=11 AND group_id= 81",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify deleted existing group membership1",
+  "description": "Verify deleted existing group membership1",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group_member WHERE user_id=11 AND group_id= 64",
+   "expected_value": "0",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify deleted existing group membership2",
+  "description": "Verify deleted existing group membership2",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group_member WHERE user_id=11 AND group_id= 75",
+   "expected_value": "0",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Product",
+  "description": "Verify Product",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM product WHERE name= \"ServiceNow OOOP\" AND category=\"software\" AND lifecycle_state=\"active\"\n\n",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify location",
+  "description": "Verify location",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM location WHERE plot_no= \"1234\" AND street=\"JM Road\" AND city=\"mumbai\" AND country=\"india\"\n\n",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Group",
+  "description": "Verify Group",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group WHERE name= \"OOPS Issues Team\" AND active=true AND type=\"support\"",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ }
+]

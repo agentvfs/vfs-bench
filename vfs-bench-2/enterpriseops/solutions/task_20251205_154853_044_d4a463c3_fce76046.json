@@ -1,0 +1,13 @@
+[
+ {"tool": "find_locations", "args": {"city": "london", "country": "uk"}},
+ {"tool": "retrieve_installed_products", "args": {"location_id": 817}},
+ {"tool": "update_installed_product_details", "args": {"installed_product_id": 40, "location_id": 692, "status": "in_use"}},
+ {"tool": "find_contacts", "args": {"account_id": 8, "active": true}},
+ {"tool": "list_users", "args": {"user_id": 20}},
+ {"tool": "list_users", "args": {"user_id": 287}},
+ {"tool": "create_new_case", "args": {"account_id": 8, "contact_id": 10, "product_id": 25, "installed_product_id": 40, "channel": "alert", "priority": "low", "state": "new", "short_description": "Product: SUSE Linux Enterprise Server 15 Variant 5, relocated to London Pratt Curve site"}},
+ {"tool": "update_case", "args": {"case_id": 1233, "state": "resolved"}},
+ {"tool": "update_case", "args": {"case_id": 1233, "state": "closed", "closed_on": "2025-12-05"}},
+ {"tool": "send_notification", "args": {"case_id": 1233, "email": "marc.henry@stark-industries.com", "type": "update"}},
+ {"tool": "send_notification", "args": {"case_id": 1233, "email": "tonya.stevens@stark-industries.com", "type": "update"}}
+]

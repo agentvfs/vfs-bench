@@ -1,0 +1,24 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Updated Escalated Case for Juniper EX4300 Issue",
+  "description": "This verifier confirms that the escalated case CS-0000009 has been correctly updated to reflect that work is now in progress.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case c\nJOIN product p\n  ON p.product_id = c.product_id\nWHERE c.number = 'CS-0000009'\n  AND c.escalation = 1\n  AND c.state = 'in_progress'\n  AND p.name = 'Juniper EX4300 Variant 31'\n  AND c.short_description LIKE 'Product: Juniper EX4300 Variant 31,%';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Knowledge Article Linked to Case",
+  "description": "This verifier ensures that the correct knowledge article for Juniper EX4300 Variant 31 has been linked to the escalated case CS-0000009.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM case_knowledge ck\nJOIN knowledge k\n  ON k.knowledge_id = 243\nJOIN customer_case c\n  ON c.case_id = ck.case_id\nWHERE c.number = 'CS-0000009'\n  AND k.title LIKE '%Juniper EX4300 Variant 31%'\n  AND k.state = 'published'\n  AND ck.used_as = 'applied';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

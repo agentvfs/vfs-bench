@@ -1,0 +1,10 @@
+[
+ {"tool": "find_account", "args": {"name": "Ramos-Case"}},
+ {"tool": "find_user", "args": {"name": "Natalie Sanders"}},
+ {"tool": "find_contacts", "args": {"account_id": 26}},
+ {"tool": "update_contact", "args": {"contact_id": 50, "is_primary": false}},
+ {"tool": "update_contact", "args": {"contact_id": 51, "is_primary": true}},
+ {"tool": "find_product", "args": {"name": "Pure Storage FlashArray//X Variant 47"}},
+ {"tool": "retrieve_installed_products", "args": {"account_id": 26, "product_id": 179}},
+ {"tool": "create_new_case", "args": {"account_id": 26, "contact_id": 51, "product_id": 179, "installed_product_id": 139, "channel": "alert", "priority": "moderate", "state": "new", "short_description": "Product: Pure Storage FlashArray//X Variant 47, Issue: unusually high hardware temperatures reported."}}
+]

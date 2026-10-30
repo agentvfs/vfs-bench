@@ -1,0 +1,118 @@
+# The EnterpriseOps-Gym tasks (harbor/tasks/enterpriseops/, harbor/enterpriseops.py
+# writes them), graded natively (MirageVerifier, graders/enterpriseops.ts): each
+# fake answers its task's verifier queries in its state view, and the grader
+# compares them in a verifier-only Mirage workspace. No SQLite in the
+# verifier, no Docker, no microVM. enterpriseops-msb.yaml runs the reference
+# grader instead. From
+# vfs-bench-2/, after `uv run --project enterpriseops python -I enterpriseops/setup.py`,
+# the reference solutions graded (94 of 103 pass; ../enterpriseops/README.md),
+# all 103 trials at once on one shared fake:
+#   uv run --project harbor harbor run -c harbor/enterpriseops.yaml -a oracle -n 103 -o state/harbor/jobs-enterpriseops
+environment:
+  import_path: vfsbench_harbor:MirageEnvironment
+verifier:
+  import_path: vfsbench_harbor:MirageVerifier
+tasks:
+  - path: harbor/tasks/enterpriseops/task_20251125_152842_063_b393a327_9622ac64
+  - path: harbor/tasks/enterpriseops/task_20251126_182216_326_66392a82_d3ff64ca
+  - path: harbor/tasks/enterpriseops/task_20251127_070938_325_b393a327_a40b1f4e
+  - path: harbor/tasks/enterpriseops/task_20251127_152838_396_99ba2325_8391501f
+  - path: harbor/tasks/enterpriseops/task_20251128_072831_616_6cd2e092_426f7c81
+  - path: harbor/tasks/enterpriseops/task_20251128_204735_353_66392a82_3f8ef4a1
+  - path: harbor/tasks/enterpriseops/task_20251201_164641_724_109c89c0_1b29acb9
+  - path: harbor/tasks/enterpriseops/task_20251202_041242_095_99ba2325_a63db5e8
+  - path: harbor/tasks/enterpriseops/task_20251202_052822_939_66392a82_0479926e
+  - path: harbor/tasks/enterpriseops/task_20251202_100743_745_109c89c0_958a07c1
+  - path: harbor/tasks/enterpriseops/task_20251203_051113_560_99ba2325_1ff9b6e5
+  - path: harbor/tasks/enterpriseops/task_20251203_064555_149_66392a82_d124b805
+  - path: harbor/tasks/enterpriseops/task_20251203_194626_202_391f1eff_1336fae8
+  - path: harbor/tasks/enterpriseops/task_20251204_132620_055_5c0cd3a2_048c6e95
+  - path: harbor/tasks/enterpriseops/task_20251204_160336_295_5c0cd3a2_26d1b04a
+  - path: harbor/tasks/enterpriseops/task_20251204_161024_294_46ca2862_1cc82f4c
+  - path: harbor/tasks/enterpriseops/task_20251204_231522_245_e6427839_5d09c3c2
+  - path: harbor/tasks/enterpriseops/task_20251205_060649_946_66392a82_354af85a
+  - path: harbor/tasks/enterpriseops/task_20251205_072016_336_46ca2862_e9006fbb
+  - path: harbor/tasks/enterpriseops/task_20251205_075543_102_46ca2862_7ba653d0
+  - path: harbor/tasks/enterpriseops/task_20251205_095558_939_5c0cd3a2_4af4214c
+  - path: harbor/tasks/enterpriseops/task_20251205_101915_742_d4a463c3_8eac8077
+  - path: harbor/tasks/enterpriseops/task_20251205_135905_848_391f1eff_9344499e
+  - path: harbor/tasks/enterpriseops/task_20251205_153330_906_a8eea1c0_8c7a6205
+  - path: harbor/tasks/enterpriseops/task_20251205_154853_044_d4a463c3_fce76046
+  - path: harbor/tasks/enterpriseops/task_20251205_194841_224_391f1eff_136bedae
+  - path: harbor/tasks/enterpriseops/task_20251206_091748_833_a8eea1c0_7775ff15
+  - path: harbor/tasks/enterpriseops/task_20251206_113950_467_6cd2e092_1a268d87
+  - path: harbor/tasks/enterpriseops/task_20251206_114027_879_5c0cd3a2_904991cc
+  - path: harbor/tasks/enterpriseops/task_20251206_130444_802_6cd2e092_8979087f
+  - path: harbor/tasks/enterpriseops/task_20251207_012657_395_accab84d_6ec27d2f
+  - path: harbor/tasks/enterpriseops/task_20251207_174704_642_5c0cd3a2_c124578d
+  - path: harbor/tasks/enterpriseops/task_20251208_035402_755_ad5a67e3_8ca9a646
+  - path: harbor/tasks/enterpriseops/task_20251208_072220_004_99ba2325_74403162
+  - path: harbor/tasks/enterpriseops/task_20251208_102635_187_c4ad7a70_43753a9a
+  - path: harbor/tasks/enterpriseops/task_20251208_123126_960_c4ad7a70_f974dae7
+  - path: harbor/tasks/enterpriseops/task_20251208_153512_199_46ca2862_3f951375
+  - path: harbor/tasks/enterpriseops/task_20251209_063042_139_66392a82_81ffc0b0
+  - path: harbor/tasks/enterpriseops/task_20251209_085836_811_a8eea1c0_6bbced3d
+  - path: harbor/tasks/enterpriseops/task_20251209_122452_734_d4a463c3_e5f1961c
+  - path: harbor/tasks/enterpriseops/task_20251210_002938_761_897c3e0b_f075229a
+  - path: harbor/tasks/enterpriseops/task_20251210_051952_801_99ba2325_a136867b
+  - path: harbor/tasks/enterpriseops/task_20251210_113549_827_d4a463c3_47b48a98
+  - path: harbor/tasks/enterpriseops/task_20251210_145940_356_accab84d_c16e9916
+  - path: harbor/tasks/enterpriseops/task_20251210_161511_924_2aa6b0ad_1446c2b4
+  - path: harbor/tasks/enterpriseops/task_20251210_183114_382_99ba2325_071a72ab
+  - path: harbor/tasks/enterpriseops/task_20251211_021838_048_accab84d_a511ee6e
+  - path: harbor/tasks/enterpriseops/task_20251211_192109_853_99ba2325_b21298a0
+  - path: harbor/tasks/enterpriseops/task_20251212_011224_384_accab84d_4ad9b557
+  - path: harbor/tasks/enterpriseops/task_20251212_081413_439_66392a82_7eb34f57
+  - path: harbor/tasks/enterpriseops/task_20251212_222304_435_66392a82_815cd745
+  - path: harbor/tasks/enterpriseops/task_20251231_123548_425_8cd8e61e_9303271e
+  - path: harbor/tasks/enterpriseops/task_20251231_152332_133_ad5a67e3_2a4e226c
+  - path: harbor/tasks/enterpriseops/task_20251231_162628_797_a8eea1c0_0a53db6c
+  - path: harbor/tasks/enterpriseops/task_20251231_164213_376_00364ece_724e98d5
+  - path: harbor/tasks/enterpriseops/task_20260101_043715_660_a8eea1c0_7304e48e
+  - path: harbor/tasks/enterpriseops/task_20260101_074825_586_a8eea1c0_e596bab2
+  - path: harbor/tasks/enterpriseops/task_20260101_111750_695_30600918_80637585
+  - path: harbor/tasks/enterpriseops/task_20260101_122222_300_ad5a67e3_3757206c
+  - path: harbor/tasks/enterpriseops/task_20260101_162109_100_a8eea1c0_e88250ef
+  - path: harbor/tasks/enterpriseops/task_20260101_191529_659_a8eea1c0_27d3bf1b
+  - path: harbor/tasks/enterpriseops/task_20260101_202840_239_a8eea1c0_0f425b23
+  - path: harbor/tasks/enterpriseops/task_20260101_233731_695_00364ece_187f2808
+  - path: harbor/tasks/enterpriseops/task_20260102_002012_363_00364ece_a3936446
+  - path: harbor/tasks/enterpriseops/task_20260102_012109_160_accab84d_686b76ff
+  - path: harbor/tasks/enterpriseops/task_20260102_031908_712_accab84d_886a7365
+  - path: harbor/tasks/enterpriseops/task_20260102_063731_186_d4a463c3_f1c4df9b
+  - path: harbor/tasks/enterpriseops/task_20260102_080409_151_d4a463c3_56c32265
+  - path: harbor/tasks/enterpriseops/task_20260102_080520_113_d4a463c3_90b440a8
+  - path: harbor/tasks/enterpriseops/task_20260102_094108_584_a8eea1c0_34a39e46
+  - path: harbor/tasks/enterpriseops/task_20260102_100510_709_66392a82_3d301c18
+  - path: harbor/tasks/enterpriseops/task_20260102_155148_014_accab84d_910b176a
+  - path: harbor/tasks/enterpriseops/task_20260102_162857_012_391f1eff_39478d55
+  - path: harbor/tasks/enterpriseops/task_20260102_165223_158_99ba2325_67a4a1e9
+  - path: harbor/tasks/enterpriseops/task_20260102_171008_763_ad5a67e3_cb101d3b
+  - path: harbor/tasks/enterpriseops/task_20260102_172945_725_ad5a67e3_5480e26f
+  - path: harbor/tasks/enterpriseops/task_20260102_210829_972_2aa6b0ad_e3d70e04
+  - path: harbor/tasks/enterpriseops/task_20260105_191634_257_2aa6b0ad_ea0bbd82
+  - path: harbor/tasks/enterpriseops/task_20260105_221816_258_00364ece_50f56980
+  - path: harbor/tasks/enterpriseops/task_20260106_070321_497_accab84d_6f4a8da8
+  - path: harbor/tasks/enterpriseops/task_20260106_073527_320_e6427839_e2e2ac8d
+  - path: harbor/tasks/enterpriseops/task_20260106_075904_098_a8eea1c0_a6cfe625
+  - path: harbor/tasks/enterpriseops/task_20260106_090444_873_99ba2325_980a3405
+  - path: harbor/tasks/enterpriseops/task_20260106_133642_894_66392a82_3e083fa5
+  - path: harbor/tasks/enterpriseops/task_20260106_134616_649_e6427839_7dba5a00
+  - path: harbor/tasks/enterpriseops/task_20260106_145907_700_a8eea1c0_f5bae698
+  - path: harbor/tasks/enterpriseops/task_20260106_151754_319_d4a463c3_41f0af13
+  - path: harbor/tasks/enterpriseops/task_20260106_155841_121_e6427839_fa425cbe
+  - path: harbor/tasks/enterpriseops/task_20260106_161324_272_c4ad7a70_4b3980fc
+  - path: harbor/tasks/enterpriseops/task_20260106_161816_678_a8eea1c0_1ef46cba
+  - path: harbor/tasks/enterpriseops/task_20260106_161859_265_00364ece_0e836ce8
+  - path: harbor/tasks/enterpriseops/task_20260106_185201_238_00364ece_8ab4fd80
+  - path: harbor/tasks/enterpriseops/task_20260106_192119_816_ad5a67e3_87a5a87c
+  - path: harbor/tasks/enterpriseops/task_20260107_111503_670_2aa6b0ad_e9611a77
+  - path: harbor/tasks/enterpriseops/task_20260107_162554_472_accab84d_41d2e871
+  - path: harbor/tasks/enterpriseops/task_20260107_164033_273_a8eea1c0_c0de2fed
+  - path: harbor/tasks/enterpriseops/task_20260108_160928_699_391f1eff_905701cb
+  - path: harbor/tasks/enterpriseops/task_20260121_143201_590_1afb323a_5a03bf03
+  - path: harbor/tasks/enterpriseops/task_20260121_145409_648_1afb323a_4e203caa
+  - path: harbor/tasks/enterpriseops/task_20260121_150447_596_1afb323a_0a1e4085
+  - path: harbor/tasks/enterpriseops/task_20260121_162252_344_1afb323a_f878fac7
+  - path: harbor/tasks/enterpriseops/task_20260121_163208_054_1afb323a_7f40ee66
+  - path: harbor/tasks/enterpriseops/task_20260121_183027_058_1afb323a_c53cb400

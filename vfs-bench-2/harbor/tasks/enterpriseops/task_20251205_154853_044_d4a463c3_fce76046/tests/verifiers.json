@@ -1,0 +1,46 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Updated Installed Product",
+  "description": "Verify Updated Installed Product",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) \nFROM installed_product AS ip\nWHERE ip.installed_product_id = 40\n  AND ip.location_id = 692\n  AND ip.status = 'in_use';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Create New Case",
+  "description": "Verify Create New Case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*)\nFROM customer_case AS c\nWHERE c.account_id = 8\n  AND c.contact_id = 10\n  AND c.channel = 'alert'\n  AND c.priority = 'low'\n  AND c.state = 'closed';\n ",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Notification Sent ",
+  "description": "Verify Notification Sent ",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*)\nFROM notification AS n\nWHERE n.case_id = 1233\n  AND n.email = 'marc.henry@stark-industries.com'\n  AND n.type = 'update';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Notification Sent ",
+  "description": "Verify Notification Sent ",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*)\nFROM notification AS n\nWHERE n.case_id = 1233\n  AND n.email = 'tonya.stevens@stark-industries.com'\n  AND n.type = 'update';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

@@ -1,0 +1,24 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Check if the notification is sent with proper KB article.",
+  "description": "Check if the notification is sent with proper KB article.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM notification WHERE case_id = '1015' AND email = 'andrew.bell58@averyltd.com' AND knowledge_id = '22' AND type = 'solution_proposal';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if KB article is linked to the case.",
+  "description": "Verify if KB article is linked to the case.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge WHERE case_id = '1015' AND knowledge_id = '22' AND used_as = 'suggested' AND case_kb_id = '528';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

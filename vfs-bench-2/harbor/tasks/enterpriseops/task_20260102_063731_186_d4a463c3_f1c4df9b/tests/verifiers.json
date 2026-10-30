@@ -1,0 +1,35 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify no knowledge linkage",
+  "description": "Verify no knowledge linkage",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id=515",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Case Escalation",
+  "description": "Verify Case Escalation",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id=1204 AND escalation=true AND escalation_reason=\"impact\"",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Interaction",
+  "description": "Verify Interaction",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM interaction WHERE channel= \"email\" AND account_id=52 AND contact_id=120 AND case_id=1204 AND status=\"handled\"\n\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

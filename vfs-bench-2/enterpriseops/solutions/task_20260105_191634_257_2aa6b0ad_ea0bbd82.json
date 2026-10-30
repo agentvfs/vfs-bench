@@ -1,0 +1,15 @@
+[
+ {"tool": "search_cases", "args": {"number": "CS-0000280"}},
+ {"tool": "find_user", "args": {"name": "Tim Anderson"}},
+ {"tool": "find_user", "args": {"name": "William Wyatt"}},
+ {"tool": "get_cases_assigned_to", "args": {"assigned_to": 606}},
+ {"tool": "get_cases_assigned_to", "args": {"assigned_to": 645}},
+ {"tool": "find_user_group", "args": {"name": "Field Service Coordination"}},
+ {"tool": "find_user_group", "args": {"name": "Proactive Case Monitoring"}},
+ {"tool": "check_user_membership", "args": {"user_id": 645, "group_id": 11}},
+ {"tool": "add_new_group_member", "args": {"group_id": 11, "user_id": 645}},
+ {"tool": "update_case", "args": {"case_id": 280, "assignment_group_id": 11, "assigned_to": 645}},
+ {"tool": "find_contacts", "args": {"contact_id": 19}},
+ {"tool": "list_users", "args": {"user_id": 428}},
+ {"tool": "send_notification", "args": {"case_id": 280, "email": "alexandra.wright@millermonroeandarroyo.com", "type": "reminder"}}
+]

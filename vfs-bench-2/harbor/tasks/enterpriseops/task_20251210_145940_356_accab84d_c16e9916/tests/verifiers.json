@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Case 5 escalated to critical with impact reason and updated description",
+  "description": "Case 5 escalated to critical with impact reason and updated description",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE case_id = 5\n  AND priority = 'critical'\n  AND escalation = 1\n  AND escalation_reason = 'impact'\n  AND short_description = 'Product: Palo Alto Networks PA-3220, Issue: Major packet drops affecting production - significantly worsened';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Knowledge 227 linked to case 5 as suggested",
+  "description": "Knowledge 227 linked to case 5 as suggested",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM case_knowledge\nWHERE case_id = 5\n  AND knowledge_id = 227\n  AND used_as = 'suggested';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Critical response SLA linked to case 5",
+  "description": "Critical response SLA linked to case 5",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM case_sla\nWHERE case_id = 5\n  AND sla_def_id = 1\n  AND stage = 'in_progress';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Notification with KB article sent to Elizabeth",
+  "description": "Notification with KB article sent to Elizabeth",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE case_id = 5\n  AND email = 'elizabeth.chase32@servicenow.com'\n  AND type = 'update'\n  AND knowledge_id = 227\n  AND status = 'success';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Critical resolution SLA linked to case 5",
+  "description": "Critical resolution SLA linked to case 5",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM case_sla\nWHERE case_id = 5\n  AND sla_def_id = 6\n  AND stage = 'in_progress';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

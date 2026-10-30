@@ -1,0 +1,101 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "User added to the new group",
+  "description": "User added to the new group",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group_member WHERE user_id = 803 AND group_id = 2;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "User added to the assignment group",
+  "description": "User added to the assignment group",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT assignment_group_id FROM customer_case WHERE case_id = 32;",
+   "expected_value": 2,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Case assigned to the user",
+  "description": "Case assigned to the user",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT assigned_to FROM customer_case WHERE case_id = 32;",
+   "expected_value": 803,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "User Amelia added to the network",
+  "description": "User Amelia added to the network",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user WHERE email = 'amelia.jones@servicenow.com' AND role = 'agent' AND location_id = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "New SLA has been linked to the case",
+  "description": "New SLA has been linked to the case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla WHERE case_id = 32 AND sla_def_id = 6;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Case-32 has been updated",
+  "description": "Case-32 has been updated",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 32 AND state = 'in_progress' AND escalation = 1 AND escalation_reason = 'breach_risk';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Case-30 has been updated ",
+  "description": "Case-30 has been updated ",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 30 AND state = 'in_progress' AND escalation = 1 AND escalation_reason = 'urgency';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Case-47 has been updated",
+  "description": "Case-47 has been updated",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT state FROM customer_case WHERE case_id = 47;",
+   "expected_value": "closed",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "check entitlement details",
+  "description": "check entitlement details",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM entitlement WHERE account_id = 2 AND product_id = 202 AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

@@ -1,0 +1,14 @@
+[
+ {"tool": "find_account", "args": {"name": "Umbrella"}},
+ {"tool": "find_locations", "args": {"city": "tokyo", "name": "Umbrella Site A - Tokyo"}},
+ {"tool": "find_product", "args": {"name": "Red Hat Enterprise Linux 9"}},
+ {"tool": "register_new_installed_product", "args": {"location_id": 814, "account_id": 6, "product_id": 3, "serial_number": "RHEL-UMB-4500", "status": "in_use", "warranty_end": "2026-12-31"}},
+ {"tool": "find_contacts", "args": {"account_id": 6, "is_primary": true, "active": true}},
+ {"tool": "create_new_case", "args": {"account_id": 6, "contact_id": 7, "product_id": 3, "installed_product_id": 301, "channel": "phone", "priority": "high", "state": "new", "short_description": "Product: Red Hat Enterprise Linux 9, Issue: node crashes frequently."}},
+ {"tool": "find_user", "args": {"name": "Travis Wood"}},
+ {"tool": "find_user_group", "args": {"name": "Proactive Case Monitoring"}},
+ {"tool": "add_new_group_member", "args": {"group_id": 11, "user_id": 11}},
+ {"tool": "find_sla_definitions", "args": {"applies_to_priority": "high", "metric": "response", "active": true}},
+ {"tool": "update_case", "args": {"case_id": 1233, "state": "in_progress"}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 1233, "sla_def_id": 2, "stage": "in_progress"}}
+]

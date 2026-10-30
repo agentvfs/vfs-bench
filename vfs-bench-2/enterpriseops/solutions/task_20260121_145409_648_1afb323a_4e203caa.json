@@ -1,0 +1,9 @@
+[
+ {"tool": "find_account", "args": {"name": "Simon LLC"}},
+ {"tool": "find_products", "args": {"name": "NGINX Plus"}},
+ {"tool": "find_product", "args": {"name": "NGINX Plus Variant 11"}},
+ {"tool": "enlist_new_contract", "args": {"account_id": 45, "contract_type": "support", "contract_price": 72000, "status": "active", "start_date": "2025-11-15", "end_date": "2026-11-15"}},
+ {"tool": "add_new_entitlement", "args": {"account_id": 45, "product_id": 31, "contract_id": 154, "support_level": "premium", "coverage_hours": "h24x7", "max_cases_per_month": 15, "active": true}},
+ {"tool": "add_new_sla_definition", "args": {"name": "SLA Response - High (Simon LLC NGINX Plus)", "metric": "response", "target_mins": 45, "pause_on_pending": true, "applies_to_priority": "high", "active": true}},
+ {"tool": "add_new_sla_definition", "args": {"name": "SLA Resolution - High (Simon LLC NGINX Plus)", "metric": "resolution", "target_mins": 240, "pause_on_pending": true, "applies_to_priority": "high", "active": true}}
+]

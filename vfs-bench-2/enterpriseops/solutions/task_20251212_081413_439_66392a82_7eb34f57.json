@@ -1,0 +1,11 @@
+[
+ {"tool": "search_cases", "args": {"number": "CS-0000026"}},
+ {"tool": "retrieve_knowledge", "args": {"product_id": 67}},
+ {"tool": "update_knowledge", "args": {"knowledge_id": 101, "state": "published"}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 26, "knowledge_id": 101, "used_as": "applied"}},
+ {"tool": "find_user", "args": {"name": "Randy Martinez"}},
+ {"tool": "find_user_group", "args": {"name": "Knowledge Curation"}},
+ {"tool": "check_user_membership", "args": {"user_id": 37, "group_id": 13}},
+ {"tool": "add_new_group_member", "args": {"group_id": 13, "user_id": 37}},
+ {"tool": "update_case", "args": {"case_id": 26, "assignment_group_id": 13, "assigned_to": 37, "state": "in_progress"}}
+]

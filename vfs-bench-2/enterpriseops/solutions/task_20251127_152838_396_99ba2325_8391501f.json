@@ -1,0 +1,12 @@
+[
+ {"tool": "find_account", "args": {"name": "Simon LLC"}},
+ {"tool": "find_locations", "args": {"name": "Simon Llc Site A - New York"}},
+ {"tool": "find_locations", "args": {"name": "Simon Llc Site B - New York"}},
+ {"tool": "retrieve_installed_products", "args": {"account_id": 45, "location_id": 892, "status": "repair"}},
+ {"tool": "update_location", "args": {"location_id": 892, "active": false}},
+ {"tool": "update_installed_product_details", "args": {"installed_product_id": 250, "location_id": 907, "status": "in_use"}},
+ {"tool": "find_contacts", "args": {"account_id": 45, "is_primary": true}},
+ {"tool": "list_users", "args": {"user_id": 74}},
+ {"tool": "create_new_case", "args": {"account_id": 45, "contact_id": 103, "product_id": 113, "installed_product_id": 250, "channel": "alert", "priority": "moderate", "state": "new", "short_description": "Asset P113-336951-9659 relocated from Simon Llc Site A to Site B - New York and set in use"}},
+ {"tool": "send_notification", "args": {"case_id": 1233, "email": "kayla.lutz@simonllc.com", "type": "alert"}}
+]

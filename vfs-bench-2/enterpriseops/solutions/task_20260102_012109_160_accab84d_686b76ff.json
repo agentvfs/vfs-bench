@@ -1,0 +1,15 @@
+[
+ {"tool": "find_user", "args": {"name": "Tonya Stevens"}},
+ {"tool": "find_contact_by_portal_user", "args": {"portal_user_id": 287}},
+ {"tool": "search_cases", "args": {"number": "CS-0000193"}},
+ {"tool": "find_product_by_id", "args": {"product_id": 140}},
+ {"tool": "find_entitlements", "args": {"account_id": 8, "product_id": 140}},
+ {"tool": "find_user_group", "args": {"name": "Escalation Management"}},
+ {"tool": "update_entitlement", "args": {"entitlement_id": 73, "support_level": "enterprise", "coverage_hours": "h24x7"}},
+ {"tool": "update_case", "args": {"case_id": 193, "priority": "critical", "escalation": true, "escalation_reason": "impact", "assignment_group_id": 18, "state": "in_progress", "reopen_count": 1}},
+ {"tool": "find_sla_definitions", "args": {"applies_to_priority": "critical", "active": true}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 193, "sla_def_id": 1, "stage": "in_progress"}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 193, "sla_def_id": 6, "stage": "in_progress"}},
+ {"tool": "retrieve_knowledge", "args": {"product_id": 140, "state": "published"}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 193, "knowledge_id": 210, "used_as": "suggested"}}
+]

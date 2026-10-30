@@ -198,13 +198,20 @@ class SharedFakes:
             raise
         return Run(fake.service, run, f"{fake.url}/_run/{run}", files[0])
 
-    async def snapshot(self, run: Run, tables: list[str]) -> dict:
-        """Read the fake's private JSON view through its async client."""
+    async def snapshot(self,
+                       run: Run,
+                       tables: list[str],
+                       queries: list[str] = ()) -> dict:
+        """Read the fake's private JSON view through its async client: each
+        table's rows, and each query's as ``query-<i>`` where the fake
+        answers its verifier's SQL itself (EnterpriseOps-Gym)."""
         fake = self._fakes[run.service]
         async with httpx.AsyncClient(timeout=120) as client:
             response = await client.get(
                 f"{run.url}/_verifier/state",
-                params=[("table", table) for table in tables],
+                params=[("table", table)
+                        for table in tables] + [("query", query)
+                                                for query in queries],
                 headers={"x-vfsbench-state-token": fake.state_token})
             response.raise_for_status()
             return response.json()
