@@ -70,3 +70,10 @@ tasks:
   - path: harbor/tasks/liveclawbench/morning-comfort-setup
   - path: harbor/tasks/liveclawbench/smarthome-test
   - path: harbor/tasks/liveclawbench/cross-service-credential-handling
+  - path: harbor/tasks/liveclawbench/flight-booking
+  - path: harbor/tasks/liveclawbench/fake-system-notification
+  - path: harbor/tasks/liveclawbench/flight-seat-selection
+  - path: harbor/tasks/liveclawbench/flight-seat-selection-failed
+  - path: harbor/tasks/liveclawbench/flight-cancel-claim
+  - path: harbor/tasks/liveclawbench/flight-info-change-notice
+  - path: harbor/tasks/liveclawbench/flight-calendar-overshare
