@@ -1,14 +1,13 @@
-# The DataSpace tasks committed under harbor/tasks/dataspace/ (harbor/
-# dataspace.py), on the mirage environment, each trial's verifier in a
-# microVM of its own: the gold CSV and upstream's evaluator reach only that
-# VM, so the Pyodide verifier cannot grade these tasks. From vfs-bench-2/,
-# after `python3 -I dataspace/setup.py`:
-#   uv run --project harbor harbor run -c harbor/dataspace.yaml -a oracle -n 8 -o state/harbor/jobs-dataspace
-# The oracle reaches 1.0 on the eleven tasks with a solution; nop scores 0.
+# All 46 DataSpace tasks: agent on Mirage, grading in a separate Mirage VFS
+# workspace using Monty 1.4.0. Gold/config inputs are hidden from the agent.
+# From vfs-bench-2/, after `python3 -I dataspace/setup.py`:
+#   uv run --project harbor harbor run -c harbor/dataspace.yaml -a nop -n 8 -o state/harbor/jobs-dataspace
+# Only eleven tasks have an oracle solution; use dataspace-oracle.yaml.
+# The preserved CPython reference is configured in dataspace-msb.yaml.
 environment:
   import_path: vfsbench_harbor:MirageEnvironment
 verifier:
-  import_path: vfsbench_harbor:MicrosandboxVerifier
+  import_path: vfsbench_harbor:MirageVerifier
 tasks:
   - path: harbor/tasks/dataspace/fund-ytd-returns
   - path: harbor/tasks/dataspace/china-credit-trends

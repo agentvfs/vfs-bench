@@ -23,6 +23,9 @@ from harbor.utils.path_filter import filter_paths_by_patterns
 from harbor.verifier.verifier import Verifier
 from vfsbench_harbor.complexmcp_verifier import definitions
 from vfsbench_harbor.complexmcp_verifier import freeze as freeze_complexmcp
+from vfsbench_harbor.dataspace_verifier import \
+    definitions as dataspace_definitions
+from vfsbench_harbor.dataspace_verifier import freeze as freeze_dataspace
 from vfsbench_harbor.environment import HARBOR, ROOT, MirageEnvironment
 
 MANIFEST = HARBOR / "graders/manifest.json"
@@ -108,7 +111,8 @@ class MirageVerifier(Verifier):
 
     A disposable Node process gives timeout/cancellation a hard stop. This
     is trusted host code, not an isolation boundary for arbitrary scripts.
-    LiveClawBench uses the workspace runtime; ComplexMCP also uses Monty.
+    LiveClawBench uses the workspace runtime; ComplexMCP and DataSpace use
+    Monty.
     Each grader reads declared JSON and file bytes through read-only VFS
     mounts and writes rewards to a separate RAM output mount.
     """
@@ -180,6 +184,7 @@ class MirageVerifier(Verifier):
         task = self.task.paths.task_dir.name
         manifest = json.loads(MANIFEST.read_text())
         manifest.update(definitions())
+        manifest.update(dataspace_definitions())
         definition = manifest.get(task)
         if definition is None:
             raise ValueError(f"No Mirage grader for {task}; use Harbor's "
@@ -292,6 +297,8 @@ class MirageVerifier(Verifier):
         Safety directory scans skip symlinks as the reference's os.walk does.
         """
         budget = _Staging(self.task.config.verifier.timeout_sec)
+        if definition.get("runtime") == "dataspace-monty":
+            return await freeze_dataspace(self, definition, stage, budget)
         if definition.get("runtime") == "complexmcp-monty":
             return await freeze_complexmcp(self, definition, stage, budget)
         frozen = await self._background(self._freeze_files,
@@ -389,10 +396,14 @@ class MirageVerifier(Verifier):
     async def _run(self, node: str, request: Path) -> dict:
         payload = await self._background(self._request_bytes, request)
         runtime = json.loads(payload).get("runtime", "typescript")
-        runner = (RUNNER if runtime == "typescript" else HARBOR /
-                  "verify-complexmcp.ts")
-        if runtime not in ("typescript", "complexmcp-monty"):
+        runners = {
+            "typescript": RUNNER,
+            "complexmcp-monty": HARBOR / "verify-complexmcp.ts",
+            "dataspace-monty": HARBOR / "verify-dataspace.ts"
+        }
+        if runtime not in runners:
             raise ValueError(f"Unknown verifier runtime: {runtime}")
+        runner = runners[runtime]
         process = await asyncio.create_subprocess_exec(
             node,
             "--no-warnings",
