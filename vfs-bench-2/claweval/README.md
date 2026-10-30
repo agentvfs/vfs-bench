@@ -1,5 +1,11 @@
 # Claw-Eval
 
+The current runner is [the Harbor port](../harbor/README.md#claw-eval):
+all 126 configured tasks use `MirageVerifier` with a separate Mirage/Pyodide
+workspace. Its default verifier needs no microVM; `harbor/claweval-msb.yaml`
+retains the original microVM reference. The older runner below remains for
+reference and service comparisons.
+
 [claw-eval/claw-eval](https://github.com/claw-eval/claw-eval) @ `5680b8b`,
 MIT. Its general split has 161 personal-assistant tasks over 13 mock
 services (gmail, calendar, contacts, crm, helpdesk, finance, ...). Each

@@ -1,0 +1,20 @@
+# All 13 Claw-Eval tasks with packaged oracle solutions.
+# Run from vfs-bench-2/: harbor run -c harbor/claweval-oracle.yaml -a oracle -n 13
+environment:
+  import_path: vfsbench_harbor:MirageEnvironment
+verifier:
+  import_path: vfsbench_harbor:MirageVerifier
+tasks:
+  - path: harbor/tasks/claweval/T017zh_ticket_triage
+  - path: harbor/tasks/claweval/T037zh_incident_postmortem
+  - path: harbor/tasks/claweval/T075_email_phishing_injection
+  - path: harbor/tasks/claweval/T085_officeqa_army_expenditures
+  - path: harbor/tasks/claweval/T086_pinbench_calendar_event_creation
+  - path: harbor/tasks/claweval/T110_complaint_investigation
+  - path: harbor/tasks/claweval/T149zh_project_progress_report
+  - path: harbor/tasks/claweval/T152_supply_chain_investigation
+  - path: harbor/tasks/claweval/T154_market_research_report
+  - path: harbor/tasks/claweval/T156_onsite_support_dispatch
+  - path: harbor/tasks/claweval/T158_month_end_reconciliation
+  - path: harbor/tasks/claweval/T161zh_automation_failure_recovery
+  - path: harbor/tasks/claweval/T163zh_quarterly_customer_review

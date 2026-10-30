@@ -446,6 +446,45 @@ def main() -> int:
                                  os.environ.get("OPENAI_BASE_URL",
                                                 "https://api.openai.com/v1")))
             self._use_gemini = False
+            # Record the raw transport, including the two email-triage
+            # graders' direct client calls, for deterministic Mirage replay.
+            self.recording = []
+            create = self.client.chat.completions.create
+
+            def save_recording():
+                VERIFIER.mkdir(parents=True, exist_ok=True)
+                target = VERIFIER / "judge-recording.json"
+                temporary = target.with_suffix(".tmp")
+                temporary.write_text(
+                    json.dumps(self.recording, ensure_ascii=False, indent=1))
+                temporary.replace(target)
+
+            save_recording()
+
+            def recorded(**request):
+                entry = {
+                    "request": request,
+                    "error": {
+                        "message": "Judge response not received"
+                    }
+                }
+                self.recording.append(entry)
+                save_recording()
+                try:
+                    response = create(**request)
+                    entry["response"] = response.model_dump(mode="json")
+                    del entry["error"]
+                    return response
+                except Exception as exc:
+                    entry["error"] = {
+                        "message": "Judge transport failed",
+                        "status": getattr(exc, "status_code", None),
+                    }
+                    raise
+                finally:
+                    save_recording()
+
+            self.client.chat.completions.create = recorded
 
         def evaluate(self, *args, **kwargs):
             return answered(super().evaluate(*args, **kwargs))
