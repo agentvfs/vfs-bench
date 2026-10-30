@@ -1,28 +1,18 @@
-/** Feasibility checks only: no dataset is routed to Monty yet. */
+/** Monty runtime version and verifier workspace confinement checks. */
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
-import { registerHooks } from 'node:module'
-import { after, test } from 'node:test'
+import { createRequire } from 'node:module'
+import { pathToFileURL } from 'node:url'
+import { test } from 'node:test'
 import { MontyRuntime } from '@struktoai/mirage-core/runtime/python/monty/runtime'
 import { Limit, MountMode, PathSpec } from '@struktoai/mirage-core/types'
 import { RAMVFS } from '@struktoai/mirage-core/vfs/ram/ram'
 import { Workspace } from '@struktoai/mirage-core/workspace/workspace/workspace'
 import { quote } from './graders/context.ts'
 
-// The development-linked Mirage checkout has its own 1.0.0 dev dependency.
-// Only this test process redirects that optional peer to the application's
-// exact 1.4.0 pin. Production needs the same version resolved by its runtime
-// before any dataset can switch; changing the application's pin alone is not
-// enough for a linked package. No upstream files or shared installs are changed.
-const montyUrl = import.meta.resolve('@pydantic/monty')
-const hooks = registerHooks({
-  resolve(specifier, context, nextResolve) {
-    return specifier === '@pydantic/monty'
-      ? { url: montyUrl, shortCircuit: true }
-      : nextResolve(specifier, context)
-  },
-})
-after(() => hooks.deregister())
+// Check the package the linked Mirage runtime resolves, not just the root pin.
+const runtimeUrl = import.meta.resolve('@struktoai/mirage-core/runtime/python/monty/runtime')
+const montyUrl = pathToFileURL(createRequire(runtimeUrl).resolve('@pydantic/monty')).href
 
 async function workspace(value: number): Promise<Workspace> {
   const input = new RAMVFS()

@@ -108,12 +108,12 @@ authoritative. Coverage across the six Mirage-agent job configs is:
 | LiveClawBench | 70 | Mirage/Pyodide | 70 |
 | DataSpace | 46 | microVM | 0 |
 | Claw-Eval | 126 | microVM | 0 |
-| ComplexMCP | 47 | microVM | 0 |
+| ComplexMCP | 47 | microVM | 47 (Monty 1.4.0) |
 | AutomationBench | 600 | microVM | 0 |
 | Gaia2 | 460 | microVM | 0 |
-| Total | 1,349 | | 70 |
+| Total | 1,349 | | 117 |
 
-The other 1,279 tasks retain microVM grading and report `unported` in parity
+The other 1,232 tasks retain microVM grading and report `unported` in parity
 mode. The unconfigured `pre-meeting-research-brief` LLM-judge task is outside
 the 70-task set and has no native port.
 
@@ -249,19 +249,16 @@ host filesystem is mounted. Monty uses its native worker processes; this is
 not a claim of zero process overhead or measured throughput. Grading runs
 inside Monty; the host only services Mirage VFS operations.
 
-The linked Mirage checkout still has a **1.0.0 development dependency**. The
-probe redirects only its test process's optional-peer resolution to the
-benchmark's exact 1.4.0 package and checks that version. Production dependency
-resolution must be aligned before enabling a Monty verifier; the pin alone
-does not change the linked runtime. The 70 LiveClawBench tasks remain on their
-native TypeScript graders, and the other datasets retain their reference
-backends. No dataset has been migrated by this probe.
+Mirage is pinned to `9dd69a316242deddee79b40ce41aafaa2be6065c`, whose
+runtime dependency is also Monty **1.4.0**. No module-resolution override is
+used. All 47 ComplexMCP tasks now use this runtime through `MirageVerifier`;
+the 70 LiveClawBench tasks retain their native TypeScript graders.
 
 Proposed migration order, one dataset per follow-up PR:
 
 | Order | Dataset | Tasks | Work before switching grading |
 |---|---|---:|---|
-| 1 | ComplexMCP | 47 | Freeze initial/final/expected JSON in a verifier-only VFS; retain the shared judge, port Levenshtein to pure Python, and preserve six-place rounding and ignored IDs. A local probe of the pinned judge with that replacement returned the expected counts for one state change; full dataset parity is still required. |
+| 1 | ComplexMCP | 47 | Freeze initial/final/expected JSON in a verifier-only VFS; retain the shared judge, port Levenshtein to pure Python, and preserve six-place rounding and ignored IDs. Implemented: 47 oracle and 47 no-op trials match the original CPython judge on all four reward fields. |
 | 2 | DataSpace | 46 | Adapt the shared CSV/Decimal evaluator, CLI loading and error handling. The pinned evaluator currently fails Monty's parser on custom exception inheritance. Validate strict CSV parsing, normalization, precision, column permutations and failure behavior. |
 | 3 | AutomationBench | 600 | Export world/hidden state as JSON; port the Pydantic-dependent world/rubric behavior by assertion family, preserving exclusions and partial-credit weights. |
 | 4 | Claw-Eval | 126 | Port task graders and trace/audit assembly over JSON. Preserve required LLM judgments through an explicit recorded service interface. |
@@ -2003,7 +2000,8 @@ behind the bridge; its eleven tasks keep their slugs and oracles.
 
 ```sh
 uv run --project complexmcp python -I complexmcp/setup.py           # upstream, into state/complexmcp
-uv run --project complexmcp python -I harbor/complexmcp.py --site    # the judge's package for the VM
+# Only the preserved microVM reference needs --site (complexmcp-msb.yaml).
+uv run --project complexmcp python -I harbor/complexmcp_manifest.py --check
 uv run --project complexmcp python -I harbor/complexmcp.py [--check] [slug ...]
 uv run --project harbor harbor run -c harbor/complexmcp.yaml -a oracle -n 4 -o state/harbor/jobs-complexmcp
 uv run --project harbor harbor run -c harbor/complexmcp.yaml -a nop -n 4 -o state/harbor/jobs-complexmcp
@@ -2013,7 +2011,38 @@ uv run --project complexmcp python -I harbor/complexmcp_compare.py [--task <row>
 
 The exporter and the comparison run in `complexmcp/`'s uv project, which
 has upstream's fastmcp: the CLIs' schemas are what upstream's MCP servers
-list. The tasks need `MicrosandboxVerifier` (`complexmcp.yaml`).
+list. `complexmcp.yaml` uses `MirageVerifier`: Harbor freezes each app's
+read-only login/logout replies and the pinned gold row, then launches a
+separate Mirage VFS workspace. Monty 1.4.0 executes the original judge body
+with a pure-Python Levenshtein implementation and writes rewards to RAM.
+No SQLite, Pyodide, VM, network or host grading callbacks are used inside
+grading. The existing fake-service storage is unchanged.
+
+The task's original `grade.py`/`test.sh`, upstream judge and gold row are
+hash-pinned in `graders/complexmcp/manifest.json`. A changed reference or row
+fails before grading. Gold data is never mounted into the agent workspace.
+The preserved reference job is `complexmcp-msb.yaml`; `MirageParityVerifier`
+still runs that reference first and compares all four numeric reward fields.
+
+Validation: all 47 oracle trials passed, all 47 no-op trials scored zero,
+and all 94 results exactly matched the original CPython judge with
+Levenshtein 0.27.3 on the saved inputs. The runs used `-n 8` and completed in
+1m50s and 1m17s respectively; these are local Harbor job timings, not a
+controlled speedup comparison. Replay and mutation commands:
+
+```sh
+uv run --project complexmcp python -I harbor/audit_complexmcp.py \
+  state/harbor/complexmcp-monty/oracle state/harbor/complexmcp-monty/nop \
+  --output state/harbor/complexmcp-monty/replay.json
+uv run --project complexmcp python -I harbor/audit_complexmcp.py \
+  state/harbor/complexmcp-monty/oracle --mutations \
+  --output state/harbor/complexmcp-monty/mutations.json
+```
+
+All 235 mutation comparisons matched the reference: no-op, exact gold,
+empty final state, extra changes, and ID/float perturbations for every task. Unit tests additionally cover
+Unicode, threshold boundaries, large integer preservation, concurrency,
+read-only mounts and timeout cleanup.
 
 | Upstream | Here |
 |---|---|
@@ -2022,7 +2051,7 @@ list. The tasks need `MicrosandboxVerifier` (`complexmcp.yaml`).
 | `AgentClient.__login` logs into LightSystem, then each of the row's apps, with its seed | Each Light app's fixture is the login (`kit/login.json`: the seed, the apps in order); its fake makes the session from it at reset |
 | A call to a Light app gets the session's `session_id` added | A run is the session; a Light app's CLI also names the trial's run of LightSystem (below) |
 | A tool's reply is fastmcp's text (`pydantic_core.to_json` of the result, a string as it is), or the client's `{'status': 'error', ...}` for an error | The same text, byte for byte |
-| `__logout` collects what each app's `logout` answers; `judge_env` compares it with the login's and the row's `gt_env` | `tests/grade.py` (`complexmcp_grade.py`) posts each app's `/login` and `/logout` at its port, in the verifier's VM, and runs upstream's `benchmark/judge.py` from `/opt/complexmcp` |
+| `__logout` collects what each app's `logout` answers; `judge_env` compares it with the login's and the row's `gt_env` | Harbor freezes each app's `/login` and `/logout` at the trial's route; Monty runs the pinned `benchmark/judge.py` body over those JSON bytes in Mirage. `complexmcp-msb.yaml` preserves the original VM path |
 
 ### The fakes
 
