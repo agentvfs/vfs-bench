@@ -7,6 +7,7 @@ export interface Grade {
   checks: Record<string, boolean | number | string>
   rewards?: Record<string, number>
   artifacts?: Record<string, unknown>
+  completionOutput?: string
 }
 /** Serializable input transport; file values are base64 bytes, never host paths. */
 export interface Inputs {
@@ -53,6 +54,16 @@ export class Context {
       })
     )
     return new Context(input, states, files)
+  }
+  async withCompletionOutput(text: string, command: CommandContext): Promise<Context> {
+    const output = '/.verifier-output/completion.txt'
+    await command.vfs!.write(output, new TextEncoder().encode(text))
+    const files = new Map(this.files)
+    // The reference shell's tee overwrites this path before the safety audit.
+    // Store the derived file in the writable output VFS, then expose its
+    // reference name to the audit without changing frozen agent inputs.
+    files.set('/tmp/verify_output.txt', new TextDecoder().decode(await command.vfs!.read(output)))
+    return new Context({ ...this.input, files: [...files.keys()] }, this.states, files)
   }
   exists(path: string) {
     return (

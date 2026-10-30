@@ -11,18 +11,93 @@ import hashlib
 import json
 import math
 import os
-import shutil
 import tempfile
+import threading
 import time
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 from harbor.models.verifier.result import VerifierResult
+from harbor.utils.env import resolve_env_vars
 from harbor.utils.path_filter import filter_paths_by_patterns
 from harbor.verifier.verifier import Verifier
 from vfsbench_harbor.environment import HARBOR, ROOT, MirageEnvironment
 
 MANIFEST = HARBOR / "graders/manifest.json"
 RUNNER = HARBOR / "verify.ts"
+MAX_STAGING_BYTES = 64 * 1024 * 1024
+MAX_STAGING_PATHS = 10_000
+COPY_CHUNK = 1024 * 1024
+
+
+class _Staging:
+    """Bound file traversal/copies and cooperatively stop a staging thread."""
+
+    def __init__(self, timeout: float):
+        self.deadline = time.monotonic() + timeout
+        self.cancelled = threading.Event()
+        self.bytes = 0
+        self.paths = 0
+
+    def check(self):
+        if self.cancelled.is_set() or time.monotonic() >= self.deadline:
+            raise TimeoutError("Mirage verifier staging stopped")
+
+    def path(self):
+        self.check()
+        self.paths += 1
+        if self.paths > MAX_STAGING_PATHS:
+            raise ValueError("Mirage verifier staging exceeds path limit")
+
+    def charge(self, size: int):
+        self.check()
+        self.bytes += size
+        if self.bytes > MAX_STAGING_BYTES:
+            raise ValueError("Mirage verifier staging exceeds byte limit")
+
+    def chunks(self, path: Path):
+        self.check()
+        if path.stat().st_size > MAX_STAGING_BYTES - self.bytes:
+            raise ValueError("Mirage verifier staging exceeds byte limit")
+        with path.open("rb") as source:
+            while True:
+                self.check()
+                chunk = source.read(COPY_CHUNK)
+                if not chunk:
+                    break
+                self.charge(len(chunk))
+                yield chunk
+
+    def copy(self, source: Path, target: Path):
+        with target.open("wb") as output:
+            for chunk in self.chunks(source):
+                output.write(chunk)
+        target.chmod(0o400)
+
+    def write_json(self, target: Path, value):
+        with target.open("wb") as output:
+            for chunk in json.JSONEncoder().iterencode(value):
+                data = chunk.encode()
+                self.charge(len(data))
+                output.write(data)
+
+    def walk(self, root: Path):
+        pending = [root]
+        while pending:
+            self.check()
+            directory = pending.pop()
+            entries = []
+            with os.scandir(directory) as scan:
+                for entry in scan:
+                    self.path()
+                    entries.append(entry)
+            for entry in sorted(entries, key=lambda e: e.name):
+                self.check()
+                if entry.is_symlink():
+                    continue
+                if entry.is_dir(follow_symlinks=False):
+                    pending.append(Path(entry.path))
+                elif entry.is_file(follow_symlinks=False):
+                    yield Path(entry.path)
 
 
 class MirageVerifier(Verifier):
@@ -33,6 +108,65 @@ class MirageVerifier(Verifier):
     The workspace has only the workspace runtime and RAM output; the grader
     reads declared JSON state and file bytes through a read-only Mirage VFS.
     """
+
+    async def _background(self, work, *args, budget=None):
+        budget = budget or _Staging(self.task.config.verifier.timeout_sec)
+        worker = asyncio.create_task(asyncio.to_thread(work, *args, budget))
+        try:
+            # wait() leaves the worker alive on cancellation without a second
+            # shield future reporting the cooperatively stopped worker's error.
+            await asyncio.wait({worker})
+            return worker.result()
+        except BaseException:
+            budget.cancelled.set()
+            # Do not delete the temporary directory while a copy still owns it.
+            while not worker.done():
+                try:
+                    await asyncio.wait({worker})
+                except asyncio.CancelledError:
+                    continue
+                except Exception:
+                    break
+            if not worker.cancelled():
+                worker.exception()
+            raise
+
+    def _effective_inputs(self, definition: dict) -> tuple[dict, dict]:
+        merged = {
+            **self.task.config.verifier.env,
+            **(self.verifier_env or {}),
+            **self.override_env,
+        }
+        env = {**self.environment.container_env, **resolve_env_vars(merged)}
+        states = definition.get("native_state", {})
+        finance = "/opt/mock/data/finance_app.sqlite"
+        if finance in states and env.get("MOCK_FINANCE_DB_PATH",
+                                         finance) not in states:
+            raise ValueError("MirageVerifier does not support this "
+                             "MOCK_FINANCE_DB_PATH override; "
+                             "use the reference verifier")
+        paths = list(definition.get("inputs", []))
+        dashboard = self.task.name == "finance-dashboard-repair"
+        if dashboard and "POLICY_PATH" in env:
+            policy = env["POLICY_PATH"]
+            virtual = PurePosixPath(policy)
+            if (not virtual.is_absolute() or ".." in virtual.parts
+                    or "\0" in policy or str(virtual) != policy):
+                raise ValueError(
+                    "POLICY_PATH must be a canonical absolute VFS path")
+            if not policy.startswith("/tests/"):
+                try:
+                    self.environment.host_path(policy)
+                except (ValueError, FileNotFoundError) as exc:
+                    raise ValueError(
+                        "POLICY_PATH is outside supported VFS mounts") from exc
+            paths.append(policy)
+        if "/.bash_history" in paths and "HOME" in env:
+            home = PurePosixPath(env["HOME"])
+            if not home.is_absolute() or ".." in home.parts:
+                raise ValueError("HOME must be an absolute VFS path")
+            paths.append(str(home / ".bash_history"))
+        return {**definition, "inputs": list(dict.fromkeys(paths))}, env
 
     def _definition(self) -> tuple[str, dict]:
         if self._skip_tests_upload or self.step_name is not None:
@@ -100,37 +234,45 @@ class MirageVerifier(Verifier):
         already refreshed the state views its Python grader read.
         Refreshing again could compare two different states.
         """
+        async with asyncio.timeout(self.task.config.verifier.timeout_sec):
+            return await self._evaluate(refresh=refresh)
+
+    async def _evaluate(self, *, refresh: bool) -> dict:
         env = self.environment
         assert isinstance(env, MirageEnvironment)
         started = time.monotonic()
         task, definition = self._definition()
+        definition, verifier_env = self._effective_inputs(definition)
         if refresh:
             await env.refresh_verifier_files()
         with tempfile.TemporaryDirectory(prefix="vfsbench-verify-") as temp:
             stage = Path(temp)
             frozen = await self.freeze(definition, stage)
             request = stage / "request.json"
-            request.write_text(
-                json.dumps({
-                    "task":
-                    task,
+            await self._background(lambda budget: budget.write_json(
+                request, {
+                    "task": task,
                     **frozen,
-                    "epoch":
-                    env.now().isoformat(),
-                    "env":
-                    env.container_env,
-                    "timeoutSeconds":
-                    self.task.config.verifier.timeout_sec,
+                    "epoch": env.now().isoformat(),
+                    "env": verifier_env,
+                    "timeoutSeconds": self.task.config.verifier.timeout_sec,
                 }))
             result = await self._run(env.node_binary, request)
             result["timings"]["total_s"] = time.monotonic() - started
-            result["input_sha256"] = {
-                p: hashlib.sha256(Path(host).read_bytes()).hexdigest()
-                for p, host in {
-                    **frozen["states"],
-                    **frozen["files"]
-                }.items()
-            }
+
+            def hashes(budget):
+                result = {}
+                for path, host in {
+                        **frozen["states"],
+                        **frozen["files"]
+                }.items():
+                    digest = hashlib.sha256()
+                    for chunk in budget.chunks(Path(host)):
+                        digest.update(chunk)
+                    result[path] = digest.hexdigest()
+                return result
+
+            result["input_sha256"] = await self._background(hashes)
             return result
 
     async def freeze(self, definition: dict, stage: Path) -> dict:
@@ -140,6 +282,37 @@ class MirageVerifier(Verifier):
         must resolve within a mounted directory; symlinks cannot read the host.
         Safety directory scans skip symlinks as the reference's os.walk does.
         """
+        budget = _Staging(self.task.config.verifier.timeout_sec)
+        frozen = await self._background(self._freeze_files,
+                                        definition,
+                                        stage,
+                                        budget=budget)
+        states = await self.environment.snapshot_verifier_states(
+            definition.get("native_state", {}))
+        history = None
+        if "/.bash_history" in definition.get("inputs", []):
+            history = await self.environment.read_virtual_file("/.bash_history"
+                                                               )
+
+        def store(budget):
+            for i, (alias, tables) in enumerate(sorted(states.items())):
+                target = stage / f"state-{i}.json"
+                budget.write_json(target, tables)
+                target.chmod(0o400)
+                frozen["states"][alias] = str(target)
+            if history is not None:
+                budget.charge(len(history))
+                target = stage / "shell-history"
+                target.write_bytes(history)
+                target.chmod(0o400)
+                frozen["files"]["/.bash_history"] = str(target)
+                # test.sh copies the virtual history here before the audit.
+                frozen["files"]["/logs/verifier/bash_history"] = str(target)
+            return frozen
+
+        return await self._background(store, budget=budget)
+
+    def _freeze_files(self, definition, stage, budget):
         env = self.environment
         sources: dict[str, Path] = {}
         existing = set()
@@ -147,7 +320,12 @@ class MirageVerifier(Verifier):
 
         def source(path: str) -> Path | None:
             if path.startswith("/tests/"):
-                return tests / path.removeprefix("/tests/")
+                host = tests / path.removeprefix("/tests/")
+                if not host.resolve().is_relative_to(tests.resolve()):
+                    raise ValueError(
+                        "Verifier resource leaves its tests directory")
+                self.task.file_filter.require_included(host)
+                return host
             try:
                 host = env.host_path(path)
             except (ValueError, FileNotFoundError):
@@ -160,6 +338,7 @@ class MirageVerifier(Verifier):
             return host
 
         for path in definition.get("inputs", []):
+            budget.path()
             host = source(path)
             if host is not None and host.exists():
                 existing.add(path)
@@ -176,37 +355,15 @@ class MirageVerifier(Verifier):
                 if host is None or not host.is_dir():
                     continue
                 existing.add(virtual)
-                for directory, dirs, files in os.walk(host, followlinks=False):
-                    dirs[:] = sorted(d for d in dirs
-                                     if not (Path(directory) / d).is_symlink())
-                    for name in sorted(files):
-                        file = Path(directory) / name
-                        if not file.is_symlink() and file.is_file():
-                            path = virtual.rstrip(
-                                "/") + "/" + file.relative_to(host).as_posix()
-                            sources[path] = file
+                for file in budget.walk(host):
+                    path = virtual.rstrip("/") + "/" + file.relative_to(
+                        host).as_posix()
+                    sources[path] = file
         frozen = {"states": {}, "files": {}, "existingPaths": sorted(existing)}
         for i, (virtual, host) in enumerate(sorted(sources.items())):
             target = stage / f"input-{i}"
-            shutil.copyfile(host, target)
-            target.chmod(0o400)
+            budget.copy(host, target)
             frozen["files"][virtual] = str(target)
-        states = await env.snapshot_verifier_states(
-            definition.get("native_state", {}))
-        for i, (alias, tables) in enumerate(sorted(states.items())):
-            target = stage / f"state-{i}.json"
-            target.write_text(json.dumps(tables))
-            target.chmod(0o400)
-            frozen["states"][alias] = str(target)
-        if "/.bash_history" in definition.get("inputs", []):
-            history = await env.read_virtual_file("/.bash_history")
-            if history is not None:
-                target = stage / "shell-history"
-                target.write_bytes(history)
-                target.chmod(0o400)
-                frozen["files"]["/.bash_history"] = str(target)
-                # test.sh copies the virtual history here before the audit.
-                frozen["files"]["/logs/verifier/bash_history"] = str(target)
         return frozen
 
     def _log(self, path: Path, text: str) -> None:
@@ -219,17 +376,7 @@ class MirageVerifier(Verifier):
             path.write_text(text)
 
     async def _run(self, node: str, request: Path) -> dict:
-        value = json.loads(request.read_text())
-        if "databases" in value:
-            raise ValueError("Native grading takes JSON state, not databases")
-        value["states"] = {
-            alias: json.loads(Path(host).read_text())
-            for alias, host in value["states"].items()
-        }
-        value["files"] = {
-            path: base64.b64encode(Path(host).read_bytes()).decode("ascii")
-            for path, host in value.get("files", {}).items()
-        }
+        payload = await self._background(self._request_bytes, request)
         process = await asyncio.create_subprocess_exec(
             node,
             "--no-warnings",
@@ -246,8 +393,7 @@ class MirageVerifier(Verifier):
         )
         try:
             async with asyncio.timeout(self.task.config.verifier.timeout_sec):
-                stdout, stderr = await process.communicate(
-                    json.dumps(value).encode())
+                stdout, stderr = await process.communicate(payload)
         finally:
             if process.returncode is None:
                 process.kill()
@@ -257,3 +403,23 @@ class MirageVerifier(Verifier):
             raise RuntimeError(f"Mirage grader exited {process.returncode}: "
                                f"{diagnostic[-4000:]}")
         return json.loads(stdout)
+
+    @staticmethod
+    def _request_bytes(request, budget):
+        budget.check()
+        value = json.loads(request.read_text())
+        if "databases" in value:
+            raise ValueError("Native grading takes JSON state, not databases")
+        value["states"] = {
+            alias: json.loads(b"".join(budget.chunks(Path(host))))
+            for alias, host in value["states"].items()
+        }
+        value["files"] = {
+            path:
+            base64.b64encode(b"".join(budget.chunks(
+                Path(host)))).decode("ascii")
+            for path, host in value.get("files", {}).items()
+        }
+        payload = json.dumps(value).encode()
+        budget.check()
+        return payload

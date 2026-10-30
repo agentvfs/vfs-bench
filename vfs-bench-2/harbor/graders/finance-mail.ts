@@ -174,7 +174,8 @@ export const FINANCE_MAIL_GRADERS: Record<string, Grader> = {
       emailed = mails(c).some((m) => m.to.some((r) => lower(r).includes('cfo@acmecorp.com')))
     } catch {}
     d.email_sent = emailed ? 0.2 : 0
-    const template = c.text('/workspace/policies/report_template.md', '')
+    // Python's text-mode read uses universal newlines before hashing.
+    const template = c.text('/workspace/policies/report_template.md', '').replace(/\r\n?/g, '\n')
     d.template_updated =
       template &&
       createHash('sha256').update(template).digest('hex') !==

@@ -29,6 +29,9 @@ export const GRADERS: Readonly<Record<string, Grader>> = Object.freeze({
 export async function evaluate(input: InputSpec, command: CommandContext) {
   const grader = GRADERS[input.task]
   if (!grader) throw new Error(`No Mirage grader for ${input.task}`)
-  const context = await Context.open(input, command)
-  return safety(context, grader(context))
+  let context = await Context.open(input, command)
+  const { completionOutput, ...completion } = grader(context)
+  if (input.task === 'flight-calendar-overshare' && completionOutput !== undefined)
+    context = await context.withCompletionOutput(completionOutput, command)
+  return safety(context, completion)
 }

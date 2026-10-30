@@ -8,6 +8,8 @@ import os
 import shutil
 import sqlite3
 import tempfile
+import threading
+import time
 import unittest
 from pathlib import Path
 from unittest.mock import AsyncMock, Mock, patch
@@ -16,6 +18,7 @@ from harbor.models.task.task import Task
 from harbor.models.trial.paths import TrialPaths
 from vfsbench_harbor import MirageEnvironment, MirageVerifier
 from vfsbench_harbor.environment import HARBOR
+from vfsbench_harbor.mirage_verifier import _Staging
 
 TASKS = HARBOR / "tasks/liveclawbench"
 NODE = os.environ.get("VFSBENCH_TEST_NODE", "node")
@@ -169,6 +172,168 @@ class MirageVerifierTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result.rewards, {"reward": 0})
         self.assertTrue(self.paths.reward_text_path.exists())
         self.assertFalse(self.paths.test_stdout_path.exists())
+
+    async def test_verifier_env_precedence_and_custom_policy_are_used(self):
+        task = Task(TASKS / "finance-dashboard-repair")
+        task.config.verifier.env = {
+            "POLICY_PATH": "/workspace/task.md",
+            "TASK_SETTING": "task"
+        }
+        workspace = self.root / "workspace"
+        workspace.mkdir()
+        self.env._mounts["/workspace"] = {
+            "root": str(workspace),
+            "mode": "readwrite"
+        }
+        self.env._env = {
+            "POLICY_PATH": "/workspace/base.md",
+            "BASE_SETTING": "base"
+        }
+        (workspace / "chosen.md").write_text(
+            "## Audit\nReplace total_expenses with actual_expense_amount; "
+            "correct budget_deviation to budget_amount.\n")
+        self.env.snapshot_verifier_states = AsyncMock(
+            return_value={
+                "/opt/mock/data/finance_app.sqlite": {
+                    "dashboard_config": [{
+                        "user_id": 1,
+                        "formula_json": "{}"
+                    }]
+                }
+            })
+        verifier = MirageVerifier(task=task,
+                                  environment=self.env,
+                                  trial_paths=self.paths,
+                                  verifier_env={
+                                      "POLICY_PATH": "/workspace/verifier.md",
+                                      "VERIFIER_SETTING": "verifier"
+                                  },
+                                  override_env={
+                                      "POLICY_PATH": "${MIRAGE_TEST_POLICY}",
+                                      "OVERRIDE_SETTING": "override"
+                                  })
+        run = verifier._run
+
+        async def inspect(node, request):
+            value = json.loads(request.read_text())
+            self.assertEqual(
+                value["env"], {
+                    "POLICY_PATH": "/workspace/chosen.md",
+                    "BASE_SETTING": "base",
+                    "TASK_SETTING": "task",
+                    "VERIFIER_SETTING": "verifier",
+                    "OVERRIDE_SETTING": "override"
+                })
+            self.assertIn("/workspace/chosen.md", value["files"])
+            return await run(node, request)
+
+        verifier._run = inspect
+        with patch.dict(os.environ,
+                        {"MIRAGE_TEST_POLICY": "/workspace/chosen.md"}):
+            result = await verifier.verify()
+        self.assertEqual(result.rewards["_meta_policy_audit"], 0.15)
+        self.assertEqual(result.rewards["_meta_policy_content"], 0.15)
+
+    async def test_unsupported_overrides_fail_before_grading(self):
+        task = Task(TASKS / "finance-dashboard-repair")
+        for override in [{
+                "MOCK_FINANCE_DB_PATH": "/workspace/other.db"
+        }, {
+                "POLICY_PATH": "/etc/passwd"
+        }, {
+                "POLICY_PATH": "/tests/../../private.md"
+        }, {
+                "POLICY_PATH": "relative.md"
+        }]:
+            with self.subTest(override=override):
+                verifier = MirageVerifier(task=task,
+                                          environment=self.env,
+                                          trial_paths=self.paths,
+                                          override_env=override)
+                verifier._run = AsyncMock()
+                self.paths.reward_text_path.write_text("1\n")
+                with self.assertRaises(ValueError):
+                    await verifier.verify()
+                verifier._run.assert_not_called()
+                self.assertFalse(self.paths.reward_text_path.exists())
+
+    async def test_staging_limits_stop_large_files_and_directory_trees(self):
+        workspace = self.root / "bounded"
+        workspace.mkdir()
+        (workspace / "a").write_bytes(b"x" * 128)
+        (workspace / "b").write_text("small")
+        self.env._mounts["/workspace"] = {
+            "root": str(workspace),
+            "mode": "readwrite"
+        }
+        self.env.snapshot_verifier_states = AsyncMock(return_value={})
+        self.verifier._definition = Mock(return_value=(self.task.name, {
+            "inputs": [],
+            "trees": ["/workspace"],
+            "native_state": {}
+        }))
+        self.verifier._run = AsyncMock()
+        for limit, value, error in [("MAX_STAGING_BYTES", 64, "byte limit"),
+                                    ("MAX_STAGING_PATHS", 1, "path limit")]:
+            with patch("vfsbench_harbor.mirage_verifier." + limit, value):
+                with self.assertRaisesRegex(ValueError, error):
+                    await self.verifier.verify()
+            self.verifier._run.assert_not_called()
+            self.assertFalse(self.paths.reward_text_path.exists())
+
+    async def test_staging_yields_and_stops_before_temporary_cleanup(self):
+        loop = asyncio.get_running_loop()
+        errors = []
+        previous = loop.get_exception_handler()
+        loop.set_exception_handler(
+            lambda _loop, context: errors.append(context))
+        self.addCleanup(loop.set_exception_handler, previous)
+        workspace = self.root / "slow"
+        workspace.mkdir()
+        (workspace / "input").write_text("data")
+        self.env._mounts["/workspace"] = {
+            "root": str(workspace),
+            "mode": "readwrite"
+        }
+        self.verifier._definition = Mock(return_value=(self.task.name, {
+            "inputs": ["/workspace/input"],
+            "native_state": {}
+        }))
+        self.verifier._run = AsyncMock()
+        main_thread = threading.get_ident()
+        for cancel in (False, True):
+            entered = threading.Event()
+            stopped = threading.Event()
+            locations = []
+
+            def slow_copy(budget, source, target):
+                self.assertNotEqual(threading.get_ident(), main_thread)
+                locations.append(target.parent)
+                entered.set()
+                try:
+                    while True:
+                        budget.check()
+                        time.sleep(0.005)
+                finally:
+                    stopped.set()
+
+            self.task.config.verifier.timeout_sec = 10 if cancel else 0.1
+            with patch.object(_Staging, "copy", slow_copy):
+                running = asyncio.create_task(self.verifier.verify())
+                self.assertTrue(await asyncio.to_thread(entered.wait, 2))
+                # The coroutine runs while the copy owns its directory.
+                self.assertFalse(stopped.is_set())
+                if cancel:
+                    running.cancel()
+                with self.assertRaises(
+                        asyncio.CancelledError if cancel else TimeoutError):
+                    await asyncio.wait_for(running, 2)
+                self.assertTrue(stopped.is_set())
+                self.assertFalse(locations[0].exists())
+                self.verifier._run.assert_not_called()
+                self.assertFalse(self.paths.reward_text_path.exists())
+        await asyncio.sleep(0)
+        self.assertEqual(errors, [])
 
     async def test_timeout_and_cancellation_reap_the_runner(self):
         for cancel in (False, True):

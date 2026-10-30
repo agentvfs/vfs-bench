@@ -148,6 +148,12 @@ logs remain intact. Every numeric reward dimension must match exactly;
 missing dimensions and non-finite values fail. A changed reference source
 invalidates the registered port until it is reviewed and parity-tested again.
 
+Verifier environment settings use Harbor's precedence: workspace environment,
+task verifier settings, `verifier_env`, then `override_env`; explicit settings
+also resolve Harbor's environment templates. Dashboard `POLICY_PATH` overrides
+are staged from supported VFS mounts. Overrides pointing at an unregistered
+finance database or outside supported mounts fail explicitly.
+
 Each native verifier gets a fresh RAM Mirage workspace, separate from the
 agent's. It mounts declared JSON state, output files, trusted reference
 resources, clock/environment metadata and safety history as read-only inputs,
@@ -155,6 +161,9 @@ with a separate writable reward mount. The trusted, argument-free `grade`
 command reads state through virtual `jq` and the Mirage VFS; it has no host
 filesystem/database imports or interpreter runtime. Safety scans copy only
 declared workspace trees; symlinks cannot escape mounts.
+The privacy grader also reconstructs the reference completion transcript before
+its file audit, replacing any stale `/tmp/verify_output.txt` input with the
+derived transcript in the output VFS.
 
 Harbor fetches JSON from a private, capability-protected state view on each
 existing fake service. That view uses the service's own async data client.
@@ -171,6 +180,10 @@ SQLite fixture conversion lives only in the test/replay adapters. A disposable
 Node worker allows Harbor to enforce cancellation/timeouts even in CPU-bound
 TypeScript. The trusted grader never executes task or agent code; this is not
 an isolation boundary for arbitrary grader scripts.
+File traversal, copying, serialization and hashing run in background threads.
+Staging is bounded to 64 MiB and 10,000 visited paths, and shares the task's
+overall verifier deadline. Cancellation stops chunked copies before temporary
+inputs are removed; limits fail the trial without writing a reward.
 
 Validation for the switch:
 
@@ -189,12 +202,19 @@ Validation for the switch:
   `uv run --project harbor python -I harbor/test_parity.py` checks preservation,
   backend routing, drift rejection, errors, cancellation and inventory, including
   a native verification with SQLite access disabled.
+- Review regressions compare fractional calendar seconds, Unicode email-length
+  boundaries, fresh privacy transcripts, invalid AQI JSON and template newlines
+  against unchanged Python graders. Adapter tests exercise override precedence,
+  custom policy inputs, staging bounds, event-loop progress and cancellation.
 
 Local reports are under `state/harbor/native-all/`: `vfs-replay-140.json`,
 `vfs-mutations.json`, reference jobs `oracle-ready`/`nop-ready`, and native
 jobs `vfs-oracle-ready`/`vfs-nop-ready`. These checks
 establish parity for the exercised cases, not every possible agent output.
 Routing tests for the five other datasets stub their reference execution.
+After the review fixes, `review-replay-140.json` and `review-mutations.json`
+record the repeated full comparisons; `review-oracle`/`review-nop` rerun the
+six affected tasks against live fake services.
 
 The worker still loads Mirage and executes TypeScript checks on its event loop.
 Independent workspaces can run concurrently; CPU, RAM and fake-service throughput

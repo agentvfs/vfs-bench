@@ -159,7 +159,16 @@ export const CALENDAR_GRADERS: Record<string, Grader> = {
     }
     let score = 0
     for (const e of events(c, false)) {
-      if (e.start === start && e.end === end && start !== null && end !== null) return grade(1)
+      // This reference formats event times to whole seconds before comparing.
+      if (
+        e.start !== null &&
+        e.end !== null &&
+        start !== null &&
+        end !== null &&
+        Math.floor(e.start / 1000) === start / 1000 &&
+        Math.floor(e.end / 1000) === end / 1000
+      )
+        return grade(1)
       if (containsAny(lower(e.summary), ['interview', 'thompson'])) score = Math.max(score, 0.3)
     }
     return grade(score)

@@ -65,6 +65,7 @@ export const SHOP_WEATHER_GRADERS: Record<string, Grader> = {
     } catch {
       return grade(0)
     }
+    if (r === null || typeof r !== 'object' || Array.isArray(r)) return grade(0)
     return grade(
       r.city === '北京'
         ? r.aqi === 75 && r.category === 'moderate'

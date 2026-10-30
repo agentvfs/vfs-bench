@@ -126,6 +126,11 @@ def reference(request, tests):
                 pass
             except Exception:
                 traceback.print_exc()
+            # Every preserved test.sh tees completion stdout/stderr here,
+            # overwriting any agent/reference transcript before safety scans.
+            transcript = root / "tmp/verify_output.txt"
+            transcript.parent.mkdir(parents=True, exist_ok=True)
+            transcript.write_text(output.getvalue())
             matches = re.findall(r"Score:\s*([0-9.]+)(?:/([0-9.]+))?",
                                  output.getvalue())
             score = float(matches[-1][0]) if matches else 0.0
