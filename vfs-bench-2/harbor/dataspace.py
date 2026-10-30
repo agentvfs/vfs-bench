@@ -16,12 +16,13 @@ evaluator stay in ``state/dataspace/`` and reach a trial from there.
 - ``environment/mirage.yaml``: the context mounted read-only at
   ``/workspace`` from ``${STATE}`` in place of the trial's own, the answer
   written to ``/output``, ``/opt/dataspace/TOOLS.md``; and what only the
-  verifier's VM gets: upstream's evaluator, the config and the gold CSV,
+  reference verifier's VM gets: upstream's evaluator, config and gold CSV,
   and not the context (``omit``).
 - ``environment/workbench/TOOLS.md``: ``dataspace/workbench/TOOLS.md``.
 - ``tests/test.sh`` and ``tests/grade.py`` (``dataspace_grade.py``):
   upstream's evaluator on ``/output/prediction.csv``. They need
-  ``MicrosandboxVerifier`` (``harbor/dataspace.yaml``).
+  ``MicrosandboxVerifier`` (``harbor/dataspace-msb.yaml``). The default
+  ``MirageVerifier`` uses the pinned shared evaluator port instead.
 - ``solution/solve.sh``: the pre-Harbor port's ``tests/oracle.sh``, for the
   tasks that have one.
 

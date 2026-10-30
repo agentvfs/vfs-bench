@@ -69,7 +69,7 @@ class ParityTests(helpers.MirageVerifierTests):
 
     async def test_every_unported_dataset_preserves_its_backend(self):
         for dataset, kind in REFERENCE_BACKENDS.items():
-            if dataset in ("complexmcp", "enterpriseops"):
+            if dataset in ("complexmcp", "dataspace", "enterpriseops"):
                 # Their registered ports are covered separately.
                 continue
             with self.subTest(dataset=dataset):
@@ -216,7 +216,7 @@ class ParityTests(helpers.MirageVerifierTests):
             "gaia2": 460,
             "enterpriseops": 103,
         })
-        self.assertEqual(result["native_candidates"], 220)
+        self.assertEqual(result["native_candidates"], 266)
 
 
 if __name__ == "__main__":

@@ -16,6 +16,8 @@ def inventory(root: Path = ROOT) -> dict:
     complexmcp = json.loads(
         (root /
          "harbor/graders/complexmcp/manifest.json").read_text())["tasks"]
+    dataspace = json.loads(
+        (root / "harbor/graders/dataspace/manifest.json").read_text())["tasks"]
     datasets = {}
     seen = set()
     for dataset, backend in REFERENCE_BACKENDS.items():
@@ -31,11 +33,11 @@ def inventory(root: Path = ROOT) -> dict:
             if identity in seen:
                 raise ValueError(f"Task appears more than once: {task}")
             seen.add(identity)
-            ported = (
-                (dataset == "liveclawbench" and task.name in manifest)
-                or (dataset == "complexmcp" and task.name in complexmcp)
-                or (dataset == "enterpriseops"
-                    and task.name in enterpriseops()))
+            ported = ((dataset == "liveclawbench" and task.name in manifest)
+                      or (dataset == "complexmcp" and task.name in complexmcp)
+                      or (dataset == "dataspace" and task.name in dataspace)
+                      or (dataset == "enterpriseops"
+                          and task.name in enterpriseops()))
             if ported:
                 native.append(task.name)
         datasets[dataset] = {

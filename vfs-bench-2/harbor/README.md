@@ -106,15 +106,15 @@ authoritative. Coverage across the six Mirage-agent job configs is:
 | Dataset | Tasks | Preserved reference backend | Native ports |
 |---|---:|---|---:|
 | LiveClawBench | 70 | Mirage/Pyodide | 70 |
-| DataSpace | 46 | microVM | 0 |
+| DataSpace | 46 | microVM | 46 (Monty 1.4.0) |
 | Claw-Eval | 126 | microVM | 0 |
 | ComplexMCP | 47 | microVM | 47 (Monty 1.4.0) |
 | AutomationBench | 600 | microVM | 0 |
 | Gaia2 | 460 | microVM | 0 |
 | EnterpriseOps-Gym | 103 | microVM | 103 |
-| Total | 1,452 | | 220 |
+| Total | 1,452 | | 266 |
 
-The other 1,232 tasks retain microVM grading and report `unported` in parity
+The other 1,186 tasks retain microVM grading and report `unported` in parity
 mode.
 
 EnterpriseOps-Gym's upstream verifier asks each server's SQL runner, so its
@@ -265,7 +265,8 @@ inside Monty; the host only services Mirage VFS operations.
 
 Mirage is pinned to `9dd69a316242deddee79b40ce41aafaa2be6065c`, whose
 runtime dependency is also Monty **1.4.0**. No module-resolution override is
-used. All 47 ComplexMCP tasks now use this runtime through `MirageVerifier`;
+used. All 47 ComplexMCP and 46 DataSpace tasks now use this runtime through
+`MirageVerifier`;
 the 70 LiveClawBench tasks retain their native TypeScript graders.
 
 Proposed migration order, one dataset per follow-up PR:
@@ -273,7 +274,7 @@ Proposed migration order, one dataset per follow-up PR:
 | Order | Dataset | Tasks | Work before switching grading |
 |---|---|---:|---|
 | 1 | ComplexMCP | 47 | Freeze initial/final/expected JSON in a verifier-only VFS; retain the shared judge, port Levenshtein to pure Python, and preserve six-place rounding and ignored IDs. Implemented: 47 oracle and 47 no-op trials match the original CPython judge on all four reward fields. |
-| 2 | DataSpace | 46 | Adapt the shared CSV/Decimal evaluator, CLI loading and error handling. The pinned evaluator currently fails Monty's parser on custom exception inheritance. Validate strict CSV parsing, normalization, precision, column permutations and failure behavior. |
+| 2 | DataSpace | 46 | Implemented: shared relation evaluator over frozen prediction/config/gold bytes. Strict CSV, Decimal, Unicode, ISO date normalization and column permutations are compared with the pinned CPython 3.12 reference; all 46 tasks are covered. |
 | 3 | AutomationBench | 600 | Export world/hidden state as JSON; port the Pydantic-dependent world/rubric behavior by assertion family, preserving exclusions and partial-credit weights. |
 | 4 | Claw-Eval | 126 | Port task graders and trace/audit assembly over JSON. Preserve required LLM judgments through an explicit recorded service interface. |
 | 5 | Gaia2 | 460 | Port event/state assembly and the judge without its daemon or SQLite; preserve event ordering and required LLM judgments through the same interface. |
@@ -1663,8 +1664,9 @@ There are no services.
 ```sh
 python3 -I dataspace/setup.py   # the tasks' data, into state/dataspace/ (about 1.7 GB)
 uv run --project harbor python -I harbor/dataspace.py [--check] [task ...]
-uv run --project harbor harbor run -c harbor/dataspace.yaml -a oracle -n 8 -o state/harbor/jobs-dataspace
-uv run --project harbor harbor run -c harbor/dataspace.yaml -a nop -n 8 -o state/harbor/jobs-dataspace
+# Only eleven tasks have committed oracle solutions.
+uv run --project harbor harbor run -c harbor/dataspace-oracle.yaml -a oracle -n 8 --no-delete -o state/harbor/dataspace-monty --job-name oracle-final
+uv run --project harbor harbor run -c harbor/dataspace.yaml -a nop -n 8 --no-delete -o state/harbor/dataspace-monty --job-name nop-final
 ```
 
 | Upstream | Here |
@@ -1673,7 +1675,7 @@ uv run --project harbor harbor run -c harbor/dataspace.yaml -a nop -n 8 -o state
 | The answer at `/output/prediction.csv` | The same; `/output` is a writable mount on the trial's run dir |
 | `relation_task_prompt` (contract relation-v2) over the question | `instruction.md`, verbatim |
 | `TOOLS.md`, describing the Docker workbench | `/opt/dataspace/TOOLS.md`, the pre-Harbor port's rewrite for this workspace (`environment/workbench/`) |
-| `evaluate.py` against `gold.csv` | The same evaluator, unchanged, in the verifier's VM (`tests/grade.py`); the reward is its `score`, 1 or 0 |
+| `evaluate.py` against `gold.csv` | Shared pinned evaluator port inside a separate Mirage VFS + Monty 1.4.0 workspace; reward is its `score`, 1 or 0. `dataspace-msb.yaml` preserves the unchanged VM reference |
 | `wall_time_seconds: 1800` | The agent's `timeout_sec` |
 
 Every file of a task is `dataspace.py`'s: `instruction.md`, `task.toml`,
@@ -1687,43 +1689,75 @@ of `../dataspace/` and those whose `task.toml` names a `task_id`.
 
 ### The answer reaches the verifier alone
 
-The gold CSV, the frozen config and the evaluator stay in `state/` and
-reach only `MicrosandboxVerifier`'s VM, through `mirage.yaml`'s
-`verifier.copy`, at `/opt/dataspace-evaluation/`. The workspace has no
-mount over them. A scripted check from inside the workspace: `find / -name
-gold.csv` and `find / -name evaluate.py` find nothing, `/opt` holds
-`dataspace/TOOLS.md` alone, a write to `/workspace` fails (`Read-only file
-system`) and `curl` reaches nothing. Setup now keeps the evaluator in
-`state/dataspace/evaluation/`, since msb copies directories and
-`state/dataspace/` holds every task's inputs and answers.
+`dataspace.yaml` selects `MirageVerifier` for all 46 tasks. Harbor freezes
+`/output/prediction.csv` plus its file metadata and verifies the source,
+config and gold hashes in `graders/dataspace/manifest.json`. Only those
+inputs enter a fresh, read-only RAM VFS. Rewards are written to a separate
+writable mount. Neither the gold nor the config is mounted in the agent's
+workspace. Grading has no SQLite, Pyodide, VM, network or host Python callback.
 
-**The Pyodide verifier cannot grade these tasks.** It runs `test.sh` in the
-agent's workspace, so the answer would have to be in a mount the agent
-reads, or committed under `tests/` (Harbor uploads `tests/` only once the
-agent is done), and this repo does not commit upstream's data. Without the
-VM, `grade.py` exits 1 naming `MicrosandboxVerifier`, and the trial has no
-reward. Run them with `dataspace.yaml`, or `--verifier
-vfsbench_harbor:MicrosandboxVerifier`.
+The 46 tasks share one evaluator. Their committed `tests/grade.py` and
+`tests/test.sh` remain unchanged references. `dataspace_manifest.py`
+generates `graders/dataspace/port.py` from the vendored upstream source,
+preserving the relation comparison and Decimal arithmetic. Compatibility
+modules handle Monty's unsupported exception inheritance, CSV field limits,
+UTF-8 BOMs and CPython 3.12 ISO date parsing. The worker memory limit is
+512 MiB; it is a cap, not a measurement of per-trial memory usage.
 
-The VM does not get `/workspace` (`verifier.omit`, which
-`microsandbox.py` reads): the verifier reads only `/output`, and msb cannot
-create a VM with patient-max-respiration's 268 MB `vitalperiodic.json`
-copied in (`not enough space in upper.ext4`, whatever `storage_mb`).
+`dataspace-msb.yaml` runs the original CPython 3.12 evaluator in a microVM.
+`MirageParityVerifier` also supports DataSpace, retaining reference rewards
+while comparing the native result. The offline audit compares the complete
+`evaluation.json` on the same frozen inputs without starting a VM:
+
+```sh
+python3 -I harbor/dataspace_manifest.py --check
+# Matches the Python version of the preserved reference VM.
+uv run --no-project --python 3.12 python -I harbor/audit_dataspace.py \
+  --jobs state/harbor/dataspace-monty/oracle-final state/harbor/dataspace-monty/nop-final \
+  --output state/harbor/dataspace-monty/audit-final.json
+# Unit tests need Node 24, built Mirage dependencies and CPython 3.12.
+VFSBENCH_REFERENCE_PYTHON=python3.12 node --test harbor/dataspace-monty.test.ts
+```
+
+Saved-trial replay requires retained output mounts (`--no-delete`). It
+preserves rejected symlinks, non-regular paths and oversized files without
+reading their contents. Deleted workspaces are rejected as unavailable,
+instead of being mistaken for missing submissions.
+
+The reference VM still uses `verifier.copy` for the evaluator/config/gold
+and `verifier.omit` to exclude `/workspace`. Native grading freezes only
+the prediction and grading inputs, so large context files never enter it.
 
 ### Results
 
-At `-n 8`, the oracle scores 1.0 on all eleven tasks with a solution
-(fund-ytd-returns, china-credit-trends, weekly-benchmark-top10,
-latest-treatments, regional-gdp-sectors, culture-before-admission,
-nonlisted-shares-by-province, deposit-corp-reserve-assets,
-pre-2000-money-banking, manager-alpha-top10, icu-stay-calendar-days), in
-11 s for the job. nop scores 0.0 on all 46 (`missing_prediction`), each
-task's workspace started and its grader run, in 26 to 46 s for the job.
-The other 35 have no solution. Upstream's evaluator passes each of the 46
-gold CSVs as its own prediction under its config, so each task's answer
-and config agree. patient-max-respiration was tried with a solution kept
-out of the repo: `json.load` of its 268 MB JSON takes 8 s in the
-workspace's Pyodide, and the answer scores 1.0.
+All eleven tasks with committed oracle solutions pass; all 46 no-op
+trials score zero with `missing_prediction`, without retries or exceptions.
+At `-n 8`, measured CLI wall time was 12.18 s for the eleven oracles and
+24.04 s for all 46 no-op trials (Harbor job time: 9.94 s and 22.25 s).
+The remaining 35 tasks have no committed oracle. All 46 gold-as-prediction
+cases pass and all tasks are covered by the differential audit, including
+column and row permutations, duplicate rows, BOMs, malformed CSV and UTF-8.
+The audit has **681 comparisons with zero mismatches**: 552 task mutations,
+72 normalization/limit/failure cases and 57 saved Harbor trials.
+The unit tests also compare 2,009 CSV strings and 1,819 date/time spellings
+with CPython, including invalid forms and UTC overflow boundaries.
+
+At `-n 46`, with `MirageVerifier` enabled and retries disabled, measured
+results on commit `43ff943` were:
+
+| Workload | Result | CLI wall time | Harbor job time |
+|---|---|---:|---:|
+| All 46 committed tasks, `-a oracle` | 11 passed; 35 missing solution scripts, so no grading for those 35 | 28.50 s | 26.12 s |
+| All 46 tasks with temporary gold-answer oracle scripts | 46 passed; zero errors or retries | 28.68 s | 26.51 s |
+
+The second run is a verifier/infrastructure smoke test: temporary task
+copies used `cp /solution/gold-answer.csv /output/prediction.csv`, with
+each answer checked against the pinned gold hash. It does not establish
+46 analytical oracle solutions. Committed tasks were unchanged.
+All 46 verifier phases overlapped; the interval from the first verifier
+start to the last verifier finish was 7.12 s. Environment setup spanned
+19.16 s. These runs used the default daemon per trial, with separate
+Mirage/Monty grading workspaces; they did not use a shared daemon.
 
 ### Skipped
 

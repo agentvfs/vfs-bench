@@ -10,6 +10,8 @@ import math
 from harbor.models.verifier.result import VerifierResult
 from harbor.verifier.verifier import Verifier
 from vfsbench_harbor.complexmcp_verifier import definitions
+from vfsbench_harbor.dataspace_verifier import \
+    definitions as dataspace_definitions
 from vfsbench_harbor.enterpriseops_verifier import definitions as enterpriseops
 from vfsbench_harbor.microsandbox import MicrosandboxVerifier
 from vfsbench_harbor.mirage_verifier import MANIFEST, MirageVerifier
@@ -51,8 +53,9 @@ class MirageParityVerifier(Verifier):
         (default True), retaining reference rewards and the parity report.
     require_native: also fail unported tasks (default False).
 
-    The 70 LiveClawBench and 47 ComplexMCP graders have native ports. Future
-    ports must define their frozen input contract, including recorded API
+    The 70 LiveClawBench, 47 ComplexMCP and 46 DataSpace graders have native
+    ports. Future ports must define their frozen input contract, including
+    recorded API
     replies/model judgments where needed, before being registered here.
     Calling a live judge twice is not a differential test.
     """
@@ -107,9 +110,11 @@ class MirageParityVerifier(Verifier):
         manifest = json.loads(MANIFEST.read_text())
         if dataset == "complexmcp":
             manifest = definitions()
-        if dataset == "enterpriseops":
+        elif dataset == "dataspace":
+            manifest = dataspace_definitions()
+        elif dataset == "enterpriseops":
             manifest = enterpriseops()
-        supported = dataset in ("liveclawbench", "complexmcp",
+        supported = dataset in ("liveclawbench", "dataspace", "complexmcp",
                                 "enterpriseops") and task in manifest
         report = {
             "dataset": dataset,
