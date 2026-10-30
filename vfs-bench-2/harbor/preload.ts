@@ -65,7 +65,9 @@ const routes = new Map(
   ]),
 )
 const allowed = (JSON.parse(process.env.VFSBENCH_ALLOW ?? '[]') as string[]).map(base)
-const send = globalThis.fetch
+// Only trusted server-side grading receives this original transport.
+export const hostFetch = globalThis.fetch
+const send = hostFetch
 
 /** The kit's own endpoints, which no upstream service has. */
 const KIT = /^\/(reset|_kit)(\/|$)/

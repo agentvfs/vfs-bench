@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 import yaml
+from vfsbench_harbor.claweval_verifier import definitions as claweval
 from vfsbench_harbor.enterpriseops_verifier import definitions as enterpriseops
 from vfsbench_harbor.environment import ROOT
 from vfsbench_harbor.parity import REFERENCE_BACKENDS
@@ -28,6 +29,7 @@ def inventory(root: Path = ROOT) -> dict:
             (root / "harbor" / f"{dataset}.yaml").read_text())
         tasks = config["tasks"]
         native = []
+        compatibility = []
         for item in tasks:
             task = root / item["path"]
             if not task.is_dir():
@@ -45,17 +47,22 @@ def inventory(root: Path = ROOT) -> dict:
                           and task.name in enterpriseops()))
             if ported:
                 native.append(task.name)
+            elif dataset == "claweval" and task.name in claweval():
+                compatibility.append(task.name)
         datasets[dataset] = {
             "tasks": len(tasks),
             "reference_backend": backend,
             "native_candidates": native,
-            "unported": len(tasks) - len(native),
+            "compatibility_candidates": compatibility,
+            "unported": len(tasks) - len(native) - len(compatibility),
         }
     return {
         "total":
         len(seen),
         "native_candidates":
         sum(len(d["native_candidates"]) for d in datasets.values()),
+        "compatibility_candidates":
+        sum(len(d["compatibility_candidates"]) for d in datasets.values()),
         "datasets":
         datasets
     }

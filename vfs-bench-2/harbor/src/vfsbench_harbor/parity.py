@@ -1,4 +1,4 @@
-"""Preserve the original grade while checking a native port on the same state.
+"""Check a Mirage backend against the original grade on the same state.
 
 Use --verifier vfsbench_harbor:MirageParityVerifier with any of the seven
 Mirage-agent job configs. Unported tasks still run their original grader;
@@ -11,6 +11,8 @@ from harbor.models.verifier.result import VerifierResult
 from harbor.verifier.verifier import Verifier
 from vfsbench_harbor.automationbench_verifier import \
     definitions as automationbench_definitions
+from vfsbench_harbor.claweval_verifier import \
+    definitions as claweval_definitions
 from vfsbench_harbor.complexmcp_verifier import definitions
 from vfsbench_harbor.dataspace_verifier import \
     definitions as dataspace_definitions
@@ -56,9 +58,10 @@ class MirageParityVerifier(Verifier):
     require_native: also fail unported tasks (default False).
 
     The 70 LiveClawBench, 47 ComplexMCP, 46 DataSpace, 600 AutomationBench
-    and 103 EnterpriseOps-Gym graders have native ports. Future ports must
-    define their frozen input contract, including recorded API replies/model
-    judgments where needed, before being registered here.
+    and 103 EnterpriseOps-Gym graders have native ports. Claw-Eval has a
+    Pyodide compatibility backend with raw judge request/response replay.
+    Future ports must define their frozen input contract, including recorded
+    API replies/model judgments where needed, before being registered here.
     Calling a live judge twice is not a differential test.
     """
 
@@ -118,9 +121,11 @@ class MirageParityVerifier(Verifier):
             manifest = automationbench_definitions()
         elif dataset == "enterpriseops":
             manifest = enterpriseops()
+        elif dataset == "claweval":
+            manifest = claweval_definitions()
         supported = dataset in ("liveclawbench", "dataspace", "complexmcp",
-                                "automationbench",
-                                "enterpriseops") and task in manifest
+                                "automationbench", "enterpriseops",
+                                "claweval") and task in manifest
         report = {
             "dataset": dataset,
             "task": task,
@@ -148,6 +153,14 @@ class MirageParityVerifier(Verifier):
             return original
         native = MirageVerifier(**self._common())
         try:
+            if dataset == "claweval":
+                # Never ask a live model twice and call it score parity.
+                recording = (self.trial_paths.verifier_dir /
+                             "judge-recording.json")
+                if not recording.is_file():
+                    raise ValueError("Claw-Eval parity requires the reference "
+                                     "judge recording")
+                native.claweval_recording = recording
             # The reference refreshed the completed agent's file views.
             # Native grading reads those files and JSON from the same idle
             # fake runs. Keep the authoritative reward/log files intact.

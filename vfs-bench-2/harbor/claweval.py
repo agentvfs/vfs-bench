@@ -34,7 +34,9 @@ for the solutions of ``SOLVED``, which are ours:
   task's ``grader.py``, run as upstream's runner runs it, over the agent's
   Harbor trajectory; ``tests/gws_seed.json``, a gws task's gmail and
   calendar fixtures, from which ``grade.py`` builds their calls. It needs
-  ``MicrosandboxVerifier`` (claweval.yaml).
+  ``MicrosandboxVerifier`` (claweval-msb.yaml) for reference runs. The
+  default ``MirageVerifier`` reads frozen JSON and pinned upstream sources
+  in a separate Pyodide workspace; it does not use the VM copies or site.
 - ``solution/trajectory.py`` (``claweval_trajectory.py``), for a task with
   a solution: writes the solution's run as the agent's trajectory.
 
