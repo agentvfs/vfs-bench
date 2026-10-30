@@ -1,0 +1,12 @@
+[
+ {"tool": "find_user", "args": {"name": "Joanne Simpson"}},
+ {"tool": "find_location", "args": {"name": "TB State Building"}},
+ {"tool": "add_location", "args": {"name": "TB State Building", "active": true, "city": "sydney", "country": "australia"}},
+ {"tool": "update_user_details", "args": {"user_id": 4, "location_id": 907}},
+ {"tool": "find_user_group", "args": {"name": "Proactive Case Monitoring_2"}},
+ {"tool": "check_user_membership", "args": {"user_id": 4, "group_id": 31}},
+ {"tool": "add_new_group_member", "args": {"group_id": 31, "user_id": 4}},
+ {"tool": "search_cases", "args": {"number": "CS-0000299"}},
+ {"tool": "update_case", "args": {"case_id": 299, "assignment_group_id": 31, "assigned_to": 4, "priority": "critical", "escalation": true, "escalation_reason": "impact"}},
+ {"tool": "send_notification", "args": {"case_id": 299, "email": "joanne.simpson@servicenow.com", "type": "update"}}
+]

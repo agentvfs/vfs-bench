@@ -1,0 +1,8 @@
+[
+ {"tool": "find_user", "args": {"name": "Ryan Allen"}},
+ {"tool": "get_cases_assigned_to", "args": {"assigned_to": 62}},
+ {"tool": "find_case_knowledge_linkages", "args": {"case_id": 5}},
+ {"tool": "retrieve_knowledge", "args": {"knowledge_id": 195}},
+ {"tool": "update_knowledge", "args": {"knowledge_id": 195, "state": "published"}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 5, "knowledge_id": 195, "used_as": "applied"}}
+]

@@ -1,0 +1,9 @@
+[
+ {"tool": "search_cases", "args": {"channel": "social", "reopen_count": 4}},
+ {"tool": "find_products", "args": {"product_id": 195}},
+ {"tool": "update_case", "args": {"case_id": 103, "priority": "high"}},
+ {"tool": "retrieve_knowledge", "args": {"product_id": 195, "limit": 10}},
+ {"tool": "find_case_knowledge_linkages", "args": {"case_id": 103}},
+ {"tool": "find_user", "args": {"name": "Amanda Austin"}},
+ {"tool": "assign_case_to_user", "args": {"case_id": 103, "assigned_to_user_id": 577}}
+]

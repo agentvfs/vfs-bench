@@ -1,0 +1,11 @@
+[
+ {"tool": "find_account", "args": {"name": "Stark Industries"}},
+ {"tool": "retrieve_installed_products", "args": {"account_id": 8, "product_id": 25}},
+ {"tool": "find_entitlements", "args": {"account_id": 8, "product_id": 25, "support_level": "premium", "active": true}},
+ {"tool": "find_contacts", "args": {"account_id": 8, "is_primary": true}},
+ {"tool": "create_new_case", "args": {"account_id": 8, "contact_id": 10, "product_id": 25, "installed_product_id": 40, "channel": "phone", "priority": "high", "state": "new", "short_description": "Product: SUSE Linux Enterprise Server 15 Variant 5, Issue: critical network errors at datacenter."}},
+ {"tool": "find_user_group", "args": {"name": "Contact Center L1_2"}},
+ {"tool": "set_case_assignment_group", "args": {"case_id": 1233, "assignment_group_id": 28}},
+ {"tool": "retrieve_knowledge", "args": {"product_id": 25, "state": "published"}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 1233, "knowledge_id": 38, "used_as": "suggested"}}
+]

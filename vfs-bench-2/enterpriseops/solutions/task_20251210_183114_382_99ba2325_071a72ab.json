@@ -1,0 +1,9 @@
+[
+ {"tool": "search_cases", "args": {"number": "CS-0000944"}},
+ {"tool": "find_case_knowledge_linkages", "args": {"case_id": 944}},
+ {"tool": "find_case_slas", "args": {"case_id": 944}},
+ {"tool": "find_user", "args": {"name": "Jason Morrison"}},
+ {"tool": "create_knowledge", "args": {"title": "Thomas Group issue", "state": "published", "visibility": "internal", "owner_id": 84, "body": "This issue is not related to any ServiceNow product directly, it occurred due to dependency on other products."}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 944, "knowledge_id": 370, "used_as": "resolution"}},
+ {"tool": "update_case", "args": {"case_id": 944, "state": "closed"}}
+]

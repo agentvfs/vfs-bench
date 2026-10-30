@@ -1,0 +1,11 @@
+[
+ {"tool": "list_users", "args": {"email": "kathy.oliver@thomasgroup.com"}},
+ {"tool": "find_contacts", "args": {"portal_user_id": 238}},
+ {"tool": "find_products", "args": {"name": "Tomcat 9 Variant 32"}},
+ {"tool": "search_cases", "args": {"contact_id": 120, "product_id": 52}},
+ {"tool": "find_case_knowledge_linkages", "args": {"case_id": 1204}},
+ {"tool": "retrieve_knowledge", "args": {"knowledge_id": 77}},
+ {"tool": "delete_case_knowledge_linkages", "args": {"case_kb_id": 515}},
+ {"tool": "update_case", "args": {"case_id": 1204, "escalation": true, "escalation_reason": "impact"}},
+ {"tool": "register_new_interaction", "args": {"channel": "email", "account_id": 52, "contact_id": 120, "case_id": 1204, "interacted_user": 238, "status": "handled"}}
+]

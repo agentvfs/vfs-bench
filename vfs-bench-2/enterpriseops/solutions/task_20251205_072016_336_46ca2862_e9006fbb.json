@@ -1,0 +1,14 @@
+[
+ {"tool": "find_user", "args": {"name": "Tabitha Bullock"}},
+ {"tool": "find_user_by_email", "args": {"email": "mckenzie.mendez@servicenow.com"}},
+ {"tool": "get_cases_assigned_to", "args": {"assigned_to": 3}},
+ {"tool": "check_user_membership", "args": {"user_id": 3, "group_id": 67}},
+ {"tool": "check_user_membership", "args": {"user_id": 5, "group_id": 67}},
+ {"tool": "add_new_group_member", "args": {"group_id": 67, "user_id": 5}},
+ {"tool": "update_case", "args": {"case_id": 251, "assigned_to": 5}},
+ {"tool": "update_case", "args": {"case_id": 1142, "assigned_to": 5}},
+ {"tool": "remove_group_membership", "args": {"member_id": 407}},
+ {"tool": "update_user_details", "args": {"user_id": 3, "active": false}},
+ {"tool": "send_notification", "args": {"case_id": 251, "email": "mckenzie.mendez@servicenow.com", "type": "update"}},
+ {"tool": "send_notification", "args": {"case_id": 1142, "email": "mckenzie.mendez@servicenow.com", "type": "update"}}
+]

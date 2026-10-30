@@ -1,0 +1,11 @@
+[
+ {"tool": "search_cases", "args": {"number": "CS-0000842"}},
+ {"tool": "find_product_by_id", "args": {"product_id": 173}},
+ {"tool": "find_case_knowledge_linkages", "args": {"case_id": 842}},
+ {"tool": "retrieve_knowledge", "args": {"product_id": 173}},
+ {"tool": "find_contacts", "args": {"account_id": 37, "is_primary": true}},
+ {"tool": "list_users", "args": {"user_id": 82}},
+ {"tool": "send_notification", "args": {"case_id": 842, "knowledge_id": 257, "email": "carl.brown91@cainryanandduncan.com", "type": "solution_proposal"}},
+ {"tool": "find_case_slas", "args": {"case_id": 842}},
+ {"tool": "update_case", "args": {"case_id": 842, "escalation": true, "escalation_reason": "breach_risk"}}
+]

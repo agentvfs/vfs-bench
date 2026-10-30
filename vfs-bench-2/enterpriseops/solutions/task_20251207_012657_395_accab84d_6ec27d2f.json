@@ -1,0 +1,18 @@
+[
+ {"tool": "find_account", "args": {"name": "Initech"}},
+ {"tool": "find_user", "args": {"name": "Thomas Bailey"}},
+ {"tool": "find_contact_by_portal_user", "args": {"portal_user_id": 63}},
+ {"tool": "find_product", "args": {"name": "Apache HTTP Server Variant 10"}},
+ {"tool": "search_cases", "args": {"account_id": 5, "contact_id": 5, "product_id": 30}},
+ {"tool": "find_user", "args": {"name": "Michael Lee"}},
+ {"tool": "find_user_group", "args": {"name": "CSM Tier 1 Support"}},
+ {"tool": "check_user_membership", "args": {"user_id": 228, "group_id": 1}},
+ {"tool": "update_case", "args": {"case_id": 108, "state": "new", "reopen_count": 1}},
+ {"tool": "update_case", "args": {"case_id": 108, "assignment_group_id": 1, "assigned_to": 228}},
+ {"tool": "update_case", "args": {"case_id": 108, "state": "in_progress"}},
+ {"tool": "find_case_knowledge_linkages", "args": {"case_id": 108}},
+ {"tool": "delete_case_knowledge_linkages", "args": {"case_kb_id": 41}},
+ {"tool": "find_product", "args": {"name": "Apache HTTP Server Variant 90"}},
+ {"tool": "retrieve_knowledge", "args": {"product_id": 110, "state": "published"}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 108, "knowledge_id": 170, "used_as": "suggested"}}
+]

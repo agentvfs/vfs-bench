@@ -1,0 +1,11 @@
+[
+ {"tool": "search_cases", "args": {"number": "CS-0000002"}},
+ {"tool": "retrieve_knowledge", "args": {"product_id": 130, "limit": 5}},
+ {"tool": "update_knowledge", "args": {"knowledge_id": 197, "state": "published"}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 2, "knowledge_id": 197, "used_as": "suggested"}},
+ {"tool": "find_user", "args": {"name": "Joanne Simpson"}},
+ {"tool": "find_user_group", "args": {"name": "Case Management"}},
+ {"tool": "add_new_user_group", "args": {"name": "Case Management", "type": "support", "active": true}},
+ {"tool": "add_new_group_member", "args": {"group_id": 81, "user_id": 4}},
+ {"tool": "update_case", "args": {"case_id": 2, "assignment_group_id": 81, "assigned_to": 4, "state": "pending"}}
+]

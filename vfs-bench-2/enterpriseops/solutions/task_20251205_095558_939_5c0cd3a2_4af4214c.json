@@ -1,0 +1,11 @@
+[
+ {"tool": "find_user", "args": {"name": "Allen Martin"}},
+ {"tool": "find_contact_by_portal_user", "args": {"portal_user_id": 189}},
+ {"tool": "find_locations", "args": {"city": "sydney"}},
+ {"tool": "retrieve_installed_products", "args": {"account_id": 9}},
+ {"tool": "find_product_by_id", "args": {"product_id": 155}},
+ {"tool": "find_user", "args": {"name": "Joseph Johnson"}},
+ {"tool": "find_contact_by_portal_user", "args": {"portal_user_id": 610}},
+ {"tool": "create_contact", "args": {"account_id": 9, "portal_user_id": 610, "active": true, "is_primary": false}},
+ {"tool": "create_new_case", "args": {"account_id": 9, "contact_id": 125, "product_id": 155, "installed_product_id": 48, "channel": "web", "priority": "critical", "state": "new", "short_description": "Product: Pure Storage FlashArray//X Variant 23, Issue: is not working as expected."}}
+]

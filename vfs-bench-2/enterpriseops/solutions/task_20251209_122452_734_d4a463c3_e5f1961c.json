@@ -1,0 +1,14 @@
+[
+ {"tool": "search_cases", "args": {"number": "CS-0001127"}},
+ {"tool": "get_accounts", "args": {"account_id": 49}},
+ {"tool": "find_product_by_id", "args": {"product_id": 165}},
+ {"tool": "find_entitlements", "args": {"account_id": 49, "active": true}},
+ {"tool": "update_case", "args": {"case_id": 1127, "state": "in_progress"}},
+ {"tool": "find_sla_definitions", "args": {"applies_to_priority": "critical", "active": true}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 1127, "sla_def_id": 1, "stage": "in_progress"}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 1127, "sla_def_id": 6, "stage": "in_progress"}},
+ {"tool": "search_cases", "args": {"number": "CS-0000888"}},
+ {"tool": "get_accounts", "args": {"account_id": 38}},
+ {"tool": "update_case", "args": {"case_id": 888, "priority": "high"}},
+ {"tool": "update_case", "args": {"case_id": 888, "state": "resolved"}}
+]

@@ -1,0 +1,13 @@
+[
+ {"tool": "find_user", "args": {"name": "Denise Hawkins"}},
+ {"tool": "find_account", "args": {"name": "Larson PLC"}},
+ {"tool": "find_contacts", "args": {"account_id": 22, "portal_user_id": 7}},
+ {"tool": "find_product", "args": {"name": "Apache HTTP Server Variant 70"}},
+ {"tool": "search_cases", "args": {"account_id": 22, "product_id": 90}},
+ {"tool": "find_user", "args": {"name": "Christine Evans"}},
+ {"tool": "find_user_group", "args": {"name": "CSM Tier 1 Support"}},
+ {"tool": "check_user_membership", "args": {"user_id": 123, "group_id": 1}},
+ {"tool": "update_case", "args": {"case_id": 486, "state": "new", "reopen_count": 1, "channel": "email", "contact_id": 38}},
+ {"tool": "set_case_assignment_group", "args": {"case_id": 486, "assignment_group_id": 1}},
+ {"tool": "assign_case_to_user", "args": {"case_id": 486, "assigned_to_user_id": 123}}
+]

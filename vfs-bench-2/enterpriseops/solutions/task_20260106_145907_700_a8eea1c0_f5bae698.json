@@ -1,0 +1,20 @@
+[
+ {"tool": "find_user", "args": {"name": "Thomas Green"}},
+ {"tool": "update_user_details", "args": {"user_id": 1, "active": true}},
+ {"tool": "add_new_product", "args": {"name": "Integrated Security Policy Audit", "category": "service", "lifecycle_state": "active"}},
+ {"tool": "create_knowledge", "args": {"title": "Issue Resolution related to Integrated Security Policy Audit, step-by-step guide", "state": "published", "visibility": "internal", "product_id": 241, "owner_id": 1, "body": "Tackled by Assignment Group: CSM Tier 2 Support, Assigned to: Thomas Green. Steps: validate audit data integrity."}},
+ {"tool": "find_account", "args": {"name": "Stark Industries"}},
+ {"tool": "search_cases", "args": {"number": "CS-0000197"}},
+ {"tool": "update_case", "args": {"case_id": 197, "state": "canceled"}},
+ {"tool": "find_user", "args": {"name": "Marc Henry"}},
+ {"tool": "find_contacts", "args": {"account_id": 8, "portal_user_id": 20}},
+ {"tool": "find_entitlements", "args": {"account_id": 8, "product_id": 241, "active": true}},
+ {"tool": "find_entitlements", "args": {"account_id": 8, "active": true}},
+ {"tool": "create_new_case", "args": {"account_id": 8, "contact_id": 10, "product_id": 241, "channel": "phone", "priority": "critical", "state": "new", "short_description": "Product: Integrated Security Policy Audit, Issue: data integrity failures."}},
+ {"tool": "find_user_group", "args": {"name": "CSM Tier 2 Support"}},
+ {"tool": "set_case_assignment_group", "args": {"case_id": 1233, "assignment_group_id": 2}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 1233, "knowledge_id": 370, "used_as": "suggested"}},
+ {"tool": "find_sla_definitions", "args": {"metric": "response", "applies_to_priority": "critical", "active": true}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 1233, "sla_def_id": 1, "stage": "in_progress"}},
+ {"tool": "update_case", "args": {"case_id": 1233, "state": "in_progress", "priority": "critical", "escalation": true, "escalation_reason": "impact"}}
+]

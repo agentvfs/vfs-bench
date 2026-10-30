@@ -1,0 +1,15 @@
+[
+ {"tool": "find_account", "args": {"name": "Stark Industries"}},
+ {"tool": "find_contacts", "args": {"account_id": 8}},
+ {"tool": "retrieve_installed_products", "args": {"account_id": 8, "product_id": 140}},
+ {"tool": "search_cases", "args": {"account_id": 8, "product_id": 140}},
+ {"tool": "find_contracts", "args": {"account_id": 8, "status": "active"}},
+ {"tool": "find_entitlements", "args": {"account_id": 8, "active": true}},
+ {"tool": "find_user_group", "args": {"name": "Installed Base Support"}},
+ {"tool": "find_sla_definitions", "args": {"applies_to_priority": "critical", "active": true}},
+ {"tool": "update_installed_product_details", "args": {"installed_product_id": 42, "status": "repair"}},
+ {"tool": "register_new_installed_product", "args": {"account_id": 8, "product_id": 140, "location_id": 817, "serial_number": "RMA-STARK-001", "status": "in_use"}},
+ {"tool": "update_case", "args": {"case_id": 181, "priority": "critical", "escalation": true, "escalation_reason": "impact", "installed_product_id": 301, "assignment_group_id": 10, "state": "in_progress"}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 181, "sla_def_id": 6, "stage": "in_progress", "has_breached": false}},
+ {"tool": "send_notification", "args": {"case_id": 181, "email": "marc.henry@stark-industries.com", "type": "update"}}
+]

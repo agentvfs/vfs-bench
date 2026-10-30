@@ -1,0 +1,129 @@
+[
+ {
+  "tool": "find_account",
+  "args": {
+   "name": "Globex"
+  }
+ },
+ {
+  "tool": "find_contacts",
+  "args": {
+   "account_id": 4
+  }
+ },
+ {
+  "tool": "list_users",
+  "args": {
+   "user_id": 347
+  }
+ },
+ {
+  "tool": "list_users",
+  "args": {
+   "user_id": 622
+  }
+ },
+ {
+  "tool": "list_users",
+  "args": {
+   "user_id": 455
+  }
+ },
+ {
+  "tool": "search_cases",
+  "args": {
+   "account_id": 4,
+   "contact_id": 2
+  }
+ },
+ {
+  "tool": "update_case",
+  "args": {
+   "case_id": 77,
+   "contact_id": 3
+  }
+ },
+ {
+  "tool": "update_case",
+  "args": {
+   "case_id": 78,
+   "contact_id": 3
+  }
+ },
+ {
+  "tool": "update_case",
+  "args": {
+   "case_id": 82,
+   "contact_id": 3
+  }
+ },
+ {
+  "tool": "update_case",
+  "args": {
+   "case_id": 83,
+   "contact_id": 3
+  }
+ },
+ {
+  "tool": "update_case",
+  "args": {
+   "case_id": 93,
+   "contact_id": 3
+  }
+ },
+ {
+  "tool": "update_case",
+  "args": {
+   "case_id": 97,
+   "contact_id": 3
+  }
+ },
+ {
+  "tool": "update_case",
+  "args": {
+   "case_id": 98,
+   "contact_id": 3
+  }
+ },
+ {
+  "tool": "update_contact",
+  "args": {
+   "contact_id": 3,
+   "is_primary": true
+  }
+ },
+ {
+  "tool": "update_contact",
+  "args": {
+   "contact_id": 2,
+   "is_primary": false,
+   "active": false
+  }
+ },
+ {
+  "tool": "update_user_details",
+  "args": {
+   "user_id": 347,
+   "active": false
+  }
+ },
+ {
+  "tool": "create_new_case",
+  "args": {
+   "account_id": 4,
+   "contact_id": 3,
+   "channel": "web",
+   "priority": "moderate",
+   "state": "new",
+   "short_description": "Globex primary contact handover: Joshua Morgan replaced by Derek Blake, open cases moved"
+  }
+ },
+ {
+  "tool": "send_notification",
+  "args": {
+   "case_id": 1233,
+   "email": "derek.blake7@globex.com",
+   "type": "update"
+  }
+ }
+]

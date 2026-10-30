@@ -10,6 +10,8 @@
  * - Values: an int binds as an INTEGER and a `PyFloat` as a REAL (node's
  *   own binding makes every number a REAL); a bool is 1 or 0. An INTEGER
  *   reads back as a number (a bigint past 2^53) and a REAL as a `PyFloat`.
+ * - Strings: a double-quoted word that names no column is a string, as
+ *   Python's SQLite build reads it.
  * - Time: SQLite's time functions read 'now' from the run's clock
  *   (mocks/upstream/instance.ts's `openRun`), and `CURRENT_TIMESTAMP` and
  *   its kin are those functions.
@@ -102,7 +104,10 @@ export class Conn {
   private lastrowid: number | null = null
 
   constructor(file: string, now: () => number) {
-    this.db = openRun(file, now)
+    // Python's sqlite3 takes a double-quoted word that names no column as a
+    // string (`status = "open"`), as SQLite does by default; node's turns
+    // that off. Upstream's verifiers rely on it.
+    this.db = openRun(file, now, { enableDoubleQuotedStringLiterals: true })
   }
 
   /** `conn.execute(sql, params)`. */

@@ -1,0 +1,16 @@
+[
+ {"tool": "find_user", "args": {"name": "Stephanie Clark"}},
+ {"tool": "find_contact_by_portal_user", "args": {"portal_user_id": 322}},
+ {"tool": "find_product", "args": {"name": "Docker Enterprise Variant 35"}},
+ {"tool": "find_entitlements", "args": {"account_id": 29, "active": true}},
+ {"tool": "find_user", "args": {"name": "Mario Perry"}},
+ {"tool": "update_user_details", "args": {"user_id": 532, "active": false}},
+ {"tool": "find_user", "args": {"name": "Emily Moore"}},
+ {"tool": "find_user_group", "args": {"name": "Field Service Coordination_2"}},
+ {"tool": "check_user_membership", "args": {"user_id": 701, "group_id": 34}},
+ {"tool": "add_new_group_member", "args": {"group_id": 34, "user_id": 701}},
+ {"tool": "create_new_case", "args": {"account_id": 29, "contact_id": 61, "product_id": 55, "channel": "email", "priority": "high", "state": "new", "short_description": "Product: Docker Enterprise Variant 35, Issue: older bugs affecting stable branches", "assignment_group_id": 34, "assigned_to": 701}},
+ {"tool": "retrieve_knowledge", "args": {"product_id": 55, "state": "published", "limit": 5}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 1233, "knowledge_id": 81, "used_as": "suggested"}},
+ {"tool": "send_notification", "args": {"case_id": 1233, "knowledge_id": 81, "email": "stephanie.clark4@jonesgoodmanandreynolds.com", "type": "report"}}
+]

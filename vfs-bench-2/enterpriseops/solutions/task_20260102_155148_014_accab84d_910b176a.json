@@ -1,0 +1,13 @@
+[
+ {"tool": "find_user", "args": {"name": "Perry Watts"}},
+ {"tool": "find_contact_by_portal_user", "args": {"portal_user_id": 727}},
+ {"tool": "find_product", "args": {"name": "Atlassian Jira Data Center"}},
+ {"tool": "find_entitlements", "args": {"account_id": 30, "product_id": 17, "active": true}},
+ {"tool": "create_new_case", "args": {"account_id": 30, "contact_id": 64, "product_id": 17, "channel": "email", "priority": "high", "state": "new", "short_description": "Product: Atlassian Jira Data Center, Issue: is not working as expected and impacting delivery"}},
+ {"tool": "retrieve_knowledge", "args": {"search_text": "Atlassian Jira Data Center", "product_id": 17, "state": "published", "limit": 5}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 1233, "knowledge_id": 27, "used_as": "suggested"}},
+ {"tool": "update_case", "args": {"case_id": 1233, "state": "in_progress"}},
+ {"tool": "find_sla_definitions", "args": {"applies_to_priority": "high", "active": true}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 1233, "sla_def_id": 2, "stage": "in_progress"}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 1233, "sla_def_id": 7, "stage": "in_progress"}}
+]

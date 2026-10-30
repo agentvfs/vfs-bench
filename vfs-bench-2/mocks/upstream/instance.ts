@@ -20,7 +20,7 @@
  */
 import * as fs from 'node:fs'
 import { join } from 'node:path'
-import { DatabaseSync, type SQLInputValue, type StatementSync } from 'node:sqlite'
+import { DatabaseSync, type DatabaseSyncOptions, type SQLInputValue, type StatementSync } from 'node:sqlite'
 
 interface Current {
   connection: DatabaseSync
@@ -134,8 +134,8 @@ function timed(connection: DatabaseSync, now: () => number): DatabaseSync {
 }
 
 /** The run's file, opened for a request: its time functions read 'now' as `now()`. */
-export function openRun(file: string, now: () => number): DatabaseSync {
-  return timed(new DatabaseSync(file), now)
+export function openRun(file: string, now: () => number, options?: DatabaseSyncOptions): DatabaseSync {
+  return timed(new DatabaseSync(file, options), now)
 }
 
 /**

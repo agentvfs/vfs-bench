@@ -1,0 +1,14 @@
+[
+ {"tool": "find_user", "args": {"name": "Marc Henry"}},
+ {"tool": "find_contact_by_portal_user", "args": {"portal_user_id": 20}},
+ {"tool": "find_product", "args": {"name": "SUSE Linux Enterprise Server 15 Variant 5"}},
+ {"tool": "find_entitlements", "args": {"account_id": 8, "product_id": 25, "active": true}},
+ {"tool": "find_user", "args": {"name": "Tabitha Bullock"}},
+ {"tool": "find_user_group", "args": {"name": "Proactive Case Monitoring"}},
+ {"tool": "check_user_membership", "args": {"user_id": 3, "group_id": 11}},
+ {"tool": "add_new_group_member", "args": {"group_id": 11, "user_id": 3}},
+ {"tool": "create_new_case", "args": {"account_id": 8, "contact_id": 10, "product_id": 25, "channel": "email", "priority": "high", "state": "new", "short_description": "Product: SUSE Linux Enterprise Server 15 Variant 5, Issue: not stable after configuration changes", "assignment_group_id": 11, "assigned_to": 3}},
+ {"tool": "retrieve_knowledge", "args": {"search_text": "SUSE Linux Enterprise Server 15 Variant 5 not stable after configuration changes", "product_id": 25, "state": "published", "limit": 5}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 1233, "knowledge_id": 38, "used_as": "suggested"}},
+ {"tool": "send_notification", "args": {"case_id": 1233, "email": "marc.henry@stark-industries.com", "type": "report"}}
+]

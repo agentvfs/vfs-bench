@@ -1,0 +1,11 @@
+[
+ {"tool": "find_account", "args": {"name": "Avery Ltd"}},
+ {"tool": "find_product", "args": {"name": "VMware vSphere Enterprise Plus Variant 34"}},
+ {"tool": "search_cases", "args": {"account_id": 44, "product_id": 54, "state": "resolved"}},
+ {"tool": "find_entitlements", "args": {"account_id": 44, "active": true}},
+ {"tool": "retrieve_knowledge", "args": {"search_text": "VMware vSphere Enterprise Plus", "state": "published", "visibility": "external", "limit": 5}},
+ {"tool": "find_contacts", "args": {"contact_id": 101}},
+ {"tool": "list_users", "args": {"user_id": 21}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 1015, "knowledge_id": 22, "used_as": "suggested"}},
+ {"tool": "send_notification", "args": {"case_id": 1015, "knowledge_id": 22, "email": "andrew.bell58@averyltd.com", "type": "solution_proposal"}}
+]

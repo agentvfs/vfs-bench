@@ -17,7 +17,8 @@ and as the CLI sends it to the fake, and:
 - at the end every table of both databases is compared, row by row.
 
 A timestamp only one side's clock could make (upstream's is the wall
-clock, the fake's the run's ``--epoch``) is compared as ``<now>``. Every
+clock, the fake's the run's ``--epoch``) is compared as ``<now>``, unless
+it is the seed's own value. Every
 difference is printed, and the script exits 1 on any.
 """
 import argparse
@@ -250,11 +251,11 @@ async def main() -> int:
     calls = json.loads(Path(args.calls).read_text())
     service = f"enterpriseops_{args.domain}"
     name, url = container(spec)
-    # The seed's own id, which the fake's errors print as upstream's do.
-    db = Path(seed).stem
-    httpx.request("DELETE", f"{url}/api/delete-database",
-                  json={"database_id": db}, headers={"x-database-id": db},
-                  timeout=60)
+    # A database of this run's own, so runs side by side never share one;
+    # its id reads as the seed's in upstream's replies, which the fake's
+    # errors print.
+    stem = Path(seed).stem
+    db = f"{stem}_{os.getpid()}_{time.time_ns()}"
     reply = httpx.post(f"{url}/api/seed-database",
                        json={
                            "database_id": db,
@@ -279,12 +280,16 @@ async def main() -> int:
         run = await pool.open(fake, f"cmp-{os.getpid()}", fixture_name,
                               args.epoch)
         fk = Fake(run.url, args.user)
+        # Both sides start from the same seed: a value the run left as the
+        # seed has it is compared as it is, never masked.
+        seeded = tables(run.db)
         epoch = datetime.fromisoformat(args.epoch.replace("Z", "+00:00"))
         fake_mask = masker(epoch, epoch + timedelta(seconds=len(calls) + 5))
         started = datetime.now(timezone.utc)
         try:
             for n, call in enumerate(calls):
                 a = await up.call(call["tool"], call.get("args") or {})
+                a = (a[0].replace(db, stem), a[1])
                 b = await fk.call(call["tool"], call.get("args") or {})
                 up_mask = masker(started, datetime.now(timezone.utc))
                 same = (masked_text(a[0], up_mask) == masked_text(
@@ -308,10 +313,17 @@ async def main() -> int:
                             str(path)], check=True)
             ta, tb = tables(path), tables(run.db)
             for table in sorted(set(ta) | set(tb)):
-                ra = [{k: up_mask(v) for k, v in r.items()}
-                      for r in ta.get(table, [])]
-                rb = [{k: fake_mask(v) for k, v in r.items()}
-                      for r in tb.get(table, [])]
+                seed = seeded.get(table, [])
+
+                def kept(i, k, v):
+                    return i < len(seed) and seed[i].get(k) == v
+
+                ra = [{k: v if kept(i, k, v) else up_mask(v)
+                       for k, v in r.items()}
+                      for i, r in enumerate(ta.get(table, []))]
+                rb = [{k: v if kept(i, k, v) else fake_mask(v)
+                       for k, v in r.items()}
+                      for i, r in enumerate(tb.get(table, []))]
                 if ra == rb:
                     continue
                 problems.append(f"table {table}")

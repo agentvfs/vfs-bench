@@ -1,0 +1,10 @@
+[
+ {"tool": "list_user_groups", "args": {"name": "Installed Base Support"}},
+ {"tool": "list_group_members", "args": {"group_id": 10}},
+ {"tool": "list_users", "args": {"role": "manager", "active": true}},
+ {"tool": "create_new_account", "args": {"name": "Lumina Healthcare", "account_type": "customer", "active": true}},
+ {"tool": "add_new_user_group", "args": {"name": "Lumina Implementation Coordination", "type": "support", "active": true}},
+ {"tool": "add_new_group_member", "args": {"group_id": 81, "user_id": 111}},
+ {"tool": "add_new_group_member", "args": {"group_id": 81, "user_id": 437}},
+ {"tool": "add_new_group_member", "args": {"group_id": 81, "user_id": 207}}
+]

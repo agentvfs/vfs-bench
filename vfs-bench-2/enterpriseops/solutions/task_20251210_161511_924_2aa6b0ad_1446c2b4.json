@@ -1,0 +1,11 @@
+[
+ {"tool": "find_user", "args": {"name": "Jermaine Hall"}},
+ {"tool": "find_contact_by_portal_user", "args": {"portal_user_id": 752}},
+ {"tool": "search_cases", "args": {"contact_id": 14, "state": "in_progress"}},
+ {"tool": "find_user", "args": {"name": "Paul Moyer"}},
+ {"tool": "find_user_group", "args": {"name": "Case Triage_4"}},
+ {"tool": "check_user_membership", "args": {"user_id": 619, "group_id": 63}},
+ {"tool": "add_new_group_member", "args": {"group_id": 63, "user_id": 619}},
+ {"tool": "update_case", "args": {"case_id": 231, "assignment_group_id": 63, "assigned_to": 619}},
+ {"tool": "send_notification", "args": {"case_id": 231, "email": "jermaine.hall@hooli.com", "type": "report"}}
+]

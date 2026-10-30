@@ -71,6 +71,26 @@ error flag, then every row of every table. The probes are under
 - A validation error names the database by its seed's id
   (`db_1762254390925_u5icw4thh`); upstream names the random id its client
   made for the run.
-- No reference solutions: upstream ships none. A task's
-  `solution/solve.sh` is written here (`solutions/<task id>.sh`), and must
-  pass both against upstream's image and against the fake.
+- Upstream ships no reference solutions. Each task's `solution/solve.sh`
+  is written here (`solutions/<task id>.json`, the calls in order, using
+  only the task's tools and following its policy) and checked with
+  `harbor/enterpriseops_compare.py --task`: the same replies and tables on
+  upstream's image and the fake, and the task's verifiers run on both.
+
+## Oracle
+
+`harbor run -c harbor/enterpriseops.yaml -a oracle` scores 94 of the 103
+CSM tasks 1.0. The other 9 cannot pass as upstream grades them:
+
+| Task | Upstream's problem |
+|---|---|
+| `task_20260107_162554_472_accab84d_41d2e871`, `task_20260108_160928_699_391f1eff_905701cb`, `task_20260121_143201_590_1afb323a_5a03bf03`, `task_20260121_145409_648_1afb323a_4e203caa`, `task_20260121_150447_596_1afb323a_0a1e4085`, `task_20260121_163208_054_1afb323a_7f40ee66` | Every expected value is a string (`"1"`), and upstream's comparison is `actual == expected`, so the integer each query returns never matches. The solutions reach the end state the queries check. |
+| `task_20251201_164641_724_109c89c0_1b29acb9` | Its 44 verifiers are 11 copies of 4 checks, some wanting the new case `new` and some `resolved`. The solution follows the policy (`new`): 32 of 44. |
+| `task_20260106_192119_816_ad5a67e3_87a5a87c` | One check moves case 53 into group 3; another wants group 3 to have 5 open cases, which the seed already has. 3 of 4. |
+| `task_20251210_002938_761_897c3e0b_f075229a` | A check that counts cases by account, product and description also matches a seeded case once the new one is updated after its creation; upstream passes only when both land in the same wall-clock second. 8 of 9. |
+
+Two more tasks (`task_20260101_122222_300_ad5a67e3_3757206c`,
+`task_20260102_172945_725_ad5a67e3_5480e26f`) need a case updated after
+it was created. They pass here, where the clock moves a second a call,
+and as a real agent's run would upstream, but a fast replay of their
+solutions on upstream's image often fails them.

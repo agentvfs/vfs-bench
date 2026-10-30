@@ -1,0 +1,12 @@
+[
+ {"tool": "find_location", "args": {"name": "Reyes Inc Site A - New York"}},
+ {"tool": "add_new_user", "args": {"first_name": "Oliver", "last_name": "Oats", "email": "oliver.oats@servicenow.com", "role": "agent", "location_id": 832, "active": true}},
+ {"tool": "list_user_groups", "args": {"name": "Case Assignment"}},
+ {"tool": "add_new_group_member", "args": {"group_id": 4, "user_id": 803}},
+ {"tool": "search_cases", "args": {"number": "CS-0000001"}},
+ {"tool": "update_case", "args": {"case_id": 1, "state": "in_progress", "assignment_group_id": 4, "assigned_to": 803}},
+ {"tool": "find_sla_definitions", "args": {"applies_to_priority": "critical", "active": true}},
+ {"tool": "find_case_slas", "args": {"case_id": 1}},
+ {"tool": "update_case_sla_details", "args": {"case_sla_id": 1, "stage": "in_progress", "has_breached": true}},
+ {"tool": "update_case_sla_details", "args": {"case_sla_id": 2, "stage": "in_progress", "has_breached": true}}
+]

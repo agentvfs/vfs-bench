@@ -1,0 +1,17 @@
+[
+ {"tool": "find_account", "args": {"name": "Stark Industries"}},
+ {"tool": "retrieve_installed_products", "args": {"account_id": 8}},
+ {"tool": "find_product_by_id", "args": {"product_id": 140}},
+ {"tool": "find_entitlements", "args": {"account_id": 8, "product_id": 140}},
+ {"tool": "find_contacts", "args": {"account_id": 8, "is_primary": true}},
+ {"tool": "enlist_new_contract", "args": {"account_id": 8, "contract_type": "support", "status": "active", "start_date": "2025-11-18", "end_date": "2026-11-18"}},
+ {"tool": "add_new_entitlement", "args": {"account_id": 8, "product_id": 140, "contract_id": 154, "support_level": "enterprise", "coverage_hours": "h24x7", "active": true}},
+ {"tool": "create_new_case", "args": {"account_id": 8, "contact_id": 10, "product_id": 140, "installed_product_id": 42, "channel": "web", "priority": "critical", "state": "new", "short_description": "Product: Palo Alto Networks PA-3220 Variant 8, Issue: repeated dataplane crashes causing outage."}},
+ {"tool": "find_user_group", "args": {"name": "Escalation Management"}},
+ {"tool": "set_case_assignment_group", "args": {"case_id": 1233, "assignment_group_id": 18}},
+ {"tool": "update_case", "args": {"case_id": 1233, "state": "in_progress"}},
+ {"tool": "find_sla_definitions", "args": {"metric": "resolution", "applies_to_priority": "critical", "active": true}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 1233, "sla_def_id": 6, "stage": "in_progress"}},
+ {"tool": "retrieve_knowledge", "args": {"product_id": 140, "state": "published"}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 1233, "knowledge_id": 210, "used_as": "suggested"}}
+]

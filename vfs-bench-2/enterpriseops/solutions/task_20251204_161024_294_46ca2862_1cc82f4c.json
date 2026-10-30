@@ -1,0 +1,10 @@
+[
+ {"tool": "find_account", "args": {"name": "ServiceNow"}},
+ {"tool": "find_locations", "args": {"street": "Janice Landing"}},
+ {"tool": "find_locations", "args": {"plot_no": "Plot 738", "city": "tokyo"}},
+ {"tool": "retrieve_installed_products", "args": {"account_id": 1}},
+ {"tool": "find_contacts", "args": {"account_id": 1}},
+ {"tool": "list_users", "args": {"user_id": 801}},
+ {"tool": "update_installed_product_details", "args": {"installed_product_id": 1, "location_id": 804, "status": "in_use"}},
+ {"tool": "update_user_details", "args": {"user_id": 801, "location_id": 804}}
+]

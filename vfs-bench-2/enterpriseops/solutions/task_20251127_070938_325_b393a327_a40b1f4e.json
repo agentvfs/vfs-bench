@@ -1,0 +1,4 @@
+[
+ {"tool": "search_cases", "args": {"number": "CS-0001213"}},
+ {"tool": "list_users", "args": {"email": "sheri.trujillo60@servicenow.com"}}
+]

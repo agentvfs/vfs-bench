@@ -1,0 +1,21 @@
+[
+ {"tool": "find_account", "args": {"name": "Spencer Inc"}},
+ {"tool": "find_contacts", "args": {"account_id": 18, "is_primary": true}},
+ {"tool": "list_users", "args": {"user_id": 16}},
+ {"tool": "find_locations", "args": {"location_id": 16}},
+ {"tool": "find_user", "args": {"name": "Joanne Simpson"}},
+ {"tool": "search_cases", "args": {"account_id": 18, "contact_id": 30, "state": "new"}},
+ {"tool": "search_cases", "args": {"account_id": 18, "contact_id": 30, "state": "in_progress"}},
+ {"tool": "search_cases", "args": {"account_id": 18, "contact_id": 30, "state": "pending"}},
+ {"tool": "update_case", "args": {"case_id": 397, "priority": "critical", "assigned_to": 4}},
+ {"tool": "update_case", "args": {"case_id": 398, "priority": "critical", "assigned_to": 4}},
+ {"tool": "update_case", "args": {"case_id": 399, "priority": "critical", "assigned_to": 4}},
+ {"tool": "update_case", "args": {"case_id": 415, "priority": "critical", "assigned_to": 4}},
+ {"tool": "update_case", "args": {"case_id": 416, "priority": "critical", "assigned_to": 4}},
+ {"tool": "update_case", "args": {"case_id": 400, "priority": "critical", "assigned_to": 4}},
+ {"tool": "update_case", "args": {"case_id": 401, "priority": "critical", "assigned_to": 4}},
+ {"tool": "update_case", "args": {"case_id": 402, "priority": "critical", "assigned_to": 4}},
+ {"tool": "update_case", "args": {"case_id": 403, "priority": "critical", "assigned_to": 4}},
+ {"tool": "update_case", "args": {"case_id": 404, "priority": "critical", "assigned_to": 4}},
+ {"tool": "update_case", "args": {"case_id": 405, "priority": "critical", "assigned_to": 4}}
+]

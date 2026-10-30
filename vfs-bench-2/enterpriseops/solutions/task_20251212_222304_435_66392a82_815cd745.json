@@ -1,0 +1,17 @@
+[
+ {"tool": "find_user", "args": {"name": "Tabitha Bullock"}},
+ {"tool": "get_cases_assigned_to", "args": {"assigned_to": 3}},
+ {"tool": "find_user", "args": {"name": "Lisa Smith"}},
+ {"tool": "find_user_group", "args": {"name": "Case Assignment_3"}},
+ {"tool": "check_user_membership", "args": {"user_id": 496, "group_id": 44}},
+ {"tool": "add_new_group_member", "args": {"group_id": 44, "user_id": 496}},
+ {"tool": "update_case", "args": {"case_id": 251, "assignment_group_id": 44, "assigned_to": 496}},
+ {"tool": "update_case", "args": {"case_id": 1142, "assignment_group_id": 44, "assigned_to": 496}},
+ {"tool": "update_user_details", "args": {"user_id": 3, "active": false}},
+ {"tool": "find_contacts", "args": {"contact_id": 15}},
+ {"tool": "list_users", "args": {"user_id": 10}},
+ {"tool": "send_notification", "args": {"case_id": 251, "email": "brandon.davis@vehementcap.com", "type": "report"}},
+ {"tool": "find_contacts", "args": {"contact_id": 112}},
+ {"tool": "list_users", "args": {"user_id": 340}},
+ {"tool": "send_notification", "args": {"case_id": 1142, "email": "david.trujillo@hernandezbarnettandstewart.com", "type": "report"}}
+]

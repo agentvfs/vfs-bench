@@ -1,0 +1,16 @@
+[
+ {"tool": "find_user", "args": {"name": "Elizabeth Chase"}},
+ {"tool": "find_account", "args": {"name": "ServiceNow"}},
+ {"tool": "find_contact_by_portal_user", "args": {"portal_user_id": 801}},
+ {"tool": "find_product", "args": {"name": "Palo Alto Networks PA-3220"}},
+ {"tool": "search_cases", "args": {"account_id": 1, "contact_id": 123, "product_id": 128, "priority": "moderate"}},
+ {"tool": "find_entitlements", "args": {"account_id": 1, "active": true}},
+ {"tool": "update_case", "args": {"case_id": 5, "priority": "critical", "escalation": true, "escalation_reason": "impact", "short_description": "Product: Palo Alto Networks PA-3220, Issue: Major packet drops affecting production - significantly worsened"}},
+ {"tool": "find_case_slas", "args": {"case_id": 5}},
+ {"tool": "find_sla_definitions", "args": {"applies_to_priority": "critical", "active": true}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 5, "sla_def_id": 1, "stage": "in_progress"}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 5, "sla_def_id": 6, "stage": "in_progress"}},
+ {"tool": "retrieve_knowledge", "args": {"search_text": "Palo Alto Networks PA-3220 Packet Drop Troubleshooting", "state": "published", "visibility": "external", "limit": 3}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 5, "knowledge_id": 227, "used_as": "suggested"}},
+ {"tool": "send_notification", "args": {"case_id": 5, "knowledge_id": 227, "email": "elizabeth.chase32@servicenow.com", "type": "update"}}
+]

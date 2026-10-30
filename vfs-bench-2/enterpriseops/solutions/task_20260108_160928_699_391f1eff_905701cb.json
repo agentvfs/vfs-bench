@@ -1,0 +1,14 @@
+[
+ {"tool": "search_cases", "args": {"number": "CS-0000058"}},
+ {"tool": "find_user", "args": {"name": "Michael Ward"}},
+ {"tool": "find_contacts", "args": {"contact_id": 1}},
+ {"tool": "list_user_groups", "args": {"group_id": 5}},
+ {"tool": "list_group_members", "args": {"group_id": 5}},
+ {"tool": "find_user", "args": {"name": "Gregory Richards"}},
+ {"tool": "find_case_slas", "args": {"case_id": 58}},
+ {"tool": "update_case", "args": {"case_id": 58, "state": "in_progress", "priority": "critical", "escalation": true, "escalation_reason": "customer_request", "assigned_to": 59}},
+ {"tool": "update_case_sla_details", "args": {"case_sla_id": 115, "stage": "in_progress"}},
+ {"tool": "update_case_sla_details", "args": {"case_sla_id": 116, "stage": "in_progress"}},
+ {"tool": "register_new_interaction", "args": {"channel": "email", "account_id": 3, "contact_id": 1, "case_id": 58, "interacted_user": 47, "status": "open"}},
+ {"tool": "send_notification", "args": {"case_id": 58, "email": "michael.ward53@acme.com", "type": "update"}}
+]

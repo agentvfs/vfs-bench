@@ -1,0 +1,11 @@
+[
+ {"tool": "find_account", "args": {"name": "Simon LLC"}},
+ {"tool": "search_cases", "args": {"number": "CS-0001041"}},
+ {"tool": "find_entitlements", "args": {"account_id": 45, "active": true}},
+ {"tool": "find_case_slas", "args": {"case_id": 1041}},
+ {"tool": "find_user", "args": {"name": "David Johnston"}},
+ {"tool": "check_user_membership", "args": {"user_id": 72, "group_id": 40}},
+ {"tool": "retrieve_knowledge", "args": {"product_id": 113, "state": "published"}},
+ {"tool": "update_case", "args": {"case_id": 1041, "priority": "critical", "assigned_to": 72}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 1041, "knowledge_id": 174, "used_as": "suggested"}}
+]

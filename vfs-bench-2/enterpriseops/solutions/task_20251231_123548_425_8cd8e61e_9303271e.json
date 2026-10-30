@@ -1,0 +1,10 @@
+[
+ {"tool": "find_account", "args": {"name": "Globex"}},
+ {"tool": "list_users", "args": {"first_name": "Derek", "email": "derek.blake7@globex.com"}},
+ {"tool": "find_contacts", "args": {"account_id": 4, "portal_user_id": 622}},
+ {"tool": "find_interactions", "args": {"account_id": 4, "contact_id": 3, "channel": "alert", "status": "open"}},
+ {"tool": "retrieve_knowledge", "args": {"search_text": "snapshot rollback Btrfs Snapper", "state": "published", "visibility": "external", "limit": 5}},
+ {"tool": "update_interaction", "args": {"interaction_id": 80, "status": "handled"}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 80, "knowledge_id": 7, "used_as": "suggested"}},
+ {"tool": "send_notification", "args": {"case_id": 80, "knowledge_id": 7, "email": "derek.blake7@globex.com", "type": "solution_proposal"}}
+]

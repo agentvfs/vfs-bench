@@ -1,0 +1,14 @@
+[
+ {"tool": "find_user", "args": {"name": "Elizabeth Chase"}},
+ {"tool": "find_contact_by_portal_user", "args": {"portal_user_id": 801}},
+ {"tool": "find_product", "args": {"name": "Palo Alto Networks PA-3220"}},
+ {"tool": "search_cases", "args": {"contact_id": 123, "product_id": 128, "priority": "critical", "state": "new"}},
+ {"tool": "retrieve_knowledge", "args": {"product_id": 128}},
+ {"tool": "update_knowledge", "args": {"knowledge_id": 195, "state": "published"}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 1, "knowledge_id": 195, "used_as": "resolution"}},
+ {"tool": "update_case", "args": {"case_id": 1, "state": "in_progress"}},
+ {"tool": "find_case_slas", "args": {"case_id": 1}},
+ {"tool": "update_case_sla_details", "args": {"case_sla_id": 1, "stage": "in_progress"}},
+ {"tool": "update_case_sla_details", "args": {"case_sla_id": 2, "stage": "in_progress"}},
+ {"tool": "send_notification", "args": {"case_id": 1, "knowledge_id": 195, "email": "elizabeth.chase32@servicenow.com", "type": "update"}}
+]

@@ -125,7 +125,8 @@ rules, read-only at the run's clock, and keeps Python's types in the JSON
 extraction and Python's comparisons over those rows. Its definitions,
 `graders/enterpriseops/manifest.json`, come from `enterpriseops.py`.
 All 103 tasks matched their microVM reference under `MirageParityVerifier`
-(`nop`, plus the oracle of the one task with a solution), and
+(`nop`), the oracle scores 94 of them 1.0 (the other 9 are upstream's,
+../enterpriseops/README.md), and
 `enterpriseops-grader.test.ts` checks the comparisons against the Python
 reference. The unconfigured `pre-meeting-research-brief` LLM-judge task is outside
 the 70-task set and has no native port.
