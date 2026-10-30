@@ -28,7 +28,7 @@ export interface ClawRequest {
 export type JudgeTransport = (request: Record<string, unknown>, signal: AbortSignal) => Promise<Omit<Recording, 'request'>>
 
 /** Credentials remain in the trusted transport, never in Python or the tape. */
-export function judgeTransport(env: Record<string, string>): JudgeTransport {
+export function judgeTransport(env: Record<string, string>, send: typeof fetch = fetch): JudgeTransport {
   return async (request, signal) => {
     if (!env.OPENAI_API_KEY) throw new Error('Claw-Eval judge requires OPENAI_API_KEY')
     const url = (env.OPENAI_BASE_URL || 'https://api.openai.com/v1').replace(/\/$/, '') + '/chat/completions'
@@ -36,7 +36,7 @@ export function judgeTransport(env: Record<string, string>): JudgeTransport {
     if (!['http:', 'https:'].includes(target.protocol) || target.username || target.password)
       throw new Error('Invalid Claw-Eval judge URL')
     try {
-      const response = await fetch(target, {
+      const response = await send(target, {
         method: 'POST', redirect: 'error', signal,
         headers: { 'content-type': 'application/json', authorization: `Bearer ${env.OPENAI_API_KEY}` },
         body: JSON.stringify(request),
@@ -65,13 +65,15 @@ export function judgeTransport(env: Record<string, string>): JudgeTransport {
   }
 }
 
-export async function verifyClaw(request: ClawRequest, transport?: JudgeTransport) {
+export async function verifyClaw(request: ClawRequest, transport?: JudgeTransport, externalSignal?: AbortSignal) {
+  externalSignal?.throwIfAborted()
   const definition = manifest.tasks[request.task]
   if (!definition) throw new Error('Unregistered Claw-Eval task')
   if (!Number.isFinite(request.timeoutSeconds) || request.timeoutSeconds <= 0)
     throw new Error('Invalid verifier timeout')
   const started = performance.now()
   const controller = new AbortController()
+  const signal = externalSignal ? AbortSignal.any([controller.signal, externalSignal]) : controller.signal
   const input = new RAMVFS(), reference = new RAMVFS(), grader = new RAMVFS(), output = new RAMVFS()
   const allowed = new Set(['state.json', 'trajectory.json', 'dispatches.jsonl', 'gws_seed.json', 'recording.json'])
   const required = new Set(Object.keys(definition.sources).map((name) => '/reference/' + name))
@@ -120,12 +122,13 @@ export async function verifyClaw(request: ClawRequest, transport?: JudgeTranspor
   const timer = setTimeout(() => controller.abort(), request.timeoutSeconds * 1000)
   try {
     for (let attempt = 0; attempt <= 128; attempt++) {
-      if (controller.signal.aborted) throw new Error('Claw-Eval verifier deadline exceeded')
+      if (signal.aborted) throw new Error('Claw-Eval verifier deadline exceeded or canceled')
       await input.write(path('tape.json'), Buffer.from(JSON.stringify(tape)))
       const result = await workspace.shell('python -c ' + quote(
-        'import runpy; runpy.run_path("/grader/main.py", run_name="__main__")'))
+        'import runpy; runpy.run_path("/grader/main.py", run_name="__main__")'), { signal })
       if (result.exitCode !== 0)
         throw new Error(`Claw-Eval Pyodide grader failed (${result.exitCode}): ${result.stderrText}`)
+      signal.throwIfAborted()
       const value = JSON.parse(new TextDecoder().decode(await materialize(await output.read(path('result.json')))))
       if (value.judge_request) {
         if (recording !== undefined) throw new Error('Judge recording exhausted')
@@ -133,8 +136,8 @@ export async function verifyClaw(request: ClawRequest, transport?: JudgeTranspor
         if (!Number.isFinite(value.judge_delay) || value.judge_delay < 0 || value.judge_delay > 60)
           throw new Error('Invalid Claw-Eval judge backoff')
         if (value.judge_delay)
-          await delay(value.judge_delay * 1000, undefined, { signal: controller.signal })
-        const response = await call(value.judge_request, controller.signal)
+          await delay(value.judge_delay * 1000, undefined, { signal })
+        const response = await call(value.judge_request, signal)
         tape.push({ request: value.judge_request, ...response })
         continue
       }

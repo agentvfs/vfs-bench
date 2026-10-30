@@ -1,4 +1,5 @@
-# All 126 Claw-Eval tasks, graded in a separate Mirage/Pyodide workspace.
+# All 126 Claw-Eval tasks, graded in a separate Mirage/Pyodide workspace
+# inside the trial HTTP server. claweval-oracle.yaml selects the 13 oracles.
 # No verifier microVM or Linux site-packages are required. After upstream
 # setup and installing Mirage dependencies:
 #   uv run --project harbor python -I harbor/setup_claweval_verifier.py

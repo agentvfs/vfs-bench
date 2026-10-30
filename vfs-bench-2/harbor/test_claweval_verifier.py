@@ -5,6 +5,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import AsyncMock, patch
 
+import httpx
+import yaml
 from harbor.models.task.task import Task
 from harbor.models.trial.paths import TrialPaths
 from harbor.models.verifier.result import VerifierResult
@@ -53,6 +55,19 @@ class ClawEvalVerifierTests(unittest.IsolatedAsyncioTestCase):
                                            "JUDGE_MODEL": "fixture"
                                        })
 
+    def test_oracle_config_contains_every_packaged_solution(self):
+        config = yaml.safe_load((HARBOR / "claweval-oracle.yaml").read_text())
+        configured = {Path(item["path"]).name for item in config["tasks"]}
+        available = {
+            p.parent.parent.name
+            for p in (HARBOR / "tasks/claweval").glob("*/solution/solve.sh")
+        }
+        self.assertEqual(configured, available)
+        self.assertEqual(len(config["tasks"]), len(available))
+        self.assertLessEqual(configured, claw.definitions().keys())
+        self.assertEqual(config["verifier"]["import_path"],
+                         "vfsbench_harbor:MirageVerifier")
+
     async def test_stages_pinned_code_and_private_json_without_sqlite(self):
         if not claw.UPSTREAM.exists():
             self.skipTest("Run claweval/setup.py first")
@@ -97,6 +112,32 @@ class ClawEvalVerifierTests(unittest.IsolatedAsyncioTestCase):
                 claw.source_bytes({"sources": {
                     "grader.py": "wrong"
                 }}, _Staging(5))
+
+    async def test_grading_uses_existing_http_server_without_a_subprocess(
+            self):
+        request = self.root / "request.json"
+        request.write_text(
+            json.dumps({
+                "runtime": "claweval-pyodide",
+                "states": {},
+                "files": {}
+            }))
+        expected = {"score": 0.5, "timings": {"execution": "trial-daemon"}}
+        self.env._client = AsyncMock()
+        self.env._client.post.return_value = httpx.Response(200, json=expected)
+        with patch("asyncio.create_subprocess_exec",
+                   side_effect=AssertionError("spawned verifier process")):
+            self.assertEqual(await self.verifier._run("node", request),
+                             expected)
+        call = self.env._client.post.call_args
+        self.assertEqual(call.args, ("/v1/harbor/claweval/verify", ))
+        self.assertEqual(call.kwargs["headers"]["authorization"],
+                         f"Bearer {self.env._verifier_token}")
+        self.assertNotIn(self.env._verifier_token.encode(),
+                         call.kwargs["content"])
+        self.env._daemon_url = "http://unmanaged.test"
+        with self.assertRaisesRegex(ValueError, "managed trial server"):
+            await self.env.verify_claweval(b"{}")
 
     async def test_parity_replays_reference_calls_and_preserves_rewards(self):
         verifier = MirageParityVerifier(task=self.task,

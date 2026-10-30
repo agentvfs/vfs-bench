@@ -192,9 +192,11 @@ not database files mounted in the verifier.
 
 Parity runs the preserved reference first, then grades the same completed
 agent state through JSON and frozen files, retaining the original reward/logs.
-SQLite fixture conversion lives only in the test/replay adapters. A disposable
-Node worker allows Harbor to enforce cancellation/timeouts even in CPU-bound
-TypeScript. The trusted grader never executes task or agent code; this is not
+SQLite fixture conversion lives only in the test/replay adapters.
+Native TypeScript/Monty graders use a disposable Node worker to enforce
+cancellation/timeouts. Claw-Eval grades in the trial HTTP server, with
+cancellation passed to its Pyodide worker and judge transport.
+The trusted grader never executes task or agent code; this is not
 an isolation boundary for arbitrary grader scripts.
 File traversal, copying, serialization and hashing run in background threads.
 Staging is bounded to 64 MiB and 10,000 visited paths, and shares the task's
@@ -1811,6 +1813,8 @@ uv run --project harbor python -I harbor/setup_claweval_verifier.py  # pinned WA
 # An agent on every task; the judge's key and API are the verifier's.
 OPENAI_API_KEY=... OPENAI_BASE_URL=... uv run --project harbor harbor run \
   -c harbor/claweval.yaml -a vfsbench_harbor:Codex -m openai/gpt-5.6-luna -n 4 -o state/harbor/jobs-claweval
+# All 13 packaged oracle solutions, running concurrently with their verifiers.
+OPENAI_API_KEY=... OPENAI_BASE_URL=... uv run --project harbor harbor run -y -c harbor/claweval-oracle.yaml -a oracle -n 13 --enable-verification
 # A task's solution (thirteen have one).
 OPENAI_API_KEY=... OPENAI_BASE_URL=... uv run --project harbor harbor run \
   -p harbor/tasks/claweval/T156_onsite_support_dispatch --env vfsbench_harbor:MirageEnvironment \
@@ -1834,6 +1838,22 @@ pinned distribution's hashes; grading then loads packages locally. There
 is no verifier microVM, Linux package directory, host Python grading callback
 or verifier SQLite connection. This remains a WASM sandbox and Python
 interpreter, rather than a native Monty port.
+
+Oracle execution and grading use the **same trial HTTP server process**.
+The verifier creates a separate RAM workspace in that process and closes it
+when grading ends; Harbor does not launch an additional Node verifier process.
+Its private HTTP route requires a per-trial capability that is never mounted
+in the oracle workspace. The trusted judge transport uses the server's original
+HTTP transport, while the oracle keeps its restricted service routes.
+Disconnects, deadlines and shutdown cancel grading and pending judge calls.
+`timings.json` records `execution: trial-daemon` and `server_pid`; compare that
+PID with `HARBOR_SERVER` in `mirage/daemon.log`.
+
+`claweval-oracle.yaml` selects all 13 tasks with packaged solutions. `-n 13`
+runs these trials concurrently; each trial retains its own server because
+service routing and clocks are process-scoped. The full `claweval.yaml` contains
+126 tasks and can run agents or no-op trials in parallel, but the other 113
+tasks have no packaged oracle solution.
 
 Harbor freezes the trial's audits, trajectory, dispatch log and the gws fake's
 private JSON exports. The gws adapter preserves the reference's SQL ordering,
@@ -1869,6 +1889,11 @@ local fake services and the mock judge; replaying their actual frozen states
 through the original CPython/SQL verifier matched **13/13**. These synthetic judge answers test
 the integration; they are not quality scores from a real model. A paid/live
 model evaluation and microVM parity run were not performed here.
+The HTTP-server path also completed all 13 oracles at concurrency 13 in
+33 seconds with zero execution exceptions. Every verifier PID matched its
+trial daemon, and all 13 saved states matched the CPython/SQL reference
+under recorded-judge replay. HTTP tests cover concurrent isolated workspaces,
+private capabilities, task binding, deadlines and client cancellation.
 
 ```sh
 uv run --project harbor python -I harbor/test_claweval_verifier.py

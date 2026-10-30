@@ -118,11 +118,12 @@ class _Staging:
 class MirageVerifier(Verifier):
     """Run a registered grader in a fresh, verifier-only Mirage workspace.
 
-    A disposable Node process gives timeout/cancellation a hard stop. This
-    is trusted host code, not an isolation boundary for arbitrary scripts.
+    Claw-Eval grades through the trial HTTP server; other runtimes use a
+    disposable Node process. This is trusted host code, not an isolation
+    boundary for arbitrary scripts.
     LiveClawBench uses the workspace runtime; ComplexMCP, DataSpace and
     AutomationBench use Monty. Claw-Eval runs pinned Python in Pyodide and
-    records model calls through an explicit host transport.
+    records model calls through an explicit host transport in that server.
     Each grader reads declared JSON and file bytes through read-only VFS
     mounts and writes rewards to a separate RAM output mount.
     """
@@ -414,12 +415,13 @@ class MirageVerifier(Verifier):
     async def _run(self, node: str, request: Path) -> dict:
         payload = await self._background(self._request_bytes, request)
         runtime = json.loads(payload).get("runtime", "typescript")
+        if runtime == "claweval-pyodide":
+            return await self.environment.verify_claweval(payload)
         runners = {
             "typescript": RUNNER,
             "complexmcp-monty": HARBOR / "verify-complexmcp.ts",
             "dataspace-monty": HARBOR / "verify-dataspace.ts",
-            "automationbench-monty": HARBOR / "verify-automationbench.ts",
-            "claweval-pyodide": HARBOR / "verify-claweval.ts"
+            "automationbench-monty": HARBOR / "verify-automationbench.ts"
         }
         if runtime not in runners:
             raise ValueError(f"Unknown verifier runtime: {runtime}")
