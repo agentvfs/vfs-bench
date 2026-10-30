@@ -561,6 +561,27 @@ class MirageEnvironment(BaseEnvironment):
     # the trial's files, its routes and the container's environment.
 
     @property
+    def node_binary(self) -> str:
+        """The Node binary used by this trial and its trusted verifier."""
+        return self._node
+
+    async def read_virtual_file(self, path: str) -> bytes | None:
+        """Read RAM inputs without a shell command or state refresh."""
+        if self._client is None:
+            return None
+        reply = await self._client.post(
+            f"/v1/workspaces/{self._workspace_id}/vfs/read",
+            json={
+                "path": path,
+                "stream": True
+            },
+        )
+        if reply.status_code == 404:
+            return None
+        reply.raise_for_status()
+        return reply.content
+
+    @property
     def disk_mounts(self) -> dict[str, Path]:
         """Each disk mount's workspace path, and its host directory."""
         return {path: Path(m["root"]) for path, m in self._mounts.items()}

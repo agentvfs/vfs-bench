@@ -1,0 +1,163 @@
+"""Check snapshots, output provenance, reference drift and cancellation.
+
+    uv run --project harbor python -I harbor/test_mirage_verifier.py
+"""
+import asyncio
+import json
+import os
+import shutil
+import sqlite3
+import tempfile
+import unittest
+from pathlib import Path
+from unittest.mock import AsyncMock, Mock, patch
+
+from harbor.models.task.task import Task
+from harbor.models.trial.paths import TrialPaths
+from vfsbench_harbor import MirageEnvironment, MirageVerifier
+from vfsbench_harbor.environment import HARBOR
+
+TASKS = HARBOR / "tasks/liveclawbench"
+NODE = os.environ.get("VFSBENCH_TEST_NODE", "node")
+SCHEMA = """
+CREATE TABLE user_sticker_pack (user_id INTEGER, sticker_pack_id INTEGER);
+CREATE TABLE user_sticker (user_id INTEGER, pack_id INTEGER, category TEXT);
+CREATE TABLE message (sender TEXT, message_kind TEXT, channel_id INTEGER);
+"""
+
+
+class MirageVerifierTests(unittest.IsolatedAsyncioTestCase):
+
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(
+            prefix="vfsbench-verifier-test-")
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.task = Task(TASKS / "chat-sticker-engagement")
+        self.paths = TrialPaths(self.root / "trial")
+        self.paths.mkdir()
+        self.env = MirageEnvironment(
+            environment_dir=self.task.paths.environment_dir,
+            environment_name=self.task.name,
+            session_id="test",
+            trial_paths=self.paths,
+            task_env_config=self.task.config.environment,
+            node=NODE,
+        )
+        self.live = self.root / "live.sqlite"
+        with sqlite3.connect(self.live) as db:
+            db.executescript(SCHEMA)
+        snapshot = self.root / "state"
+        snapshot.mkdir()
+        self.env._mounts = {
+            "/opt/mock/data/chat": {
+                "root": str(snapshot),
+                "mode": "read",
+            }
+        }
+        self.env._state = [(snapshot / "chat.sqlite", self.live)]
+        self.verifier = MirageVerifier(task=self.task,
+                                       environment=self.env,
+                                       trial_paths=self.paths)
+
+    async def test_rewards_use_fresh_state_and_ignore_agent_output(self):
+        # An agent can forge its /logs, which is not the verifier's output.
+        agent_logs = self.root / "agent-logs/verifier"
+        agent_logs.mkdir(parents=True)
+        (agent_logs / "reward.txt").write_text("1.0\n")
+        self.env._mounts["/logs"] = {
+            "root": str(agent_logs.parent),
+            "mode": "write",
+        }
+        self.paths.reward_json_path.write_text('{"reward": 1}')
+        result = await self.verifier.verify()
+        self.assertEqual(result.rewards, {"reward": 0})
+        self.assertFalse(self.paths.reward_json_path.exists())
+        self.assertEqual((agent_logs / "reward.txt").read_text(), "1.0\n")
+        with sqlite3.connect(self.live) as db:
+            db.executescript("""
+            INSERT INTO user_sticker_pack VALUES (1, 1), (1, 2);
+            INSERT INTO message VALUES
+                ('You', 'sticker', 2), ('You', 'sticker', 3);
+            """)
+        result = await self.verifier.verify()
+        self.assertEqual(result.rewards, {"reward": 0.5})
+        with sqlite3.connect(self.live) as db:
+            db.execute("INSERT INTO user_sticker VALUES (1, 1, 'favorite')")
+        before = self.live.read_bytes()
+        result = await self.verifier.verify()
+        self.assertEqual(result.rewards, {"reward": 1})
+        self.assertEqual(self.live.read_bytes(), before)
+        self.assertEqual(self.paths.test_stdout_path.read_text(),
+                         "Score: 1.0/1.0\n")
+        timings = json.loads(
+            (self.paths.verifier_dir / "timings.json").read_text())
+        self.assertGreater(timings["peak_node_mib"], 0)
+        self.assertGreater(timings["total_s"], timings["run_s"])
+
+    async def test_changed_reference_is_rejected_and_stale_rewards_removed(
+            self):
+        copied = self.root / "chat-sticker-engagement"
+        shutil.copytree(self.task.paths.task_dir, copied)
+        source = copied / "tests/verify.py"
+        source.write_text(source.read_text() + "\n# changed\n")
+        self.verifier.task = Task(copied)
+        self.verifier._run = AsyncMock()
+        self.paths.reward_text_path.write_text("1.0\n")
+        with self.assertRaisesRegex(ValueError, "reference .* changed"):
+            await self.verifier.verify()
+        self.verifier._run.assert_not_called()
+        self.assertFalse(self.paths.reward_text_path.exists())
+
+    async def test_unported_task_requires_an_explicit_other_backend(self):
+        self.verifier.task = Task(TASKS / "pre-meeting-research-brief")
+        with self.assertRaisesRegex(ValueError, "No Mirage grader"):
+            await self.verifier.verify()
+
+    async def test_failed_database_does_not_leave_a_reward(self):
+        self.env._state = []
+        self.env.host_path("/opt/mock/data/chat/chat.sqlite").write_bytes(
+            b"bad database")
+        self.paths.reward_text_path.write_text("1\n")
+        with self.assertRaisesRegex(RuntimeError, "Mirage grader exited"):
+            await self.verifier.verify()
+        self.assertFalse(self.paths.reward_text_path.exists())
+
+    async def test_log_filters_keep_rewards(self):
+        self.verifier.exclude_logs = ["*"]
+        result = await self.verifier.verify()
+        self.assertEqual(result.rewards, {"reward": 0})
+        self.assertTrue(self.paths.reward_text_path.exists())
+        self.assertFalse(self.paths.test_stdout_path.exists())
+
+    async def test_timeout_and_cancellation_reap_the_runner(self):
+        for cancel in (False, True):
+            with self.subTest(cancel=cancel):
+                entered = asyncio.Event()
+
+                async def communicate():
+                    entered.set()
+                    await asyncio.Event().wait()
+
+                process = Mock(returncode=None)
+                process.communicate = communicate
+                process.wait = AsyncMock(return_value=-9)
+                self.task.config.verifier.timeout_sec = 30 if cancel else 0.02
+                with patch(
+                        "vfsbench_harbor.mirage_verifier.asyncio."
+                        "create_subprocess_exec",
+                        AsyncMock(return_value=process)):
+                    running = asyncio.create_task(
+                        self.verifier._run(NODE, self.root / "request.json"))
+                    await entered.wait()
+                    if cancel:
+                        running.cancel()
+                    with self.assertRaises(asyncio.CancelledError
+                                           if cancel else TimeoutError):
+                        await running
+                process.kill.assert_called_once()
+                process.wait.assert_awaited_once()
+
+
+if __name__ == "__main__":
+    unittest.main()
