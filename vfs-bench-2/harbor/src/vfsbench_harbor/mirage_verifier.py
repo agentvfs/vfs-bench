@@ -1,6 +1,6 @@
-"""Trusted TypeScript graders through Mirage, without Pyodide or a microVM.
+"""Registered TypeScript/Monty graders in separate Mirage VFS workspaces.
 
-Only tasks in graders/manifest.json are supported. Their original Python
+Only tasks in the registered grader manifests are supported. Original Python
 and shell files stay untouched as references; a changed reference must be
 ported and parity-tested before its manifest hashes are updated. No code
 from the task or agent workspace is executed by this verifier.
@@ -11,6 +11,7 @@ import hashlib
 import json
 import math
 import os
+import signal
 import tempfile
 import threading
 import time
@@ -20,6 +21,8 @@ from harbor.models.verifier.result import VerifierResult
 from harbor.utils.env import resolve_env_vars
 from harbor.utils.path_filter import filter_paths_by_patterns
 from harbor.verifier.verifier import Verifier
+from vfsbench_harbor.complexmcp_verifier import definitions
+from vfsbench_harbor.complexmcp_verifier import freeze as freeze_complexmcp
 from vfsbench_harbor.environment import HARBOR, ROOT, MirageEnvironment
 
 MANIFEST = HARBOR / "graders/manifest.json"
@@ -105,8 +108,9 @@ class MirageVerifier(Verifier):
 
     A disposable Node process gives timeout/cancellation a hard stop. This
     is trusted host code, not an isolation boundary for arbitrary scripts.
-    The workspace has only the workspace runtime and RAM output; the grader
-    reads declared JSON state and file bytes through a read-only Mirage VFS.
+    LiveClawBench uses the workspace runtime; ComplexMCP also uses Monty.
+    Each grader reads declared JSON and file bytes through read-only VFS
+    mounts and writes rewards to a separate RAM output mount.
     """
 
     async def _background(self, work, *args, budget=None):
@@ -174,7 +178,9 @@ class MirageVerifier(Verifier):
                              "its reference tests available on the host")
         _, tests, script = self._resolve_tests()
         task = self.task.paths.task_dir.name
-        definition = json.loads(MANIFEST.read_text()).get(task)
+        manifest = json.loads(MANIFEST.read_text())
+        manifest.update(definitions())
+        definition = manifest.get(task)
         if definition is None:
             raise ValueError(f"No Mirage grader for {task}; use Harbor's "
                              "default verifier or MicrosandboxVerifier")
@@ -223,8 +229,10 @@ class MirageVerifier(Verifier):
         for name, value in result.get("artifacts", {}).items():
             if name != Path(name).name:
                 raise ValueError(f"Invalid grader artifact name: {name}")
-            self._log(self.trial_paths.verifier_dir / name,
-                      json.dumps(value, indent=2) + "\n")
+            self._log(
+                self.trial_paths.verifier_dir / name,
+                value if name == "judge.log" and isinstance(value, str) else
+                json.dumps(value, indent=2) + "\n")
         return VerifierResult(rewards=rewards)
 
     async def evaluate(self, *, refresh: bool) -> dict:
@@ -252,6 +260,7 @@ class MirageVerifier(Verifier):
             await self._background(lambda budget: budget.write_json(
                 request, {
                     "task": task,
+                    "runtime": definition.get("runtime", "typescript"),
                     **frozen,
                     "epoch": env.now().isoformat(),
                     "env": verifier_env,
@@ -283,6 +292,8 @@ class MirageVerifier(Verifier):
         Safety directory scans skip symlinks as the reference's os.walk does.
         """
         budget = _Staging(self.task.config.verifier.timeout_sec)
+        if definition.get("runtime") == "complexmcp-monty":
+            return await freeze_complexmcp(self, definition, stage, budget)
         frozen = await self._background(self._freeze_files,
                                         definition,
                                         stage,
@@ -377,16 +388,22 @@ class MirageVerifier(Verifier):
 
     async def _run(self, node: str, request: Path) -> dict:
         payload = await self._background(self._request_bytes, request)
+        runtime = json.loads(payload).get("runtime", "typescript")
+        runner = (RUNNER if runtime == "typescript" else HARBOR /
+                  "verify-complexmcp.ts")
+        if runtime not in ("typescript", "complexmcp-monty"):
+            raise ValueError(f"Unknown verifier runtime: {runtime}")
         process = await asyncio.create_subprocess_exec(
             node,
             "--no-warnings",
-            str(RUNNER),
+            str(runner),
             cwd=ROOT,
             # No model credentials, NODE_OPTIONS or task-controlled env.
             env={
                 "PATH": os.environ.get("PATH", ""),
                 "TZ": "UTC"
             },
+            start_new_session=True,
             stdin=asyncio.subprocess.PIPE,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
@@ -395,9 +412,13 @@ class MirageVerifier(Verifier):
             async with asyncio.timeout(self.task.config.verifier.timeout_sec):
                 stdout, stderr = await process.communicate(payload)
         finally:
-            if process.returncode is None:
-                process.kill()
-                await process.wait()
+            # Monty owns child workers. Kill the whole dedicated process
+            # group on timeout/cancellation, even if Node exited first.
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            await process.wait()
         if process.returncode:
             diagnostic = stderr.decode(errors="replace")
             raise RuntimeError(f"Mirage grader exited {process.returncode}: "

@@ -24,8 +24,9 @@ upstream's ``benchmark/data/data.parquet`` (ATH-MaaS/complex-mcp, pinned by
 - ``environment/tools.json``: the tools, by CLI.
 - ``tests/test.sh`` and ``tests/grade.py`` (``complexmcp_grade.py``):
   upstream's judge over what each app's login and logout answer and the
-  row's expected environment. It needs ``MicrosandboxVerifier``
-  (``complexmcp.yaml``).
+  row's expected environment. This preserved reference runs with
+  ``MicrosandboxVerifier`` (``complexmcp-msb.yaml``); ``complexmcp.yaml``
+  runs the hash-pinned Monty port in a separate Mirage workspace.
 - ``solution/solve.sh``: the reference trajectory, each tool call as the
   CLI that makes it (``ORACLES``), or the pre-Harbor port's oracle
   (``complexmcp/<slug>/tests/oracle.sh``) where it has one.

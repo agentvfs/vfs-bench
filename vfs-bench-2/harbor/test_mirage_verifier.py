@@ -335,6 +335,30 @@ class MirageVerifierTests(unittest.IsolatedAsyncioTestCase):
         await asyncio.sleep(0)
         self.assertEqual(errors, [])
 
+    async def test_timeout_stops_actual_child_processes(self):
+        child_pid_file = self.root / "child.pid"
+        runner = self.root / "child-runner.mjs"
+        runner.write_text("import { spawn } from 'node:child_process';\n"
+                          "import { writeFileSync } from 'node:fs';\n"
+                          "const child = spawn(process.execPath, "
+                          "['-e', 'setInterval(() => {}, 1000)']);\n"
+                          f"writeFileSync({json.dumps(str(child_pid_file))}, "
+                          "String(child.pid));\n"
+                          "setInterval(() => {}, 1000);\n")
+        self.task.config.verifier.timeout_sec = 2
+        with patch("vfsbench_harbor.mirage_verifier.RUNNER", runner):
+            with self.assertRaises(TimeoutError):
+                await self.verifier._run(NODE, self.root / "request.json")
+        pid = int(child_pid_file.read_text())
+        for _ in range(100):
+            try:
+                os.kill(pid, 0)
+            except ProcessLookupError:
+                break
+            await asyncio.sleep(0.02)
+        else:
+            self.fail("Verifier timeout left its child process alive")
+
     async def test_timeout_and_cancellation_reap_the_runner(self):
         for cancel in (False, True):
             with self.subTest(cancel=cancel):
@@ -344,14 +368,16 @@ class MirageVerifierTests(unittest.IsolatedAsyncioTestCase):
                     entered.set()
                     await asyncio.Event().wait()
 
-                process = Mock(returncode=None)
+                process = Mock(returncode=None, pid=12345)
                 process.communicate = communicate
                 process.wait = AsyncMock(return_value=-9)
                 self.task.config.verifier.timeout_sec = 30 if cancel else 0.02
                 with patch(
                         "vfsbench_harbor.mirage_verifier.asyncio."
                         "create_subprocess_exec",
-                        AsyncMock(return_value=process)):
+                        AsyncMock(return_value=process)
+                ), patch(
+                        "vfsbench_harbor.mirage_verifier.os.killpg") as killpg:
                     running = asyncio.create_task(
                         self.verifier._run(NODE, self.root / "request.json"))
                     await entered.wait()
@@ -360,7 +386,7 @@ class MirageVerifierTests(unittest.IsolatedAsyncioTestCase):
                     with self.assertRaises(asyncio.CancelledError
                                            if cancel else TimeoutError):
                         await running
-                process.kill.assert_called_once()
+                killpg.assert_called_once_with(12345, 9)
                 process.wait.assert_awaited_once()
 
 
