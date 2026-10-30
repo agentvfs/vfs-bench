@@ -1713,6 +1713,23 @@ The audit has **681 comparisons with zero mismatches**: 552 task mutations,
 The unit tests also compare 2,009 CSV strings and 1,819 date/time spellings
 with CPython, including invalid forms and UTC overflow boundaries.
 
+At `-n 46`, with `MirageVerifier` enabled and retries disabled, measured
+results on commit `43ff943` were:
+
+| Workload | Result | CLI wall time | Harbor job time |
+|---|---|---:|---:|
+| All 46 committed tasks, `-a oracle` | 11 passed; 35 missing solution scripts, so no grading for those 35 | 28.50 s | 26.12 s |
+| All 46 tasks with temporary gold-answer oracle scripts | 46 passed; zero errors or retries | 28.68 s | 26.51 s |
+
+The second run is a verifier/infrastructure smoke test: temporary task
+copies used `cp /solution/gold-answer.csv /output/prediction.csv`, with
+each answer checked against the pinned gold hash. It does not establish
+46 analytical oracle solutions. Committed tasks were unchanged.
+All 46 verifier phases overlapped; the interval from the first verifier
+start to the last verifier finish was 7.12 s. Environment setup spanned
+19.16 s. These runs used the default daemon per trial, with separate
+Mirage/Monty grading workspaces; they did not use a shared daemon.
+
 ### Skipped
 
 The 14 public tasks whose question reads its criteria off
