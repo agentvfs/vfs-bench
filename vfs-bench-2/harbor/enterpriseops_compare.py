@@ -42,7 +42,6 @@ ROOT = HARBOR.parent
 STATE = ROOT / "state" / "enterpriseops"
 DBS = STATE / "dbs" / "Domain Wise DBs and Task-DB Mappings"
 TOOLS = ROOT / "enterpriseops" / "tools"
-STAMP = re.compile(r"^(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2}:\d{2})")
 
 
 def _fakes():
@@ -213,35 +212,32 @@ def stamps(value, key: str | None = None) -> set[tuple[str, str]]:
 
 def masker(start: datetime, end: datetime, supplied: set[tuple[str, str]]):
     """A value as compared: a timestamp in [start, end] is `<now>`, unless
-    a call supplied it in a field of this name (``supplied``), when both
-    sides keep it. A field another clock wrote is masked whatever the calls
-    supplied elsewhere."""
+    a call supplied it. A field whose value is a timestamp keeps it only if
+    a call supplied it in a field of that name (``supplied``), so a field
+    another clock wrote is masked whatever the calls supplied elsewhere. A
+    timestamp inside text (an error that echoes the input) keeps any value
+    a call supplied."""
+    echoed = {stamp for _, stamp in supplied}
 
     def mask(value, key: str | None = None):
-        if isinstance(value, str):
-            m = STAMP.match(value)
-            if m and (key, f"{m[1]} {m[2]}") in supplied:
-                pass
-            elif m:
-                try:
-                    at = datetime.fromisoformat(f"{m[1]} {m[2]}").replace(
-                        tzinfo=timezone.utc)
-                except ValueError:
-                    return value
-                if start - timedelta(seconds=2) <= at <= end + timedelta(
-                        seconds=2):
-                    return "<now>"
-            return STAMP_IN_TEXT.sub(
-                lambda t: "<now>"
-                if within(t.group(0), start, end) and (key, t.group(
-                    0)[:19].replace("T", " ")) not in supplied else t.group(0),
-                value)
-        return value
+        if not isinstance(value, str):
+            return value
+        if key is not None and STAMP_VALUE.fullmatch(value):
+            stamp = value[:19].replace("T", " ")
+            if (key, stamp) in supplied or not within(value, start, end):
+                return value
+            return "<now>"
+        return STAMP_IN_TEXT.sub(
+            lambda t: "<now>"
+            if within(t.group(0), start, end) and t.group(0)[:19].replace(
+                "T", " ") not in echoed else t.group(0), value)
 
     return mask
 
 
 STAMP_IN_TEXT = re.compile(r"\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(\.\d+)?")
+# A value that is a timestamp and nothing else.
+STAMP_VALUE = re.compile(STAMP_IN_TEXT.pattern + r"(Z|[+-]\d{2}:?\d{2})?")
 
 
 def within(text: str, start: datetime, end: datetime) -> bool:
