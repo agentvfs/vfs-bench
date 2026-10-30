@@ -27,7 +27,18 @@ databases (`gym_dbs.zip`) into `state/enterpriseops/dbs`, and downloads the
 dataset's task files into `state/enterpriseops/hf/<mode>/<domain>.parquet`.
 
 Then `harbor/enterpriseops.py` writes the tasks, and
-`harbor/enterpriseops.yaml` runs them (harbor/README.md).
+`harbor/enterpriseops.yaml` runs them (harbor/README.md). The reference
+solutions, graded natively, in one line:
+
+```sh
+uv run --project harbor harbor run -c harbor/enterpriseops.yaml -a oracle -n 64 -o state/harbor/jobs-enterpriseops
+```
+
+All 103 trials take about 70 s at 64 at a time. Every trial gets its own
+run of the shared fake, so the results are the same at any concurrency:
+16, 32 and 64 gave the same reward and verifier count for every task.
+`harbor/enterpriseops-msb.yaml` grades with the reference grader in
+microVMs instead, which is slower (`-n 8`).
 
 ## How it maps
 

@@ -4,8 +4,10 @@
 # compares them in a verifier-only Mirage workspace. No SQLite in the
 # verifier, no Docker, no microVM. enterpriseops-msb.yaml runs the reference
 # grader instead. From
-# vfs-bench-2/, after `uv run --project enterpriseops python -I enterpriseops/setup.py`:
-#   uv run --project harbor harbor run -c harbor/enterpriseops.yaml -a nop -n 8 -o state/harbor/jobs-enterpriseops
+# vfs-bench-2/, after `uv run --project enterpriseops python -I enterpriseops/setup.py`,
+# the reference solutions graded (94 of 103 pass; ../enterpriseops/README.md),
+# 64 trials at a time on one shared fake:
+#   uv run --project harbor harbor run -c harbor/enterpriseops.yaml -a oracle -n 64 -o state/harbor/jobs-enterpriseops
 environment:
   import_path: vfsbench_harbor:MirageEnvironment
 verifier:
