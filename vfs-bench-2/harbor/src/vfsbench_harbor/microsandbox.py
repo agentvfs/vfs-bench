@@ -48,7 +48,7 @@ import shutil
 import tarfile
 import tempfile
 import time
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Awaitable, Callable
 from pathlib import Path, PurePosixPath
 from typing import IO
 from urllib.parse import urlsplit
@@ -544,6 +544,20 @@ class Sandbox:
             return {}
 
 
+async def retried(attempt: Callable[[], Awaitable[None]],
+                  log: list[str]) -> int:
+    """``attempt`` run again while msb hangs it, up to ``ATTEMPTS`` times,
+    each hang in ``log``; the attempt that ran."""
+    for n in range(1, ATTEMPTS + 1):
+        try:
+            await attempt()
+            return n
+        except Hung as e:
+            log.append(f"attempt {n}: {e}")
+    raise RuntimeError(f"msb hung on all {ATTEMPTS} attempts "
+                       "(mirage/verifier.log has each)")
+
+
 def extract(data: IO[bytes], target: Path, *, include: list[str] | None,
             exclude: list[str] | None, protect: tuple[str, ...]) -> list[str]:
     """A tar's regular files into ``target``: no links, devices or names
@@ -749,17 +763,9 @@ class MicrosandboxVerifier(Verifier):
         requests: list[str] = []
         timings: dict[str, float] = {}
         try:
-            for attempt in range(1, ATTEMPTS + 1):
-                try:
-                    await self._attempt(command, str(paths.verifier_dir), log,
-                                        requests, timings)
-                    break
-                except Hung as e:
-                    log.append(f"attempt {attempt}: {e}")
-            else:
-                raise RuntimeError(f"msb hung on all {ATTEMPTS} attempts "
-                                   "(mirage/verifier.log has each)")
-            timings["attempts"] = attempt
+            timings["attempts"] = await retried(
+                lambda: self._attempt(command, str(paths.verifier_dir), log,
+                                      requests, timings), log)
         finally:
             self._write_log(log, requests, timings)
 

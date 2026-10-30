@@ -62,6 +62,8 @@ uv run --project harbor python -I harbor/isolation.py [--out <dir>] [--msb]
 # Rewrite the committed tasks from upstream, or check them against it.
 uv run --project harbor python -I harbor/export.py [--check]
 uv run --project harbor python -I harbor/test_export.py
+# MicrosandboxVerifier's reading of guest.py's beats, against a stand-in msb.
+uv run --project harbor python -I harbor/test_microsandbox.py
 
 # The finance fake against upstream's finance mock (Bun), the social
 # fake against upstream's social mock, and each fake that runs an upstream
