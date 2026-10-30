@@ -40,6 +40,12 @@ export interface Plan {
   fakes: FakeSpec[]
   /** Each port the task reaches a fake at on localhost, and the fake's name. */
   routes: Record<number, string>
+  /**
+   * Each port a verifier outside the workspace (microsandbox.py) reaches a
+   * fake at besides `routes`, and the fake's name: one the agent must not
+   * reach, such as a fake's SQL runner.
+   */
+  verifierRoutes?: Record<number, string>
   /** Each file a fake keeps its state in, by the workspace path the task reads it at. */
   state: Record<string, string>
   /** The environment every command sees, as the container's. */
@@ -196,6 +202,12 @@ async function prepare(plan: Plan, run: Run, external: Record<string, mirage.Ext
         state,
         routes: Object.fromEntries(
           Object.entries(plan.routes).map(([port, name]) => [port, run.fakes.get(name)?.url ?? external[name]!.url]),
+        ),
+        verifierRoutes: Object.fromEntries(
+          Object.entries(plan.verifierRoutes ?? {}).map(([port, name]) => [
+            port,
+            run.fakes.get(name)?.url ?? external[name]!.url,
+          ]),
         ),
         // The shared fakes' runs, which this trial's mounts and CLIs reach
         // directly; nothing else on those ports is reachable.

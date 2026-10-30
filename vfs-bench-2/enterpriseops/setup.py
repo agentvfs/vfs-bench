@@ -25,7 +25,9 @@ COMMIT = "271f2c357f763376997dfd16807fcde2474ae41b"
 DATASET = "ServiceNow-AI/EnterpriseOps-Gym"
 REVISION = "c8e538eae8a6205294f0a86675fefdc1fac408f6"
 MODES = ["oracle", "plus_5_tools", "plus_10_tools", "plus_15_tools"]
-DOMAINS = ["calendar", "csm", "drive", "email", "hr", "hybrid", "itsm", "teams"]
+DOMAINS = [
+    "calendar", "csm", "drive", "email", "hr", "hybrid", "itsm", "teams"
+]
 
 
 def main() -> int:
@@ -33,8 +35,8 @@ def main() -> int:
     if not (src / ".git").is_dir():
         STATE.mkdir(parents=True, exist_ok=True)
         subprocess.run(["git", "clone", "--quiet", REPO, str(src)], check=True)
-    subprocess.run(["git", "-C", str(src), "checkout", "--quiet", COMMIT],
-                   check=True)
+    subprocess.run(
+        ["git", "-C", str(src), "checkout", "--quiet", COMMIT], check=True)
     dbs = STATE / "dbs"
     if not dbs.is_dir():
         with zipfile.ZipFile(src / "gym_dbs.zip") as archive:

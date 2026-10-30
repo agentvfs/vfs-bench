@@ -15,10 +15,13 @@ each of its servers has a fake (``mocks/enterpriseops_<domain>/``):
   user prompt, verbatim, as upstream's agent gets them, then the selected
   tools as the CLIs that carry them.
 - ``task.toml``: the row.
-- ``environment/mirage.yaml``: each of the task's servers as its kit fake at
-  upstream's port, seeded from the row's seed (``gym_dbs.zip``), its tools
-  a CLI (``harbor/tools.ts``) that calls as the row's user
-  (``x-user-email``). The trial's clock starts at the task's id's time.
+- ``environment/mirage.yaml``: each of the task's servers as its kit fake,
+  seeded from the row's seed (``gym_dbs.zip``), its tools a CLI
+  (``harbor/tools.ts``) that calls as the row's user (``x-user-email``):
+  the agent reaches the fake through that CLI alone, so neither another
+  tool, another user nor the SQL runner. Upstream's port reaches the fake
+  from the reference grader's VM only (``verifierPorts``). The trial's
+  clock starts at the task's id's time.
 - ``environment/kit/<service>.json``: each fake's fixture, the seed's path.
 - ``environment/tools.json``: the tools, by CLI.
 - ``tests/test.sh``, ``tests/grade.py`` (``enterpriseops_grade.py``),
@@ -61,7 +64,9 @@ MANIFEST = HARBOR / "graders" / "enterpriseops" / "manifest.json"
 REFERENCE = ("test.sh", "grade.py", "verifiers.json", "ports.json")
 DATASET = "ServiceNow-AI/EnterpriseOps-Gym@c8e538e"
 MODE = "oracle"
-DOMAINS = ["calendar", "csm", "drive", "email", "hr", "hybrid", "itsm", "teams"]
+DOMAINS = [
+    "calendar", "csm", "drive", "email", "hr", "hybrid", "itsm", "teams"
+]
 DISPATCHES = "/var/lib/mock-data/enterpriseops/dispatches.jsonl"
 
 
@@ -103,7 +108,9 @@ def tool_specs(row: dict) -> list[tuple[str, list[dict]]]:
     out = []
     for cfg in row["gym_servers_config"]:
         server = cfg["mcp_server_name"]
-        tools = [t for t in servers()[server]["tools"] if t["name"] in selected]
+        tools = [
+            t for t in servers()[server]["tools"] if t["name"] in selected
+        ]
         out.append((server, tools))
     return out
 
@@ -112,8 +119,11 @@ def parameters(tool: dict) -> dict:
     """A tool's input schema as the CLI takes it: its properties and the
     required ones, less the database's id, which the server adds."""
     schema = tool.get("inputSchema") or {}
-    props = {k: v for k, v in (schema.get("properties") or {}).items()
-             if k != "database_id"}
+    props = {
+        k: v
+        for k, v in (schema.get("properties") or {}).items()
+        if k != "database_id"
+    }
     out = {"type": "object", "properties": props}
     required = [k for k in schema.get("required") or [] if k in props]
     if required:
@@ -123,15 +133,18 @@ def parameters(tool: dict) -> dict:
 
 def tools_json(row: dict) -> list[dict]:
     return [{
-        "name": server,
-        "description": f"{server}'s tools.",
+        "name":
+        server,
+        "description":
+        f"{server}'s tools.",
         "tools": [{
             "name": t["name"],
             "call": t["name"],
             "description": t.get("description") or "",
             "parameters": parameters(t),
             "endpoint": {
-                "url": f"http://localhost:{servers()[server]['port']}/{t['name']}",
+                "url":
+                f"http://localhost:{servers()[server]['port']}/{t['name']}",
                 "method": "POST"
             },
         } for t in tools],
@@ -141,10 +154,13 @@ def tools_json(row: dict) -> list[dict]:
 def flag(param: str, schema: dict, required: bool) -> str:
     kind = schema.get("type")
     if kind is None and "anyOf" in schema:
-        kinds = [s.get("type") for s in schema["anyOf"] if s.get("type") != "null"]
+        kinds = [
+            s.get("type") for s in schema["anyOf"] if s.get("type") != "null"
+        ]
         kind = kinds[0] if len(kinds) == 1 else "object"
-    if kind == "array" and (schema.get("items") or {}).get("type") not in (
-            "string", "integer", "number", None):
+    if kind == "array" and (schema.get("items")
+                            or {}).get("type") not in ("string", "integer",
+                                                       "number", None):
         kind = "object"
     value = {"array": "<value> ...", "object": "<JSON>"}.get(kind, f"<{kind}>")
     text = f"--{param.replace('_', '-')} {value}"
@@ -164,8 +180,9 @@ def instruction(row: dict) -> str:
         for t in entry["tools"]:
             params = t["parameters"].get("properties") or {}
             required = set(t["parameters"].get("required") or [])
-            usage = " ".join([entry["name"], t["name"].replace("_", "-")] +
-                             [flag(p, s, p in required) for p, s in params.items()])
+            usage = " ".join(
+                [entry["name"], t["name"].replace("_", "-")] +
+                [flag(p, s, p in required) for p, s in params.items()])
             description = " ".join(t["description"].split())
             lines.append(f"- `{usage}`: {description}".rstrip(": "))
         lines.append("")
@@ -173,8 +190,10 @@ def instruction(row: dict) -> str:
 
 
 def epoch(row: dict) -> str:
-    """The trial's clock: the time in the task's id (``task_<date>_<time>``)."""
-    m = re.match(r"task_(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})", row["task_id"])
+    """The trial's clock: the time in the task's id
+    (``task_<date>_<time>``)."""
+    m = re.match(r"task_(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})",
+                 row["task_id"])
     if not m:
         raise ValueError(f"no time in {row['task_id']}")
     y, mo, d, h, mi, s = m.groups()
@@ -182,8 +201,8 @@ def epoch(row: dict) -> str:
 
 
 def task_toml(row: dict) -> str:
-    servers_list = ", ".join(json.dumps(c["mcp_server_name"])
-                             for c in row["gym_servers_config"])
+    servers_list = ", ".join(
+        json.dumps(c["mcp_server_name"]) for c in row["gym_servers_config"])
     return f"""version = "1.0"
 
 [metadata]
@@ -210,32 +229,41 @@ allow_internet = true
 
 
 def fixture(cfg: dict) -> bytes:
-    return (json.dumps({"seed": [{"id": 1, "db": cfg["seed_database_file"]}]},
+    return (json.dumps({"seed": [{
+        "id": 1,
+        "db": cfg["seed_database_file"]
+    }]},
                        indent=1) + "\n").encode()
 
 
 def mirage_yaml(row: dict) -> str:
     lines = [
-        f"# {row['task_id']}, EnterpriseOps-Gym's {MODE}/{row['domain']} task, "
+        f"# {row['task_id']}, EnterpriseOps-Gym's "
+        f"{MODE}/{row['domain']} task, "
         "on vfsbench_harbor's",
         "# mirage environment (harbor/enterpriseops.py writes it).",
         "#",
-        "# Each of the task's servers is its kit fake at upstream's port, "
-        "seeded from",
-        "# the task's seed; its selected tools are a CLI (harbor/tools.ts) "
-        "that calls",
-        "# as the task's user. The trial's clock starts at the task id's time.",
+        "# Each of the task's servers is its kit fake, seeded from the task's "
+        "seed; its",
+        "# selected tools are a CLI (harbor/tools.ts) that calls as the "
+        "task's user, the",
+        "# agent's only way to it. Upstream's port is the reference grader's "
+        "alone, for",
+        "# the SQL runner. The trial's clock starts at the task id's time.",
         "fakes:",
     ]
     for cfg in row["gym_servers_config"]:
         server = cfg["mcp_server_name"]
         lines += [
-            f"  {service(server)}:", f"    fixture: kit/{service(server)}.json",
+            f"  {service(server)}:",
+            f"    fixture: kit/{service(server)}.json",
             f"    epoch: '{epoch(row)}'",
-            f"    ports: [{servers()[server]['port']}]"
+            f"    verifierPorts: [{servers()[server]['port']}]"
         ]
-    lines += ["tools:", "  file: tools.json", f"  dispatches: {DISPATCHES}",
-              "workspace:", "  clis:"]
+    lines += [
+        "tools:", "  file: tools.json", f"  dispatches: {DISPATCHES}",
+        "workspace:", "  clis:"
+    ]
     for cfg in row["gym_servers_config"]:
         server = cfg["mcp_server_name"]
         url = "${" + service(server).upper() + "_URL}"
@@ -271,22 +299,32 @@ python3 /tests/grade.py
 
 def expected(row: dict) -> dict[str, bytes]:
     """Every file this writes for a task, by path in its directory."""
-    ports = {c["mcp_server_name"]: servers()[c["mcp_server_name"]]["port"]
-             for c in row["gym_servers_config"]}
+    ports = {
+        c["mcp_server_name"]: servers()[c["mcp_server_name"]]["port"]
+        for c in row["gym_servers_config"]
+    }
     out = {
-        "instruction.md": instruction(row).encode(),
-        "task.toml": task_toml(row).encode(),
-        "environment/mirage.yaml": mirage_yaml(row).encode(),
-        "environment/tools.json": (json.dumps(tools_json(row), ensure_ascii=False,
-                                              indent=1) + "\n").encode(),
-        "tests/test.sh": TEST_SH.encode(),
-        "tests/grade.py": GRADE.read_bytes(),
-        "tests/verifiers.json": (json.dumps(row["verifiers"], ensure_ascii=False,
-                                            indent=1) + "\n").encode(),
+        "instruction.md":
+        instruction(row).encode(),
+        "task.toml":
+        task_toml(row).encode(),
+        "environment/mirage.yaml":
+        mirage_yaml(row).encode(),
+        "environment/tools.json":
+        (json.dumps(tools_json(row), ensure_ascii=False, indent=1) +
+         "\n").encode(),
+        "tests/test.sh":
+        TEST_SH.encode(),
+        "tests/grade.py":
+        GRADE.read_bytes(),
+        "tests/verifiers.json":
+        (json.dumps(row["verifiers"], ensure_ascii=False, indent=1) +
+         "\n").encode(),
         "tests/ports.json": (json.dumps(ports, indent=1) + "\n").encode(),
     }
     for cfg in row["gym_servers_config"]:
-        out[f"environment/kit/{service(cfg['mcp_server_name'])}.json"] = fixture(cfg)
+        kit = f"environment/kit/{service(cfg['mcp_server_name'])}.json"
+        out[kit] = fixture(cfg)
     solve = SOLUTIONS / f"{row['task_id']}.json"
     if solve.is_file():
         out["solution/solve.sh"] = solution(row, json.loads(solve.read_text()))
@@ -297,14 +335,17 @@ def solution(row: dict, calls: list[dict]) -> bytes:
     """A solution's calls (``[{"tool": ..., "args": {...}}]``, ``server``
     where the task has two) as a script, one CLI line each."""
     default = row["gym_servers_config"][0]["mcp_server_name"]
-    lines = ["#!/usr/bin/env bash",
-             f"# A solution of {row['task_id']}, written for this port "
-             "(enterpriseops/solutions/);",
-             "# it passes upstream's verifiers on upstream's image and on the "
-             "fake."]
+    lines = [
+        "#!/usr/bin/env bash",
+        f"# A solution of {row['task_id']}, written for this port "
+        "(enterpriseops/solutions/);",
+        "# it passes upstream's verifiers on upstream's image and on the "
+        "fake."
+    ]
     for call in calls:
-        lines.append(command(call.get("server", default), call["tool"],
-                             call.get("args") or {}))
+        lines.append(
+            command(call.get("server", default), call["tool"],
+                    call.get("args") or {}))
     return ("\n".join(lines) + "\n").encode()
 
 
@@ -324,7 +365,10 @@ def command(server: str, tool: str, args: dict) -> str:
             for v in value:
                 parts += [flag_name, shlex.quote(str(v))]
         elif isinstance(value, (dict, list)):
-            parts += [flag_name, shlex.quote(json.dumps(value, ensure_ascii=False))]
+            parts += [
+                flag_name,
+                shlex.quote(json.dumps(value, ensure_ascii=False))
+            ]
         else:
             text = json.dumps(value) if isinstance(value, bool) else str(value)
             parts += [flag_name, shlex.quote(text)]
@@ -340,7 +384,8 @@ def definition(row: dict, files: dict[str, bytes]) -> dict:
     for cfg in row["gym_servers_config"]:
         server = cfg["mcp_server_name"]
         state[server] = {
-            "service": service(server),
+            "service":
+            service(server),
             "queries": [
                 v["validation_config"]["query"] for v in row["verifiers"]
                 if v.get("verifier_type") == "database_state"
@@ -360,8 +405,9 @@ def definition(row: dict, files: dict[str, bytes]) -> dict:
 
 def manifest(chosen: list[dict]) -> bytes:
     tasks = {r["task_id"]: definition(r, expected(r)) for r in chosen}
-    return (json.dumps({"tasks": dict(sorted(tasks.items()))}, indent=1,
-                       ensure_ascii=False) + "\n").encode()
+    return (json.dumps(
+        {"tasks": dict(sorted(tasks.items()))}, indent=1, ensure_ascii=False) +
+            "\n").encode()
 
 
 def main() -> int:
@@ -370,10 +416,11 @@ def main() -> int:
     parser.add_argument("--domain", action="append", choices=DOMAINS)
     parser.add_argument("tasks", nargs="*")
     args = parser.parse_args()
-    chosen = [r for d in (args.domain or ["csm"]) for r in rows(d)
-              if all(faked(c["mcp_server_name"]) for c in r["gym_servers_config"])]
-    if args.tasks:
-        chosen = [r for r in chosen if r["task_id"] in args.tasks]
+    every = [
+        r for d in (args.domain or ["csm"]) for r in rows(d) if all(
+            faked(c["mcp_server_name"]) for c in r["gym_servers_config"])
+    ]
+    chosen = [r for r in every if not args.tasks or r["task_id"] in args.tasks]
     failed = 0
     for row in chosen:
         target = OUT / row["task_id"]
@@ -400,12 +447,13 @@ def main() -> int:
         print(f"{status} {row['task_id']}")
         for problem in problems:
             print(f"    {problem}")
-    data = manifest(chosen)
+    # The manifest is every task's, however many this writes or checks.
+    data = manifest(every)
     if args.check:
         if not MANIFEST.is_file() or MANIFEST.read_bytes() != data:
             print(f"FAIL {MANIFEST.relative_to(ROOT)} differs from the tasks'")
             failed += 1
-    elif not args.tasks:
+    else:
         MANIFEST.parent.mkdir(parents=True, exist_ok=True)
         MANIFEST.write_bytes(data)
     print(f"{len(chosen)} tasks")

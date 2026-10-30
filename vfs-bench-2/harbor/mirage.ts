@@ -8,6 +8,8 @@
  *         fixture: fixtures/chat.json   # the run's seed, from environment/
  *         epoch: '2026-04-03T09:00:00Z' # the run's frozen clock
  *         ports: [5003]                 # localhost:<port> reaches the run
+ *         verifierPorts: [8001]         # the same, for a verifier outside
+ *                                       # the workspace alone (microsandbox.py)
  *         state: /opt/mock/data/chat/chat.sqlite  # where its SQLite is read
  *         faults: [{method: POST, route: /api/stickers, status: 500}]
  *                                       # kit fault plans armed on the run
@@ -65,6 +67,7 @@ interface FakeBlock {
   fixture: string
   epoch?: string
   ports?: number[]
+  verifierPorts?: number[]
   state?: string
   /** Armed by the environment, not here (fakes.py). */
   faults?: unknown[]
@@ -141,13 +144,18 @@ export function plan(taskDir: string, run: Run, external: Record<string, Externa
   if (unknown.length > 0) throw new Error(`${path}: unknown keys ${unknown.join(', ')}`)
   const environmentDir = join(taskDir, 'environment')
   const routes: Record<number, string> = {}
+  const verifierRoutes: Record<number, string> = {}
   const state: Record<string, string> = {}
   for (const [service, fake] of Object.entries(spec.fakes)) {
     const run = external[service]
     if (run === undefined) throw new Error(`${path}: the environment started no '${service}' fake`)
-    for (const port of fake.ports ?? []) {
-      if (routes[port] !== undefined) throw new Error(`${path}: port ${port} is both ${routes[port]} and ${service}`)
-      routes[port] = service
+    for (const [port, only] of [
+      ...(fake.ports ?? []).map((p) => [p, false] as const),
+      ...(fake.verifierPorts ?? []).map((p) => [p, true] as const),
+    ]) {
+      const taken = routes[port] ?? verifierRoutes[port]
+      if (taken !== undefined) throw new Error(`${path}: port ${port} is both ${taken} and ${service}`)
+      ;(only ? verifierRoutes : routes)[port] = service
     }
     if (fake.state !== undefined) state[fake.state] = run.db
   }
@@ -164,6 +172,7 @@ export function plan(taskDir: string, run: Run, external: Record<string, Externa
     name: spec.env?.TASK_NAME ?? basename(taskDir),
     fakes: [],
     routes,
+    verifierRoutes,
     state,
     env: spec.env ?? {},
     copies,

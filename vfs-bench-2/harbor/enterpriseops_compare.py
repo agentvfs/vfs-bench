@@ -64,21 +64,35 @@ def server_of(domain: str) -> dict:
 
 
 def container(spec: dict) -> tuple[str, str]:
-    """Upstream's server for the spec, running: its container and URL."""
+    """Upstream's server for the spec, running: its container and URL. A
+    running container is reused only if it runs the pinned image."""
     name = f"eog-{spec['domain']}"
+    image = ["docker", "image", "inspect", "-f", "{{.Id}}", spec["image"]]
+    if subprocess.run(image, capture_output=True).returncode != 0:
+        subprocess.run(
+            ["docker", "pull", "--platform", "linux/amd64", spec["image"]],
+            check=True,
+            capture_output=True)
+    pinned = subprocess.run(image, capture_output=True, text=True,
+                            check=True).stdout.strip()
     running = subprocess.run(
-        ["docker", "inspect", "-f", "{{.State.Running}}", name],
-        capture_output=True, text=True).stdout.strip()
-    if running != "true":
+        ["docker", "inspect", "-f", "{{.State.Running}} {{.Image}}", name],
+        capture_output=True,
+        text=True).stdout.strip()
+    if running != f"true {pinned}":
         subprocess.run(["docker", "rm", "-f", name], capture_output=True)
         subprocess.run([
-            "docker", "run", "-d", "--name", name, "--platform",
-            "linux/amd64", "-p", f"127.0.0.1::{spec['container_port']}",
-            spec["image"]
-        ], check=True, capture_output=True)
+            "docker", "run", "-d", "--name", name, "--platform", "linux/amd64",
+            "-p", f"127.0.0.1::{spec['container_port']}", spec["image"]
+        ],
+                       check=True,
+                       capture_output=True)
     port = subprocess.run(
-        ["docker", "port", name, str(spec["container_port"])],
-        capture_output=True, text=True, check=True).stdout.split(":")[-1]
+        ["docker", "port", name,
+         str(spec["container_port"])],
+        capture_output=True,
+        text=True,
+        check=True).stdout.split(":")[-1]
     url = f"http://127.0.0.1:{port.strip()}"
     for _ in range(120):
         try:
@@ -124,11 +138,15 @@ class Upstream:
 
     async def call(self, tool: str, args: dict) -> tuple[str, bool]:
         if self.session is None:
-            await self.rpc("initialize", {
-                "protocolVersion": "2025-03-26",
-                "capabilities": {},
-                "clientInfo": {"name": "compare", "version": "1"}
-            })
+            await self.rpc(
+                "initialize", {
+                    "protocolVersion": "2025-03-26",
+                    "capabilities": {},
+                    "clientInfo": {
+                        "name": "compare",
+                        "version": "1"
+                    }
+                })
         out = await self.rpc("tools/call", {"name": tool, "arguments": args})
         if "error" in out:
             return json.dumps(out["error"]), True
@@ -196,8 +214,8 @@ STAMP_IN_TEXT = re.compile(r"\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(\.\d+)?")
 
 def within(text: str, start: datetime, end: datetime) -> bool:
     try:
-        at = datetime.fromisoformat(text[:19].replace("T", " ")).replace(
-            tzinfo=timezone.utc)
+        at = datetime.fromisoformat(text[:19].replace(
+            "T", " ")).replace(tzinfo=timezone.utc)
     except ValueError:
         return False
     return start - timedelta(seconds=2) <= at <= end + timedelta(seconds=2)
@@ -305,12 +323,16 @@ async def main() -> int:
                           f"{b[0][:1500]}")
             up_mask = masker(started, datetime.now(timezone.utc))
             path = Path(tmp) / "upstream.sqlite"
-            found = subprocess.run(
-                ["docker", "exec", name, "sh", "-c",
-                 f"find / -xdev -name '*{db}*' 2>/dev/null | head -1"],
-                capture_output=True, text=True).stdout.strip()
-            subprocess.run(["docker", "cp", "-q", f"{name}:{found}",
-                            str(path)], check=True)
+            found = subprocess.run([
+                "docker", "exec", name, "sh", "-c",
+                f"find / -xdev -name '*{db}*' 2>/dev/null | head -1"
+            ],
+                                   capture_output=True,
+                                   text=True).stdout.strip()
+            subprocess.run(
+                ["docker", "cp", "-q", f"{name}:{found}",
+                 str(path)],
+                check=True)
             ta, tb = tables(path), tables(run.db)
             for table in sorted(set(ta) | set(tb)):
                 seed = seeded.get(table, [])
@@ -318,12 +340,14 @@ async def main() -> int:
                 def kept(i, k, v):
                     return i < len(seed) and seed[i].get(k) == v
 
-                ra = [{k: v if kept(i, k, v) else up_mask(v)
-                       for k, v in r.items()}
-                      for i, r in enumerate(ta.get(table, []))]
-                rb = [{k: v if kept(i, k, v) else fake_mask(v)
-                       for k, v in r.items()}
-                      for i, r in enumerate(tb.get(table, []))]
+                ra = [{
+                    k: v if kept(i, k, v) else up_mask(v)
+                    for k, v in r.items()
+                } for i, r in enumerate(ta.get(table, []))]
+                rb = [{
+                    k: v if kept(i, k, v) else fake_mask(v)
+                    for k, v in r.items()
+                } for i, r in enumerate(tb.get(table, []))]
                 if ra == rb:
                     continue
                 problems.append(f"table {table}")
@@ -344,17 +368,22 @@ async def main() -> int:
                     for v in verifiers:
                         config = v["validation_config"]
                         reply = httpx.post(f"{base}/api/sql-runner",
-                                           json={"query": config["query"],
-                                                 "database_id": db},
+                                           json={
+                                               "query": config["query"],
+                                               "database_id": db
+                                           },
                                            headers={"x-database-id": db},
                                            timeout=60)
-                        result = ({"success": True, "result": reply.json()}
-                                  if reply.status_code == 200 else
-                                  {"success": False})
+                        result = ({
+                            "success": True,
+                            "result": reply.json()
+                        } if reply.status_code == 200 else {
+                            "success": False
+                        })
                         actual = grade.extract(result)
-                        ok = grade.compare(actual, config.get("expected_value"),
-                                           config.get("comparison_type",
-                                                      "equals"))
+                        ok = grade.compare(
+                            actual, config.get("expected_value"),
+                            config.get("comparison_type", "equals"))
                         passed += ok
                         if not ok:
                             print(f"  {side}: FAIL {v.get('name')}: "

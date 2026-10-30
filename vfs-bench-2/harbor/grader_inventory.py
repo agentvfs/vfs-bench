@@ -31,10 +31,12 @@ def inventory(root: Path = ROOT) -> dict:
             if identity in seen:
                 raise ValueError(f"Task appears more than once: {task}")
             seen.add(identity)
-            if ((dataset == "liveclawbench" and task.name in manifest)
-                    or (dataset == "complexmcp" and task.name in complexmcp)
-                    or (dataset == "enterpriseops"
-                        and task.name in enterpriseops())):
+            ported = (
+                (dataset == "liveclawbench" and task.name in manifest)
+                or (dataset == "complexmcp" and task.name in complexmcp)
+                or (dataset == "enterpriseops"
+                    and task.name in enterpriseops()))
+            if ported:
                 native.append(task.name)
         datasets[dataset] = {
             "tasks": len(tasks),

@@ -153,6 +153,7 @@ class MirageEnvironment(BaseEnvironment):
         self._verifier: dict = {}
         self._state: list[tuple[Path, Path]] = []
         self._routes: dict[str, str] = {}
+        self._verifier_routes: dict[str, str] = {}
         self._env: dict[str, str] = {}
         self._runs: list[fakes.Run] = []
         self._url = ""
@@ -398,6 +399,8 @@ class MirageEnvironment(BaseEnvironment):
         self._env = dict(plan["config"].get("env") or {})
         routes = {} if self._network_disabled else plan["routes"]
         self._routes = dict(routes)
+        # Never the daemon's: the agent does not reach these.
+        self._verifier_routes = dict(plan.get("verifierRoutes") or {})
         # A mount or CLI reaches its service at the trial's run directly,
         # so these stay reachable with the network off.
         allow = plan.get("allow", [])
@@ -618,6 +621,19 @@ class MirageEnvironment(BaseEnvironment):
         behind it: its own mock, or its run of a shared fake. Empty when the
         task turns the network off."""
         return {int(port): url for port, url in self._routes.items()}
+
+    @property
+    def verifier_routes(self) -> dict[int, str]:
+        """The routes a verifier outside the workspace reaches: ``routes``,
+        and the ports a task gives its verifier alone (mirage.yaml's
+        ``verifierPorts``), which the agent never reaches."""
+        return {
+            **self.routes,
+            **{
+                int(port): url
+                for port, url in self._verifier_routes.items()
+            }
+        }
 
     @property
     def container_env(self) -> dict[str, str]:

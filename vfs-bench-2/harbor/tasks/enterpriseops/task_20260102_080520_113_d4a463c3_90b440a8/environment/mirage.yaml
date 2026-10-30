@@ -1,14 +1,15 @@
 # task_20260102_080520_113_d4a463c3_90b440a8, EnterpriseOps-Gym's oracle/csm task, on vfsbench_harbor's
 # mirage environment (harbor/enterpriseops.py writes it).
 #
-# Each of the task's servers is its kit fake at upstream's port, seeded from
-# the task's seed; its selected tools are a CLI (harbor/tools.ts) that calls
-# as the task's user. The trial's clock starts at the task id's time.
+# Each of the task's servers is its kit fake, seeded from the task's seed; its
+# selected tools are a CLI (harbor/tools.ts) that calls as the task's user, the
+# agent's only way to it. Upstream's port is the reference grader's alone, for
+# the SQL runner. The trial's clock starts at the task id's time.
 fakes:
   enterpriseops_csm:
     fixture: kit/enterpriseops_csm.json
     epoch: '2026-01-02T08:05:20Z'
-    ports: [8001]
+    verifierPorts: [8001]
 tools:
   file: tools.json
   dispatches: /var/lib/mock-data/enterpriseops/dispatches.jsonl

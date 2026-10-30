@@ -209,8 +209,9 @@ class SharedFakes:
         async with httpx.AsyncClient(timeout=120) as client:
             response = await client.get(
                 f"{run.url}/_verifier/state",
-                params=[("table", table) for table in tables] +
-                [("query", query) for query in queries],
+                params=[("table", table)
+                        for table in tables] + [("query", query)
+                                                for query in queries],
                 headers={"x-vfsbench-state-token": fake.state_token})
             response.raise_for_status()
             return response.json()

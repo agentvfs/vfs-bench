@@ -682,7 +682,7 @@ class MicrosandboxVerifier(Verifier):
         mounts = {p: r for p, r in env.disk_mounts.items() if p not in omit}
         stage = Path(tempfile.mkdtemp(prefix="vfsbench-msb-"))
         try:
-            async with proxies(env.routes, requests) as ports:
+            async with proxies(env.verifier_routes, requests) as ports:
                 shutil.copyfile(GUEST, stage / "guest.py")
                 (stage / "config.json").write_text(
                     json.dumps({

@@ -32,7 +32,9 @@ def sql(port: int, query: str) -> dict:
     """Upstream's ``_execute_sql_query``: the runner's JSON, or its error."""
     request = urllib.request.Request(
         f"http://localhost:{port}/api/sql-runner",
-        data=json.dumps({"query": query}).encode(),
+        data=json.dumps({
+            "query": query
+        }).encode(),
         headers={"Content-Type": "application/json"},
         method="POST")
     try:
@@ -42,8 +44,8 @@ def sql(port: int, query: str) -> dict:
         text = error.read().decode(errors="replace")
         try:
             body = json.loads(text)
-            detail = body.get("detail", body.get("message", text)) if isinstance(
-                body, dict) else text
+            detail = body.get("detail", body.get(
+                "message", text)) if isinstance(body, dict) else text
         except json.JSONDecodeError:
             detail = text
         return {"success": False, "error": f"HTTP {error.code}: {detail}"}
@@ -52,14 +54,16 @@ def sql(port: int, query: str) -> dict:
 
 
 def extract(result: dict) -> Any:
-    """Upstream's ``_extract_value_from_sql_result``, for the runner's reply."""
+    """Upstream's ``_extract_value_from_sql_result``, for the runner's
+    reply."""
     if not result.get("success"):
         return None
     data = result.get("result", {})
     if isinstance(data, dict) and "data" in data:
         rows = data["data"]
         if isinstance(rows, list) and rows:
-            if len(rows) == 1 and isinstance(rows[0], dict) and len(rows[0]) == 1:
+            if len(rows) == 1 and isinstance(rows[0], dict) and len(
+                    rows[0]) == 1:
                 return list(rows[0].values())[0]
             if len(rows) == 1:
                 return rows[0]
@@ -90,36 +94,50 @@ def main() -> int:
     results = []
     for verifier in verifiers:
         if verifier.get("verifier_type") != "database_state":
-            results.append({"name": verifier.get("name"), "passed": False,
-                            "error": "not a database_state verifier"})
+            results.append({
+                "name": verifier.get("name"),
+                "passed": False,
+                "error": "not a database_state verifier"
+            })
             continue
         config = verifier["validation_config"]
         reply = sql(ports[verifier["gym_name"]], config["query"])
         if not reply["success"]:
-            results.append({"name": verifier.get("name"), "passed": False,
-                            "error": f"SQL query failed: {reply['error']}",
-                            "query": config["query"]})
+            results.append({
+                "name": verifier.get("name"),
+                "passed": False,
+                "error": f"SQL query failed: {reply['error']}",
+                "query": config["query"]
+            })
             continue
         actual = extract(reply)
         kind = config.get("comparison_type", "equals")
         results.append({
-            "name": verifier.get("name"),
-            "passed": compare(actual, config.get("expected_value"), kind),
-            "expected": config.get("expected_value"),
-            "actual": actual,
-            "comparison_type": kind,
-            "query": config["query"],
+            "name":
+            verifier.get("name"),
+            "passed":
+            compare(actual, config.get("expected_value"), kind),
+            "expected":
+            config.get("expected_value"),
+            "actual":
+            actual,
+            "comparison_type":
+            kind,
+            "query":
+            config["query"],
         })
     passed = sum(r["passed"] for r in results)
     LOGS.mkdir(parents=True, exist_ok=True)
-    (LOGS / "reward.json").write_text(json.dumps({
-        "reward": int(bool(results) and passed == len(results)),
-        "verifiers_passed": passed,
-        "verifiers": len(results),
-    }))
+    (LOGS / "reward.json").write_text(
+        json.dumps({
+            "reward": int(bool(results) and passed == len(results)),
+            "verifiers_passed": passed,
+            "verifiers": len(results),
+        }))
     (LOGS / "verifiers.json").write_text(json.dumps(results, indent=1))
     for r in results:
-        detail = r.get("error") or f"{r.get('actual')!r} vs {r.get('expected')!r}"
+        detail = r.get(
+            "error") or f"{r.get('actual')!r} vs {r.get('expected')!r}"
         print(f"{'pass' if r['passed'] else 'FAIL'} {r['name']}: {detail}")
     print(f"{passed} of {len(results)} verifiers pass")
     return 0
