@@ -25,6 +25,7 @@ import hashlib
 import json
 import os
 import re
+import secrets
 import shutil
 import subprocess
 import tempfile
@@ -48,6 +49,7 @@ class Fake:
     url: str
     state: Path
     process: subprocess.Popen
+    state_token: str
 
 
 @dataclass
@@ -110,6 +112,7 @@ class SharedFakes:
             logs.mkdir(parents=True, exist_ok=True)
             launcher = logs / f"fake-{service}.launcher.log"
             log = launcher.open("ab")
+            state_token = secrets.token_urlsafe(32)
             process = subprocess.Popen(
                 [
                     node,
@@ -118,7 +121,9 @@ class SharedFakes:
                     str(logs / f"fake-{service}.log")
                 ],
                 cwd=ROOT,
-                env=env,
+                env={
+                    **env, "VFSBENCH_STATE_TOKEN": state_token
+                },
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=log,
@@ -136,7 +141,8 @@ class SharedFakes:
                 raise RuntimeError(
                     f"the shared {service} fake exited ({process.returncode}) "
                     f"before it was ready:\n{text[-4000:]}")
-            fake = Fake(service, ready["url"], Path(ready["state"]), process)
+            fake = Fake(service, ready["url"], Path(ready["state"]), process,
+                        state_token)
             self._fakes[service] = fake
             return fake
 
@@ -191,6 +197,17 @@ class SharedFakes:
                     self.drop(Run(fake.service, run, "", Path())))
             raise
         return Run(fake.service, run, f"{fake.url}/_run/{run}", files[0])
+
+    async def snapshot(self, run: Run, tables: list[str]) -> dict:
+        """Read the fake's private JSON view through its async client."""
+        fake = self._fakes[run.service]
+        async with httpx.AsyncClient(timeout=120) as client:
+            response = await client.get(
+                f"{run.url}/_verifier/state",
+                params=[("table", table) for table in tables],
+                headers={"x-vfsbench-state-token": fake.state_token})
+            response.raise_for_status()
+            return response.json()
 
     async def drop(self, run: Run) -> None:
         """Delete a trial's run, its file with it."""

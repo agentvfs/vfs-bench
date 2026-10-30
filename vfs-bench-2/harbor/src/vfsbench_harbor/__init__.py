@@ -1,8 +1,11 @@
-"""A Harbor environment served from a Mirage workspace, not a container, a
-verifier that runs outside it, in a microVM, and Codex and Claude Code on
-the host with their tools in the workspace."""
+"""A Mirage environment, reference/native graders, and host-driven agents."""
 from vfsbench_harbor.agents import ClaudeCode, Codex
 from vfsbench_harbor.environment import MirageEnvironment
 from vfsbench_harbor.microsandbox import MicrosandboxVerifier
+from vfsbench_harbor.mirage_verifier import MirageVerifier
+from vfsbench_harbor.parity import MirageParityVerifier
 
-__all__ = ["ClaudeCode", "Codex", "MirageEnvironment", "MicrosandboxVerifier"]
+__all__ = [
+    "ClaudeCode", "Codex", "MirageEnvironment", "MirageVerifier",
+    "MirageParityVerifier", "MicrosandboxVerifier"
+]

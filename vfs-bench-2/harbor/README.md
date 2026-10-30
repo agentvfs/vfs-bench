@@ -9,7 +9,7 @@ and creates a workspace on a Mirage daemon of the trial's own. Harbor's
 into and out of the workspace's mounts.
 
 It runs two kinds of task:
-- **Committed tasks**, under `tasks/liveclawbench/`: thirty-eight LiveClawBench
+- **Committed tasks**, under `tasks/liveclawbench/`: seventy configured LiveClawBench
   tasks as Harbor task directories. Each has an `environment/mirage.yaml`
   in place of upstream's Dockerfile. Their services are kit fakes on
   Mirage's integ kit, one process per service for the whole job, and each
@@ -87,6 +87,150 @@ starts, through `mocks/node_modules`, a gitignored link to Mirage's integ
 packages. Each schema gets a client of its own, `mocks/<service>/client-<hash>/`,
 and `client` links to the current one, so jobs started together never
 remove a client another one is loading. After that, `pnpm exec tsc -p mocks` type-checks the fakes.
+
+## Native Mirage grading
+
+All **70 configured LiveClawBench tasks** now use `MirageVerifier` by default
+in `liveclawbench.yaml`. Their trusted TypeScript graders run as a `grade`
+command in Mirage's virtual terminal. SQL checks are ported to TypeScript
+filters, joins and aggregates over JSON read through Mirage's shell/VFS.
+Grading uses no SQLite engine, Pyodide, Python interpreter, container or
+microVM. Harbor still orchestrates trials in Python; the agent's runtime
+configuration and the existing fake services' storage are unchanged.
+
+The original Python and shell graders are preserved, with source hashes in
+`graders/manifest.json`. `liveclawbench-pyodide.yaml` explicitly runs those
+references; `MirageParityVerifier` runs both and keeps the reference rewards
+authoritative. Coverage across the six Mirage-agent job configs is:
+
+| Dataset | Tasks | Preserved reference backend | Native ports |
+|---|---:|---|---:|
+| LiveClawBench | 70 | Mirage/Pyodide | 70 |
+| DataSpace | 46 | microVM | 0 |
+| Claw-Eval | 126 | microVM | 0 |
+| ComplexMCP | 47 | microVM | 0 |
+| AutomationBench | 600 | microVM | 0 |
+| Gaia2 | 460 | microVM | 0 |
+| Total | 1,349 | | 70 |
+
+The other 1,279 tasks retain microVM grading and report `unported` in parity
+mode. The unconfigured `pre-meeting-research-brief` LLM-judge task is outside
+the 70-task set and has no native port.
+
+From `vfs-bench-2/`, after the usual dependency/setup steps:
+
+```sh
+# Inventory from job configs, including unported counts.
+uv run --project harbor python -I harbor/grader_inventory.py
+# Native-only grading for all 70 tasks (liveclawbench-mirage.yaml is an alias).
+uv run --project harbor harbor run -c harbor/liveclawbench.yaml -a oracle -n 4
+uv run --project harbor harbor run -c harbor/liveclawbench.yaml -a nop -n 4
+# Compare against the preserved Pyodide grader on the same final state.
+uv run --project harbor harbor run -c harbor/liveclawbench.yaml \
+  --verifier vfsbench_harbor:MirageParityVerifier -a oracle -n 4
+# Keep original reference trials for repeatable offline comparison.
+uv run --project harbor harbor run -c harbor/liveclawbench-pyodide.yaml \
+  -a oracle -n 4 --no-delete -o state/harbor/reference
+uv run --project harbor python -I harbor/replay_graders.py <reference-job-dir>
+uv run --project harbor python -I harbor/audit_native_graders.py <oracle-reference-job-dir>
+```
+
+The parity override also works with `dataspace.yaml`, `claweval.yaml`,
+`complexmcp.yaml`, `automationbench.yaml`, and `gaia2.yaml`; their existing
+setup and microVM requirements still apply. `reference_kwargs` forwards
+backend options such as the microVM image. `require_native=True` rejects
+unported tasks; `fail_on_mismatch=False` records native failures without
+failing the reference run. By default, mismatches and native errors fail.
+
+Each trial writes `verifier/mirage_parity.json` with its status, both rewards,
+differences, source/input hashes, checks and timings. The original reward and
+logs remain intact. Every numeric reward dimension must match exactly;
+missing dimensions and non-finite values fail. A changed reference source
+invalidates the registered port until it is reviewed and parity-tested again.
+
+Verifier environment settings use Harbor's precedence: workspace environment,
+task verifier settings, `verifier_env`, then `override_env`; explicit settings
+also resolve Harbor's environment templates. Dashboard `POLICY_PATH` overrides
+are staged from supported VFS mounts. Overrides pointing at an unregistered
+finance database or outside supported mounts fail explicitly.
+
+Each native verifier gets a fresh RAM Mirage workspace, separate from the
+agent's. It mounts declared JSON state, output files, trusted reference
+resources, clock/environment metadata and safety history as read-only inputs,
+with a separate writable reward mount. The trusted, argument-free `grade`
+command reads state through virtual `jq` and the Mirage VFS; it has no host
+filesystem/database imports or interpreter runtime. Safety scans copy only
+declared workspace trees; symlinks cannot escape mounts.
+The privacy grader also reconstructs the reference completion transcript before
+its file audit, replacing any stale `/tmp/verify_output.txt` input with the
+derived transcript in the output VFS.
+
+Harbor fetches JSON from a private, capability-protected state view on each
+existing fake service. That view uses the service's own async data client.
+The smart-home client also exports its unmodeled grocery table in insertion
+order, preserving the reference's first-match behavior and nullable keys.
+Native staging skips database backups. The fake services retain their
+existing storage implementation; moving that storage is outside this grader
+port. Legacy `.db` names in the input contract are aliases for JSON state,
+not database files mounted in the verifier.
+
+Parity runs the preserved reference first, then grades the same completed
+agent state through JSON and frozen files, retaining the original reward/logs.
+SQLite fixture conversion lives only in the test/replay adapters. A disposable
+Node worker allows Harbor to enforce cancellation/timeouts even in CPU-bound
+TypeScript. The trusted grader never executes task or agent code; this is not
+an isolation boundary for arbitrary grader scripts.
+File traversal, copying, serialization and hashing run in background threads.
+Staging is bounded to 64 MiB and 10,000 visited paths, and shares the task's
+overall verifier deadline. Cancellation stops chunked copies before temporary
+inputs are removed; limits fail the trial without writing a reward.
+
+Validation for the switch:
+
+- All 70 tasks completed native-only oracle runs and all 70 completed native-only
+  no-op runs, with no exceptions and exact reward parity against real Pyodide runs.
+- Replaying the 140 preserved reference trials matched every numeric reward
+  dimension, including safety and task-completion rewards.
+- 215 differential cases matched: original oracle state, deleted database rows,
+  partial output files, and injected safety violations. These use the unchanged
+  Python sources through a test-only adapter whose baseline is checked against
+  real Pyodide rewards. Cases without applicable rows/files can be unchanged.
+- `pnpm test` covers the 70-source manifest, 79 chat-grader comparisons, Python
+  rounding, time zones/DST, mailbox parsing, and JSON integer distinctions.
+  It also checks read-only VFS inputs, isolated concurrent verifier workspaces,
+  blocked interpreter/host access and the private service JSON exports.
+  `uv run --project harbor python -I harbor/test_parity.py` checks preservation,
+  backend routing, drift rejection, errors, cancellation and inventory, including
+  a native verification with SQLite access disabled.
+- Review regressions compare fractional calendar seconds, Unicode email-length
+  boundaries, fresh privacy transcripts, invalid AQI JSON and template newlines
+  against unchanged Python graders. They also cover UTF-8 BOM preservation and
+  SQLite-compatible NUL, wildcard and end-of-string matching. Adapter tests
+  exercise override precedence, custom policy inputs, staging bounds,
+  event-loop progress and cancellation.
+
+Local reports are under `state/harbor/native-all/`: `vfs-replay-140.json`,
+`vfs-mutations.json`, reference jobs `oracle-ready`/`nop-ready`, and native
+jobs `vfs-oracle-ready`/`vfs-nop-ready`. These checks
+establish parity for the exercised cases, not every possible agent output.
+Routing tests for the five other datasets stub their reference execution.
+After the review fixes, `review-replay-140.json` and `review-mutations.json`
+record the repeated full comparisons; `review-oracle`/`review-nop` rerun the
+six affected tasks against live fake services.
+The subsequent text-decoding and matching fixes are checked in
+`bom-nul-replay-140.json` and `bom-nul-mutations.json`.
+
+The worker still loads Mirage and executes TypeScript checks on its event loop.
+Independent workspaces can run concurrently; CPU, RAM and fake-service throughput
+remain practical limits. `run_s` excludes process startup; `total_s` includes
+staging/startup. These correctness checks do not establish lower memory use or
+better throughput. The Pyodide task notes below describe the preserved reference.
+
+When a reference changes, review its TypeScript port and rerun parity before
+regenerating `graders/manifest.json` and `graders/reference-data.json` with
+`build_manifest.py` and `extract_constants.py`. Both scripts accept `--check`
+to detect stale generated data without rewriting it. Future API/LLM grader
+ports must consume recorded responses or judgments to make comparisons stable.
 
 ## Files
 
