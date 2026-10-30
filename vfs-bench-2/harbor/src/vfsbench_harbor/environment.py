@@ -73,6 +73,19 @@ DONE = {"done", "failed", "canceled"}
 # fake escapes a file's path (mocks/upstream/fake.ts).
 URI_SAFE = "-_.!~*'()"
 
+# How many trials' daemons boot at once, however many trials run: a daemon
+# that cannot get the CPU to boot in time fails its Fastify ready hook (10 s),
+# as 103 booting together on 14 cores did. Each waits here only to start.
+BOOTS = int(os.environ.get("VFSBENCH_DAEMON_BOOTS") or os.cpu_count() or 4)
+_boots: asyncio.Semaphore | None = None
+
+
+def _boot_slot() -> asyncio.Semaphore:
+    global _boots
+    if _boots is None:
+        _boots = asyncio.Semaphore(BOOTS)
+    return _boots
+
 
 def _free_port() -> int:
     with socket.socket() as s:
@@ -314,7 +327,13 @@ class MirageEnvironment(BaseEnvironment):
     async def _start_daemon(self, routes: dict[str, str], allow: list[str],
                             tools: dict | None) -> str:
         """Start the trial's own daemon, routing its network and with the
-        task's tools as CLIs, if it has some; wait for it."""
+        task's tools as CLIs, if it has some; wait for it. At most
+        ``BOOTS`` daemons boot at once."""
+        async with _boot_slot():
+            return await self._boot_daemon(routes, allow, tools)
+
+    async def _boot_daemon(self, routes: dict[str, str], allow: list[str],
+                           tools: dict | None) -> str:
         port = _free_port()
         self._ssh_port = _free_port()
         _, authorized = ssh_key()

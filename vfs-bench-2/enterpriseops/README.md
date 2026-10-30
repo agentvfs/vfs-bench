@@ -28,17 +28,23 @@ dataset's task files into `state/enterpriseops/hf/<mode>/<domain>.parquet`.
 
 Then `harbor/enterpriseops.py` writes the tasks, and
 `harbor/enterpriseops.yaml` runs them (harbor/README.md). The reference
-solutions, graded natively, in one line:
+solutions, graded natively, all 103 trials at once, in one line:
 
 ```sh
-uv run --project harbor harbor run -c harbor/enterpriseops.yaml -a oracle -n 64 -o state/harbor/jobs-enterpriseops
+uv run --project harbor harbor run -c harbor/enterpriseops.yaml -a oracle -n 103 -o state/harbor/jobs-enterpriseops
 ```
 
-All 103 trials take about 70 s at 64 at a time. Every trial gets its own
-run of the shared fake, so the results are the same at any concurrency:
-16, 32 and 64 gave the same reward and verifier count for every task.
-`harbor/enterpriseops-msb.yaml` grades with the reference grader in
-microVMs instead, which is slower (`-n 8`).
+This takes about 60 s, with no errors. Every trial gets its own run of the
+shared fake, so the results are the same at any concurrency: 16, 32, 64 and
+103 gave the same reward and verifier count for every task. Each trial has
+its own Mirage daemon, and at most one per core boots at a time
+(`VFSBENCH_DAEMON_BOOTS` changes that), so many trials do not starve each
+other's startup.
+
+Grading is Mirage-native. `harbor/enterpriseops-msb.yaml` runs the
+reference grader (upstream's logic in Python over HTTP, in a microVM) only
+to check the native one: `MirageParityVerifier` runs both, and they agree on
+all 103 tasks.
 
 ## How it maps
 
