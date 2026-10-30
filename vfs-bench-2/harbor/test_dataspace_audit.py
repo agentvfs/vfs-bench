@@ -1,4 +1,7 @@
-"""Saved submission replay must preserve the original grading outcome."""
+"""Saved submission replay must preserve the original grading outcome.
+
+    python3.12 -I harbor/test_dataspace_audit.py
+"""
 import contextlib
 import io
 import json
@@ -9,7 +12,8 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 
-import audit_dataspace as audit
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import audit_dataspace as audit  # noqa: E402
 
 
 class DataSpaceAuditTests(unittest.TestCase):
