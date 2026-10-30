@@ -29,4 +29,13 @@ export class SmarthomeClient extends PrismaClient {
     super(options)
     this.file = options.datasourceUrl.replace(/^file:/, '')
   }
+
+  /** Export the unmodeled table using this service's existing store client.
+   * Unlike the public API's alphabetical order, preserve insertion order:
+   * the reference grader chooses the first matching product. No grading
+   * predicates or new database connection belong in this state export.
+   */
+  async snapshotGroceryRows(): Promise<Record<string, unknown>[]> {
+    return this.$queryRawUnsafe('SELECT * FROM grocery_product ORDER BY rowid')
+  }
 }

@@ -18,7 +18,6 @@ from pathlib import Path
 from harbor.models.task.task import Task
 from harbor.models.trial.paths import TrialPaths
 from vfsbench_harbor.environment import HARBOR
-from vfsbench_harbor.mirage_verifier import MirageVerifier
 from vfsbench_harbor.parity import differences
 
 spec = importlib.util.spec_from_file_location("replay",
@@ -101,9 +100,9 @@ async def run(args):
             env = replay.saved_environment(
                 task, TrialPaths(path),
                 json.loads((path / "mirage/plan.json").read_text()), args.node)
-            native = MirageVerifier(task=task,
-                                    environment=env,
-                                    trial_paths=TrialPaths(path))
+            native = replay.SavedVerifier(task=task,
+                                          environment=env,
+                                          trial_paths=TrialPaths(path))
             _, definition = native._definition()
             modes = ["baseline", "alternate_rows", "partial_files"]
             if (task.paths.tests_dir / "safety_audit.py").exists():

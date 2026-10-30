@@ -1,17 +1,17 @@
-/** Frozen, declared verifier inputs. No agent code, network, or Python runtime. */
-import { readFileSync } from 'node:fs'
-import { DatabaseSync, type SQLInputValue } from 'node:sqlite'
-
+/** Native verifier data comes only through Mirage's VFS and virtual shell. */
+import type { Context as CommandContext } from '@struktoai/mirage-core/commands/config'
 export type Row = Record<string, any>
+export type Tables = Record<string, Row[]>
 export interface Grade {
   score: number
   checks: Record<string, boolean | number | string>
   rewards?: Record<string, number>
   artifacts?: Record<string, unknown>
 }
+/** Serializable input transport; file values are base64 bytes, never host paths. */
 export interface Inputs {
   task: string
-  databases: Record<string, string>
+  states: Record<string, Tables>
   files?: Record<string, string>
   existingPaths?: string[]
   epoch?: string
@@ -19,34 +19,59 @@ export interface Inputs {
   timeoutSeconds: number
 }
 export type Grader = (context: Context) => Grade
+export type InputSpec = Omit<Inputs, 'states' | 'files'> & { states: Record<string, string>; files: string[] }
 export class Context {
-  private opened = new Map<string, DatabaseSync>()
-  readonly input: Inputs
-  constructor(input: Inputs) {
+  readonly input: InputSpec
+  private states: Record<string, Tables>
+  private files: Map<string, string>
+  private constructor(input: InputSpec, states: Record<string, Tables>, files: Map<string, string>) {
     this.input = input
+    this.states = states
+    this.files = files
+  }
+  static async open(input: InputSpec, command: CommandContext): Promise<Context> {
+    if (!command.vfs || !command.shell) throw new Error('Grading requires Mirage VFS and shell access')
+    const states: Record<string, Tables> = {}
+    const files = new Map<string, string>()
+    for (const [name, path] of Object.entries(input.states)) {
+      const output = '/.verifier-output/state.json'
+      const out = await command.shell('jq -c . ' + quote(path) + ' > ' + quote(output))
+      if (out.exitCode !== 0) throw new Error(`Cannot read verifier state ${name}`)
+      const value = JSON.parse(new TextDecoder().decode(await command.vfs.read(output)))
+      if (
+        !value ||
+        typeof value !== 'object' ||
+        Array.isArray(value) ||
+        Object.values(value).some((v) => !Array.isArray(v))
+      )
+        throw new Error(`Invalid state ${name}`)
+      states[name] = value
+    }
+    await Promise.all(
+      input.files.map(async (path) => {
+        files.set(path, new TextDecoder().decode(await command.vfs!.read(path, { raw: true })))
+      })
+    )
+    return new Context(input, states, files)
   }
   exists(path: string) {
     return (
-      Object.hasOwn(this.input.files ?? {}, path) ||
-      Object.hasOwn(this.input.databases, path) ||
+      this.files.has(path) ||
+      Object.hasOwn(this.states, path) ||
       Boolean(this.input.existingPaths?.includes(path))
     )
   }
   text(path: string, fallback?: string): string {
-    const host = this.input.files?.[path]
-    if (host === undefined) {
-      if (fallback !== undefined) return fallback
-      throw new Error(`Missing frozen input: ${path}`)
-    }
-    return readFileSync(host, 'utf8')
+    const text = this.files.get(path)
+    if (text !== undefined) return text
+    if (fallback !== undefined) return fallback
+    throw new Error(`Missing VFS input: ${path}`)
   }
   json(path: string, fallback?: any): any {
     if (!this.exists(path) && fallback !== undefined) return fallback
     return JSON.parse(this.text(path))
   }
   jsonInteger(path: string, key: string): boolean {
-    // Python distinguishes JSON 0 from 0.0. Keep that distinction for
-    // graders using type(value) is int, which Number.isInteger loses.
     const flags = new WeakMap<object, Map<string, boolean>>()
     const parsed = JSON.parse(this.text(path), function (
       this: object,
@@ -62,38 +87,64 @@ export class Context {
     } as any)
     return parsed !== null && typeof parsed === 'object' && flags.get(parsed)?.get(key) === true
   }
-  db(path: string): DatabaseSync {
-    let db = this.opened.get(path)
-    if (!db) {
-      const host = this.input.databases[path]
-      if (!host) throw new Error(`Missing frozen database: ${path}`)
-      db = new DatabaseSync(host, { readOnly: true, allowExtension: false })
-      this.opened.set(path, db)
-    }
-    return db
-  }
-  all(path: string, sql: string, ...params: SQLInputValue[]): Row[] {
-    return this.db(path)
-      .prepare(sql)
-      .all(...params)
-  }
-  one(path: string, sql: string, ...params: SQLInputValue[]): Row | undefined {
-    return this.db(path)
-      .prepare(sql)
-      .get(...params)
-  }
-  scalar(path: string, sql: string, ...params: SQLInputValue[]): any {
-    const row = this.one(path, sql, ...params)
-    return row ? Object.values(row)[0] : undefined
-  }
-  close() {
-    for (const db of this.opened.values()) db.close()
-    this.opened.clear()
+  rows(source: string, table: string): Row[] {
+    const rows = this.states[source]?.[table]
+    if (!rows) throw new Error(`Missing VFS table: ${source}/${table}`)
+    return [...rows]
   }
   now() {
     return new Date(this.input.epoch ?? '2026-04-03T09:00:00Z')
   }
 }
+export const quote = (value: string) => "'" + value.replace(/'/g, "'\\''") + "'"
+// Preserve the references' missing-value and comparison semantics on JSON rows.
+export const eq = (a: any, b: any) => a != null && b != null && a === b
+export const ne = (a: any, b: any) => a != null && b != null && a !== b
+export const gt = (a: any, b: any) => a != null && b != null && a > b
+export const ge = (a: any, b: any) => a != null && b != null && a >= b
+export const lt = (a: any, b: any) => a != null && b != null && a < b
+export const le = (a: any, b: any) => a != null && b != null && a <= b
+export const asciiLower = (s: any): string => String(s ?? '').replace(/[A-Z]/g, (c) => c.toLowerCase())
+export function instantDate(value: any): string | null {
+  if (typeof value !== 'string') return null
+  const parsed = Date.parse(
+    value.includes('T') || value.includes(' ')
+      ? value.replace(' ', 'T') + (/(?:Z|[+-]\d\d:\d\d)$/.test(value) ? '' : 'Z')
+      : value
+  )
+  return Number.isFinite(parsed) ? new Date(parsed).toISOString().slice(0, 10) : null
+}
+export function like(value: any, pattern: string): boolean {
+  if (value == null) return false
+  const re = [...asciiLower(pattern)]
+    .map((c) => (c === '%' ? '[\\s\\S]*' : c === '_' ? '[\\s\\S]' : c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')))
+    .join('')
+  return new RegExp('^' + re + '$', 'u').test(asciiLower(value))
+}
+export function compare(a: any, b: any): number {
+  if (a === b) return 0
+  if (a == null) return -1
+  if (b == null) return 1
+  if (typeof a === 'string' && typeof b === 'string') {
+    const aa = [...a],
+      bb = [...b]
+    for (let i = 0; i < Math.min(aa.length, bb.length); i++) {
+      const diff = aa[i]!.codePointAt(0)! - bb[i]!.codePointAt(0)!
+      if (diff) return diff
+    }
+    return aa.length - bb.length
+  }
+  return a < b ? -1 : 1
+}
+export const orderBy =
+  (...keys: [string, number][]) =>
+  (a: Row, b: Row) => {
+    for (const [key, direction] of keys) {
+      const cmp = compare(a[key], b[key])
+      if (cmp) return cmp * direction
+    }
+    return 0
+  }
 export function grade(score: number, checks: Grade['checks'] = {}): Grade {
   return { score, checks }
 }
@@ -202,12 +253,19 @@ export interface Mail {
   body: string
   id: string
 }
+export function sentMessages(c: Context): Row[] {
+  const labels = c.rows(GWS, 'MessageLabel')
+  return c.rows(GWS, 'Message').filter((m) => {
+    const own = labels.filter((l) => eq(l.tenant, m.tenant) && eq(l.messageId, m.id))
+    return own.some((l) => l.labelId === 'SENT') && !own.some((l) => l.labelId === 'TRASH')
+  })
+}
 export function mails(c: Context, sent = true): Mail[] {
-  const where = sent
-    ? "WHERE EXISTS (SELECT 1 FROM MessageLabel l WHERE l.tenant = m.tenant AND l.messageId = m.id AND l.labelId = 'SENT') AND NOT EXISTS (SELECT 1 FROM MessageLabel l WHERE l.tenant = m.tenant AND l.messageId = m.id AND l.labelId = 'TRASH')"
-    : ''
-  return c.all(GWS, `SELECT id, bodyText FROM Message m ${where} ORDER BY seq`).map((r) => {
-    const headers = c.all(GWS, 'SELECT name, value FROM MessageHeader WHERE messageId = ? ORDER BY seq', r.id)
+  return (sent ? sentMessages(c) : c.rows(GWS, 'Message')).sort(orderBy(['seq', 1])).map((r) => {
+    const headers = c
+      .rows(GWS, 'MessageHeader')
+      .filter((h) => eq(h.messageId, r.id))
+      .sort(orderBy(['seq', 1]))
     return {
       id: r.id,
       to: addresses(headers.filter((h) => lower(h.name) === 'to').map((h) => h.value)),

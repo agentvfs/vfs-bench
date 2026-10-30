@@ -130,9 +130,9 @@ class MirageParityVerifier(Verifier):
             return original
         native = MirageVerifier(**self._common())
         try:
-            # The reference's last exec/VM staging refreshed these views.
-            # These ports read only those views, so don't refresh or run the
-            # agent again. Keep the authoritative reward/log files intact.
+            # The reference refreshed the completed agent's file views.
+            # Native grading reads those files and JSON from the same idle
+            # fake runs. Keep the authoritative reward/log files intact.
             report["reference_source_sha256"] = manifest[task]["files"]
             result = await native.evaluate(refresh=False)
             report["input_sha256"] = result.get("input_sha256", {})

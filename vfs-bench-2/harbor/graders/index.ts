@@ -1,5 +1,6 @@
-import { type Grader, Context, type Inputs } from './context.ts'
-import { CHAT_DB, CHAT_GRADERS } from './chat.ts'
+import { type Grader, Context, type InputSpec } from './context.ts'
+import type { Context as CommandContext } from '@struktoai/mirage-core/commands/config'
+import { CHAT_GRADERS } from './chat.ts'
 import { MAIL_GRADERS } from './mail.ts'
 import { CALENDAR_GRADERS } from './calendar.ts'
 import { SHOP_WEATHER_GRADERS } from './shop-weather.ts'
@@ -13,9 +14,7 @@ import { SMARTHOME_GRADERS } from './smarthome.ts'
 import { safety } from './safety.ts'
 
 export const GRADERS: Readonly<Record<string, Grader>> = Object.freeze({
-  ...Object.fromEntries(
-    Object.entries(CHAT_GRADERS).map(([name, fn]) => [name, (c: Context) => fn(c.db(CHAT_DB))])
-  ),
+  ...CHAT_GRADERS,
   ...MAIL_GRADERS,
   ...CALENDAR_GRADERS,
   ...SHOP_WEATHER_GRADERS,
@@ -27,13 +26,9 @@ export const GRADERS: Readonly<Record<string, Grader>> = Object.freeze({
   ...SOCIAL_GRADERS,
   ...SMARTHOME_GRADERS,
 })
-export function evaluate(input: Inputs) {
+export async function evaluate(input: InputSpec, command: CommandContext) {
   const grader = GRADERS[input.task]
   if (!grader) throw new Error(`No Mirage grader for ${input.task}`)
-  const context = new Context(input)
-  try {
-    return safety(context, grader(context))
-  } finally {
-    context.close()
-  }
+  const context = await Context.open(input, command)
+  return safety(context, grader(context))
 }

@@ -536,11 +536,15 @@ class MirageEnvironment(BaseEnvironment):
                 raise RuntimeError(
                     f"Command timed out after {timeout_sec} seconds")
 
-    def _refresh_state(self) -> None:
+    def _refresh_state(self, *, files_only: bool = False) -> None:
         """Bring each mock's state file in the workspace up to date; one
         refresh at a time."""
         with self._refreshing:
             for view, live in self._state:
+                if files_only and live.is_file():
+                    with live.open("rb") as source:
+                        if source.read(len(SQLITE)) == SQLITE:
+                            continue
                 _snapshot(view, live)
             # Host agents write ATIF outside Mirage's /logs mount. Both
             # verifiers refresh before reading it; keep an oracle's own
@@ -557,6 +561,10 @@ class MirageEnvironment(BaseEnvironment):
         the mounts; one refresh at a time."""
         await asyncio.to_thread(self._refresh_state)
 
+    async def refresh_verifier_files(self) -> None:
+        """Refresh files/trajectory; native grading never copies a database."""
+        await asyncio.to_thread(self._refresh_state, files_only=True)
+
     # What a verifier run outside the workspace reads (microsandbox.py):
     # the trial's files, its routes and the container's environment.
 
@@ -564,6 +572,22 @@ class MirageEnvironment(BaseEnvironment):
     def node_binary(self) -> str:
         """The Node binary used by this trial and its trusted verifier."""
         return self._node
+
+    async def snapshot_verifier_states(self, definitions: dict) -> dict:
+        """Read native JSON views from this trial's existing fake services."""
+        runs = {run.service: run for run in self._runs}
+
+        async def read(alias, definition):
+            run = runs.get(definition["service"])
+            if run is None:
+                raise ValueError(f"No live state source for {alias}")
+            value = await fakes.pool().snapshot(run, definition["tables"])
+            return alias, value
+
+        return dict(
+            await
+            asyncio.gather(*(read(alias, definition)
+                             for alias, definition in definitions.items())))
 
     async def read_virtual_file(self, path: str) -> bytes | None:
         """Read RAM inputs without a shell command or state refresh."""

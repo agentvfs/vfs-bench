@@ -1,6 +1,6 @@
+import { eq, type Grader, GWS, containsAny, dimensions, lower, mails, round } from './context.ts'
 import { createHash } from 'node:crypto'
 import DATA from './reference-data.json' with { type: 'json' }
-import { type Grader, GWS, containsAny, dimensions, lower, mails, round } from './context.ts'
 import { financePath } from './finance.ts'
 const finish = (d: Record<string, number>) =>
   dimensions(
@@ -66,17 +66,10 @@ export const FINANCE_MAIL_GRADERS: Record<string, Grader> = {
     try {
       const db = financePath(c)
       if (c.exists(db)) {
-        const invoice = c.one(
-          db,
-          "SELECT id, vendor_id, invoice_date FROM invoice WHERE invoice_number = 'INV-2026-010'"
-        )
+        const invoice = c.rows(db, 'invoice').filter((r) => eq(r.invoice_number, 'INV-2026-010'))[0]
         let ok = invoice?.vendor_id === 1 && invoice.invoice_date === '2026-03-01'
         if (ok) {
-          const items = c.all(
-              db,
-              'SELECT category_code, amount FROM invoice_line_item WHERE invoice_id = ?',
-              invoice!.id
-            ),
+          const items = c.rows(db, 'invoice_line_item').filter((r) => eq(r.invoice_id, invoice!.id)),
             used = new Set<number>()
           ok =
             items.length === 2 &&

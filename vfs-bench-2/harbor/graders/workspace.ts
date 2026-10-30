@@ -1,25 +1,25 @@
+import { eq, orderBy, type Grader, grade, lower } from './context.ts'
 import DATA from './reference-data.json' with { type: 'json' }
-import { type Grader, grade, lower } from './context.ts'
 const DB = '/var/lib/mock-data/workspace/workspace.db',
   EXPENSE = '/var/lib/mock-data/expense/expense.db'
 export const WORKSPACE_GRADERS: Record<string, Grader> = {
   'expense-draft-delete': (c) => {
     try {
-      const user = c.one(
-        EXPENSE,
-        "SELECT id FROM user WHERE email='alice@mosi.inc' AND password='password123' AND is_active=1"
-      )
+      const user = c
+        .rows(EXPENSE, 'user')
+        .filter(
+          (r) => eq(r.email, 'alice@mosi.inc') && eq(r.password, 'password123') && eq(r.is_active, 1)
+        )[0]
       if (!user) return grade(0)
       const codes = new Set(
         c
-          .all(
-            EXPENSE,
-            'SELECT draft_code FROM expense_draft WHERE user_id=? ORDER BY created_at DESC LIMIT 20',
-            user.id
-          )
+          .rows(EXPENSE, 'expense_draft')
+          .filter((r) => eq(r.user_id, user.id))
+          .sort(orderBy(['created_at', -1]))
+          .slice(0, 20)
           .map((r) => r.draft_code)
       )
-      const total = c.scalar(EXPENSE, 'SELECT COUNT(*) FROM expense_draft WHERE user_id=?', user.id),
+      const total = c.rows(EXPENSE, 'expense_draft').filter((r) => eq(r.user_id, user.id)).length,
         remaining = [...codes].filter((x) => ['EXP-001', 'EXP-002'].includes(x))
       return grade((remaining.length === 1 && codes.size === 1 ? 0.5 : 0) + (total === 1 ? 0.5 : 0))
     } catch {
@@ -28,14 +28,19 @@ export const WORKSPACE_GRADERS: Record<string, Grader> = {
   },
   'expense-submit-verify': (c) => {
     const statuses = new Set(
-      c.all(EXPENSE, 'SELECT id,status FROM expense_draft ORDER BY id').map((r) => r.status)
+      c
+        .rows(EXPENSE, 'expense_draft')
+        .sort(orderBy(['id', 1]))
+        .map((r) => r.status)
     )
     return grade(statuses.has('submitted') ? 1 : statuses.size > 1 ? 0.3 : 0)
   },
   'workspace-brief-tracking': (c) => {
-    const user = c.one(DB, "SELECT id FROM user WHERE username='demo'")!
+    const user = c.rows(DB, 'user').filter((r) => eq(r.username, 'demo'))[0]!
     const note = c
-      .all(DB, 'SELECT * FROM note WHERE owner_user_id=? ORDER BY updated_at DESC', user.id)
+      .rows(DB, 'note')
+      .filter((r) => eq(r.owner_user_id, user.id))
+      .sort(orderBy(['updated_at', -1]))
       .find((n) => n.title === 'Sprint 24 Retrospective' && n.content_type === 'brief' && n.is_seeded === 0)
     const d = {
       note_created: note ? 1 : 0,
@@ -46,7 +51,7 @@ export const WORKSPACE_GRADERS: Record<string, Grader> = {
       task_record_updated: 0,
     }
     if (note) {
-      const brief = c.one(DB, 'SELECT * FROM brief_entry WHERE note_id=?', note.id)
+      const brief = c.rows(DB, 'brief_entry').filter((r) => eq(r.note_id, note.id))[0]
       if (!brief) return grade(0) // reference API's missing brief raises before reward.json
       const updates = lower(brief.key_updates),
         evidence = JSON.parse(brief.evidence_bullets),
@@ -71,7 +76,7 @@ export const WORKSPACE_GRADERS: Record<string, Grader> = {
         )
           ? 1
           : 0
-      const record = c.one(DB, 'SELECT * FROM task_record WHERE note_id=?', note.id)
+      const record = c.rows(DB, 'task_record').filter((r) => eq(r.note_id, note.id))[0]
       if (record) {
         d.task_record_created =
           record.record_type === 'tracker_update' &&
@@ -92,21 +97,20 @@ export const WORKSPACE_GRADERS: Record<string, Grader> = {
     return { ...grade(score, d), rewards: { reward: score, ...d } }
   },
   'workspace-task-record-batch': (c) => {
-    const user = c.one(DB, "SELECT id FROM user WHERE username='demo'")!,
+    const user = c.rows(DB, 'user').filter((r) => eq(r.username, 'demo'))[0]!,
       expected: Record<string, any> = DATA['workspace-task-record-batch'].EXPECTED
     let matched = 0,
       rt = 0,
       sc = 0,
       sum = 0,
       status = 0
-    for (const n of c.all(
-      DB,
-      'SELECT * FROM note WHERE owner_user_id=? AND is_seeded=1 ORDER BY updated_at DESC',
-      user.id
-    )) {
+    for (const n of c
+      .rows(DB, 'note')
+      .filter((r) => eq(r.owner_user_id, user.id) && eq(r.is_seeded, 1))
+      .sort(orderBy(['updated_at', -1]))) {
       const e = expected[n.id]
       if (!e || e.title !== n.title) continue
-      const r = c.one(DB, 'SELECT * FROM task_record WHERE note_id=?', n.id)
+      const r = c.rows(DB, 'task_record').filter((r) => eq(r.note_id, n.id))[0]
       if (!r) continue
       matched++
       if (r.record_type === e.record_type) rt++

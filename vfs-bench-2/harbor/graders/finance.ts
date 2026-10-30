@@ -1,4 +1,8 @@
 import {
+  eq,
+  gt,
+  like,
+  orderBy,
   type Context,
   type Grader,
   FINANCE,
@@ -26,17 +30,12 @@ const near = (a: any, b: number, tolerance = 0.01) => typeof a === 'number' && M
 export const FINANCE_GRADERS: Record<string, Grader> = {
   'finance-budget-shift': (c) => {
     const db = c.exists(FINANCE) ? FINANCE : '/workspace/finance.db'
-    const records = c.all(
-      db,
-      "SELECT department_name, budget_amount, actual_expense_amount FROM department_financial_record WHERE month = '2026-03'"
-    )
+    const records = c.rows(db, 'department_financial_record').filter((r) => eq(r.month, '2026-03'))
     const current = new Map(records.map((r) => [r.department_name, r]))
     const base = new Map(
       c
-        .all(
-          db,
-          "SELECT department_name, budget_amount FROM department_financial_record WHERE month = '2026-01'"
-        )
+        .rows(db, 'department_financial_record')
+        .filter((r) => eq(r.month, '2026-01'))
         .map((r) => [r.department_name, r.budget_amount])
     )
     const d: Record<string, number> = {}
@@ -49,10 +48,9 @@ export const FINANCE_GRADERS: Record<string, Grader> = {
     )
       d.c1_detection = 0.3
     const budget = records.find((r) => r.department_name === 'Marketing')?.budget_amount
-    const alert = c.one(
-      db,
-      "SELECT threshold FROM budget_alert WHERE department_name = 'Marketing' AND month = '2026-03'"
-    )
+    const alert = c
+      .rows(db, 'budget_alert')
+      .filter((r) => eq(r.department_name, 'Marketing') && eq(r.month, '2026-03'))[0]
     if (alert && budget && Math.abs(alert.threshold - budget * 0.8) < 0.01) d.alert_setup = 0.5
     return dimensions(
       d,
@@ -64,7 +62,7 @@ export const FINANCE_GRADERS: Record<string, Grader> = {
   },
   'finance-anomaly-detect': (c) =>
     finance(c, (d, db) => {
-      const rows = c.all(db, 'SELECT id, vendor_name, amount, status FROM transaction_record ORDER BY id')
+      const rows = c.rows(db, 'transaction_record').sort(orderBy(['id', 1]))
       if (!rows.length) return
       const flagged = new Set(rows.filter((r) => r.status === 'flagged').map((r) => r.id)),
         hits = [8, 9, 10, 11].filter((id) => flagged.has(id)).length
@@ -87,13 +85,13 @@ export const FINANCE_GRADERS: Record<string, Grader> = {
         ]
       const matches = (pairs: number[][]) =>
         pairs.filter(([id, value]) =>
-          near(c.scalar(db, 'SELECT annual_depreciation FROM asset_record WHERE id = ?', id!), value!)
+          near(c.rows(db, 'asset_record').filter((r) => eq(r.id, id!))[0]?.annual_depreciation, value!)
         ).length
       const count = matches(corrected)
       d.db_corrections = count === 3 ? 0.3 : 0
       d.no_false_corrections = count > 0 && matches(unchanged) === 4 ? 0.15 : 0
       d.correction_reasons = corrected.every(([id]) =>
-        String(c.scalar(db, 'SELECT correction_reason FROM asset_record WHERE id = ?', id!) ?? '').trim()
+        String(c.rows(db, 'asset_record').filter((r) => eq(r.id, id!))[0]?.correction_reason ?? '').trim()
       )
         ? 0.15
         : 0
@@ -107,7 +105,7 @@ export const FINANCE_GRADERS: Record<string, Grader> = {
     }),
   'finance-dashboard-repair': (c) => {
     const d: Record<string, number> = {},
-      row = c.one(financePath(c), 'SELECT formula_json FROM dashboard_config WHERE user_id = 1')
+      row = c.rows(financePath(c), 'dashboard_config').filter((r) => eq(r.user_id, 1))[0]
     const finish = () => {
       const r = dimensions(
         Object.fromEntries(Object.entries(d).map(([k, v]) => ['_meta_' + k, v])),
@@ -173,8 +171,8 @@ export const FINANCE_GRADERS: Record<string, Grader> = {
   'finance-expense-log': (c) =>
     finance(c, (d, db) => {
       const report =
-        c.one(db, "SELECT * FROM expense_report WHERE trip_name = 'NYC Client Visit'") ??
-        c.one(db, "SELECT * FROM expense_report WHERE id > 2 AND trip_name LIKE '%NYC%'")
+        c.rows(db, 'expense_report').filter((r) => eq(r.trip_name, 'NYC Client Visit'))[0] ??
+        c.rows(db, 'expense_report').filter((r) => gt(r.id, 2) && like(r.trip_name, '%NYC%'))[0]
       d.expense_report_created = report ? 0.2 : 0
       if (!report) {
         d.correct_categories = 0
@@ -182,11 +180,7 @@ export const FINANCE_GRADERS: Record<string, Grader> = {
         d.report_submitted = 0
         return
       }
-      const items = c.all(
-        db,
-        'SELECT expense_category, amount FROM expense_item WHERE expense_report_id = ?',
-        report.id
-      )
+      const items = c.rows(db, 'expense_item').filter((r) => eq(r.expense_report_id, report.id))
       const expected: [string, number][] = [
         ['transport', 45],
         ['meals', 85.5],
@@ -218,24 +212,23 @@ export const FINANCE_GRADERS: Record<string, Grader> = {
   'finance-monthly-close': (c) =>
     finance(c, (d, db) => {
       d.account_flagging =
-        c.scalar(db, "SELECT status FROM account_balance WHERE account_id = 'ACC-1002'") === 'flagged'
+        c.rows(db, 'account_balance').filter((r) => eq(r.account_id, 'ACC-1002'))[0]?.status === 'flagged'
           ? 0.2
           : 0
       const flagged = new Set(
         c
-          .all(db, 'SELECT id, status FROM transaction_record WHERE id IN (2,4,8)')
+          .rows(db, 'transaction_record')
+          .filter((r) => [2, 4, 8].some((v) => eq(r.id, v)))
           .filter((r) => r.status === 'flagged')
           .map((r) => r.id)
       )
       d.transaction_flagging = [2, 4, 8].every((id) => flagged.has(id)) ? 0.2 : 0
-      const report = c.one(db, "SELECT * FROM expense_report WHERE trip_name = 'March Marketing Trip'")
+      const report = c.rows(db, 'expense_report').filter((r) => eq(r.trip_name, 'March Marketing Trip'))[0]
       d.expense_report_created = report && near(report.total_amount, 2450) ? 0.2 : 0
       d.expense_report_submitted = report?.status === 'submitted' ? 0.1 : 0
-      const invoice = c.one(db, "SELECT * FROM invoice WHERE invoice_number = 'INV-2026-004'")
+      const invoice = c.rows(db, 'invoice').filter((r) => eq(r.invoice_number, 'INV-2026-004'))[0]
       d.invoice_created = invoice?.vendor_id === 2 && invoice.invoice_date === '2026-03-01' ? 0.2 : 0
-      const items = invoice
-        ? c.all(db, 'SELECT category_code FROM invoice_line_item WHERE invoice_id = ?', invoice.id)
-        : []
+      const items = invoice ? c.rows(db, 'invoice_line_item').filter((r) => eq(r.invoice_id, invoice.id)) : []
       d.invoice_line_items =
         items.length === 2 && ['5100', '5400'].every((code) => items.some((i) => i.category_code === code))
           ? 0.1
@@ -263,11 +256,9 @@ export const FINANCE_GRADERS: Record<string, Grader> = {
           ],
         ],
       ] as const) {
-        const inv = c.one(db, 'SELECT * FROM invoice WHERE invoice_number = ?', `INV-2026-0${n}`)
+        const inv = c.rows(db, 'invoice').filter((r) => eq(r.invoice_number, `INV-2026-0${n}`))[0]
         d[`invoice_${n}_created`] = inv?.vendor_id === vendor && inv.invoice_date === date ? 0.3 : 0
-        const items = inv
-          ? c.all(db, 'SELECT category_code, amount FROM invoice_line_item WHERE invoice_id = ?', inv.id)
-          : []
+        const items = inv ? c.rows(db, 'invoice_line_item').filter((r) => eq(r.invoice_id, inv.id)) : []
         const used = new Set<number>()
         const matches =
           items.length === expected.length &&
@@ -286,11 +277,7 @@ export const FINANCE_GRADERS: Record<string, Grader> = {
     let score = 0
     try {
       const db = financePath(c),
-        holdings = new Map(
-          c
-            .all(db, 'SELECT asset_class_code, current_value FROM portfolio_holding')
-            .map((r) => [r.asset_class_code, r.current_value])
-        )
+        holdings = new Map(c.rows(db, 'portfolio_holding').map((r) => [r.asset_class_code, r.current_value]))
       if (
         Object.entries({ eq: 112500, fi: 75000, ca: 37500, al: 25000 }).every(([k, v]) =>
           near(holdings.get(k), v, 1)
@@ -300,7 +287,7 @@ export const FINANCE_GRADERS: Record<string, Grader> = {
       else {
         const seed = new Set(['eq,buy,5000', 'fi,sell,3000', 'al,buy,2000'])
         const orders = c
-          .all(db, 'SELECT asset_class_code, direction, amount FROM portfolio_order')
+          .rows(db, 'portfolio_order')
           .filter((o) => !seed.has([o.asset_class_code, o.direction, o.amount].join(',')))
         score =
           (

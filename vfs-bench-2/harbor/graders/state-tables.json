@@ -1,0 +1,82 @@
+{
+  "/opt/mock/data/chat/chat.sqlite": [
+    "message",
+    "user_sticker",
+    "user_sticker_pack"
+  ],
+  "/opt/mock/data/finance_app.sqlite": [
+    "account_balance",
+    "asset_record",
+    "budget_alert",
+    "dashboard_config",
+    "department_financial_record",
+    "expense_item",
+    "expense_report",
+    "invoice",
+    "invoice_line_item",
+    "portfolio_holding",
+    "portfolio_order",
+    "transaction_record"
+  ],
+  "/tmp/mosi_smart_home.sqlite": [
+    "calendar_event",
+    "coffee_schedule",
+    "grocery_product",
+    "thermostat_settings"
+  ],
+  "/var/lib/mock-data/airline/airline.db": [
+    "bookings",
+    "flights",
+    "passengers",
+    "seats",
+    "users"
+  ],
+  "/var/lib/mock-data/expense/expense.db": [
+    "expense_draft",
+    "user"
+  ],
+  "/var/lib/mock-data/gws/gws.db": [
+    "Attachment",
+    "Event",
+    "Message",
+    "MessageHeader",
+    "MessageLabel"
+  ],
+  "/var/lib/mock-data/health/health.db": [
+    "allergen",
+    "health_metric_series",
+    "medication",
+    "medication_intake_slot"
+  ],
+  "/var/lib/mock-data/insurance/insurance.db": [
+    "appointment",
+    "claim",
+    "current_policy",
+    "insurance_plan",
+    "plan_selection"
+  ],
+  "/var/lib/mock-data/mint-diet/mint-diet.sqlite": [
+    "daily_log",
+    "food_catalog",
+    "food_entry",
+    "meal_plan",
+    "meal_plan_day",
+    "meal_plan_item"
+  ],
+  "/var/lib/mock-data/social/social.db": [
+    "account",
+    "comment",
+    "follow_relation",
+    "post",
+    "post_action_log",
+    "post_like",
+    "post_tag",
+    "tag"
+  ],
+  "/var/lib/mock-data/workspace/workspace.db": [
+    "brief_entry",
+    "note",
+    "task_record",
+    "user"
+  ]
+}

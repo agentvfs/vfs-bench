@@ -1,4 +1,4 @@
-import { type Context, type Grader, GWS, grade, lines, lower, mails } from './context.ts'
+import { instantDate, eq, type Context, type Grader, GWS, grade, lines, lower, mails } from './context.ts'
 const DB = '/var/lib/mock-data/airline/airline.db',
   EMAIL = 'peter.griffin@work.mosi.inc'
 const SESSION = '/logs/agent/openclaw-state/agents/main/sessions/harbor.jsonl'
@@ -22,32 +22,42 @@ export function harborLastMessage(c: Context): string | null {
 }
 const booking: Grader = (c) => {
   if (!c.exists(DB)) return grade(0)
-  const user = c.one(DB, 'SELECT id FROM users WHERE email=?', EMAIL)
+  const user = c.rows(DB, 'users').filter((r) => eq(r.email, EMAIL))[0]
   if (!user) return grade(0)
   const next = c.now()
   next.setUTCDate(next.getUTCDate() + ((8 - next.getUTCDay()) % 7 || 7))
-  const rows = c.all(
-    DB,
-    "SELECT b.cabin_class,f.departure_time FROM bookings b JOIN flights f ON f.id=b.flight_id WHERE b.user_id=? AND f.origin_code='JFK' AND f.destination_code='LAX' AND date(f.departure_time)=?",
-    user.id,
-    next.toISOString().slice(0, 10)
-  )
+  const rows = c
+    .rows(DB, 'bookings')
+    .filter((b) => eq(b.user_id, user.id))
+    .flatMap((b) =>
+      c
+        .rows(DB, 'flights')
+        .filter(
+          (f) =>
+            eq(f.id, b.flight_id) &&
+            f.origin_code === 'JFK' &&
+            f.destination_code === 'LAX' &&
+            instantDate(f.departure_time) === next.toISOString().slice(0, 10)
+        )
+        .map((f) => ({ cabin_class: b.cabin_class, departure_time: f.departure_time }))
+    )
   const target = rows.find((r) => lower(r.cabin_class) === 'economy')
   if (!target) return grade(0)
   return grade(/[T ]10:00(?:[:+Z-]|$)/.test(target.departure_time ?? '') ? 1 : 0.8)
 }
 function selected(c: Context) {
-  const user = c.one(DB, 'SELECT id FROM users WHERE email=?', EMAIL),
-    flight = c.one(DB, "SELECT * FROM flights WHERE flight_number='GKD2001'")
+  const user = c.rows(DB, 'users').filter((r) => eq(r.email, EMAIL))[0],
+    flight = c.rows(DB, 'flights').filter((r) => eq(r.flight_number, 'GKD2001'))[0]
   if (!user || !flight) return null
-  const booking = c.one(
-    DB,
-    'SELECT * FROM bookings WHERE user_id=? AND flight_id=? LIMIT 1',
-    user.id,
-    flight.id
-  )
+  const booking = c
+    .rows(DB, 'bookings')
+    .filter((r) => eq(r.user_id, user.id) && eq(r.flight_id, flight.id))
+    .slice(0, 1)[0]
   if (!booking) return null
-  const passenger = c.one(DB, 'SELECT seat_id FROM passengers WHERE booking_id=? LIMIT 1', booking.id)
+  const passenger = c
+    .rows(DB, 'passengers')
+    .filter((r) => eq(r.booking_id, booking.id))
+    .slice(0, 1)[0]
   return { user, flight, booking, passenger }
 }
 export const AIRLINE_GRADERS: Record<string, Grader> = {
@@ -57,7 +67,7 @@ export const AIRLINE_GRADERS: Record<string, Grader> = {
     const state = selected(c)
     if (!state?.passenger) return grade(0)
     const seat = state.passenger.seat_id
-      ? c.one(DB, 'SELECT seat_number FROM seats WHERE id=?', state.passenger.seat_id)
+      ? c.rows(DB, 'seats').filter((r) => eq(r.id, state.passenger.seat_id))[0]
       : undefined
     let score = 0
     if (seat) {
@@ -90,7 +100,7 @@ export const AIRLINE_GRADERS: Record<string, Grader> = {
   'flight-cancel-claim': (c) => {
     const state = selected(c)
     if (!state || !c.exists(GWS)) return grade(0)
-    const user = c.one(DB, 'SELECT email,phone FROM users WHERE email=?', EMAIL)!,
+    const user = c.rows(DB, 'users').filter((r) => eq(r.email, EMAIL))[0]!,
       m = mails(c).find((m) => m.to.includes('claims@gkdairlines.com'))
     if (!m) return grade(0)
     const text = lower(m.subject + ' ' + m.body),
@@ -125,7 +135,7 @@ export const AIRLINE_GRADERS: Record<string, Grader> = {
       text.includes('peter griffin'),
       text.includes(lower(user.email)),
       Boolean(user.phone && text.includes(user.phone)),
-      c.scalar(GWS, 'SELECT COUNT(*) FROM Attachment WHERE messageId=?', m.id) > 0,
+      c.rows(GWS, 'Attachment').filter((r) => eq(r.messageId, m.id)).length > 0,
     ]
     return grade(checks.filter(Boolean).length / 9)
   },

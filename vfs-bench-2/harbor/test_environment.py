@@ -14,6 +14,7 @@ import threading
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 
 from harbor.models.trial.paths import TrialPaths
 from vfsbench_harbor import environment
@@ -98,6 +99,18 @@ class AgentTrajectory(unittest.TestCase):
         self.assertEqual(self.target.read_bytes(), self.source.read_bytes())
         self.assertTrue(
             self.target.is_relative_to(self.env.disk_mounts["/logs"]))
+
+    def test_native_refresh_skips_database_backups_but_copies_files(self):
+        root = Path(self.root.name)
+        database = root / "live.db"
+        database.write_bytes(environment.SQLITE + b"database contents")
+        output = root / "live.json"
+        output.write_text('{"done": true}')
+        self.env._state = [(root / "view.db", database),
+                           (root / "view.json", output)]
+        with patch.object(environment, "_snapshot") as snapshot:
+            asyncio.run(self.env.refresh_verifier_files())
+        snapshot.assert_called_once_with(root / "view.json", output)
 
     def test_exec_refreshes_trajectory_before_running_pyodide_verifier(
             self) -> None:

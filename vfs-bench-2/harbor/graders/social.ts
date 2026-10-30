@@ -1,5 +1,10 @@
-import DATA from './reference-data.json' with { type: 'json' }
 import {
+  compare,
+  eq,
+  ne,
+  gt,
+  le,
+  orderBy,
   type Context,
   type Grader,
   type Row,
@@ -11,6 +16,7 @@ import {
   mailText,
   round,
 } from './context.ts'
+import DATA from './reference-data.json' with { type: 'json' }
 
 /** The read-only social_api.py contract used by the preserved Pyodide graders. */
 class Social {
@@ -19,107 +25,96 @@ class Social {
     this.c = c
   }
   login(username: string): number | null {
-    const a = this.c.one(SOCIAL, 'SELECT * FROM account WHERE username=?', username)
+    const a = this.c.rows(SOCIAL, 'account').find((a) => eq(a.username, username))
     return a && a.password === 'demo123' && a.is_active !== 0 ? a.id : null
   }
-  private shadow() {
-    const now =
-      this.c.scalar(
-        SOCIAL,
-        'SELECT MAX(t) FROM (SELECT MAX(created_at) AS t FROM post UNION ALL SELECT MAX(updated_at) FROM post UNION ALL SELECT MAX(created_at) FROM post_action_log UNION ALL SELECT MAX(updated_at) FROM comment)'
-      ) ?? null
-    const due = "status='scheduled' AND REPLACE(scheduled_for,'T',' ')<=?"
-    return {
-      sql: `WITH post AS (SELECT id,author_account_id,content,CASE WHEN ${due} THEN 'published' ELSE status END AS status,visibility,moderation_state,scheduled_for,scheduled_timezone,CASE WHEN ${due} THEN ? ELSE published_at END AS published_at,deleted_at,is_pinned,has_event_cta,created_at,updated_at FROM main.post)`,
-      params: [now, now, now],
-    }
+  private posts(): Row[] {
+    const posts = this.c.rows(SOCIAL, 'post')
+    const times = [
+      ...posts.flatMap((p) => [p.created_at, p.updated_at]),
+      ...this.c.rows(SOCIAL, 'post_action_log').map((p) => p.created_at),
+      ...this.c.rows(SOCIAL, 'comment').map((p) => p.updated_at),
+    ].filter((t) => t != null)
+    const now = times.sort(compare).at(-1) ?? null
+    return posts.flatMap((p) => {
+      const author = this.c.rows(SOCIAL, 'account').find((a) => eq(a.id, p.author_account_id))
+      if (!author) return []
+      const due =
+        p.status === 'scheduled' && p.scheduled_for != null && le(p.scheduled_for.replaceAll('T', ' '), now)
+      return [
+        {
+          ...p,
+          author_username: author.username,
+          status: due ? 'published' : p.status,
+          published_at: due ? now : p.published_at,
+        },
+      ]
+    })
+  }
+  private follows(viewer: number, author: number): boolean {
+    return this.c
+      .rows(SOCIAL, 'follow_relation')
+      .some(
+        (f) =>
+          eq(f.follower_account_id, viewer) && eq(f.target_account_id, author) && f.status === 'following'
+      )
+  }
+  private blocked(viewer: number, author: number): boolean {
+    return this.c
+      .rows(SOCIAL, 'follow_relation')
+      .some(
+        (f) =>
+          f.status === 'blocked' &&
+          ((eq(f.follower_account_id, viewer) && eq(f.target_account_id, author)) ||
+            (eq(f.follower_account_id, author) && eq(f.target_account_id, viewer)))
+      )
   }
   private enriched(post: Row, viewer: number | null): Row {
+    const likes = this.c.rows(SOCIAL, 'post_like').filter((l) => eq(l.post_id, post.id))
     return {
       ...post,
-      tags: this.c.all(
-        SOCIAL,
-        'SELECT t.* FROM tag t JOIN post_tag pt ON pt.tag_id=t.id WHERE pt.post_id=? ORDER BY pt.sort_order',
-        post.id
-      ),
-      liked: Boolean(
-        viewer &&
-          this.c.one(SOCIAL, 'SELECT 1 FROM post_like WHERE post_id=? AND account_id=?', post.id, viewer)
-      ),
-      like_count: this.c.scalar(SOCIAL, 'SELECT COUNT(*) FROM post_like WHERE post_id=?', post.id),
+      tags: this.c
+        .rows(SOCIAL, 'post_tag')
+        .filter((pt) => eq(pt.post_id, post.id))
+        .sort(orderBy(['sort_order', 1]))
+        .flatMap((pt) => this.c.rows(SOCIAL, 'tag').filter((t) => eq(t.id, pt.tag_id))),
+      liked: Boolean(viewer && likes.some((l) => eq(l.account_id, viewer))),
+      like_count: likes.length,
     }
   }
   list(viewer: number | null, author?: number, includeDeleted = false, limit = 20): Row[] {
-    const { sql, params } = this.shadow()
-    let where: string,
-      p: any[] = []
-    if (!viewer) where = "p.status='published' AND p.visibility='public'"
-    else {
-      const own = includeDeleted && author === viewer
-      where =
-        "p.visibility!='unlisted' AND ((p.status='published' AND p.visibility='public') OR (p.status='published' AND p.visibility='followers_only' AND EXISTS (SELECT 1 FROM follow_relation fr WHERE fr.follower_account_id=? AND fr.target_account_id=p.author_account_id AND fr.status='following')) OR (p.author_account_id=? AND p.status!='deleted')" +
-        (own ? " OR (p.author_account_id=? AND p.status='deleted')" : '') +
-        ')'
-      p = own ? [viewer, viewer, viewer] : [viewer, viewer]
-      const blocked = this.c
-        .all(
-          SOCIAL,
-          "SELECT target_account_id AS id FROM follow_relation WHERE follower_account_id=? AND status='blocked' UNION SELECT follower_account_id AS id FROM follow_relation WHERE target_account_id=? AND status='blocked'",
-          viewer,
-          viewer
+    return this.posts()
+      .filter((p) => {
+        if (author !== undefined && !eq(p.author_account_id, author)) return false
+        if (!viewer) return p.status === 'published' && p.visibility === 'public'
+        if (!ne(p.visibility, 'unlisted') || this.blocked(viewer, p.author_account_id)) return false
+        return (
+          (p.status === 'published' &&
+            (p.visibility === 'public' ||
+              (p.visibility === 'followers_only' && this.follows(viewer, p.author_account_id)))) ||
+          (eq(p.author_account_id, viewer) && ne(p.status, 'deleted')) ||
+          (includeDeleted && author === viewer && eq(p.author_account_id, viewer) && p.status === 'deleted')
         )
-        .map((r) => r.id)
-      if (blocked.length) {
-        where += ` AND p.author_account_id NOT IN (${blocked.map(() => '?').join(',')})`
-        p.push(...blocked)
-      }
-    }
-    if (author !== undefined) {
-      where += ' AND p.author_account_id=?'
-      p.push(author)
-    }
-    return this.c
-      .all(
-        SOCIAL,
-        `${sql} SELECT p.*,a.username AS author_username FROM post p JOIN account a ON a.id=p.author_account_id WHERE ${where} ORDER BY p.is_pinned DESC,COALESCE(p.published_at,p.created_at) DESC,p.id DESC LIMIT ? OFFSET 0`,
-        ...params,
-        ...p,
-        limit
+      })
+      .sort(
+        (a, b) =>
+          compare(b.is_pinned, a.is_pinned) ||
+          compare(b.published_at ?? b.created_at, a.published_at ?? a.created_at) ||
+          compare(b.id, a.id)
       )
-      .map((r) => this.enriched(r, viewer))
+      .slice(0, limit)
+      .map((p) => this.enriched(p, viewer))
   }
   detail(id: number, viewer: number): Row | undefined {
-    const { sql, params } = this.shadow(),
-      p = this.c.one(
-        SOCIAL,
-        `${sql} SELECT p.*,a.username AS author_username FROM post p JOIN account a ON a.id=p.author_account_id WHERE p.id=?`,
-        ...params,
-        id
-      )
-    if (!p) return undefined
-    if (
-      this.c.one(
-        SOCIAL,
-        "SELECT 1 FROM follow_relation WHERE status='blocked' AND ((follower_account_id=? AND target_account_id=?) OR (follower_account_id=? AND target_account_id=?))",
-        viewer,
-        p.author_account_id,
-        p.author_account_id,
-        viewer
-      )
-    )
-      return undefined
+    const p = this.posts().find((p) => eq(p.id, id))
+    if (!p || this.blocked(viewer, p.author_account_id)) return undefined
     if (['deleted', 'draft', 'scheduled'].includes(p.status) && viewer !== p.author_account_id)
       return undefined
     if (
       p.status === 'published' &&
       p.visibility === 'followers_only' &&
       viewer !== p.author_account_id &&
-      !this.c.one(
-        SOCIAL,
-        "SELECT 1 FROM follow_relation WHERE follower_account_id=? AND target_account_id=? AND status='following'",
-        viewer,
-        p.author_account_id
-      )
+      !this.follows(viewer, p.author_account_id)
     )
       return undefined
     return this.enriched(p, viewer)
@@ -150,12 +145,12 @@ export const SOCIAL_GRADERS: Record<string, Grader> = {
     return grade(p ? (p.liked ? 0 : 0.5) + (p.like_count === 0 ? 0.5 : 0) : 0)
   },
   'social-unlike-verify': (c) =>
-    grade(c.one(SOCIAL, 'SELECT id FROM post_like WHERE post_id=1 AND account_id=2') ? 0 : 1),
+    grade(c.rows(SOCIAL, 'post_like').filter((r) => eq(r.post_id, 1) && eq(r.account_id, 2))[0] ? 0 : 1),
   'social-post-rate-limit': (c) => {
-    const n = c.all(
-      SOCIAL,
-      'SELECT id,content,created_at FROM post WHERE id>10 ORDER BY created_at ASC'
-    ).length
+    const n = c
+      .rows(SOCIAL, 'post')
+      .filter((r) => gt(r.id, 10))
+      .sort(orderBy(['created_at', 1])).length
     return grade(n >= 3 ? 1 : n ? 0.3 : 0)
   },
   'social-keyword-cleanup': (c) => {
@@ -176,15 +171,21 @@ export const SOCIAL_GRADERS: Record<string, Grader> = {
   'social-comment-moderation': (c) => {
     let score = 0
     for (const id of [101, 103, 104]) {
-      const row = c.one(SOCIAL, 'SELECT status FROM comment WHERE id=?', id)
+      const row = c.rows(SOCIAL, 'comment').filter((r) => eq(r.id, id))[0]
       if (!row || row.status !== 'visible') score += 0.05
     }
-    if (c.scalar(SOCIAL, 'SELECT status FROM comment WHERE id=102') === 'visible') score += 0.1
+    if (c.rows(SOCIAL, 'comment').filter((r) => eq(r.id, 102))[0]?.status === 'visible') score += 0.1
     if (
-      c.one(
-        SOCIAL,
-        "SELECT c.id FROM comment c LEFT JOIN account a ON c.author_account_id=a.id WHERE c.parent_comment_id=102 AND c.status='visible' AND a.username='mosi_brand'"
-      )
+      c
+        .rows(SOCIAL, 'comment')
+        .find(
+          (row) =>
+            row.parent_comment_id === 102 &&
+            row.status === 'visible' &&
+            c
+              .rows(SOCIAL, 'account')
+              .some((a) => eq(a.id, row.author_account_id) && a.username === 'mosi_brand')
+        )
     )
       score += 0.75
     else score = Math.min(score, 0.4)

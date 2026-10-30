@@ -5,6 +5,7 @@ This never runs an agent or changes a saved trial. A mismatch exits nonzero.
 """
 import argparse
 import asyncio
+import importlib.util
 import json
 import time
 from pathlib import Path
@@ -12,8 +13,13 @@ from pathlib import Path
 from harbor.models.task.task import Task
 from harbor.models.trial.paths import TrialPaths
 from vfsbench_harbor.environment import HARBOR, MirageEnvironment
-from vfsbench_harbor.mirage_verifier import MirageVerifier
 from vfsbench_harbor.parity import differences
+
+spec = importlib.util.spec_from_file_location("reference_state",
+                                              HARBOR / "reference_state.py")
+reference_state = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(reference_state)
+SavedVerifier = reference_state.SavedVerifier
 
 
 def saved_environment(task, paths, plan, node):
@@ -33,6 +39,16 @@ def saved_environment(task, paths, plan, node):
     env._epoch = datetime.fromisoformat(plan["epoch"].replace(
         "Z", "+00:00")).timestamp() * 1000
     env._started = time.time() * 1000
+
+    async def snapshot(definitions):
+        return {
+            alias:
+            reference_state.reference_tables(env.host_path(alias),
+                                             item["tables"])
+            for alias, item in definitions.items()
+        }
+
+    env.snapshot_verifier_states = snapshot
     return env
 
 
@@ -49,9 +65,9 @@ async def run(args):
             plan = json.loads((path / "mirage/plan.json").read_text())
             paths = TrialPaths(path)
             env = saved_environment(task, paths, plan, args.node)
-            native = MirageVerifier(task=task,
-                                    environment=env,
-                                    trial_paths=paths)
+            native = SavedVerifier(task=task,
+                                   environment=env,
+                                   trial_paths=paths)
             try:
                 result = await native.evaluate(refresh=False)
                 expected = original["verifier_result"]["rewards"]

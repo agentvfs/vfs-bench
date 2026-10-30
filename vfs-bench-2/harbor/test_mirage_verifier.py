@@ -56,6 +56,30 @@ class MirageVerifierTests(unittest.IsolatedAsyncioTestCase):
             }
         }
         self.env._state = [(snapshot / "chat.sqlite", self.live)]
+
+        async def snapshot_states(definitions):
+            with sqlite3.connect(self.live) as db:
+                db.row_factory = sqlite3.Row
+                return {
+                    alias: {
+                        table: [
+                            dict(row) for row in db.execute('SELECT * FROM "' +
+                                                            table + '"')
+                        ]
+                        for table in definition["tables"]
+                    }
+                    for alias, definition in definitions.items()
+                }
+
+        self.env.snapshot_verifier_states = snapshot_states
+        (self.root / "request.json").write_text(
+            json.dumps({
+                "task": self.task.name,
+                "states": {},
+                "files": {},
+                "timeoutSeconds": 30
+            }))
+
         self.verifier = MirageVerifier(task=self.task,
                                        environment=self.env,
                                        trial_paths=self.paths)
@@ -114,14 +138,30 @@ class MirageVerifierTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaisesRegex(ValueError, "No Mirage grader"):
             await self.verifier.verify()
 
-    async def test_failed_database_does_not_leave_a_reward(self):
-        self.env._state = []
-        self.env.host_path("/opt/mock/data/chat/chat.sqlite").write_bytes(
-            b"bad database")
+    async def test_invalid_state_does_not_leave_a_reward(self):
+        self.env.snapshot_verifier_states = AsyncMock(return_value={
+            "/opt/mock/data/chat/chat.sqlite": {
+                "message": "invalid"
+            }
+        })
         self.paths.reward_text_path.write_text("1\n")
         with self.assertRaisesRegex(RuntimeError, "Mirage grader exited"):
             await self.verifier.verify()
         self.assertFalse(self.paths.reward_text_path.exists())
+
+    async def test_native_grading_never_opens_sqlite(self):
+        self.env.snapshot_verifier_states = AsyncMock(
+            return_value={
+                "/opt/mock/data/chat/chat.sqlite": {
+                    "user_sticker_pack": [],
+                    "user_sticker": [],
+                    "message": []
+                }
+            })
+        with patch("sqlite3.connect",
+                   side_effect=AssertionError("host SQLite")):
+            result = await self.verifier.verify()
+        self.assertEqual(result.rewards, {"reward": 0})
 
     async def test_log_filters_keep_rewards(self):
         self.verifier.exclude_logs = ["*"]
@@ -135,7 +175,7 @@ class MirageVerifierTests(unittest.IsolatedAsyncioTestCase):
             with self.subTest(cancel=cancel):
                 entered = asyncio.Event()
 
-                async def communicate():
+                async def communicate(_input):
                     entered.set()
                     await asyncio.Event().wait()
 

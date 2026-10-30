@@ -2,13 +2,14 @@
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { DatabaseSync } from 'node:sqlite'
 import { test } from 'node:test'
 
 import { CHAT_DB, CHAT_GRADERS } from './graders/chat.ts'
+import { referenceTables } from './reference-state.ts'
 import { GRADERS } from './graders/index.ts'
 import { verify, verifierWorkspace } from './verify.ts'
 
@@ -92,7 +93,7 @@ test('the registered reference files match their pinned hashes', () => {
   }
 })
 
-test('SQL ports match Python on empty, partial, complete, wrong-user and NULL states', () => {
+test('VFS checks match Python on empty, partial, complete, wrong-user and NULL states', async () => {
   const dir = mkdtempSync(join(tmpdir(), 'vfsbench-grade-parity-'))
   const seen = new Map(Object.keys(CHAT_GRADERS).map((task) => [task, new Set<number>()]))
   let index = 0
@@ -109,8 +110,10 @@ test('SQL ports match Python on empty, partial, complete, wrong-user and NULL st
       state(file, packs, channels, count, category)
       const db = new DatabaseSync(file, { readOnly: true })
       try {
-        for (const [task, grade] of Object.entries(CHAT_GRADERS)) {
-          const score = grade(db).score
+        for (const task of Object.keys(CHAT_GRADERS)) {
+          const score = (
+            await verify({ task, states: { [CHAT_DB]: referenceTables(db) }, timeoutSeconds: 30 })
+          ).score
           assert.equal(
             score,
             reference(task, file),
@@ -128,10 +131,25 @@ test('SQL ports match Python on empty, partial, complete, wrong-user and NULL st
     const db = new DatabaseSync(file)
     db.exec("INSERT INTO user_sticker VALUES (2, 1, 'recent')")
     assert.equal(
-      CHAT_GRADERS['chat-sticker-engagement']!(db).score,
+      (
+        await verify({
+          task: 'chat-sticker-engagement',
+          states: { [CHAT_DB]: referenceTables(db) },
+          timeoutSeconds: 30,
+        })
+      ).score,
       reference('chat-sticker-engagement', file)
     )
-    assert.equal(CHAT_GRADERS['chat-sticker-engagement']!(db).score, 0.5)
+    assert.equal(
+      (
+        await verify({
+          task: 'chat-sticker-engagement',
+          states: { [CHAT_DB]: referenceTables(db) },
+          timeoutSeconds: 30,
+        })
+      ).score,
+      0.5
+    )
     db.close()
     for (const scores of seen.values()) assert.deepEqual([...scores].sort(), [0, 0.5, 1])
   } finally {
@@ -143,9 +161,9 @@ test('fresh verifier workspaces have no Python/JS runtime or host file mounts', 
   const dir = mkdtempSync(join(tmpdir(), 'vfsbench-grade-workspace-'))
   const database = join(dir, 'chat.sqlite')
   state(database, 3, 3, 6, 'favorite')
-  const { workspace } = verifierWorkspace({
+  const { workspace } = await verifierWorkspace({
     task: 'chat-sticker-engagement',
-    databases: { [CHAT_DB]: database },
+    states: { [CHAT_DB]: referenceTables(database) },
     timeoutSeconds: 30,
   })
   const before = readFileSync(database)
@@ -156,6 +174,8 @@ test('fresh verifier workspaces have no Python/JS runtime or host file mounts', 
       'cat /etc/passwd',
       `cat ${database}`,
       'grade --sql "DELETE FROM message"',
+      'sqlite3 /.verifier-state/0.json',
+      'echo forged > /.verifier-state/0.json',
     ]) {
       const result = await workspace.shell(command)
       assert.notEqual(result.exitCode, 0, command)
@@ -179,7 +199,7 @@ test('concurrent verifiers return their own rewards and errors produce no score'
     state(empty, 0, 0, 0, 'favorite')
     const request = (file: string) => ({
       task: 'chat-sticker-engagement',
-      databases: { [CHAT_DB]: file },
+      states: { [CHAT_DB]: referenceTables(file) },
       timeoutSeconds: 30,
     })
     const results = await Promise.all([verify(request(full)), verify(request(empty))])
@@ -188,10 +208,26 @@ test('concurrent verifiers return their own rewards and errors produce no score'
       [1, 0]
     )
     await assert.rejects(verify({ ...request(full), task: 'unported' }), /No Mirage grader/)
-    await assert.rejects(verify(request(join(dir, 'missing.sqlite'))), /Grader failed/)
-    writeFileSync(join(dir, 'bad.sqlite'), 'not a database')
-    await assert.rejects(verify(request(join(dir, 'bad.sqlite'))), /Grader failed/)
+    await assert.rejects(verify({ ...request(full), states: {} }), /Grader failed/)
+    await assert.rejects(
+      verify({ ...request(full), states: { [CHAT_DB]: { message: 'invalid' as any } } }),
+      /Grader failed/
+    )
   } finally {
     rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('native grading has no host filesystem, database, or subprocess imports', () => {
+  const sources = readdirSync(join(HARBOR, 'graders'))
+    .filter((f) => f.endsWith('.ts'))
+    .map((f) => join(HARBOR, 'graders', f))
+  for (const path of [...sources, join(HARBOR, 'verify.ts')]) {
+    const text = readFileSync(path, 'utf8')
+    assert.doesNotMatch(
+      text,
+      /node:(?:fs|sqlite|child_process)|bun:sqlite|SELECT\s+.+?FROM|DatabaseSync/,
+      path
+    )
   }
 })

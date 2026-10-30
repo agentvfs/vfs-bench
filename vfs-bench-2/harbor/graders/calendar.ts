@@ -1,4 +1,8 @@
 import {
+  eq,
+  ne,
+  like,
+  orderBy,
   type Context,
   type Grader,
   type Row,
@@ -58,12 +62,9 @@ export function iso(value: any, zone?: string | null): number | null {
 }
 export function events(c: Context, primary = true): (Row & { start: number | null; end: number | null })[] {
   return c
-    .all(
-      GWS,
-      `SELECT * FROM Event WHERE ${
-        primary ? "calendarId = 'integ@example.com' AND " : ''
-      }status != 'cancelled' ORDER BY seq`
-    )
+    .rows(GWS, 'Event')
+    .filter((e) => (!primary || e.calendarId === 'integ@example.com') && ne(e.status, 'cancelled'))
+    .sort(orderBy(['seq', 1]))
     .map((e) => ({
       ...e,
       start: iso(e.startDateTime, e.startTimeZone),
@@ -114,10 +115,20 @@ export const CALENDAR_GRADERS: Record<string, Grader> = {
   'interview-slot-verify': (c) => {
     let start = iso('2026-05-26T14:00:00'),
       end = iso('2026-05-26T15:00:00')
-    const body = c.scalar(
-      GWS,
-      "SELECT m.bodyText FROM Message m JOIN MessageHeader h ON h.tenant = m.tenant AND h.messageId = m.id WHERE h.name = 'Subject' AND h.value LIKE '%Interview Confirmation%' ORDER BY m.seq LIMIT 1"
-    )
+    const body = c
+      .rows(GWS, 'Message')
+      .sort(orderBy(['seq', 1]))
+      .find((m) =>
+        c
+          .rows(GWS, 'MessageHeader')
+          .some(
+            (h) =>
+              eq(h.tenant, m.tenant) &&
+              eq(h.messageId, m.id) &&
+              h.name === 'Subject' &&
+              like(h.value, '%Interview Confirmation%')
+          )
+      )?.bodyText
     if (typeof body === 'string') {
       const d = body.match(/Date:\s*\w+,\s*(\w+)\s+(\d+),\s*(\d+)/),
         t = body.match(/Time:\s*(\d+):(\d+)\s*(AM|PM)\s*-\s*(\d+):(\d+)\s*(AM|PM)/)

@@ -1,37 +1,50 @@
-/**
- * A trusted grader command in a fresh Mirage workspace, with no language
- * runtime. Called by MirageVerifier in a disposable Node process so Harbor
- * can kill synchronous work on timeout/cancel. Never loads task-provided code.
- */
-import { readFileSync } from 'node:fs'
-
-// Import the virtual shell directly: the broad Node entrypoint also loads
-// every cloud/storage adapter and host runtime, which grading doesn't need.
+/** Native Mirage verifier. Input transport contains bytes and JSON, never host paths. */
 import { CLI, CLIHandler } from '@struktoai/mirage-core/commands/cli/types'
 import { CommandSpec } from '@struktoai/mirage-core/commands/spec/types'
 import { IOResult } from '@struktoai/mirage-core/io/types'
-import { Limit, MountMode } from '@struktoai/mirage-core/types'
+import { Limit, MountMode, PathSpec } from '@struktoai/mirage-core/types'
 import { RAMVFS } from '@struktoai/mirage-core/vfs/ram/ram'
 import { Workspace } from '@struktoai/mirage-core/workspace/workspace/workspace'
-
-import { type Inputs, type Grade } from './graders/context.ts'
+import { type Inputs, type InputSpec, type Grade } from './graders/context.ts'
 import { evaluate, GRADERS } from './graders/index.ts'
-
 export type VerifyRequest = Inputs
-
-/** Only registered, reviewed graders can reach the staged database. No SQL/path arguments. */
-export function verifierWorkspace(request: VerifyRequest): {
-  workspace: Workspace
-  result: () => Grade | undefined
-} {
+const encoder = new TextEncoder()
+function pathSpec(path: string) {
+  if (!path.startsWith('/') || path.split('/').some((s) => s === '.' || s === '..') || path.includes('\0'))
+    throw new Error(`Invalid virtual input path: ${path}`)
+  return new PathSpec({ virtual: path, directory: '/', vfsPath: path.slice(1) })
+}
+export async function verifierWorkspace(
+  request: VerifyRequest
+): Promise<{ workspace: Workspace; result: () => Grade | undefined }> {
   if (!Object.hasOwn(GRADERS, request.task)) throw new Error(`No Mirage grader for ${request.task}`)
   if (!Number.isFinite(request.timeoutSeconds) || request.timeoutSeconds <= 0)
     throw new Error('Invalid verifier timeout')
+  const input = new RAMVFS(),
+    output = new RAMVFS()
+  const write = async (path: string, data: Uint8Array) => {
+    await input.mkdir(pathSpec(path.slice(0, path.lastIndexOf('/')) || '/'), true)
+    await input.write(pathSpec(path), data)
+  }
+  const { states, files = {}, ...metadata } = request
+  const spec: InputSpec = { ...metadata, states: {}, files: Object.keys(files) }
+  for (const [i, [alias, tables]] of Object.entries(states).entries()) {
+    const path = `/.verifier-state/${i}.json`
+    spec.states[alias] = path
+    await write(path, encoder.encode(JSON.stringify(tables)))
+  }
+  for (const [path, bytes] of Object.entries(files)) {
+    if (path.startsWith('/.verifier-state/') || path.startsWith('/logs/verifier/reward'))
+      throw new Error(`Reserved verifier path: ${path}`)
+    await write(
+      path,
+      Uint8Array.from(atob(bytes), (c) => c.charCodeAt(0))
+    )
+  }
   let grade: Grade | undefined
   const workspace = new Workspace(
-    { '/logs/verifier': new RAMVFS() },
+    { '/': [input, MountMode.READ], '/.verifier-output': [output, MountMode.WRITE] },
     {
-      mode: MountMode.WRITE,
       runtimes: ['workspace'],
       commandLimits: { '@line': new Limit({ timeoutSeconds: request.timeoutSeconds }) },
     }
@@ -39,14 +52,12 @@ export function verifierWorkspace(request: VerifyRequest): {
   workspace.registerCli(
     'grade',
     new CLI({
-      spec: new CommandSpec({ name: 'grade', description: 'Grade this trial using its frozen state.' }),
+      spec: new CommandSpec({ name: 'grade', description: 'Grade the frozen Mirage VFS state.' }),
       handlers: {
         '': new CLIHandler({
-          fn: () => {
-            // Real SQLite, opened read-only. Its path is fixed by the host's
-            // staging, never taken from an agent command or task environment.
-            grade = evaluate(request)
-            return [new TextEncoder().encode(`${grade.score}\n`), new IOResult()]
+          fn: async (_accessor, _paths, _texts, command) => {
+            grade = await evaluate(spec, command)
+            return [encoder.encode(`${grade.score}\n`), new IOResult()]
           },
         }),
       },
@@ -54,12 +65,13 @@ export function verifierWorkspace(request: VerifyRequest): {
   )
   return { workspace, result: () => grade }
 }
-
 export async function verify(request: VerifyRequest) {
   const started = performance.now()
-  const { workspace, result } = verifierWorkspace(request)
+  const { workspace, result } = await verifierWorkspace(request)
   try {
-    const io = await workspace.shell('grade > /logs/verifier/reward.txt && cat /logs/verifier/reward.txt')
+    const io = await workspace.shell(
+      'grade > /.verifier-output/reward.txt && cat /.verifier-output/reward.txt'
+    )
     if (io.exitCode !== 0) throw new Error(`Grader failed (${io.exitCode}): ${io.stderrText}`)
     const grade = result()
     if (!grade || Number(io.stdoutText.trim()) !== grade.score)
@@ -76,11 +88,11 @@ export async function verify(request: VerifyRequest) {
     await workspace.close()
   }
 }
-
 if (import.meta.main) {
   try {
-    const request = JSON.parse(readFileSync(process.argv[2]!, 'utf8')) as VerifyRequest
-    process.stdout.write(`${JSON.stringify(await verify(request))}\n`)
+    let text = ''
+    for await (const chunk of process.stdin) text += chunk.toString('utf8')
+    process.stdout.write(`${JSON.stringify(await verify(JSON.parse(text)))}\n`)
   } catch (error) {
     console.error(error instanceof Error ? error.stack : error)
     process.exitCode = 1

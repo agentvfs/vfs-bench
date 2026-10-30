@@ -6,6 +6,7 @@ ported and parity-tested before its manifest hashes are updated. No code
 from the task or agent workspace is executed by this verifier.
 """
 import asyncio
+import base64
 import hashlib
 import json
 import math
@@ -27,11 +28,10 @@ RUNNER = HARBOR / "verify.ts"
 class MirageVerifier(Verifier):
     """Run a registered grader in a fresh, verifier-only Mirage workspace.
 
-    A disposable Node process gives timeout/cancellation a hard stop even
-    during synchronous SQLite queries. This is trusted host code, not an
-    isolation boundary for arbitrary Python or JavaScript. The workspace
-    has only the workspace runtime and RAM output; the grader gets private,
-    read-only copies of precisely the state files its manifest declares.
+    A disposable Node process gives timeout/cancellation a hard stop. This
+    is trusted host code, not an isolation boundary for arbitrary scripts.
+    The workspace has only the workspace runtime and RAM output; the grader
+    reads declared JSON state and file bytes through a read-only Mirage VFS.
     """
 
     def _definition(self) -> tuple[str, dict]:
@@ -59,7 +59,6 @@ class MirageVerifier(Verifier):
     async def verify(self) -> VerifierResult:
         if not isinstance(self.environment, MirageEnvironment):
             raise TypeError("MirageVerifier requires MirageEnvironment")
-        self.environment
         # Outputs belong to the host verifier, not the agent's /logs mount.
         # Remove old rewards even when validation or execution fails.
         self.trial_paths.verifier_dir.mkdir(parents=True, exist_ok=True)
@@ -106,7 +105,7 @@ class MirageVerifier(Verifier):
         started = time.monotonic()
         task, definition = self._definition()
         if refresh:
-            await env.refresh_state()
+            await env.refresh_verifier_files()
         with tempfile.TemporaryDirectory(prefix="vfsbench-verify-") as temp:
             stage = Path(temp)
             frozen = await self.freeze(definition, stage)
@@ -128,7 +127,7 @@ class MirageVerifier(Verifier):
             result["input_sha256"] = {
                 p: hashlib.sha256(Path(host).read_bytes()).hexdigest()
                 for p, host in {
-                    **frozen["databases"],
+                    **frozen["states"],
                     **frozen["files"]
                 }.items()
             }
@@ -160,7 +159,7 @@ class MirageVerifier(Verifier):
                     f"Verifier input leaves its workspace mount: {path}")
             return host
 
-        for path in definition["databases"] + definition.get("inputs", []):
+        for path in definition.get("inputs", []):
             host = source(path)
             if host is not None and host.exists():
                 existing.add(path)
@@ -186,18 +185,19 @@ class MirageVerifier(Verifier):
                             path = virtual.rstrip(
                                 "/") + "/" + file.relative_to(host).as_posix()
                             sources[path] = file
-        frozen = {
-            "databases": {},
-            "files": {},
-            "existingPaths": sorted(existing)
-        }
+        frozen = {"states": {}, "files": {}, "existingPaths": sorted(existing)}
         for i, (virtual, host) in enumerate(sorted(sources.items())):
             target = stage / f"input-{i}"
             shutil.copyfile(host, target)
             target.chmod(0o400)
-            kind = "databases" if virtual in definition[
-                "databases"] else "files"
-            frozen[kind][virtual] = str(target)
+            frozen["files"][virtual] = str(target)
+        states = await env.snapshot_verifier_states(
+            definition.get("native_state", {}))
+        for i, (alias, tables) in enumerate(sorted(states.items())):
+            target = stage / f"state-{i}.json"
+            target.write_text(json.dumps(tables))
+            target.chmod(0o400)
+            frozen["states"][alias] = str(target)
         if "/.bash_history" in definition.get("inputs", []):
             history = await env.read_virtual_file("/.bash_history")
             if history is not None:
@@ -219,24 +219,35 @@ class MirageVerifier(Verifier):
             path.write_text(text)
 
     async def _run(self, node: str, request: Path) -> dict:
+        value = json.loads(request.read_text())
+        if "databases" in value:
+            raise ValueError("Native grading takes JSON state, not databases")
+        value["states"] = {
+            alias: json.loads(Path(host).read_text())
+            for alias, host in value["states"].items()
+        }
+        value["files"] = {
+            path: base64.b64encode(Path(host).read_bytes()).decode("ascii")
+            for path, host in value.get("files", {}).items()
+        }
         process = await asyncio.create_subprocess_exec(
             node,
             "--no-warnings",
             str(RUNNER),
-            str(request),
             cwd=ROOT,
             # No model credentials, NODE_OPTIONS or task-controlled env.
             env={
                 "PATH": os.environ.get("PATH", ""),
                 "TZ": "UTC"
             },
-            stdin=asyncio.subprocess.DEVNULL,
+            stdin=asyncio.subprocess.PIPE,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )
         try:
             async with asyncio.timeout(self.task.config.verifier.timeout_sec):
-                stdout, stderr = await process.communicate()
+                stdout, stderr = await process.communicate(
+                    json.dumps(value).encode())
         finally:
             if process.returncode is None:
                 process.kill()

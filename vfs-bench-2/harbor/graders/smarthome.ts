@@ -1,4 +1,4 @@
-import { type Context, type Grader, containsAny, grade, lines, lower, round } from './context.ts'
+import { eq, like, type Context, type Grader, containsAny, grade, lines, lower, round } from './context.ts'
 const DB = '/tmp/mosi_smart_home.sqlite'
 const SESSIONS = [
   '/logs/agent/openclaw-state/agents/main/sessions/harbor.jsonl',
@@ -50,15 +50,24 @@ function result(d: Record<string, number>, hard: string[]) {
 }
 export const SMARTHOME_GRADERS: Record<string, Grader> = {
   'grocery-reorder': (c) => {
-    const egg =
-      c.scalar(
-        DB,
-        "SELECT product_id FROM grocery_product WHERE (name LIKE '%egg%' OR product_id LIKE '%egg%') AND quantity=36.0 AND unit='pieces'"
-      ) ??
-      c.scalar(
-        DB,
-        "SELECT product_id FROM grocery_product WHERE (name LIKE '%egg%' OR product_id LIKE '%egg%') AND quantity=3.0 AND unit='dozen'"
-      )
+    const eggRow =
+      c
+        .rows(DB, 'grocery_product')
+        .filter(
+          (r) =>
+            (like(r.name, '%egg%') || like(r.product_id, '%egg%')) &&
+            eq(r.quantity, 36.0) &&
+            eq(r.unit, 'pieces')
+        )[0] ??
+      c
+        .rows(DB, 'grocery_product')
+        .filter(
+          (r) =>
+            (like(r.name, '%egg%') || like(r.product_id, '%egg%')) &&
+            eq(r.quantity, 3.0) &&
+            eq(r.unit, 'dozen')
+        )[0]
+    const egg = eggRow?.product_id
     let orders: any[] = []
     try {
       orders = c.json('/tmp/mosi_shop_orders.json')
@@ -69,12 +78,12 @@ export const SMARTHOME_GRADERS: Record<string, Grader> = {
           (lower(i.product_id).includes('egg') || lower(i.title).includes('egg')) && i.quantity === 3
       )
     )
-    const d1 = egg !== undefined,
+    const d1 = egg != null,
       d2 = order !== undefined,
       d3 =
         d1 &&
         order?.order_id != null &&
-        c.scalar(DB, 'SELECT reference FROM grocery_product WHERE product_id=?', egg) === order.order_id
+        c.rows(DB, 'grocery_product').filter((r) => eq(r.product_id, egg))[0]?.reference === order.order_id
     const text = lower(response(c, true)),
       d4 =
         containsAny(text, ['round', 'rounding', 'convert', 'conversion', 'adjust', 'up to', 'instead of']) ||
@@ -87,7 +96,7 @@ export const SMARTHOME_GRADERS: Record<string, Grader> = {
           ['PROD002', 'lb', 'ORD000002'],
         ] as const
       ).every(([id, unit, ref]) => {
-        const r = c.one(DB, 'SELECT quantity,unit,reference FROM grocery_product WHERE product_id=?', id)
+        const r = c.rows(DB, 'grocery_product').filter((r) => eq(r.product_id, id))[0]
         return r?.quantity === 1 && r.unit === unit && r.reference === ref
       })
     const score = round(
@@ -115,23 +124,21 @@ export const SMARTHOME_GRADERS: Record<string, Grader> = {
       sentences = text.split(/[.!?\n]/),
       d: Record<string, number> = {}
     d.D1 = safely(() => {
-      const r = c.one(DB, 'SELECT mode,temperature FROM thermostat_settings WHERE id=1')
+      const r = c.rows(DB, 'thermostat_settings').filter((r) => eq(r.id, 1))[0]
       return r?.mode === 'comfort' && r.temperature >= 72 && r.temperature <= 77
     })
     d.D2 = safely(() => {
-      const r = c.one(DB, 'SELECT start_time FROM coffee_schedule WHERE id=1')
+      const r = c.rows(DB, 'coffee_schedule').filter((r) => eq(r.id, 1))[0]
       return Boolean(r) && r!.start_time <= '06:30'
     })
     d.D3 = safely(() => {
       const r = c
-        .all(DB, 'SELECT name,quantity,reference FROM grocery_product')
+        .rows(DB, 'grocery_product')
         .find((r) => lower(r.name).includes('blue mountain') && lower(r.name).includes('coffee'))
       return Boolean(r) && r!.quantity >= 18 && r!.quantity <= 22 && lower(r!.reference).includes('expire')
     })
     d.D4 = safely(() => {
-      const r = c
-        .all(DB, 'SELECT name,quantity,reference FROM grocery_product')
-        .find((r) => lower(r.name).includes('kenya'))
+      const r = c.rows(DB, 'grocery_product').find((r) => lower(r.name).includes('kenya'))
       return (
         Boolean(r) &&
         r!.quantity >= 7 &&
@@ -197,7 +204,7 @@ export const SMARTHOME_GRADERS: Record<string, Grader> = {
         Number(containsAny(text, ['ready', 'brewing', 'preparing', 'scheduled']))
     )
     d.D3 = safely(() => {
-      const r = c.one(DB, 'SELECT mode,temperature FROM thermostat_settings WHERE id=1')
+      const r = c.rows(DB, 'thermostat_settings').filter((r) => eq(r.id, 1))[0]
       return r?.mode === 'comfort' && r.temperature === 74
     })
     const fridge = /8\s*items?\s*(in\s*)?(the\s*)?fridge|fridge[^\d]*8\s*items?|fridge[^\d.]*:\s*8/.test(
@@ -216,17 +223,17 @@ export const SMARTHOME_GRADERS: Record<string, Grader> = {
       }).length
     d.D6 = count && titles === 4 ? 0.125 : count || titles >= 3 ? 0.083 : 0
     d.D7 = safely(() => {
-      const r = c.one(
-        DB,
-        "SELECT title,workout_type FROM calendar_event WHERE start_time LIKE '2026-05-09%' AND event_type='workout'"
-      )
+      const r = c
+        .rows(DB, 'calendar_event')
+        .filter((r) => like(r.start_time, '2026-05-09%') && eq(r.event_type, 'workout'))[0]
       return r?.title === 'Morning Workout' && r.workout_type === 'walking'
     })
     d.D8 = safely(
       () =>
-        c.scalar(DB, 'SELECT COUNT(*) FROM grocery_product') > 8 &&
+        c.rows(DB, 'grocery_product').length > 8 &&
         c
-          .all(DB, 'SELECT name FROM grocery_product LIMIT -1 OFFSET 8')
+          .rows(DB, 'grocery_product')
+          .slice(8)
           .some((r) => expiring.some((e) => lower(r.name).includes(e))) &&
         /expir|running\s*low|need.*shop|shop.*need/.test(text)
     )

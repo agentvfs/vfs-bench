@@ -15,6 +15,7 @@ ROOT = HERE.parent.parent
 
 
 def build():
+    state_tables = json.loads((HERE / "state-tables.json").read_text())
     tasks = yaml.safe_load(
         (ROOT / "harbor/liveclawbench.yaml").read_text())["tasks"]
     result = {}
@@ -62,6 +63,14 @@ def build():
             for rule in patterns.get("file_content_rules", []):
                 trees.extend(rule.get("search_paths", []))
         result[task.name] = {
+            "native_state": {
+                fake["state"]: {
+                    "service": service,
+                    "tables": state_tables[fake["state"]]
+                }
+                for service, fake in config.get("fakes", {}).items()
+                if fake.get("state") in state_tables
+            },
             "files": {
                 str(p.relative_to(tests)):
                 hashlib.sha256(p.read_bytes()).hexdigest()
