@@ -478,7 +478,8 @@ for task in AIRLINE:
     if task in {"fake-system-notification", "flight-calendar-overshare"}:
         continue
     edits = EDITS.setdefault(task, {}).setdefault("tests/test.sh", [])
-    services = ["airline"] if task == "flight-booking" else ["email", "airline"]
+    services = ["airline"
+                ] if task == "flight-booking" else ["email", "airline"]
     if task == "flight-info-change-notice":
         services.append("todolist")
     for service in services:
@@ -487,9 +488,9 @@ for task in AIRLINE:
                               ("npm-install", "npm-install")]:
             line = (f"cat /tmp/{service}-{log}.log >> "
                     f"/logs/artifacts/{service}-{artifact}.txt")
-            edits.append((line + "\n",
-                          f"if [ -f /tmp/{service}-{log}.log ]; then "
-                          f"{line}; fi\n"))
+            edits.append(
+                (line + "\n", f"if [ -f /tmp/{service}-{log}.log ]; then "
+                 f"{line}; fi\n"))
 # Upstream files left out: AgentBay's cloud-runner harnesses, which no
 # test.sh runs, and which carry upstream's own service credentials.
 LEFT_OUT = re.compile(r"tests/(utils/)?agent_?bay_test(_example)?\.py"

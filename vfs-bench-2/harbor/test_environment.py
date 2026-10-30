@@ -16,7 +16,6 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from harbor.models.trial.paths import TrialPaths
-
 from vfsbench_harbor import environment
 from vfsbench_harbor.environment import MirageEnvironment
 
@@ -79,30 +78,49 @@ class AgentTrajectory(unittest.TestCase):
         root = Path(self.root.name)
         self.env = object.__new__(MirageEnvironment)
         self.env.trial_paths = TrialPaths(root)
-        self.env._mounts = {"/logs": {"root": str(root / "mirage/logs"),
-                                     "mode": "readwrite"}}
+        self.env._mounts = {
+            "/logs": {
+                "root": str(root / "mirage/logs"),
+                "mode": "readwrite"
+            }
+        }
         self.env._state = []
         self.env._refreshing = threading.Lock()
         self.source = self.env.trial_paths.agent_dir / "trajectory.json"
         self.source.parent.mkdir(parents=True)
         self.target = self.env.host_path("/logs/agent/trajectory.json")
 
-    def test_refresh_copies_finished_host_trajectory_into_verifier_mount(self) -> None:
-        self.source.write_text('{"steps": [{"source": "agent", "message": "$350"}]}')
+    def test_refresh_copies_finished_host_trajectory_into_verifier_mount(
+            self) -> None:
+        self.source.write_text(
+            '{"steps": [{"source": "agent", "message": "$350"}]}')
         asyncio.run(self.env.refresh_state())
         self.assertEqual(self.target.read_bytes(), self.source.read_bytes())
-        self.assertTrue(self.target.is_relative_to(self.env.disk_mounts["/logs"]))
+        self.assertTrue(
+            self.target.is_relative_to(self.env.disk_mounts["/logs"]))
 
-    def test_exec_refreshes_trajectory_before_running_pyodide_verifier(self) -> None:
+    def test_exec_refreshes_trajectory_before_running_pyodide_verifier(
+            self) -> None:
         self.source.write_text('{"steps": []}')
 
         async def post(*args, **kwargs):
-            self.assertEqual(self.target.read_bytes(), self.source.read_bytes())
-            return environment.httpx.Response(200, json={"job_id": "verify"},
-                                               request=environment.httpx.Request("POST", "http://mirage/shell"))
+            self.assertEqual(self.target.read_bytes(),
+                             self.source.read_bytes())
+            return environment.httpx.Response(
+                200,
+                json={"job_id": "verify"},
+                request=environment.httpx.Request("POST",
+                                                  "http://mirage/shell"))
 
         async def wait(*args):
-            return {"status": "done", "result": {"stdout": "", "stderr": "", "exit_code": 0}}
+            return {
+                "status": "done",
+                "result": {
+                    "stdout": "",
+                    "stderr": "",
+                    "exit_code": 0
+                }
+            }
 
         self.env._client = SimpleNamespace(post=post)
         self.env._workspace_id = "trial"
@@ -113,7 +131,8 @@ class AgentTrajectory(unittest.TestCase):
 
     def test_no_host_trajectory_preserves_oracle_file(self) -> None:
         self.target.parent.mkdir(parents=True)
-        self.target.write_text('{"steps": [{"source": "agent", "message": "oracle"}]}')
+        self.target.write_text(
+            '{"steps": [{"source": "agent", "message": "oracle"}]}')
         before = self.target.read_bytes()
         asyncio.run(self.env.refresh_state())
         self.assertEqual(self.target.read_bytes(), before)
