@@ -1,0 +1,24 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Check contract price",
+  "description": "Check correct contract price update",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM contract WHERE contract_id = 3 and contract_type = 'subscription' AND status = 'active' AND contract_price = 25798",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Check phone of user",
+  "description": "Check phone of user is still null",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "select count(*) from user where user_id=802 and phone is null and location_id=803",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

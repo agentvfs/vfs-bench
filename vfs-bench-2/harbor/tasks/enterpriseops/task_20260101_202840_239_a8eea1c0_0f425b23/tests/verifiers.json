@@ -1,0 +1,156 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "assign_case_to_user",
+  "description": "Verify case CS-0000504 is assigned to Liam O'Connell (ID 803) within Escalation Management (ID 18).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT assigned_to FROM customer_case WHERE case_id = 504 AND assignment_group_id = 18;",
+   "expected_value": 803,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "add_new_user",
+  "description": "Verify Liam O'Connell (ID 803) was created with the correct role and correct default location (ID 3).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user WHERE email = 'liam.oconnell@servicenow.com' AND user_id = 803 AND role = 'agent' AND active = 1 AND location_id = 3;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "add_new_group_member",
+  "description": "Verify Liam O'Connell (ID 803) is a member of Escalation Management (ID 18).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group_member WHERE group_id = 18 AND user_id = 803;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_case",
+  "description": "Verify case CS-0000504 state is set to 'in_progress' and priority is 'critical'.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT state FROM customer_case WHERE case_id = 504 AND priority = 'critical';",
+   "expected_value": "in_progress",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_case",
+  "description": "Verify reopen count for CS-0000504 is incremented to 1.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT reopen_count FROM customer_case WHERE case_id = 504;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "delete_case_knowledge_linkages",
+  "description": "Confirm that the old, inaccurate knowledge linkage (ID 216) was deleted from case_knowledge.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 216;",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "create_knowledge",
+  "description": "Confirm the new KB article (ID 370) was created with correct internal visibility, owner (ID 3), and title structure per conditional instructions.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM knowledge WHERE knowledge_id = 370 AND visibility = 'internal' AND owner_id = 3 AND title = 'Failed Resolution Analysis - Managed Network Services Variant 41: Protocol Mismatch Root Cause';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_case_knowledge",
+  "description": "Confirm the new KB (ID 370) is linked to Case 504 as 'suggested'.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge WHERE case_id = 504 AND knowledge_id = 370 AND used_as = 'suggested';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_new_case_sla",
+  "description": "Verify Critical Response SLA (ID 1) is active on the case and tracked as 'in_progress'.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla WHERE case_id = 504 AND sla_def_id = 1 AND stage = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_new_case_sla",
+  "description": "Verify Critical Resolution SLA (ID 6) is active on the case and tracked as 'in_progress'.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla WHERE case_id = 504 AND sla_def_id = 6 AND stage = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "find_entitlements",
+  "description": "Validate that Enterprise Entitlement 216 exists and is active.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM entitlement WHERE entitlement_id = 216 AND account_id = 23 AND active = 1  AND support_level = 'enterprise';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "find_user",
+  "description": "Verify the current user's information (Tabitha Bullock, ID 3) was successfully retrieved for use in subsequent steps.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT location_id FROM user WHERE user_id = 3 AND role = 'agent';",
+   "expected_value": 3,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_case",
+  "description": "Verify the entire case record (ID 504) has its system update timestamp modified (ensuring audit log integrity).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT sys_updated_on IS NOT NULL FROM customer_case WHERE case_id = 504;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "create_knowledge",
+  "description": "Verify the new knowledge article (ID 370) is in 'published' state, allowing it to be linked per policy, despite the prompt using the term 'draft'.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT state FROM knowledge WHERE knowledge_id = 370;",
+   "expected_value": "published",
+   "comparison_type": "equals"
+  }
+ }
+]

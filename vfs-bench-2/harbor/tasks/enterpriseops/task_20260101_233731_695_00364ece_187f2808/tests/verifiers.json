@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Validating whether a new location is created. ",
+  "description": "Validating whether the location (TB State Building, Sydney, Australia) has been created.  ",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM location\nWHERE name = 'TB State Building'\n  AND city = 'sydney'\n  AND country = 'australia'\n  AND active = true;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating whether the user is updated with the location. ",
+  "description": "Validating whether Joanne is updated with the new location.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM user u\nJOIN location l ON u.location_id = l.location_id\nWHERE u.first_name = 'Joanne'\n  AND u.last_name = 'Simpson'\n  AND l.name = 'TB State Building'\n  AND l.city = 'sydney'\n  AND l.country = 'australia';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating whether user is assigned to the group.",
+  "description": "Validating whether Joanne is added to Proactive Case Monitoring_2 group.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM user u\nJOIN user_group_member ugm ON u.user_id = ugm.user_id\nJOIN user_group g ON g.group_id = ugm.group_id\nWHERE u.first_name = 'Joanne'\n  AND u.last_name = 'Simpson'\n  AND g.name = 'Proactive Case Monitoring_2';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating whether the case is updated. ",
+  "description": "Validating whether case number CS-0000299 has been updated.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM customer_case c\nJOIN user u ON c.assigned_to = u.user_id\nJOIN user_group g ON c.assignment_group_id = g.group_id\nWHERE c.number = 'CS-0000299'\n  AND u.first_name = 'Joanne'\n  AND u.last_name = 'Simpson'\n  AND g.name = 'Proactive Case Monitoring_2'\n  AND c.priority = 'critical'\n  AND c.escalation = true\n  AND c.escalation_reason = 'impact';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating whether notification has been sent to the user. ",
+  "description": "Validating whether an update notification has been sent to Joanne. ",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM notification n\nJOIN user u ON n.email = u.email\nWHERE u.first_name = 'Joanne'\n  AND u.last_name = 'Simpson'\n  AND n.type = 'update'\n  AND n.status = 'success';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

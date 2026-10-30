@@ -1,0 +1,46 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "High priority case created for Perry Watts",
+  "description": "High priority case created for Perry Watts",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_created\nFROM customer_case\nWHERE case_id = 1233\n  AND account_id = 30\n  AND contact_id = 64\n  AND product_id = 17\n  AND channel = 'email'\n  AND priority = 'high'\n  AND state = 'in_progress' ;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify KB article is linked to the case",
+  "description": "Verify KB article is linked to the case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_kb_link_exists\nFROM case_knowledge\nWHERE case_id = 1233\n  AND knowledge_id = 27\n  AND used_as = 'suggested';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify SLA Definition (Response - High) Exists",
+  "description": "Verify SLA Definition (Response - High) Exists",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS sla_def_response_exists\nFROM sla_definition\nWHERE sla_def_id = 2\n  AND name = 'SLA Response - High'\n  AND metric = 'response'",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify SLA Definition (Resolution - High) Exists",
+  "description": "Verify SLA Definition (Resolution - High) Exists",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS sla_def_resolution_exists\nFROM sla_definition\nWHERE sla_def_id = 7\n  AND name = 'SLA Resolution - High'\n  AND metric = 'resolution';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

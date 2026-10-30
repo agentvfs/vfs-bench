@@ -9,6 +9,8 @@
  *         epoch: '2026-04-03T09:00:00Z' # the run's frozen clock
  *         ports: [5003]                 # localhost:<port> reaches the run
  *         state: /opt/mock/data/chat/chat.sqlite  # where its SQLite is read
+ *         verifier_state: /var/lib/mock-data/x.db  # where only the verifier
+ *                                       # reads it (WorkspaceVerifier)
  *         faults: [{method: POST, route: /api/stickers, status: 500}]
  *                                       # kit fault plans armed on the run
  *     env: {TASK_NAME: chat-sticker-engagement}
@@ -66,6 +68,11 @@ interface FakeBlock {
   epoch?: string
   ports?: number[]
   state?: string
+  /**
+   * Where the verifier reads the run's SQLite, which the agent never sees:
+   * the file appears once `WorkspaceVerifier` starts (verifier.py).
+   */
+  verifier_state?: string
   /** Armed by the environment, not here (fakes.py). */
   faults?: unknown[]
 }
@@ -142,6 +149,7 @@ export function plan(taskDir: string, run: Run, external: Record<string, Externa
   const environmentDir = join(taskDir, 'environment')
   const routes: Record<number, string> = {}
   const state: Record<string, string> = {}
+  const verifierState: Record<string, string> = {}
   for (const [service, fake] of Object.entries(spec.fakes)) {
     const run = external[service]
     if (run === undefined) throw new Error(`${path}: the environment started no '${service}' fake`)
@@ -150,6 +158,7 @@ export function plan(taskDir: string, run: Run, external: Record<string, Externa
       routes[port] = service
     }
     if (fake.state !== undefined) state[fake.state] = run.db
+    if (fake.verifier_state !== undefined) verifierState[fake.verifier_state] = run.db
   }
   // The run's clock, which the workspace's follows: every fake's is one.
   const epochs = [...new Set(Object.values(spec.fakes).flatMap((fake) => (fake.epoch === undefined ? [] : [fake.epoch])))]
@@ -165,6 +174,7 @@ export function plan(taskDir: string, run: Run, external: Record<string, Externa
     fakes: [],
     routes,
     state,
+    ...(Object.keys(verifierState).length === 0 ? {} : { verifierState }),
     env: spec.env ?? {},
     copies,
     run: (spec.run ?? []).map((line) => ({ cwd: spec.workdir ?? '/', line })),

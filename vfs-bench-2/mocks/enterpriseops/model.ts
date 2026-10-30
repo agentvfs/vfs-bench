@@ -57,12 +57,12 @@ function enumText(values: readonly string[]): string {
 }
 
 /** A value as one field's type reads it, or the error pydantic gives. */
-function coerce(type: FieldType, value: unknown, loc: (string | number)[]): { value: unknown } | { error: FieldError } {
+function coerce(type: FieldType, value: unknown, loc: (string | number)[]): { value: unknown } | { error: FieldError; more?: FieldError[] } {
   const fail = (t: string, msg: string, ctx?: Record<string, unknown>) => ({ error: { type: t, loc, msg, input: value, ...(ctx ? { ctx } : {}) } })
   if (type === 'any') return { value }
   if (type === 'int') {
     if (typeof value === 'boolean') return { value: value ? 1 : 0 }
-    if (typeof value === 'number' && Number.isInteger(value)) return { value }
+    if ((typeof value === 'number' && Number.isInteger(value)) || typeof value === 'bigint') return { value }
     if (value instanceof PyFloat) {
       return Number.isInteger(value.v) ? { value: value.v } : fail('int_from_float', 'Input should be a valid integer, got a number with a fractional part')
     }
@@ -108,10 +108,11 @@ function coerce(type: FieldType, value: unknown, loc: (string | number)[]): { va
   const errors: FieldError[] = []
   value.forEach((item, i) => {
     const r = coerce(type.list, item, [...loc, i])
-    if ('error' in r) errors.push(r.error)
+    if ('error' in r) errors.push(r.error, ...(r.more ?? []))
     else out.push(r.value)
   })
-  return errors.length > 0 ? { error: errors[0]! } : { value: out }
+  // pydantic reports each item that does not fit, not just the first.
+  return errors.length > 0 ? { error: errors[0]!, more: errors.slice(1) } : { value: out }
 }
 
 function constraints(field: Field, value: unknown, loc: (string | number)[]): FieldError | null {
@@ -157,7 +158,7 @@ export function validate(model: Model, body: Record<string, unknown>): Validated
     }
     const r = coerce(field.type, given, loc)
     if ('error' in r) {
-      errors.push(r.error)
+      errors.push(r.error, ...(r.more ?? []))
       continue
     }
     const bad = constraints(field, r.value, loc)

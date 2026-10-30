@@ -49,7 +49,11 @@ function bindable(value: unknown): SQLInputValue {
   if (typeof value === 'boolean') return value ? 1n : 0n
   if (value instanceof PyFloat) return value.v
   if (typeof value === 'number') return Number.isInteger(value) ? BigInt(value) : value
-  if (typeof value === 'bigint' || typeof value === 'string') return value
+  if (typeof value === 'bigint') {
+    if (value > 2n ** 63n - 1n || value < -(2n ** 63n)) throw new SqliteError('OverflowError', 'Python int too large to convert to SQLite INTEGER')
+    return value
+  }
+  if (typeof value === 'string') return value
   if (ArrayBuffer.isView(value)) return value as SQLInputValue
   throw new SqliteError('ProgrammingError', `Error binding parameter - probably unsupported type.`)
 }

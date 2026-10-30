@@ -1,0 +1,10 @@
+[
+ {"tool": "find_product", "args": {"name": "NGINX Plus"}},
+ {"tool": "create_new_account", "args": {"name": "Apex Industries", "email_domain": "apex-ind.com", "account_type": "customer", "active": true}},
+ {"tool": "add_new_user", "args": {"first_name": "Sarah", "last_name": "Miles", "email": "sarah@apex-ind.com", "role": "customer", "active": true}},
+ {"tool": "create_contact", "args": {"account_id": 53, "portal_user_id": 803, "active": true, "is_primary": true}},
+ {"tool": "register_new_installed_product", "args": {"account_id": 53, "product_id": 11, "serial_number": "APX-NGINX-001", "status": "in_use"}},
+ {"tool": "enlist_new_contract", "args": {"account_id": 53, "contract_type": "support", "contract_price": 35000, "status": "active", "start_date": "2025-11-18", "end_date": "2026-11-18"}},
+ {"tool": "add_new_entitlement", "args": {"account_id": 53, "product_id": 11, "contract_id": 154, "support_level": "premium", "coverage_hours": "h24x7", "max_cases_per_month": 40, "active": true}},
+ {"tool": "create_new_case", "args": {"account_id": 53, "contact_id": 125, "product_id": 11, "installed_product_id": 301, "channel": "phone", "priority": "high", "state": "new", "short_description": "NGINX Plus returning 502 Bad Gateway since go-live"}}
+]

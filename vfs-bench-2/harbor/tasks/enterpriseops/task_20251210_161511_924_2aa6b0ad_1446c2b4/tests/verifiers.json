@@ -1,0 +1,35 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Validating case update. ",
+  "description": "Validating whether the case has been assigned to Paul Moyer and Case Triage_4.  ",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM customer_case c\nJOIN contact ct ON c.contact_id = ct.contact_id\nJOIN user u ON ct.portal_user_id = u.user_id\nJOIN user p ON c.assigned_to = p.user_id\nJOIN user_group g ON c.assignment_group_id = g.group_id\nWHERE u.first_name = 'Jermaine'\n  AND u.last_name = 'Hall'\n  AND c.state = 'in_progress'\n  AND p.first_name = 'Paul'\n  AND p.last_name = 'Moyer'\n  AND g.name = 'Case Triage_4';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating group membership.",
+  "description": "Validating whether Paul Moyer is assigned to Case Triage_4.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM user_group_member ugm\nJOIN user u ON ugm.user_id = u.user_id\nJOIN user_group g ON ugm.group_id = g.group_id\nWHERE u.first_name = 'Paul'\n  AND u.last_name = 'Moyer'\n  AND g.name = 'Case Triage_4';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": " Validating report notification status. ",
+  "description": "Validating whether an report notification was successfully sent to Jermaine Hall.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM notification n\nJOIN customer_case c ON n.case_id = c.case_id\nJOIN contact ct ON c.contact_id = ct.contact_id\nJOIN user u ON ct.portal_user_id = u.user_id\nJOIN user p ON c.assigned_to = p.user_id\nJOIN user_group g ON c.assignment_group_id = g.group_id\nWHERE u.first_name = 'Jermaine'\n  AND u.last_name = 'Hall'\n  AND n.email = u.email\n  AND c.state = 'in_progress'\n  AND p.first_name = 'Paul'\n  AND p.last_name = 'Moyer'\n  AND g.name = 'Case Triage_4'\n  AND n.type = 'report'\n  AND n.status = 'success';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

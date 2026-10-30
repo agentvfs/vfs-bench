@@ -1,0 +1,24 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verifier for case reopening",
+  "description": "Verifies if the specified case is reopened with state 'new', reopen count 1 and channel email",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM customer_case WHERE case_id = 486 AND state = 'new' AND reopen_count = 1 AND channel = 'email' AND contact_id=38;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verifier for user group and user assignment",
+  "description": "Verifies if the case is assigned to Christine Evans in CSM Tier 1 Support",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM customer_case WHERE case_id = 486 AND assignment_group_id = 1 AND assigned_to = 123;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

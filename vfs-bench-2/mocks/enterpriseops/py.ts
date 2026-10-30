@@ -10,9 +10,21 @@
  * A tool's reply is `json.dumps` of what the server returns: `dumps` here,
  * with Python's default separators and `ensure_ascii`.
  */
-import { PyFloat, loads, repr, reprFloat, reprStr, str } from '../complexmcp/py.ts'
+import { PyFloat, repr, reprFloat, reprStr, str } from '../complexmcp/py.ts'
 
-export { PyFloat, loads, repr, reprStr, str }
+export { PyFloat, repr, reprStr, str }
+
+/**
+ * A request's JSON as Python's `json.loads` reads it: a number with a point
+ * or an exponent a float, and an int past 2^53 exact, as a bigint.
+ */
+export function loads<T>(text: string): T {
+  return JSON.parse(text, (_key, value: unknown, context?: { source?: string }) => {
+    if (typeof value !== 'number' || context?.source === undefined) return value
+    if (/[.eE]/.test(context.source)) return new PyFloat(value)
+    return Number.isSafeInteger(value) ? value : BigInt(context.source)
+  }) as T
+}
 
 /** Python's `json.dumps(value)`: `, ` and `: `, non-ASCII escaped, floats as `repr`. */
 export function dumps(value: unknown, indent?: number): string {

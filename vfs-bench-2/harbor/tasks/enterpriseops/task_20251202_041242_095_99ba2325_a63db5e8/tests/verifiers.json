@@ -1,0 +1,46 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify user deactivation",
+  "description": "Verify user deactivation",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM user WHERE first_name = 'Christopher' AND last_name = 'Underwood' AND active = 0;\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify case updation",
+  "description": "Verify case updation",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM customer_case WHERE number = 'CS-0000311' AND priority = 'critical' AND assigned_to = 770;\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Varify case and KB link",
+  "description": "Varify case and KB link",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM case_knowledge WHERE case_id = 311 AND knowledge_id = 44;\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify KB state",
+  "description": "Verify KB state",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM knowledge WHERE knowledge_id = 44 AND state = 'published';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

@@ -1,0 +1,46 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Palo Alto entitlement upgraded to 24x7 enterprise",
+  "description": "Palo Alto entitlement upgraded to 24x7 enterprise",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM entitlement\nWHERE entitlement_id = 73\n  AND account_id = 8\n  AND product_id = 140\n  AND support_level = 'enterprise'\n  AND coverage_hours = 'h24x7'\n  AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Critical response SLA linked to case CS-0000193",
+  "description": "Critical response SLA linked to case CS-0000193",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM case_sla\nWHERE case_id = 193\n  AND sla_def_id = 1\n  AND stage = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Critical resolution SLA linked to case CS-0000193",
+  "description": "Critical resolution SLA linked to case CS-0000193",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM case_sla\nWHERE case_id = 193\n  AND sla_def_id = 6\n  AND stage = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "KB is attached to the case",
+  "description": "KB is attached to the case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS kb_attached_count\nFROM case_knowledge\nWHERE case_id = 193\n  AND knowledge_id = 210\n  AND used_as = 'suggested';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

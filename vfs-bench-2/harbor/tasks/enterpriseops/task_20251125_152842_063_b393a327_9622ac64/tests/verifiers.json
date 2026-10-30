@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify state",
+  "description": "Case must be in state 'new'",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE short_description = 'NGINX Plus returning 502 Bad Gateway since go-live' AND priority = 'high' AND channel = 'phone' AND state = 'new';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify coverage hours ",
+  "description": "coverage_hours must be exactly 'h24x7'",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM entitlement e JOIN account a ON e.account_id = a.account_id WHERE a.name = 'Apex Industries' AND e.support_level = 'premium' AND e.max_cases_per_month = 40 AND e.coverage_hours = 'h24x7';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify installed product",
+  "description": "Installed product created correctly + linked to exact NGINX Plus product_id = 11",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM installed_product ip JOIN account a ON ip.account_id = a.account_id WHERE a.name = 'Apex Industries' AND ip.serial_number = 'APX-NGINX-001' AND ip.status = 'in_use' AND ip.product_id = 11;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify user-creation",
+  "description": "Primary contact correctly linked via real portal_user_id (catches user-creation bypass)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM contact c JOIN account a ON c.account_id = a.account_id WHERE a.name = 'Apex Industries' AND c.is_primary = 1 AND c.portal_user_id = 803;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify contract start date",
+  "description": "Verify any contract was back-dated",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM contract c JOIN account a ON c.account_id = a.account_id\nWHERE a.name = 'Apex Industries'\n  AND c.contract_type = 'support'\n  AND c.status = 'active'\n  AND c.contract_price = 35000\n  AND c.start_date = '2025-11-18';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

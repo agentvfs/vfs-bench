@@ -1,0 +1,35 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Case CS-0000088 Reopened as Critical Email with Second Reopen",
+  "description": "Validates that the previously closed case CS-0000088 (case_id = 88) has been reopened into an active working state, with the contact channel corrected to email, the priority set to critical, and the reopen_count set to 2 to reflect that the case has been closed twice before this corrective action.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM customer_case WHERE account_id = 4 AND contact_id = 3 AND product_id = 170 AND installed_product_id = 22 AND state = 'in_progress' AND channel = 'email' AND priority = 'critical' AND reopen_count = 2;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Case Assigned to an Installed Base Support Manager",
+  "description": "hecks that the reopened critical case is now owned by on of the Installed Base Support group manager.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM customer_case c WHERE c.case_id = 88 AND c.assignment_group_id = 10 AND c.assigned_to IN ( SELECT ugm.user_id FROM user_group_member ugm JOIN user u ON u.user_id = ugm.user_id WHERE ugm.group_id = 10 AND u.role = 'manager' AND u.active = 1 );",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Proactive Case Monitoring Manager Notified for Critical Follow-Up",
+  "description": "Confirms that one of the manager from the Proactive Case Monitoring group (group_id = 11) has been explicitly involved in the critical follow-up.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM notification n WHERE n.case_id = 88 AND n.type = 'update' AND n.email IN ( SELECT u.email FROM user_group_member ugm JOIN user u ON u.user_id = ugm.user_id WHERE ugm.group_id = 11 AND u.role = 'manager' AND u.active = 1 );",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

@@ -1,0 +1,35 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "customer_case",
+  "description": "Verify the case was created with correct initial values AND updated with assignment group",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS verification_count FROM customer_case WHERE case_id = 1233 AND number = 'CS-0001233' AND account_id = 8 AND contact_id = 10 AND product_id = 25 AND installed_product_id = 40 AND channel = 'phone' AND priority = 'high' AND state = 'new' AND assignment_group_id = 28 AND assigned_to IS NULL AND escalation = 0 AND escalation_reason IS NULL AND reopen_count = 0;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "case_knowledge",
+  "description": "Verify the case-knowledge linkage was created correctly",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS verification_count FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 1233 AND knowledge_id = 38 AND used_as = 'suggested';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "customer_case",
+  "description": "Verify assignment group was set",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS assignment_updated FROM customer_case WHERE case_id = 1233 AND assignment_group_id = 28;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

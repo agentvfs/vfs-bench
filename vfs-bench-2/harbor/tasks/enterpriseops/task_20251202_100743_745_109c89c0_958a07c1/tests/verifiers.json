@@ -1,0 +1,68 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify entitlement update",
+  "description": "Verify that Entitlement 26 reactivated (product 25, installed_product_id 15)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM entitlement\nWHERE entitlement_id = 26\n  AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify second entitlement update",
+  "description": "Verify that Entitlement 27 reactivated (product 159, installed_product_id 17)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM entitlement\nWHERE entitlement_id = 27\n  AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Contract extension",
+  "description": "Verify that Contract 133 is extended & active",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM contract\nWHERE contract_id = 133\n  AND status = 'active'\n  AND end_date = '2029-07-07';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify entitlement update",
+  "description": "Verify that Entitlement 26 reactivated (product 25, installed_product_id 15)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM entitlement\nWHERE entitlement_id = 26\n  AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify second entitlement update",
+  "description": "Verify that Entitlement 27 reactivated (product 159, installed_product_id 17)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM entitlement\nWHERE entitlement_id = 27\n  AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Contract extension",
+  "description": "Verify that Contract 133 is extended & active",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM contract\nWHERE contract_id = 133\n  AND status = 'active'\n  AND end_date = '2029-07-07';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

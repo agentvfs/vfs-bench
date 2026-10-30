@@ -1,0 +1,35 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Susan Garcia is now inactive",
+  "description": "Susan Garcia is now inactive",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM \"user\"\nWHERE email = 'susan.garcia@servicenow.com'\n  AND active = 0;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Case CS-0000001 now owned by Stephanie in CSM Tier 1 with Critical priority",
+  "description": "Case CS-0000001 now owned by Stephanie in CSM Tier 1 with Critical priority",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case cc\nJOIN \"user\" u ON cc.assigned_to = u.user_id\nJOIN user_group g ON cc.assignment_group_id = g.group_id\nWHERE cc.number = 'CS-0000001'\n  AND u.email = 'stephanie.todd@servicenow.com'\n  AND g.name = 'CSM Tier 1 Support'\n  AND cc.priority = 'critical';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Stephanie has no other group memberships",
+  "description": "Stephanie has no other group memberships",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM user_group_member gm\nJOIN \"user\" u ON gm.user_id = u.user_id\nJOIN user_group g ON gm.group_id = g.group_id\nWHERE u.email = 'stephanie.todd@servicenow.com'\n  AND g.name <> 'CSM Tier 1 Support';",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ }
+]

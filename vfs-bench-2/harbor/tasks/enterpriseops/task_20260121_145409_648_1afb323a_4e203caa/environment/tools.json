@@ -1,0 +1,273 @@
+[
+ {
+  "name": "sn-csm-server",
+  "description": "sn-csm-server's tools.",
+  "tools": [
+   {
+    "name": "find_account",
+    "call": "find_account",
+    "description": "Retrieve an account by its exact name. Account is a company or organization that has a relationship with the business.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "Exact account name, e.g., 'Wood and Sons'.",
+       "minLength": 1
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_account",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_product",
+    "call": "find_product",
+    "description": "Look up a product by its exact name. Product represents an item or service offered by the company.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "Product name, e.g., 'Pulse Edge'.",
+       "minLength": 1
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_product",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_products",
+    "call": "find_products",
+    "description": "Find products with optional filters. All the inputs are optional, not providing any filter will return all products.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "product_id": {
+       "type": "integer",
+       "description": "Unique identifier of the product."
+      },
+      "name": {
+       "type": "string",
+       "description": "Name of the product.",
+       "minLength": 1
+      },
+      "category": {
+       "type": "string",
+       "enum": [
+        "software",
+        "hardware",
+        "service"
+       ],
+       "description": "Category of the product."
+      },
+      "lifecycle_state": {
+       "type": "string",
+       "enum": [
+        "active",
+        "retired"
+       ],
+       "description": "Lifecycle state of the product."
+      },
+      "product_price": {
+       "type": "integer",
+       "description": "Price of the product."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Filter for products created before this timestamp (ISO format)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Filter for products created after this timestamp (ISO format)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_products",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "enlist_new_contract",
+    "call": "enlist_new_contract",
+    "description": "Create a new contract for an account. Contracts define the terms of service, support, or warranty agreements between the organization and its customers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "account_id": {
+       "type": "integer",
+       "description": "ID of the account the contract is associated with."
+      },
+      "contract_type": {
+       "type": "string",
+       "enum": [
+        "support",
+        "warranty",
+        "subscription"
+       ],
+       "description": "Type of contract to create."
+      },
+      "contract_price": {
+       "type": "integer",
+       "description": "Price value for the contract."
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "draft",
+        "active",
+        "suspended",
+        "expired"
+       ],
+       "description": "Initial status of the contract."
+      },
+      "start_date": {
+       "type": "string",
+       "description": "Start date of the contract (YYYY-MM-DD)."
+      },
+      "end_date": {
+       "type": "string",
+       "description": "End date of the contract (YYYY-MM-DD)."
+      }
+     },
+     "required": [
+      "account_id",
+      "contract_type",
+      "status",
+      "start_date",
+      "end_date"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/enlist_new_contract",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "add_new_entitlement",
+    "call": "add_new_entitlement",
+    "description": "Create a new entitlement. Entitlements define the support and service levels provided to an account for specific products or contracts.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "account_id": {
+       "type": "integer",
+       "description": "Account ID to which the entitlement belongs."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Product ID associated with the entitlement (optional)."
+      },
+      "contract_id": {
+       "type": "integer",
+       "description": "Contract ID linked to this entitlement."
+      },
+      "support_level": {
+       "type": "string",
+       "enum": [
+        "standard",
+        "premium",
+        "enterprise"
+       ],
+       "description": "Support level provided under the entitlement."
+      },
+      "coverage_hours": {
+       "type": "string",
+       "enum": [
+        "h8x5",
+        "h12x6",
+        "h24x7"
+       ],
+       "description": "Coverage hours provided (8x5, 12x6, 24x7)."
+      },
+      "max_cases_per_month": {
+       "type": "integer",
+       "description": "Maximum number of support cases allowed per month."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Indicates whether the entitlement is active (true) or inactive (false)."
+      }
+     },
+     "required": [
+      "account_id",
+      "support_level",
+      "active"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/add_new_entitlement",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "add_new_sla_definition",
+    "call": "add_new_sla_definition",
+    "description": "Create an SLA definition. SLA definitions specify the service level agreements for support cases.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "metric": {
+       "type": "string",
+       "enum": [
+        "response",
+        "resolution"
+       ],
+       "description": "Metric type: 'response' for response SLAs, 'resolution' for resolution SLAs."
+      },
+      "target_mins": {
+       "type": "integer",
+       "description": "Target SLA duration in minutes."
+      },
+      "name": {
+       "type": "string",
+       "minLength": 1,
+       "description": "Name of the SLA definition."
+      },
+      "pause_on_pending": {
+       "type": "boolean",
+       "description": "Whether the SLA timer pauses when case status is pending."
+      },
+      "applies_to_priority": {
+       "type": "string",
+       "enum": [
+        "critical",
+        "high",
+        "moderate",
+        "low"
+       ],
+       "description": "Priority level to which the SLA applies."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Flag indicating whether this SLA definition is active."
+      }
+     },
+     "required": [
+      "metric",
+      "name",
+      "target_mins",
+      "pause_on_pending",
+      "active"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/add_new_sla_definition",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

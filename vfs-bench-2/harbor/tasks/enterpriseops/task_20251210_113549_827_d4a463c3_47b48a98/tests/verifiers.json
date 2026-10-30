@@ -1,0 +1,68 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify New Product",
+  "description": "Verify New Product",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS service_healthy_cnt\nFROM product AS p\nWHERE p.name = 'Network Resilience Health Check'\nAND p.category = 'service'\nAND p.lifecycle_state = 'active';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Update Case",
+  "description": "Verify Update Case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_888_canceled_cnt\nFROM customer_case AS cc\nWHERE cc.case_id = 888\nAND cc.state = 'canceled';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Knowledge Created",
+  "description": "Verify Knowledge Created",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS kb_network_resilience_cnt\nFROM knowledge AS k\nWHERE k.title = 'Network Resilience Health Check Troubleshooting'\nAND k.state = 'published'\nAND k.visibility = 'internal'\nAND k.owner_id = 32\nAND k.product_id = 241;\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify New Case",
+  "description": "Verify New Case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_network_resilience_cnt\nFROM customer_case AS cc\nWHERE cc.case_id = 1233 \nAND cc.account_id = 38\nAND cc.contact_id = 84\nAND cc.product_id = 241\nAND cc.channel = 'phone'\nAND cc.priority = 'critical'\nAND cc.state = 'in_progress'\nAND cc.assignment_group_id = 18\nAND cc.escalation = 1\nAND cc.escalation_reason = 'impact';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify New Case Knowledge Link",
+  "description": "Verify New Case Knowledge Link",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_1233_kb_370_cnt\nFROM case_knowledge AS ck\nWHERE ck.case_id = 1233\nAND ck.knowledge_id = 370\nAND ck.used_as = 'suggested';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify New Case SLA",
+  "description": "Verify New Case SLA",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_1234_sla_cnt\nFROM case_sla AS cs\nWHERE cs.case_id = 1233\nAND cs.sla_def_id = 1\nAND cs.stage = 'in_progress';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

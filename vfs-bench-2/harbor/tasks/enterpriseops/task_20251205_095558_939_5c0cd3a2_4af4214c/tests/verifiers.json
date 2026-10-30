@@ -1,0 +1,24 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verifier for contact creation",
+  "description": "Verifies that the new contact record for Joseph Johnson has been successfully created and linked to the Wonka Industries account.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT portal_user_id FROM contact WHERE contact_id = 125 AND account_id = 9 AND active = 1 AND is_primary = false;",
+   "expected_value": 610,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verifier for new case creation",
+  "description": "Verifies that the critical case for the flash storage array has been created with the correct priority and product association.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT case_id FROM customer_case WHERE case_id = 1233 AND account_id = 9 AND contact_id = 125 AND contact_id = 125 AND installed_product_id = 48 AND channel = 'web' AND priority = 'critical' AND state = 'new';",
+   "expected_value": 1233,
+   "comparison_type": "equals"
+  }
+ }
+]

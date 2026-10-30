@@ -1,0 +1,46 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Is Case Priority High",
+  "description": "Verifies the case priority was set to high.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS result FROM customer_case WHERE number='CS-0000184' AND priority='high';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Is Case Assigned To Tier2",
+  "description": "Verifies the case is assigned to \"CSM Tier 2 Support\".",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS result FROM customer_case WHERE number='CS-0000184' AND assignment_group_id=(SELECT group_id FROM user_group WHERE name='CSM Tier 2 Support');",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Is Case POC Tonya Stevens",
+  "description": "Verifies the case contact is Tonya Stevens",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS result FROM customer_case WHERE number='CS-0000184' AND contact_id=11;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Is SLA-High-No-Pause Linked And Running",
+  "description": "Verifies the case is linked to \"SLA Response - High (No Pause)\" and its timer is running.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS result FROM case_sla WHERE case_id=(SELECT case_id FROM customer_case WHERE number='CS-0000184') AND sla_def_id=(SELECT sla_def_id FROM sla_definition WHERE name='SLA Response - High (No Pause)') AND stage='in_progress' AND start_time IS NOT NULL;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

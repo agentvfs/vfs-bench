@@ -1,0 +1,123 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "update_entitlement",
+  "description": "Verify Entitlement 73's coverage hours were updated to h24x7.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT coverage_hours FROM entitlement WHERE entitlement_id = 73;",
+   "expected_value": "h24x7",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_entitlement",
+  "description": "Verify Entitlement 73's max case limit was set to unlimited (0).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT max_cases_per_month FROM entitlement WHERE entitlement_id = 73;",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_entitlement",
+  "description": "Verify that Entitlement 73's update timestamp is newer than its original data record to confirm the update occurred.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM entitlement WHERE entitlement_id = 73 AND sys_updated_on IS NOT NULL",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "create_new_case",
+  "description": "Verify the new case (ID 1233) was created for the correct installed product (ID 42).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT installed_product_id FROM customer_case WHERE case_id = 1233;",
+   "expected_value": 42,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "create_new_case",
+  "description": "Verify the new case priority is 'critical' and channel is 'phone'.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT priority FROM customer_case WHERE case_id = 1233 AND channel = 'phone';",
+   "expected_value": "critical",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "create_new_case",
+  "description": "Verify the case (ID 1233) was correctly assigned to the Escalation Management group (ID 18).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT assignment_group_id FROM customer_case WHERE case_id = 1233;",
+   "expected_value": 18,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "create_new_case",
+  "description": "Verify the case (ID 1233) was correctly assigned to Curtis McCoy (ID 177).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT assigned_to FROM customer_case WHERE case_id = 1233;",
+   "expected_value": 177,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "create_new_case",
+  "description": "Verify the case initial state was correctly set to 'in_progress'.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT state FROM customer_case WHERE case_id = 1233;",
+   "expected_value": "in_progress",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_new_case_sla",
+  "description": "Verify that the Critical Resolution SLA (ID 6) was linked to the new case (ID 1233).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla WHERE case_id = 1233 AND sla_def_id = 6;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_new_case_sla",
+  "description": "Verify that the new case_sla entry's stage is set to 'in_progress'.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT stage FROM case_sla WHERE case_id = 1233 AND sla_def_id = 6;",
+   "expected_value": "in_progress",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_entitlement",
+  "description": "Verify Entitlement 73's support level was updated to enterprise.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT support_level FROM entitlement WHERE entitlement_id = 73;",
+   "expected_value": "enterprise",
+   "comparison_type": "equals"
+  }
+ }
+]

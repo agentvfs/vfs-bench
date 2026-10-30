@@ -1,0 +1,24 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if case is updated or not.",
+  "description": "Verify if case is updated or not.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = '1041' AND account_id = '45' AND priority = 'critical' AND assigned_to = '72' AND escalation = '0';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if KB article linked correctly.",
+  "description": "Verify if KB article linked correctly.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge WHERE case_id = '1041' AND case_kb_id = '528' AND used_as = 'suggested' AND knowledge_id = '174';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

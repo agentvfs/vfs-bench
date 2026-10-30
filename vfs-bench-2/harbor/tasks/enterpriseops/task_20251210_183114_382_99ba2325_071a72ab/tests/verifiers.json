@@ -1,0 +1,24 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify the new knowledge is created.",
+  "description": "Verify the new knowledge is created.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM knowledge WHERE knowledge_id = '370' AND title = 'Thomas Group issue' AND state = 'published' AND visibility = 'internal' AND owner_id = '84';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify new knowledge is linked to the case.",
+  "description": "Verify new knowledge is linked to the case.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge WHERE case_id = '944' AND knowledge_id = '370' AND used_as = 'resolution';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

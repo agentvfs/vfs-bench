@@ -1,0 +1,46 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify location deactivated",
+  "description": "Verify location deactivated",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM location WHERE location_id = '892' AND active = 0;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Installed product",
+  "description": "Verify Installed product",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM installed_product WHERE location_id = '907' AND status = 'in_use' AND installed_product_id = '250';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify case creation",
+  "description": "Verify case creation",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM customer_case WHERE account_id = '45' AND channel = 'alert' AND state = 'new' AND priority = 'moderate' AND installed_product_id = '250' AND product_id = '113';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify send notification",
+  "description": "Verify send notification",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM notification WHERE email = 'kayla.lutz@simonllc.com' AND status = 'success' AND case_id = '1233' AND type = 'alert';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Tabitha Bullock Deactivated",
+  "description": "Ensures that the outgoing agent Tabitha Bullock (user_id = 3) has been correctly marked inactive after the case handoff.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM user WHERE user_id = 3 AND first_name = 'Tabitha' AND last_name = 'Bullock' AND active = 0;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "All Active Tabitha Cases Reassigned To Lisa",
+  "description": "Checks that both active cases formerly assigned to Tabitha (251, 1142) are now assigned to Lisa Smith (user_id = 496) AND placed under Case Assignment_3 (group_id = 44), regardless of state.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM customer_case WHERE case_id IN (251, 1142) AND assigned_to = 496 AND assignment_group_id = 44;",
+   "expected_value": 2,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Lisa Is Member Of Case Assignment_3",
+  "description": "Confirms that Lisa Smith (user_id = 496) has been added as a member of the Case Assignment_3 group (group_id = 44).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM user_group_member WHERE group_id = 44 AND user_id = 496;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Notification Sent To Brandon",
+  "description": "Ensures that a report notification was successfully sent to the portal contact (Brandon Davis, user_id 10) for case (case_id = 251).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM notification n JOIN customer_case c ON n.case_id = c.case_id JOIN contact ct ON c.contact_id = ct.contact_id JOIN user u ON ct.portal_user_id = u.user_id WHERE c.case_id = 251 AND u.email = 'brandon.davis@vehementcap.com' AND n.type = 'report' AND n.status = 'success';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Notification Sent To David",
+  "description": "Ensures that a report notification was successfully sent to the portal contact (David Trujillo, user_id 340) for case (case_id = 1142).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM notification n JOIN customer_case c ON n.case_id = c.case_id JOIN contact ct ON c.contact_id = ct.contact_id JOIN user u ON ct.portal_user_id = u.user_id WHERE c.case_id = 1142 AND u.email = 'david.trujillo@hernandezbarnettandstewart.com' AND n.type = 'report' AND n.status = 'success';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

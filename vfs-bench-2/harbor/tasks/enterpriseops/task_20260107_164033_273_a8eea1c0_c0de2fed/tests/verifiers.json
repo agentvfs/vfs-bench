@@ -1,0 +1,90 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "retired_installed_product_status_update",
+  "description": "Verifies that the installed product with ID 21 was updated to retired status for the specified account, product, and location.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM installed_product WHERE installed_product_id = 21 AND account_id = 4 AND product_id = 152 AND serial_number = 'P152-537224-3992' AND status = 'retired' AND location_id = 809;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "new_installed_product_registration",
+  "description": "Verifies that the replacement installed product was registered with in_use status at the same account, product, and location.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM installed_product WHERE installed_product_id = 301 AND account_id = 4 AND product_id = 152 AND serial_number = 'P152-648335-99' AND status = 'in_use' AND location_id = 809;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "installed_product_replacement_pair_validation",
+  "description": "Verifies that exactly one retired unit and one in_use replacement exist for the same account, product, and location.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM installed_product WHERE account_id = 4 AND product_id = 152 AND location_id = 809 AND EXISTS (SELECT 1 FROM installed_product WHERE account_id = 4 AND product_id = 152 AND location_id = 809 AND serial_number = 'P152-537224-3992' AND status = 'retired') AND EXISTS (SELECT 1 FROM installed_product WHERE account_id = 4 AND product_id = 152 AND location_id = 809 AND serial_number = 'P152-648335-99' AND status = 'in_use');",
+   "expected_value": 2,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "documentation_case_creation",
+  "description": "Verifies that documentation case CS-0001233 was created with correct attributes and linked to the new installed product.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 1233 AND number = 'CS-0001233' AND account_id = 4 AND contact_id = 2 AND product_id = 152 AND installed_product_id = 301 AND channel = 'web' AND priority = 'moderate' AND state = 'new' AND assigned_to = 3 AND assignment_group_id IS NULL AND escalation = 0 AND reopen_count = 0 AND closed_on IS NULL;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "case_to_replacement_product_linkage",
+  "description": "Verifies that the case is linked only to the new in_use installed product and not the retired unit.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case c INNER JOIN installed_product ip ON c.installed_product_id = ip.installed_product_id WHERE c.case_id = 1233 AND c.installed_product_id = 301 AND ip.status = 'in_use' AND ip.serial_number = 'P152-648335-99' AND NOT EXISTS (SELECT 1 FROM customer_case WHERE case_id = 1233 AND installed_product_id = 21);",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "active_entitlement_validation",
+  "description": "Verifies that an active premium entitlement exists for the account and product before case creation.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM entitlement WHERE entitlement_id = 32 AND account_id = 4 AND product_id = 152 AND active = 1 AND support_level = 'premium';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "case_assignment_to_active_agent",
+  "description": "Verifies that the case is assigned to an active agent with the correct role.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case c INNER JOIN user u ON c.assigned_to = u.user_id WHERE c.case_id = 1233 AND c.assigned_to = 3 AND u.email = 'tabitha.bullock@servicenow.com' AND u.role = 'agent' AND u.active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "no_retired_or_repair_products_attached",
+  "description": "Verifies that the case is linked only to an in_use installed product and not to retired or repair units.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case c INNER JOIN installed_product ip ON c.installed_product_id = ip.installed_product_id WHERE c.case_id = 1233 AND ip.status = 'in_use' AND ip.status NOT IN ('retired', 'repair');",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

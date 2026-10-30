@@ -1,0 +1,24 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify case updation",
+  "description": "Verify case priority updation",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case c\nJOIN product p\n  ON p.product_id = c.product_id\n AND p.name = 'Enterprise Success Plan Variant 3'\nWHERE c.channel           = 'social'\n  AND c.reopen_count      = 4\n  AND c.priority          = 'high'\n  AND c.state             = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "verifying assignment",
+  "description": "verifying case assignment agent",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case c\nJOIN product p\n  ON p.product_id = c.product_id\n AND p.name = 'Enterprise Success Plan Variant 3'\nJOIN \"user\" u\n  ON u.user_id    = c.assigned_to\n AND u.first_name = 'Amanda'\n AND u.last_name  = 'Austin'\nWHERE c.channel      = 'social'\n  AND c.reopen_count = 4\n  AND c.priority     = 'high'\n  AND c.state        = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

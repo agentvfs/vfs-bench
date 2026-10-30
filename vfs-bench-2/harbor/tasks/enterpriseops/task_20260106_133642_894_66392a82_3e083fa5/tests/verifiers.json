@@ -1,0 +1,24 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Derek Blake User Reactivated",
+  "description": "Checks that the Derek Blake is active.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM user WHERE user_id = 622 AND active = 1; ",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Case Reopened and Assigned to an Account Management Manager",
+  "description": "Validates that the closed case CS-0000088 (case_id = 88) was correctly transitioned back into in_progress, its reopen_count was incremented to 1, and it was reassigned to the Account Management support group (assignment_group_id = 7) with an assignee who is both an active manager and a member of that group.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM customer_case c WHERE c.case_id = 88 AND c.account_id = 4 AND c.contact_id = 3 AND c.product_id = 170 AND c.state = 'in_progress' AND c.assignment_group_id = 7 AND c.reopen_count = 1 AND c.assigned_to IN (SELECT ugm.user_id FROM user_group_member ugm JOIN user u ON u.user_id = ugm.user_id WHERE ugm.group_id = 7 AND u.role = 'manager' AND u.active = 1); ",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

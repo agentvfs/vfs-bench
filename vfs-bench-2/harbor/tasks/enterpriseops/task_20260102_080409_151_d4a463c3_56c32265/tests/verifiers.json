@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Check Case SLA ",
+  "description": "Check Case SLA ",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla AS cs WHERE cs.case_sla_id = 9 AND cs.stage = 'completed'",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Check Case Knowledge Linkage Deleted",
+  "description": "Check Case Knowledge Linkage Deleted",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge AS ck WHERE ck.case_kb_id = 1 AND ck.knowledge_id = 195;",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Check For SLA in State Canceled",
+  "description": "Check For SLA in State Canceled",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla AS cs WHERE cs.case_sla_id = 2465 AND cs.stage = 'canceled'",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": " Check Case State Updated to Closed",
+  "description": " Check Case State Updated to  Closed",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case AS c WHERE c.case_id = 5 AND c.state = 'closed';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Check Case SLA ",
+  "description": "Check Case SLA ",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla AS cs WHERE cs.case_sla_id = 10 AND cs.stage = 'completed'",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

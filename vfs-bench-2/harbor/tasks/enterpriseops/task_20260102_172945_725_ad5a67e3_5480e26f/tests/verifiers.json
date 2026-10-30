@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verifier 1 - Verify installed product registration at Umbrella's Tokyo site",
+  "description": "Verify that the installed product record was created at Umbrella's Tokyo site with the expected values",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM installed_product ip JOIN account a ON ip.account_id=a.account_id JOIN product p ON ip.product_id=p.product_id JOIN location l ON ip.location_id=l.location_id WHERE a.name='Umbrella' AND p.name='Red Hat Enterprise Linux 9' AND l.name='Umbrella Site A - Tokyo' AND ip.serial_number='RHEL-UMB-4500' AND ip.status='in_use' AND ip.warranty_end='2026-12-31';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verifier 2 - Verify Travis Wood group membership",
+  "description": "Verify that Travis Wood was added to the Proactive Case Monitoring group",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group_member gm JOIN user u ON gm.user_id=u.user_id JOIN user_group g ON gm.group_id=g.group_id WHERE u.first_name='Travis' AND u.last_name='Wood' AND g.name='Proactive Case Monitoring';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verifier 3 - Verify case with active primary contact",
+  "description": "Verify that the case exists, is linked to an active primary contact, product and install, and uses the correct channel, priority and description",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case cc JOIN account a ON cc.account_id=a.account_id JOIN product p ON cc.product_id=p.product_id JOIN installed_product ip ON cc.installed_product_id=ip.installed_product_id JOIN contact c ON cc.contact_id=c.contact_id WHERE a.name='Umbrella' AND p.name='Red Hat Enterprise Linux 9' AND ip.serial_number='RHEL-UMB-4500' AND cc.short_description= 'Product: Red Hat Enterprise Linux 9, Issue: node crashes frequently.' AND cc.channel='phone' AND cc.priority='high' AND c.is_primary=1 AND c.active=1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verifier 4 - Verify SLA linkage and tracking",
+  "description": "Verify that the case is linked to the correct SLA and tracking is in progress",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla cs JOIN customer_case cc ON cc.case_id=cs.case_id JOIN sla_definition s ON s.sla_def_id=cs.sla_def_id WHERE cc.short_description='Product: Red Hat Enterprise Linux 9, Issue: node crashes frequently.' AND s.name='SLA Response - High' AND s.metric='response' AND cs.stage='in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verifier 5 - Verify case state transition to in_progress",
+  "description": "Verify that the case was created in new state then moved to in_progress (timestamp evidence)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case cc JOIN account a ON cc.account_id=a.account_id WHERE a.name='Umbrella' AND cc.short_description='Product: Red Hat Enterprise Linux 9, Issue: node crashes frequently.' AND cc.state='in_progress' AND cc.sys_updated_on > cc.sys_created_on;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

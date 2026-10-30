@@ -98,6 +98,26 @@ ComplexMCP
   Fetched:   the servers, the tasks and the judge, by complexmcp/setup.py.
   Committed: nothing.
 
+EnterpriseOps-Gym
+  Source:    https://github.com/ServiceNow/EnterpriseOps-Gym
+             @ 271f2c357f763376997dfd16807fcde2474ae41b
+  Data:      https://huggingface.co/datasets/ServiceNow-AI/EnterpriseOps-Gym
+             @ c8e538eae8a6205294f0a86675fefdc1fac408f6
+  Images:    docker.io/shivakrishnareddyma225/enterpriseops-gym-mcp-<domain>,
+             by the digests enterpriseops/tools/<server>.json records
+  License:   Apache-2.0 (repository and dataset). The images, which the
+             repository's README tells its users to pull, carry no license
+             of their own; they are taken here as part of that release.
+  Fetched:   the repository and its seeds, and the dataset's tasks, by
+             enterpriseops/setup.py.
+  Committed: each server's tool list as its image answers tools/list
+             (enterpriseops/tools/); the CSM image's sql/csm_schema_sqlite.sql
+             (mocks/enterpriseops_csm/schema.sql); the fakes under
+             mocks/enterpriseops*/ reimplement the images' tools; the tasks
+             under harbor/tasks/enterpriseops/ carry the dataset's prompts and
+             verifiers; harbor/enterpriseops_grade.py repeats the logic of
+             benchmark/verifier.py's value extraction and comparison.
+
 Claw-Eval
   Source:    https://github.com/claw-eval/claw-eval
              @ 5680b8b11ff2ee5dd2b07b89086a29a5c5c984d7

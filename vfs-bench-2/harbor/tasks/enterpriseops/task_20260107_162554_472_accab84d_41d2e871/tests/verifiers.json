@@ -1,0 +1,90 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Case 1233 Created (David Ramirez - Tomcat 9 Variant 12)",
+  "description": "Verify Case 1233 Created (David Ramirez - Tomcat 9 Variant 12)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_1233_created\nFROM customer_case\nWHERE case_id = 1233\n  AND account_id = 25\n  AND contact_id = 48\n  AND product_id = 32\n  AND installed_product_id = 134\n  AND channel = 'web'\n  AND priority = 'high';",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Case 1234 Created (Alexis Torres - Tomcat 9 Variant 32)",
+  "description": "Verify Case 1234 Created (Alexis Torres - Tomcat 9 Variant 32)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_1234_created\nFROM customer_case\nWHERE case_id = 1234\n  AND account_id = 52\n  AND contact_id = 120\n  AND product_id = 52\n  AND installed_product_id = 293\n  AND channel = 'web'\n  AND priority = 'high';",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": " Verify Case 1233 Response SLA (SLA 2)",
+  "description": " Verify Case 1233 Response SLA (SLA 2)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_1233_sla_response\nFROM case_sla\nWHERE case_sla_id = 2465\n  AND case_id = 1233\n  AND sla_def_id = 2;",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Case 1233 Resolution SLA (SLA 7)",
+  "description": "Verify Case 1233 Resolution SLA (SLA 7)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_1233_sla_resolution\nFROM case_sla\nWHERE case_sla_id = 2466\n  AND case_id = 1233\n  AND sla_def_id = 7;",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Case 1234 Response SLA (SLA 2)",
+  "description": "Verify Case 1234 Response SLA (SLA 2)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_1234_sla_response\nFROM case_sla\nWHERE case_sla_id = 2467\n  AND case_id = 1234\n  AND sla_def_id = 2;",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Case 1234 Resolution SLA (SLA 7)",
+  "description": "Verify Case 1234 Resolution SLA (SLA 7)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_1234_sla_resolution\nFROM case_sla\nWHERE case_sla_id = 2468\n  AND case_id = 1234\n  AND sla_def_id = 7;",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Case 1233 Linked to KB 18",
+  "description": "Verify Case 1233 Linked to KB 18",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_kb_link_1233\nFROM case_knowledge\nWHERE case_kb_id = 528\n  AND case_id = 1233\n  AND knowledge_id = 18\n  AND used_as = 'suggested';",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Case 1234 Linked to KB 77",
+  "description": "Verify Case 1234 Linked to KB 77",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_kb_link_1234\nFROM case_knowledge\nWHERE case_kb_id = 529\n  AND case_id = 1234\n  AND knowledge_id = 77\n  AND used_as = 'suggested';",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ }
+]

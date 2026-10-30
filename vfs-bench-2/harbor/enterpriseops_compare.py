@@ -225,8 +225,24 @@ async def main() -> int:
     parser.add_argument("--seed")
     parser.add_argument("--epoch", default="2025-11-25T15:28:42Z")
     parser.add_argument("--user", default="jose.roberson@servicenow.com")
+    parser.add_argument("--task",
+                        help="a committed task: its seed, epoch and user, "
+                        "and its verifiers run on both sides at the end")
     parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args()
+    verifiers = None
+    if args.task:
+        task = HARBOR / "tasks" / "enterpriseops" / args.task
+        fixture_json = json.loads(
+            (task / "environment" / "kit" /
+             f"enterpriseops_{args.domain}.json").read_text())
+        args.seed = fixture_json["seed"][0]["db"]
+        yaml_text = (task / "environment" / "mirage.yaml").read_text()
+        args.epoch = re.search(r"epoch: '([^']+)'", yaml_text)[1]
+        user = re.search(r'x-user-email: "([^"]+)"', yaml_text)
+        if user:
+            args.user = user[1]
+        verifiers = json.loads((task / "tests" / "verifiers.json").read_text())
     spec = server_of(args.domain)
     seed = args.seed or sorted(
         (DBS / args.domain / "dbs").glob("*.sql"))[0].relative_to(
@@ -308,6 +324,34 @@ async def main() -> int:
                     print(f"    upstream only: {x}")
                 for x in rb[len(ra):]:
                     print(f"    fake only:     {x}")
+            if verifiers is not None:
+                sys.path.insert(0, str(HARBOR))
+                import enterpriseops_grade as grade
+                for side, base in (("upstream", url), ("fake", run.url)):
+                    passed = 0
+                    for v in verifiers:
+                        config = v["validation_config"]
+                        reply = httpx.post(f"{base}/api/sql-runner",
+                                           json={"query": config["query"],
+                                                 "database_id": db},
+                                           headers={"x-database-id": db},
+                                           timeout=60)
+                        result = ({"success": True, "result": reply.json()}
+                                  if reply.status_code == 200 else
+                                  {"success": False})
+                        actual = grade.extract(result)
+                        ok = grade.compare(actual, config.get("expected_value"),
+                                           config.get("comparison_type",
+                                                      "equals"))
+                        passed += ok
+                        if not ok:
+                            print(f"  {side}: FAIL {v.get('name')}: "
+                                  f"{actual!r} vs "
+                                  f"{config.get('expected_value')!r}")
+                    print(f"{side}: {passed} of {len(verifiers)} verifiers "
+                          "pass")
+                    if passed != len(verifiers):
+                        problems.append(f"{side} verifiers")
         finally:
             await pool.drop(run)
             httpx.request("DELETE",

@@ -97,6 +97,9 @@ remove a client another one is loading. After that, `pnpm exec tsc -p mocks` typ
   a trial's verifier in a microVM, and the host's proxies for it.
 - `src/vfsbench_harbor/guest.py`: run inside that VM. It relays the
   upstream ports and runs `test.sh`.
+- `src/vfsbench_harbor/verifier.py`: `WorkspaceVerifier`, Harbor's verifier
+  in the trial's own workspace, with the state files only it may read
+  (below).
 - `src/vfsbench_harbor/agents.py`: `Codex` and `ClaudeCode`, Harbor's own
   agents run on the host, their tools in the trial's workspace.
 - `src/vfsbench_harbor/gateway.py`: each trial's gateway to its agent's
@@ -180,6 +183,15 @@ remove a client another one is loading. After that, `pnpm exec tsc -p mocks` typ
 - `../mocks/gaia2/`, `../mocks/gaia2_<app>/`: gaia2-cli's nine apps as kit
   fakes, a shared store, schema and Python-semantics helpers, and each
   app's `app.ts`, `fake.ts` and `main.ts`.
+- `tasks/enterpriseops/<task id>/`: the EnterpriseOps-Gym tasks
+  (../enterpriseops/README.md); `enterpriseops.py` writes them, or checks
+  them; `enterpriseops_grade.py` is each one's `tests/grade.py`;
+  `enterpriseops.yaml`, their job config, under `WorkspaceVerifier`;
+  `enterpriseops_compare.py` checks a fake against upstream's server image.
+- `../mocks/enterpriseops/`, `../mocks/enterpriseops_<domain>/`:
+  EnterpriseOps-Gym's servers as kit fakes, a shared layer (Python's
+  `sqlite3` and `json`, pydantic's checks, the SQL runner) and each
+  server's schema, tools, `config.ts`, `fake.ts` and `main.ts`.
 
 ## The committed tasks
 
@@ -900,6 +912,20 @@ scoped to a workspace. Sharing one daemon needs a per-workspace network
 policy in the workspace config, an allowlist with host and port mapping
 (`localhost:1235` to `127.0.0.1:53211`) that curl's HTTP layer applies for
 the workspace it runs in.
+
+## The verifier in the workspace, with state the agent never sees
+
+A fake's `verifier_state` in `mirage.yaml` names where the verifier reads
+its run's SQLite. Unlike `state`, the file is not in the workspace while
+the agent works: its directory is mounted, empty. `WorkspaceVerifier`
+(`--verifier vfsbench_harbor:WorkspaceVerifier`) tells the environment
+the agent's turn is over, then verifies as Harbor's own verifier does,
+`test.sh` in the workspace, whose first command copies the file in. The
+grader reads it with Pyodide's `sqlite3`. No VM, no network.
+
+It is for tasks whose upstream agent reaches its services through their
+tools alone (EnterpriseOps-Gym). On a task like that, a database copy in
+the workspace would let the agent read every table directly.
 
 ## The verifier in a microVM
 

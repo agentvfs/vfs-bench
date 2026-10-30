@@ -1,0 +1,22 @@
+version = "1.0"
+
+[metadata]
+upstream = "ServiceNow-AI/EnterpriseOps-Gym@c8e538e oracle/csm task_20260108_160928_699_391f1eff_905701cb"
+domain = "csm"
+servers = ["sn-csm-server"]
+category = "tool-use"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 1800.0
+
+[environment]
+build_timeout_sec = 300.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 4096
+# The trial's services are its only network: without it, Harbor gives the
+# verifier no routes to them either. The internet stays out.
+allow_internet = true

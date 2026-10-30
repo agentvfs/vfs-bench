@@ -1,0 +1,35 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Contract",
+  "description": "Verify Contract ",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM contract WHERE contract_id = 100 AND contract_price = 2678;\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify User location",
+  "description": "Verify User location",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM user WHERE user_id = 55 AND phone = '+12125516299' AND location_id = 903;\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Contract price",
+  "description": "Verify Contract price",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM contract WHERE contract_id = 101 AND contract_price = 27315;\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

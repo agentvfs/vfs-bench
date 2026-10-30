@@ -1,0 +1,35 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Case routed to Tier 2, assigned to Travis, high priority and escalated",
+  "description": "Verify the SUSE alert case for Acme is moved to Tier 2, assigned to Travis Wood, set to in_progress, priority high, and escalated for impact.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM customer_case WHERE case_id = 71 AND assignment_group_id = 2 AND assigned_to = 11 AND priority = 'high' AND state = 'in_progress' AND escalation = 1 AND escalation_reason = 'impact';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Travis added to Tier 2 support group",
+  "description": "Verify that Travis Wood is a member of the 'CSM Tier 2 Support' group.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM user_group_member WHERE group_id = 2 AND user_id = 11;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Jira entitlement upgraded to premium 12x6 with 30 cases/month",
+  "description": "Verify Acme's active entitlement tied to a Jira product is updated to premium 12x6 with 30 cases per month.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM entitlement e JOIN account a ON a.account_id = e.account_id JOIN contract ct ON ct.contract_id = e.contract_id AND ct.status = 'active' JOIN product p ON p.product_id = e.product_id WHERE a.name = 'Acme Systems' AND p.name='Atlassian Jira Data Center Variant 77' AND e.support_level = 'premium' AND e.coverage_hours = 'h12x6' AND e.max_cases_per_month = 30 AND e.active = 1",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

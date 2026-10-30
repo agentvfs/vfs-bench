@@ -1,0 +1,79 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "update_case",
+  "description": "update_case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM customer_case WHERE case_id = 1142 AND assigned_to = 5",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_case",
+  "description": "update_case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM customer_case WHERE case_id = 251 AND assigned_to = 5",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_user_details",
+  "description": "update_user_details",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM user WHERE user_id = 3 AND active = 0",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "add_new_group_member",
+  "description": "add_new_group_member",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM user_group_member WHERE member_id = 960 AND  user_id = 5 AND group_id = 67",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "remove_group_member",
+  "description": "remove_group_member",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM user_group_member WHERE user_id = 3 AND group_id = 67",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "send_notification",
+  "description": "send_notification",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM notification WHERE email= 'mckenzie.mendez@servicenow.com' AND case_id = 1142 AND type = 'update'",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "send_notification",
+  "description": "send_notification",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM notification WHERE email= 'mckenzie.mendez@servicenow.com' AND case_id = 1142 AND type = 'update'",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

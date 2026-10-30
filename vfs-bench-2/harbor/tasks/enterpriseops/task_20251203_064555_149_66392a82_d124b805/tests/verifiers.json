@@ -1,0 +1,46 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Horizon Fleet Services Customer Account Creation",
+  "description": "Ensures Horizon Fleet Services has been created as an active customer in the account table.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM account WHERE name = 'Horizon Fleet Services' AND account_type = 'customer' AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Horizon Field Response Coordination Group Creation",
+  "description": "Confirms the \"Horizon Field Response Coordination\" group exists as an active field-type user group.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group WHERE name = 'Horizon Field Response Coordination' AND type = 'field' AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Manager 518 is Assigned to Horizon Field Response Coordination",
+  "description": "Ensures that user 518 is a member of the \"Horizon Field Response Coordination\" group.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group_member ugm JOIN user_group ug ON ugm.group_id = ug.group_id WHERE ug.name = 'Horizon Field Response Coordination' AND ug.type = 'field' AND ugm.user_id = 518;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Manager 518 is Removed from Field Service Coordination_3",
+  "description": "Confirms that user 518 is no longer a member of the \"Field Service Coordination_3\" group after the move.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group_member WHERE group_id = 54  AND user_id = 518;",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ }
+]

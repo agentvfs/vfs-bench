@@ -1,0 +1,278 @@
+[
+ {
+  "name": "sn-csm-server",
+  "description": "sn-csm-server's tools.",
+  "tools": [
+   {
+    "name": "list_users",
+    "call": "list_users",
+    "description": "List users with optional filters. None of the filters are mandatory. If no filters are provided, all users will be returned.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "email": {
+       "type": "string",
+       "description": "Filter by user email address (exact match) (unique)."
+      },
+      "user_id": {
+       "type": "integer",
+       "description": "Filter by unique user identifier."
+      },
+      "first_name": {
+       "type": "string",
+       "description": "Filter by user's first name."
+      },
+      "last_name": {
+       "type": "string",
+       "description": "Filter by user's last name."
+      },
+      "phone": {
+       "type": "string",
+       "description": "Filter by phone number."
+      },
+      "role": {
+       "type": "string",
+       "enum": [
+        "admin",
+        "agent",
+        "manager",
+        "customer"
+       ],
+       "description": "Filter by user role (admin, agent, manager, or customer)."
+      },
+      "location_id": {
+       "type": "integer",
+       "description": "Filter by location identifier."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Filter by active status (true = active, false = inactive)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return only users created after this timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return only users created before this timestamp (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/list_users",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_user_groups",
+    "call": "list_user_groups",
+    "description": "List user groups with optional filters.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "group_id": {
+       "type": "integer",
+       "description": "Filter by unique group identifier."
+      },
+      "name": {
+       "type": "string",
+       "description": "Filter by group name (exact match, unique)."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Filter by active status (true = active, false = inactive)."
+      },
+      "type": {
+       "type": "string",
+       "enum": [
+        "support",
+        "backoffice",
+        "field",
+        "vendor"
+       ],
+       "description": "Filter by group type (support, backoffice, field, vendor)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return only groups created after this timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return only groups created before this timestamp (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/list_user_groups",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_group_members",
+    "call": "list_group_members",
+    "description": "List user group members with optional filters. Combination of group_id and user_id is unique.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "member_id": {
+       "type": "integer",
+       "description": "Filter by unique membership identifier."
+      },
+      "group_id": {
+       "type": "integer",
+       "description": "Filter by group identifier."
+      },
+      "user_id": {
+       "type": "integer",
+       "description": "Filter by user identifier."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return only memberships created after this timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return only memberships created before this timestamp (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/list_group_members",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "add_new_user_group",
+    "call": "add_new_user_group",
+    "description": "Create a user group. A user group is a collection of users who share similar roles, responsibilities, or access permissions within the system, allowing for efficient management and assignment of tasks or cases.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "Name of the user group.",
+       "minLength": 1
+      },
+      "type": {
+       "type": "string",
+       "enum": [
+        "support",
+        "backoffice",
+        "field",
+        "vendor"
+       ],
+       "description": "Type of the user group (support, backoffice, field, vendor)."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Whether the group is active (true) or inactive (false)."
+      }
+     },
+     "required": [
+      "name",
+      "type",
+      "active"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/add_new_user_group",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "add_new_group_member",
+    "call": "add_new_group_member",
+    "description": "Add a user to a group. Combination of group_id and user_id should be unique.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "group_id": {
+       "type": "integer",
+       "description": "Identifier of the group the user will be added to."
+      },
+      "user_id": {
+       "type": "integer",
+       "description": "Identifier of the user being added to the group."
+      }
+     },
+     "required": [
+      "group_id",
+      "user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/add_new_group_member",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "remove_group_membership",
+    "call": "remove_group_membership",
+    "description": "Remove a membership by member_id or by (group_id, user_id).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "member_id": {
+       "type": "integer",
+       "description": "Unique identifier of the membership to remove."
+      },
+      "group_id": {
+       "type": "integer",
+       "description": "Group identifier (used with user_id if member_id is not provided)."
+      },
+      "user_id": {
+       "type": "integer",
+       "description": "User identifier (used with group_id if member_id is not provided)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/remove_group_membership",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "create_new_account",
+    "call": "create_new_account",
+    "description": "Create/onboard an account. An account represents a company or organization that is a customer, partner, or internal entity within the system.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "Name of the account (e.g., 'Stark Industries')(unique).",
+       "minLength": 1
+      },
+      "email_domain": {
+       "type": "string",
+       "description": "Primary email domain associated with the account (e.g., 'stark-industries.com').",
+       "minLength": 1
+      },
+      "account_type": {
+       "type": "string",
+       "enum": [
+        "customer",
+        "partner",
+        "internal"
+       ],
+       "description": "Type of account: customer, partner, or internal."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Whether the account is active (true) or inactive (false)."
+      }
+     },
+     "required": [
+      "name",
+      "account_type",
+      "active"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/create_new_account",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

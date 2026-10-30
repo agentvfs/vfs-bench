@@ -139,6 +139,11 @@ class MirageEnvironment(BaseEnvironment):
             starting one for the trial.
     """
 
+    # State files only the verifier reads (mirage.yaml's ``verifier_state``),
+    # copied once ``reveal_verifier_state`` is called.
+    _verifier_state: list[tuple[Path, Path]] = []
+    _revealed = False
+
     def __init__(self,
                  *args,
                  node: str = "node",
@@ -394,6 +399,8 @@ class MirageEnvironment(BaseEnvironment):
                                                     exist_ok=True)
         self._state = [(Path(view), Path(live))
                        for view, live in plan["state"]]
+        self._verifier_state = [(Path(view), Path(live))
+                                for view, live in plan.get("verifier_state", [])]
         self._workdir = self.task_env_config.workdir or plan["workdir"]
         self._env = dict(plan["config"].get("env") or {})
         routes = {} if self._network_disabled else plan["routes"]
@@ -542,6 +549,14 @@ class MirageEnvironment(BaseEnvironment):
         with self._refreshing:
             for view, live in self._state:
                 _snapshot(view, live)
+            if self._revealed:
+                for view, live in self._verifier_state:
+                    _snapshot(view, live)
+
+    def reveal_verifier_state(self) -> None:
+        """From now on, refresh the state files only the verifier reads
+        too: the agent's turn is over (``WorkspaceVerifier``)."""
+        self._revealed = True
 
     async def refresh_state(self) -> None:
         """Bring each mock's state file in the workspace up to date, as

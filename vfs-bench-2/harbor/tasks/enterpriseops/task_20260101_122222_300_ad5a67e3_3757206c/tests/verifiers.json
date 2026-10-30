@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Confirm the support contract for Wayne Enterprises is created with correct attributes",
+  "description": "Validates the support contract has correct type, status, dates, and price",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM contract c JOIN account a ON a.account_id = c.account_id WHERE a.name = 'Wayne Enterprises' AND c.contract_type = 'support' AND c.status = 'active' AND c.start_date = '2026-01-01' AND c.end_date = '2026-12-31' AND c.contract_price = 150000;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Confirm the premium 24×7 entitlement exists under Wayne Enterprises with product linkage",
+  "description": "Validates entitlement is linked to the correct product and has correct attributes",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM entitlement e JOIN account a ON a.account_id = e.account_id JOIN product p ON e.product_id = p.product_id WHERE a.name = 'Wayne Enterprises' AND e.support_level = 'premium' AND e.coverage_hours = 'h24x7' AND e.max_cases_per_month = 50 AND e.active = 1 AND p.name = 'Windows Server 2022 Datacenter';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Confirm the high-priority phone case was created as NEW then moved to IN_PROGRESS under an active primary contact",
+  "description": "Validates case was created in 'new' state, then updated to 'in_progress', using timestamp evidence. Also verifies contact is active and primary.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case cc JOIN account a ON cc.account_id = a.account_id JOIN contact c ON cc.contact_id = c.contact_id JOIN product p ON cc.product_id = p.product_id WHERE a.name = 'Wayne Enterprises' AND p.name = 'Windows Server 2022 Datacenter' AND cc.short_description = 'SSL termination issue on Windows Server node' AND cc.channel = 'phone' AND cc.priority = 'high' AND cc.state = 'in_progress' AND c.is_primary = 1 AND c.active = 1 AND cc.sys_updated_on > cc.sys_created_on;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Confirm the case is linked to 'SLA Response - High' (RESPONSE metric) and is in_progress",
+  "description": "Validates SLA linkage uses the correct RESPONSE metric SLA (not resolution) and stage is in_progress",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla cs JOIN customer_case cc ON cc.case_id = cs.case_id JOIN sla_definition s ON s.sla_def_id = cs.sla_def_id WHERE cc.short_description = 'SSL termination issue on Windows Server node' AND s.name = 'SLA Response - High' AND s.metric = 'response' AND cs.stage = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Confirm the entitlement is properly linked to the new 2026 support contract",
+  "description": "Validates the entitlement-contract relationship is correctly established",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM entitlement e JOIN contract c ON e.contract_id = c.contract_id JOIN account a ON c.account_id = a.account_id WHERE a.name = 'Wayne Enterprises' AND c.contract_type = 'support' AND c.start_date = '2026-01-01' AND e.support_level = 'premium' AND e.coverage_hours = 'h24x7';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

@@ -21,7 +21,10 @@ import type { Conn } from '../enterpriseops/sqlite.ts'
 export interface Body {
   /** The body's fields as the model read them, defaults filled in. */
   value: Record<string, unknown>
-  /** The fields the body gave (`model_dump(exclude_unset=True)`). */
+  /**
+   * The fields the body gave (`model_dump(exclude_unset=True)`). Upstream's
+   * update routes dump with `exclude_none` instead: they read `value`'s non-null fields.
+   */
   set: Set<string>
 }
 
