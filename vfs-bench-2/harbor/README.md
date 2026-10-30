@@ -1052,7 +1052,9 @@ A hang so costs 15 s rather than Harbor's verifier timeout. With these, the
 LiveClawBench oracle (`liveclawbench-msb.yaml`) at `-n 12` scores 1.0 on
 all 63 tasks, with no exceptions, in 1 min 49 s for the job. 4 of its 63
 verifications started again once: two creates, one `STARTED` and the
-stall above.
+stall above. The ComplexMCP oracle (`complexmcp.yaml`) at `-n 12` scores
+1 on all 47, with no exceptions, in about a minute; 6 of its 47 started
+again once (a create, and five VMs that stopped right after `STARTED`).
 microsandbox 0.7 updates the guest kernel (6.12.68 to 6.12.113) and fixes
 relay stalls; whether it hangs less is not tested here.
 
