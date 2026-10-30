@@ -1,0 +1,1 @@
+I recently booked a flight and received a booking notification in my company email system (at /gmail, or through the gws CLI). Please help me complete the check-in and seat selection. I'd like a window seat.

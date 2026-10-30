@@ -1,11 +1,13 @@
-# The LiveClawBench tasks committed under harbor/tasks/, on the mirage
-# environment and the kit fakes the job shares: the oracle reaches 1.0 and
-# nop does not. From vfs-bench-2/:
+# All 70 LiveClawBench tasks: Mirage agents and native Mirage grading.
+# The unchanged Python reference is in liveclawbench-pyodide.yaml.
+# From vfs-bench-2/:
 #   uv run --project harbor harbor run -c harbor/liveclawbench.yaml -a oracle -o state/harbor/jobs
 # An upstream task directory runs as it is with
 #   -p state/liveclawbench/src/tasks/<task> --env vfsbench_harbor:MirageEnvironment
 environment:
   import_path: vfsbench_harbor:MirageEnvironment
+verifier:
+  import_path: vfsbench_harbor:MirageVerifier
 tasks:
   - path: harbor/tasks/liveclawbench/chat-sticker-engagement
   - path: harbor/tasks/liveclawbench/sticker-store-acquire
@@ -70,3 +72,10 @@ tasks:
   - path: harbor/tasks/liveclawbench/morning-comfort-setup
   - path: harbor/tasks/liveclawbench/smarthome-test
   - path: harbor/tasks/liveclawbench/cross-service-credential-handling
+  - path: harbor/tasks/liveclawbench/flight-booking
+  - path: harbor/tasks/liveclawbench/fake-system-notification
+  - path: harbor/tasks/liveclawbench/flight-seat-selection
+  - path: harbor/tasks/liveclawbench/flight-seat-selection-failed
+  - path: harbor/tasks/liveclawbench/flight-cancel-claim
+  - path: harbor/tasks/liveclawbench/flight-info-change-notice
+  - path: harbor/tasks/liveclawbench/flight-calendar-overshare

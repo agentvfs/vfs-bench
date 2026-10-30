@@ -30,7 +30,8 @@ while the trial's environment is still up:
   container's ``ENV`` and the task's verifier environment, and the reward
   files are read as Harbor's own verifier reads them. The VM is removed
   however the verification ends, timed out or canceled included. A VM msb
-  hangs before the test starts is replaced (``ATTEMPTS``).
+  hangs, before the test starts or while it runs (its beats stop), is
+  replaced, and the test runs again in the new one (``ATTEMPTS``).
 
 The VM has the task's CPUs, memory and storage, as the container had.
 ``mirage/verifier.log`` in the trial's directory gives the VM's timings,
@@ -47,7 +48,7 @@ import shutil
 import tarfile
 import tempfile
 import time
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Awaitable, Callable
 from pathlib import Path, PurePosixPath
 from typing import IO
 from urllib.parse import urlsplit
@@ -71,8 +72,11 @@ HOST_NAME = "host.microsandbox.internal"
 GUEST = Path(__file__).with_name("guest.py")
 # Where the VM keeps the runner, its config and the trial's /tmp.
 STAGE = "/.vfsbench"
-# guest.py's first line.
+# guest.py's first line; then, until the command ends, a beat every second,
+# and an end line.
 STARTED = b"STARTED\n"
+BEAT = b"BEAT\n"
+END = b"END\n"
 # Hop-by-hop headers, and the framing the proxy sets itself.
 HOP = {
     b"connection", b"keep-alive", b"proxy-authenticate",
@@ -81,15 +85,20 @@ HOP = {
 }
 # The kit's own endpoints, which no upstream service has.
 KIT = re.compile(r"/(reset|_kit)(/|$)")
-# msb 0.5.10 now and then hangs a create, or leaves a command in a running
-# VM unrun (about one in a hundred of each, concurrent or not). A create
-# takes a third of a second, its copies included (300 MB in 3,000 files add
-# 0.3 s), and guest.py's first line comes in a tenth of one; past these
-# the VM has hung, and the verification starts again in another, up to
-# ATTEMPTS times. Nothing of the test has run by then.
-ATTEMPTS = 3
-CREATE_TIMEOUT = 30
+# msb 0.5.10's guest now and then stops: its vCPU spins at 100% and the
+# VM answers nothing again, in boot (the create never returns), before
+# guest.py runs, or soon after (about one VM in ten with twelve at once and
+# the host overcommitted; the README's "When msb hangs"); rarely its
+# network and then the VM stall later. A create takes a third of
+# a second, its copies included (300 MB in 3,000 files add 0.3 s), and at
+# most a second with the host loaded three times over; guest.py's first
+# line comes within a second more, and its beats every second. Past these
+# timeouts the VM has hung, and the verification starts again in another,
+# up to ATTEMPTS times.
+ATTEMPTS = 5
+CREATE_TIMEOUT = 15
 ANSWER_TIMEOUT = 15
+STALL_TIMEOUT = 15
 # What the host keeps of a VM's answer: its stdout (the pulled logs' tar) is
 # spooled to a temporary file, past SPOOL bytes, and refused past
 # MAX_OUTPUT; of its stderr (the test's output) only the last ERROR_TAIL
@@ -359,6 +368,16 @@ async def _pull(msb: str, image: str) -> None:
             f"msb pull {image} failed: {err.decode(errors='replace')[-2000:]}")
 
 
+_creates: dict[asyncio.AbstractEventLoop, asyncio.Lock] = {}
+
+
+def _create_lock() -> asyncio.Lock:
+    """One create at a time per event loop: msb 0.5.10 hangs a boot far
+    more often when boots overlap (microsandbox#1041)."""
+    loop = asyncio.get_running_loop()
+    return _creates.setdefault(loop, asyncio.Lock())
+
+
 class Hung(Exception):
     """msb left a VM's create or a command in it unanswered."""
 
@@ -391,19 +410,21 @@ class Sandbox:
             argv += ["--copy-dir", f"{source}:{target}"]
         await _pull(msb, image)
         vm = cls(msb, f"{prefix}-{secrets.token_hex(3)}")
-        started = time.monotonic()
+        queued = time.monotonic()
         try:
             try:
-                code, _, err = await _run(msb,
-                                          "create",
-                                          "-q",
-                                          "-n",
-                                          vm.name,
-                                          *argv,
-                                          "--pull",
-                                          "never",
-                                          image,
-                                          timeout=CREATE_TIMEOUT)
+                async with _create_lock():
+                    started = time.monotonic()
+                    code, _, err = await _run(msb,
+                                              "create",
+                                              "-q",
+                                              "-n",
+                                              vm.name,
+                                              *argv,
+                                              "--pull",
+                                              "never",
+                                              image,
+                                              timeout=CREATE_TIMEOUT)
             except TimeoutError:
                 raise Hung(f"create {vm.name} did not return in "
                            f"{CREATE_TIMEOUT}s") from None
@@ -411,7 +432,8 @@ class Sandbox:
                 # msb's own timeout on a hung boot ends this way too.
                 raise Hung(f"create {vm.name} exited {code}: "
                            f"{err.decode(errors='replace').strip()[-500:]}")
-            log.append(f"create {vm.name}: {time.monotonic() - started:.2f}s")
+            log.append(f"create {vm.name}: {time.monotonic() - started:.2f}s"
+                       f", after {started - queued:.2f}s queued")
             yield vm
         finally:
             await asyncio.shield(vm.remove(log))
@@ -436,9 +458,11 @@ class Sandbox:
 
     async def guest(self, *args: str) -> tuple[int, IO[bytes], bytes]:
         """Run ``guest.py`` in the VM, to its end: its status, its stdout
-        after its first line, spooled and rewound (the caller closes it),
-        and its stderr's last ``ERROR_TAIL`` bytes. Raises ``Hung`` if that
-        first line does not come in time, so the VM never ran it."""
+        after its first line (after its end line, unless ``args`` is a
+        probe), spooled and rewound (the caller closes it), and its
+        stderr's last ``ERROR_TAIL`` bytes. Raises ``Hung`` if that first
+        line does not come in time, so the VM never ran it, or if its beats
+        stop before the end line, so the VM stopped running it."""
         process = await asyncio.create_subprocess_exec(
             self.msb,
             "exec",
@@ -464,6 +488,22 @@ class Sandbox:
             except TimeoutError:
                 raise Hung(f"{self.name} ran nothing in {ANSWER_TIMEOUT}s; "
                            "msb left the command unrun") from None
+            # A probe neither beats nor ends; nor does a guest.py that
+            # failed to start.
+            ended = bool(args) or first != STARTED
+            beats = 0
+            while not ended:
+                try:
+                    line = await asyncio.wait_for(process.stdout.readline(),
+                                                  STALL_TIMEOUT)
+                except TimeoutError:
+                    raise Hung(f"{self.name} stopped beating after {beats}s"
+                               f" of the test, for {STALL_TIMEOUT}s; msb's "
+                               "guest hung") from None
+                ended = line == END
+                if not ended and line != BEAT:
+                    break
+                beats += 1
             while chunk := await process.stdout.read(2**16):
                 if out.tell() + len(chunk) > MAX_OUTPUT:
                     raise RuntimeError(
@@ -475,6 +515,10 @@ class Sandbox:
                 raise RuntimeError(
                     f"guest.py did not start in {self.name} "
                     f"(exit {code}): {(first + err).decode(errors='replace')}")
+            if not ended:
+                raise RuntimeError(
+                    f"guest.py ended before its command in {self.name} "
+                    f"(exit {code}): {err.decode(errors='replace')}")
         except BaseException:
             out.close()
             if process.returncode is None:
@@ -498,6 +542,20 @@ class Sandbox:
             return json.loads(out) if code == 0 else {}
         except (TimeoutError, ValueError):
             return {}
+
+
+async def retried(attempt: Callable[[], Awaitable[None]],
+                  log: list[str]) -> int:
+    """``attempt`` run again while msb hangs it, up to ``ATTEMPTS`` times,
+    each hang in ``log``; the attempt that ran."""
+    for n in range(1, ATTEMPTS + 1):
+        try:
+            await attempt()
+            return n
+        except Hung as e:
+            log.append(f"attempt {n}: {e}")
+    raise RuntimeError(f"msb hung on all {ATTEMPTS} attempts "
+                       "(mirage/verifier.log has each)")
 
 
 def extract(data: IO[bytes], target: Path, *, include: list[str] | None,
@@ -705,17 +763,9 @@ class MicrosandboxVerifier(Verifier):
         requests: list[str] = []
         timings: dict[str, float] = {}
         try:
-            for attempt in range(1, ATTEMPTS + 1):
-                try:
-                    await self._attempt(command, str(paths.verifier_dir), log,
-                                        requests, timings)
-                    break
-                except Hung as e:
-                    log.append(f"attempt {attempt}: {e}")
-            else:
-                raise RuntimeError(f"msb hung on all {ATTEMPTS} attempts "
-                                   "(mirage/verifier.log has each)")
-            timings["attempts"] = attempt
+            timings["attempts"] = await retried(
+                lambda: self._attempt(command, str(paths.verifier_dir), log,
+                                      requests, timings), log)
         finally:
             self._write_log(log, requests, timings)
 

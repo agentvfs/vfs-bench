@@ -1,0 +1,401 @@
+// The airline fake's store: LiveClawBench's airline mock (Mosi-AI/LiveClawBench
+// @ 303dc77, MIT, mock-platform/mocks/airline), one SQLite file per run.
+//
+// Generated with `prisma db pull` from upstream's own CREATE TABLE and
+// CREATE INDEX statements (each fixture's `_schema`), so each table, column,
+// key, foreign key and index is upstream's, by name and in order, and
+// upstream's verify.py and its own statements read a run's file as they
+// read upstream's. Column types are as SQLite keeps them (text, integer,
+// real); a default of SQLite's 'now' is `datetime('now')`, which each run
+// answers with its clock. Prisma cannot state upstream's CHECKs: each run
+// gets them as triggers (mocks/upstream/checks.ts). The last five models
+// are the fake's own (mocks/upstream).
+//
+// The fixture has no rows of upstream's tables: its seed writes 60 days of
+// flights and 317,000 seats, too many to commit. The fake runs that seed on
+// each run's template instead, as upstream's mock seeds itself when it
+// starts, and checks each table against the digest of the same seed under
+// Bun, which the fixture carries (`_seed`; mocks/upstream/fake.ts).
+//
+// No tenant column: a run is one world, as upstream's mock is one.
+
+datasource db {
+  provider = "sqlite"
+  url      = env("INTEG_DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "client"
+}
+
+model migrations {
+  id         Int     @id @default(autoincrement())
+  name       String  @unique
+  applied_at String? @default(dbgenerated("(datetime('now'))"))
+
+  @@map("_migrations")
+}
+
+model announcements {
+  id           Int     @id @default(autoincrement())
+  title        String
+  content      String
+  category     String
+  priority     String? @default("normal")
+  is_active    Int?    @default(1)
+  published_at String? @default(dbgenerated("(datetime('now'))"))
+  expires_at   String?
+  created_at   String? @default(dbgenerated("(datetime('now'))"))
+  updated_at   String? @default(dbgenerated("(datetime('now'))"))
+
+  @@index([is_active], map: "idx_announcements_active")
+}
+
+model baggage_tracking {
+  id                  Int       @id @default(autoincrement())
+  user_id             Int
+  booking_id          Int?
+  flight_number       String
+  flight_time         String
+  seat_number         String?
+  passenger_name      String
+  passenger_phone     String
+  passenger_email     String
+  baggage_description String
+  loss_details        String?
+  status              String?   @default("processing")
+  location            String?
+  created_at          String?   @default(dbgenerated("(datetime('now'))"))
+  updated_at          String?   @default(dbgenerated("(datetime('now'))"))
+  bookings            bookings? @relation(fields: [booking_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users               users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([user_id], map: "idx_baggage_user")
+}
+
+model bookings {
+  id                  Int                   @id @default(autoincrement())
+  booking_reference   String                @unique
+  user_id             Int
+  flight_id           Int
+  cabin_class         String
+  total_price         Float
+  booking_status      String                @default("pending")
+  checked_in          Int?                  @default(0)
+  check_in_time       String?
+  booked_at           String?               @default(dbgenerated("(datetime('now'))"))
+  created_at          String?               @default(dbgenerated("(datetime('now'))"))
+  updated_at          String?               @default(dbgenerated("(datetime('now'))"))
+  baggage_tracking    baggage_tracking[]
+  flights             flights               @relation(fields: [flight_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users               users                 @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  calendar_events     calendar_events?
+  claims              claims[]
+  email_notifications email_notifications[]
+  passengers          passengers[]
+  payments            payments?
+
+  @@index([booking_status], map: "idx_bookings_status")
+  @@index([flight_id], map: "idx_bookings_flight")
+  @@index([user_id], map: "idx_bookings_user")
+  @@index([booking_reference], map: "idx_bookings_ref")
+}
+
+model calendar_events {
+  id               Int      @id @default(autoincrement())
+  booking_id       Int      @unique
+  user_id          Int
+  event_id         String   @unique
+  title            String
+  description      String?
+  start_time       String
+  end_time         String
+  location         String?
+  reminder_minutes Int?     @default(60)
+  created_at       String?  @default(dbgenerated("(datetime('now'))"))
+  updated_at       String?  @default(dbgenerated("(datetime('now'))"))
+  users            users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  bookings         bookings @relation(fields: [booking_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([booking_id], map: "idx_ce_booking")
+}
+
+model chat_messages {
+  id            Int           @id @default(autoincrement())
+  session_id    Int
+  message       String
+  sender_type   String
+  sender_name   String?
+  sent_at       String?       @default(dbgenerated("(datetime('now'))"))
+  created_at    String?       @default(dbgenerated("(datetime('now'))"))
+  updated_at    String?       @default(dbgenerated("(datetime('now'))"))
+  chat_sessions chat_sessions @relation(fields: [session_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([session_id], map: "idx_cm_session")
+}
+
+model chat_sessions {
+  id            Int             @id @default(autoincrement())
+  user_id       Int
+  session_id    String          @unique
+  status        String?         @default("active")
+  started_at    String?         @default(dbgenerated("(datetime('now'))"))
+  ended_at      String?
+  created_at    String?         @default(dbgenerated("(datetime('now'))"))
+  updated_at    String?         @default(dbgenerated("(datetime('now'))"))
+  chat_messages chat_messages[]
+  users         users           @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([user_id], map: "idx_cs_user")
+}
+
+model claims {
+  id               Int      @id @default(autoincrement())
+  booking_id       Int
+  claim_type       String
+  claim_amount     Float
+  claim_reason     String
+  claim_status     String?  @default("pending")
+  resolution_notes String?
+  resolved_amount  Float?
+  resolved_at      String?
+  created_at       String?  @default(dbgenerated("(datetime('now'))"))
+  updated_at       String?  @default(dbgenerated("(datetime('now'))"))
+  bookings         bookings @relation(fields: [booking_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([claim_status], map: "idx_claims_status")
+  @@index([booking_id], map: "idx_claims_booking")
+}
+
+model email_notifications {
+  id              Int       @id @default(autoincrement())
+  user_id         Int
+  booking_id      Int?
+  email_type      String
+  recipient_email String
+  subject         String
+  body            String
+  sent_at         String?   @default(dbgenerated("(datetime('now'))"))
+  is_read         Int?      @default(0)
+  created_at      String?   @default(dbgenerated("(datetime('now'))"))
+  updated_at      String?   @default(dbgenerated("(datetime('now'))"))
+  bookings        bookings? @relation(fields: [booking_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users           users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([email_type], map: "idx_en_type")
+  @@index([user_id], map: "idx_en_user")
+}
+
+model faqs {
+  id            Int     @id @default(autoincrement())
+  question      String
+  answer        String
+  category      String
+  is_active     Int?    @default(1)
+  display_order Int?    @default(0)
+  created_at    String? @default(dbgenerated("(datetime('now'))"))
+  updated_at    String? @default(dbgenerated("(datetime('now'))"))
+
+  @@index([is_active], map: "idx_faqs_active")
+}
+
+model flight_status_history {
+  id            Int     @id @default(autoincrement())
+  flight_id     Int
+  old_status    String?
+  new_status    String
+  delay_minutes Int?
+  reason        String?
+  changed_at    String? @default(dbgenerated("(datetime('now'))"))
+  created_at    String? @default(dbgenerated("(datetime('now'))"))
+  updated_at    String? @default(dbgenerated("(datetime('now'))"))
+  flights       flights @relation(fields: [flight_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([flight_id], map: "idx_fsh_flight")
+}
+
+model flights {
+  id                    Int                     @id @default(autoincrement())
+  flight_number         String
+  airline               String                  @default("GKD Airlines")
+  origin_code           String
+  origin_city           String
+  origin_airport        String
+  destination_code      String
+  destination_city      String
+  destination_airport   String
+  departure_time        String
+  arrival_time          String
+  duration_minutes      Int
+  aircraft_type         String                  @default("Boeing 737")
+  base_price_economy    Float
+  base_price_business   Float?
+  base_price_first      Float?
+  status                String                  @default("scheduled")
+  delay_minutes         Int?                    @default(0)
+  delay_reason          String?
+  gate                  String?
+  terminal              String?
+  created_at            String?                 @default(dbgenerated("(datetime('now'))"))
+  updated_at            String?                 @default(dbgenerated("(datetime('now'))"))
+  bookings              bookings[]
+  flight_status_history flight_status_history[]
+  price_history         price_history[]
+  seats                 seats[]
+
+  @@index([origin_code, destination_code], map: "idx_flights_route")
+  @@index([status], map: "idx_flights_status")
+  @@index([departure_time], map: "idx_flights_departure")
+  @@index([destination_code], map: "idx_flights_dest")
+  @@index([origin_code], map: "idx_flights_origin")
+  @@index([flight_number], map: "idx_flights_number")
+}
+
+model passengers {
+  id                 Int      @id @default(autoincrement())
+  booking_id         Int
+  seat_id            Int?
+  first_name         String
+  last_name          String
+  date_of_birth      String
+  nationality        String?
+  meal_preference    String?
+  special_assistance String?
+  created_at         String?  @default(dbgenerated("(datetime('now'))"))
+  updated_at         String?  @default(dbgenerated("(datetime('now'))"))
+  seats              seats?   @relation(fields: [seat_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  bookings           bookings @relation(fields: [booking_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([booking_id], map: "idx_passengers_booking")
+}
+
+model payments {
+  id                       Int      @id @default(autoincrement())
+  booking_id               Int      @unique
+  amount                   Float
+  currency                 String?  @default("USD")
+  payment_method           String?  @default("credit_card")
+  payment_status           String   @default("pending")
+  card_last_four           String?
+  card_type                String?
+  card_holder_name         String?
+  transaction_id           String?  @unique
+  payment_gateway_response String?
+  refund_amount            Float?
+  refund_reason            String?
+  refunded_at              String?
+  paid_at                  String?
+  created_at               String?  @default(dbgenerated("(datetime('now'))"))
+  updated_at               String?  @default(dbgenerated("(datetime('now'))"))
+  bookings                 bookings @relation(fields: [booking_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([payment_status], map: "idx_payments_status")
+  @@index([booking_id], map: "idx_payments_booking")
+}
+
+model price_history {
+  id            Int     @id @default(autoincrement())
+  flight_id     Int
+  cabin_class   String
+  old_price     Float
+  new_price     Float
+  change_reason String?
+  changed_at    String? @default(dbgenerated("(datetime('now'))"))
+  created_at    String? @default(dbgenerated("(datetime('now'))"))
+  updated_at    String? @default(dbgenerated("(datetime('now'))"))
+  flights       flights @relation(fields: [flight_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([flight_id], map: "idx_ph_flight")
+}
+
+model seats {
+  id                Int          @id @default(autoincrement())
+  flight_id         Int
+  seat_number       String
+  cabin_class       String
+  price             Float
+  is_available      Int?         @default(1)
+  is_window         Int?         @default(0)
+  is_aisle          Int?         @default(0)
+  has_extra_legroom Int?         @default(0)
+  row_number        Int
+  seat_letter       String
+  created_at        String?      @default(dbgenerated("(datetime('now'))"))
+  updated_at        String?      @default(dbgenerated("(datetime('now'))"))
+  passengers        passengers[]
+  flights           flights      @relation(fields: [flight_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([flight_id, seat_number])
+  @@index([flight_id, is_available], map: "idx_seats_available")
+  @@index([flight_id], map: "idx_seats_flight")
+}
+
+model users {
+  id                  Int                   @id @default(autoincrement())
+  email               String                @unique
+  password_hash       String
+  first_name          String
+  last_name           String
+  phone               String?
+  date_of_birth       String?
+  is_verified         Int?                  @default(0)
+  is_active           Int?                  @default(1)
+  created_at          String?               @default(dbgenerated("(datetime('now'))"))
+  updated_at          String?               @default(dbgenerated("(datetime('now'))"))
+  baggage_tracking    baggage_tracking[]
+  bookings            bookings[]
+  calendar_events     calendar_events[]
+  chat_sessions       chat_sessions[]
+  email_notifications email_notifications[]
+
+  @@index([email], map: "idx_users_email")
+}
+
+// The environment upstream's mock reads from its process (`TASK_NAME`),
+// which a fake every task of a job shares cannot take from its own: each
+// task's fixture states it.
+model vfsbench_env {
+  name  String @id
+  value String
+
+  @@map("_env")
+}
+
+// Each file the mock keeps on disk upstream, by its path in the image, and
+// the task's assets: text as it is, anything else as base64.
+model vfsbench_file {
+  path     String @id
+  data     String
+  encoding String @default("utf8")
+
+  @@map("_file")
+}
+
+// The rows of upstream's tables Prisma cannot key (marked @@ignore above),
+// which the fake inserts itself, in order, once the kit has seeded the rest.
+model vfsbench_row {
+  seq   Int    @id
+  table String
+  data  String
+
+  @@map("_row")
+}
+
+// Upstream's CREATE TABLE and CREATE INDEX statements, as its seed ran them.
+model vfsbench_schema {
+  name String @id
+  type String
+  sql  String
+
+  @@map("_schema")
+}
+
+// Each of upstream's tables as its seed leaves it under Bun: its row count
+// and digest (mocks/upstream/digest.ts), which the run's seed must match.
+model vfsbench_seed {
+  name  String @id
+  value String
+
+  @@map("_seed")
+}

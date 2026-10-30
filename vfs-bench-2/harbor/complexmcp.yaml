@@ -1,14 +1,12 @@
-# The ComplexMCP tasks (harbor/tasks/complexmcp/, harbor/complexmcp.py writes
-# them), each verifier in a microVM of its own (microsandbox's msb): upstream's
-# judge, in CPython with python-Levenshtein, reads each app's login and logout
-# from the trial's fakes at upstream's ports. From vfs-bench-2/, after
-# `uv run --project complexmcp python -I complexmcp/setup.py` and
-# `uv run --project complexmcp python -I harbor/complexmcp.py --site`:
-#   uv run --project harbor harbor run -c harbor/complexmcp.yaml -a oracle -n 8 -o state/harbor/jobs-complexmcp
+# All 47 ComplexMCP tasks: Mirage agents and a separate Mirage/Monty 1.4.0
+# verifier workspace. No SQLite, Pyodide, microVM or host Python grading.
+# Prepare the hash-pinned rows with complexmcp/setup.py; --site is needed
+# only for the preserved reference job in complexmcp-msb.yaml.
+#   uv run --project harbor harbor run -c harbor/complexmcp.yaml -a oracle -n 8
 environment:
   import_path: vfsbench_harbor:MirageEnvironment
 verifier:
-  import_path: vfsbench_harbor:MicrosandboxVerifier
+  import_path: vfsbench_harbor:MirageVerifier
 tasks:
   - path: harbor/tasks/complexmcp/mark-sean-baker-read
   - path: harbor/tasks/complexmcp/good-morning-paisley

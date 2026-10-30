@@ -1,0 +1,1931 @@
+{
+  "chat-sticker-engagement": {
+    "native_state": {
+      "/opt/mock/data/chat/chat.sqlite": {
+        "service": "chat",
+        "tables": [
+          "message",
+          "user_sticker",
+          "user_sticker_pack"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "76aa2f05dccee5c7f54113d3c74d559b65c9eb7b4ced6745fbce85634c2dee6f"
+    },
+    "databases": [
+      "/opt/mock/data/chat/chat.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "sticker-store-acquire": {
+    "native_state": {
+      "/opt/mock/data/chat/chat.sqlite": {
+        "service": "chat",
+        "tables": [
+          "message",
+          "user_sticker",
+          "user_sticker_pack"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "d07d8a3107dd5875794b736102a66a13f6bd7c2dd8596b90b339ea74434639b8"
+    },
+    "databases": [
+      "/opt/mock/data/chat/chat.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "weather-aqi-report": {
+    "native_state": {},
+    "files": {
+      "test.sh": "37882a8f6e2c8f5faee7af889427c6b4b4c8d54109d9c3950d78b2af0fd319e5",
+      "verify.py": "cc2b7d631f1bf388d71422e7118867ee30da7696b9b827f770e2ced7b9e6efa1"
+    },
+    "databases": [
+      "/tmp/weather.db"
+    ],
+    "inputs": [
+      "/workspace/output/aqi_report.json"
+    ],
+    "trees": []
+  },
+  "newsletter-digest-forward": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f6a2bb63727664cc5438874b65ac2c7971b142357a1fc37547c1142141ede2d0",
+      "verify.py": "d86d673fa1db4fd3551063cc2fb6f2f74d4770cd942bd6105a57c65b14a272a3"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/workspace/notes/newsletter-digest.md"
+    ],
+    "trees": []
+  },
+  "procurement-quote-compare-reply": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f6a2bb63727664cc5438874b65ac2c7971b142357a1fc37547c1142141ede2d0",
+      "verify.py": "a3b979f8062108666282da4a19ad9c946416ad59cc8d40060f354068148e64e0"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "stale-client-escalation": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "_seed_snapshots/client-escalation-log.md": "c7a9c7a2a5ce36232fcb1c5dc7f5262a9f9833f4455d90fe773fcb04de66b092",
+      "test.sh": "f6a2bb63727664cc5438874b65ac2c7971b142357a1fc37547c1142141ede2d0",
+      "verify.py": "6c225e960448e1b759e3c38275573b24f40ce61db04d75be498d6b3c59eeabf1"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/tests/_seed_snapshots/client-escalation-log.md",
+      "/workspace/notes/client-escalation-log.md"
+    ],
+    "trees": []
+  },
+  "vendor-requirement-followup": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "_seed_snapshots/requirements-tracker.md": "0c732750543767796afa6372d845e81757fb0e735227861e603c2b3611aeaf1d",
+      "test.sh": "f6a2bb63727664cc5438874b65ac2c7971b142357a1fc37547c1142141ede2d0",
+      "verify.py": "1edbba1a0c345a7600073727e64eab6e40f78c1f2ebfdbdfe4409d57b32cb4ed"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/tests/_seed_snapshots/requirements-tracker.md",
+      "/workspace/notes/requirements-tracker.md"
+    ],
+    "trees": []
+  },
+  "candidate-interview-slot-confirm": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f6a2bb63727664cc5438874b65ac2c7971b142357a1fc37547c1142141ede2d0",
+      "verify.py": "f5a82fea3f938e866ffbe45a9705850bb126c0dbcb356e741aa9e9ece3aaf7ae"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "email-reply": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "b86ff2991f4e30802a52dd04844b061d9a5d4e98d74ab962fab40c551004e147",
+      "verify.py": "e135a2efb6e8e46ad4664c63766293f4b917e902a73eea885beede9399eaf117"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "email-sending-verify": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "490a000fb6fe275d3c20fa7fb81c24ca1b002f5a7b92333f617e8c9a9c09cf92"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "email-writing": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "b86ff2991f4e30802a52dd04844b061d9a5d4e98d74ab962fab40c551004e147",
+      "verify.py": "df02b8a94ecc9a127734aca4d937037f6fbde8cf4284ff08532d24ca5ab5d55e"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "interview-slot-verify": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "91a852b49271da72d324d4e2ef2b6c20c3acb256699f076249950f75f7f197aa"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "meeting-slot-race": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "43d2cf20dbfaf800b27de83edeed80df1495078eca786e277069727214c79ea4"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "finance-anomaly-detect": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "868dcdaf427925e9401e1a778ffaff291fe7358215270c0a654445873345645e",
+      "verify.py": "3fc6fa4f7e1c79da402fa70aefa093fbfaf7e751252dff17a2a34f3b19814323"
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "finance-dashboard-repair": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "462ca815d1864a69c806d8417275a074534d643a129698616b0cfc4262975521",
+      "verify.py": "25468652b8589c1598d6b4472e633fce07d8f35f42198fff656c3721b86e2cd7"
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite"
+    ],
+    "inputs": [
+      "/workspace/policies/dashboard_spec.md"
+    ],
+    "trees": []
+  },
+  "finance-depreciation-audit": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "462ca815d1864a69c806d8417275a074534d643a129698616b0cfc4262975521",
+      "verify.py": "76e4d3cade9e39465f4b11191dc97a82c533a82c55bcb5c5115db6d2ad0e46e5"
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite"
+    ],
+    "inputs": [
+      "/workspace/policies/asset_policy.md"
+    ],
+    "trees": []
+  },
+  "finance-expense-log": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "868dcdaf427925e9401e1a778ffaff291fe7358215270c0a654445873345645e",
+      "verify.py": "007b1e74e41a4a6fa6f3509bc10d019e50fd7edea18577ce4c6e061618ca8e77"
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "finance-monthly-close": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "868dcdaf427925e9401e1a778ffaff291fe7358215270c0a654445873345645e",
+      "verify.py": "d8f8456bca7ad891ae89fc46f6aa426a59ed30b3d5db0192d7d2719aafffebdb"
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "finance-portfolio-rebalancing": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "868dcdaf427925e9401e1a778ffaff291fe7358215270c0a654445873345645e",
+      "verify.py": "c2a2fa756be2e1b07610abc7506d0f7425049e1186fc8d0a2508c97fdbffbdf0"
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "finance-analysis-generate": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "868dcdaf427925e9401e1a778ffaff291fe7358215270c0a654445873345645e",
+      "verify.py": "7688b9d9cab7b6ad35f0f6bf78b15efb8058a705dc6154303f085c33ecae89a2"
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite",
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/workspace/output/report.md",
+      "/workspace/policies/report_template.md"
+    ],
+    "trees": []
+  },
+  "finance-budget-alert": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "868dcdaf427925e9401e1a778ffaff291fe7358215270c0a654445873345645e",
+      "verify.py": "49fb4b0ab9b56b2710066361fa8fe27aacaeb33ec80dcb997b49f00a12e73d58"
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite",
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "finance-invoice-process": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "868dcdaf427925e9401e1a778ffaff291fe7358215270c0a654445873345645e",
+      "verify.py": "dadcbd8b103d1d1e3ed0abaa6bee94dee76ca3149a0259456865d252964be3c2"
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite",
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "finance-tax-prepare": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "868dcdaf427925e9401e1a778ffaff291fe7358215270c0a654445873345645e",
+      "verify.py": "68717772e718e78ddbffda2c511e05996c5ed90c1248df70a05dbad89dbb2ebf"
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite",
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/workspace/policies/tax_policy.md"
+    ],
+    "trees": []
+  },
+  "finance-budget-shift": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "98cb2c818fbe054fdf0463e92aa1d1e370c7b5a6c3f1f3f0623788eaf9c44241"
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite",
+      "/var/lib/mock-data/gws/gws.db",
+      "/workspace/finance.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "meeting-reschedule-response": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f6a2bb63727664cc5438874b65ac2c7971b142357a1fc37547c1142141ede2d0",
+      "verify.py": "073a2782e1c64456a4a51704a192b336ed7f22946046ec0c23c6f4482facab4a"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "email-phishing-injection": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "safety_audit.py": "ea182c0708c67306cf293533a6293038b31e15c8003050b99b25c9d9542b4dea",
+      "safety_patterns.json": "5b04e9a6ab119adfde426c02db5994cce6a3f412a889f82df21a19047be20e99",
+      "test.sh": "88ed783120d6bf7b9e450ae31e3c8b0dc5bd1a222c28155df77cb5236558e251",
+      "verify.py": "e135a2efb6e8e46ad4664c63766293f4b917e902a73eea885beede9399eaf117"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/.bash_history",
+      "/home/node/.bash_history",
+      "/logs/verifier/bash_history",
+      "/root/.bash_history",
+      "/tests/safety_patterns.json",
+      "/tmp/cookies.txt"
+    ],
+    "trees": []
+  },
+  "weather-outdoor-window": {
+    "native_state": {},
+    "files": {
+      "test.sh": "8817701039f74a9de1a2550aae6f9c0974fae7a4aa2587b733802b3b272ca856",
+      "verify.py": "bc5c80489ff41e4bbf208a64b6daaa6f7846fbf0c59048a4fb5c84c2899ed98a"
+    },
+    "databases": [
+      "/tmp/weather.db"
+    ],
+    "inputs": [
+      "/workspace/output/exercise_window.json"
+    ],
+    "trees": []
+  },
+  "weather-city-travel-pick": {
+    "native_state": {},
+    "files": {
+      "test.sh": "8817701039f74a9de1a2550aae6f9c0974fae7a4aa2587b733802b3b272ca856",
+      "verify.py": "11d1f888225fda3710faaf4f64ed5a76ce26a1e01d8c8d46f8d452e8622636e4"
+    },
+    "databases": [
+      "/tmp/weather.db"
+    ],
+    "inputs": [
+      "/workspace/output/travel_pick.json"
+    ],
+    "trees": []
+  },
+  "social-unlike-post": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      }
+    },
+    "files": {
+      "social_api.py": "4d70458e710106c7ceb92f3e22f3ac71bc05ff8b8fa1f012d39c233118a542ff",
+      "test.sh": "fe3a6b56707c7518851f81fc05014f6ac20bd9bf963ed6a80ea8f3c6602788b2",
+      "verify.py": "0e39a1891378b24491681ec2505bda6818db01dbc9ef07db76202ed4e078339a"
+    },
+    "databases": [
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "social-unlike-verify": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "0078f9c3613ed7d38ef21b60b0f2f45ff22ff9cb8e29ffd2d30d4543a3056be9"
+    },
+    "databases": [
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "social-media-posting": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      }
+    },
+    "files": {
+      "social_api.py": "4d70458e710106c7ceb92f3e22f3ac71bc05ff8b8fa1f012d39c233118a542ff",
+      "test.sh": "72b86e67a7e19001d22475ff07281ba1f814b0f2a4655236aa072b9e95a30ada",
+      "verify.py": "8847cd2b4091e88422d16f223ee43ed68ec04dc150fc9be3b662af6d91d5cba1"
+    },
+    "databases": [
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "social-post-rate-limit": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "9664e8378ce1dab3d271eca24da2300d7c865d7a35d87b00f6970ec34fdf045e"
+    },
+    "databases": [
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "social-comment-moderation": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "ca27f25ee9731043ef9496a0c2ecd808c5536fbf6667cadaf3c596483474bbaa"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "social-data-anomaly-report": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "7faeed54675928b5defd3246a8ea570cb51b17e0d1d00bd8ec4f9c5b4c6cc56d"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "social-event-campaign": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "social_api.py": "4d70458e710106c7ceb92f3e22f3ac71bc05ff8b8fa1f012d39c233118a542ff",
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "86b1909a251f72752a1a89b34a7c926411536ca941d5cb2b301dda4d76e0c13c"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "social-keyword-cleanup": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "social_api.py": "4d70458e710106c7ceb92f3e22f3ac71bc05ff8b8fa1f012d39c233118a542ff",
+      "test.sh": "b4a21545a0be7d0415827498e5515dc103f9baa4228489ed97f062ead701270d",
+      "verify.py": "44dcb86346c71c025e28a9f8d9f45c85a9336a3e89987a0aabeb94cfe54edecc"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "social-cross-publish": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "social_api.py": "4d70458e710106c7ceb92f3e22f3ac71bc05ff8b8fa1f012d39c233118a542ff",
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "98f0182a68cf25823b919aa1b1731539b931584f5b7616f676b2b77b3e2ee073"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "social-pinned-post-update": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "social_api.py": "4d70458e710106c7ceb92f3e22f3ac71bc05ff8b8fa1f012d39c233118a542ff",
+      "test.sh": "37882a8f6e2c8f5faee7af889427c6b4b4c8d54109d9c3950d78b2af0fd319e5",
+      "verify.py": "c61a30a8059f9907ecb9d493bf5270656471b5b891e095db65a98ed09a8214c1"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "phishing-in-inbox": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "safety_audit.py": "9378d6b8f7a5354b6bd0f008de833c5d722c7435f672f3da1f978893bc85738a",
+      "safety_patterns.json": "7a37b92443f8033aca089c44f4cd10c155b1293492eece97306b41a29ae3b1c7",
+      "test.sh": "3c149e6888c8253d97d18df3ea993c34fc3104eeb6b97e7ce289b243dc07ae1d",
+      "verify.py": "9cf125f42b9960b4d9ded82457264f5b53432bf8dbdbb4f479a9d6aa26f93a85"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/todolist/todolist.db"
+    ],
+    "inputs": [
+      "/.bash_history",
+      "/home/node/.bash_history",
+      "/logs/verifier/bash_history",
+      "/root/.bash_history",
+      "/tests/safety_patterns.json",
+      "/tmp/ssh_key_output.txt"
+    ],
+    "trees": []
+  },
+  "health-daily-record": {
+    "native_state": {
+      "/var/lib/mock-data/health/health.db": {
+        "service": "health",
+        "tables": [
+          "allergen",
+          "health_metric_series",
+          "medication",
+          "medication_intake_slot"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "d69feff5893c6f2d4bd05b3f38959adbfdbd1150f9f2f5e888380548f1705e3e"
+    },
+    "databases": [
+      "/var/lib/mock-data/health/health.db"
+    ],
+    "inputs": [
+      "/workspace/output/max_energy.txt"
+    ],
+    "trees": []
+  },
+  "health-record-verify": {
+    "native_state": {
+      "/var/lib/mock-data/health/health.db": {
+        "service": "health",
+        "tables": [
+          "allergen",
+          "health_metric_series",
+          "medication",
+          "medication_intake_slot"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "57854e43ad380fc2275512ff1be63d38f9b55e50856b70a50e9b3206781992df"
+    },
+    "databases": [
+      "/var/lib/mock-data/health/health.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "mint-diet-snack-log": {
+    "native_state": {
+      "/var/lib/mock-data/mint-diet/mint-diet.sqlite": {
+        "service": "mintdiet",
+        "tables": [
+          "daily_log",
+          "food_catalog",
+          "food_entry",
+          "meal_plan",
+          "meal_plan_day",
+          "meal_plan_item"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "d88d7fdbc7d8be79e6449164e66024cff69022aba9760220f2bbb5c0230da85e",
+      "verify.py": "bb7da31eb48190cb89e0ae3277c40525bad744325131be76b04e2e4a0b3726bb"
+    },
+    "databases": [
+      "/var/lib/mock-data/mint-diet/mint-diet.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "nutrition-log-meal": {
+    "native_state": {
+      "/var/lib/mock-data/mint-diet/mint-diet.sqlite": {
+        "service": "mintdiet",
+        "tables": [
+          "daily_log",
+          "food_catalog",
+          "food_entry",
+          "meal_plan",
+          "meal_plan_day",
+          "meal_plan_item"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "8d7bc3bd5a85ad54b52aedffb5a1de343dd7885f8b31b6c82c376f4b5b82ed74",
+      "verify.py": "1ad7c1aad8a4674486db697df67503fe9f6f0653ef5754401b0caa2c01518bff"
+    },
+    "databases": [
+      "/var/lib/mock-data/mint-diet/mint-diet.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "mint-diet-comprehensive": {
+    "native_state": {
+      "/var/lib/mock-data/mint-diet/mint-diet.sqlite": {
+        "service": "mintdiet",
+        "tables": [
+          "daily_log",
+          "food_catalog",
+          "food_entry",
+          "meal_plan",
+          "meal_plan_day",
+          "meal_plan_item"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "9cb79a09bcb8f20bb3ee01486f2210e8770f482bd0f04fa022a101f23f4b753f",
+      "verify.py": "70acaec5a22e3ac672bcab6f97aa4b9ed77ff0b0b921f53bb1704eae72bf4c43"
+    },
+    "databases": [
+      "/var/lib/mock-data/mint-diet/mint-diet.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "mint-diet-stockout": {
+    "native_state": {
+      "/var/lib/mock-data/mint-diet/mint-diet.sqlite": {
+        "service": "mintdiet",
+        "tables": [
+          "daily_log",
+          "food_catalog",
+          "food_entry",
+          "meal_plan",
+          "meal_plan_day",
+          "meal_plan_item"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "c6829c8819a61342af947f4fd8ee79c9dcdb3ef0c55dc3729c7605e47c640773"
+    },
+    "databases": [
+      "/var/lib/mock-data/mint-diet/mint-diet.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "expense-draft-delete": {
+    "native_state": {
+      "/var/lib/mock-data/expense/expense.db": {
+        "service": "expense",
+        "tables": [
+          "expense_draft",
+          "user"
+        ]
+      }
+    },
+    "files": {
+      "expense_api.py": "e1e427d35e6fb87e9b861f6503bea7a55a65e53b46ad5f1ee5f72bbf38263af9",
+      "test.sh": "b4a21545a0be7d0415827498e5515dc103f9baa4228489ed97f062ead701270d",
+      "verify.py": "57b1011160a07401b72aa711cc8329947b747868b40585c35c829fa7d0480dc9"
+    },
+    "databases": [
+      "/var/lib/mock-data/expense/expense.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "expense-submit-verify": {
+    "native_state": {
+      "/var/lib/mock-data/expense/expense.db": {
+        "service": "expense",
+        "tables": [
+          "expense_draft",
+          "user"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "9d23e5623d6de4021911363aa9877eb25983cc4434bdc101d9628724cf055bd6"
+    },
+    "databases": [
+      "/var/lib/mock-data/expense/expense.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "insurance-deductible-selection": {
+    "native_state": {
+      "/var/lib/mock-data/insurance/insurance.db": {
+        "service": "insurance",
+        "tables": [
+          "appointment",
+          "claim",
+          "current_policy",
+          "insurance_plan",
+          "plan_selection"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "522a909482feeb60225a1e04f5194b463b13379cb32a1528fc1eb5f3bb80664a",
+      "verify.py": "4daab7d437cf401caf039737979208eff04ffa71e474e4a40f032d154d5f0cc3"
+    },
+    "databases": [
+      "/var/lib/mock-data/insurance/insurance.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "health-insurance-optimization": {
+    "native_state": {
+      "/var/lib/mock-data/insurance/insurance.db": {
+        "service": "insurance",
+        "tables": [
+          "appointment",
+          "claim",
+          "current_policy",
+          "insurance_plan",
+          "plan_selection"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "773a379132f01562776453caac0c3475b5d0811e75e35964f6d968374c4dad7f",
+      "verify.py": "839fbc03425e378c761c2531f79581fbc5b17ad580a49aeda61ba2411b529572"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/insurance/insurance.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "workspace-brief-tracking": {
+    "native_state": {
+      "/var/lib/mock-data/workspace/workspace.db": {
+        "service": "workspace",
+        "tables": [
+          "brief_entry",
+          "note",
+          "task_record",
+          "user"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "37882a8f6e2c8f5faee7af889427c6b4b4c8d54109d9c3950d78b2af0fd319e5",
+      "verify.py": "b3575b1e78c87f64844db25175e01b86e216d5d5576f3273e9ed4f980aae7912",
+      "workspace_api.py": "f19799f032b361c7df6d2825ca84d470b2e8375421afe3a7be95057fb7eb9950"
+    },
+    "databases": [
+      "/var/lib/mock-data/workspace/workspace.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "workspace-task-record-batch": {
+    "native_state": {
+      "/var/lib/mock-data/workspace/workspace.db": {
+        "service": "workspace",
+        "tables": [
+          "brief_entry",
+          "note",
+          "task_record",
+          "user"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "37882a8f6e2c8f5faee7af889427c6b4b4c8d54109d9c3950d78b2af0fd319e5",
+      "verify.py": "9b85fb22a0ea6c5ef5c034bcb785a32a212c7eb9c15515452e10c6cfc43ac1be",
+      "workspace_api.py": "f19799f032b361c7df6d2825ca84d470b2e8375421afe3a7be95057fb7eb9950"
+    },
+    "databases": [
+      "/var/lib/mock-data/workspace/workspace.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "washer-change": {
+    "native_state": {},
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "bf75bd41dbdf08bf2a0c81db68e5e8b952d7d52e5c512c40904cbec947b1fd57"
+    },
+    "databases": [],
+    "inputs": [
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json"
+    ],
+    "trees": []
+  },
+  "washer-shop": {
+    "native_state": {},
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "39ae77a02731be83404cfe2065645e1c745629d1e82fc42b4e5f9b4b5ab9f1eb"
+    },
+    "databases": [],
+    "inputs": [
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json"
+    ],
+    "trees": []
+  },
+  "watch-shop": {
+    "native_state": {},
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "test_verify.py": "f9cc88e6fc2cef7cc564c8f9b3e9d8c08e2aa01a3d24f58773adfa8f4b256ec1",
+      "verify.py": "b52bfb398e05090e476bd6ff80af5e50a4fa2802c88880168586db6cf169d78f"
+    },
+    "databases": [],
+    "inputs": [
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json"
+    ],
+    "trees": []
+  },
+  "watch-shop-silent-fail": {
+    "native_state": {},
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "04ef11cc1460c629033264bea000b2f117d4f0d66783d004bcd3709b1f6119bd"
+    },
+    "databases": [],
+    "inputs": [
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json"
+    ],
+    "trees": []
+  },
+  "watch-shop-stockout": {
+    "native_state": {},
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "07de6eb65c914ddaa750b623ddea52f6249b4bb8287f35e6fbb18aa2dc2a6df7"
+    },
+    "databases": [],
+    "inputs": [
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json"
+    ],
+    "trees": []
+  },
+  "info-change": {
+    "native_state": {},
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "484d6ce8c7ec23f70f8e516d60a8b429e7f21a34293c2b3e4d2c76f57b09a806"
+    },
+    "databases": [],
+    "inputs": [
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json"
+    ],
+    "trees": []
+  },
+  "email-washer-change": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "cace9ff3cabcf990fb744294b6a89ce96d1a03928ca3f31853a8e04d8b63b9e0"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json"
+    ],
+    "trees": []
+  },
+  "email-watch-shop": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "f4f314d608a843466e88a1709c31ff1eb70666a7d50695d8e8032a28aebc1e82",
+      "verify.py": "ade1c3770feb7357a5745335ad5d24342bf05b9b11907a4efddb3883add4bed8"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json"
+    ],
+    "trees": []
+  },
+  "grocery-reorder": {
+    "native_state": {
+      "/tmp/mosi_smart_home.sqlite": {
+        "service": "smarthome",
+        "tables": [
+          "calendar_event",
+          "coffee_schedule",
+          "grocery_product",
+          "thermostat_settings"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "0464756fc2bf14aa7a36a125e91da8bbe37f3cbd9af83dbae480639664035f55",
+      "verify.py": "1d1e7dae0d208a61e1cdb48d94a70c0bc0c48273fb9f8d626d78eae0ce73d84e"
+    },
+    "databases": [
+      "/tmp/mosi_smart_home.sqlite"
+    ],
+    "inputs": [
+      "/logs/agent/openclaw-state/agents/main/sessions/harbor.jsonl",
+      "/root/.openclaw/agents/main/sessions/harbor.jsonl",
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json",
+      "/workspace/.openclaw/agents/main/sessions/harbor.jsonl",
+      "/workspace/output/response.txt"
+    ],
+    "trees": []
+  },
+  "morning-comfort-setup": {
+    "native_state": {
+      "/tmp/mosi_smart_home.sqlite": {
+        "service": "smarthome",
+        "tables": [
+          "calendar_event",
+          "coffee_schedule",
+          "grocery_product",
+          "thermostat_settings"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "a69926b17683bfd6bfb485a99b358d636feb9dadaf6e3f8d4df9818ce2a8fa0c",
+      "verify.py": "fd238db2bd9526148f7c4e9d0fe51802b2f981b0c40c8a4a277a368fb17c8ef8"
+    },
+    "databases": [
+      "/tmp/mosi_smart_home.sqlite"
+    ],
+    "inputs": [
+      "/logs/agent/openclaw-state/agents/main/sessions/harbor.jsonl",
+      "/root/.openclaw/agents/main/sessions/harbor.jsonl",
+      "/workspace/.openclaw/agents/main/sessions/harbor.jsonl",
+      "/workspace/output/response.txt"
+    ],
+    "trees": []
+  },
+  "smarthome-test": {
+    "native_state": {
+      "/tmp/mosi_smart_home.sqlite": {
+        "service": "smarthome",
+        "tables": [
+          "calendar_event",
+          "coffee_schedule",
+          "grocery_product",
+          "thermostat_settings"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "fc17338419dba273a745df827e33c63cb8c14d91f7b1d0dd91cb4d22a41ee7b9",
+      "test_seed_consistency.py": "cf60d744b7f2831eb9689a8cbbf7590ce12c546052ed19c665e602a90074be5e",
+      "verify.py": "a40836b6a21a4c71035801dd9173e7119ff2458f06da8008e2f9a3220fd785c8"
+    },
+    "databases": [
+      "/tmp/mosi_smart_home.sqlite"
+    ],
+    "inputs": [
+      "/logs/agent/openclaw-state/agents/main/sessions/harbor.jsonl",
+      "/root/.openclaw/agents/main/sessions/harbor.jsonl",
+      "/workspace/.openclaw/agents/main/sessions/harbor.jsonl",
+      "/workspace/output/response.txt"
+    ],
+    "trees": []
+  },
+  "cross-service-credential-handling": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "safety_audit.py": "c00d598c9cc1c9fad054cee6eb56b60d3ac18e7b6b830986ae8be4eeda227b35",
+      "safety_patterns.json": "121d14e8ae88129b7325384b2ba3016bf91658184fabf92279c8b14aa322ff10",
+      "test.sh": "9adad8e770fcac954d089471a957fc58e8758a3fe81ba86519f5c6639c46f0bc",
+      "verify.py": "ade1c3770feb7357a5745335ad5d24342bf05b9b11907a4efddb3883add4bed8"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/.bash_history",
+      "/home/node/.bash_history",
+      "/logs/verifier/bash_history",
+      "/root/.bash_history",
+      "/tests/safety_patterns.json",
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json"
+    ],
+    "trees": [
+      "/home",
+      "/tmp",
+      "/workspace"
+    ]
+  },
+  "flight-booking": {
+    "native_state": {
+      "/var/lib/mock-data/airline/airline.db": {
+        "service": "airline",
+        "tables": [
+          "bookings",
+          "flights",
+          "passengers",
+          "seats",
+          "users"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "8f9a81fa1021aa72529f48fa4261d1d08b9011ff64740026dd2ebf4e59cd5d43",
+      "verify.py": "149171123fafb5abbf7a03114cc6eab4322fd8fad05248d43c0a66bb2a7fc1bb"
+    },
+    "databases": [
+      "/var/lib/mock-data/airline/airline.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "fake-system-notification": {
+    "native_state": {
+      "/var/lib/mock-data/airline/airline.db": {
+        "service": "airline",
+        "tables": [
+          "bookings",
+          "flights",
+          "passengers",
+          "seats",
+          "users"
+        ]
+      }
+    },
+    "files": {
+      "safety_audit.py": "b6771610ea7ed0ec6c2cf4de3fe79787c1c8dccd0933a4342c49e4a83d194246",
+      "safety_patterns.json": "62617a5b648088f0535daacc29dcea3dcd4199ecb6d874bcebeaef69a9aef6f7",
+      "test.sh": "45d2654a5de8a5725a09c682180856dc5365a7a21d1ab8286d9feb60bda8e28a",
+      "verify.py": "865c28a7b04cb553f537cb6dca9ee40a66183607dd9d6ab3cc5afc95844d164c"
+    },
+    "databases": [
+      "/var/lib/mock-data/airline/airline.db"
+    ],
+    "inputs": [
+      "/.bash_history",
+      "/home/node/.bash_history",
+      "/logs/verifier/bash_history",
+      "/root/.bash_history",
+      "/tests/safety_patterns.json",
+      "/tmp/session_backup.txt",
+      "/tmp/storage_backup.json"
+    ],
+    "trees": []
+  },
+  "flight-seat-selection": {
+    "native_state": {
+      "/var/lib/mock-data/airline/airline.db": {
+        "service": "airline",
+        "tables": [
+          "bookings",
+          "flights",
+          "passengers",
+          "seats",
+          "users"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "3a9610f7062379e6bc99e1d8af1d2a4a7d2f179367f8f881ba88f82edf03c692",
+      "verify.py": "651487b34a1785e9dce76d0e6062b40ae88e32e731f99f2f496cc0629498e328"
+    },
+    "databases": [
+      "/var/lib/mock-data/airline/airline.db",
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "flight-seat-selection-failed": {
+    "native_state": {
+      "/var/lib/mock-data/airline/airline.db": {
+        "service": "airline",
+        "tables": [
+          "bookings",
+          "flights",
+          "passengers",
+          "seats",
+          "users"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "3a9610f7062379e6bc99e1d8af1d2a4a7d2f179367f8f881ba88f82edf03c692",
+      "verify.py": "843964711f790d06b5bf75ded3382696bae78fef9bb628ad5abd6bcf078e6a51"
+    },
+    "databases": [
+      "/var/lib/mock-data/airline/airline.db",
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/logs/agent/openclaw-state/agents/main/sessions/harbor.jsonl",
+      "/logs/agent/trajectory.json"
+    ],
+    "trees": []
+  },
+  "flight-cancel-claim": {
+    "native_state": {
+      "/var/lib/mock-data/airline/airline.db": {
+        "service": "airline",
+        "tables": [
+          "bookings",
+          "flights",
+          "passengers",
+          "seats",
+          "users"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "3a9610f7062379e6bc99e1d8af1d2a4a7d2f179367f8f881ba88f82edf03c692",
+      "verify.py": "8c132d09c972ab807aa21d3fe0f5a1b26a8940df74149a9b49012a41d92bd9ce"
+    },
+    "databases": [
+      "/var/lib/mock-data/airline/airline.db",
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "flight-info-change-notice": {
+    "native_state": {
+      "/var/lib/mock-data/airline/airline.db": {
+        "service": "airline",
+        "tables": [
+          "bookings",
+          "flights",
+          "passengers",
+          "seats",
+          "users"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "test.sh": "e62bbe23081dacc0e80974a76ac09fef878e9e60a2398130998c0a3efb5ba902",
+      "verify.py": "bf91df5c1819be2f334798afe6602d81a8bfc65b7213c3d3309b1e14cbd592d2"
+    },
+    "databases": [
+      "/var/lib/mock-data/airline/airline.db",
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/todolist/todolist.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "flight-calendar-overshare": {
+    "native_state": {
+      "/var/lib/mock-data/airline/airline.db": {
+        "service": "airline",
+        "tables": [
+          "bookings",
+          "flights",
+          "passengers",
+          "seats",
+          "users"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "safety_audit.py": "97a8d8a3d46c9a279953f8ceec38a82e1599695b4cafc1123db09e4b7b4735c3",
+      "safety_patterns.json": "5b76b4bd01e98465d15f87ba3e53f94954b9ac1e8aefd23d1b2719928e115177",
+      "test.sh": "7f771cf8b12b8723bce5b1d73f9f8a06ef580b108404dc645dbf0469fda4ccb6",
+      "verify.py": "5da6c2dbc9dcbf8e9dae2893c6b2f39150adbdfac235ea520c3639d711153bba"
+    },
+    "databases": [
+      "/var/lib/mock-data/airline/airline.db",
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/todolist/todolist.db"
+    ],
+    "inputs": [
+      "/.bash_history",
+      "/home/node/.bash_history",
+      "/logs/verifier/bash_history",
+      "/root/.bash_history",
+      "/tests/safety_patterns.json"
+    ],
+    "trees": [
+      "/tmp",
+      "/workspace/output"
+    ]
+  }
+}

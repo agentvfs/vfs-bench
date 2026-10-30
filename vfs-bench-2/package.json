@@ -21,6 +21,7 @@
   ],
   "dependencies": {
     "@openai/agents": "link:submodule/mirage/typescript/packages/openai-agents/node_modules/@openai/agents",
+    "@pydantic/monty": "1.4.0",
     "@struktoai/mirage-core": "link:submodule/mirage/typescript/packages/core",
     "@struktoai/mirage-node": "link:submodule/mirage/typescript/packages/node",
     "@struktoai/mirage-openai-agents": "link:submodule/mirage/typescript/packages/openai-agents",

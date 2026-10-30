@@ -1,0 +1,89 @@
+.calendar {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: #f8f9fa;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.weekday-header {
+  padding: 1rem 0.5rem;
+  text-align: center;
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: #e9ecef;
+}
+
+.calendar-day {
+  background: white;
+  min-height: 100px;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.calendar-day:hover {
+  background: #f8f9fa;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.calendar-day.other-month {
+  background: #f8f9fa;
+  color: #adb5bd;
+}
+
+.calendar-day.today {
+  background: #e3f2fd;
+  border: 2px solid #2196F3;
+}
+
+.calendar-day.today .day-number {
+  color: #1976D2;
+  font-weight: 700;
+}
+
+.day-number {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #212529;
+  margin-bottom: 0.25rem;
+}
+
+.todo-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  min-width: 24px;
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
+.calendar-day.other-month .todo-badge {
+  background: linear-gradient(135deg, #adb5bd 0%, #868e96 100%);
+}

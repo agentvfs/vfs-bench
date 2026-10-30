@@ -18,6 +18,20 @@ export interface MockSpec {
   env: Record<string, string>
   /** Where the mock keeps its SQLite in the image, or `:memory:`. */
   db?: string
+  /**
+   * Its seed runs in the fake, on each run's template, rather than as the
+   * fixture's rows, which are too many to commit (the airline's 60 days of
+   * flights, 317,000 seats). The fixture then has a digest of the tables
+   * upstream's seed writes under Bun, which the fake's must match.
+   */
+  seedsRun?: boolean
+  /**
+   * The name its random numbers are counted under, where it is not
+   * `upstream-seed` (harbor/fixtures/upstream.ts): another of upstream's
+   * random worlds, where the one the default draws breaks the seed's own
+   * assumptions (the airline's).
+   */
+  random?: string
 }
 
 export const MOCKS: Record<string, MockSpec> = {
@@ -81,5 +95,19 @@ export const MOCKS: Record<string, MockSpec> = {
     factory: 'createShopApp',
     port: 1234,
     env: { MOCK_DATA_DIR: '/var/lib/mock-data/shop', MOCK_PRODUCTS_PATH: '/opt/mock/static/shop/products.json' },
+  },
+  airline: {
+    entry: 'src/index.ts',
+    factory: 'createAirlineApp',
+    port: 5000,
+    env: { AIRLINE_DB_PATH: '/var/lib/mock-data/airline/airline.db' },
+    db: '/var/lib/mock-data/airline/airline.db',
+    seedsRun: true,
+    // Upstream's seed skips GKD2000 so that the flight its seat and claim
+    // tasks add is the one GKD2001, but checks for it after skipping 30% of
+    // flight numbers at random, so that a skipped 2000 leaves a scheduled
+    // GKD2001 of its own, and the verifiers find that one. The default
+    // count skips it; this count draws a world where it is not.
+    random: 'airline-seed',
   },
 }
