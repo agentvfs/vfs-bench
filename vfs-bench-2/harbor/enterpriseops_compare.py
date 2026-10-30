@@ -197,29 +197,30 @@ def tables(path: Path) -> dict[str, list[dict]]:
     return out
 
 
-def stamps(value) -> set[str]:
-    """Every timestamp in a call's arguments, to the second: values the
-    caller supplied, which a clock mask leaves alone."""
+def stamps(value, key: str | None = None) -> set[tuple[str, str]]:
+    """Every timestamp in a call's arguments, to the second, with the field
+    that carried it: values the caller supplied, which a clock mask leaves
+    alone in a field of that name (``closed_on``), and only there."""
     if isinstance(value, dict):
-        return set().union(*map(stamps, value.values()))
+        return set().union(*(stamps(v, k) for k, v in value.items()))
     if isinstance(value, list):
-        return set().union(*map(stamps, value))
-    if isinstance(value, str):
-        return {
-            m.group(0)[:19].replace("T", " ")
-            for m in STAMP_IN_TEXT.finditer(value)
-        }
+        return set().union(*(stamps(v, key) for v in value))
+    if isinstance(value, str) and key is not None:
+        return {(key, m.group(0)[:19].replace("T", " "))
+                for m in STAMP_IN_TEXT.finditer(value)}
     return set()
 
 
-def masker(start: datetime, end: datetime, supplied: set[str]):
+def masker(start: datetime, end: datetime, supplied: set[tuple[str, str]]):
     """A value as compared: a timestamp in [start, end] is `<now>`, unless
-    a call supplied it (``supplied``), when both sides keep it."""
+    a call supplied it in a field of this name (``supplied``), when both
+    sides keep it. A field another clock wrote is masked whatever the calls
+    supplied elsewhere."""
 
-    def mask(value):
+    def mask(value, key: str | None = None):
         if isinstance(value, str):
             m = STAMP.match(value)
-            if m and f"{m[1]} {m[2]}" in supplied:
+            if m and (key, f"{m[1]} {m[2]}") in supplied:
                 pass
             elif m:
                 try:
@@ -232,8 +233,9 @@ def masker(start: datetime, end: datetime, supplied: set[str]):
                     return "<now>"
             return STAMP_IN_TEXT.sub(
                 lambda t: "<now>"
-                if within(t.group(0), start, end) and t.group(0)[:19].replace(
-                    "T", " ") not in supplied else t.group(0), value)
+                if within(t.group(0), start, end) and (key, t.group(
+                    0)[:19].replace("T", " ")) not in supplied else t.group(0),
+                value)
         return value
 
     return mask
@@ -257,12 +259,12 @@ def masked_text(text: str, mask) -> str:
     except ValueError:
         return mask(text)
 
-    def walk(v):
+    def walk(v, key=None):
         if isinstance(v, dict):
-            return {k: walk(x) for k, x in v.items()}
+            return {k: walk(x, k) for k, x in v.items()}
         if isinstance(v, list):
-            return [walk(x) for x in v]
-        return mask(v)
+            return [walk(x, key) for x in v]
+        return mask(v, key)
 
     return json.dumps(walk(value), ensure_ascii=False)
 
@@ -373,11 +375,11 @@ async def main() -> int:
                     return i < len(seed) and seed[i].get(k) == v
 
                 ra = [{
-                    k: v if kept(i, k, v) else up_mask(v)
+                    k: v if kept(i, k, v) else up_mask(v, k)
                     for k, v in r.items()
                 } for i, r in enumerate(ta.get(table, []))]
                 rb = [{
-                    k: v if kept(i, k, v) else fake_mask(v)
+                    k: v if kept(i, k, v) else fake_mask(v, k)
                     for k, v in r.items()
                 } for i, r in enumerate(tb.get(table, []))]
                 if ra == rb:
