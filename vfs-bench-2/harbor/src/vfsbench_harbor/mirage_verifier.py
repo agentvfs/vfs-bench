@@ -1,9 +1,10 @@
-"""Registered TypeScript/Monty graders in separate Mirage VFS workspaces.
+"""Registered graders in separate Mirage VFS workspaces.
 
 Only tasks in the registered grader manifests are supported. Original Python
 and shell files stay untouched as references; a changed reference must be
-ported and parity-tested before its manifest hashes are updated. No code
-from the task or agent workspace is executed by this verifier.
+ported and parity-tested before its manifest hashes are updated. Only
+registered, pinned code is executed; agent-supplied code is never loaded.
+Claw-Eval uses a Pyodide compatibility backend for its upstream Python.
 """
 import asyncio
 import base64
@@ -25,6 +26,9 @@ from vfsbench_harbor.automationbench_verifier import \
     definitions as automationbench_definitions
 from vfsbench_harbor.automationbench_verifier import \
     freeze as freeze_automationbench
+from vfsbench_harbor.claweval_verifier import \
+    definitions as claweval_definitions
+from vfsbench_harbor.claweval_verifier import freeze as freeze_claweval
 from vfsbench_harbor.complexmcp_verifier import definitions
 from vfsbench_harbor.complexmcp_verifier import freeze as freeze_complexmcp
 from vfsbench_harbor.dataspace_verifier import \
@@ -117,7 +121,8 @@ class MirageVerifier(Verifier):
     A disposable Node process gives timeout/cancellation a hard stop. This
     is trusted host code, not an isolation boundary for arbitrary scripts.
     LiveClawBench uses the workspace runtime; ComplexMCP, DataSpace and
-    AutomationBench use Monty.
+    AutomationBench use Monty. Claw-Eval runs pinned Python in Pyodide and
+    records model calls through an explicit host transport.
     Each grader reads declared JSON and file bytes through read-only VFS
     mounts and writes rewards to a separate RAM output mount.
     """
@@ -192,6 +197,7 @@ class MirageVerifier(Verifier):
         manifest.update(dataspace_definitions())
         manifest.update(automationbench_definitions())
         manifest.update(enterpriseops())
+        manifest.update(claweval_definitions())
         definition = manifest.get(task)
         if definition is None:
             raise ValueError(f"No Mirage grader for {task}; use Harbor's "
@@ -311,6 +317,8 @@ class MirageVerifier(Verifier):
             return await freeze_dataspace(self, definition, stage, budget)
         if definition.get("runtime") == "complexmcp-monty":
             return await freeze_complexmcp(self, definition, stage, budget)
+        if definition.get("runtime") == "claweval-pyodide":
+            return await freeze_claweval(self, definition, stage, budget)
         frozen = await self._background(self._freeze_files,
                                         definition,
                                         stage,
@@ -410,7 +418,8 @@ class MirageVerifier(Verifier):
             "typescript": RUNNER,
             "complexmcp-monty": HARBOR / "verify-complexmcp.ts",
             "dataspace-monty": HARBOR / "verify-dataspace.ts",
-            "automationbench-monty": HARBOR / "verify-automationbench.ts"
+            "automationbench-monty": HARBOR / "verify-automationbench.ts",
+            "claweval-pyodide": HARBOR / "verify-claweval.ts"
         }
         if runtime not in runners:
             raise ValueError(f"Unknown verifier runtime: {runtime}")
@@ -420,7 +429,9 @@ class MirageVerifier(Verifier):
             "--no-warnings",
             str(runner),
             cwd=ROOT,
-            # No model credentials, NODE_OPTIONS or task-controlled env.
+            # No inherited credentials, NODE_OPTIONS or task-controlled env.
+            # Claw-Eval's explicit judge settings travel in the request and
+            # stay outside its Python VFS.
             env={
                 "PATH": os.environ.get("PATH", ""),
                 "TZ": "UTC"

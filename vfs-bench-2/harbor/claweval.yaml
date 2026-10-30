@@ -1,13 +1,14 @@
-# The Claw-Eval tasks (harbor/tasks/claweval/, harbor/claweval.py writes
-# them), each verifier in a microVM of its own (microsandbox's msb): the
-# grader is upstream's, in CPython with its packages, and asks the judge
-# at OPENAI_BASE_URL. From vfs-bench-2/, after `python -I harbor/claweval.py
-# --site`:
-#   OPENAI_API_KEY=... uv run --project harbor harbor run -c harbor/claweval.yaml -a oracle -n 8 -o state/harbor/jobs-claweval
+# All 126 Claw-Eval tasks, graded in a separate Mirage/Pyodide workspace.
+# No verifier microVM or Linux site-packages are required. After upstream
+# setup and installing Mirage dependencies:
+#   uv run --project harbor python -I harbor/setup_claweval_verifier.py
+#   OPENAI_API_KEY=... uv run --project harbor harbor run -c harbor/claweval.yaml -a oracle -n 8
+# claweval-msb.yaml preserves the microVM reference; MirageParityVerifier
+# replays its recorded judge replies without asking a live model twice.
 environment:
   import_path: vfsbench_harbor:MirageEnvironment
 verifier:
-  import_path: vfsbench_harbor:MicrosandboxVerifier
+  import_path: vfsbench_harbor:MirageVerifier
 tasks:
   - path: harbor/tasks/claweval/T001zh_email_triage
   - path: harbor/tasks/claweval/T002_email_triage

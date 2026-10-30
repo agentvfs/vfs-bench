@@ -446,6 +446,27 @@ def main() -> int:
                                  os.environ.get("OPENAI_BASE_URL",
                                                 "https://api.openai.com/v1")))
             self._use_gemini = False
+            # Record the raw transport, including the two email-triage
+            # graders' direct client calls, for deterministic Mirage replay.
+            self.recording = []
+            create = self.client.chat.completions.create
+
+            def recorded(**request):
+                entry = {"request": request}
+                try:
+                    response = create(**request)
+                    entry["response"] = response.model_dump(mode="json")
+                    return response
+                except Exception as exc:
+                    entry["error"] = {
+                        "message": "Judge transport failed",
+                        "status": getattr(exc, "status_code", None),
+                    }
+                    raise
+                finally:
+                    self.recording.append(entry)
+
+            self.client.chat.completions.create = recorded
 
         def evaluate(self, *args, **kwargs):
             return answered(super().evaluate(*args, **kwargs))
@@ -504,6 +525,8 @@ def main() -> int:
             },
             ensure_ascii=False,
             indent=1))
+    (VERIFIER / "judge-recording.json").write_text(
+        json.dumps(judge.recording, ensure_ascii=False, indent=1))
     print(printed.getvalue())
     for d in built:
         print(f"gws: {d['tool_name']} "

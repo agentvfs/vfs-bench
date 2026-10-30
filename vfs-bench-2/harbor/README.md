@@ -107,15 +107,17 @@ authoritative. Coverage across the seven Mirage-agent job configs is:
 |---|---:|---|---:|
 | LiveClawBench | 70 | Mirage/Pyodide | 70 |
 | DataSpace | 46 | microVM | 46 (Monty 1.4.0) |
-| Claw-Eval | 126 | microVM | 0 |
+| Claw-Eval | 126 | microVM | 0 native; 126 Mirage/Pyodide compatibility graders |
 | ComplexMCP | 47 | microVM | 47 (Monty 1.4.0) |
 | AutomationBench | 600 | microVM | 600 (Monty 1.4.0) |
 | Gaia2 | 460 | microVM | 0 |
 | EnterpriseOps-Gym | 103 | microVM | 103 |
 | Total | 1,452 | | 866 |
 
-The other 586 tasks retain microVM grading and report `unported` in parity
-mode.
+Claw-Eval removes its verifier microVM through a compatibility backend;
+it is counted separately from native TypeScript/Monty ports. The remaining
+460 Gaia2 tasks retain microVM grading and report `unported` in parity mode.
+Run `grader_inventory.py` for current counts and per-dataset coverage.
 
 EnterpriseOps-Gym's upstream verifier asks each server's SQL runner, so its
 fakes answer their task's verifier queries themselves: the state view takes
@@ -276,7 +278,7 @@ Proposed migration order, one dataset per follow-up PR:
 | 1 | ComplexMCP | 47 | Freeze initial/final/expected JSON in a verifier-only VFS; retain the shared judge, port Levenshtein to pure Python, and preserve six-place rounding and ignored IDs. Implemented: 47 oracle and 47 no-op trials match the original CPython judge on all four reward fields. |
 | 2 | DataSpace | 46 | Implemented: shared relation evaluator over frozen prediction/config/gold bytes. Strict CSV, Decimal, Unicode, ISO date normalization and column permutations are compared with the pinned CPython 3.12 reference; all 46 tasks are covered. |
 | 3 | AutomationBench | 600 | Implemented: private fake JSON snapshot, generated rubric/schema adapter, and all 600 task definitions. Per-assertion results, free-assertion exclusions and partial credit match the pinned Python reference. |
-| 4 | Claw-Eval | 126 | Port task graders and trace/audit assembly over JSON. Preserve required LLM judgments through an explicit recorded service interface. |
+| 4 | Claw-Eval | 126 | MicroVM removed through Mirage/Pyodide compatibility grading over frozen JSON with recorded judge transport. A Monty port remains future work: upstream depends on inheritance, regex and Pydantic. |
 | 5 | Gaia2 | 460 | Port event/state assembly and the judge without its daemon or SQLite; preserve event ordering and required LLM judgments through the same interface. |
 
 Monty supports a [subset of Python and its standard library](https://pydantic.dev/docs/monty/limitations/modules/);
@@ -286,8 +288,10 @@ and compares every reward dimension and failure outcome. Require all configured
 tasks plus negative, partial and adversarial cases to match before switching a
 dataset. For LLM-dependent graders, replay identical recorded judge responses
 for deterministic parity, then validate the live service interface separately.
-No host Python grading callback, SQL engine, Pyodide or microVM belongs in the
-new grading path. Fake-service storage remains separate.
+Native Monty ports use no host Python grading callback, SQL engine, Pyodide
+or microVM. Claw-Eval instead preserves its upstream Python code through the
+separately identified Pyodide compatibility backend below. Fake-service
+storage remains separate.
 
 When a reference changes, review its TypeScript port and rerun parity before
 regenerating `graders/manifest.json` and `graders/reference-data.json` with
@@ -364,7 +368,8 @@ ports must consume recorded responses or judgments to make comparisons stable.
   below); `claweval.py` writes them, or checks them; `claweval_grade.py`
   is each one's `tests/grade.py`, `claweval_trajectory.py` each solution's
   `trajectory.py`; `claweval.yaml`, their job config, each verifier in a
-  microVM; `claweval_compare.py` checks their fakes against upstream's
+  separate Mirage/Pyodide workspace; `claweval-msb.yaml` keeps the microVM
+  reference; `claweval_compare.py` checks their fakes against upstream's
   services; `mock_judge.py`, a stand-in judge on localhost.
 - `tools.ts`: a task's own tools (`mirage.yaml`'s `tools`) as CLIs in the
   trial's daemon, each call logged as upstream's dispatcher logs it, with
@@ -1801,33 +1806,78 @@ services as they are.
 
 ```sh
 python3 -I claweval/setup.py                         # upstream, into state/claweval/src
-uv run --project harbor python -I harbor/claweval.py --site   # the grader's packages for the VM
 uv run --project harbor python -I harbor/claweval.py [--check] [task ...]
+uv run --project harbor python -I harbor/setup_claweval_verifier.py  # pinned WASM wheels, once
 # An agent on every task; the judge's key and API are the verifier's.
 OPENAI_API_KEY=... OPENAI_BASE_URL=... uv run --project harbor harbor run \
   -c harbor/claweval.yaml -a vfsbench_harbor:Codex -m openai/gpt-5.6-luna -n 4 -o state/harbor/jobs-claweval
 # A task's solution (thirteen have one).
 OPENAI_API_KEY=... OPENAI_BASE_URL=... uv run --project harbor harbor run \
   -p harbor/tasks/claweval/T156_onsite_support_dispatch --env vfsbench_harbor:MirageEnvironment \
-  --verifier vfsbench_harbor:MicrosandboxVerifier -a oracle -o state/harbor/jobs-claweval
+  --verifier vfsbench_harbor:MirageVerifier -a oracle -o state/harbor/jobs-claweval
+# Optional preserved reference and reference-first parity (these require msb).
+uv run --project harbor python -I harbor/claweval.py --site
+OPENAI_API_KEY=... uv run --project harbor harbor run -c harbor/claweval-msb.yaml -a oracle
+OPENAI_API_KEY=... uv run --project harbor harbor run -c harbor/claweval.yaml \
+  --verifier vfsbench_harbor:MirageParityVerifier -a oracle
 # Each kit fake against upstream's service: exits 1 on a difference.
 uv run --project harbor python -I harbor/claweval_compare.py [service ...] [--task <id> ...]
 # A stand-in judge for the plumbing (it scores everything the same).
 uv run --project harbor python -I harbor/mock_judge.py --port 8765 --score 1.0
 ```
 
-The tasks need `MicrosandboxVerifier` (`claweval.yaml`): the grader runs
-in CPython with upstream's `claw_eval` package, pydantic, httpx and openai,
-which Pyodide does not have, and fetches each service's audit log over the
-trial's routes. `JUDGE_MODEL` names the judge's model, upstream's
-`google/gemini-3-flash-preview` by default, over the chat completions API
-at `OPENAI_BASE_URL`; the VM reaches that host alone (`verifier.egress`).
-A judge on the host is `http://host.microsandbox.internal:<port>/v1`, which
-`grade.py` dials at the host's IPv4 address, as `guest.py` dials the
-proxies: the name resolves to IPv6 first, and a judge listening on
-127.0.0.1 alone left the connection hanging, not refused.
-`microsandbox.py` writes that host's egress rule as msb's `host`, as for
-the proxies.
+`claweval.yaml` now selects `MirageVerifier`. Each grade runs the unchanged,
+hash-pinned upstream graders, models, score formula and judge parser in a
+fresh Mirage RAM workspace using **Pyodide 314.0.5** (CPython 3.14.2,
+Pydantic 2.12.5). Setup downloads six wheels and validates them against the
+pinned distribution's hashes; grading then loads packages locally. There
+is no verifier microVM, Linux package directory, host Python grading callback
+or verifier SQLite connection. This remains a WASM sandbox and Python
+interpreter, rather than a native Monty port.
+
+Harbor freezes the trial's audits, trajectory, dispatch log and the gws fake's
+private JSON exports. The gws adapter preserves the reference's SQL ordering,
+first-header behavior, sent/draft exclusions and calendar reconstruction.
+Reference source, fixtures and inputs are read-only; rewards have their own
+writable RAM mount. The original `verifier.copy`/`egress` metadata is retained
+only for explicit microVM reference runs.
+
+The guest has no model credentials or network bridge. When a grader needs a
+model response it emits the exact chat-completions request; the host transport
+calls `OPENAI_BASE_URL` using `OPENAI_API_KEY`, records the raw reply and
+resumes grading from the same frozen inputs. Upstream response parsing, retry
+counts and retry delays are retained; HTTP SDK-internal retries are replaced
+by the upstream grader's retries. `JUDGE_MODEL` defaults to
+`google/gemini-3-flash-preview`. A local judge is
+`http://127.0.0.1:<port>/v1` on this path. Only the explicit microVM reference
+uses `host.microsandbox.internal`.
+
+Trials save `judge-recording.json` and `claweval-inputs.json`, subject to
+Harbor's log filters. `MirageParityVerifier` runs the preserved microVM
+reference first, then replays its exact raw judge responses. Missing,
+mismatched or unused responses fail instead of calling the model again.
+It preserves the original rewards and logs. Reference sources are pinned in
+`graders/claweval/manifest.json`; `build_claweval_manifest.py --check` detects
+drift. Review and rerun parity before updating a pin.
+
+Validation: `audit_claweval.py` compared all 126 configured tasks under four
+frozen scenarios (empty, partial, fixture completion and safety violations):
+**504/504** matched every reward dimension, dimension-score object and
+reconstructed gws dispatch, with identical recorded judge requests. All
+13 available Harbor oracles also completed without a microVM using live
+local fake services and the mock judge; replaying their actual frozen states
+through the original CPython/SQL verifier matched **13/13**. These synthetic judge answers test
+the integration; they are not quality scores from a real model. A paid/live
+model evaluation and microVM parity run were not performed here.
+
+```sh
+uv run --project harbor python -I harbor/test_claweval_verifier.py
+node --test harbor/claweval-grader.test.ts
+# Needs the upstream checkout and the Harbor Python dependencies.
+uv run --project harbor python -I harbor/audit_claweval.py --jobs 3
+# Compare saved Mirage trial inputs against the original CPython/SQL grader.
+uv run --project harbor python -I harbor/audit_claweval.py --job <job-dir> --out <report.json>
+```
 
 ### A task
 
