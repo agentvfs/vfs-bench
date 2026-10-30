@@ -13,6 +13,7 @@
  */
 import { resolve } from 'node:path'
 
+import { UPSTREAM_ERROR_HEADER } from '../upstream-errors.ts'
 import { boot, startup } from './upstream.ts'
 
 /** LiveClawBench's mock platform, as main.ts finds it. */
@@ -24,7 +25,17 @@ if (service === undefined || task === undefined || epoch === undefined) {
 }
 const booted = await boot(PLATFORM, service, task, epoch)
 await startup(PLATFORM, service, task, booted)
-const server = Bun.serve({ hostname: '127.0.0.1', port: 0, fetch: (request) => booted.app.fetch(request) })
+// Upstream masks internal errors in its response body. An outer Hono
+// middleware can inspect the caught error without replacing its handler,
+// status or body. Use upstream's own Hono so route() keeps that handler.
+const { Hono } = await import(resolve(PLATFORM, 'node_modules/hono/dist/index.js'))
+const app = new Hono()
+app.use('*', async (c: { error?: Error; header: (name: string, value: string) => void }, next: () => Promise<void>) => {
+  await next()
+  if (c.error) c.header(UPSTREAM_ERROR_HEADER, c.error.message)
+})
+app.route('/', booted.app)
+const server = Bun.serve({ hostname: '127.0.0.1', port: 0, fetch: (request) => app.fetch(request) })
 console.log(`UPSTREAM=${JSON.stringify({ url: `http://127.0.0.1:${server.port}`, root: booted.root })}`)
 for await (const _ of Bun.stdin.stream()) {
   // Until the parent closes stdin.

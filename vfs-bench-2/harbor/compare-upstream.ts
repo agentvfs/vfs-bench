@@ -36,6 +36,7 @@ import { DatabaseSync } from 'node:sqlite'
 import { fileURLToPath } from 'node:url'
 
 import { MOCKS } from '../mocks/upstream/mocks.ts'
+import { paymentClockClash, UPSTREAM_ERROR_HEADER } from './upstream-errors.ts'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const PLATFORM = join(HERE, '..', 'state', 'liveclawbench', 'src', 'mock-platform')
@@ -347,7 +348,7 @@ class Side {
       const value = pick(json, path)
       if (value !== undefined && value !== null) this.values[name] = String(value)
     }
-    return { status: reply.status, type: reply.headers.get('content-type'), text }
+    return { status: reply.status, type: reply.headers.get('content-type'), text, error: reply.headers.get(UPSTREAM_ERROR_HEADER) }
   }
 }
 
@@ -466,7 +467,7 @@ async function compare(service: string, task: string, epoch: string, fake: { url
     for (const step of FLOWS[service]!) {
       const a = await theirs.send(step)
       const b = await ours.send(step)
-      if (clash !== undefined && step.name === clash.step && a.status === 500 && b.status === 201) {
+      if (clash !== undefined && step.name === clash.step && paymentClockClash(a, b)) {
         clashed = true
         known.push(`${step.name}: 500 vs 201, upstream's frozen clock's transaction id clash`)
         continue

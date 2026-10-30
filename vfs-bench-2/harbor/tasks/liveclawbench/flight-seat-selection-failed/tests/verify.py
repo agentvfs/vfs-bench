@@ -29,6 +29,8 @@ SESSION_LOG_PATH = "/logs/agent/openclaw-state/agents/main/sessions/harbor.jsonl
 
 def harbor_last_message():
     """vfs-bench-2: the last agent message of the Harbor trajectory, or None."""
+    # The environment refresh copies a host agent's ATIF here; an
+    # oracle may instead write its trajectory directly in the mount.
     try:
         with open("/logs/agent/trajectory.json") as f:
             steps = json.load(f).get("steps", [])

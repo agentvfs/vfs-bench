@@ -542,10 +542,19 @@ class MirageEnvironment(BaseEnvironment):
         with self._refreshing:
             for view, live in self._state:
                 _snapshot(view, live)
+            # Host agents write ATIF outside Mirage's /logs mount. Both
+            # verifiers refresh before reading it; keep an oracle's own
+            # in-workspace trajectory when there is no host trajectory.
+            trajectory = self.trial_paths.agent_dir / "trajectory.json"
+            if trajectory.is_file():
+                target = self._host("/logs/agent/trajectory.json", write=True)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(trajectory, target)
 
     async def refresh_state(self) -> None:
-        """Bring each mock's state file in the workspace up to date, as
-        every ``exec`` does first; one refresh at a time."""
+        """Refresh the mocks' state and the host agent's trajectory, as
+        every ``exec`` does first and a microVM verifier does before copying
+        the mounts; one refresh at a time."""
         await asyncio.to_thread(self._refresh_state)
 
     # What a verifier run outside the workspace reads (microsandbox.py):

@@ -256,13 +256,15 @@ HISTORY = (
 SIGNED_OUT = "(http://localhost:5173/, open it in browser)"
 SIGNED_IN = ("(http://localhost:5173/, where you are signed in as "
              "peter.griffin@work.mosi.inc with the password password123)")
-# The last message of the agent's Harbor trajectory (ATIF), as a verifier
-# that reads openclaw's session log reads it from there.
+# The last message of the agent's Harbor trajectory (ATIF), copied from
+# the host trial by MirageEnvironment.refresh_state before either verifier.
 LAST_MESSAGE = (
     "\n\n"
     "def harbor_last_message():\n"
     '    """vfs-bench-2: the last agent message of the Harbor trajectory, '
     'or None."""\n'
+    '    # The environment refresh copies a host agent\'s ATIF here; an\n'
+    '    # oracle may instead write its trajectory directly in the mount.\n'
     "    try:\n"
     '        with open("/logs/agent/trajectory.json") as f:\n'
     '            steps = json.load(f).get("steps", [])\n'
@@ -470,6 +472,24 @@ EDITS = {
           "    json.dump({'_meta_dimensions': dimensions}, f, indent=2)\n")],
     },
 }
+# These debug logs are optional: Mirage does not install or start the
+# legacy frontends, Flask backends or their package installers.
+for task in AIRLINE:
+    if task in {"fake-system-notification", "flight-calendar-overshare"}:
+        continue
+    edits = EDITS.setdefault(task, {}).setdefault("tests/test.sh", [])
+    services = ["airline"] if task == "flight-booking" else ["email", "airline"]
+    if task == "flight-info-change-notice":
+        services.append("todolist")
+    for service in services:
+        for log, artifact in [("frontend", "frontend-log"),
+                              ("backend", "backend-log"),
+                              ("npm-install", "npm-install")]:
+            line = (f"cat /tmp/{service}-{log}.log >> "
+                    f"/logs/artifacts/{service}-{artifact}.txt")
+            edits.append((line + "\n",
+                          f"if [ -f /tmp/{service}-{log}.log ]; then "
+                          f"{line}; fi\n"))
 # Upstream files left out: AgentBay's cloud-runner harnesses, which no
 # test.sh runs, and which carry upstream's own service credentials.
 LEFT_OUT = re.compile(r"tests/(utils/)?agent_?bay_test(_example)?\.py"

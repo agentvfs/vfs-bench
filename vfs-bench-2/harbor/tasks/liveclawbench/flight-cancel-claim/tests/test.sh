@@ -10,9 +10,9 @@ SCORE=$(grep -oP 'Score:\s*\K[0-9.]+' /tmp/verify_output.txt | tail -1 || echo "
 echo "$SCORE" > /logs/verifier/reward.txt
 
 # DEBUG: extract server running logs
-cat /tmp/email-frontend.log >> /logs/artifacts/email-frontend-log.txt
-cat /tmp/email-backend.log >> /logs/artifacts/email-backend-log.txt
-cat /tmp/email-npm-install.log >> /logs/artifacts/email-npm-install.txt
-cat /tmp/airline-frontend.log >> /logs/artifacts/airline-frontend-log.txt
-cat /tmp/airline-backend.log >> /logs/artifacts/airline-backend-log.txt
-cat /tmp/airline-npm-install.log >> /logs/artifacts/airline-npm-install.txt
+if [ -f /tmp/email-frontend.log ]; then cat /tmp/email-frontend.log >> /logs/artifacts/email-frontend-log.txt; fi
+if [ -f /tmp/email-backend.log ]; then cat /tmp/email-backend.log >> /logs/artifacts/email-backend-log.txt; fi
+if [ -f /tmp/email-npm-install.log ]; then cat /tmp/email-npm-install.log >> /logs/artifacts/email-npm-install.txt; fi
+if [ -f /tmp/airline-frontend.log ]; then cat /tmp/airline-frontend.log >> /logs/artifacts/airline-frontend-log.txt; fi
+if [ -f /tmp/airline-backend.log ]; then cat /tmp/airline-backend.log >> /logs/artifacts/airline-backend-log.txt; fi
+if [ -f /tmp/airline-npm-install.log ]; then cat /tmp/airline-npm-install.log >> /logs/artifacts/airline-npm-install.txt; fi
