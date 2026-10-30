@@ -23,6 +23,7 @@ from harbor.utils.path_filter import filter_paths_by_patterns
 from harbor.verifier.verifier import Verifier
 from vfsbench_harbor.complexmcp_verifier import definitions
 from vfsbench_harbor.complexmcp_verifier import freeze as freeze_complexmcp
+from vfsbench_harbor.enterpriseops_verifier import definitions as enterpriseops
 from vfsbench_harbor.environment import HARBOR, ROOT, MirageEnvironment
 
 MANIFEST = HARBOR / "graders/manifest.json"
@@ -180,6 +181,7 @@ class MirageVerifier(Verifier):
         task = self.task.paths.task_dir.name
         manifest = json.loads(MANIFEST.read_text())
         manifest.update(definitions())
+        manifest.update(enterpriseops())
         definition = manifest.get(task)
         if definition is None:
             raise ValueError(f"No Mirage grader for {task}; use Harbor's "

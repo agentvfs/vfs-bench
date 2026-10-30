@@ -23,11 +23,13 @@ each of its servers has a fake (``mocks/enterpriseops_<domain>/``):
 - ``environment/tools.json``: the tools, by CLI.
 - ``tests/test.sh``, ``tests/grade.py`` (``enterpriseops_grade.py``),
   ``tests/verifiers.json`` (the row's verifiers, verbatim) and
-  ``tests/databases.json``: upstream's SQL verifiers on each fake's end
-  state, read from the run's SQLite in the workspace. The agent never sees
-  that file: it appears once ``WorkspaceVerifier`` starts
-  (``enterpriseops.yaml``), as upstream's agent reaches its services
-  through their tools alone.
+  ``tests/ports.json``: upstream's SQL verifiers on each fake's SQL
+  runner, the reference grader, for ``MicrosandboxVerifier``
+  (``enterpriseops-msb.yaml``). ``enterpriseops.yaml`` grades natively
+  instead (``MirageVerifier``, ``graders/enterpriseops.ts``), its
+  definitions in ``graders/enterpriseops/manifest.json``, which this
+  writes too, with each task's verifier queries and the hashes of the
+  reference tests the native grader ports.
 - ``solution/solve.sh``, where ``enterpriseops/solutions/<task id>.json``
   has one (upstream ships no reference solutions): its calls, each as the
   CLI line that makes it. ``harbor/enterpriseops_compare.py --task`` checks
@@ -39,6 +41,7 @@ gives, or if a file is unaccounted for.
 """
 import argparse
 import functools
+import hashlib
 import json
 import re
 import shlex
@@ -52,11 +55,14 @@ PORT = ROOT / "enterpriseops"
 OUT = HARBOR / "tasks" / "enterpriseops"
 GRADE = HARBOR / "enterpriseops_grade.py"
 SOLUTIONS = PORT / "solutions"
+MANIFEST = HARBOR / "graders" / "enterpriseops" / "manifest.json"
+# The reference tests the native grader ports: MirageVerifier refuses a task
+# whose files no longer hash as its definition says.
+REFERENCE = ("test.sh", "grade.py", "verifiers.json", "ports.json")
 DATASET = "ServiceNow-AI/EnterpriseOps-Gym@c8e538e"
 MODE = "oracle"
 DOMAINS = ["calendar", "csm", "drive", "email", "hr", "hybrid", "itsm", "teams"]
 DISPATCHES = "/var/lib/mock-data/enterpriseops/dispatches.jsonl"
-DATABASES = "/var/lib/mock-data/enterpriseops"
 
 
 @functools.cache
@@ -219,7 +225,6 @@ def mirage_yaml(row: dict) -> str:
         "# the task's seed; its selected tools are a CLI (harbor/tools.ts) "
         "that calls",
         "# as the task's user. The trial's clock starts at the task id's time.",
-        "# The verifier alone reads each run's SQLite (verifier_state).",
         "fakes:",
     ]
     for cfg in row["gym_servers_config"]:
@@ -227,8 +232,7 @@ def mirage_yaml(row: dict) -> str:
         lines += [
             f"  {service(server)}:", f"    fixture: kit/{service(server)}.json",
             f"    epoch: '{epoch(row)}'",
-            f"    ports: [{servers()[server]['port']}]",
-            f"    verifier_state: {database(server)}"
+            f"    ports: [{servers()[server]['port']}]"
         ]
     lines += ["tools:", "  file: tools.json", f"  dispatches: {DISPATCHES}",
               "workspace:", "  clis:"]
@@ -240,11 +244,6 @@ def mirage_yaml(row: dict) -> str:
         lines.append(f"    {server}: {{cli: {server}, config: {{url: '{url}', "
                      f"headers: {{{headers}}}}}}}")
     return "\n".join(lines) + "\n"
-
-
-def database(server: str) -> str:
-    """Where the verifier reads a server's run, its SQLite."""
-    return f"{DATABASES}/{service(server)}.db"
 
 
 def context_headers(cfg: dict) -> dict[str, str]:
@@ -262,8 +261,8 @@ def context_headers(cfg: dict) -> dict[str, str]:
 
 
 TEST_SH = """#!/usr/bin/env bash
-# Upstream's SQL verifiers on each server's end state, in the workspace
-# (grade.py), under WorkspaceVerifier.
+# Upstream's SQL verifiers on each server's end state (grade.py), in
+# MicrosandboxVerifier's VM; MirageVerifier runs its native port instead.
 set -euo pipefail
 mkdir -p /logs/verifier
 python3 /tests/grade.py
@@ -272,8 +271,8 @@ python3 /tests/grade.py
 
 def expected(row: dict) -> dict[str, bytes]:
     """Every file this writes for a task, by path in its directory."""
-    databases = {c["mcp_server_name"]: database(c["mcp_server_name"])
-                 for c in row["gym_servers_config"]}
+    ports = {c["mcp_server_name"]: servers()[c["mcp_server_name"]]["port"]
+             for c in row["gym_servers_config"]}
     out = {
         "instruction.md": instruction(row).encode(),
         "task.toml": task_toml(row).encode(),
@@ -284,7 +283,7 @@ def expected(row: dict) -> dict[str, bytes]:
         "tests/grade.py": GRADE.read_bytes(),
         "tests/verifiers.json": (json.dumps(row["verifiers"], ensure_ascii=False,
                                             indent=1) + "\n").encode(),
-        "tests/databases.json": (json.dumps(databases, indent=1) + "\n").encode(),
+        "tests/ports.json": (json.dumps(ports, indent=1) + "\n").encode(),
     }
     for cfg in row["gym_servers_config"]:
         out[f"environment/kit/{service(cfg['mcp_server_name'])}.json"] = fixture(cfg)
@@ -332,6 +331,39 @@ def command(server: str, tool: str, args: dict) -> str:
     return " ".join(parts)
 
 
+def definition(row: dict, files: dict[str, bytes]) -> dict:
+    """A task's native grading definition (``MirageVerifier``,
+    ``graders/enterpriseops.ts``): each server's verifier queries, in order,
+    which its fake answers in its state view, and the reference tests'
+    hashes."""
+    state = {}
+    for cfg in row["gym_servers_config"]:
+        server = cfg["mcp_server_name"]
+        state[server] = {
+            "service": service(server),
+            "queries": [
+                v["validation_config"]["query"] for v in row["verifiers"]
+                if v.get("verifier_type") == "database_state"
+                and v.get("gym_name") == server
+            ],
+        }
+    return {
+        "native_state": state,
+        "files": {
+            name: hashlib.sha256(files[f"tests/{name}"]).hexdigest()
+            for name in REFERENCE
+        },
+        "inputs": ["/tests/verifiers.json"],
+        "trees": [],
+    }
+
+
+def manifest(chosen: list[dict]) -> bytes:
+    tasks = {r["task_id"]: definition(r, expected(r)) for r in chosen}
+    return (json.dumps({"tasks": dict(sorted(tasks.items()))}, indent=1,
+                       ensure_ascii=False) + "\n").encode()
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--check", action="store_true")
@@ -368,6 +400,14 @@ def main() -> int:
         print(f"{status} {row['task_id']}")
         for problem in problems:
             print(f"    {problem}")
+    data = manifest(chosen)
+    if args.check:
+        if not MANIFEST.is_file() or MANIFEST.read_bytes() != data:
+            print(f"FAIL {MANIFEST.relative_to(ROOT)} differs from the tasks'")
+            failed += 1
+    elif not args.tasks:
+        MANIFEST.parent.mkdir(parents=True, exist_ok=True)
+        MANIFEST.write_bytes(data)
     print(f"{len(chosen)} tasks")
     return 1 if failed else 0
 

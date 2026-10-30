@@ -1,27 +1,26 @@
-"""Grade one EnterpriseOps-Gym trial with upstream's verifiers, in the verifier's VM.
+"""Grade one EnterpriseOps-Gym trial with upstream's verifiers: the reference.
 
     python3 /tests/grade.py
 
 Each committed EnterpriseOps-Gym task's ``tests/grade.py``
-(harbor/enterpriseops.py writes it). It runs in the trial's workspace, on
-its Python (Pyodide), under ``WorkspaceVerifier``, beside
-``verifiers.json`` (the task's ``verifiers``, as upstream's dataset gives
-them) and ``databases.json`` (where each server's database is: its run's
-SQLite, which the agent never sees, revealed for the verifier).
+(harbor/enterpriseops.py writes it), beside ``verifiers.json`` (the task's
+``verifiers``, as upstream's dataset gives them) and ``ports.json`` (each
+server's port, at which its fake answers for this trial). It runs where
+``MicrosandboxVerifier`` runs a test, which reaches those ports; the
+native port of it is ``graders/enterpriseops.ts`` (``MirageVerifier``).
 
 Every verifier is a ``database_state`` check, which this runs as upstream's
 ``benchmark/verifier.py`` does (ServiceNow/EnterpriseOps-Gym, Apache-2.0):
-the query runs as the server's ``/api/sql-runner`` runs it (one read-only
-SELECT, ``LIMIT 100`` unless it has a LIMIT, each row a dict), its value is
-taken from the result as ``_extract_value_from_sql_result`` takes it, and
-compared with the expected one as ``_compare_values`` compares them. The trial passes, as
+the query goes to the server's ``/api/sql-runner``, its value is taken from
+the reply as ``_extract_value_from_sql_result`` takes it, and compared with
+the expected one as ``_compare_values`` compares them. The trial passes, as
 upstream's ``overall_success_rate`` counts a run, when every verifier
 passes: ``reward.json``'s ``reward`` is 1 or 0, beside the verifiers'
 pass rate, and ``verifiers.json`` in the logs each one's result.
 """
 import json
-import re
-import sqlite3
+import urllib.error
+import urllib.request
 from pathlib import Path
 from typing import Any
 
@@ -29,42 +28,27 @@ HERE = Path(__file__).resolve().parent
 LOGS = Path("/logs/verifier")
 
 
-FORBIDDEN = re.compile(
-    r"\b(INSERT|UPDATE|DELETE|REPLACE|CREATE|ALTER|DROP|TRUNCATE|VACUUM|"
-    r"ATTACH|DETACH|PRAGMA|REINDEX|ANALYZE|BEGIN|END|COMMIT|ROLLBACK)\b",
-    re.IGNORECASE)
-STRING_OR_COMMENT = re.compile(
-    r"'(?:''|[^'])*'|\"(?:\"\"|[^\"])*\"|--[^\n]*|/\*[^*]*\*+(?:[^/*][^*]*\*+)*/",
-    re.DOTALL)
-
-
-def sql(path: str, query: str, limit: int = 100) -> dict:
-    """Upstream's ``_execute_sql_query``, over the SQL runner's own rules:
-    the result as the runner returns it, or its error."""
-    q = query.strip().rstrip(";").strip()
-    if ";" in q:
-        return {"success": False,
-                "error": "Only a single SELECT statement is allowed"}
-    head = q.lstrip().upper()
-    if not head.startswith(("SELECT", "WITH", "EXPLAIN")) or FORBIDDEN.search(
-            STRING_OR_COMMENT.sub(" ", q)):
-        return {"success": False,
-                "error": "Only read-only SELECT queries are allowed"}
-    if " LIMIT " not in q.upper():
-        q = f"{q} LIMIT {limit}"
+def sql(port: int, query: str) -> dict:
+    """Upstream's ``_execute_sql_query``: the runner's JSON, or its error."""
+    request = urllib.request.Request(
+        f"http://localhost:{port}/api/sql-runner",
+        data=json.dumps({"query": query}).encode(),
+        headers={"Content-Type": "application/json"},
+        method="POST")
     try:
-        conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
-    except sqlite3.Error as error:
+        with urllib.request.urlopen(request, timeout=30) as reply:
+            return {"success": True, "result": json.load(reply)}
+    except urllib.error.HTTPError as error:
+        text = error.read().decode(errors="replace")
+        try:
+            body = json.loads(text)
+            detail = body.get("detail", body.get("message", text)) if isinstance(
+                body, dict) else text
+        except json.JSONDecodeError:
+            detail = text
+        return {"success": False, "error": f"HTTP {error.code}: {detail}"}
+    except OSError as error:
         return {"success": False, "error": str(error)}
-    conn.row_factory = sqlite3.Row
-    try:
-        rows = [dict(r) for r in conn.execute(q).fetchall()]
-    except sqlite3.Error as error:
-        return {"success": False, "error": f"Query failed: {error}"}
-    finally:
-        conn.close()
-    return {"success": True, "result": {"success": True, "data": rows,
-                                        "row_count": len(rows), "query": q}}
 
 
 def extract(result: dict) -> Any:
@@ -102,7 +86,7 @@ def compare(actual: Any, expected: Any, kind: str) -> bool:
 
 def main() -> int:
     verifiers = json.loads((HERE / "verifiers.json").read_text())
-    databases = json.loads((HERE / "databases.json").read_text())
+    ports = json.loads((HERE / "ports.json").read_text())
     results = []
     for verifier in verifiers:
         if verifier.get("verifier_type") != "database_state":
@@ -110,7 +94,7 @@ def main() -> int:
                             "error": "not a database_state verifier"})
             continue
         config = verifier["validation_config"]
-        reply = sql(databases[verifier["gym_name"]], config["query"])
+        reply = sql(ports[verifier["gym_name"]], config["query"])
         if not reply["success"]:
             results.append({"name": verifier.get("name"), "passed": False,
                             "error": f"SQL query failed: {reply['error']}",

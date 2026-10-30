@@ -69,8 +69,9 @@ class ParityTests(helpers.MirageVerifierTests):
 
     async def test_every_unported_dataset_preserves_its_backend(self):
         for dataset, kind in REFERENCE_BACKENDS.items():
-            if dataset == "complexmcp":
-                continue  # Its registered Monty port is covered separately.
+            if dataset in ("complexmcp", "enterpriseops"):
+                # Their registered ports are covered separately.
+                continue
             with self.subTest(dataset=dataset):
                 task_dir = next((HARBOR / "tasks" / dataset).iterdir())
                 if dataset == "liveclawbench":
@@ -196,13 +197,13 @@ class ParityTests(helpers.MirageVerifierTests):
         self.assertIn("reward",
                       differences({"reward": 0}, {"reward": float("nan")}))
 
-    def test_job_config_inventory_is_1349_not_24(self):
+    def test_job_config_inventory_is_1452_not_24(self):
         spec = importlib.util.spec_from_file_location(
             "inventory", HARBOR / "grader_inventory.py")
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         result = module.inventory()
-        self.assertEqual(result["total"], 1349)
+        self.assertEqual(result["total"], 1452)
         self.assertEqual({
             k: v["tasks"]
             for k, v in result["datasets"].items()
@@ -213,8 +214,9 @@ class ParityTests(helpers.MirageVerifierTests):
             "complexmcp": 47,
             "automationbench": 600,
             "gaia2": 460,
+            "enterpriseops": 103,
         })
-        self.assertEqual(result["native_candidates"], 117)
+        self.assertEqual(result["native_candidates"], 220)
 
 
 if __name__ == "__main__":

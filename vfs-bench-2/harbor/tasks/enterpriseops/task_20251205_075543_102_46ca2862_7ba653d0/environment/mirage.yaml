@@ -4,13 +4,11 @@
 # Each of the task's servers is its kit fake at upstream's port, seeded from
 # the task's seed; its selected tools are a CLI (harbor/tools.ts) that calls
 # as the task's user. The trial's clock starts at the task id's time.
-# The verifier alone reads each run's SQLite (verifier_state).
 fakes:
   enterpriseops_csm:
     fixture: kit/enterpriseops_csm.json
     epoch: '2025-12-05T07:55:43Z'
     ports: [8001]
-    verifier_state: /var/lib/mock-data/enterpriseops/enterpriseops_csm.db
 tools:
   file: tools.json
   dispatches: /var/lib/mock-data/enterpriseops/dispatches.jsonl

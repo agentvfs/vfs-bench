@@ -37,7 +37,7 @@ Then `harbor/enterpriseops.py` writes the tasks, and
 | `/api/seed-database` makes a database from the task's seed | The fake's `afterSeed` makes the run's file the same way: upstream's own CREATE TABLE statements (the fake's `schema.sql`), then the seed |
 | The client lists the server's tools, keeps the task's `selected_tools` | One CLI per server with the task's selected tools, from the image's `tools/list` (`tools/<server>.json`): `sn-csm-server create-new-case --account-id 53 ...` |
 | The task's `context` goes as headers on every call (`x-user-email`, tokens) | The CLI's config sends the same headers |
-| `benchmark/verifier.py` runs each verifier's query on `/api/sql-runner` | The same queries, extraction and comparisons (`harbor/enterpriseops_grade.py`), run as the SQL runner runs them on the run's SQLite, in the workspace's Python. The agent never sees that file: it appears once the verifier starts (`WorkspaceVerifier`). The trial passes when every verifier does, as upstream's `overall_success_rate` counts a run |
+| `benchmark/verifier.py` runs each verifier's query on `/api/sql-runner` | The fake answers each query itself, with the runner's rules, in its private state view; `MirageVerifier` then does upstream's extraction and comparisons in a verifier-only Mirage workspace (`harbor/graders/enterpriseops.ts`). No SQLite, Python or VM in grading. The trial passes when every verifier does, as upstream's `overall_success_rate` counts a run. The reference grader (`tests/grade.py`, upstream's logic over HTTP) runs in a microVM under `harbor/enterpriseops-msb.yaml`, and `MirageParityVerifier` compares the two |
 | The model gets the system prompt (the domain's policy) and the user prompt | `instruction.md` is the two, verbatim, then the tools |
 
 ## Cost
@@ -45,7 +45,8 @@ Then `harbor/enterpriseops.py` writes the tasks, and
 A server's fake is one Node process per Harbor job (56 MB for CSM), every
 trial a run of its own: a 1.3 MB copy of its seeded database, made in
 about 50 ms. A tool call takes about 4 ms. No Docker and no VM: all 103
-CSM tasks ran 32 at a time in 98 s with `nop`, no errors.
+CSM tasks ran 32 at a time in 57 s with `nop`, no errors, grading about 4 s
+each.
 
 ## How the fakes are checked
 

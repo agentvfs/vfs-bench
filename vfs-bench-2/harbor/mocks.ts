@@ -42,8 +42,6 @@ export interface Plan {
   routes: Record<number, string>
   /** Each file a fake keeps its state in, by the workspace path the task reads it at. */
   state: Record<string, string>
-  /** The same, for files only the verifier reads: they appear once it starts. */
-  verifierState?: Record<string, string>
   /** The environment every command sees, as the container's. */
   env: Record<string, string>
   /** Host paths copied into the workspace, in the Dockerfile's order (copies.ts). */
@@ -175,16 +173,11 @@ async function prepare(plan: Plan, run: Run, external: Record<string, mirage.Ext
     for (const [view, live] of Object.entries(fake.files ?? {})) plan.state[view] = live
   }
   const state: [string, string][] = []
-  const verifierState: [string, string][] = []
-  const files = [
-    ...Object.entries(plan.state).map(([path, live]) => [path, live, state] as const),
-    ...Object.entries(plan.verifierState ?? {}).map(([path, live]) => [path, live, verifierState] as const),
-  ]
-  for (const [path, live, into] of files.sort(([a], [b]) => dirname(a).length - dirname(b).length)) {
+  for (const [path, live] of Object.entries(plan.state).sort(([a], [b]) => dirname(a).length - dirname(b).length)) {
     if (hostPath(mounts, path) === undefined) {
       mounts[dirname(path)] = { vfs: 'disk', mode: 'read', read: 'fresh', config: { root: join(runDir, 'state', dirname(path)) } }
     }
-    into.push([hostPath(mounts, path)!, live])
+    state.push([hostPath(mounts, path)!, live])
   }
   for (const [, mount] of onDisk(mounts)) mkdirSync(mount.config.root, { recursive: true })
   copyInto(plan.copies, (path) => hostPath(mounts, path), plan.name)
@@ -201,7 +194,6 @@ async function prepare(plan: Plan, run: Run, external: Record<string, mirage.Ext
         config,
         mounts: Object.fromEntries(onDisk(mounts).map(([path, m]) => [path, { root: m.config.root, mode: m.mode }])),
         state,
-        verifier_state: verifierState,
         routes: Object.fromEntries(
           Object.entries(plan.routes).map(([port, name]) => [port, run.fakes.get(name)?.url ?? external[name]!.url]),
         ),

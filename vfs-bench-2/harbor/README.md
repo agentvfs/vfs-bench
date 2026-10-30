@@ -111,10 +111,23 @@ authoritative. Coverage across the six Mirage-agent job configs is:
 | ComplexMCP | 47 | microVM | 47 (Monty 1.4.0) |
 | AutomationBench | 600 | microVM | 0 |
 | Gaia2 | 460 | microVM | 0 |
-| Total | 1,349 | | 117 |
+| EnterpriseOps-Gym | 103 | microVM | 103 |
+| Total | 1,452 | | 220 |
 
 The other 1,232 tasks retain microVM grading and report `unported` in parity
-mode. The unconfigured `pre-meeting-research-brief` LLM-judge task is outside
+mode.
+
+EnterpriseOps-Gym's upstream verifier asks each server's SQL runner, so its
+fakes answer their task's verifier queries themselves: the state view takes
+`query=` beside `table=` (`fake-state.ts`), answers each with the runner's
+rules, read-only at the run's clock, and keeps Python's types in the JSON
+(`{"__float__": 3.0}`). `graders/enterpriseops.ts` then does upstream's
+extraction and Python's comparisons over those rows. Its definitions,
+`graders/enterpriseops/manifest.json`, come from `enterpriseops.py`.
+All 103 tasks matched their microVM reference under `MirageParityVerifier`
+(`nop`, plus the oracle of the one task with a solution), and
+`enterpriseops-grader.test.ts` checks the comparisons against the Python
+reference. The unconfigured `pre-meeting-research-brief` LLM-judge task is outside
 the 70-task set and has no native port.
 
 From `vfs-bench-2/`, after the usual dependency/setup steps:
@@ -291,9 +304,6 @@ ports must consume recorded responses or judgments to make comparisons stable.
   a trial's verifier in a microVM, and the host's proxies for it.
 - `src/vfsbench_harbor/guest.py`: run inside that VM. It relays the
   upstream ports and runs `test.sh`.
-- `src/vfsbench_harbor/verifier.py`: `WorkspaceVerifier`, Harbor's verifier
-  in the trial's own workspace, with the state files only it may read
-  (below).
 - `src/vfsbench_harbor/agents.py`: `Codex` and `ClaudeCode`, Harbor's own
   agents run on the host, their tools in the trial's workspace.
 - `src/vfsbench_harbor/gateway.py`: each trial's gateway to its agent's
@@ -381,7 +391,8 @@ ports must consume recorded responses or judgments to make comparisons stable.
 - `tasks/enterpriseops/<task id>/`: the EnterpriseOps-Gym tasks
   (../enterpriseops/README.md); `enterpriseops.py` writes them, or checks
   them; `enterpriseops_grade.py` is each one's `tests/grade.py`;
-  `enterpriseops.yaml`, their job config, under `WorkspaceVerifier`;
+  `enterpriseops.yaml`, their job config, graded natively
+  (`MirageVerifier`), `enterpriseops-msb.yaml` with the reference grader;
   `enterpriseops_compare.py` checks a fake against upstream's server image.
 - `../mocks/enterpriseops/`, `../mocks/enterpriseops_<domain>/`:
   EnterpriseOps-Gym's servers as kit fakes, a shared layer (Python's
@@ -1192,20 +1203,6 @@ scoped to a workspace. Sharing one daemon needs a per-workspace network
 policy in the workspace config, an allowlist with host and port mapping
 (`localhost:1235` to `127.0.0.1:53211`) that curl's HTTP layer applies for
 the workspace it runs in.
-
-## The verifier in the workspace, with state the agent never sees
-
-A fake's `verifier_state` in `mirage.yaml` names where the verifier reads
-its run's SQLite. Unlike `state`, the file is not in the workspace while
-the agent works: its directory is mounted, empty. `WorkspaceVerifier`
-(`--verifier vfsbench_harbor:WorkspaceVerifier`) tells the environment
-the agent's turn is over, then verifies as Harbor's own verifier does,
-`test.sh` in the workspace, whose first command copies the file in. The
-grader reads it with Pyodide's `sqlite3`. No VM, no network.
-
-It is for tasks whose upstream agent reaches its services through their
-tools alone (EnterpriseOps-Gym). On a task like that, a database copy in
-the workspace would let the agent read every table directly.
 
 ## The verifier in a microVM
 

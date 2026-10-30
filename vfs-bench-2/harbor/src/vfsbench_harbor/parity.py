@@ -10,6 +10,7 @@ import math
 from harbor.models.verifier.result import VerifierResult
 from harbor.verifier.verifier import Verifier
 from vfsbench_harbor.complexmcp_verifier import definitions
+from vfsbench_harbor.enterpriseops_verifier import definitions as enterpriseops
 from vfsbench_harbor.microsandbox import MicrosandboxVerifier
 from vfsbench_harbor.mirage_verifier import MANIFEST, MirageVerifier
 
@@ -20,6 +21,7 @@ REFERENCE_BACKENDS = {
     "complexmcp": "microsandbox",
     "automationbench": "microsandbox",
     "gaia2": "microsandbox",
+    "enterpriseops": "microsandbox",
 }
 
 
@@ -105,8 +107,10 @@ class MirageParityVerifier(Verifier):
         manifest = json.loads(MANIFEST.read_text())
         if dataset == "complexmcp":
             manifest = definitions()
-        supported = dataset in ("liveclawbench",
-                                "complexmcp") and task in manifest
+        if dataset == "enterpriseops":
+            manifest = enterpriseops()
+        supported = dataset in ("liveclawbench", "complexmcp",
+                                "enterpriseops") and task in manifest
         report = {
             "dataset": dataset,
             "task": task,

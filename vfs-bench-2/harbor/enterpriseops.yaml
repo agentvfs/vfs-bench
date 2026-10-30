@@ -1,13 +1,15 @@
 # The EnterpriseOps-Gym tasks (harbor/tasks/enterpriseops/, harbor/enterpriseops.py
-# writes them), each verified in its own workspace (WorkspaceVerifier):
-# upstream's SQL verifiers on each run's SQLite, which only the verifier
-# sees. No Docker and no microVM. From
+# writes them), graded natively (MirageVerifier, graders/enterpriseops.ts): each
+# fake answers its task's verifier queries in its state view, and the grader
+# compares them in a verifier-only Mirage workspace. No SQLite in the
+# verifier, no Docker, no microVM. enterpriseops-msb.yaml runs the reference
+# grader instead. From
 # vfs-bench-2/, after `uv run --project enterpriseops python -I enterpriseops/setup.py`:
 #   uv run --project harbor harbor run -c harbor/enterpriseops.yaml -a nop -n 8 -o state/harbor/jobs-enterpriseops
 environment:
   import_path: vfsbench_harbor:MirageEnvironment
 verifier:
-  import_path: vfsbench_harbor:WorkspaceVerifier
+  import_path: vfsbench_harbor:MirageVerifier
 tasks:
   - path: harbor/tasks/enterpriseops/task_20251125_152842_063_b393a327_9622ac64
   - path: harbor/tasks/enterpriseops/task_20251126_182216_326_66392a82_d3ff64ca

@@ -22,8 +22,8 @@ import { fileURLToPath } from 'node:url'
 
 import { parseConfig, route } from '../../submodule/mirage/integ/server/kit/typescript/index.ts'
 import type { Ctx, Dmmf, Fake, KitRoute, MinimalClient, Reply } from '../../submodule/mirage/integ/server/kit/typescript/index.ts'
-import { dumps, loads } from './py.ts'
-import { Conn, SqliteError } from './sqlite.ts'
+import { PyFloat, dumps, loads } from './py.ts'
+import { Conn, type Row, SqliteError, type Value } from './sqlite.ts'
 
 /** Upstream's checkout and seeds, as enterpriseops/setup.py fetches them. */
 export const STATE =
@@ -79,6 +79,9 @@ export interface ServerSpec {
   sqlLimit?: number
 }
 
+/** A verifier query's answer: its rows, each value JSON that keeps its Python type, or the runner's error. */
+export type VerifierQuery<C> = (db: C, query: string, nowMs: number) => { rows: Record<string, unknown>[] } | { error: string }
+
 /** A server's kit config: its schema is this directory's, linked from its own. */
 export function serverConfig(service: string, dir: string) {
   return parseConfig({ service, schema: join(dir, `${service}.prisma`), tenantKind: 'none' })
@@ -130,35 +133,55 @@ function toolCtx<C extends RunClient>(ctx: Ctx<C>): ToolCtx {
   }
 }
 
+/** What upstream's SQL runner answers a query: its rows, or why it refused or failed. */
+type Answer = { ok: true; rows: Row[]; query: string } | { ok: false; detail: string }
+
 /**
  * Upstream's `/api/sql-runner`: one read-only SELECT (or WITH, or
  * EXPLAIN), a LIMIT added unless it has one, each row as an object.
  */
-function sqlRunner(conn: Conn, query: string, limit: number): Reply {
-  const fail = (detail: string) => ({ status: 400, body: { detail } })
+function runQuery(conn: Conn, query: string, limit: number): Answer {
   let q = query.trim().replace(/;+$/, '').trim()
-  if (q.includes(';')) return fail('Only a single SELECT statement is allowed')
+  if (q.includes(';')) return { ok: false, detail: 'Only a single SELECT statement is allowed' }
   const head = q.trimStart().toUpperCase()
   const stripped = q.replace(/'(?:''|[^'])*'|"(?:""|[^"])*"|--[^\n]*|\/\*[^*]*\*+(?:[^/*][^*]*\*+)*\//g, ' ')
   const forbidden =
     /\b(INSERT|UPDATE|DELETE|REPLACE|CREATE|ALTER|DROP|TRUNCATE|VACUUM|ATTACH|DETACH|PRAGMA|REINDEX|ANALYZE|BEGIN|END|COMMIT|ROLLBACK)\b/i
   if (!(head.startsWith('SELECT') || head.startsWith('WITH') || head.startsWith('EXPLAIN')) || forbidden.test(stripped)) {
-    return fail('Only read-only SELECT queries are allowed')
+    return { ok: false, detail: 'Only read-only SELECT queries are allowed' }
   }
   if (!q.toUpperCase().includes(' LIMIT ')) q = `${q} LIMIT ${limit}`
   try {
-    const rows = conn.execute(q).fetchall()
-    const text = dumps({
-      success: true,
-      message: `Query executed successfully, returned ${rows.length} rows`,
-      data: rows,
-      row_count: rows.length,
-      query: q,
-    })
-    return { status: 200, body: Buffer.from(text), headers: { 'Content-Type': 'application/json' } }
+    return { ok: true, rows: conn.execute(q).fetchall(), query: q }
   } catch (error) {
-    return fail(`Query failed: ${error instanceof Error ? error.message : String(error)}`)
+    return { ok: false, detail: `Query failed: ${error instanceof Error ? error.message : String(error)}` }
   }
+}
+
+function sqlRunner(conn: Conn, query: string, limit: number): Reply {
+  const answer = runQuery(conn, query, limit)
+  if (!answer.ok) return { status: 400, body: { detail: answer.detail } }
+  const text = dumps({
+    success: true,
+    message: `Query executed successfully, returned ${answer.rows.length} rows`,
+    data: answer.rows,
+    row_count: answer.rows.length,
+    query: answer.query,
+  })
+  return { status: 200, body: Buffer.from(text), headers: { 'Content-Type': 'application/json' } }
+}
+
+/**
+ * A row's value as JSON that keeps its Python type, for the verifier's
+ * state view: a float as `{"__float__": v}` (JSON alone cannot tell `5.0`
+ * from `5`), an int past 2^53 as `{"__int__": "<digits>"}`, bytes as
+ * `{"__bytes__": "<base64>"}`.
+ */
+function typed(value: Value): unknown {
+  if (value instanceof PyFloat) return { __float__: Number.isFinite(value.v) ? value.v : String(value.v) }
+  if (typeof value === 'bigint') return { __int__: value.toString() }
+  if (value instanceof Uint8Array) return { __bytes__: Buffer.from(value).toString('base64') }
+  return value
 }
 
 /** A server's fake: its run is the task's seeded database. */
@@ -167,7 +190,7 @@ export function serverFake<C extends RunClient>(
   config: ReturnType<typeof serverConfig>,
   client: new (options: { datasourceUrl: string }) => C,
   dmmf: Dmmf,
-): Fake<C> {
+): Fake<C> & { verifierQuery: VerifierQuery<C> } {
   const schema = readFileSync(spec.schema, 'utf8')
   const routes = (): KitRoute<C>[] => [
     ...Object.entries(spec.tools).map(([name, tool]) =>
@@ -204,6 +227,19 @@ export function serverFake<C extends RunClient>(
     config,
     client,
     dmmf,
+    // The verifier's state view (harbor/fake-state.ts) asks each of a
+    // task's verifier queries here, as upstream's verifier asks the
+    // server's SQL runner: the rows, typed, or the runner's error.
+    verifierQuery: (db, query, nowMs) => {
+      const conn = new Conn(db.file, () => nowMs)
+      try {
+        const answer = runQuery(conn, query, spec.sqlLimit ?? 100)
+        if (!answer.ok) return { error: answer.detail }
+        return { rows: answer.rows.map((row) => Object.fromEntries(Object.entries(row).map(([k, v]) => [k, typed(v)]))) }
+      } finally {
+        conn.close()
+      }
+    },
     seedRoots: { seed: 'Seed' },
     afterSeed: async (db, _tenant, _counts, _extras, _root, epoch) => {
       const row = await db.seed.findFirst()

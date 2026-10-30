@@ -139,11 +139,6 @@ class MirageEnvironment(BaseEnvironment):
             starting one for the trial.
     """
 
-    # State files only the verifier reads (mirage.yaml's ``verifier_state``),
-    # copied once ``reveal_verifier_state`` is called.
-    _verifier_state: list[tuple[Path, Path]] = []
-    _revealed = False
-
     def __init__(self,
                  *args,
                  node: str = "node",
@@ -399,8 +394,6 @@ class MirageEnvironment(BaseEnvironment):
                                                     exist_ok=True)
         self._state = [(Path(view), Path(live))
                        for view, live in plan["state"]]
-        self._verifier_state = [(Path(view), Path(live))
-                                for view, live in plan.get("verifier_state", [])]
         self._workdir = self.task_env_config.workdir or plan["workdir"]
         self._env = dict(plan["config"].get("env") or {})
         routes = {} if self._network_disabled else plan["routes"]
@@ -561,14 +554,6 @@ class MirageEnvironment(BaseEnvironment):
                 target = self._host("/logs/agent/trajectory.json", write=True)
                 target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(trajectory, target)
-            if self._revealed:
-                for view, live in self._verifier_state:
-                    _snapshot(view, live)
-
-    def reveal_verifier_state(self) -> None:
-        """From now on, refresh the state files only the verifier reads
-        too: the agent's turn is over (``WorkspaceVerifier``)."""
-        self._revealed = True
 
     async def refresh_state(self) -> None:
         """Refresh the mocks' state and the host agent's trajectory, as
@@ -596,7 +581,9 @@ class MirageEnvironment(BaseEnvironment):
             run = runs.get(definition["service"])
             if run is None:
                 raise ValueError(f"No live state source for {alias}")
-            value = await fakes.pool().snapshot(run, definition["tables"])
+            value = await fakes.pool().snapshot(run,
+                                                definition.get("tables", []),
+                                                definition.get("queries", []))
             return alias, value
 
         return dict(

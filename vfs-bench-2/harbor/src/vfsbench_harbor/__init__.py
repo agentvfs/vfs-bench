@@ -4,9 +4,8 @@ from vfsbench_harbor.environment import MirageEnvironment
 from vfsbench_harbor.microsandbox import MicrosandboxVerifier
 from vfsbench_harbor.mirage_verifier import MirageVerifier
 from vfsbench_harbor.parity import MirageParityVerifier
-from vfsbench_harbor.verifier import WorkspaceVerifier
 
 __all__ = [
     "ClaudeCode", "Codex", "MirageEnvironment", "MirageVerifier",
-    "MirageParityVerifier", "MicrosandboxVerifier", "WorkspaceVerifier"
+    "MirageParityVerifier", "MicrosandboxVerifier"
 ]
