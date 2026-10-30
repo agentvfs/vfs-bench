@@ -110,11 +110,11 @@ authoritative. Coverage across the seven Mirage-agent job configs is:
 | Claw-Eval | 126 | microVM | 0 |
 | ComplexMCP | 47 | microVM | 47 (Monty 1.4.0) |
 | AutomationBench | 600 | microVM | 600 (Monty 1.4.0) |
-| Gaia2 | 460 | microVM | 0 |
+| Gaia2 | 460 | microVM | 460 (Monty 1.4.0) |
 | EnterpriseOps-Gym | 103 | microVM | 103 |
-| Total | 1,452 | | 866 |
+| Total | 1,452 | | 1,326 |
 
-The other 586 tasks retain microVM grading and report `unported` in parity
+The other 126 tasks retain microVM grading and report `unported` in parity
 mode.
 
 EnterpriseOps-Gym's upstream verifier asks each server's SQL runner, so its
@@ -265,7 +265,8 @@ inside Monty; the host only services Mirage VFS operations.
 
 Mirage is pinned to `9dd69a316242deddee79b40ce41aafaa2be6065c`, whose
 runtime dependency is also Monty **1.4.0**. No module-resolution override is
-used. All 47 ComplexMCP, 46 DataSpace and 600 AutomationBench tasks now use this runtime through
+used. All 47 ComplexMCP, 46 DataSpace, 600 AutomationBench and 460 Gaia2
+tasks now use this runtime through
 `MirageVerifier`;
 the 70 LiveClawBench tasks retain their native TypeScript graders.
 
@@ -277,7 +278,7 @@ Proposed migration order, one dataset per follow-up PR:
 | 2 | DataSpace | 46 | Implemented: shared relation evaluator over frozen prediction/config/gold bytes. Strict CSV, Decimal, Unicode, ISO date normalization and column permutations are compared with the pinned CPython 3.12 reference; all 46 tasks are covered. |
 | 3 | AutomationBench | 600 | Implemented: private fake JSON snapshot, generated rubric/schema adapter, and all 600 task definitions. Per-assertion results, free-assertion exclusions and partial credit match the pinned Python reference. |
 | 4 | Claw-Eval | 126 | Port task graders and trace/audit assembly over JSON. Preserve required LLM judgments through an explicit recorded service interface. |
-| 5 | Gaia2 | 460 | Port event/state assembly and the judge without its daemon or SQLite; preserve event ordering and required LLM judgments through the same interface. |
+| 5 | Gaia2 | 460 | Implemented: pinned judge and event assembly in Monty over private JSON snapshots. Reference oracle ordering and exact LLM messages/responses are replayed for parity; no verifier daemon, SQLite, Pyodide or microVM. |
 
 Monty supports a [subset of Python and its standard library](https://pydantic.dev/docs/monty/limitations/modules/);
 it is not a drop-in loader for the upstream packages. Each port keeps hash-pinned
@@ -384,7 +385,8 @@ ports must consume recorded responses or judgments to make comparisons stable.
   files made from Gaia2's data not committed; `gaia2.py` writes them, or
   checks them; `gaia2_grade.py` is each one's `tests/grade.py`,
   `gaia2_trajectory.py` each solution's `trajectory.py`; `gaia2.yaml`, their
-  job config, each verifier in a microVM; `gaia2_compare.py` checks each
+  job config using Mirage/Monty; `gaia2-msb.yaml` preserves the microVM
+  reference. `gaia2_compare.py` checks each
   app's fake against upstream's app, with `gaia2_calls/<cli>.py`'s calls
   or each task's oracle.
 - `../mocks/gaia2/`, `../mocks/gaia2_<app>/`: gaia2-cli's nine apps as kit
@@ -2449,16 +2451,68 @@ reply with the scenario's oracle events. An ambiguity scenario's request
 cannot be done as asked: its oracle does what it can and asks the user,
 and that question is the reply the judge compares, in the same one turn.
 
+`gaia2.yaml` now uses `MirageVerifier`. Each trial grades in a fresh Mirage
+workspace running Monty 1.4.0. The verifier reads the fakes' capability-protected
+JSON exports (`doc` and `event`), the hash-pinned scenario, and the agent's
+trajectory. It sorts event rows by the same `(wall, seq, entry)` tuple as the
+reference, preserves the processor's timestamp ordering and turn boundary,
+and runs the pinned judge over those frozen inputs. Fake-service storage stays
+as it is; the verifier opens no SQLite files and starts no daemon or microVM.
+
+`graders/gaia2/reference/` preserves the MIT upstream sources at `a9fd2ed`.
+`build.py` produces `port.py`: Pydantic models become dataclasses, enum members
+become strings, properties become methods, static text dedenting happens at
+build time, and a few unsupported standard-library operations get equivalents.
+The checker and matching algorithms and prompt text remain the reference's.
+LLM checker initialization and audit-log failures are fatal, preventing the
+reference's optional-dependency fallback from masking a broken port.
+
+Only an explicit judge transport can leave the workspace. It sends the same
+chat-completion requests with the configured model and records every response;
+credentials stay outside Monty's VFS and environment. Missing credentials or
+inconclusive responses still fail checks that normalized equality cannot settle.
+`MirageParityVerifier` replays the reference's recorded messages/responses and
+oracle order, rejects different prompts or unused responses, and preserves the
+original reward. The order matters because upstream constructs its oracle DAG
+from a Python set, so independent sibling order varies with the hash seed.
+
+Validation covers 3,573 frozen-input cases across all 460 scenarios,
+including oracle-shaped events, no reply, missing/extra writes, changed answers
+and reworded app content with absent, accepting and rejecting judge responses.
+Each case matched the unchanged CPython daemon parser, final-turn collector and
+judge in both recorded-response replay and default-order local HTTP runs
+(7,146 comparisons, zero differences).
+These are synthetic event fixtures, not 460 full agent trajectories. Live Harbor
+oracle trials for search-0002, execution-0052 and ambiguity-0132 scored 1.0;
+matching no-op trials scored 0.0, with no exceptions. Tests also check prompt
+formatting, Unicode/path/date comparisons, VFS isolation, source drift, staging
+limits and a local HTTP judge. No paid model was used for validation.
+
+```sh
+uv run --project harbor python -I harbor/test_gaia2_verifier.py
+node --test harbor/gaia2-monty.test.ts
+uv run --project gaia2 python -I harbor/audit_gaia2.py
+# Default native ordering and a local HTTP stand-in, without recorded order:
+uv run --project gaia2 python -I harbor/audit_gaia2.py --live-mock \
+  --out state/harbor/gaia2-default-order-parity.json
+uv run --project gaia2 python -I harbor/graders/gaia2/build.py --check
+uv run --project harbor python -I harbor/graders/gaia2/build_manifest.py --check
+```
+
+The preserved reference is `gaia2-msb.yaml`; only that config and parity mode
+need microsandbox and `harbor/gaia2.py --site`. The default agent workspace still
+needs the normal `setup/python.py` packages for its existing oracle scripts.
+
 ```sh
 uv run --project gaia2 python -I gaia2/setup.py          # the data, into state/gaia2/
 uv run --project gaia2 python -I harbor/gaia2.py          # the tasks' files made from it
-uv run --project gaia2 python -I harbor/gaia2.py --site   # the judge's packages, for the VM
+uv run --project gaia2 python -I harbor/gaia2.py --site   # optional: microVM reference/parity only
 uv run --project gaia2 python -I harbor/gaia2.py --check [task ...]
 uv run --project harbor harbor run -y -c harbor/gaia2.yaml -a oracle -n 4 -o state/harbor/jobs-gaia2
 uv run --project harbor harbor run -y -c harbor/gaia2.yaml -a nop -n 4 -o state/harbor/jobs-gaia2
 # One split (-i needs -p; -c takes none).
 uv run --project harbor harbor run -y -p harbor/tasks/gaia2 -i 'ambiguity-*' \
-  --env vfsbench_harbor:MirageEnvironment --verifier vfsbench_harbor:MicrosandboxVerifier \
+  --env vfsbench_harbor:MirageEnvironment --verifier vfsbench_harbor:MirageVerifier \
   -a oracle -n 4 -o state/harbor/jobs-gaia2
 # Each app's fake against upstream's app, on the same calls: gaia2_calls/'s,
 # or with --oracles every task's oracle (gaia2.py's replay).
@@ -2466,7 +2520,7 @@ uv run --project gaia2 python -I harbor/gaia2_compare.py [app ...] [--scenario <
 uv run --project gaia2 python -I harbor/gaia2_compare.py --oracles [app ...]
 # The judge's plumbing, with a stand-in that answers every check one way.
 uv run --project harbor python -I harbor/mock_judge.py --port 8771 --content '[[Success]] [[True]]'
-OPENAI_API_KEY=mock OPENAI_BASE_URL=http://host.microsandbox.internal:8771/v1 \
+OPENAI_API_KEY=mock OPENAI_BASE_URL=http://127.0.0.1:8771/v1 \
   uv run --project harbor harbor run -y -c harbor/gaia2.yaml -a oracle -n 4 -o state/harbor/jobs-gaia2
 ```
 
@@ -2477,7 +2531,7 @@ Gaia2's data is never committed. `gaia2.py` writes the files made from it
 into each task, and `tasks/gaia2/.gitignore` (which it writes too) keeps them
 out of git: `instruction.md`, `environment/kit/` (the fixtures),
 `environment/drive/` and the replayed `solution/solve.sh`. The scenario
-itself goes to `state/gaia2/harbor/<task>/`, which only the verifier's VM
+itself goes to `state/gaia2/harbor/<task>/`, which only the verifier
 gets. A fresh checkout runs these tasks once setup and `gaia2.py` have run.
 
 | Upstream (gaia2-cli in its container) | Here |
@@ -2490,7 +2544,7 @@ gets. A fresh checkout runs these tasks once setup and `gaia2.py` have run.
 | `uuid.uuid4()` | A counter of the run's, hashed: the same ids every time |
 | `AGENTS_TEMPLATE.md` rendered for the scenario, then the scenario's message | `instruction.md`: the same render with four edits (`EDITS`: `/workspace` for `/home/agent`, the drive a mount, not a CLI), the notifications section cut (nothing delivers them; these splits have no ENV events), then `## Task` and the message, verbatim |
 | The agent's reply, logged as `send_message_to_user` by its adapter | The last message of the agent's Harbor trajectory |
-| gaia2-eventd with `GAIA2_JUDGE_FINAL_TURN`: gaia2-core's judge on the turn, its LLM checks through litellm | `tests/grade.py` (`gaia2_grade.py`) in the verifier's VM: every run's state files and its event rows, in the order the calls were made, then the reply, laid out as the daemon reads them, and the daemon itself run on them, unchanged; its LLM engine over the chat completions API (`OPENAI_BASE_URL`, `OPENAI_API_KEY`, `JUDGE_MODEL`, default `gpt-oss-120b` with `JUDGE_EXTRA_BODY` `reasoning_effort: low`, upstream's calibrated judge) |
+| gaia2-eventd with `GAIA2_JUDGE_FINAL_TURN`: gaia2-core's judge on the turn, its LLM checks through litellm | The pinned judge in Mirage/Monty over frozen JSON, with an explicit chat-completions transport (`OPENAI_BASE_URL`, `OPENAI_API_KEY`, `JUDGE_MODEL`, default `gpt-oss-120b` with `JUDGE_EXTRA_BODY` `reasoning_effort: low`). The original `tests/grade.py` (`gaia2_grade.py`) and unchanged daemon remain available through `gaia2-msb.yaml`. |
 | Reward 1.0 if the judgment succeeds, else 0.0 | The same; `reward_details.json` has the judgment, the daemon's `judgments.jsonl`, its status and each model call |
 
 The judge needs the model for every check its equality does not settle
@@ -2613,17 +2667,19 @@ of the 154 ambiguity ones.
   conditional groups and `\N{...}` are refused (`pyre.ts`).
 - **Uncaught exceptions.** Where upstream prints a traceback, the fake
   prints its last line (`ValueError: ...`).
-- **The judge's transport.** urllib over the chat completions API in place
-  of litellm, which the VM lacks; prompts, votes and parsing are gaia2-core's.
+- **The judge's transport.** The native verifier uses Node fetch over the
+  chat completions API; the microVM reference uses urllib. Both replace
+  litellm; prompts, votes and parsing are gaia2-core's.
   The model name goes as given (litellm would strip an `openai/` prefix).
   A call that fails after six tries (a refused connection, a bad reply) is
   no answer, an inconclusive check, as litellm's would be once its retries
-  ran out. A judge on the host (`host.microsandbox.internal`) is dialed at
-  the host's IPv4 address, as `claweval_grade.py` dials it.
+  ran out. The native transport also respects the verifier's total deadline.
+  The microVM reference resolves `host.microsandbox.internal` to the host's
+  IPv4 address. For a local judge with MirageVerifier, use `127.0.0.1`.
 - **The reply.** The trajectory's last agent message; an agent that writes no
   trajectory, or no message, hands in no reply, so the turn never ends and
   there is no judgment: 0, as upstream's runner scores it.
 - **The state files** are visible read-only in the workspace at
   `/var/lib/mock-data/gaia2/`, as every committed task's services' are. They
   hold the apps' state and the calls' log, which the CLIs show anyway; the
-  oracle is only in the VM.
+  oracle is only in the separate verifier workspace.

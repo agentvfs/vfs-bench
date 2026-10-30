@@ -1,5 +1,11 @@
 # Gaia2
 
+The current benchmark is the [Harbor integration](../harbor/README.md#gaia2):
+460 search, execution and ambiguity tasks on Mirage, with `MirageVerifier`
+running the pinned judge in Monty. Its verifier needs no microVM or SQLite.
+Use `harbor/gaia2.yaml`; `harbor/gaia2-msb.yaml` retains the microVM reference.
+The notes below describe the earlier, smaller harness port.
+
 [Meta Agents Research Environments](https://github.com/facebookresearch/meta-agents-research-environments)
 `gaia2-cli` @ `a9fd2ed` (MIT) with the Gaia2 data (CC BY 4.0, plus the
 Llama terms recorded in [THIRD_PARTY_LICENSES](../THIRD_PARTY_LICENSES)).

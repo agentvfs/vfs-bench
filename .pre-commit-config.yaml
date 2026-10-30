@@ -50,14 +50,14 @@
 # stripping it edits the value, and dvc rewrites the file back on the next
 # repro either way, so the two would fight over every commit.
 # vfs-bench-2/harbor/graders/*/reference/ contains hash-pinned upstream
-# judge source. DataSpace port.py is generated from that source and checked
-# by dataspace_manifest.py --check-port in CI. Keep their bytes intact;
-# the manifest check detects drift.
+# judge source. DataSpace, AutomationBench and GAIA2 port.py are generated
+# from that source. Their local grader-pin hooks detect drift; keep their
+# bytes intact.
 # vfs-bench-2/harbor/tasks/ holds LiveClawBench's task directories, each
 # file upstream's bytes or an edit of them; `harbor/export.py --check` holds
 # them to upstream, and a formatter's rewrite of a verify.py fails it.
 exclude: |
-  (?x)^vfs-bench-2/harbor/graders/(dataspace|automationbench)/port\.py$|^vfs-bench-2/harbor/tasks/.*$|^vfs-bench-2/harbor/graders/[^/]+/reference/.*$|^vfs-bench-1/(
+  (?x)^vfs-bench-2/harbor/graders/(dataspace|automationbench|gaia2)/port\.py$|^vfs-bench-2/harbor/tasks/.*$|^vfs-bench-2/harbor/graders/[^/]+/reference/.*$|^vfs-bench-1/(
       task/[^/]+/.*/vfs/.*\.md|
       task/[^/]+/.*/shared/task\.md|
       task/[^/]+/.*/shared/system_prompt\.md|
@@ -168,6 +168,13 @@ repos:
 
   - repo: local
     hooks:
+      - id: gaia2-grader-pin
+        name: Check pinned GAIA2 judge port
+        entry: python vfs-bench-2/harbor/graders/gaia2/build.py --check
+        language: python
+        language_version: python3.12
+        files: ^vfs-bench-2/harbor/graders/gaia2/
+        pass_filenames: false
       - id: dataspace-grader-pin
         name: Check pinned DataSpace evaluator port
         entry: python vfs-bench-2/harbor/dataspace_manifest.py --check-port

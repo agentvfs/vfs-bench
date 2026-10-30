@@ -8,6 +8,7 @@ from pathlib import Path
 import yaml
 from vfsbench_harbor.enterpriseops_verifier import definitions as enterpriseops
 from vfsbench_harbor.environment import ROOT
+from vfsbench_harbor.gaia2_verifier import definitions as gaia2_definitions
 from vfsbench_harbor.parity import REFERENCE_BACKENDS
 
 
@@ -21,6 +22,7 @@ def inventory(root: Path = ROOT) -> dict:
     automationbench = json.loads(
         (root /
          "harbor/graders/automationbench/manifest.json").read_text())["tasks"]
+    gaia2 = gaia2_definitions()
     datasets = {}
     seen = set()
     for dataset, backend in REFERENCE_BACKENDS.items():
@@ -41,6 +43,7 @@ def inventory(root: Path = ROOT) -> dict:
                       or (dataset == "dataspace" and task.name in dataspace)
                       or (dataset == "automationbench"
                           and task.name in automationbench)
+                      or (dataset == "gaia2" and task.name in gaia2)
                       or (dataset == "enterpriseops"
                           and task.name in enterpriseops()))
             if ported:

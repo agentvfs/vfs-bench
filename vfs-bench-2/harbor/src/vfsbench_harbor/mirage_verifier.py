@@ -32,6 +32,8 @@ from vfsbench_harbor.dataspace_verifier import \
 from vfsbench_harbor.dataspace_verifier import freeze as freeze_dataspace
 from vfsbench_harbor.enterpriseops_verifier import definitions as enterpriseops
 from vfsbench_harbor.environment import HARBOR, ROOT, MirageEnvironment
+from vfsbench_harbor.gaia2_verifier import definitions as gaia2_definitions
+from vfsbench_harbor.gaia2_verifier import freeze as freeze_gaia2
 
 MANIFEST = HARBOR / "graders/manifest.json"
 RUNNER = HARBOR / "verify.ts"
@@ -116,8 +118,8 @@ class MirageVerifier(Verifier):
 
     A disposable Node process gives timeout/cancellation a hard stop. This
     is trusted host code, not an isolation boundary for arbitrary scripts.
-    LiveClawBench uses the workspace runtime; ComplexMCP, DataSpace and
-    AutomationBench use Monty.
+    LiveClawBench uses the workspace runtime; ComplexMCP, DataSpace,
+    AutomationBench and GAIA2 use Monty.
     Each grader reads declared JSON and file bytes through read-only VFS
     mounts and writes rewards to a separate RAM output mount.
     """
@@ -192,6 +194,7 @@ class MirageVerifier(Verifier):
         manifest.update(dataspace_definitions())
         manifest.update(automationbench_definitions())
         manifest.update(enterpriseops())
+        manifest.update(gaia2_definitions())
         definition = manifest.get(task)
         if definition is None:
             raise ValueError(f"No Mirage grader for {task}; use Harbor's "
@@ -304,6 +307,8 @@ class MirageVerifier(Verifier):
         Safety directory scans skip symlinks as the reference's os.walk does.
         """
         budget = _Staging(self.task.config.verifier.timeout_sec)
+        if definition.get("runtime") == "gaia2-monty":
+            return await freeze_gaia2(self, definition, stage, budget)
         if definition.get("runtime") == "automationbench-monty":
             return await freeze_automationbench(self, definition, stage,
                                                 budget)
@@ -410,7 +415,8 @@ class MirageVerifier(Verifier):
             "typescript": RUNNER,
             "complexmcp-monty": HARBOR / "verify-complexmcp.ts",
             "dataspace-monty": HARBOR / "verify-dataspace.ts",
-            "automationbench-monty": HARBOR / "verify-automationbench.ts"
+            "automationbench-monty": HARBOR / "verify-automationbench.ts",
+            "gaia2-monty": HARBOR / "verify-gaia2.ts"
         }
         if runtime not in runners:
             raise ValueError(f"Unknown verifier runtime: {runtime}")
@@ -420,7 +426,9 @@ class MirageVerifier(Verifier):
             "--no-warnings",
             str(runner),
             cwd=ROOT,
-            # No model credentials, NODE_OPTIONS or task-controlled env.
+            # No inherited credentials, NODE_OPTIONS or task-controlled env.
+            # GAIA2 judge settings travel in the request and stay outside
+            # the Python VFS.
             env={
                 "PATH": os.environ.get("PATH", ""),
                 "TZ": "UTC"

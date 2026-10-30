@@ -15,6 +15,7 @@ from vfsbench_harbor.complexmcp_verifier import definitions
 from vfsbench_harbor.dataspace_verifier import \
     definitions as dataspace_definitions
 from vfsbench_harbor.enterpriseops_verifier import definitions as enterpriseops
+from vfsbench_harbor.gaia2_verifier import definitions as gaia2_definitions
 from vfsbench_harbor.microsandbox import MicrosandboxVerifier
 from vfsbench_harbor.mirage_verifier import MANIFEST, MirageVerifier
 
@@ -56,7 +57,8 @@ class MirageParityVerifier(Verifier):
     require_native: also fail unported tasks (default False).
 
     The 70 LiveClawBench, 47 ComplexMCP, 46 DataSpace, 600 AutomationBench
-    and 103 EnterpriseOps-Gym graders have native ports. Future ports must
+    and 103 EnterpriseOps-Gym graders have native ports. GAIA2 adds 460
+    ports with recorded judge calls and oracle order. Future ports must
     define their frozen input contract, including recorded API replies/model
     judgments where needed, before being registered here.
     Calling a live judge twice is not a differential test.
@@ -118,9 +120,11 @@ class MirageParityVerifier(Verifier):
             manifest = automationbench_definitions()
         elif dataset == "enterpriseops":
             manifest = enterpriseops()
+        elif dataset == "gaia2":
+            manifest = gaia2_definitions()
         supported = dataset in ("liveclawbench", "dataspace", "complexmcp",
-                                "automationbench",
-                                "enterpriseops") and task in manifest
+                                "automationbench", "enterpriseops",
+                                "gaia2") and task in manifest
         report = {
             "dataset": dataset,
             "task": task,
@@ -148,6 +152,9 @@ class MirageParityVerifier(Verifier):
             return original
         native = MirageVerifier(**self._common())
         try:
+            if dataset == "gaia2":
+                native.gaia2_judge_replay = (self.trial_paths.verifier_dir /
+                                             "reward_details.json")
             # The reference refreshed the completed agent's file views.
             # Native grading reads those files and JSON from the same idle
             # fake runs. Keep the authoritative reward/log files intact.
