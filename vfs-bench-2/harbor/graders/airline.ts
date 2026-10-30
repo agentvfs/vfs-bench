@@ -1,4 +1,15 @@
-import { instantDate, eq, type Context, type Grader, GWS, grade, lines, lower, mails } from './context.ts'
+import {
+  instantDate,
+  eq,
+  type Context,
+  type Grader,
+  GWS,
+  grade,
+  fileLines,
+  lower,
+  mails,
+  strip,
+} from './context.ts'
 const DB = '/var/lib/mock-data/airline/airline.db',
   EMAIL = 'peter.griffin@work.mosi.inc'
 const SESSION = '/logs/agent/openclaw-state/agents/main/sessions/harbor.jsonl'
@@ -16,7 +27,7 @@ export function harborLastMessage(c: Context): string | null {
         .filter((p) => p && typeof p === 'object' && p.type === 'text')
         .map((p) => p.text ?? '')
         .join('\n')
-    if (step.source === 'agent' && typeof message === 'string' && message.trim()) return message
+    if (step.source === 'agent' && typeof message === 'string' && strip(message)) return message
   }
   return null
 }
@@ -83,10 +94,10 @@ export const AIRLINE_GRADERS: Record<string, Grader> = {
     let last: string | null = null
     if (!c.exists(SESSION)) last = harborLastMessage(c)
     else
-      for (const line of lines(c.text(SESSION))) {
+      for (const line of fileLines(c.text(SESSION))) {
         let d: any
         try {
-          d = JSON.parse(line.trim())
+          d = JSON.parse(strip(line))
         } catch {
           continue
         }

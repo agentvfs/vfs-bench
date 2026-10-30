@@ -205,7 +205,10 @@ Validation for the switch:
 - Review regressions compare fractional calendar seconds, Unicode email-length
   boundaries, fresh privacy transcripts, invalid AQI JSON and template newlines
   against unchanged Python graders. They also cover UTF-8 BOM preservation and
-  SQLite-compatible NUL, wildcard and end-of-string matching. Adapter tests
+  SQLite-compatible NUL, wildcard and end-of-string matching. Follow-up text
+  regressions check Python whitespace boundaries, all `str.splitlines()`
+  separators, terminal empty lines, and universal-newline JSONL reading,
+  including Unicode separators inside response strings. Adapter tests
   exercise override precedence, custom policy inputs, staging bounds,
   event-loop progress and cancellation.
 
@@ -219,12 +222,60 @@ record the repeated full comparisons; `review-oracle`/`review-nop` rerun the
 six affected tasks against live fake services.
 The subsequent text-decoding and matching fixes are checked in
 `bom-nul-replay-140.json` and `bom-nul-mutations.json`.
+Follow-up whitespace and line-parsing comparisons are recorded in
+`text-parsing-replay-140.json` and `text-parsing-mutations.json`.
 
 The worker still loads Mirage and executes TypeScript checks on its event loop.
 Independent workspaces can run concurrently; CPU, RAM and fake-service throughput
 remain practical limits. `run_s` excludes process startup; `total_s` includes
 staging/startup. These correctness checks do not establish lower memory use or
 better throughput. The Pyodide task notes below describe the preserved reference.
+
+#### Dataset-by-dataset Monty migration
+
+`@pydantic/monty` is pinned to **1.4.0** in the benchmark package and lockfile.
+The [1.4.0 release](https://github.com/pydantic/monty/releases/tag/1.4.0)
+adds `decimal` and corrects Python `splitlines` boundaries. The feasibility
+probe runs Python through Mirage's Monty runtime with RAM VFS mounts:
+
+```sh
+node --test harbor/monty-probe.test.ts
+```
+
+It checks JSON input reads, Decimal arithmetic, reward writes/readback through
+the virtual shell, concurrent workspace isolation, read-only input enforcement,
+and unavailable SQLite, subprocess, socket, pandas and Pydantic imports. No
+host filesystem is mounted. Monty uses its native worker processes; this is
+not a claim of zero process overhead or measured throughput. Grading runs
+inside Monty; the host only services Mirage VFS operations.
+
+The linked Mirage checkout still has a **1.0.0 development dependency**. The
+probe redirects only its test process's optional-peer resolution to the
+benchmark's exact 1.4.0 package and checks that version. Production dependency
+resolution must be aligned before enabling a Monty verifier; the pin alone
+does not change the linked runtime. The 70 LiveClawBench tasks remain on their
+native TypeScript graders, and the other datasets retain their reference
+backends. No dataset has been migrated by this probe.
+
+Proposed migration order, one dataset per follow-up PR:
+
+| Order | Dataset | Tasks | Work before switching grading |
+|---|---|---:|---|
+| 1 | ComplexMCP | 47 | Freeze initial/final/expected JSON in a verifier-only VFS; retain the shared judge, port Levenshtein to pure Python, and preserve six-place rounding and ignored IDs. A local probe of the pinned judge with that replacement returned the expected counts for one state change; full dataset parity is still required. |
+| 2 | DataSpace | 46 | Adapt the shared CSV/Decimal evaluator, CLI loading and error handling. The pinned evaluator currently fails Monty's parser on custom exception inheritance. Validate strict CSV parsing, normalization, precision, column permutations and failure behavior. |
+| 3 | AutomationBench | 600 | Export world/hidden state as JSON; port the Pydantic-dependent world/rubric behavior by assertion family, preserving exclusions and partial-credit weights. |
+| 4 | Claw-Eval | 126 | Port task graders and trace/audit assembly over JSON. Preserve required LLM judgments through an explicit recorded service interface. |
+| 5 | Gaia2 | 460 | Port event/state assembly and the judge without its daemon or SQLite; preserve event ordering and required LLM judgments through the same interface. |
+
+Monty supports a [subset of Python and its standard library](https://pydantic.dev/docs/monty/limitations/modules/);
+it is not a drop-in loader for the upstream packages. Each port keeps hash-pinned
+reference graders, runs the same frozen inputs through reference and candidate,
+and compares every reward dimension and failure outcome. Require all configured
+tasks plus negative, partial and adversarial cases to match before switching a
+dataset. For LLM-dependent graders, replay identical recorded judge responses
+for deterministic parity, then validate the live service interface separately.
+No host Python grading callback, SQL engine, Pyodide or microVM belongs in the
+new grading path. Fake-service storage remains separate.
 
 When a reference changes, review its TypeScript port and rerun parity before
 regenerating `graders/manifest.json` and `graders/reference-data.json` with

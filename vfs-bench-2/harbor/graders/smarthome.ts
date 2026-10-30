@@ -1,4 +1,14 @@
-import { eq, like, type Context, type Grader, containsAny, grade, lines, lower, round } from './context.ts'
+import {
+  eq,
+  like,
+  type Context,
+  type Grader,
+  containsAny,
+  grade,
+  fileLines,
+  lower,
+  round,
+} from './context.ts'
 const DB = '/tmp/mosi_smart_home.sqlite'
 const SESSIONS = [
   '/logs/agent/openclaw-state/agents/main/sessions/harbor.jsonl',
@@ -11,7 +21,7 @@ function response(c: Context, last = false): string | null {
   if (!path)
     return c.exists('/workspace/output/response.txt') ? c.text('/workspace/output/response.txt') : null
   const contents: string[] = []
-  for (const line of lines(c.text(path))) {
+  for (const line of fileLines(c.text(path))) {
     let e: any
     try {
       e = JSON.parse(line)

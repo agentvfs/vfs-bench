@@ -12,6 +12,7 @@ import {
   mails,
   mailText,
   round,
+  strip,
 } from './context.ts'
 
 const reply: Grader = (c) =>
@@ -38,7 +39,7 @@ export const MAIL_GRADERS: Record<string, Grader> = {
         lower(m.subject).includes('follow-up on project proposal') ||
         m.to.some((r) => lower(r).includes('john.smith@gmail.com'))
       ) {
-        score = Math.max(score, m.subject && m.body && [...m.body.trim()].length > 20 ? 1 : 0.3)
+        score = Math.max(score, m.subject && m.body && [...strip(m.body)].length > 20 ? 1 : 0.3)
       }
     return grade(score)
   },
