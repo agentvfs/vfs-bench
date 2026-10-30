@@ -454,22 +454,37 @@ class MirageEnvironment(BaseEnvironment):
                     f"{done.return_code} in the workspace:\n"
                     f"{done.stderr or done.stdout}")
 
-    async def verify_claweval(self, payload: bytes) -> dict:
-        """Grade in this trial's server, outside the agent workspace."""
+    async def verify_claweval(self, payload: bytes, save_artifact) -> dict:
+        """Stream artifacts to Harbor before grading can fail or time out."""
         if self._client is None or self._daemon_url is not None:
             raise ValueError(
                 "Claw-Eval grading requires the managed trial server")
-        reply = await self._client.post("/v1/harbor/claweval/verify",
-                                        content=payload,
-                                        headers={
-                                            "authorization":
-                                            f"Bearer {self._verifier_token}",
-                                            "content-type": "application/json",
-                                        })
-        if reply.is_error:
-            raise RuntimeError(f"Claw-Eval server verifier failed "
-                               f"({reply.status_code}): {reply.text[-4000:]}")
-        return reply.json()
+        async with self._client.stream("POST",
+                                       "/v1/harbor/claweval/verify",
+                                       content=payload,
+                                       headers={
+                                           "authorization":
+                                           f"Bearer {self._verifier_token}",
+                                           "content-type": "application/json",
+                                           "accept": "application/x-ndjson"
+                                       }) as reply:
+            if reply.is_error:
+                await reply.aread()
+                raise RuntimeError(
+                    f"Claw-Eval server verifier failed "
+                    f"({reply.status_code}): {reply.text[-4000:]}")
+            async for line in reply.aiter_lines():
+                event = json.loads(line)
+                if event["type"] == "artifact":
+                    save_artifact(event["name"], event["value"])
+                elif event["type"] == "result":
+                    return event["value"]
+                elif event["type"] == "error":
+                    raise RuntimeError("Claw-Eval server verifier failed: " +
+                                       event["detail"])
+                else:
+                    raise ValueError("Unknown Claw-Eval verifier event")
+        raise RuntimeError("Claw-Eval verifier stream ended without a result")
 
     async def stop(self, delete: bool):
         try:

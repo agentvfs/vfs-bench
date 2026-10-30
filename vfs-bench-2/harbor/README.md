@@ -1872,8 +1872,13 @@ by the upstream grader's retries. `JUDGE_MODEL` defaults to
 `http://127.0.0.1:<port>/v1` on this path. Only the explicit microVM reference
 uses `host.microsandbox.internal`.
 
-Trials save `judge-recording.json` and `claweval-inputs.json`, subject to
-Harbor's log filters. `MirageParityVerifier` runs the preserved microVM
+Trials stream `claweval-inputs.json` and `judge-recording.json` to Harbor,
+which atomically checkpoints them before grading finishes, subject to its log
+filters. Requests are saved before dispatch and updated when replies arrive;
+errors, disconnects and timeouts retain the completed calls. An interrupted
+call is marked `Judge response not received`, so replay never substitutes a
+new live call for a missing response. The microVM reference also checkpoints
+each call. `MirageParityVerifier` runs the preserved microVM
 reference first, then replays its exact raw judge responses. Missing,
 mismatched or unused responses fail instead of calling the model again.
 It preserves the original rewards and logs. Reference sources are pinned in

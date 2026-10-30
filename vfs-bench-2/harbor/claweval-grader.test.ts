@@ -90,3 +90,36 @@ test('Judge transport sends the configured model and keeps credentials out of re
     assert.equal(JSON.stringify(result).includes('private-test-key'), false)
   } finally { await new Promise<void>((resolve) => server.close(() => resolve())) }
 })
+
+test('Judge transport cancels unsuccessful response bodies before recording HTTP errors', async () => {
+  let canceled = 0
+  const call = judgeTransport({ OPENAI_API_KEY: 'test' }, async () => new Response(
+    new ReadableStream({ cancel() { canceled++ } }), { status: 429 }))
+  for (let retry = 0; retry < 3; retry++) {
+    assert.deepEqual(await call({ model: 'fixture' }, AbortSignal.timeout(1000)),
+      { error: { message: 'Judge HTTP 429', status: 429 } })
+    assert.equal(canceled, retry + 1)
+  }
+})
+
+test('Completed judge replies are emitted before a later cancellation fails the grade', { skip: !ready }, async () => {
+  const request = fixture()
+  const tape = JSON.parse(Buffer.from(request.files['/input/recording.json'], 'base64').toString())
+  delete request.files['/input/recording.json']
+  const controller = new AbortController()
+  const artifacts: Record<string, any> = {}
+  let sawPending = false
+  await assert.rejects(verifyClaw(request, async (value) => {
+    assert.equal(sawPending, true)
+    assert.deepEqual(value, tape[0].request)
+    return { response: tape[0].response }
+  }, controller.signal, (name, value) => {
+    artifacts[name] = structuredClone(value)
+    if (name === 'judge-recording.json') {
+      sawPending ||= artifacts[name][0]?.error?.message === 'Judge response not received'
+      if (artifacts[name][0]?.response) controller.abort()
+    }
+  }))
+  assert.deepEqual(artifacts['judge-recording.json'], [tape[0]])
+  assert.equal(artifacts['claweval-inputs.json'].task, request.task)
+})

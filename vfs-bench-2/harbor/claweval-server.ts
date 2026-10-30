@@ -1,5 +1,6 @@
 /** Private grading endpoint on the same HTTP server as the trial workspace. */
 import { timingSafeEqual } from 'node:crypto'
+import { once } from 'node:events'
 import type { FastifyInstance } from '../submodule/mirage/typescript/packages/server/node_modules/fastify/fastify.js'
 import { judgeTransport, verifyClaw, type ClawRequest } from './verify-claweval.ts'
 
@@ -35,13 +36,29 @@ export function registerClawVerifier(app: App, options: { token: string; task: s
     const abort = () => { if (!reply.raw.writableFinished) controller.abort() }
     request.raw.on('aborted', abort)
     reply.raw.on('close', abort)
+    const streaming = request.headers.accept === 'application/x-ndjson'
+    const send = async (event: unknown) => {
+      controller.signal.throwIfAborted()
+      if (!reply.raw.write(JSON.stringify(event) + '\n'))
+        await once(reply.raw, 'drain', { signal: controller.signal })
+    }
+    if (streaming) {
+      reply.hijack()
+      reply.raw.writeHead(200, { 'content-type': 'application/x-ndjson', 'cache-control': 'no-store' })
+    }
     try {
       const result = await verifyClaw(request.body,
-        judgeTransport(request.body.env ?? {}, options.fetch), controller.signal)
-      return { ...result, timings: { ...result.timings, server_pid: process.pid, execution: 'trial-daemon' } }
+        judgeTransport(request.body.env ?? {}, options.fetch), controller.signal,
+        streaming ? async (name, value) => send({ type: 'artifact', name, value }) : undefined)
+      const value = { ...result, timings: { ...result.timings, server_pid: process.pid, execution: 'trial-daemon' } }
+      if (!streaming) return value
+      await send({ type: 'result', value })
     } catch (error) {
-      return reply.code(controller.signal.aborted ? 408 : 500).send({ detail: (error as Error).message })
+      const detail = (error as Error).message
+      if (!streaming) return reply.code(controller.signal.aborted ? 408 : 500).send({ detail })
+      if (!controller.signal.aborted && !reply.raw.destroyed) await send({ type: 'error', detail })
     } finally {
+      if (streaming) reply.raw.end()
       active.delete(controller)
       request.raw.off('aborted', abort)
       reply.raw.off('close', abort)

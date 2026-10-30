@@ -451,11 +451,29 @@ def main() -> int:
             self.recording = []
             create = self.client.chat.completions.create
 
+            def save_recording():
+                VERIFIER.mkdir(parents=True, exist_ok=True)
+                target = VERIFIER / "judge-recording.json"
+                temporary = target.with_suffix(".tmp")
+                temporary.write_text(
+                    json.dumps(self.recording, ensure_ascii=False, indent=1))
+                temporary.replace(target)
+
+            save_recording()
+
             def recorded(**request):
-                entry = {"request": request}
+                entry = {
+                    "request": request,
+                    "error": {
+                        "message": "Judge response not received"
+                    }
+                }
+                self.recording.append(entry)
+                save_recording()
                 try:
                     response = create(**request)
                     entry["response"] = response.model_dump(mode="json")
+                    del entry["error"]
                     return response
                 except Exception as exc:
                     entry["error"] = {
@@ -464,7 +482,7 @@ def main() -> int:
                     }
                     raise
                 finally:
-                    self.recording.append(entry)
+                    save_recording()
 
             self.client.chat.completions.create = recorded
 
@@ -525,8 +543,6 @@ def main() -> int:
             },
             ensure_ascii=False,
             indent=1))
-    (VERIFIER / "judge-recording.json").write_text(
-        json.dumps(judge.recording, ensure_ascii=False, indent=1))
     print(printed.getvalue())
     for d in built:
         print(f"gws: {d['tool_name']} "

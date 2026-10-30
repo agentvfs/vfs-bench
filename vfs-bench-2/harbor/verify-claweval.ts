@@ -18,13 +18,14 @@ const runtimeRequire = createRequire(import.meta.resolve('@struktoai/mirage-core
 if (runtimeRequire('pyodide/package.json').version !== '314.0.5')
   throw new Error('Review Claw-Eval parity before changing Pyodide 314.0.5')
 const path = (name: string) => new PathSpec({ virtual: '/' + name, directory: '/', vfsPath: name })
-type Recording = { request: Record<string, unknown>; response?: unknown; error?: { message: string; status?: number } }
+export type Recording = { request: Record<string, unknown>; response?: unknown; error?: { message: string; status?: number } }
 export interface ClawRequest {
   task: string
   files: Record<string, string>
   env?: Record<string, string>
   timeoutSeconds: number
 }
+export type ArtifactSink = (name: 'judge-recording.json' | 'claweval-inputs.json', value: unknown) => Promise<void> | void
 export type JudgeTransport = (request: Record<string, unknown>, signal: AbortSignal) => Promise<Omit<Recording, 'request'>>
 
 /** Credentials remain in the trusted transport, never in Python or the tape. */
@@ -41,7 +42,10 @@ export function judgeTransport(env: Record<string, string>, send: typeof fetch =
         headers: { 'content-type': 'application/json', authorization: `Bearer ${env.OPENAI_API_KEY}` },
         body: JSON.stringify(request),
       })
-      if (!response.ok) return { error: { message: `Judge HTTP ${response.status}`, status: response.status } }
+      if (!response.ok) {
+        await response.body?.cancel()
+        return { error: { message: `Judge HTTP ${response.status}`, status: response.status } }
+      }
       // Bound untrusted remote replies before storing or passing them to WASM.
       const reader = response.body?.getReader()
       if (!reader) return { error: { message: 'Empty judge response' } }
@@ -65,7 +69,7 @@ export function judgeTransport(env: Record<string, string>, send: typeof fetch =
   }
 }
 
-export async function verifyClaw(request: ClawRequest, transport?: JudgeTransport, externalSignal?: AbortSignal) {
+export async function verifyClaw(request: ClawRequest, transport?: JudgeTransport, externalSignal?: AbortSignal, saveArtifact?: ArtifactSink) {
   externalSignal?.throwIfAborted()
   const definition = manifest.tasks[request.task]
   if (!definition) throw new Error('Unregistered Claw-Eval task')
@@ -120,7 +124,12 @@ export async function verifyClaw(request: ClawRequest, transport?: JudgeTranspor
   const tape = recording ?? []
   const call = transport ?? judgeTransport(env)
   const timer = setTimeout(() => controller.abort(), request.timeoutSeconds * 1000)
+  const savedInputs = { task: request.task, model,
+    files: Object.fromEntries(Object.entries(request.files).filter(([name]) =>
+      name.startsWith('/input/') && name !== '/input/recording.json')) }
   try {
+    await saveArtifact?.('claweval-inputs.json', savedInputs)
+    await saveArtifact?.('judge-recording.json', tape)
     for (let attempt = 0; attempt <= 128; attempt++) {
       if (signal.aborted) throw new Error('Claw-Eval verifier deadline exceeded or canceled')
       await input.write(path('tape.json'), Buffer.from(JSON.stringify(tape)))
@@ -135,10 +144,17 @@ export async function verifyClaw(request: ClawRequest, transport?: JudgeTranspor
         if (attempt === 128) throw new Error('Claw-Eval judge call limit exceeded')
         if (!Number.isFinite(value.judge_delay) || value.judge_delay < 0 || value.judge_delay > 60)
           throw new Error('Invalid Claw-Eval judge backoff')
+        // Persist the request before dispatch; an interrupted call has no reply.
+        const entry: Recording = { request: value.judge_request,
+          error: { message: 'Judge response not received' } }
+        tape.push(entry)
+        await saveArtifact?.('judge-recording.json', tape)
         if (value.judge_delay)
           await delay(value.judge_delay * 1000, undefined, { signal })
         const response = await call(value.judge_request, signal)
-        tape.push({ request: value.judge_request, ...response })
+        delete entry.error
+        Object.assign(entry, response)
+        await saveArtifact?.('judge-recording.json', tape)
         continue
       }
       if (Object.keys(value.rewards ?? {}).sort().join() !== 'completion,passed,reward,robustness,safety' ||
@@ -146,9 +162,7 @@ export async function verifyClaw(request: ClawRequest, transport?: JudgeTranspor
           ![0, 1].includes(value.rewards.passed) || value.score !== value.rewards.reward)
         throw new Error('Invalid Claw-Eval rewards')
       return { ...value, artifacts: { ...value.artifacts, 'judge-recording.json': tape,
-          'claweval-inputs.json': { task: request.task, model,
-            files: Object.fromEntries(Object.entries(request.files).filter(([name]) =>
-              name.startsWith('/input/') && name !== '/input/recording.json')) } },
+          'claweval-inputs.json': savedInputs },
         timings: { run_s: (performance.now() - started) / 1000, runtime: 'pyodide',
           judge_calls: tape.length, peak_node_mib: process.resourceUsage().maxRSS / 1024 } }
     }

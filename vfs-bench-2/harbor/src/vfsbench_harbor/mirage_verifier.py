@@ -409,14 +409,30 @@ class MirageVerifier(Verifier):
                                     include=self.include_logs,
                                     exclude=self.exclude_logs):
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.unlink(missing_ok=True)
-            path.write_text(text)
+            # Keep the previous complete artifact if a write is interrupted.
+            with tempfile.NamedTemporaryFile(mode="w",
+                                             dir=path.parent,
+                                             delete=False) as output:
+                temporary = Path(output.name)
+                try:
+                    output.write(text)
+                    output.close()
+                    temporary.replace(path)
+                finally:
+                    temporary.unlink(missing_ok=True)
+
+    def _claw_artifact(self, name: str, value) -> None:
+        if name not in ("claweval-inputs.json", "judge-recording.json"):
+            raise ValueError(f"Unexpected Claw-Eval artifact: {name}")
+        self._log(self.trial_paths.verifier_dir / name,
+                  json.dumps(value, indent=2) + "\n")
 
     async def _run(self, node: str, request: Path) -> dict:
         payload = await self._background(self._request_bytes, request)
         runtime = json.loads(payload).get("runtime", "typescript")
         if runtime == "claweval-pyodide":
-            return await self.environment.verify_claweval(payload)
+            return await self.environment.verify_claweval(
+                payload, self._claw_artifact)
         runners = {
             "typescript": RUNNER,
             "complexmcp-monty": HARBOR / "verify-complexmcp.ts",

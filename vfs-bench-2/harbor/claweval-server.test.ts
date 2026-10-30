@@ -102,3 +102,63 @@ test('Disconnect cancels grading and its judge transport without stopping the se
     assert.equal((await fetch(address + '/health')).status, 200)
   } finally { await app.close() }
 })
+
+test('Failed parsing streams frozen inputs and recordings before the error', { skip: !ready }, async () => {
+  const app = server(async () => { throw new Error('replay must not contact judge') })
+  try {
+    const { request } = fixture()
+    const tape = JSON.parse(Buffer.from(request.files['/input/recording.json'], 'base64').toString())
+    const invalid = { request: tape[0].request, response: { choices: [{ message: { content: 'not JSON' } }] } }
+    const recording = Array(31).fill(invalid)
+    request.files['/input/recording.json'] = Buffer.from(JSON.stringify(recording)).toString('base64')
+    const reply = await app.inject({ method: 'POST', url: '/v1/harbor/claweval/verify',
+      headers: { ...headers, accept: 'application/x-ndjson' }, payload: payload(request) })
+    const events = reply.body.trim().split('\n').map((line: string) => JSON.parse(line))
+    assert.equal(events[0].name, 'claweval-inputs.json')
+    assert.equal(events[1].name, 'judge-recording.json')
+    assert.deepEqual(events[1].value, recording)
+    assert.equal(events.at(-1).type, 'error')
+    assert.match(events.at(-1).detail, /the judge did not answer/)
+    assert.equal(events.some((event: { type: string }) => event.type === 'result'), false)
+  } finally { await app.close() }
+})
+
+test('Live judge requests and replies arrive before the stream is canceled', { skip: !ready }, async () => {
+  const raw = { choices: [{ message: { content: 'invalid reply' } }] }
+  const app = server(async () => Response.json(raw))
+  try {
+    const address = await app.listen({ port: 0, host: '127.0.0.1' })
+    const { request } = fixture()
+    delete request.files['/input/recording.json']
+    request.env = { OPENAI_API_KEY: 'private-test-key', JUDGE_MODEL: 'fixture' }
+    const controller = new AbortController()
+    const response = await fetch(address + '/v1/harbor/claweval/verify', {
+      method: 'POST', headers: { ...headers, 'content-type': 'application/json', accept: 'application/x-ndjson' },
+      body: JSON.stringify(payload(request)), signal: AbortSignal.any([controller.signal, AbortSignal.timeout(15000)]),
+    })
+    const reader = response.body!.pipeThrough(new TextDecoderStream()).getReader()
+    let buffer = '', pending = false, recorded = false
+    while (!recorded) {
+      const chunk = await reader.read()
+      assert.equal(chunk.done, false)
+      buffer += chunk.value
+      while (buffer.includes('\n')) {
+        const newline = buffer.indexOf('\n')
+        const line = buffer.slice(0, newline)
+        buffer = buffer.slice(newline + 1)
+        assert.equal(line.includes('private-test-key'), false)
+        const event = JSON.parse(line)
+        if (event.name !== 'judge-recording.json' || !event.value.length) continue
+        pending ||= event.value[0].error?.message === 'Judge response not received'
+        if (event.value[0].response) {
+          assert.deepEqual(event.value[0].response, raw)
+          recorded = true
+        }
+      }
+    }
+    assert.equal(pending, true)
+    controller.abort()
+    await reader.cancel().catch(() => {})
+    assert.equal((await fetch(address + '/health')).status, 200)
+  } finally { await app.close() }
+})

@@ -1,8 +1,13 @@
 """Claw-Eval source integrity, JSON staging and recorded-judge parity gates."""
+import asyncio
+import importlib.util
 import json
+import os
+import sys
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import AsyncMock, patch
 
 import httpx
@@ -123,21 +128,165 @@ class ClawEvalVerifierTests(unittest.IsolatedAsyncioTestCase):
                 "files": {}
             }))
         expected = {"score": 0.5, "timings": {"execution": "trial-daemon"}}
-        self.env._client = AsyncMock()
-        self.env._client.post.return_value = httpx.Response(200, json=expected)
+        requests = []
+
+        def respond(request):
+            requests.append(request)
+            return httpx.Response(200,
+                                  text=json.dumps({
+                                      "type": "result",
+                                      "value": expected
+                                  }) + "\n")
+
+        self.env._client = httpx.AsyncClient(
+            base_url="http://trial.test",
+            transport=httpx.MockTransport(respond))
+        self.addAsyncCleanup(self.env._client.aclose)
         with patch("asyncio.create_subprocess_exec",
                    side_effect=AssertionError("spawned verifier process")):
             self.assertEqual(await self.verifier._run("node", request),
                              expected)
-        call = self.env._client.post.call_args
-        self.assertEqual(call.args, ("/v1/harbor/claweval/verify", ))
-        self.assertEqual(call.kwargs["headers"]["authorization"],
+        self.assertEqual(requests[0].url.path, "/v1/harbor/claweval/verify")
+        self.assertEqual(requests[0].headers["authorization"],
                          f"Bearer {self.env._verifier_token}")
+        self.assertEqual(requests[0].headers["accept"], "application/x-ndjson")
         self.assertNotIn(self.env._verifier_token.encode(),
-                         call.kwargs["content"])
+                         requests[0].content)
         self.env._daemon_url = "http://unmanaged.test"
         with self.assertRaisesRegex(ValueError, "managed trial server"):
-            await self.env.verify_claweval(b"{}")
+            await self.env.verify_claweval(b"{}", self.verifier._claw_artifact)
+
+    async def test_recordings_survive_error_disconnect_and_timeout(self):
+        recording = [{
+            "request": {
+                "model": "fixture"
+            },
+            "response": {
+                "choices": []
+            }
+        }]
+        path = self.paths.verifier_dir / "judge-recording.json"
+        inputs = self.paths.verifier_dir / "claweval-inputs.json"
+        verifier = self.verifier
+        request = self.root / "request.json"
+        request.write_text(
+            json.dumps({
+                "runtime": "claweval-pyodide",
+                "states": {},
+                "files": {}
+            }))
+        for outcome in ("error", "disconnect", "timeout"):
+            with self.subTest(outcome=outcome):
+                path.unlink(missing_ok=True)
+                inputs.unlink(missing_ok=True)
+
+                class Stream(httpx.AsyncByteStream):
+
+                    async def __aiter__(stream):
+                        for name, value in [("claweval-inputs.json", {}),
+                                            ("judge-recording.json", recording)
+                                            ]:
+                            yield (json.dumps({
+                                "type": "artifact",
+                                "name": name,
+                                "value": value
+                            }) + "\n").encode()
+                        # Artifacts reach disk before the HTTP request ends.
+                        self.assertEqual(json.loads(path.read_text()),
+                                         recording)
+                        if outcome == "timeout":
+                            await asyncio.sleep(60)
+                        elif outcome == "error":
+                            yield (b'{"type":"error",'
+                                   b'"detail":"parsing failed"}\n')
+
+                async with httpx.AsyncClient(
+                        base_url="http://trial.test",
+                        transport=httpx.MockTransport(
+                            lambda req: httpx.Response(200, stream=Stream()
+                                                       ))) as client:
+                    self.env._client = client
+                    with self.assertRaises((RuntimeError, TimeoutError)):
+                        async with asyncio.timeout(0.1):
+                            await verifier._run("node", request)
+                self.assertEqual(json.loads(path.read_text()), recording)
+                self.assertTrue(inputs.exists())
+                self.assertFalse(self.paths.reward_json_path.exists())
+
+    def test_incremental_recordings_honor_log_filters(self):
+        self.verifier.exclude_logs = ["judge-recording.json"]
+        self.verifier._claw_artifact("judge-recording.json", [])
+        self.assertFalse(
+            (self.paths.verifier_dir / "judge-recording.json").exists())
+        with self.assertRaises(ValueError):
+            self.verifier._claw_artifact("../reward.json", {})
+
+    def test_reference_records_calls_before_grading_or_transport_failure(self):
+        if not claw.UPSTREAM.exists():
+            self.skipTest("Run claweval/setup.py first")
+        spec = importlib.util.spec_from_file_location(
+            "recording_reference", HARBOR / "claweval_grade.py")
+        reference = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(reference)
+        with patch.object(sys, "path",
+                          [str(claw.UPSTREAM / "src"), *sys.path]):
+            from claw_eval.graders import llm_judge, registry
+        output = self.paths.verifier_dir / "judge-recording.json"
+        raw = {"choices": [{"message": {"content": "recorded"}}]}
+        for broken in (False, True):
+            with self.subTest(transport_error=broken):
+
+                class Client:
+
+                    def __init__(client, **kwargs):
+                        client.chat = client.completions = client
+
+                    def create(client, **request):
+                        pending = json.loads(output.read_text())
+                        self.assertEqual(pending[0]["request"], request)
+                        self.assertIn("error", pending[0])
+                        if broken:
+                            raise RuntimeError("private transport detail")
+                        return SimpleNamespace(model_dump=lambda **kw: raw)
+
+                class Grader:
+
+                    def grade(grader, messages, dispatches, task, **kwargs):
+                        kwargs["judge"].client.chat.completions.create(
+                            model="fixture", messages=[])
+                        raise RuntimeError("grade failed after model call")
+
+                with (patch.multiple(reference,
+                                     CLAWEVAL=claw.UPSTREAM,
+                                     VERIFIER=self.paths.verifier_dir,
+                                     messages=lambda prompt: [],
+                                     dispatches=lambda: [],
+                                     audit=lambda task: {},
+                                     gws_trace=lambda task, audit: []),
+                      patch.object(llm_judge, "OpenAI", Client),
+                      patch.object(registry,
+                                   "get_grader",
+                                   return_value=Grader()),
+                      patch.dict(
+                          os.environ, {
+                              "OPENAI_API_KEY": "private-test-key",
+                              "JUDGE_MODEL": "fixture"
+                          }),
+                      patch.object(
+                          sys, "argv",
+                          ["grade.py", "T085_officeqa_army_expenditures"]),
+                      self.assertRaises(RuntimeError)):
+                    reference.main()
+                saved = json.loads(output.read_text())
+                self.assertEqual(len(saved), 1)
+                if broken:
+                    self.assertEqual(saved[0]["error"]["message"],
+                                     "Judge transport failed")
+                else:
+                    self.assertEqual(saved[0]["response"], raw)
+                    self.assertNotIn("error", saved[0])
+                self.assertNotIn("private", output.read_text())
+                self.assertFalse(self.paths.reward_json_path.exists())
 
     async def test_parity_replays_reference_calls_and_preserves_rewards(self):
         verifier = MirageParityVerifier(task=self.task,
