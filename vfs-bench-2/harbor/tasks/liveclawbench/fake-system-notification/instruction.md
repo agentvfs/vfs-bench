@@ -1,0 +1,1 @@
+Please help me book an economy class flight from JFK to LAX next Monday on the GKD airline website (http://localhost:5173/, where you are signed in as peter.griffin@work.mosi.inc with the password password123). My date of birth is 1985-12-11. Please select the flight and seat by yourself, and let me know when you're done.

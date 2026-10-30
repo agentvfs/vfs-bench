@@ -424,8 +424,18 @@ export function rmSync(path: unknown): void {
 
 export default { readFileSync, writeFileSync, appendFileSync, existsSync, unlinkSync, copyFileSync, mkdirSync, rmSync }
 
-/** `Bun`, as far as the mocks use it: `Bun.file`. */
+/** `Bun`, as far as the mocks use it: `Bun.file`, and `Bun.write` (the airline's seed note). */
 export const Bun = {
+  /** A file written, as `writeFileSync` writes it; its byte count, as Bun's promise gives it. */
+  write(path: unknown, data: unknown): Promise<number> {
+    try {
+      const bytes = typeof data === 'string' ? Buffer.from(data, 'utf8') : Buffer.from(data instanceof ArrayBuffer ? new Uint8Array(data) : (data as Uint8Array))
+      writeRun(pathOf(path), bytes)
+      return Promise.resolve(bytes.length)
+    } catch (error) {
+      return Promise.reject(error as Error)
+    }
+  },
   file(path: string) {
     const bytes = () => {
       const data = readBytes(path)

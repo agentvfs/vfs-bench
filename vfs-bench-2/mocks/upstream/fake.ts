@@ -18,8 +18,20 @@
  * also kept as a file beside the run's SQLite, `<run>.db.files/<path,
  * escaped>`, which the environment hands the verifier where the task's
  * mirage.yaml names it (`files`), as upstream's image keeps it on disk.
+ *
+ * A mock whose seed is too big to commit (`seedsRun` in mocks.ts: the
+ * airline) has a fixture of no rows, only a digest of each table as the
+ * seed leaves it under Bun (`_seed`). Each reset, once the kit has seeded
+ * the run, the fake runs the mock's factory and seed on it, as upstream's
+ * mock seeds itself when it starts, with the clock at the epoch
+ * and random numbers a counter's, as `harbor/fixtures/upstream.ts` has
+ * them; a table that then differs from its digest fails the reset. Each
+ * run's copy of such a mock is made on the run's database, so its seed
+ * finds the rows there and skips, as upstream's does on a restart.
  */
+import { createHash } from 'node:crypto'
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs'
+import { createRequire } from 'node:module'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { DatabaseSync, SQLInputValue } from 'node:sqlite'
@@ -29,6 +41,7 @@ import type { Ctx, Dmmf, Fake, KitConfig, KitRoute, Reply } from '../../submodul
 import type { ClientCtor, MinimalClient } from '../../submodule/mirage/integ/server/kit/typescript/index.ts'
 import { type Copy, bundle, load } from './bundle.ts'
 import { checkTriggers } from './checks.ts'
+import { digest, seedRow } from './digest.ts'
 import { fileBytes, openRun } from './instance.ts'
 import { MOCKS } from './mocks.ts'
 
@@ -54,6 +67,8 @@ export interface UpstreamSpec {
   env: Record<string, string>
   /** Path prefixes of upstream's image, each read from a host directory. */
   map: Record<string, string>
+  /** The name a run's seed counts its random numbers under (mocks.ts). */
+  random?: string
 }
 
 /** A service's spec, from mocks.ts: its entry in upstream's checkout, and the image's static files read from there. */
@@ -66,6 +81,7 @@ export function serviceSpec(service: string): UpstreamSpec {
     port: mock.port,
     env: mock.env,
     map: { '/opt/mock/static': join(PLATFORM, 'static') },
+    ...(mock.random === undefined ? {} : { random: mock.random }),
   }
 }
 
@@ -118,6 +134,91 @@ function mirror(connection: DatabaseSync, file: string, paths: string[] | 'all')
     const target = join(dir, encodeURIComponent(row.path))
     if (row.data === undefined) rmSync(target, { force: true })
     else writeFileSync(target, fileBytes(row as { data: string; encoding: string }))
+  }
+}
+
+/** Whether a run's world is the seed's own (`_seed`), not the fixture's rows. */
+function seedsRun(connection: DatabaseSync): boolean {
+  const exists = connection.prepare("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = '_seed'").get()
+  return exists !== undefined && connection.prepare('SELECT 1 FROM "_seed" LIMIT 1').get() !== undefined
+}
+
+/**
+ * Random numbers a counter's, as `harbor/fixtures/upstream.ts` counts them
+ * for the fixture (`Math.random`, `crypto.getRandomValues` and Node's
+ * `randomBytes`, one counter), from the draws upstream's modules made as
+ * they loaded there; the function returned puts them back.
+ */
+function countRandom(from: number, name = 'upstream-seed'): () => void {
+  let counted = from
+  const next = () => createHash('sha256').update(`${name}-${++counted}`).digest()
+  const random = Math.random
+  const nodeCrypto = createRequire(import.meta.url)('node:crypto') as { randomBytes: (size: number) => Buffer }
+  const randomBytes = nodeCrypto.randomBytes
+  const own = Object.getOwnPropertyDescriptor(globalThis.crypto, 'getRandomValues')
+  Object.defineProperty(globalThis.crypto, 'getRandomValues', {
+    configurable: true,
+    writable: true,
+    value: <T extends ArrayBufferView>(array: T): T => {
+      const bytes = new Uint8Array(array.buffer, array.byteOffset, array.byteLength)
+      for (let i = 0; i < bytes.length; i += 32) bytes.set(next().subarray(0, Math.min(32, bytes.length - i)), i)
+      return array
+    },
+  })
+  Math.random = () => next().readUInt32BE(0) / 2 ** 32
+  nodeCrypto.randomBytes = (size: number) => {
+    const bytes = Buffer.alloc(size)
+    for (let i = 0; i < size; i += 32) next().copy(bytes, i, 0, Math.min(32, size - i))
+    return bytes
+  }
+  return () => {
+    Math.random = random
+    nodeCrypto.randomBytes = randomBytes
+    if (own === undefined) delete (globalThis.crypto as unknown as Record<string, unknown>).getRandomValues
+    else Object.defineProperty(globalThis.crypto, 'getRandomValues', own)
+  }
+}
+
+/**
+ * A run whose world is the seed's own: the mock's factory and seed, run on
+ * the run's file at the epoch, then each table checked against its digest.
+ */
+async function seedTheRun(spec: UpstreamSpec, bundled: () => Promise<string>, file: string, epoch: string | undefined): Promise<void> {
+  // A reset with no epoch (the fake's own first run) is on the wall clock,
+  // as the kit's clock is; the digest, the epoch's, is not checked then.
+  const startMs = epoch === undefined ? Date.now() : Date.parse(epoch)
+  if (Number.isNaN(startMs)) throw new Error(`the epoch ${epoch} is not a date`)
+  const copy = await load(await bundled())
+  const connection = openRun(file, () => startMs)
+  try {
+    const env = connection.prepare('SELECT name, value FROM "_env"').all() as { name: string; value: string }[]
+    copy.vfsbench.configure({ env: { ...spec.env, ...Object.fromEntries(env.map((e) => [e.name, e.value])) }, map: spec.map, startMs, files: {} })
+    const expected = connection.prepare('SELECT name, value FROM "_seed"').all() as { name: string; value: string }[]
+    const draws = Number(expected.find((e) => e.name === 'draws:import')?.value ?? 0)
+    copy.vfsbench.enter(connection, startMs)
+    let seeded: unknown
+    // Counted from here to the seed's end, with no await between, so no
+    // other run's request draws in between.
+    const restore = countRandom(draws, spec.random)
+    try {
+      // As upstream's startServer: the factory, then its seed.
+      seeded = copy.create().seed?.()
+    } finally {
+      restore()
+      copy.vfsbench.leave()
+    }
+    await seeded
+    if (epoch === undefined) return
+    const want = new Map(expected.map((e) => [e.name, e.value]))
+    const tables = expected.filter((e) => e.name.startsWith(seedRow(''))).map((e) => e.name.slice(seedRow('').length))
+    const got = digest(tables, (sql) => connection.prepare(sql).all())
+    const differ = tables.filter((t) => got[t] !== want.get(seedRow(t)))
+    if (differ.length > 0) {
+      const each = differ.map((t) => `${t}: ${got[t]}, not ${want.get(seedRow(t))}`)
+      throw new Error(`the seed of ${spec.entry} differs from its fixture's digest: ${each.join('; ')}`)
+    }
+  } finally {
+    connection.close()
   }
 }
 
@@ -178,9 +279,17 @@ export function upstreamFake<C extends UpstreamClient>(spec: UpstreamSpec, confi
           })
           // As upstream's startServer: the factory, then its seed, on the
           // copy's scratch database and files; the run holds what they write.
-          const app = copy.create()
-          await app.seed?.()
-          return { copy, app }
+          // A run seeded by the mock itself is its database, where the seed
+          // finds its rows and skips.
+          const own = seedsRun(connection)
+          if (own) copy.vfsbench.enter(connection, startMs)
+          try {
+            const app = copy.create()
+            await app.seed?.()
+            return { copy, app }
+          } finally {
+            if (own) copy.vfsbench.leave()
+          }
         } finally {
           connection.close()
         }
@@ -218,7 +327,18 @@ export function upstreamFake<C extends UpstreamClient>(spec: UpstreamSpec, confi
     dmmf,
     // A fixture names each table as upstream does.
     seedRoots: Object.fromEntries(dmmf.datamodel.models.map((m) => [m.dbName ?? m.name, m.name])),
-    afterSeed: async (db) => afterSeed(db.file),
+    afterSeed: async (db, _tenant, _counts, _extras, _root, epoch) => {
+      const connection = openRun(db.file, () => Date.now())
+      const own = (() => {
+        try {
+          return seedsRun(connection)
+        } finally {
+          connection.close()
+        }
+      })()
+      if (own) await seedTheRun(spec, () => (bundled ??= bundle(spec.entry, spec.factory)), db.file, epoch)
+      afterSeed(db.file)
+    },
     afterReset: (db) => {
       copies.delete(db)
     },

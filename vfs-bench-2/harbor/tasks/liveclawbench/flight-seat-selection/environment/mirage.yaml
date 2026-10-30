@@ -1,0 +1,53 @@
+# flight-seat-selection, on vfsbench_harbor's mirage environment.
+#
+# In place of upstream's environment/Dockerfile: the mocks of its base
+# image are the fakes below, and its COPY, RUN, ENV and WORKDIR lines are
+# `copy`, `run`, `env` and `workdir`, but for the RUNs that install the
+# legacy airline app's Python and npm packages, which nothing here starts
+# (the Bun mock is its backend), and a browser, which the workspace has none
+# of (harbor/export.py's RUN_LEFT_OUT).
+#
+# Rule B: Mirage has no such service, so each upstream mock is this repo's
+# kit fake that runs upstream's own app: airline (mocks/airline).
+# Rule A for email: Mirage fakes Gmail, so the email mock
+# becomes Mirage's own gws fake, the mailbox at /gmail and the gws CLI;
+# nothing listens on upstream's ports 5001 and 5174.
+# One fake of each serves the whole job; this trial is a run of its own on
+# each.
+fakes:
+  airline:
+    # Upstream's airline mock seeds 60 days of flights and their seats as it
+    # starts, too many rows to commit: the fake runs that seed on each run,
+    # and the fixture is a digest of the tables it leaves under Bun, which
+    # the run's must match (harbor/export.py writes it; mocks/upstream).
+    # 5173 is the image's proxy to it, where its frontend was.
+    fixture: fixtures/airline.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports: [5000, 5173]
+    # Where upstream's image keeps its SQLite, which verify.py reads.
+    state: /var/lib/mock-data/airline/airline.db
+  gws:
+    # Upstream's email seed for the task, as Gmail messages
+    # (harbor/export.py writes it).
+    fixture: fixtures/gws.json
+    epoch: '2026-04-03T09:00:00Z'
+    # The run's SQLite, which the ported verify.py reads.
+    state: /var/lib/mock-data/gws/gws.db
+env:
+  TASK_NAME: flight-seat-selection
+copy:
+  /workspace/environment: [airline-app, email-app, startup.sh]
+run:
+  - mkdir -p /workspace/output
+# gws-integ-token is the gws fake's own fixed credential; ${GWS_URL} is this
+# trial's run.
+workspace:
+  mounts:
+    /gmail:
+      vfs: gmail
+      mode: read
+      config: {accessToken: gws-integ-token, apiBase: '${GWS_URL}'}
+  clis:
+    gws:
+      cli: gws
+      config: {accessToken: gws-integ-token, apiBase: '${GWS_URL}'}

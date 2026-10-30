@@ -1,0 +1,1 @@
+Please check my company email (at /gmail, or through the gws CLI) to see if I have received any recent emails from GKD Airlines. If there are any notifications regarding flight changes, please check if the changes affect my schedule (you can view my schedule in http://localhost:3000/). If a conflict arises, you can send an email to remind my fellow travelers. Thank you.

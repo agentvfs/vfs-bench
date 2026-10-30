@@ -1,0 +1,310 @@
+{
+ "_env": [
+  {
+   "name": "TASK_NAME",
+   "value": "flight-seat-selection-failed"
+  }
+ ],
+ "_schema": [
+  {
+   "type": "table",
+   "name": "_migrations",
+   "sql": "CREATE TABLE _migrations (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      name TEXT NOT NULL UNIQUE,\n      applied_at TEXT DEFAULT (datetime('2026-04-03 09:00:00'))\n    )"
+  },
+  {
+   "type": "table",
+   "name": "users",
+   "sql": "CREATE TABLE users (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      email TEXT UNIQUE NOT NULL,\n      password_hash TEXT NOT NULL,\n      first_name TEXT NOT NULL,\n      last_name TEXT NOT NULL,\n      phone TEXT,\n      date_of_birth TEXT,\n      is_verified INTEGER DEFAULT 0,\n      is_active INTEGER DEFAULT 1,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00'))\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_users_email",
+   "sql": "CREATE INDEX idx_users_email ON users(email)\n  "
+  },
+  {
+   "type": "table",
+   "name": "flights",
+   "sql": "CREATE TABLE flights (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      flight_number TEXT NOT NULL,\n      airline TEXT NOT NULL DEFAULT 'GKD Airlines',\n      origin_code TEXT NOT NULL,\n      origin_city TEXT NOT NULL,\n      origin_airport TEXT NOT NULL,\n      destination_code TEXT NOT NULL,\n      destination_city TEXT NOT NULL,\n      destination_airport TEXT NOT NULL,\n      departure_time TEXT NOT NULL,\n      arrival_time TEXT NOT NULL,\n      duration_minutes INTEGER NOT NULL,\n      aircraft_type TEXT NOT NULL DEFAULT 'Boeing 737',\n      base_price_economy REAL NOT NULL,\n      base_price_business REAL,\n      base_price_first REAL,\n      status TEXT NOT NULL DEFAULT 'scheduled',\n      delay_minutes INTEGER DEFAULT 0,\n      delay_reason TEXT,\n      gate TEXT,\n      terminal TEXT,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00'))\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_flights_number",
+   "sql": "CREATE INDEX idx_flights_number ON flights(flight_number)"
+  },
+  {
+   "type": "index",
+   "name": "idx_flights_origin",
+   "sql": "CREATE INDEX idx_flights_origin ON flights(origin_code)"
+  },
+  {
+   "type": "index",
+   "name": "idx_flights_dest",
+   "sql": "CREATE INDEX idx_flights_dest ON flights(destination_code)"
+  },
+  {
+   "type": "index",
+   "name": "idx_flights_departure",
+   "sql": "CREATE INDEX idx_flights_departure ON flights(departure_time)"
+  },
+  {
+   "type": "index",
+   "name": "idx_flights_status",
+   "sql": "CREATE INDEX idx_flights_status ON flights(status)"
+  },
+  {
+   "type": "index",
+   "name": "idx_flights_route",
+   "sql": "CREATE INDEX idx_flights_route ON flights(origin_code, destination_code)"
+  },
+  {
+   "type": "table",
+   "name": "seats",
+   "sql": "CREATE TABLE seats (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      flight_id INTEGER NOT NULL,\n      seat_number TEXT NOT NULL,\n      cabin_class TEXT NOT NULL,\n      price REAL NOT NULL,\n      is_available INTEGER DEFAULT 1,\n      is_window INTEGER DEFAULT 0,\n      is_aisle INTEGER DEFAULT 0,\n      has_extra_legroom INTEGER DEFAULT 0,\n      row_number INTEGER NOT NULL,\n      seat_letter TEXT NOT NULL,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (flight_id) REFERENCES flights(id),\n      UNIQUE(flight_id, seat_number)\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_seats_flight",
+   "sql": "CREATE INDEX idx_seats_flight ON seats(flight_id)"
+  },
+  {
+   "type": "index",
+   "name": "idx_seats_available",
+   "sql": "CREATE INDEX idx_seats_available ON seats(flight_id, is_available)"
+  },
+  {
+   "type": "table",
+   "name": "bookings",
+   "sql": "CREATE TABLE bookings (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      booking_reference TEXT UNIQUE NOT NULL,\n      user_id INTEGER NOT NULL,\n      flight_id INTEGER NOT NULL,\n      cabin_class TEXT NOT NULL,\n      total_price REAL NOT NULL,\n      booking_status TEXT NOT NULL DEFAULT 'pending',\n      checked_in INTEGER DEFAULT 0,\n      check_in_time TEXT,\n      booked_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (user_id) REFERENCES users(id),\n      FOREIGN KEY (flight_id) REFERENCES flights(id)\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_bookings_ref",
+   "sql": "CREATE INDEX idx_bookings_ref ON bookings(booking_reference)"
+  },
+  {
+   "type": "index",
+   "name": "idx_bookings_user",
+   "sql": "CREATE INDEX idx_bookings_user ON bookings(user_id)"
+  },
+  {
+   "type": "index",
+   "name": "idx_bookings_flight",
+   "sql": "CREATE INDEX idx_bookings_flight ON bookings(flight_id)"
+  },
+  {
+   "type": "index",
+   "name": "idx_bookings_status",
+   "sql": "CREATE INDEX idx_bookings_status ON bookings(booking_status)"
+  },
+  {
+   "type": "table",
+   "name": "passengers",
+   "sql": "CREATE TABLE passengers (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      booking_id INTEGER NOT NULL,\n      seat_id INTEGER,\n      first_name TEXT NOT NULL,\n      last_name TEXT NOT NULL,\n      date_of_birth TEXT NOT NULL,\n      nationality TEXT,\n      meal_preference TEXT,\n      special_assistance TEXT,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (booking_id) REFERENCES bookings(id),\n      FOREIGN KEY (seat_id) REFERENCES seats(id)\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_passengers_booking",
+   "sql": "CREATE INDEX idx_passengers_booking ON passengers(booking_id)"
+  },
+  {
+   "type": "table",
+   "name": "payments",
+   "sql": "CREATE TABLE payments (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      booking_id INTEGER NOT NULL UNIQUE,\n      amount REAL NOT NULL,\n      currency TEXT DEFAULT 'USD',\n      payment_method TEXT DEFAULT 'credit_card',\n      payment_status TEXT NOT NULL DEFAULT 'pending',\n      card_last_four TEXT,\n      card_type TEXT,\n      card_holder_name TEXT,\n      transaction_id TEXT UNIQUE,\n      payment_gateway_response TEXT,\n      refund_amount REAL,\n      refund_reason TEXT,\n      refunded_at TEXT,\n      paid_at TEXT,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (booking_id) REFERENCES bookings(id)\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_payments_booking",
+   "sql": "CREATE INDEX idx_payments_booking ON payments(booking_id)"
+  },
+  {
+   "type": "index",
+   "name": "idx_payments_status",
+   "sql": "CREATE INDEX idx_payments_status ON payments(payment_status)"
+  },
+  {
+   "type": "table",
+   "name": "claims",
+   "sql": "CREATE TABLE claims (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      booking_id INTEGER NOT NULL,\n      claim_type TEXT NOT NULL,\n      claim_amount REAL NOT NULL,\n      claim_reason TEXT NOT NULL,\n      claim_status TEXT DEFAULT 'pending',\n      resolution_notes TEXT,\n      resolved_amount REAL,\n      resolved_at TEXT,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (booking_id) REFERENCES bookings(id)\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_claims_booking",
+   "sql": "CREATE INDEX idx_claims_booking ON claims(booking_id)"
+  },
+  {
+   "type": "index",
+   "name": "idx_claims_status",
+   "sql": "CREATE INDEX idx_claims_status ON claims(claim_status)"
+  },
+  {
+   "type": "table",
+   "name": "flight_status_history",
+   "sql": "CREATE TABLE flight_status_history (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      flight_id INTEGER NOT NULL,\n      old_status TEXT,\n      new_status TEXT NOT NULL,\n      delay_minutes INTEGER,\n      reason TEXT,\n      changed_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (flight_id) REFERENCES flights(id)\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_fsh_flight",
+   "sql": "CREATE INDEX idx_fsh_flight ON flight_status_history(flight_id)"
+  },
+  {
+   "type": "table",
+   "name": "baggage_tracking",
+   "sql": "CREATE TABLE baggage_tracking (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      user_id INTEGER NOT NULL,\n      booking_id INTEGER,\n      flight_number TEXT NOT NULL,\n      flight_time TEXT NOT NULL,\n      seat_number TEXT,\n      passenger_name TEXT NOT NULL,\n      passenger_phone TEXT NOT NULL,\n      passenger_email TEXT NOT NULL,\n      baggage_description TEXT NOT NULL,\n      loss_details TEXT,\n      status TEXT DEFAULT 'processing',\n      location TEXT,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (user_id) REFERENCES users(id),\n      FOREIGN KEY (booking_id) REFERENCES bookings(id)\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_baggage_user",
+   "sql": "CREATE INDEX idx_baggage_user ON baggage_tracking(user_id)"
+  },
+  {
+   "type": "table",
+   "name": "email_notifications",
+   "sql": "CREATE TABLE email_notifications (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      user_id INTEGER NOT NULL,\n      booking_id INTEGER,\n      email_type TEXT NOT NULL,\n      recipient_email TEXT NOT NULL,\n      subject TEXT NOT NULL,\n      body TEXT NOT NULL,\n      sent_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      is_read INTEGER DEFAULT 0,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (user_id) REFERENCES users(id),\n      FOREIGN KEY (booking_id) REFERENCES bookings(id)\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_en_user",
+   "sql": "CREATE INDEX idx_en_user ON email_notifications(user_id)"
+  },
+  {
+   "type": "index",
+   "name": "idx_en_type",
+   "sql": "CREATE INDEX idx_en_type ON email_notifications(email_type)"
+  },
+  {
+   "type": "table",
+   "name": "calendar_events",
+   "sql": "CREATE TABLE calendar_events (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      booking_id INTEGER NOT NULL UNIQUE,\n      user_id INTEGER NOT NULL,\n      event_id TEXT UNIQUE NOT NULL,\n      title TEXT NOT NULL,\n      description TEXT,\n      start_time TEXT NOT NULL,\n      end_time TEXT NOT NULL,\n      location TEXT,\n      reminder_minutes INTEGER DEFAULT 60,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (booking_id) REFERENCES bookings(id),\n      FOREIGN KEY (user_id) REFERENCES users(id)\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_ce_booking",
+   "sql": "CREATE INDEX idx_ce_booking ON calendar_events(booking_id)"
+  },
+  {
+   "type": "table",
+   "name": "chat_sessions",
+   "sql": "CREATE TABLE chat_sessions (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      user_id INTEGER NOT NULL,\n      session_id TEXT UNIQUE NOT NULL,\n      status TEXT DEFAULT 'active',\n      started_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      ended_at TEXT,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (user_id) REFERENCES users(id)\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_cs_user",
+   "sql": "CREATE INDEX idx_cs_user ON chat_sessions(user_id)"
+  },
+  {
+   "type": "table",
+   "name": "chat_messages",
+   "sql": "CREATE TABLE chat_messages (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      session_id INTEGER NOT NULL,\n      message TEXT NOT NULL,\n      sender_type TEXT NOT NULL,\n      sender_name TEXT,\n      sent_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (session_id) REFERENCES chat_sessions(id)\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_cm_session",
+   "sql": "CREATE INDEX idx_cm_session ON chat_messages(session_id)"
+  },
+  {
+   "type": "table",
+   "name": "price_history",
+   "sql": "CREATE TABLE price_history (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      flight_id INTEGER NOT NULL,\n      cabin_class TEXT NOT NULL,\n      old_price REAL NOT NULL,\n      new_price REAL NOT NULL,\n      change_reason TEXT,\n      changed_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      FOREIGN KEY (flight_id) REFERENCES flights(id)\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_ph_flight",
+   "sql": "CREATE INDEX idx_ph_flight ON price_history(flight_id)"
+  },
+  {
+   "type": "table",
+   "name": "announcements",
+   "sql": "CREATE TABLE announcements (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      title TEXT NOT NULL,\n      content TEXT NOT NULL,\n      category TEXT NOT NULL,\n      priority TEXT DEFAULT 'normal',\n      is_active INTEGER DEFAULT 1,\n      published_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      expires_at TEXT,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00'))\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_announcements_active",
+   "sql": "CREATE INDEX idx_announcements_active ON announcements(is_active)"
+  },
+  {
+   "type": "table",
+   "name": "faqs",
+   "sql": "CREATE TABLE faqs (\n      id INTEGER PRIMARY KEY AUTOINCREMENT,\n      question TEXT NOT NULL,\n      answer TEXT NOT NULL,\n      category TEXT NOT NULL,\n      is_active INTEGER DEFAULT 1,\n      display_order INTEGER DEFAULT 0,\n      created_at TEXT DEFAULT (datetime('2026-04-03 09:00:00')),\n      updated_at TEXT DEFAULT (datetime('2026-04-03 09:00:00'))\n    )"
+  },
+  {
+   "type": "index",
+   "name": "idx_faqs_active",
+   "sql": "CREATE INDEX idx_faqs_active ON faqs(is_active)"
+  }
+ ],
+ "_seed": [
+  {
+   "name": "draws:import",
+   "value": "3"
+  },
+  {
+   "name": "table:_migrations",
+   "value": "0 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "name": "table:announcements",
+   "value": "6 384db936fa8a1ff025a700cda1a3ce172657d34b8e34bf6ae7553e7f5f64fb66"
+  },
+  {
+   "name": "table:baggage_tracking",
+   "value": "0 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "name": "table:bookings",
+   "value": "73 e21dad34aee5897f9b16bb322ea83b6a13e50188bb0b9ae3d818eb01d7282710"
+  },
+  {
+   "name": "table:calendar_events",
+   "value": "0 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "name": "table:chat_messages",
+   "value": "0 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "name": "table:chat_sessions",
+   "value": "0 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "name": "table:claims",
+   "value": "0 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "name": "table:email_notifications",
+   "value": "0 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "name": "table:faqs",
+   "value": "5 faa16e1d96b3d1c20c76b7b4a237829e9ef7b39612107b16c3269a945a45a090"
+  },
+  {
+   "name": "table:flight_status_history",
+   "value": "0 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "name": "table:flights",
+   "value": "1477 5047c1b3d24a5c1363a6b063d322e890ca84d0cdde7d294bd03719a5a432fcd1"
+  },
+  {
+   "name": "table:passengers",
+   "value": "61 80143577669d51515f99413936edc0fe69ec8676aae4a814c18f1f6ccf546e6c"
+  },
+  {
+   "name": "table:payments",
+   "value": "61 c1f3fd75a5c3dbecebf918fedda2592d298083c98757f618255dad2e5da9b390"
+  },
+  {
+   "name": "table:price_history",
+   "value": "0 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "name": "table:seats",
+   "value": "307216 62f41cb0ddf67fbc22765858e3e5f9439f898878e5e803d2112a418d82b64f18"
+  },
+  {
+   "name": "table:users",
+   "value": "66 a6084f12a8ccab86145493711d7a3b61588962e09ef6ae03ce717a9780a6e638"
+  }
+ ],
+ "_file": []
+}

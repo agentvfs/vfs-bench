@@ -21,7 +21,9 @@
  * gets its triggers and views, and the tables' CHECKs as triggers), the run's `TASK_NAME` (`_env`), and every file the seed wrote
  * and every task asset, by its path in the image (`_file`). A table Prisma
  * cannot key (no primary key that is never NULL, nor such a unique index)
- * has its rows in `_row` instead, which the fake inserts itself.
+ * has its rows in `_row` instead, which the fake inserts itself. A mock
+ * whose seed runs in the fake (`seedsRun`) has no rows here, only each
+ * table's digest (`_seed`), which the fake's seed must match.
  */
 import { Database } from 'bun:sqlite'
 import { createHash } from 'node:crypto'
@@ -30,6 +32,7 @@ import { createRequire } from 'node:module'
 import { tmpdir } from 'node:os'
 import { dirname, join, relative } from 'node:path'
 
+import { digest, seedRow } from '../../mocks/upstream/digest.ts'
 import { MOCKS } from '../../mocks/upstream/mocks.ts'
 import { startupFiles, startupSql } from './startup.ts'
 
@@ -70,9 +73,10 @@ function freezeSqlite(epoch: string): void {
 }
 
 /** Random numbers, a counter's. */
-function countRandom(): void {
-  let counted = 0
-  const next = () => createHash('sha256').update(`upstream-seed-${++counted}`).digest()
+let counted = 0
+
+function countRandom(name = 'upstream-seed'): void {
+  const next = () => createHash('sha256').update(`${name}-${++counted}`).digest()
   Object.defineProperty(globalThis.crypto, 'getRandomValues', {
     value: <T extends ArrayBufferView>(array: T): T => {
       const bytes = new Uint8Array(array.buffer, array.byteOffset, array.byteLength)
@@ -165,6 +169,8 @@ export interface Booted {
   root: string
   /** The task's own assets, by their path in the image. */
   own: Record<string, string>
+  /** The random numbers the mock's modules drew as they loaded, before its factory ran. */
+  importDraws: number
 }
 
 /** Boot upstream's mock for a task: its factory, then its `seed()`, at the frozen epoch. */
@@ -176,7 +182,7 @@ export async function boot(platform: string, service: string, task: string, epoc
   process.env.FROZEN_EPOCH = epoch
   await import('./frozen.ts')
   freezeSqlite(epoch)
-  countRandom()
+  countRandom(spec.random)
   const scratch = mkdtempSync(join(tmpdir(), `vfsbench-${mock}-seed-`))
   const root = join(scratch, 'root')
   const at = (path: string) => join(root, path)
@@ -195,9 +201,10 @@ export async function boot(platform: string, service: string, task: string, epoc
   console.log = (...args: unknown[]) => console.error(...args)
   try {
     const module = (await import(join(platform, 'mocks', mock, spec.entry))) as Record<string, () => Booted['app'] & { app?: Booted['app']; seed?: () => unknown }>
+    const importDraws = counted
     const made = module[spec.factory]!()
     await made.seed?.()
-    return { app: made.app ?? made, at, scratch, root, own }
+    return { app: made.app ?? made, at, scratch, root, own, importDraws }
   } finally {
     console.log = log
   }
@@ -222,7 +229,7 @@ export async function upstream(platform: string, service: string, task: string, 
   const spec = MOCKS[service]
   if (spec === undefined) throw new Error(`no upstream mock spec for ${service}`)
   const mock = spec.mock ?? service
-  const { at, scratch, root, own } = await boot(platform, service, task, epoch)
+  const { at, scratch, root, own, importDraws } = await boot(platform, service, task, epoch)
 
   const out: Record<string, unknown[]> = { _env: [{ name: 'TASK_NAME', value: task }] }
   if (spec.db === ':memory:') {
@@ -245,8 +252,19 @@ export async function upstream(platform: string, service: string, task: string, 
     out._schema = schema.map((s) =>
       s.type === 'trigger' || s.type === 'view' ? { ...s, sql: s.sql.split(stamp).join("datetime('now')") } : s,
     )
+    if (spec.seedsRun === true) {
+      // The rows are too many to commit: the fake runs the seed on each
+      // run's template and checks it against this digest (mocks.ts).
+      if (startupSql(platform, task, mock).length > 0) throw new Error(`${task}: a startup script's rows on ${mock}, whose seed runs in the fake`)
+      const tables = schema.filter((s) => s.type === 'table').map((s) => s.name)
+      // The fake's copy has loaded before it counts: it starts the count past the draws loading made here.
+      out._seed = [
+        { name: 'draws:import', value: String(importDraws) },
+        ...Object.entries(digest(tables, (sql) => db.query(sql).all())).map(([table, value]) => ({ name: seedRow(table), value })),
+      ]
+    }
     const unkeyed: unknown[] = []
-    for (const table of parentsFirst(
+    for (const table of spec.seedsRun === true ? [] : parentsFirst(
       db,
       schema.filter((s) => s.type === 'table').map((s) => s.name),
     )) {

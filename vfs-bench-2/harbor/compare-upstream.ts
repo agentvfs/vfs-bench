@@ -20,8 +20,10 @@
  * reply for the requests after it. Known and allowed: a time (the fake's
  * clock moves a second per write, upstream's here stays at the epoch), a
  * session token (each has its own secret), and an id upstream's mock draws
- * at random (smart home's grocery ids, a password's bcrypt salt); each is
- * masked. A list whose rows are the same but in another order, as rows
+ * at random (smart home's grocery ids, a password's bcrypt salt, a booking's
+ * reference and payment id at the airline); each is masked. The airline's
+ * seed is run by the fake (`seedsRun`), and the tables it leaves are compared
+ * whole, its 317,000 seats among them, after the requests. A list whose rows are the same but in another order, as rows
  * listed by time are, is printed (`ORDER`) and allowed. Anything else is
  * printed, and the check exits 1.
  */
@@ -210,6 +212,72 @@ const FLOWS: Record<string, Step[]> = {
     get('/api/orders'),
     get('/'),
   ],
+  // Next Monday is 2026-04-06 at the airline tasks' epoch. `ref` is Peter's
+  // seeded booking (none in flight-booking's), `made` the one booked here.
+  airline: [
+    get('/health'),
+    get('/api/bookings'),
+    login('/api/auth/login', { email: 'peter.griffin@work.mosi.inc', password: 'wrong' }),
+    login('/api/auth/login', { email: 'peter.griffin@work.mosi.inc', password: 'password123' }),
+    get('/api/profile'),
+    get('/api/bookings', { ref: 'data.bookings.0.booking_reference' }),
+    get('/api/bookings/{ref}', { passenger: 'data.passengers.0.id' }),
+    get('/api/checkin/{ref}/seats', { window: 'data.seat_chart.1.0.id', middle: 'data.seat_chart.3.1.id' }),
+    send('POST', '/api/bookings/{ref}/seats', { seat_assignments: [{ passenger_id: '{passenger}', seat_id: '{window}' }] }),
+    send('POST', '/api/checkin/{ref}'),
+    get('/api/checkin/{ref}/boarding-pass'),
+    send('POST', '/api/bookings/{ref}/seats', { seat_assignments: [{ passenger_id: '{passenger}', seat_id: '{middle}' }] }),
+    get('/api/checkin/eligible'),
+    get('/api/flights?origin=JFK&destination=LAX&date=2026-04-06', { flight: 'data.flights.0.id' }),
+    send('POST', '/api/flights/search', { origin: 'JFK', destination: 'LAX', departure_date: '2026-04-06' }),
+    get('/api/flights/{flight}'),
+    get('/api/flights/{flight}/seats?cabin_class=economy&available_only=true', { seat: 'data.seats.economy.0.id' }),
+    send(
+      'POST',
+      '/api/bookings',
+      { flight_id: '{flight}', cabin_class: 'economy', passengers: [{ first_name: 'Peter', last_name: 'Griffin', date_of_birth: '1985-12-11' }] },
+      { made: 'data.booking_reference' },
+    ),
+    send('POST', '/api/bookings', {}),
+    get('/api/bookings/{made}', { booked: 'data.passengers.0.id' }),
+    send('POST', '/api/bookings/{made}/seats', { seat_assignments: [{ passenger_id: '{booked}', seat_id: '{seat}' }] }),
+    send('POST', '/api/bookings/{made}/cancel'),
+    get('/api/bookings?status=cancelled'),
+    get('/api/announcements'),
+    get('/api/faq'),
+    get('/api/info/airport'),
+    send('POST', '/api/baggage', {
+      flight_number: 'GKD888',
+      flight_time: '2026-04-03 06:00',
+      passenger_name: 'Peter Griffin',
+      passenger_phone: '+1-555-0100',
+      passenger_email: 'peter.griffin@work.mosi.inc',
+      baggage_description: '20-inch black rolling suitcase',
+      loss_details: 'Not on the carousel',
+    }),
+    send('POST', '/api/baggage', { flight_number: 'GKD888' }),
+    get('/api/baggage'),
+    get('/api/claims'),
+    send('POST', '/api/claims/calculate-refund/{ref}', {}),
+    get('/api/flights/999999'),
+    get('/'),
+  ],
+}
+
+/**
+ * A difference this check's own frozen clock makes, by service: the step it
+ * shows at, the steps and tables that follow from it. At the airline, a new
+ * booking's payment is `TXN-${Date.now()}`, which upstream's clock, frozen
+ * here, gives the seed's payments too: the UNIQUE clash fails the booking
+ * (500, a pending row left), which upstream's moving clock never does and
+ * the fake's does not. Only tasks whose seed has a payment show it.
+ */
+const CLOCK_CLASH: Record<string, { step: string; after: RegExp; tables: string[] }> = {
+  airline: {
+    step: 'POST /api/bookings',
+    after: /\{made\}|\{booked\}|status=cancelled/,
+    tables: ['bookings', 'payments', 'passengers', 'seats', 'email_notifications'],
+  },
 }
 
 /** A value of a JSON reply by its dotted path, or undefined. */
@@ -291,6 +359,9 @@ function masked(text: string): string {
     .replace(/PROD\d{14}-[A-Z0-9]{3}/g, '<random id>')
     .replace(/\$2[aby]\$\d\d\$[./A-Za-z0-9]{53}/g, '<bcrypt hash>')
     .replace(/(session|token)=[^;"\s]+/g, '$1=<token>')
+    .replace(/"booking_reference":"[A-HJ-NP-Z2-9]{6}"/g, '"booking_reference":"<random reference>"')
+    .replace(/(Booking Confirmation - |your booking )[A-HJ-NP-Z2-9]{6}\b/g, '$1<random reference>')
+    .replace(/TXN-\d{13}/g, 'TXN-<time>')
 }
 
 /**
@@ -321,7 +392,15 @@ function firstDifference(a: string, b: string): string {
 }
 
 /** The fake's own tables, which upstream's mock has none of. */
-const OURS = new Set(['_env', '_file', '_schema', '_row', '_prisma_migrations', 'sqlite_sequence'])
+const OURS = new Set(['_env', '_file', '_schema', '_row', '_seed', '_prisma_migrations', 'sqlite_sequence'])
+
+/**
+ * A file the fake keeps that upstream's mock, here, cannot: the airline's
+ * seed writes its note to /var/lib/mock-data/seed-meta.json, a path of its
+ * own rather than one under the environment it is given, which under Bun is
+ * the host's, outside the scratch root (and not writable there).
+ */
+const OUT_OF_ROOT = new Set(['/var/lib/mock-data/seed-meta.json'])
 
 /** Every table of a SQLite file but the fake's own, rows in order, masked. */
 function tables(file: string): Record<string, string> {
@@ -368,6 +447,9 @@ async function compare(service: string, task: string, epoch: string, fake: { url
   })
   const differ: string[] = []
   const reordered: string[] = []
+  const known: string[] = []
+  const clash = CLOCK_CLASH[service]
+  let clashed = false
   let same = 0
   try {
     const upstream = await announced<{ url: string; root: string }>(child, 'UPSTREAM=', `upstream's ${service} for ${task}`)
@@ -384,6 +466,15 @@ async function compare(service: string, task: string, epoch: string, fake: { url
     for (const step of FLOWS[service]!) {
       const a = await theirs.send(step)
       const b = await ours.send(step)
+      if (clash !== undefined && step.name === clash.step && a.status === 500 && b.status === 201) {
+        clashed = true
+        known.push(`${step.name}: 500 vs 201, upstream's frozen clock's transaction id clash`)
+        continue
+      }
+      if (clashed && clash!.after.test(step.path)) {
+        known.push(`${step.name}: follows the clash`)
+        continue
+      }
       const problems: string[] = []
       if (a.status !== b.status) problems.push(`status ${a.status} vs ${b.status}`)
       if (a.type !== b.type) problems.push(`content-type ${a.type} vs ${b.type}`)
@@ -402,13 +493,19 @@ async function compare(service: string, task: string, epoch: string, fake: { url
       const upstreamTables = tables(join(upstream.root, spec.db))
       const fakeTables = tables(db)
       for (const table of new Set([...Object.keys(upstreamTables), ...Object.keys(fakeTables)])) {
-        if (upstreamTables[table] !== fakeTables[table]) differ.push(`table ${table}\n${firstDifference(upstreamTables[table] ?? '', fakeTables[table] ?? '')}`)
+        if (upstreamTables[table] === fakeTables[table]) continue
+        if (clashed && clash!.tables.includes(table)) known.push(`table ${table}: follows the clash`)
+        else differ.push(`table ${table}\n${firstDifference(upstreamTables[table] ?? '', fakeTables[table] ?? '')}`)
       }
     }
     const files = join(fake.state, kit, `${run}.db.files`)
     if (existsSync(files)) {
       for (const name of readdirSync(files)) {
         const path = decodeURIComponent(name)
+        if (OUT_OF_ROOT.has(path)) {
+          console.log(`KNOWN ${service} ${task} file ${path}: written by the fake's seed, outside upstream's scratch root`)
+          continue
+        }
         const mine = masked(readFileSync(join(files, name), 'utf8'))
         const theirsFile = join(upstream.root, path)
         const upstreamText = existsSync(theirsFile) ? masked(readFileSync(theirsFile, 'utf8')) : '<none>'
@@ -420,6 +517,7 @@ async function compare(service: string, task: string, epoch: string, fake: { url
     child.kill()
   }
   for (const line of differ) console.log(`DIFF ${service} ${task} ${line}`)
+  for (const line of known) console.log(`KNOWN ${service} ${task} ${line}`)
   for (const line of reordered) console.log(`ORDER ${service} ${task} ${line}: the same rows, in the clock's order`)
   console.log(`${differ.length === 0 ? 'ok' : 'FAIL'} ${service} ${task}: ${same} replies the same, ${differ.length} differ`)
   return differ.length
