@@ -1,5 +1,7 @@
 /** Native verifier data comes only through Mirage's VFS and virtual shell. */
 import type { Context as CommandContext } from '@struktoai/mirage-core/commands/config'
+// Python's UTF-8 text reads preserve U+FEFF; ignoreBOM disables its stripping.
+const utf8 = new TextDecoder('utf-8', { ignoreBOM: true })
 export type Row = Record<string, any>
 export type Tables = Record<string, Row[]>
 export interface Grade {
@@ -38,7 +40,7 @@ export class Context {
       const output = '/.verifier-output/state.json'
       const out = await command.shell('jq -c . ' + quote(path) + ' > ' + quote(output))
       if (out.exitCode !== 0) throw new Error(`Cannot read verifier state ${name}`)
-      const value = JSON.parse(new TextDecoder().decode(await command.vfs.read(output)))
+      const value = JSON.parse(utf8.decode(await command.vfs.read(output)))
       if (
         !value ||
         typeof value !== 'object' ||
@@ -50,7 +52,7 @@ export class Context {
     }
     await Promise.all(
       input.files.map(async (path) => {
-        files.set(path, new TextDecoder().decode(await command.vfs!.read(path, { raw: true })))
+        files.set(path, utf8.decode(await command.vfs!.read(path, { raw: true })))
       })
     )
     return new Context(input, states, files)
@@ -62,7 +64,7 @@ export class Context {
     // The reference shell's tee overwrites this path before the safety audit.
     // Store the derived file in the writable output VFS, then expose its
     // reference name to the audit without changing frozen agent inputs.
-    files.set('/tmp/verify_output.txt', new TextDecoder().decode(await command.vfs!.read(output)))
+    files.set('/tmp/verify_output.txt', utf8.decode(await command.vfs!.read(output)))
     return new Context({ ...this.input, files: [...files.keys()] }, this.states, files)
   }
   exists(path: string) {
@@ -127,10 +129,13 @@ export function instantDate(value: any): string | null {
 }
 export function like(value: any, pattern: string): boolean {
   if (value == null) return false
-  const re = [...asciiLower(pattern)]
+  // SQLite LIKE treats NUL as the end of both its text and its pattern.
+  const text = asciiLower(value).split('\0', 1)[0]!
+  const re = [...asciiLower(pattern).split('\0', 1)[0]!]
     .map((c) => (c === '%' ? '[\\s\\S]*' : c === '_' ? '[\\s\\S]' : c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')))
     .join('')
-  return new RegExp('^' + re + '$', 'u').test(asciiLower(value))
+  // Unlike $, this end assertion cannot match before a final newline.
+  return new RegExp('^' + re + '(?![\\s\\S])', 'u').test(text)
 }
 export function compare(a: any, b: any): number {
   if (a === b) return 0

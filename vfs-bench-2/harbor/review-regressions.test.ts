@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { DatabaseSync } from 'node:sqlite'
 import { test } from 'node:test'
-import { GWS } from './graders/context.ts'
+import { FINANCE, GWS, like } from './graders/context.ts'
 import { referenceTables } from './reference-state.ts'
 import { verify } from './verify.ts'
 
@@ -33,7 +33,13 @@ async function fixture(run: (dir: string, db: DatabaseSync, database: string) =>
   }
 }
 
-async function compare(task: string, dir: string, database: string, contents: Record<string, string> = {}) {
+async function compare(
+  task: string,
+  dir: string,
+  database: string,
+  contents: Record<string, string> = {},
+  alias = GWS
+) {
   const files = Object.fromEntries(
     Object.entries(contents).map(([path, text], i) => {
       const file = join(dir, `input-${i}`)
@@ -43,7 +49,7 @@ async function compare(task: string, dir: string, database: string, contents: Re
   )
   const input = {
     task,
-    databases: { [GWS]: database },
+    databases: { [alias]: database },
     files,
     epoch: '2026-04-03T09:00:00Z',
     timeoutSeconds: 30,
@@ -59,7 +65,7 @@ async function compare(task: string, dir: string, database: string, contents: Re
   const expected = JSON.parse(ref.stdout)
   const result = await verify({
     task,
-    states: { [GWS]: referenceTables(database) },
+    states: { [alias]: referenceTables(database) },
     files: Object.fromEntries(
       Object.entries(contents).map(([p, t]) => [p, Buffer.from(t).toString('base64')])
     ),
@@ -173,3 +179,70 @@ function pythonTemplate(): string {
   assert.equal(result.status, 0, result.stderr)
   return JSON.parse(result.stdout)
 }
+
+test('file decoding preserves UTF-8 BOMs for reference JSON and text grading', async () =>
+  fixture(async (dir, _db, database) => {
+    const report = '{"city":"北京","aqi":75,"category":"moderate"}'
+    for (const prefix of ['', '\ufeff', '\ufeff\ufeff', ' \ufeff']) {
+      const result = await compare('weather-aqi-report', dir, database, {
+        '/workspace/output/aqi_report.json': prefix + report,
+      })
+      assert.equal(result.score, prefix ? 0 : 1)
+    }
+    const result = await compare('finance-analysis-generate', dir, database, {
+      '/workspace/policies/report_template.md': '\ufeff' + pythonTemplate(),
+    })
+    assert.equal(result.rewards?.template_updated, 0.2)
+  }))
+
+test('expense grading cannot match NYC after an embedded NUL', async () =>
+  fixture(async (dir, db, database) => {
+    db.exec(`
+      CREATE TABLE expense_report (id INTEGER, trip_name TEXT, total_amount REAL, status TEXT);
+      CREATE TABLE expense_item (expense_report_id INTEGER, expense_category TEXT, amount REAL);
+      INSERT INTO expense_report VALUES (3, 'Other', 85.5, 'draft');
+      INSERT INTO expense_item VALUES (3, 'meals', 85.5);
+    `)
+    for (const [name, score] of [
+      ['Other\0NYC', 0],
+      ['Other NYC', 0.32],
+      ['NYC\0Other', 0.32],
+      ['\0NYC', 0],
+    ] as const) {
+      db.prepare('UPDATE expense_report SET trip_name=?').run(name)
+      const result = await compare('finance-expense-log', dir, database, {}, FINANCE)
+      assert.equal(result.score, score)
+    }
+  }))
+
+test('LIKE preserves SQLite NUL, wildcard and end-of-string semantics', () => {
+  const db = new DatabaseSync(':memory:')
+  try {
+    const query = db.prepare('SELECT ? LIKE ? AS matched')
+    const values = [
+      null,
+      '',
+      '\0NYC',
+      'NYC\0Other',
+      'Other\0NYC',
+      'NYC',
+      'NYC\n',
+      'NYC\r',
+      'NYC\r\n',
+      '😀',
+      'æ',
+      'Æ',
+    ]
+    const patterns = ['', '%', '_', '%NYC%', 'NYC', 'NYC_', 'NYC\0Other', '%\0NYC', '\0NYC', 'æ']
+    for (const value of values)
+      for (const pattern of patterns) {
+        assert.equal(
+          like(value, pattern),
+          Boolean(query.get(value, pattern)?.matched),
+          JSON.stringify({ value, pattern })
+        )
+      }
+  } finally {
+    db.close()
+  }
+})

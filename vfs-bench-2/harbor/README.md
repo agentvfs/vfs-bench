@@ -204,8 +204,10 @@ Validation for the switch:
   a native verification with SQLite access disabled.
 - Review regressions compare fractional calendar seconds, Unicode email-length
   boundaries, fresh privacy transcripts, invalid AQI JSON and template newlines
-  against unchanged Python graders. Adapter tests exercise override precedence,
-  custom policy inputs, staging bounds, event-loop progress and cancellation.
+  against unchanged Python graders. They also cover UTF-8 BOM preservation and
+  SQLite-compatible NUL, wildcard and end-of-string matching. Adapter tests
+  exercise override precedence, custom policy inputs, staging bounds,
+  event-loop progress and cancellation.
 
 Local reports are under `state/harbor/native-all/`: `vfs-replay-140.json`,
 `vfs-mutations.json`, reference jobs `oracle-ready`/`nop-ready`, and native
@@ -215,6 +217,8 @@ Routing tests for the five other datasets stub their reference execution.
 After the review fixes, `review-replay-140.json` and `review-mutations.json`
 record the repeated full comparisons; `review-oracle`/`review-nop` rerun the
 six affected tasks against live fake services.
+The subsequent text-decoding and matching fixes are checked in
+`bom-nul-replay-140.json` and `bom-nul-mutations.json`.
 
 The worker still loads Mirage and executes TypeScript checks on its event loop.
 Independent workspaces can run concurrently; CPU, RAM and fake-service throughput
