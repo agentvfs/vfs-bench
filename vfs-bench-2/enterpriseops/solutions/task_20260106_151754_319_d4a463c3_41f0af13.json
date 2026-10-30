@@ -1,0 +1,127 @@
+[
+ {
+  "tool": "retrieve_installed_products",
+  "args": {
+   "status": "in_use"
+  }
+ },
+ {
+  "tool": "search_cases",
+  "args": {
+   "installed_product_id": 42
+  }
+ },
+ {
+  "tool": "search_cases",
+  "args": {
+   "installed_product_id": 113
+  }
+ },
+ {
+  "tool": "search_cases",
+  "args": {
+   "installed_product_id": 182
+  }
+ },
+ {
+  "tool": "search_cases",
+  "args": {
+   "installed_product_id": 243
+  }
+ },
+ {
+  "tool": "find_product_by_id",
+  "args": {
+   "product_id": 140
+  }
+ },
+ {
+  "tool": "find_contracts",
+  "args": {
+   "account_id": 33
+  }
+ },
+ {
+  "tool": "find_entitlements",
+  "args": {
+   "account_id": 33,
+   "product_id": 140
+  }
+ },
+ {
+  "tool": "register_new_installed_product",
+  "args": {
+   "account_id": 33,
+   "product_id": 140,
+   "location_id": 867,
+   "serial_number": "P140-411674-6934-R",
+   "status": "in_use",
+   "warranty_end": "2027-09-16"
+  }
+ },
+ {
+  "tool": "update_installed_product_details",
+  "args": {
+   "installed_product_id": 182,
+   "status": "retired"
+  }
+ },
+ {
+  "tool": "update_case",
+  "args": {
+   "case_id": 747,
+   "installed_product_id": 301
+  }
+ },
+ {
+  "tool": "update_case",
+  "args": {
+   "case_id": 768,
+   "installed_product_id": 301
+  }
+ },
+ {
+  "tool": "update_case",
+  "args": {
+   "case_id": 769,
+   "installed_product_id": 301
+  }
+ },
+ {
+  "tool": "find_contacts",
+  "args": {
+   "account_id": 33,
+   "is_primary": true
+  }
+ },
+ {
+  "tool": "list_users",
+  "args": {
+   "user_id": 19
+  }
+ },
+ {
+  "tool": "send_notification",
+  "args": {
+   "case_id": 747,
+   "email": "angela.brooks@phillips-jones.com",
+   "type": "update"
+  }
+ },
+ {
+  "tool": "send_notification",
+  "args": {
+   "case_id": 768,
+   "email": "angela.brooks@phillips-jones.com",
+   "type": "update"
+  }
+ },
+ {
+  "tool": "send_notification",
+  "args": {
+   "case_id": 769,
+   "email": "angela.brooks@phillips-jones.com",
+   "type": "update"
+  }
+ }
+]

@@ -1,0 +1,486 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Move all open cases",
+  "description": "All Open Cases moved from the resigned primary contact to the updated primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Update Primary Contact",
+  "description": "Ensure primary contact was set correctly",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Transition Case Created",
+  "description": "Ensure a new transition case was created",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'new'\n  AND channel = 'web';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Notification Sent to New Primary",
+  "description": "Check to see that notification was sent to new primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'new'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Move all open cases",
+  "description": "All Open Cases moved from the resigned primary contact to the updated primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Update Primary Contact",
+  "description": "Ensure primary contact was set correctly",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Transition Case Created",
+  "description": "Ensure a new transition case was created",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'new'\n  AND channel = 'web';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Notification Sent to New Primary",
+  "description": "Check to see that notification was sent to new primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'new'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Move all open cases",
+  "description": "All Open Cases moved from the resigned primary contact to the updated primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Update Primary Contact",
+  "description": "Ensure primary contact was set correctly",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Transition Case Created",
+  "description": "Ensure a new transition case was created",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'new'\n  AND channel = 'web';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Notification Sent to New Primary",
+  "description": "Check to see that notification was sent to new primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'new'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Move all open cases",
+  "description": "All Open Cases moved from the resigned primary contact to the updated primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Update Primary Contact",
+  "description": "Ensure primary contact was set correctly",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Transition Case Created",
+  "description": "Ensure a new transition case was created",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'new'\n  AND channel = 'web';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Notification Sent to New Primary",
+  "description": "Check to see that notification was sent to new primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'new'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Move all open cases",
+  "description": "All Open Cases moved from the resigned primary contact to the updated primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Update Primary Contact",
+  "description": "Ensure primary contact was set correctly",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Transition Case Created",
+  "description": "Ensure a new transition case was created",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'new'\n  AND channel = 'web';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Notification Sent to New Primary",
+  "description": "Check to see that notification was sent to new primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'new'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Move all open cases",
+  "description": "All Open Cases moved from the resigned primary contact to the updated primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Update Primary Contact",
+  "description": "Ensure primary contact was set correctly",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Transition Case Created",
+  "description": "Ensure a new transition case was created",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'resolved'\n  AND channel = 'web';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Notification Sent to New Primary",
+  "description": "Check to see that notification was sent to new primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'resolved'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Move all open cases",
+  "description": "All Open Cases moved from the resigned primary contact to the updated primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Update Primary Contact",
+  "description": "Ensure primary contact was set correctly",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Transition Case Created",
+  "description": "Ensure a new transition case was created",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'resolved'\n  AND channel = 'web';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Notification Sent to New Primary",
+  "description": "Check to see that notification was sent to new primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'resolved'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Move all open cases",
+  "description": "All Open Cases moved from the resigned primary contact to the updated primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Update Primary Contact",
+  "description": "Ensure primary contact was set correctly",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Transition Case Created",
+  "description": "Ensure a new transition case was created",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'resolved'\n  AND channel = 'web';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Notification Sent to New Primary",
+  "description": "Check to see that notification was sent to new primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'resolved'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Move all open cases",
+  "description": "All Open Cases moved from the resigned primary contact to the updated primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Update Primary Contact",
+  "description": "Ensure primary contact was set correctly",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Transition Case Created",
+  "description": "Ensure a new transition case was created",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'resolved'\n  AND channel = 'web';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Notification Sent to New Primary",
+  "description": "Check to see that notification was sent to new primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'resolved'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Move all open cases",
+  "description": "All Open Cases moved from the resigned primary contact to the updated primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Update Primary Contact",
+  "description": "Ensure primary contact was set correctly",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Transition Case Created",
+  "description": "Ensure a new transition case was created",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'resolved'\n  AND channel = 'web';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Notification Sent to New Primary",
+  "description": "Check to see that notification was sent to new primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'resolved'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Move all open cases",
+  "description": "All Open Cases moved from the resigned primary contact to the updated primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Update Primary Contact",
+  "description": "Ensure primary contact was set correctly",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT is_primary\nFROM contact\nWHERE contact_id = 3;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Transition Case Created",
+  "description": "Ensure a new transition case was created",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'resolved'\n  AND channel = 'web';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Notification Sent to New Primary",
+  "description": "Check to see that notification was sent to new primary contact",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'resolved'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

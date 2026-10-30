@@ -1,0 +1,8 @@
+[
+ {"tool": "get_accounts", "args": {"name": "Acme Systems"}},
+ {"tool": "search_cases", "args": {"account_id": 3, "priority": "critical", "state": "new"}},
+ {"tool": "list_user_groups", "args": {"name": "Case Triage"}},
+ {"tool": "count_case_by_state", "args": {"assignment_group_id": 3}},
+ {"tool": "find_entitlements", "args": {"account_id": 3, "product_id": 159, "active": true, "support_level": "enterprise"}},
+ {"tool": "update_case", "args": {"case_id": 53, "assignment_group_id": 3, "state": "in_progress"}}
+]

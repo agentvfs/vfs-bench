@@ -1,0 +1,68 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "December 2026 contract extended correctly(first)",
+  "description": "Ensures the first identified December 2026  active warranty contract now ends two calendar months later, with contract type and status unchanged.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM contract WHERE contract_id = 100 AND contract_type = 'warranty' AND status = 'active' AND end_date = '2027-02-07';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "December 2026 contract extended correctly(Second)",
+  "description": "Ensures the second identified December 2026 active warranty contract now ends two calendar months later, with contract type and status unchanged.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM contract WHERE contract_id = 115 AND contract_type = 'warranty' AND status = 'active' AND end_date = '2027-02-28';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "December 2027 contract extended correctly(first)",
+  "description": "Validates that the first December 2027 active warranty contract has its end date extended by two calendar months, without altering type or status.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM contract WHERE contract_id = 33 AND contract_type = 'warranty' AND status = 'active' AND end_date = '2028-02-24';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "December 2027 contract extended correctly(second)",
+  "description": "Checks that the second December 2027 active warranty contract’s end date has been moved two calendar months forward and remains an active warranty.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM contract WHERE contract_id = 56 AND contract_type = 'warranty' AND status = 'active' AND end_date = '2028-02-26';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "December 2026 contract extended correctly(third)",
+  "description": "Ensures the third identified December 2026  active warranty contract now ends two calendar months later, with contract type and status unchanged.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM contract WHERE contract_id = 60 AND contract_type = 'warranty' AND status = 'active' AND end_date = '2028-02-04';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "December 2026 contract extended correctly(fourth )",
+  "description": "Ensures the fourth identified December 2026  active warranty contract now ends two calendar months later, with contract type and status unchanged.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM contract WHERE contract_id = 117 AND contract_type = 'warranty' AND status = 'active' AND end_date = '2028-02-12';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

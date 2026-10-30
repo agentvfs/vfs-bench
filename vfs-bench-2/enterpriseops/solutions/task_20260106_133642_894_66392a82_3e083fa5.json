@@ -1,0 +1,12 @@
+[
+ {"tool": "find_user", "args": {"name": "Derek Blake"}},
+ {"tool": "update_user_details", "args": {"user_id": 622, "active": true}},
+ {"tool": "find_contact_by_portal_user", "args": {"portal_user_id": 622}},
+ {"tool": "find_user", "args": {"name": "Alexandra Hansen"}},
+ {"tool": "search_cases", "args": {"contact_id": 3, "state": "closed"}},
+ {"tool": "list_user_groups", "args": {"name": "Account Management"}},
+ {"tool": "list_group_members", "args": {"group_id": 7}},
+ {"tool": "list_users", "args": {"user_id": 72, "role": "manager", "active": true}},
+ {"tool": "update_case", "args": {"case_id": 88, "state": "new", "reopen_count": 1}},
+ {"tool": "update_case", "args": {"case_id": 88, "assignment_group_id": 7, "assigned_to": 72, "state": "in_progress"}}
+]

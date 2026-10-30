@@ -1,0 +1,11 @@
+[
+ {"tool": "find_account", "args": {"name": "Initech"}},
+ {"tool": "find_product", "args": {"name": "MySQL Enterprise 8.0 Variant 28"}},
+ {"tool": "search_cases", "args": {"account_id": 5, "product_id": 48}},
+ {"tool": "find_entitlements", "args": {"account_id": 5, "active": true}},
+ {"tool": "find_case_slas", "args": {"case_id": 102}},
+ {"tool": "update_case", "args": {"case_id": 102, "escalation": true, "escalation_reason": "customer_request"}},
+ {"tool": "find_contacts", "args": {"account_id": 5, "is_primary": true}},
+ {"tool": "list_users", "args": {"user_id": 63}},
+ {"tool": "send_notification", "args": {"case_id": 102, "email": "thomas.bailey63@initech.io", "type": "update"}}
+]

@@ -3,7 +3,7 @@
 # verifier in a microVM of its own: upstream's rubric on the world the trial's
 # run of the fake ends with. From vfs-bench-2/, after
 # `uv run --project automationbench python -I harbor/automationbench.py [--site]`:
-#   uv run --project harbor harbor run -y -c harbor/automationbench.yaml -a oracle -n 8 -o state/harbor/jobs-automationbench
+#   uv run --project harbor harbor run -y -c harbor/automationbench-msb.yaml -a oracle -n 8 -o state/harbor/jobs-automationbench
 environment:
   import_path: vfsbench_harbor:MirageEnvironment
 verifier:

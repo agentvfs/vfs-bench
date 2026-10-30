@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "New Agent Created",
+  "description": "Confirms that Susan Adams has been created and activated as an agent.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user WHERE first_name = 'Susan' AND last_name = 'Adams' AND email = 'susan.adams075@servicenow.com' AND role = 'agent' AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Location Created and Linked",
+  "description": "Confirms that Susan's Mumbai location was created and linked to her profile.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM location WHERE name = 'User 803 - Mumbai' AND plot_no = 'Plot 685' AND street = 'Ferguson Neck' AND city = 'mumbai' AND country = 'india' AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Group Membership Added",
+  "description": "Confirms Susan was added to the same support group (group_id = 6) as Samuel.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group_member WHERE group_id = '6' AND user_id = '803';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Cases Reassigned Correctly",
+  "description": "Confirms all active cases (two) from Samuel were reassigned to Susan.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id IN (223, 751, 1155) AND assigned_to = 803;",
+   "expected_value": 2,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Offboarding Complete",
+  "description": "Confirms Samuel Kemp’s user record was deactivated successfully.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT active FROM user WHERE user_id = 38 AND first_name = 'Samuel' AND last_name = 'Kemp' AND email = 'samuel.kemp@servicenow.com';",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ }
+]

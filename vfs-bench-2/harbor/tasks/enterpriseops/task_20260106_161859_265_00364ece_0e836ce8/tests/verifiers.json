@@ -1,0 +1,46 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Validate new high priority case created. ",
+  "description": "Validating whether a new high-priority case is created for Thomas Bailey's Managed Network Services Variant 17.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM customer_case c\nJOIN product p ON c.product_id = p.product_id\nJOIN contact ct ON c.contact_id = ct.contact_id\nJOIN user u ON ct.portal_user_id = u.user_id\nJOIN user u2 ON c.assigned_to = u2.user_id\nJOIN user_group g ON c.assignment_group_id = g.group_id\nWHERE u.first_name = 'Thomas'\n  AND u.last_name = 'Bailey'\n  AND c.channel = 'email'\n  AND c.priority = 'high'\n  AND c.state = 'new'\n  AND p.name = 'Managed Network Services Variant 17'\n  AND u2.first_name = 'David'\n  AND u2.last_name = 'Smith'\n  AND g.name = 'CSM Tier 1 Support_2';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating group membership. ",
+  "description": "Validating whether David Smith is assigned to CSM Tier 1 Support_2.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM user_group_member ugm\nJOIN user u ON ugm.user_id = u.user_id\nJOIN user_group g ON ugm.group_id = g.group_id\nWHERE u.first_name = 'David'\n  AND u.last_name = 'Smith'\n  AND g.name = 'CSM Tier 1 Support_2';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating successful notification. ",
+  "description": "Validating whether successful report notification is sent without knowledge Article",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt \nFROM notification n \nWHERE n.case_id = 1233 \n  AND n.email = 'thomas.bailey63@initech.io' \n  AND n.type = 'report' \n  AND n.status = 'success' \n  AND n.knowledge_id IS NULL;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify that knowledge is linked",
+  "description": "Verify that appropriate knowledge is linked with case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt \nFROM case_knowledge n \nWHERE n.case_id = 1233 \n  AND n.knowledge_id = 315 \n  AND n.used_as = 'suggested' ;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

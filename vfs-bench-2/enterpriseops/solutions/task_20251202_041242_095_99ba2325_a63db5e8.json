@@ -1,0 +1,11 @@
+[
+ {"tool": "search_cases", "args": {"number": "CS-0000311"}},
+ {"tool": "find_user", "args": {"name": "Christopher Underwood"}},
+ {"tool": "find_user", "args": {"name": "Katherine Gallegos"}},
+ {"tool": "list_group_members", "args": {"group_id": 79, "user_id": 770}},
+ {"tool": "retrieve_knowledge", "args": {"kb_number": "KB-0000044"}},
+ {"tool": "update_user_details", "args": {"user_id": 432, "active": false}},
+ {"tool": "update_case", "args": {"case_id": 311, "priority": "critical", "assigned_to": 770}},
+ {"tool": "update_knowledge", "args": {"knowledge_id": 44, "state": "published"}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 311, "knowledge_id": 44, "used_as": "applied"}}
+]

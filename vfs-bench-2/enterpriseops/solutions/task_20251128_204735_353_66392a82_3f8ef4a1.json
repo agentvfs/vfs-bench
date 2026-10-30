@@ -1,0 +1,14 @@
+[
+ {"tool": "find_user", "args": {"name": "Patricia Castro"}},
+ {"tool": "find_account", "args": {"name": "Carrillo Inc"}},
+ {"tool": "find_contact_by_portal_user", "args": {"portal_user_id": 138}},
+ {"tool": "find_installed_product_by_serial", "args": {"serial_number": "P97-245230-8224"}},
+ {"tool": "find_entitlements", "args": {"account_id": 19, "product_id": 97, "active": true}},
+ {"tool": "create_new_case", "args": {"account_id": 19, "contact_id": 31, "product_id": 97, "installed_product_id": 98, "channel": "email", "priority": "high", "state": "new", "short_description": "Product: Atlassian Jira Data Center Variant 77, Issue: is not working as expected."}},
+ {"tool": "find_sla_definitions", "args": {"applies_to_priority": "high", "active": true}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 1233, "sla_def_id": 2, "stage": "in_progress"}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 1233, "sla_def_id": 7, "stage": "in_progress"}},
+ {"tool": "retrieve_knowledge", "args": {"product_id": 97, "state": "published"}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 1233, "knowledge_id": 145, "used_as": "suggested"}},
+ {"tool": "send_notification", "args": {"case_id": 1233, "knowledge_id": 145, "email": "patricia.castro@carrilloinc.com", "type": "solution_proposal"}}
+]

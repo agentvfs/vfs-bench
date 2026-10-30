@@ -1,0 +1,24 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify case update",
+  "description": "Verify case update",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM customer_case WHERE case_id = 842 AND escalation = true AND escalation_reason = 'breach_risk';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify notification",
+  "description": "Verify notification",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count FROM notification WHERE case_id = 842 AND email = 'carl.brown91@cainryanandduncan.com' AND type = 'solution_proposal';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

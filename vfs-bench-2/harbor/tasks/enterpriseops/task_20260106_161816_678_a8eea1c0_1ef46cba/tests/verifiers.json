@@ -1,0 +1,79 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "product_changes",
+  "description": "Verifies: 1 INSERT (Advanced Security Module created)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS product_changes_verified FROM product WHERE product_id = 241 AND name = 'Advanced Security Module' AND category = 'software' AND lifecycle_state = 'active';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "user_changes",
+  "description": "Verifies: 1 UPDATE (Thomas Green activated) + 1 INSERT (Lisa Casey created)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS user_changes_verified FROM user WHERE (user_id = 1 AND first_name = 'Thomas' AND last_name = 'Green'  AND email = 'thomas.green@servicenow.com' AND active = 1 AND role = 'agent') OR (user_id = 803 AND first_name = 'Lisa' AND last_name = 'Casey'  AND email = 'lisa.casey@servicenow.com' AND active = 1 AND role = 'agent');",
+   "expected_value": 2,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "sla_changes",
+  "description": "Verifies: 1 UPDATE (Critical Resolution SLA target changed to 360 mins)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS sla_changes_verified FROM sla_definition WHERE sla_def_id = 6 AND name = 'SLA Resolution - Critical' AND metric = 'resolution' AND target_mins = 360 AND applies_to_priority = 'critical' AND pause_on_pending = 1 AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "membership_changes",
+  "description": "Verifies: 2 INSERTs (Thomas Green added to group 1, Lisa Casey added to group 81)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS membership_changes_verified FROM user_group_member WHERE (member_id = 960 AND group_id = 1 AND user_id = 1) OR (member_id = 961 AND group_id = 81 AND user_id = 803);",
+   "expected_value": 2,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "case_changes",
+  "description": "Verifies: 1 UPDATE (Case CS-0000783 state changed to in_progress, assigned to user 1)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_changes_verified FROM customer_case WHERE case_id = 783 AND number = 'CS-0000783' AND state = 'in_progress' AND assigned_to = 1 AND assignment_group_id = 1 AND priority = 'critical' AND account_id = 34 AND contact_id = 73 AND product_id = 35;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "group_changes",
+  "description": "Verifies: 1 INSERT (Security Policy Review team created)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS group_changes_verified FROM user_group WHERE group_id = 81 AND name = 'Security Policy Review' AND type = 'support' AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "all_changes",
+  "description": "Combined verification across all affected tables",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT(SELECT COUNT(*) FROM user WHERE (user_id = 1 AND active = 1) OR (user_id = 803)) +(SELECT COUNT(*) FROM product WHERE product_id = 241) +(SELECT COUNT(*) FROM sla_definition WHERE sla_def_id = 6 AND target_mins = 360) +(SELECT COUNT(*) FROM user_group_member WHERE member_id IN (960, 961)) +(SELECT COUNT(*) FROM customer_case WHERE case_id = 783 AND state = 'in_progress' AND assigned_to = 1) +(SELECT COUNT(*) FROM user_group WHERE group_id = 81)AS total_verified_changes;",
+   "expected_value": 8,
+   "comparison_type": "equals"
+  }
+ }
+]

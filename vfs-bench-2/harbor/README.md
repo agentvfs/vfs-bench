@@ -101,7 +101,7 @@ configuration and the existing fake services' storage are unchanged.
 The original Python and shell graders are preserved, with source hashes in
 `graders/manifest.json`. `liveclawbench-pyodide.yaml` explicitly runs those
 references; `MirageParityVerifier` runs both and keeps the reference rewards
-authoritative. Coverage across the six Mirage-agent job configs is:
+authoritative. Coverage across the seven Mirage-agent job configs is:
 
 | Dataset | Tasks | Preserved reference backend | Native ports |
 |---|---:|---|---:|
@@ -111,10 +111,24 @@ authoritative. Coverage across the six Mirage-agent job configs is:
 | ComplexMCP | 47 | microVM | 47 (Monty 1.4.0) |
 | AutomationBench | 600 | microVM | 600 (Monty 1.4.0) |
 | Gaia2 | 460 | microVM | 0 |
-| Total | 1,349 | | 763 |
+| EnterpriseOps-Gym | 103 | microVM | 103 |
+| Total | 1,452 | | 866 |
 
 The other 586 tasks retain microVM grading and report `unported` in parity
-mode. The unconfigured `pre-meeting-research-brief` LLM-judge task is outside
+mode.
+
+EnterpriseOps-Gym's upstream verifier asks each server's SQL runner, so its
+fakes answer their task's verifier queries themselves: the state view takes
+`query=` beside `table=` (`fake-state.ts`), answers each with the runner's
+rules, read-only at the run's clock, and keeps Python's types in the JSON
+(`{"__float__": 3.0}`). `graders/enterpriseops.ts` then does upstream's
+extraction and Python's comparisons over those rows. Its definitions,
+`graders/enterpriseops/manifest.json`, come from `enterpriseops.py`.
+All 103 tasks matched their microVM reference under `MirageParityVerifier`
+(`nop`), the oracle scores 94 of them 1.0 (the other 9 are upstream's,
+../enterpriseops/README.md), and
+`enterpriseops-grader.test.ts` checks the comparisons against the Python
+reference. The unconfigured `pre-meeting-research-brief` LLM-judge task is outside
 the 70-task set and has no native port.
 
 From `vfs-bench-2/`, after the usual dependency/setup steps:
@@ -376,6 +390,16 @@ ports must consume recorded responses or judgments to make comparisons stable.
 - `../mocks/gaia2/`, `../mocks/gaia2_<app>/`: gaia2-cli's nine apps as kit
   fakes, a shared store, schema and Python-semantics helpers, and each
   app's `app.ts`, `fake.ts` and `main.ts`.
+- `tasks/enterpriseops/<task id>/`: the EnterpriseOps-Gym tasks
+  (../enterpriseops/README.md); `enterpriseops.py` writes them, or checks
+  them; `enterpriseops_grade.py` is each one's `tests/grade.py`;
+  `enterpriseops.yaml`, their job config, graded natively
+  (`MirageVerifier`), `enterpriseops-msb.yaml` with the reference grader;
+  `enterpriseops_compare.py` checks a fake against upstream's server image.
+- `../mocks/enterpriseops/`, `../mocks/enterpriseops_<domain>/`:
+  EnterpriseOps-Gym's servers as kit fakes, a shared layer (Python's
+  `sqlite3` and `json`, pydantic's checks, the SQL runner) and each
+  server's schema, tools, `config.ts`, `fake.ts` and `main.ts`.
 
 ## The committed tasks
 

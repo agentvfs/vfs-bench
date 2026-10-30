@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Emergency Entitlement Oversight Group Creation",
+  "description": "Checks that the \"Emergency Entitlement Oversight\" group has been created as an active support-type user group, confirming that the emergency coordination structure exists and is enabled.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group WHERE name = 'Emergency Entitlement Oversight' AND type = 'support' AND active = 1; ",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Number of Managers in Entitlement Verification",
+  "description": "Ensures that, in the source Entitlement Verification team, there are exactly three users with the manager role. This establishes the baseline set of managers who should be added to the emergency oversight group.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user u JOIN user_group_member ugm ON ugm.user_id = u.user_id WHERE ugm.group_id = 5 AND u.role = 'manager' AND u.active = 1;",
+   "expected_value": 3,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify All Entitlement Managers Added to Emergency Group",
+  "description": "Confirms that all three identified Entitlement Verification managers have been added as members of the \"Emergency Entitlement Oversight\" support group.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group_member ugm JOIN user_group ug ON ug.group_id = ugm.group_id WHERE ug.name = 'Emergency Entitlement Oversight' AND ug.type = 'support' AND ugm.user_id IN (59, 170, 31);",
+   "expected_value": 3,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify No Additional Users Added to Emergency Group",
+  "description": "Ensures that no users outside the three Entitlement Verification managers have been added to the \"Emergency Entitlement Oversigh\" group, so the emergency group's membership is restricted strictly to those managers.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group_member ugm JOIN user_group ug ON ug.group_id = ugm.group_id WHERE ug.name = 'Emergency Entitlement Oversight' AND ug.type = 'support' AND ugm.user_id NOT IN (59, 170, 31);",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Emergency Group Contains Only Managers",
+  "description": "Checks that all members of the \"Emergency Entitlement Oversight\" group hold the manager role, guaranteeing that no agents or admins were mistakenly included in the emergency oversight structure.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user u JOIN user_group_member ugm ON u.user_id = ugm.user_id JOIN user_group ug ON ug.group_id = ugm.group_id WHERE ug.name = 'Emergency Entitlement Oversight' AND ug.type = 'support' AND u.role != 'manager';",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ }
+]

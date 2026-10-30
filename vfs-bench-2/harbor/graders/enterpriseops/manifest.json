@@ -1,0 +1,2515 @@
+{
+ "tasks": {
+  "task_20251125_152842_063_b393a327_9622ac64": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM customer_case WHERE short_description = 'NGINX Plus returning 502 Bad Gateway since go-live' AND priority = 'high' AND channel = 'phone' AND state = 'new';",
+      "SELECT COUNT(*) FROM entitlement e JOIN account a ON e.account_id = a.account_id WHERE a.name = 'Apex Industries' AND e.support_level = 'premium' AND e.max_cases_per_month = 40 AND e.coverage_hours = 'h24x7';",
+      "SELECT COUNT(*) FROM installed_product ip JOIN account a ON ip.account_id = a.account_id WHERE a.name = 'Apex Industries' AND ip.serial_number = 'APX-NGINX-001' AND ip.status = 'in_use' AND ip.product_id = 11;",
+      "SELECT COUNT(*) FROM contact c JOIN account a ON c.account_id = a.account_id WHERE a.name = 'Apex Industries' AND c.is_primary = 1 AND c.portal_user_id = 803;",
+      "SELECT COUNT(*) AS cnt FROM contract c JOIN account a ON c.account_id = a.account_id\nWHERE a.name = 'Apex Industries'\n  AND c.contract_type = 'support'\n  AND c.status = 'active'\n  AND c.contract_price = 35000\n  AND c.start_date = '2025-11-18';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "51f866188dfce9bc9beeb32f8940b4be3508fa988df1806d864185a3f446a4a4",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251126_182216_326_66392a82_d3ff64ca": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt FROM location WHERE location_id = 840 AND name = 'Carrillo Inc Site A - Tokyo' AND city = 'tokyo' AND country = 'japan' AND active = 0;",
+      "SELECT COUNT(*) AS cnt FROM location WHERE location_id = 839 AND name = 'Carrillo Inc Hq - Japan' AND city = 'tokyo' AND country = 'japan' AND active = 1;",
+      "SELECT COUNT(*) AS cnt FROM installed_product WHERE installed_product_id = 98 AND account_id = 19 AND product_id = 97 AND serial_number = 'P97-245230-8224' AND location_id = 839 AND status = 'in_use';",
+      "SELECT COUNT(*) AS cnt FROM installed_product WHERE installed_product_id = 102 AND account_id = 19 AND product_id = 229 AND serial_number = 'P229-742915-6468' AND location_id = 839 AND status = 'in_use';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "b6751a6037b792f25e93378485f37c1560231622338bc922686d9d600937ea0d",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251127_070938_325_b393a327_a40b1f4e": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM customer_case WHERE number = 'CS-0001213' AND state = 'closed' AND reopen_count = 0 AND assigned_to IS NULL AND priority = 'moderate';",
+      "SELECT COUNT(*) AS cnt FROM notification WHERE case_id = 1213 AND email = 'sheri.trujillo60@servicenow.com' AND type = 'alert';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "ae2f34d96ecc1856195e26d0eff2b702502a98616b0be8ffacc1f8d59cf70998",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251127_152838_396_99ba2325_8391501f": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS count FROM location WHERE location_id = '892' AND active = 0;",
+      "SELECT COUNT(*) AS count FROM installed_product WHERE location_id = '907' AND status = 'in_use' AND installed_product_id = '250';\n",
+      "SELECT COUNT(*) AS count FROM customer_case WHERE account_id = '45' AND channel = 'alert' AND state = 'new' AND priority = 'moderate' AND installed_product_id = '250' AND product_id = '113';",
+      "SELECT COUNT(*) AS count FROM notification WHERE email = 'kayla.lutz@simonllc.com' AND status = 'success' AND case_id = '1233' AND type = 'alert';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "02d1b3bdaead933421cce41ba182b07b378f9817fd29dfd003d5933a7de12dd1",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251128_072831_616_6cd2e092_426f7c81": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS result FROM customer_case WHERE number='CS-0000184' AND priority='high';",
+      "SELECT COUNT(*) AS result FROM customer_case WHERE number='CS-0000184' AND assignment_group_id=(SELECT group_id FROM user_group WHERE name='CSM Tier 2 Support');",
+      "SELECT COUNT(*) AS result FROM customer_case WHERE number='CS-0000184' AND contact_id=11;",
+      "SELECT COUNT(*) AS result FROM case_sla WHERE case_id=(SELECT case_id FROM customer_case WHERE number='CS-0000184') AND sla_def_id=(SELECT sla_def_id FROM sla_definition WHERE name='SLA Response - High (No Pause)') AND stage='in_progress' AND start_time IS NOT NULL;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "ac1c858e09c76701a5de2f20e73ba48c1649c204b3b01f8f1f200f4a6d4b2364",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251128_204735_353_66392a82_3f8ef4a1": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS c FROM customer_case WHERE case_id = 1233 AND account_id = 19 AND contact_id = 31 AND product_id = 97 AND installed_product_id = 98 AND channel = 'email' AND priority = 'high' AND state = 'new';",
+      "SELECT COUNT(*) AS c FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 1233 AND knowledge_id = 145 AND used_as = 'suggested';",
+      "SELECT COUNT(*) AS c FROM notification WHERE notification_id = 734 AND case_id = 1233 AND knowledge_id = 145 AND email = 'patricia.castro@carrilloinc.com' AND type = 'solution_proposal' AND status = 'success';",
+      "SELECT COUNT(*) FROM case_sla WHERE case_id = 1233 AND sla_def_id = 2 AND stage = 'in_progress';",
+      "SELECT COUNT(*) FROM case_sla WHERE case_id = 1233 AND sla_def_id = 7 AND stage = 'in_progress';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "11fe7cd0089f8108655c580e383f86014b631c3c70d186b90985c43f4110287f",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251201_164641_724_109c89c0_1b29acb9": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+      "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'new'\n  AND channel = 'web';",
+      "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'new'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+      "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'new'\n  AND channel = 'web';",
+      "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'new'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+      "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'new'\n  AND channel = 'web';",
+      "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'new'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+      "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'new'\n  AND channel = 'web';",
+      "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'new'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+      "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'new'\n  AND channel = 'web';",
+      "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'new'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+      "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'resolved'\n  AND channel = 'web';",
+      "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'resolved'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+      "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'resolved'\n  AND channel = 'web';",
+      "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'resolved'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+      "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'resolved'\n  AND channel = 'web';",
+      "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'resolved'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+      "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'resolved'\n  AND channel = 'web';",
+      "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'resolved'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+      "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 3\n  AND is_primary = 1;",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'resolved'\n  AND channel = 'web';",
+      "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'resolved'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 2\n  AND state IN ('new','in_progress','pending');",
+      "SELECT is_primary\nFROM contact\nWHERE contact_id = 3;",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE account_id = 4\n  AND contact_id = 3\n  AND priority = 'moderate'\n  AND state = 'resolved'\n  AND channel = 'web';",
+      "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE email = 'derek.blake7@globex.com'\n  AND type = 'update'\n  AND case_id = (\n      SELECT case_id\n      FROM customer_case\n      WHERE account_id = 4\n        AND contact_id = 3\n        AND priority = 'moderate'\n        AND state = 'resolved'\n      ORDER BY case_id DESC\n      LIMIT 1\n  );\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "fe88f10ec0d31ae57751119b01cfd9003cc67bed54bc5b8611589cf26b7047b9",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251202_041242_095_99ba2325_a63db5e8": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS count FROM user WHERE first_name = 'Christopher' AND last_name = 'Underwood' AND active = 0;\n",
+      "SELECT COUNT(*) AS count FROM customer_case WHERE number = 'CS-0000311' AND priority = 'critical' AND assigned_to = 770;\n",
+      "SELECT COUNT(*) AS count FROM case_knowledge WHERE case_id = 311 AND knowledge_id = 44;\n",
+      "SELECT COUNT(*) AS count FROM knowledge WHERE knowledge_id = 44 AND state = 'published';\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "587927bb58ac9586a2fba59fff3d5a948c36bab8cf7aaa32d741c6605aecc3e8",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251202_052822_939_66392a82_0479926e": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM account WHERE name = 'Lumina Healthcare' AND account_type = 'customer' AND active = 1;",
+      "SELECT COUNT(*) FROM user_group WHERE name = 'Lumina Implementation Coordination' AND type = 'support' AND active = 1;",
+      "SELECT COUNT(*) AS member_count FROM user_group_member ugm JOIN user_group ug ON ugm.group_id = ug.group_id WHERE ug.name = 'Lumina Implementation Coordination';",
+      "SELECT COUNT(*) AS manager_count FROM user u JOIN user_group_member new_g ON u.user_id = new_g.user_id JOIN user_group ng ON new_g.group_id = ng.group_id JOIN user_group_member ib_g ON u.user_id = ib_g.user_id JOIN user_group ibg ON ib_g.group_id = ibg.group_id WHERE ng.name = 'Lumina Implementation Coordination' AND ibg.name = 'Installed Base Support' AND u.role = 'manager';",
+      "SELECT COUNT(*) AS non_manager_count FROM user u JOIN user_group_member new_g ON u.user_id = new_g.user_id JOIN user_group ng ON new_g.group_id = ng.group_id JOIN user_group_member ib_g ON u.user_id = ib_g.user_id JOIN user_group ibg ON ib_g.group_id = ibg.group_id WHERE ng.name = 'Lumina Implementation Coordination' AND ibg.name = 'Installed Base Support' AND u.role != 'manager';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "6855f87fa67eb79a7adfbf8a391e367225b529a823f07ed4a4bb3fdf40dec97f",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251202_100743_745_109c89c0_958a07c1": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt\nFROM entitlement\nWHERE entitlement_id = 26\n  AND active = 1;",
+      "SELECT COUNT(*) AS cnt\nFROM entitlement\nWHERE entitlement_id = 27\n  AND active = 1;",
+      "SELECT COUNT(*) AS cnt\nFROM contract\nWHERE contract_id = 133\n  AND status = 'active'\n  AND end_date = '2029-07-07';",
+      "SELECT COUNT(*) AS cnt\nFROM entitlement\nWHERE entitlement_id = 26\n  AND active = 1;",
+      "SELECT COUNT(*) AS cnt\nFROM entitlement\nWHERE entitlement_id = 27\n  AND active = 1;",
+      "SELECT COUNT(*) AS cnt\nFROM contract\nWHERE contract_id = 133\n  AND status = 'active'\n  AND end_date = '2029-07-07';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "ebcccebfa222d964259bb8300edc6d42cc562fe568815eadaa0aeff982c69a08",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251203_051113_560_99ba2325_1ff9b6e5": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS count FROM contract WHERE contract_id = 100 AND contract_price = 2678;\n",
+      "SELECT COUNT(*) AS count FROM user WHERE user_id = 55 AND phone = '+12125516299' AND location_id = 903;\n",
+      "SELECT COUNT(*) AS count FROM contract WHERE contract_id = 101 AND contract_price = 27315;\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "1a94799935245420c35b56d4f6234f0e1bb04c6fcecd264132cdfb47c066e718",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251203_064555_149_66392a82_d124b805": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM account WHERE name = 'Horizon Fleet Services' AND account_type = 'customer' AND active = 1;",
+      "SELECT COUNT(*) FROM user_group WHERE name = 'Horizon Field Response Coordination' AND type = 'field' AND active = 1;",
+      "SELECT COUNT(*) FROM user_group_member ugm JOIN user_group ug ON ugm.group_id = ug.group_id WHERE ug.name = 'Horizon Field Response Coordination' AND ug.type = 'field' AND ugm.user_id = 518;",
+      "SELECT COUNT(*) FROM user_group_member WHERE group_id = 54  AND user_id = 518;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "0acaf96416272391047a6ef882ddc34b803d9634c846401a057b9c8a3e188698",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251203_194626_202_391f1eff_1336fae8": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 1179 AND state = 'in_progress' AND escalation = 1 AND escalation_reason = 'customer_request';",
+      "SELECT stage FROM case_sla WHERE case_sla_id = 2358;",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 1179 AND knowledge_id = 206 AND used_as = 'suggested';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "a1d282897975062a5402a857280efffadda4c6bba674d67799bcc2cab7ec227e",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251204_132620_055_5c0cd3a2_048c6e95": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt FROM customer_case WHERE case_id = 71 AND assignment_group_id = 2 AND assigned_to = 11 AND priority = 'high' AND state = 'in_progress' AND escalation = 1 AND escalation_reason = 'impact';",
+      "SELECT COUNT(*) AS cnt FROM user_group_member WHERE group_id = 2 AND user_id = 11;",
+      "SELECT COUNT(*) AS cnt FROM entitlement e JOIN account a ON a.account_id = e.account_id JOIN contract ct ON ct.contract_id = e.contract_id AND ct.status = 'active' JOIN product p ON p.product_id = e.product_id WHERE a.name = 'Acme Systems' AND p.name='Atlassian Jira Data Center Variant 77' AND e.support_level = 'premium' AND e.coverage_hours = 'h12x6' AND e.max_cases_per_month = 30 AND e.active = 1"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "e2a5c1599f763336288a3199a64a4633d7fec48b20ee05d95449f0f2a344e409",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251204_160336_295_5c0cd3a2_26d1b04a": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT count(*) FROM location WHERE name='Globex HQ - Sydney' and plot_no='114B';",
+      "SELECT count(*) FROM installed_product WHERE installed_product_id = 20 and warranty_end='2029-09-14' and status='repair';",
+      "SELECT count(*) FROM entitlement WHERE entitlement_id = 31 and coverage_hours='h24x7' and support_level='premium';",
+      "SELECT count(*) FROM contract WHERE contract_id = 10 and end_date='2028-08-15';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "0cf806dbfec5762ebec5c5fbcad8cdfde55b934e78c23fc6c5d4d8abc7ed05de",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251204_161024_294_46ca2862_1cc82f4c": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt FROM user WHERE user_id = 801 AND location_id = 804",
+      "SELECT location_id FROM installed_product WHERE installed_product_id = 1 AND status ='in_use'",
+      "SELECT COUNT(*) AS cnt FROM installed_product WHERE installed_product_id = 1 AND status ='in_use'"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "652bd15af0163a6849e8e93812733c2073a7b3d32d0154d1664f8ce09cfb38c1",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251204_231522_245_e6427839_5d09c3c2": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request' AND priority = 'high';\n",
+      "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+      "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+      "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+      "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+      "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+      "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+      "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+      "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+      "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+      "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+      "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "765b74318f776bb6a13ba818534ef25749a498696b8a2e1008d51759a23da135",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251205_060649_946_66392a82_354af85a": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM contract WHERE contract_id = 100 AND contract_type = 'warranty' AND status = 'active' AND end_date = '2027-02-07';",
+      "SELECT COUNT(*) FROM contract WHERE contract_id = 115 AND contract_type = 'warranty' AND status = 'active' AND end_date = '2027-02-28';",
+      "SELECT COUNT(*) FROM contract WHERE contract_id = 33 AND contract_type = 'warranty' AND status = 'active' AND end_date = '2028-02-24';",
+      "SELECT COUNT(*) FROM contract WHERE contract_id = 56 AND contract_type = 'warranty' AND status = 'active' AND end_date = '2028-02-26';",
+      "SELECT COUNT(*) FROM contract WHERE contract_id = 60 AND contract_type = 'warranty' AND status = 'active' AND end_date = '2028-02-04';",
+      "SELECT COUNT(*) FROM contract WHERE contract_id = 117 AND contract_type = 'warranty' AND status = 'active' AND end_date = '2028-02-12';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "a8785ccbba6cb54f3d99cfa40100729e1cd6398dc725798e69299291b2081f9d",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251205_072016_336_46ca2862_e9006fbb": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt FROM customer_case WHERE case_id = 1142 AND assigned_to = 5",
+      "SELECT COUNT(*) AS cnt FROM customer_case WHERE case_id = 251 AND assigned_to = 5",
+      "SELECT COUNT(*) AS cnt FROM user WHERE user_id = 3 AND active = 0",
+      "SELECT COUNT(*) AS cnt FROM user_group_member WHERE member_id = 960 AND  user_id = 5 AND group_id = 67",
+      "SELECT COUNT(*) AS cnt FROM user_group_member WHERE user_id = 3 AND group_id = 67",
+      "SELECT COUNT(*) AS cnt FROM notification WHERE email= 'mckenzie.mendez@servicenow.com' AND case_id = 1142 AND type = 'update'",
+      "SELECT COUNT(*) AS cnt FROM notification WHERE email= 'mckenzie.mendez@servicenow.com' AND case_id = 1142 AND type = 'update'"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "aa627570b92d5dac65ad541864443339004c9627fd3696965b13e183e32c980e",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251205_075543_102_46ca2862_7ba653d0": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt FROM knowledge WHERE knowledge_id = 197 AND state = 'published'",
+      "SELECT COUNT(*) AS cnt FROM case_knowledge WHERE knowledge_id = 197 AND case_id = 2 AND used_as = 'suggested'",
+      "SELECT COUNT(*) AS cnt FROM user_group WHERE name = 'Case Management' AND type = 'support'",
+      "SELECT COUNT(*) AS cnt FROM user_group_member WHERE group_id = 81 AND user_id = 4",
+      "SELECT COUNT(*) AS cnt FROM customer_case WHERE case_id = 2 AND assignment_group_id = 81 AND assigned_to = 4 AND state = 'pending'"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "02d1ea29a8d8830aebb3942cbab8da5aa628c7f40a79da985ebb57b5808ee05a",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251205_095558_939_5c0cd3a2_4af4214c": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT portal_user_id FROM contact WHERE contact_id = 125 AND account_id = 9 AND active = 1 AND is_primary = false;",
+      "SELECT case_id FROM customer_case WHERE case_id = 1233 AND account_id = 9 AND contact_id = 125 AND contact_id = 125 AND installed_product_id = 48 AND channel = 'web' AND priority = 'critical' AND state = 'new';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "065c08e68ef1b95e0186fbf6e6fce4616e664ffd1467e8c0efff851934dcf671",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251205_101915_742_d4a463c3_8eac8077": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) \nFROM knowledge AS k\nWHERE k.title = 'Restore PA-3220 connection queue and restart monitoring service'\n  AND k.state = 'published'\n  AND k.visibility = 'external'\n  AND k.owner_id = 32\n  AND k.product_id = 128;\n",
+      "SELECT COUNT(*)\nFROM interaction AS i\nWHERE i.case_id = 5\n  AND i.account_id = 1\n  AND i.contact_id = 123\n  AND i.channel = 'email'\n  AND i.status = 'handled'\n  AND i.interacted_user = 32;\n",
+      "SELECT COUNT(*)\nFROM notification AS n\nWHERE n.case_id = 5\n  AND n.email = 'elizabeth.chase32@servicenow.com'\n  AND n.type = 'solution_proposal'\n  AND n.knowledge_id = 370;\n",
+      "SELECT COUNT(*)\nFROM customer_case AS c\nWHERE c.case_id = 10\n  AND c.state = 'closed';\n",
+      "SELECT COUNT(*)\nFROM customer_case AS c\nWHERE c.case_id = 5\n  AND c.state = 'resolved';\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "1e7f26bf2acd5373681332158ad778d07d6ac9a1c6f5709e3cb9eb02fca51144",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251205_135905_848_391f1eff_9344499e": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 379 AND assigned_to = 656 AND state = 'in_progress';",
+      "SELECT COUNT(*) FROM case_sla WHERE case_sla_id = 757 AND stage = 'in_progress';",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 379 AND knowledge_id = 57 AND used_as = 'suggested';",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 379 AND assigned_to = 656 AND state = 'in_progress';",
+      "SELECT COUNT(*) FROM case_sla WHERE case_sla_id = 757 AND stage = 'in_progress';",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 379 AND knowledge_id = 57 AND used_as = 'suggested';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "ac3f48919e41248a9429da2a3b739cf038c66178bac5d63f074757a186a9a380",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251205_153330_906_a8eea1c0_8c7a6205": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT coverage_hours FROM entitlement WHERE entitlement_id = 73;",
+      "SELECT max_cases_per_month FROM entitlement WHERE entitlement_id = 73;",
+      "SELECT COUNT(*) FROM entitlement WHERE entitlement_id = 73 AND sys_updated_on IS NOT NULL",
+      "SELECT installed_product_id FROM customer_case WHERE case_id = 1233;",
+      "SELECT priority FROM customer_case WHERE case_id = 1233 AND channel = 'phone';",
+      "SELECT assignment_group_id FROM customer_case WHERE case_id = 1233;",
+      "SELECT assigned_to FROM customer_case WHERE case_id = 1233;",
+      "SELECT state FROM customer_case WHERE case_id = 1233;",
+      "SELECT COUNT(*) FROM case_sla WHERE case_id = 1233 AND sla_def_id = 6;",
+      "SELECT stage FROM case_sla WHERE case_id = 1233 AND sla_def_id = 6;",
+      "SELECT support_level FROM entitlement WHERE entitlement_id = 73;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "2c1dcb3918b214456057612123da5fb30f7a438e53f76f5ebfd28a1bb63aa508",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251205_154853_044_d4a463c3_fce76046": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) \nFROM installed_product AS ip\nWHERE ip.installed_product_id = 40\n  AND ip.location_id = 692\n  AND ip.status = 'in_use';\n",
+      "SELECT COUNT(*)\nFROM customer_case AS c\nWHERE c.account_id = 8\n  AND c.contact_id = 10\n  AND c.channel = 'alert'\n  AND c.priority = 'low'\n  AND c.state = 'closed';\n ",
+      "SELECT COUNT(*)\nFROM notification AS n\nWHERE n.case_id = 1233\n  AND n.email = 'marc.henry@stark-industries.com'\n  AND n.type = 'update';\n",
+      "SELECT COUNT(*)\nFROM notification AS n\nWHERE n.case_id = 1233\n  AND n.email = 'tonya.stevens@stark-industries.com'\n  AND n.type = 'update';\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "e3f59c31ea9786c7f1249d9ff4136247e7d214a97cbfe406853965b1bdd72a10",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251205_194841_224_391f1eff_136bedae": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 1233 AND  account_id = 4 AND contact_id = 3 AND product_id = 14 AND channel = 'web' AND priority = 'moderate' AND state = 'new';",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 1233 AND knowledge_id = 22 AND used_as = 'suggested';",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 1233 AND  account_id = 4 AND contact_id = 3 AND product_id = 14 AND channel = 'web' AND priority = 'moderate' AND state = 'new';",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 1233 AND knowledge_id = 22 AND used_as = 'suggested';",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 1233 AND  account_id = 4 AND contact_id = 3 AND product_id = 14 AND channel = 'web' AND priority = 'moderate' AND state = 'new';",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 1233 AND knowledge_id = 22 AND used_as = 'suggested';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "26f0c5f5953f7274ace1ce37745c3894688ae8a98c1d00bebd9a29c8debbe4e8",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251206_091748_833_a8eea1c0_7775ff15": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT assigned_to FROM customer_case WHERE case_id = 7;",
+      "SELECT priority FROM customer_case WHERE case_id = 7;",
+      "SELECT escalation FROM customer_case WHERE case_id = 7;",
+      "SELECT escalation_reason FROM customer_case WHERE case_id = 7;",
+      "SELECT assignment_group_id FROM customer_case WHERE case_id = 7;",
+      "SELECT state FROM customer_case WHERE case_id = 7;",
+      "SELECT stage FROM case_sla WHERE case_sla_id = 13;",
+      "SELECT stage FROM case_sla WHERE case_sla_id = 14;",
+      "SELECT has_breached FROM case_sla WHERE case_sla_id = 13;",
+      "SELECT COUNT(completed_time) FROM case_sla WHERE case_sla_id = 14;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "e91169830f6013a9ff96e68daa11dacc27f0ddc36040189af38b07aabdbbf663",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251206_113950_467_6cd2e092_1a268d87": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt FROM customer_case WHERE case_id = 486 AND state = 'new' AND reopen_count = 1 AND channel = 'email' AND contact_id=38;",
+      "SELECT COUNT(*) AS cnt FROM customer_case WHERE case_id = 486 AND assignment_group_id = 1 AND assigned_to = 123;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "aef4ab9f8a1b73a87c23d3a66f34a04cee8e08b836b918a16fd751afb697d1b2",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251206_114027_879_5c0cd3a2_904991cc": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt\nFROM customer_case c\nJOIN product p\n  ON p.product_id = c.product_id\nWHERE c.number = 'CS-0000009'\n  AND c.escalation = 1\n  AND c.state = 'in_progress'\n  AND p.name = 'Juniper EX4300 Variant 31'\n  AND c.short_description LIKE 'Product: Juniper EX4300 Variant 31,%';\n",
+      "SELECT COUNT(*) AS cnt\nFROM case_knowledge ck\nJOIN knowledge k\n  ON k.knowledge_id = 243\nJOIN customer_case c\n  ON c.case_id = ck.case_id\nWHERE c.number = 'CS-0000009'\n  AND k.title LIKE '%Juniper EX4300 Variant 31%'\n  AND k.state = 'published'\n  AND ck.used_as = 'applied';\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "8f221ba3760c8b9401fd84ce3e7511e528bae486e1e3a41d042f00903f8cf2c3",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251206_130444_802_6cd2e092_8979087f": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS result FROM customer_case WHERE number='CS-0000184' AND assignment_group_id=(SELECT group_id FROM user_group WHERE name='CSM Tier 2 Support');",
+      "SELECT COUNT(*) AS result FROM customer_case WHERE number='CS-0000184' AND priority='high';",
+      "SELECT COUNT(*) AS result FROM customer_case WHERE number='CS-0000184' AND contact_id=11;",
+      "SELECT COUNT(*) AS result FROM case_sla WHERE case_id=(SELECT case_id FROM customer_case WHERE number='CS-0000184') AND sla_def_id=(SELECT sla_def_id FROM sla_definition WHERE name='SLA Response - High (No Pause)') AND stage='in_progress' AND start_time IS NOT NULL;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "e93ae6093fb9cc4ad41b348d443b0fd509b79243fb522040b2df77ae686bbae3",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251207_012657_395_accab84d_6ec27d2f": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt\nFROM customer_case cc\nJOIN account a ON cc.account_id = a.account_id\nJOIN contact c ON cc.contact_id = c.contact_id\nJOIN \"user\" u ON cc.assigned_to = u.user_id\nJOIN user_group g ON cc.assignment_group_id = g.group_id\nWHERE a.name = 'Initech'\n  AND u.first_name = 'Michael'\n  AND u.last_name = 'Lee'\n  AND g.name = 'CSM Tier 1 Support'\n  AND cc.state = 'in_progress'\n  AND cc.reopen_count >= 1;",
+      "SELECT COUNT(*) AS cnt\nFROM case_knowledge ck\nJOIN customer_case cc ON ck.case_id = cc.case_id\nJOIN account a ON cc.account_id = a.account_id\nWHERE a.name = 'Initech'\n  AND ck.used_as = 'resolution'\n  AND ck.knowledge_id = 46;",
+      "SELECT COUNT(*) AS cnt\nFROM case_knowledge ck\nJOIN customer_case cc ON ck.case_id = cc.case_id\nJOIN account a ON cc.account_id = a.account_id\nWHERE a.name = 'Initech'\n  AND ck.used_as = 'suggested'\n  AND ck.knowledge_id = 170;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "4d48ec0ff74cb89e9f413ac9922225f2541ce557363ba5de40a4b5325a0a2db7",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251207_174704_642_5c0cd3a2_c124578d": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt\nFROM customer_case c\nJOIN product p\n  ON p.product_id = c.product_id\n AND p.name = 'Enterprise Success Plan Variant 3'\nWHERE c.channel           = 'social'\n  AND c.reopen_count      = 4\n  AND c.priority          = 'high'\n  AND c.state             = 'in_progress';",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case c\nJOIN product p\n  ON p.product_id = c.product_id\n AND p.name = 'Enterprise Success Plan Variant 3'\nJOIN \"user\" u\n  ON u.user_id    = c.assigned_to\n AND u.first_name = 'Amanda'\n AND u.last_name  = 'Austin'\nWHERE c.channel      = 'social'\n  AND c.reopen_count = 4\n  AND c.priority     = 'high'\n  AND c.state        = 'in_progress';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "636ad8095473ca3945ed6129bd76a7b41517a6ead999909a30bb62270707abef",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251208_035402_755_ad5a67e3_8ca9a646": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt\nFROM customer_case c\nJOIN contact ct\n  ON ct.contact_id = c.contact_id\nJOIN account a\n  ON a.account_id = c.account_id\nJOIN \"user\" u\n  ON u.user_id = ct.portal_user_id\nJOIN product p\n  ON p.product_id = c.product_id\nWHERE u.first_name = 'Thomas'\n  AND u.last_name  = 'Bailey'\n  AND a.name       = 'Initech'\n  AND p.name       = 'Docker Enterprise Variant 15'\n  AND c.channel    = 'phone'\n  AND c.state      = 'in_progress';",
+      "SELECT COUNT(*) AS cnt\nFROM case_knowledge ck\nJOIN knowledge k\n  ON k.knowledge_id = ck.knowledge_id\nJOIN product p\n  ON p.product_id = k.product_id\nJOIN customer_case c\n  ON c.case_id = ck.case_id\nJOIN contact ct\n  ON ct.contact_id = c.contact_id\nJOIN account a\n  ON a.account_id = ct.account_id\nJOIN \"user\" u\n  ON u.user_id = ct.portal_user_id\nWHERE u.first_name = 'Thomas'\n  AND u.last_name  = 'Bailey'\n  AND a.name       = 'Initech'\n  AND c.channel    = 'phone'\n  AND c.state      = 'in_progress'\n  AND c.product_id = p.product_id\n  AND p.name       = 'Docker Enterprise Variant 15'\n  AND ck.used_as   = 'applied'\n  AND k.title LIKE '%Docker Enterprise Variant 15%';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "3ce27b0c326903fbf04d65d2fe7c75a987106a44f3284dd2bcf0d4824b21c294",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251208_072220_004_99ba2325_74403162": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS count FROM user_group_member WHERE group_id = 4 AND user_id = 803;",
+      "SELECT COUNT(*) AS count FROM case_sla WHERE case_sla_id = 1 AND stage = 'in_progress' AND has_breached = 1;",
+      "SELECT COUNT(*) AS count FROM customer_case WHERE case_id = 1 AND state = 'in_progress' AND assignment_group_id = 4 AND assigned_to = 803;",
+      "SELECT COUNT(*) AS count FROM user WHERE email = 'oliver.oats@servicenow.com' AND role = 'agent' AND active = 1 AND location_id = 832;",
+      "SELECT COUNT(*) AS count FROM case_sla WHERE case_sla_id = 2 AND stage = 'in_progress' AND has_breached = 1;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "d303990a8c701f5f785d06588e407e2832b90c2f3dc1b9ef6726f63164e7fe3d",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251208_102635_187_c4ad7a70_43753a9a": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM contact WHERE account_id = 26 AND portal_user_id = 539 AND is_primary = 1;",
+      "SELECT COUNT(*) FROM contact WHERE account_id = 26 AND contact_id = 50 AND is_primary = 1;",
+      "SELECT COUNT(*) FROM customer_case WHERE account_id = 26 AND contact_id = 51 AND product_id = 179 AND installed_product_id = 139 AND channel = 'alert' AND priority = 'moderate' AND state = 'new' AND short_description LIKE '%Product: Pure Storage FlashArray//X Variant 47, Issue:%';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "4205f4fc697f84bdd9c93d577cc017dbac4959f8f5f1d9b937e3a80706a00671",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251208_123126_960_c4ad7a70_f974dae7": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 1233 AND account_id = 44 AND contact_id = 101 AND product_id = 140 AND installed_product_id = 243 AND channel = 'social' AND priority = 'moderate' AND state = 'new' AND short_description LIKE '%Product: Palo Alto Networks PA-3220 Variant 8, Issue:%';",
+      "SELECT COUNT(*) FROM interaction WHERE account_id = 44 AND contact_id = 101 AND case_id = 1233 AND channel = 'social' AND status = 'handled';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "82d3d78ca89748f16b23bbf3cfa0f5ba0feb697eb51337f3b2d4c51187e40c87",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251208_153512_199_46ca2862_3f951375": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt FROM user_group_member WHERE user_id = 6 AND group_id = 50",
+      "SELECT COUNT(*) AS cnt FROM user_group_member WHERE member_id = 960 AND  user_id = 31 AND group_id = 50",
+      "SELECT COUNT(*) AS cnt FROM user WHERE user_id = 6 AND active = 0",
+      "SELECT COUNT(*) AS cnt FROM customer_case WHERE case_id = 525  AND assigned_to = 31",
+      "SELECT COUNT(*) AS cnt FROM user_group_member WHERE user_id = 6 AND group_id = 35"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "aad0cc968cd320f3b0da0beb2c0be8458cc260aa23568148323363cf15feef64",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251209_063042_139_66392a82_81ffc0b0": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt FROM customer_case WHERE account_id = 4 AND contact_id = 3 AND product_id = 170 AND installed_product_id = 22 AND state = 'in_progress' AND channel = 'email' AND priority = 'critical' AND reopen_count = 2;",
+      "SELECT COUNT(*) AS cnt FROM customer_case c WHERE c.case_id = 88 AND c.assignment_group_id = 10 AND c.assigned_to IN ( SELECT ugm.user_id FROM user_group_member ugm JOIN user u ON u.user_id = ugm.user_id WHERE ugm.group_id = 10 AND u.role = 'manager' AND u.active = 1 );",
+      "SELECT COUNT(*) AS cnt FROM notification n WHERE n.case_id = 88 AND n.type = 'update' AND n.email IN ( SELECT u.email FROM user_group_member ugm JOIN user u ON u.user_id = ugm.user_id WHERE ugm.group_id = 11 AND u.role = 'manager' AND u.active = 1 );"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "e96113a651db2e8954acc76c6872d853b1376cb0c07c575e256b5dcb1af92013",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251209_085836_811_a8eea1c0_6bbced3d": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM user WHERE (user_id = 1 AND active = 1) OR (user_id = 803 AND first_name = 'Sarah' AND last_name = 'Connor' AND role = 'agent');",
+      "SELECT COUNT(*) FROM product WHERE product_id = 241 AND name = 'Quantum Firewall 5000' AND category = 'hardware' AND lifecycle_state = 'active';",
+      "SELECT COUNT(*) FROM user_group_member WHERE group_id = 1 AND user_id = 803;",
+      "SELECT COUNT(*) FROM knowledge WHERE kb_number = 'KB000370' AND product_id = 241 AND owner_id = 803 AND state = 'draft';",
+      "SELECT COUNT(*) FROM user_group WHERE group_id = 1 AND name = 'CSM Tier 1 Support' AND type = 'support' AND active = 1;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "af6a9a6ff545b4aa218056235fd0e185dc51105556765df6b6fb37c2ef79ae04",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251209_122452_734_d4a463c3_e5f1961c": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS case_1127_state_cnt\nFROM customer_case AS cc\nWHERE cc.case_id = 1127\nAND cc.state = 'in_progress';\n",
+      "SELECT COUNT(*) AS case_888_update_cnt\nFROM customer_case AS cc\nWHERE cc.case_id = 888\nAND cc.priority = 'high'\nAND cc.state = 'resolved';\n",
+      "SELECT COUNT(*) AS case_1127_sla_cnt\nFROM case_sla AS s\nWHERE s.case_id = 1127\nAND s.sla_def_id = 1\nAND s.stage = 'in_progress';\n",
+      "SELECT COUNT(*) AS case_1127_sla_cnt\nFROM case_sla AS s\nWHERE s.case_id = 1127\nAND s.sla_def_id = 6\nAND s.stage = 'in_progress';\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "2f6e4246055624a1e1ced2b7c2cc9a203ebcecccbe86c448dc9bbfe4d7618cb8",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251210_002938_761_897c3e0b_f075229a": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM customer_case WHERE account_id = 52 AND product_id = 133 AND installed_product_id = 295 AND priority = 'moderate' AND channel = 'community' AND short_description = 'Product: Dell PowerEdge R740 (Config 1), Issue: is not working as expected.' AND assignment_group_id = 10;",
+      "SELECT COUNT(*) FROM customer_case cc JOIN contact c ON cc.contact_id = c.contact_id WHERE cc.account_id = 52 AND cc.product_id = 133 AND c.is_primary = 1 AND cc.short_description = 'Product: Dell PowerEdge R740 (Config 1), Issue: is not working as expected.';",
+      "SELECT COUNT(*) FROM customer_case WHERE account_id = 52 AND product_id = 133 AND state = 'in_progress' AND short_description = 'Product: Dell PowerEdge R740 (Config 1), Issue: is not working as expected.';",
+      "SELECT COUNT(*) FROM customer_case WHERE account_id = 52 AND product_id = 133 AND installed_product_id = 295 AND priority = 'moderate' AND channel = 'community' AND assignment_group_id = 10 AND short_description = 'Product: Dell PowerEdge R740 (Config 1), Issue: is not working as expected.';",
+      "SELECT COUNT(*) FROM customer_case WHERE account_id = 52 AND product_id = 133 AND assignment_group_id = 10 AND short_description = 'Product: Dell PowerEdge R740 (Config 1), Issue: is not working as expected.';",
+      "SELECT COUNT(*) FROM case_sla cs JOIN customer_case cc ON cs.case_id = cc.case_id JOIN sla_definition sd ON cs.sla_def_id = sd.sla_def_id WHERE cc.account_id = 52 AND cc.product_id = 133 AND sd.metric = 'response' AND sd.applies_to_priority = 'moderate' AND sd.active = 1 AND cc.short_description = 'Product: Dell PowerEdge R740 (Config 1), Issue: is not working as expected.';",
+      "SELECT COUNT(*) FROM case_sla cs JOIN customer_case cc ON cs.case_id = cc.case_id WHERE cc.account_id = 52 AND cc.product_id = 133 AND cs.stage = 'in_progress' AND cs.start_time IS NOT NULL AND cc.short_description = 'Product: Dell PowerEdge R740 (Config 1), Issue: is not working as expected.';",
+      "SELECT COUNT(*) FROM customer_case WHERE account_id = 52 AND product_id = 133 AND priority = 'moderate' AND channel = 'community' AND short_description = 'Product: Dell PowerEdge R740 (Config 1), Issue: is not working as expected.';",
+      "SELECT COUNT(*) FROM customer_case WHERE account_id = 52 AND product_id = 133 AND short_description = 'Product: Dell PowerEdge R740 (Config 1), Issue: is not working as expected.' AND sys_updated_on > sys_created_on;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "7012cd93917ad782f94313d1e1d7d1a0e93145b4de799a2848290cc2684f4cf6",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251210_051952_801_99ba2325_a136867b": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS count FROM customer_case WHERE case_id = 62 AND account_id = 3 AND product_id = 97 AND state = 'in_progress' AND reopen_count = 1 AND assigned_to = 439 AND assignment_group_id = 4;",
+      "SELECT COUNT(*) AS cnt FROM case_knowledge WHERE case_id = 62 AND knowledge_id = 145;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "11fa0bede6ab7e68799694861255426790a1559e951c5ce854138dfd3c6c6df0",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251210_113549_827_d4a463c3_47b48a98": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS service_healthy_cnt\nFROM product AS p\nWHERE p.name = 'Network Resilience Health Check'\nAND p.category = 'service'\nAND p.lifecycle_state = 'active';\n",
+      "SELECT COUNT(*) AS case_888_canceled_cnt\nFROM customer_case AS cc\nWHERE cc.case_id = 888\nAND cc.state = 'canceled';\n",
+      "SELECT COUNT(*) AS kb_network_resilience_cnt\nFROM knowledge AS k\nWHERE k.title = 'Network Resilience Health Check Troubleshooting'\nAND k.state = 'published'\nAND k.visibility = 'internal'\nAND k.owner_id = 32\nAND k.product_id = 241;\n",
+      "SELECT COUNT(*) AS case_network_resilience_cnt\nFROM customer_case AS cc\nWHERE cc.case_id = 1233 \nAND cc.account_id = 38\nAND cc.contact_id = 84\nAND cc.product_id = 241\nAND cc.channel = 'phone'\nAND cc.priority = 'critical'\nAND cc.state = 'in_progress'\nAND cc.assignment_group_id = 18\nAND cc.escalation = 1\nAND cc.escalation_reason = 'impact';\n",
+      "SELECT COUNT(*) AS case_1233_kb_370_cnt\nFROM case_knowledge AS ck\nWHERE ck.case_id = 1233\nAND ck.knowledge_id = 370\nAND ck.used_as = 'suggested';\n",
+      "SELECT COUNT(*) AS case_1234_sla_cnt\nFROM case_sla AS cs\nWHERE cs.case_id = 1233\nAND cs.sla_def_id = 1\nAND cs.stage = 'in_progress';\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "38a317546706668b593399e4a31db13d57006d383c5f5463f58cbdbe79d7fc13",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251210_145940_356_accab84d_c16e9916": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE case_id = 5\n  AND priority = 'critical'\n  AND escalation = 1\n  AND escalation_reason = 'impact'\n  AND short_description = 'Product: Palo Alto Networks PA-3220, Issue: Major packet drops affecting production - significantly worsened';",
+      "SELECT COUNT(*) AS cnt\nFROM case_knowledge\nWHERE case_id = 5\n  AND knowledge_id = 227\n  AND used_as = 'suggested';\n",
+      "SELECT COUNT(*) AS cnt\nFROM case_sla\nWHERE case_id = 5\n  AND sla_def_id = 1\n  AND stage = 'in_progress';\n",
+      "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE case_id = 5\n  AND email = 'elizabeth.chase32@servicenow.com'\n  AND type = 'update'\n  AND knowledge_id = 227\n  AND status = 'success';\n",
+      "SELECT COUNT(*) AS cnt\nFROM case_sla\nWHERE case_id = 5\n  AND sla_def_id = 6\n  AND stage = 'in_progress';\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "364bccf6e3dbc48f3a967afbb08d2e0c66ca15e295a630a7200adaa36dfe57ac",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251210_161511_924_2aa6b0ad_1446c2b4": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS count\nFROM customer_case c\nJOIN contact ct ON c.contact_id = ct.contact_id\nJOIN user u ON ct.portal_user_id = u.user_id\nJOIN user p ON c.assigned_to = p.user_id\nJOIN user_group g ON c.assignment_group_id = g.group_id\nWHERE u.first_name = 'Jermaine'\n  AND u.last_name = 'Hall'\n  AND c.state = 'in_progress'\n  AND p.first_name = 'Paul'\n  AND p.last_name = 'Moyer'\n  AND g.name = 'Case Triage_4';",
+      "SELECT COUNT(*) AS count\nFROM user_group_member ugm\nJOIN user u ON ugm.user_id = u.user_id\nJOIN user_group g ON ugm.group_id = g.group_id\nWHERE u.first_name = 'Paul'\n  AND u.last_name = 'Moyer'\n  AND g.name = 'Case Triage_4';",
+      "SELECT COUNT(*) AS count\nFROM notification n\nJOIN customer_case c ON n.case_id = c.case_id\nJOIN contact ct ON c.contact_id = ct.contact_id\nJOIN user u ON ct.portal_user_id = u.user_id\nJOIN user p ON c.assigned_to = p.user_id\nJOIN user_group g ON c.assignment_group_id = g.group_id\nWHERE u.first_name = 'Jermaine'\n  AND u.last_name = 'Hall'\n  AND n.email = u.email\n  AND c.state = 'in_progress'\n  AND p.first_name = 'Paul'\n  AND p.last_name = 'Moyer'\n  AND g.name = 'Case Triage_4'\n  AND n.type = 'report'\n  AND n.status = 'success';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "523d657884225944a9aae4f69368daa25aa951d17c1b46d283c6ebb818c6781b",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251210_183114_382_99ba2325_071a72ab": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM knowledge WHERE knowledge_id = '370' AND title = 'Thomas Group issue' AND state = 'published' AND visibility = 'internal' AND owner_id = '84';",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_id = '944' AND knowledge_id = '370' AND used_as = 'resolution';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "ff5bc36a00fed3ca58dd015fce1640a985c0b975040d4ce64791add4c4033268",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251211_021838_048_accab84d_a511ee6e": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt\nFROM \"user\"\nWHERE email = 'susan.garcia@servicenow.com'\n  AND active = 0;",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case cc\nJOIN \"user\" u ON cc.assigned_to = u.user_id\nJOIN user_group g ON cc.assignment_group_id = g.group_id\nWHERE cc.number = 'CS-0000001'\n  AND u.email = 'stephanie.todd@servicenow.com'\n  AND g.name = 'CSM Tier 1 Support'\n  AND cc.priority = 'critical';",
+      "SELECT COUNT(*) AS cnt\nFROM user_group_member gm\nJOIN \"user\" u ON gm.user_id = u.user_id\nJOIN user_group g ON gm.group_id = g.group_id\nWHERE u.email = 'stephanie.todd@servicenow.com'\n  AND g.name <> 'CSM Tier 1 Support';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "9e617265f1c53724eb8cd3cbcaef245924e6ad7f048d9a602e3caac62a6dfaf3",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251211_192109_853_99ba2325_b21298a0": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = '513' AND state = 'in_progress';",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_id = '513' AND knowledge_id = '300' AND used_as = 'suggested';",
+      "SELECT COUNT(*) FROM notification WHERE case_id = '513' AND email = 'christopher.lee94@clarkandsons.com' AND type = 'alert' AND knowledge_id = '300';",
+      "SELECT COUNT(*) FROM case_sla WHERE case_id = '513' AND stage = 'in_progress' AND sla_def_id = 3;",
+      "SELECT COUNT(*) FROM case_sla WHERE case_id = '513' AND stage = 'in_progress' AND sla_def_id = 12;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "f7a87674b4de1250c265eacc70608ea756ac36bb6de66174e70efdb52cb427ee",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251212_011224_384_accab84d_4ad9b557": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt\nFROM \"user\" u\nJOIN contact c ON c.portal_user_id = u.user_id\nJOIN account a ON a.account_id = c.account_id\nWHERE u.user_id = 622\n  AND u.email = 'derek.blake7@globex.com'\n  AND a.account_id = 4\n  AND a.name = 'Globex'\n  AND c.contact_id = 3\n  AND c.active = 1\n  AND c.is_primary = 1;\n",
+      "SELECT COUNT(*) AS cnt\nFROM contact\nWHERE contact_id = 2\n  AND account_id = 4\n  AND active = 1\n  AND is_primary = 0;\n",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE case_id = 1233\n  AND number = 'CS-0001233'\n  AND account_id = 4\n  AND contact_id = 3\n  AND product_id = 123\n  AND channel = 'email'\n  AND priority = 'moderate'\n  AND state = 'new';",
+      "SELECT COUNT(*) AS cnt\nFROM case_knowledge ck\nJOIN knowledge k ON k.knowledge_id = ck.knowledge_id\nWHERE ck.case_id = 1233\n  AND ck.knowledge_id = 189\n  AND ck.used_as = 'suggested'\n  AND k.product_id = 123\n  AND k.state = 'published';\n",
+      "SELECT COUNT(*) AS cnt\nFROM notification\nWHERE case_id = 1233\n  AND knowledge_id = 189\n  AND email = 'derek.blake7@globex.com'\n  AND type = 'solution_proposal'\n  AND status = 'success';\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "d55df25f20f6d632adadf292f00a338c521f3b264539ae583c72c0e9cc6e5be0",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251212_081413_439_66392a82_7eb34f57": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt FROM knowledge WHERE knowledge_id = 101 AND product_id = 67 AND state = 'published';\n",
+      "SELECT COUNT(*) AS cnt FROM case_knowledge WHERE case_id = 26 AND knowledge_id = 101 AND used_as = 'applied';\n",
+      "SELECT COUNT(*) AS cnt FROM user_group_member WHERE group_id = 13 AND user_id = 37;\n",
+      "SELECT COUNT(*) AS cnt FROM customer_case WHERE case_id = 26 AND assignment_group_id = 13 AND assigned_to = 37 AND state = 'in_progress';\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "7ed9e04ea3a13ab7625069aab70689daea4723110acdad1a28154d2b97bb6187",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251212_222304_435_66392a82_815cd745": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt FROM user WHERE user_id = 3 AND first_name = 'Tabitha' AND last_name = 'Bullock' AND active = 0;",
+      "SELECT COUNT(*) AS cnt FROM customer_case WHERE case_id IN (251, 1142) AND assigned_to = 496 AND assignment_group_id = 44;",
+      "SELECT COUNT(*) AS cnt FROM user_group_member WHERE group_id = 44 AND user_id = 496;",
+      "SELECT COUNT(*) AS cnt FROM notification n JOIN customer_case c ON n.case_id = c.case_id JOIN contact ct ON c.contact_id = ct.contact_id JOIN user u ON ct.portal_user_id = u.user_id WHERE c.case_id = 251 AND u.email = 'brandon.davis@vehementcap.com' AND n.type = 'report' AND n.status = 'success';",
+      "SELECT COUNT(*) AS cnt FROM notification n JOIN customer_case c ON n.case_id = c.case_id JOIN contact ct ON c.contact_id = ct.contact_id JOIN user u ON ct.portal_user_id = u.user_id WHERE c.case_id = 1142 AND u.email = 'david.trujillo@hernandezbarnettandstewart.com' AND n.type = 'report' AND n.status = 'success';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "e1b4b0b0ae85724c2260f96199eefe061c00552c476a4d0eb0e647184b415d4d",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251231_123548_425_8cd8e61e_9303271e": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM interaction WHERE interaction_id = 80 AND status = 'handled';",
+      "SELECT COUNT(*) FROM notification WHERE case_id = \"80\" AND type = 'solution_proposal' AND email = 'derek.blake7@globex.com' AND knowledge_id = '7';",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_id = 80 AND knowledge_id = 7 AND used_as = 'suggested';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "3ea7cd6f9701e0b0524a204da0dbed646384b1a9a731726c1a641a348b268fa7",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251231_152332_133_ad5a67e3_2a4e226c": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 5 AND knowledge_id = 195 AND used_as = 'applied';",
+      "SELECT COUNT(*)\nFROM knowledge\nWHERE knowledge_id = 195\n  AND state = 'published';\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "be5b37d51c83bebb299b29b5eb4a2651f33463b8bdaf7bd5b42c3d3237fec0c5",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251231_162628_797_a8eea1c0_0a53db6c": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM contract WHERE account_id = 8 AND contract_type = 'support' AND status = 'active' AND contract_id = 154 AND end_date = '2026-11-18';",
+      "SELECT COUNT(*) FROM contract WHERE contract_id = 154 AND sys_updated_on IS NOT NULL;",
+      "SELECT COUNT(*) FROM entitlement WHERE account_id = 8 AND product_id = 140 AND contract_id = 154 AND support_level = 'enterprise' AND coverage_hours = 'h24x7' AND active = 1;",
+      "SELECT COUNT(*) FROM contract WHERE contract_id = 154 AND sys_updated_on > '2025-11-18';",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 1233 AND account_id = 8 AND product_id = 140 AND installed_product_id = 42 AND priority = 'critical';",
+      "SELECT COUNT(*) FROM contact WHERE contact_id = 10 AND sys_updated_on IS NOT NULL;",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 1233 AND assignment_group_id = 18;",
+      "SELECT COUNT(*) FROM user_group WHERE group_id = 18 AND sys_updated_on IS NOT NULL;",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 1233 AND state = 'in_progress';",
+      "SELECT COUNT(*) FROM case_sla WHERE case_id = 1233 AND sla_def_id = 6 AND stage = 'in_progress';",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_id = 1233 AND knowledge_id = 210 AND used_as = 'suggested';",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 1233 AND sys_updated_on IS NOT NULL;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "28f0a1bfbf1e2bc9ab87d6ff308e76101a89615935fff987065e96b09ee94464",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20251231_164213_376_00364ece_724e98d5": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT count(*) as count\nFROM user\nWHERE first_name = 'Diana'\n  AND last_name = 'Johnson'\n  AND active = False;",
+      "SELECT COUNT(*) AS count\nFROM customer_case c\nJOIN user u ON c.assigned_to = u.user_id\nWHERE c.number IN ('CS-0000115', 'CS-0000179')\n  AND c.state NOT IN ('canceled', 'closed', 'resolved')\n  AND u.first_name = 'Casey'\n  AND u.last_name = 'Green';",
+      "SELECT COUNT(*) AS count\nFROM customer_case c\nJOIN user u ON c.assigned_to = u.user_id\nJOIN user_group ug ON c.assignment_group_id = ug.group_id\nWHERE c.number = 'CS-0000179'\n  AND u.first_name = 'Casey'\n  AND u.last_name = 'Green'\n  AND ug.name = 'Case Assignment_3';",
+      "SELECT COUNT(*) AS count\nFROM user u\nJOIN user_group_member ugm ON u.user_id = ugm.user_id\nJOIN user_group ug ON ugm.group_id = ug.group_id\nWHERE u.first_name = 'Casey'\n  AND u.last_name = 'Green'\n  AND ug.name = 'Case Assignment_3';",
+      "SELECT COUNT(*) AS count\nFROM notification n\nJOIN customer_case c ON n.case_id = c.case_id\nJOIN contact ct ON c.contact_id = ct.contact_id\nJOIN user u ON ct.portal_user_id = u.user_id\nWHERE c.number = 'CS-0000179'\n  AND n.status = 'success'\n  AND n.type = 'report';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "a97d38b96ded62ae1289b49c6e08ec0969e3cc5ff6f8c8b542f6853575858bff",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260101_043715_660_a8eea1c0_7304e48e": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT city FROM location WHERE location_id = 907;",
+      "SELECT state FROM knowledge WHERE knowledge_id = 209;",
+      "SELECT COUNT(*) FROM installed_product WHERE installed_product_id = 301 AND location_id = 907 AND product_id = 139;",
+      "SELECT COUNT(*) FROM location WHERE location_id = 907 AND name = 'Stark Industries - New Lab' AND active = 1;",
+      "SELECT status FROM installed_product WHERE installed_product_id = 301;",
+      "SELECT COUNT(*) FROM contract WHERE contract_id = 154 AND account_id = 8 AND status = 'active';",
+      "SELECT end_date FROM contract WHERE contract_id = 154;",
+      "SELECT COUNT(*) FROM entitlement WHERE entitlement_id = 432 AND product_id = 139 AND support_level = 'enterprise' AND coverage_hours = 'h24x7';",
+      "SELECT contract_id FROM entitlement WHERE entitlement_id = 432;",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 1233 AND priority = 'critical' AND installed_product_id = 301;",
+      "SELECT contact_id FROM customer_case WHERE case_id = 1233;",
+      "SELECT assigned_to FROM customer_case WHERE case_id = 1233;",
+      "SELECT COUNT(*) FROM user_group_member WHERE user_id = 127 AND group_id = 2;",
+      "SELECT state FROM customer_case WHERE case_id = 1233;",
+      "SELECT COUNT(*) FROM case_sla WHERE case_id = 1233 AND sla_def_id = 6 AND stage = 'in_progress';",
+      "SELECT applies_to_priority FROM sla_definition WHERE sla_def_id = 6;",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_id = 1233 AND knowledge_id = 209 AND used_as = 'suggested';",
+      "SELECT COUNT(*) FROM notification WHERE case_id = 1233 AND email = 'marc.henry@stark-industries.com' AND type = 'solution_proposal';",
+      "SELECT knowledge_id FROM notification WHERE case_id = 1233 AND email = 'marc.henry@stark-industries.com';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "cd12d5553a85af469c6307ce4346e37f95a64ad80c7d6837ac49602d1f92ee34",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260101_074825_586_a8eea1c0_e596bab2": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM installed_product WHERE installed_product_id = 42 AND account_id = 8 AND product_id = 140 AND serial_number = 'P140-898548-8853' AND status = 'repair';",
+      "SELECT COUNT(*) FROM installed_product WHERE installed_product_id = 301 AND account_id = 8 AND product_id = 140 AND location_id = 817 AND serial_number = 'RMA-STARK-001' AND status = 'in_use';",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 181 AND priority = 'critical' AND escalation = 1 AND escalation_reason = 'impact';",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 181 AND state = 'in_progress';",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 181 AND assignment_group_id = 10;",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 181 AND installed_product_id = 301 AND product_id = 140;",
+      "SELECT COUNT(*) FROM case_sla WHERE case_sla_id = 2465 AND case_id = 181 AND sla_def_id = 6 AND stage = 'in_progress' AND has_breached = 0;",
+      "SELECT COUNT(*) FROM notification WHERE notification_id = 734 AND case_id = 181 AND email = 'marc.henry@stark-industries.com' AND type = 'update' AND status = 'success';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "b1b19756b33f5ef0d8e9f6e244e79d66b6bf57acb62293d0a4fe2c4c70a9f746",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260101_111750_695_30600918_80637585": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM customer_case WHERE number = 'CS-0000020' AND state = 'in_progress' AND assigned_to IS NULL AND priority = 'critical' AND assignment_group_id = 1 AND escalation_reason= 'customer_request' AND escalation =true;",
+      "SELECT COUNT(*) FROM notification WHERE case_id = 20 AND email = 'joanne.simpson@servicenow.com' AND type = 'update' AND notification_id=734;",
+      "select COUNT(*) from case_sla WHERE (case_sla_id = 39 OR case_sla_id = 40) AND (sla_def_id = 11 OR sla_def_id = 7) AND case_id = 20 AND stage = 'canceled';",
+      "select COUNT(*) from case_sla WHERE (case_sla_id = 2465 OR case_sla_id = 2466) AND (sla_def_id = 1 OR sla_def_id = 6 ) AND case_id = 20 AND stage = 'in_progress';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "39e2340b61ed7d80a1bc560fe8a2b8531d350f7f03bf5b6a4f7882f6c235de12",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260101_122222_300_ad5a67e3_3757206c": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM contract c JOIN account a ON a.account_id = c.account_id WHERE a.name = 'Wayne Enterprises' AND c.contract_type = 'support' AND c.status = 'active' AND c.start_date = '2026-01-01' AND c.end_date = '2026-12-31' AND c.contract_price = 150000;",
+      "SELECT COUNT(*) FROM entitlement e JOIN account a ON a.account_id = e.account_id JOIN product p ON e.product_id = p.product_id WHERE a.name = 'Wayne Enterprises' AND e.support_level = 'premium' AND e.coverage_hours = 'h24x7' AND e.max_cases_per_month = 50 AND e.active = 1 AND p.name = 'Windows Server 2022 Datacenter';",
+      "SELECT COUNT(*) FROM customer_case cc JOIN account a ON cc.account_id = a.account_id JOIN contact c ON cc.contact_id = c.contact_id JOIN product p ON cc.product_id = p.product_id WHERE a.name = 'Wayne Enterprises' AND p.name = 'Windows Server 2022 Datacenter' AND cc.short_description = 'SSL termination issue on Windows Server node' AND cc.channel = 'phone' AND cc.priority = 'high' AND cc.state = 'in_progress' AND c.is_primary = 1 AND c.active = 1 AND cc.sys_updated_on > cc.sys_created_on;",
+      "SELECT COUNT(*) FROM case_sla cs JOIN customer_case cc ON cc.case_id = cs.case_id JOIN sla_definition s ON s.sla_def_id = cs.sla_def_id WHERE cc.short_description = 'SSL termination issue on Windows Server node' AND s.name = 'SLA Response - High' AND s.metric = 'response' AND cs.stage = 'in_progress';",
+      "SELECT COUNT(*) FROM entitlement e JOIN contract c ON e.contract_id = c.contract_id JOIN account a ON c.account_id = a.account_id WHERE a.name = 'Wayne Enterprises' AND c.contract_type = 'support' AND c.start_date = '2026-01-01' AND e.support_level = 'premium' AND e.coverage_hours = 'h24x7';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "cb6fbf500761332425d67e1a33c6566c9b3a4ececa9cce362899c10b0eb60799",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260101_162109_100_a8eea1c0_e88250ef": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM user_group_member WHERE group_id = 1 AND user_id = 3 AND member_id IS NOT NULL;",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 1 AND number = 'CS-0000001' AND assignment_group_id = 1 AND assigned_to = 3 AND state = 'in_progress' AND channel = 'email' AND account_id = 1 AND product_id = 128;",
+      "SELECT COUNT(*) FROM case_sla WHERE case_sla_id = 2 AND case_id = 1 AND sla_def_id = 6 AND stage = 'in_progress' AND has_breached = 0 AND completed_time IS NULL;",
+      "SELECT COUNT(*) FROM knowledge WHERE knowledge_id = 195 AND kb_number = 'KB-0000195' AND state = 'published' AND product_id = 128 AND visibility = 'internal';",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 3 AND case_id = 10 AND knowledge_id = 195 AND used_as = 'resolution';",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_id = 1 AND knowledge_id = 195 AND used_as = 'suggested';",
+      "SELECT COUNT() FROM user WHERE (user_id = 3 AND active = 1 AND role = 'agent') OR (user_id = 1 AND active = 0 AND role = 'agent') HAVING COUNT() = 2;",
+      "SELECT COUNT(*) FROM sla_definition WHERE sla_def_id = 6 AND metric = 'resolution' AND applies_to_priority = 'critical' AND pause_on_pending = 1 AND active = 1;",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 1 AND account_id = 1 AND contact_id = 123 AND product_id = 128 AND installed_product_id = 3 AND priority = 'critical' AND escalation = 1 AND escalation_reason = 'urgency' AND reopen_count = 0 AND sys_created_on = '2025-08-27 15:34:44' AND closed_on IS NULL;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "ea2a792c1c4ef7c977054382f9fd4e858aa14fbc0fcc4b7ddb3af10a0670fdd5",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260101_191529_659_a8eea1c0_27d3bf1b": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT count(*) FROM customer_case WHERE case_id = 1233 AND account_id = 3 AND product_id = 48 AND priority = 'critical';",
+      "SELECT status FROM installed_product WHERE installed_product_id = 14;",
+      "SELECT assignment_group_id FROM customer_case WHERE case_id = 1233;",
+      "SELECT assigned_to FROM customer_case WHERE case_id = 1233;",
+      "SELECT count(*) FROM case_sla WHERE case_id = 1233 AND sla_def_id = 6;",
+      "SELECT stage FROM case_sla WHERE case_id = 1233 AND sla_def_id = 6;",
+      "SELECT COUNT(sys_updated_on) FROM installed_product WHERE installed_product_id = 14 AND status = 'repair' AND sys_updated_on IS NOT NULL;",
+      "SELECT channel FROM customer_case WHERE case_id = 1233;",
+      "SELECT count(*) FROM interaction WHERE case_id = 1233;",
+      "SELECT status FROM interaction WHERE interaction_id = 1233;",
+      "SELECT count(*) FROM customer_case WHERE case_id = 1233 AND account_id = 3 AND product_id = 48 AND priority = 'critical';",
+      "SELECT status FROM installed_product WHERE installed_product_id = 14;",
+      "SELECT assignment_group_id FROM customer_case WHERE case_id = 1233;",
+      "SELECT assigned_to FROM customer_case WHERE case_id = 1233;",
+      "SELECT count(*) FROM case_sla WHERE case_id = 1233 AND sla_def_id = 6;",
+      "SELECT stage FROM case_sla WHERE case_id = 1233 AND sla_def_id = 6;",
+      "SELECT COUNT(sys_updated_on) FROM installed_product WHERE installed_product_id = 14 AND status = 'repair' AND sys_updated_on IS NOT NULL;",
+      "SELECT channel FROM customer_case WHERE case_id = 1233;",
+      "SELECT count(*) FROM interaction WHERE case_id = 1233;",
+      "SELECT status FROM interaction WHERE interaction_id = 1233;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "262edb99948e90898fe779fbf8e1ec8f4e4e33699fe250b2c83ef10d3fe23d30",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260101_202840_239_a8eea1c0_0f425b23": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT assigned_to FROM customer_case WHERE case_id = 504 AND assignment_group_id = 18;",
+      "SELECT COUNT(*) FROM user WHERE email = 'liam.oconnell@servicenow.com' AND user_id = 803 AND role = 'agent' AND active = 1 AND location_id = 3;",
+      "SELECT COUNT(*) FROM user_group_member WHERE group_id = 18 AND user_id = 803;",
+      "SELECT state FROM customer_case WHERE case_id = 504 AND priority = 'critical';",
+      "SELECT reopen_count FROM customer_case WHERE case_id = 504;",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 216;",
+      "SELECT COUNT(*) FROM knowledge WHERE knowledge_id = 370 AND visibility = 'internal' AND owner_id = 3 AND title = 'Failed Resolution Analysis - Managed Network Services Variant 41: Protocol Mismatch Root Cause';",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_id = 504 AND knowledge_id = 370 AND used_as = 'suggested';",
+      "SELECT COUNT(*) FROM case_sla WHERE case_id = 504 AND sla_def_id = 1 AND stage = 'in_progress';",
+      "SELECT COUNT(*) FROM case_sla WHERE case_id = 504 AND sla_def_id = 6 AND stage = 'in_progress';",
+      "SELECT COUNT(*) FROM entitlement WHERE entitlement_id = 216 AND account_id = 23 AND active = 1  AND support_level = 'enterprise';",
+      "SELECT location_id FROM user WHERE user_id = 3 AND role = 'agent';",
+      "SELECT sys_updated_on IS NOT NULL FROM customer_case WHERE case_id = 504;",
+      "SELECT state FROM knowledge WHERE knowledge_id = 370;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "7aed5c97dbe10b7e3345b311e650b720849d730fec64e12a8da2784f781e983f",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260101_233731_695_00364ece_187f2808": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS count\nFROM location\nWHERE name = 'TB State Building'\n  AND city = 'sydney'\n  AND country = 'australia'\n  AND active = true;",
+      "SELECT COUNT(*) AS count\nFROM user u\nJOIN location l ON u.location_id = l.location_id\nWHERE u.first_name = 'Joanne'\n  AND u.last_name = 'Simpson'\n  AND l.name = 'TB State Building'\n  AND l.city = 'sydney'\n  AND l.country = 'australia';",
+      "SELECT COUNT(*) AS count\nFROM user u\nJOIN user_group_member ugm ON u.user_id = ugm.user_id\nJOIN user_group g ON g.group_id = ugm.group_id\nWHERE u.first_name = 'Joanne'\n  AND u.last_name = 'Simpson'\n  AND g.name = 'Proactive Case Monitoring_2';",
+      "SELECT COUNT(*) AS count\nFROM customer_case c\nJOIN user u ON c.assigned_to = u.user_id\nJOIN user_group g ON c.assignment_group_id = g.group_id\nWHERE c.number = 'CS-0000299'\n  AND u.first_name = 'Joanne'\n  AND u.last_name = 'Simpson'\n  AND g.name = 'Proactive Case Monitoring_2'\n  AND c.priority = 'critical'\n  AND c.escalation = true\n  AND c.escalation_reason = 'impact';",
+      "SELECT COUNT(*) AS count\nFROM notification n\nJOIN user u ON n.email = u.email\nWHERE u.first_name = 'Joanne'\n  AND u.last_name = 'Simpson'\n  AND n.type = 'update'\n  AND n.status = 'success';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "c55278f6c16bc8924edf82405fa41eec943d572ef598fdd450dcacb18bf5a72a",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260102_002012_363_00364ece_a3936446": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS count\nFROM notification n\nJOIN user u ON n.email = u.email\nWHERE u.first_name = 'Stephanie'\n  AND u.last_name = 'Clark'\n  AND n.type = 'report'\n  AND n.status = 'success'\n  AND n.knowledge_id = 81;",
+      "SELECT COUNT(*) AS count\nFROM user u\nWHERE u.first_name = 'Mario'\n  AND u.last_name = 'Perry'\n  AND u.active = 0;",
+      "SELECT COUNT(*) AS count\nFROM customer_case cc\nJOIN contact c ON cc.contact_id = c.contact_id\nJOIN user u ON c.portal_user_id = u.user_id\nJOIN product p ON cc.product_id = p.product_id\nWHERE u.first_name = 'Stephanie'\n  AND u.last_name = 'Clark'\n  AND cc.channel = 'email'\n  AND p.name = 'Docker Enterprise Variant 35'\n  AND cc.state = 'new'\n  AND cc.priority = 'high';",
+      "SELECT COUNT(*) AS count\nFROM customer_case cc\nJOIN user u ON cc.assigned_to = u.user_id\nJOIN user_group g ON cc.assignment_group_id = g.group_id\nWHERE u.first_name = 'Emily'\n  AND u.last_name = 'Moore'\n  AND g.name = 'Field Service Coordination_2';",
+      "SELECT COUNT(*) AS count\nFROM user_group_member ugm\nJOIN user u ON ugm.user_id = u.user_id\nJOIN user_group g ON ugm.group_id = g.group_id\nWHERE u.first_name = 'Emily'\n  AND u.last_name = 'Moore'\n  AND g.name = 'Field Service Coordination_2';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "ee3d2344825e647fe3c231cd0b47dd6ec3faeccb41352fb36a69180048d94141",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260102_012109_160_accab84d_686b76ff": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt\nFROM entitlement\nWHERE entitlement_id = 73\n  AND account_id = 8\n  AND product_id = 140\n  AND support_level = 'enterprise'\n  AND coverage_hours = 'h24x7'\n  AND active = 1;",
+      "SELECT COUNT(*) AS cnt\nFROM case_sla\nWHERE case_id = 193\n  AND sla_def_id = 1\n  AND stage = 'in_progress';",
+      "SELECT COUNT(*) AS cnt\nFROM case_sla\nWHERE case_id = 193\n  AND sla_def_id = 6\n  AND stage = 'in_progress';",
+      "SELECT COUNT(*) AS kb_attached_count\nFROM case_knowledge\nWHERE case_id = 193\n  AND knowledge_id = 210\n  AND used_as = 'suggested';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "c441daecee7cdbe1b917669d824d676316b3502c6f1643be3366eb81c10555de",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260102_031908_712_accab84d_886a7365": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM user_group_member WHERE user_id = 803 AND group_id = 2;",
+      "SELECT assignment_group_id FROM customer_case WHERE case_id = 32;",
+      "SELECT assigned_to FROM customer_case WHERE case_id = 32;",
+      "SELECT COUNT(*) FROM user WHERE email = 'amelia.jones@servicenow.com' AND role = 'agent' AND location_id = 1;",
+      "SELECT COUNT(*) FROM case_sla WHERE case_id = 32 AND sla_def_id = 6;",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 32 AND state = 'in_progress' AND escalation = 1 AND escalation_reason = 'breach_risk';",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 30 AND state = 'in_progress' AND escalation = 1 AND escalation_reason = 'urgency';",
+      "SELECT state FROM customer_case WHERE case_id = 47;",
+      "SELECT COUNT(*) FROM entitlement WHERE account_id = 2 AND product_id = 202 AND active = 1;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "22740ee4c52af4e631b497a3d261d94492d72a532ebe9b7a2594ada2404bf36c",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260102_063731_186_d4a463c3_f1c4df9b": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id=515",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id=1204 AND escalation=true AND escalation_reason=\"impact\"",
+      "SELECT COUNT(*) FROM interaction WHERE channel= \"email\" AND account_id=52 AND contact_id=120 AND case_id=1204 AND status=\"handled\"\n\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "e0b69fc3fd2319cdc4683b556d9ef7308f7cd4adcd6e041da10c3b395f9d0f52",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260102_080409_151_d4a463c3_56c32265": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM case_sla AS cs WHERE cs.case_sla_id = 9 AND cs.stage = 'completed'",
+      "SELECT COUNT(*) FROM case_knowledge AS ck WHERE ck.case_kb_id = 1 AND ck.knowledge_id = 195;",
+      "SELECT COUNT(*) FROM case_sla AS cs WHERE cs.case_sla_id = 2465 AND cs.stage = 'canceled'",
+      "SELECT COUNT(*) FROM customer_case AS c WHERE c.case_id = 5 AND c.state = 'closed';\n",
+      "SELECT COUNT(*) FROM case_sla AS cs WHERE cs.case_sla_id = 10 AND cs.stage = 'completed'"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "ab2fa71c8d621aa3d5d2b18fed78f96f06382ad8847b49ffeea6a49a34d37580",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260102_080520_113_d4a463c3_90b440a8": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM installed_product WHERE installed_product_id = 4 AND location_id = 803 AND serial_number = 'P237-136518-2272';",
+      "SELECT COUNT(*) FROM location WHERE location_id = 803 AND active = true;",
+      "SELECT COUNT(*) FROM location WHERE location_id = 804 AND active = false;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "45a5af65cdfc84b1af3fbf65d33161b832bf761796207c8957e61d1e22a494e9",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260102_094108_584_a8eea1c0_34a39e46": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS verification_count FROM customer_case WHERE case_id = 1233 AND number = 'CS-0001233' AND account_id = 8 AND contact_id = 10 AND product_id = 25 AND installed_product_id = 40 AND channel = 'phone' AND priority = 'high' AND state = 'new' AND assignment_group_id = 28 AND assigned_to IS NULL AND escalation = 0 AND escalation_reason IS NULL AND reopen_count = 0;",
+      "SELECT COUNT(*) AS verification_count FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 1233 AND knowledge_id = 38 AND used_as = 'suggested';",
+      "SELECT COUNT(*) AS assignment_updated FROM customer_case WHERE case_id = 1233 AND assignment_group_id = 28;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "b7a61f786ba2f79647aca8de44def9aee7fcd13007fc2aa6dedfb6002472d17b",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260102_100510_709_66392a82_3d301c18": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM user_group WHERE name = 'Emergency Entitlement Oversight' AND type = 'support' AND active = 1; ",
+      "SELECT COUNT(*) FROM user u JOIN user_group_member ugm ON ugm.user_id = u.user_id WHERE ugm.group_id = 5 AND u.role = 'manager' AND u.active = 1;",
+      "SELECT COUNT(*) FROM user_group_member ugm JOIN user_group ug ON ug.group_id = ugm.group_id WHERE ug.name = 'Emergency Entitlement Oversight' AND ug.type = 'support' AND ugm.user_id IN (59, 170, 31);",
+      "SELECT COUNT(*) FROM user_group_member ugm JOIN user_group ug ON ug.group_id = ugm.group_id WHERE ug.name = 'Emergency Entitlement Oversight' AND ug.type = 'support' AND ugm.user_id NOT IN (59, 170, 31);",
+      "SELECT COUNT(*) FROM user u JOIN user_group_member ugm ON u.user_id = ugm.user_id JOIN user_group ug ON ug.group_id = ugm.group_id WHERE ug.name = 'Emergency Entitlement Oversight' AND ug.type = 'support' AND u.role != 'manager';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "12d3b79bc9b4577c7d1a1c9fc9268fda06d22492be20b68b108cbc31304c02cf",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260102_155148_014_accab84d_910b176a": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS case_created\nFROM customer_case\nWHERE case_id = 1233\n  AND account_id = 30\n  AND contact_id = 64\n  AND product_id = 17\n  AND channel = 'email'\n  AND priority = 'high'\n  AND state = 'in_progress' ;",
+      "SELECT COUNT(*) AS case_kb_link_exists\nFROM case_knowledge\nWHERE case_id = 1233\n  AND knowledge_id = 27\n  AND used_as = 'suggested';",
+      "SELECT COUNT(*) AS sla_def_response_exists\nFROM sla_definition\nWHERE sla_def_id = 2\n  AND name = 'SLA Response - High'\n  AND metric = 'response'",
+      "SELECT COUNT(*) AS sla_def_resolution_exists\nFROM sla_definition\nWHERE sla_def_id = 7\n  AND name = 'SLA Resolution - High'\n  AND metric = 'resolution';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "739a677f31cfa2b4f29ebb71bf0a19308622fdf0c2081cb1808d7d3660bbdd18",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260102_162857_012_391f1eff_39478d55": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 1233 AND  account_id = 8 AND contact_id = 10 AND product_id = 25 AND channel = 'web' AND priority = 'moderate' AND state = 'new';",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 1233 AND knowledge_id = 38 AND used_as = 'suggested';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "f45fd85ee94f106670ebb10ae172b8cbe8676907e8cf916956373f0c482c99a8",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260102_165223_158_99ba2325_67a4a1e9": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM contract WHERE contract_id = 3 and contract_type = 'subscription' AND status = 'active' AND contract_price = 25798",
+      "select count(*) from user where user_id=802 and phone is null and location_id=803"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "f0ea34192149ca4a5d19401d2ff643f28729d583f2db8402c5579ceebdfc43d5",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260102_171008_763_ad5a67e3_cb101d3b": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT stage FROM case_sla WHERE case_sla_id = 2;",
+      "SELECT stage FROM case_sla WHERE case_sla_id = 1;",
+      "SELECT type FROM notification WHERE notification_id = 734 AND case_id = 1 AND email = 'elizabeth.chase32@servicenow.com';",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 1 AND used_as = 'resolution';",
+      "SELECT state FROM customer_case WHERE case_id = 1;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "a11eb330f1f4e869ba4beacd73908b10c8cb591c1e0d67284f5fbfc28bbcbba4",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260102_172945_725_ad5a67e3_5480e26f": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM installed_product ip JOIN account a ON ip.account_id=a.account_id JOIN product p ON ip.product_id=p.product_id JOIN location l ON ip.location_id=l.location_id WHERE a.name='Umbrella' AND p.name='Red Hat Enterprise Linux 9' AND l.name='Umbrella Site A - Tokyo' AND ip.serial_number='RHEL-UMB-4500' AND ip.status='in_use' AND ip.warranty_end='2026-12-31';",
+      "SELECT COUNT(*) FROM user_group_member gm JOIN user u ON gm.user_id=u.user_id JOIN user_group g ON gm.group_id=g.group_id WHERE u.first_name='Travis' AND u.last_name='Wood' AND g.name='Proactive Case Monitoring';",
+      "SELECT COUNT(*) FROM customer_case cc JOIN account a ON cc.account_id=a.account_id JOIN product p ON cc.product_id=p.product_id JOIN installed_product ip ON cc.installed_product_id=ip.installed_product_id JOIN contact c ON cc.contact_id=c.contact_id WHERE a.name='Umbrella' AND p.name='Red Hat Enterprise Linux 9' AND ip.serial_number='RHEL-UMB-4500' AND cc.short_description= 'Product: Red Hat Enterprise Linux 9, Issue: node crashes frequently.' AND cc.channel='phone' AND cc.priority='high' AND c.is_primary=1 AND c.active=1;",
+      "SELECT COUNT(*) FROM case_sla cs JOIN customer_case cc ON cc.case_id=cs.case_id JOIN sla_definition s ON s.sla_def_id=cs.sla_def_id WHERE cc.short_description='Product: Red Hat Enterprise Linux 9, Issue: node crashes frequently.' AND s.name='SLA Response - High' AND s.metric='response' AND cs.stage='in_progress';",
+      "SELECT COUNT(*) FROM customer_case cc JOIN account a ON cc.account_id=a.account_id WHERE a.name='Umbrella' AND cc.short_description='Product: Red Hat Enterprise Linux 9, Issue: node crashes frequently.' AND cc.state='in_progress' AND cc.sys_updated_on > cc.sys_created_on;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "02e75d3000b1e838630d0d1294a9a6cfb4edce86c10ea2aaba3adcbe2f9e8a64",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260102_210829_972_2aa6b0ad_e3d70e04": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS count\nFROM location\nWHERE name = 'Zee Building'\n  AND city = 'mumbai'\n  AND country = 'india';",
+      "SELECT COUNT(*) AS count\nFROM user u\nJOIN location l ON u.location_id = l.location_id\nWHERE u.first_name = 'Abraham'\n  AND u.last_name = 'George'\n  AND u.email = 'abraham.george@servicenow.com'\n  AND u.role = 'admin'\n  AND u.active = 1\n  AND l.name = 'Zee Building'\n  AND l.city = 'mumbai'\n  AND l.country = 'india';",
+      "SELECT COUNT(*) AS count\nFROM user_group_member ugm\nJOIN user u ON ugm.user_id = u.user_id\nJOIN user_group g ON ugm.group_id = g.group_id\nWHERE u.first_name = 'Kurt'\n  AND u.last_name = 'Fritz'\n  AND g.name = 'Contact Center L2';",
+      "SELECT COUNT(*) AS count\nFROM user\nWHERE first_name = 'Kurt'\n  AND last_name = 'Fritz'\n  AND active = 0;",
+      "SELECT COUNT(*) AS count\nFROM user_group_member ugm\nJOIN user u ON ugm.user_id = u.user_id\nJOIN user_group g ON ugm.group_id = g.group_id\nWHERE g.name = 'Contact Center L2'\n  AND (\n        (u.first_name = 'Abraham' AND u.last_name = 'George')\n     OR (u.first_name = 'Aaron' AND u.last_name = 'Le')\n      );",
+      "SELECT COUNT(*) AS count\nFROM user_group_member ugm\nJOIN user u ON ugm.user_id = u.user_id\nJOIN user_group g ON ugm.group_id = g.group_id\nWHERE u.first_name = 'Aaron'\n  AND u.last_name = 'Le'\n  AND g.name <> 'Contact Center L2';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "cdfc6c7c48f4eb8b517f856d0d9d3c2540e935032964bc1fd238f7e2ff786150",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260105_191634_257_2aa6b0ad_ea0bbd82": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS count\nFROM customer_case cc\nJOIN user u ON cc.assigned_to = u.user_id\nJOIN user_group g ON cc.assignment_group_id = g.group_id\nWHERE cc.number = 'CS-0000280'\n  AND u.first_name = 'William'\n  AND u.last_name = 'Wyatt'\n  AND g.name = 'Proactive Case Monitoring';",
+      "SELECT COUNT(*) AS count\nFROM user_group_member ugm\nJOIN user u ON ugm.user_id = u.user_id\nJOIN user_group g ON ugm.group_id = g.group_id\nWHERE u.first_name = 'William'\n  AND u.last_name = 'Wyatt'\n  AND g.name = 'Proactive Case Monitoring';",
+      "SELECT COUNT(*) AS count\nFROM notification n\nJOIN customer_case cc ON n.case_id = cc.case_id\nJOIN contact c ON cc.contact_id = c.contact_id\nJOIN user u ON c.portal_user_id = u.user_id\nWHERE cc.number = 'CS-0000280'\n  AND n.email = u.email\n  AND n.type = 'reminder'\n  AND n.status = 'success';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "d92d038a5b19505cf57b4375d0ca726728b988a25c9109c0e037a6d3aa7aa0fe",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260105_221816_258_00364ece_50f56980": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS count\nFROM customer_case cc\nJOIN user_group ug ON cc.assignment_group_id = ug.group_id\nWHERE ug.name = 'Case Triage'\n  AND ug.type = 'support'\n  AND cc.STATE NOT IN ('canceled', 'closed', 'resolved');",
+      "SELECT COUNT(*) AS count\nFROM customer_case cc\nJOIN user_group ug ON cc.assignment_group_id = ug.group_id\nJOIN user u ON cc.assigned_to = u.user_id\nWHERE cc.case_id = 1010\n  AND u.first_name = 'Jason'\n  AND u.last_name = 'Smith'\n  AND ug.name = 'Proactive Case Monitoring_4';",
+      "SELECT COUNT(*) AS count\nFROM user_group_member ugm\nJOIN user u ON ugm.user_id = u.user_id\nJOIN user_group g ON ugm.group_id = g.group_id\nWHERE u.first_name = 'Jason'\n  AND u.last_name = 'Smith'\n  AND g.name = 'Proactive Case Monitoring_4';",
+      "SELECT COUNT(*) AS count\nFROM notification n\nJOIN user u ON n.email = u.email\nWHERE n.type = 'report'\n  AND u.first_name = 'Jason'\n  AND u.last_name = 'Smith'\n  AND n.status = 'success';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "2fcf6365aad903ec07cd0539676cf3bde507f6cf39a36dbc3b4d851e489b01b8",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260106_070321_497_accab84d_6f4a8da8": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT count(*) AS successful_updates\nFROM customer_case\nWHERE case_id IN (397, 398, 399, 415, 416, 400, 401, 402, 403, 404, 405)\n  AND priority = 'critical'\n  AND assigned_to = 4;",
+      "SELECT COUNT(*) AS cnt FROM customer_case cc JOIN account a ON cc.account_id = a.account_id WHERE a.name = 'Spencer Inc' AND cc.contact_id = 30 AND cc.state IN ('new', 'in_progress', 'pending') AND cc.assigned_to <> 4;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "984611d56636e954609a4f871cd00657c3ded669d82d69359b63a0bd2a38ac6d",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260106_073527_320_e6427839_e2e2ac8d": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = '700' AND account_id = '31' AND product_id = '83' AND escalation = '1' AND escalation_reason = 'customer_request' AND priority = 'moderate';\n",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = '700' AND account_id = '31' AND product_id = '83' AND assigned_to = '103' AND priority = 'moderate';\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "d9f700d4e0205731f21f35a709f4b3125aadd4d6ba7e3ae499ad6169e6ab0f5d",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260106_075904_098_a8eea1c0_a6cfe625": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT is_primary FROM contact WHERE contact_id = 10 AND portal_user_id = 20;",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 181 AND priority = 'critical' AND state = 'in_progress' AND escalation = 1 AND escalation_reason = 'vip';",
+      "SELECT COUNT(*) FROM case_sla WHERE case_id = 181 AND sla_def_id = 6 AND stage = 'in_progress';",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 181 AND assignment_group_id = 18 AND assigned_to = 177;",
+      "SELECT COUNT(*) FROM knowledge WHERE knowledge_id = 103 AND state = 'retired' AND visibility = 'internal';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "dd32b0b5ca3dd54caa87ebcb79badb3680a3543dbac1f78823ac1124988a1896",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260106_090444_873_99ba2325_980a3405": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS count FROM customer_case WHERE case_id = 842 AND escalation = true AND escalation_reason = 'breach_risk';",
+      "SELECT COUNT(*) AS count FROM notification WHERE case_id = 842 AND email = 'carl.brown91@cainryanandduncan.com' AND type = 'solution_proposal';\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "3a87fc111fabc4a8cc398caf241e3bdef54fdf360b065e2fe34be429c96953f8",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260106_133642_894_66392a82_3e083fa5": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt FROM user WHERE user_id = 622 AND active = 1; ",
+      "SELECT COUNT(*) AS cnt FROM customer_case c WHERE c.case_id = 88 AND c.account_id = 4 AND c.contact_id = 3 AND c.product_id = 170 AND c.state = 'in_progress' AND c.assignment_group_id = 7 AND c.reopen_count = 1 AND c.assigned_to IN (SELECT ugm.user_id FROM user_group_member ugm JOIN user u ON u.user_id = ugm.user_id WHERE ugm.group_id = 7 AND u.role = 'manager' AND u.active = 1); "
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "1dfbe0b27aa02fce5d2c82ee9fa01c2953e15558e512c6b93203a513556e48e3",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260106_134616_649_e6427839_7dba5a00": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = '1041' AND account_id = '45' AND priority = 'critical' AND assigned_to = '72' AND escalation = '0';\n",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_id = '1041' AND case_kb_id = '528' AND used_as = 'suggested' AND knowledge_id = '174';\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "a7621c3dccc643744e93388af2678ccf2f9f9b015b8e18f76edc74b85f0c035b",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260106_145907_700_a8eea1c0_f5bae698": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM user WHERE user_id = 1 AND first_name = 'Thomas' AND last_name = 'Green' AND email = 'thomas.green@servicenow.com' AND role = 'agent' AND active = 1;",
+      "SELECT COUNT(*) FROM product WHERE product_id = 241 AND name = 'Integrated Security Policy Audit' AND category = 'service' AND lifecycle_state = 'active';",
+      "SELECT COUNT(*) FROM knowledge WHERE knowledge_id = 370 AND kb_number = 'KB000370' AND state = 'published' AND visibility = 'internal' AND product_id = 241 AND owner_id = 1;",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 197 AND number = 'CS-0000197' AND account_id = 8 AND state = 'canceled';",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 1233 AND number = 'CS-0001233' AND account_id = 8 AND contact_id = 10 AND product_id = 241 AND channel = 'phone' AND priority = 'critical' AND state = 'in_progress' AND assignment_group_id = 2 AND escalation = 1 AND escalation_reason = 'impact';",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 528 AND case_id = 1233 AND knowledge_id = 370 AND used_as = 'suggested';",
+      "SELECT COUNT(*) FROM case_sla WHERE case_sla_id = 2465 AND case_id = 1233 AND sla_def_id = 1 AND stage = 'in_progress' AND has_breached = 0;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "13b7e3026515fb7737fdbd11b95e0e111fb977bf538d72b86be2058c8567df87",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260106_151754_319_d4a463c3_41f0af13": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS ip_retired_cnt\nFROM installed_product ip\nWHERE ip.installed_product_id = 182\n  AND ip.status = 'retired';",
+      "SELECT COUNT(*) AS case_747_ip_301_cnt\nFROM customer_case cc\nWHERE cc.case_id = 747\n  AND cc.installed_product_id = 301;",
+      "SELECT COUNT(*) AS case_768_ip_301_cnt\nFROM customer_case cc\nWHERE cc.case_id = 768\n  AND cc.installed_product_id = 301;",
+      "SELECT COUNT(*) AS case_769_ip_301_cnt\nFROM customer_case cc\nWHERE cc.case_id = 769\n  AND cc.installed_product_id = 301;",
+      "SELECT COUNT(*) AS notif_747_cnt\nFROM notification n\nWHERE n.case_id = 747\n  AND n.email = 'angela.brooks@phillips-jones.com'\n  AND n.type  = 'update';",
+      "SELECT COUNT(*) AS notif_768_cnt\nFROM notification n\nWHERE n.case_id = 768\n  AND n.email = 'angela.brooks@phillips-jones.com'\n  AND n.type  = 'update';",
+      "SELECT COUNT(*) AS notif_769_cnt\nFROM notification n\nWHERE n.case_id = 769\n  AND n.email = 'angela.brooks@phillips-jones.com'\n  AND n.type  = 'update';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "5798dc202fcc9b853a31878b5020be94d19d2983bcc2a6eaec5c6c790d7d66b1",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260106_155841_121_e6427839_fa425cbe": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM notification WHERE case_id = '1015' AND email = 'andrew.bell58@averyltd.com' AND knowledge_id = '22' AND type = 'solution_proposal';\n",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_id = '1015' AND knowledge_id = '22' AND used_as = 'suggested' AND case_kb_id = '528';\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "4961da3ca147b94662435e5c07c04c58448569663dcb9bb8e7a3a583105bae8a",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260106_161324_272_c4ad7a70_4b3980fc": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE case_id = 71\n  AND account_id = 3              \n  AND product_id = 25             \n  AND state = 'new'\n  AND priority = 'high'\n  AND escalation = 1\n  AND escalation_reason = 'vip';\n",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE case_id = 71\n  AND assigned_to = 3             \n  AND assignment_group_id = 30;",
+      "SELECT COUNT(*) AS cnt\nFROM user_group_member\nWHERE user_id = 3 \n  AND group_id = 30;",
+      "SELECT COUNT(*) AS cnt\nFROM customer_case cc\nJOIN contact c ON cc.contact_id = c.contact_id\nWHERE cc.case_id = 71\n  AND c.account_id = 3            \n  AND c.portal_user_id = 47;     \n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "617a717be4128f2f761fcbb262b620f7d4eb059f46f29fc25ee7c17ad319ec7b",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260106_161816_678_a8eea1c0_1ef46cba": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS product_changes_verified FROM product WHERE product_id = 241 AND name = 'Advanced Security Module' AND category = 'software' AND lifecycle_state = 'active';",
+      "SELECT COUNT(*) AS user_changes_verified FROM user WHERE (user_id = 1 AND first_name = 'Thomas' AND last_name = 'Green'  AND email = 'thomas.green@servicenow.com' AND active = 1 AND role = 'agent') OR (user_id = 803 AND first_name = 'Lisa' AND last_name = 'Casey'  AND email = 'lisa.casey@servicenow.com' AND active = 1 AND role = 'agent');",
+      "SELECT COUNT(*) AS sla_changes_verified FROM sla_definition WHERE sla_def_id = 6 AND name = 'SLA Resolution - Critical' AND metric = 'resolution' AND target_mins = 360 AND applies_to_priority = 'critical' AND pause_on_pending = 1 AND active = 1;",
+      "SELECT COUNT(*) AS membership_changes_verified FROM user_group_member WHERE (member_id = 960 AND group_id = 1 AND user_id = 1) OR (member_id = 961 AND group_id = 81 AND user_id = 803);",
+      "SELECT COUNT(*) AS case_changes_verified FROM customer_case WHERE case_id = 783 AND number = 'CS-0000783' AND state = 'in_progress' AND assigned_to = 1 AND assignment_group_id = 1 AND priority = 'critical' AND account_id = 34 AND contact_id = 73 AND product_id = 35;",
+      "SELECT COUNT(*) AS group_changes_verified FROM user_group WHERE group_id = 81 AND name = 'Security Policy Review' AND type = 'support' AND active = 1;",
+      "SELECT(SELECT COUNT(*) FROM user WHERE (user_id = 1 AND active = 1) OR (user_id = 803)) +(SELECT COUNT(*) FROM product WHERE product_id = 241) +(SELECT COUNT(*) FROM sla_definition WHERE sla_def_id = 6 AND target_mins = 360) +(SELECT COUNT(*) FROM user_group_member WHERE member_id IN (960, 961)) +(SELECT COUNT(*) FROM customer_case WHERE case_id = 783 AND state = 'in_progress' AND assigned_to = 1) +(SELECT COUNT(*) FROM user_group WHERE group_id = 81)AS total_verified_changes;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "a60fbb6d8f6e35cc8ed192b67f8bd624fbc6ad6074bcda99be5dc11080a97065",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260106_161859_265_00364ece_0e836ce8": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS count\nFROM customer_case c\nJOIN product p ON c.product_id = p.product_id\nJOIN contact ct ON c.contact_id = ct.contact_id\nJOIN user u ON ct.portal_user_id = u.user_id\nJOIN user u2 ON c.assigned_to = u2.user_id\nJOIN user_group g ON c.assignment_group_id = g.group_id\nWHERE u.first_name = 'Thomas'\n  AND u.last_name = 'Bailey'\n  AND c.channel = 'email'\n  AND c.priority = 'high'\n  AND c.state = 'new'\n  AND p.name = 'Managed Network Services Variant 17'\n  AND u2.first_name = 'David'\n  AND u2.last_name = 'Smith'\n  AND g.name = 'CSM Tier 1 Support_2';",
+      "SELECT COUNT(*) AS count\nFROM user_group_member ugm\nJOIN user u ON ugm.user_id = u.user_id\nJOIN user_group g ON ugm.group_id = g.group_id\nWHERE u.first_name = 'David'\n  AND u.last_name = 'Smith'\n  AND g.name = 'CSM Tier 1 Support_2';",
+      "SELECT COUNT(*) AS cnt \nFROM notification n \nWHERE n.case_id = 1233 \n  AND n.email = 'thomas.bailey63@initech.io' \n  AND n.type = 'report' \n  AND n.status = 'success' \n  AND n.knowledge_id IS NULL;",
+      "SELECT COUNT(*) AS cnt \nFROM case_knowledge n \nWHERE n.case_id = 1233 \n  AND n.knowledge_id = 315 \n  AND n.used_as = 'suggested' ;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "58151dad5f6e30a560117491916630fca42479d75282c246b9e60d2e119dd808",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260106_185201_238_00364ece_8ab4fd80": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS count\nFROM customer_case cc\nJOIN product p ON cc.product_id = p.product_id\nJOIN user u ON cc.assigned_to = u.user_id\nJOIN user_group ug ON cc.assignment_group_id = ug.group_id\nJOIN contact c ON cc.contact_id = c.contact_id\nJOIN user cu ON c.portal_user_id = cu.user_id\nWHERE p.name = 'SUSE Linux Enterprise Server 15 Variant 5'\n  AND cc.priority = 'high'\n  AND cc.state = 'new'\n  AND cc.channel = 'email'\n  AND u.first_name = 'Tabitha'\n  AND u.last_name = 'Bullock'\n  AND ug.name = 'Proactive Case Monitoring'\n  AND cu.first_name = 'Marc'\n  AND cu.last_name = 'Henry';",
+      "SELECT COUNT(*) AS count\nFROM user_group_member ugm\nJOIN user u ON ugm.user_id = u.user_id\nJOIN user_group g ON ugm.group_id = g.group_id\nWHERE u.first_name = 'Tabitha'\n  AND u.last_name = 'Bullock'\n  AND g.name = 'Proactive Case Monitoring';",
+      "SELECT COUNT(*) AS count\nFROM notification n\nJOIN customer_case c ON n.case_id = c.case_id\nWHERE c.number = 'CS-0001233'\n  AND n.type = 'report'\n  AND n.status = 'success'\n  AND n.email = 'marc.henry@stark-industries.com'\n  AND n.knowledge_id IS NULL;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "82c907788a02aa3047f26106c2ed64e1cd52a69171f8e6b9242448243df94e37",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260106_192119_816_ad5a67e3_87a5a87c": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 53 AND assignment_group_id = 3 AND state = 'in_progress';\n",
+      "SELECT COUNT(*) AS count\nFROM entitlement\nWHERE account_id = 3\n  AND product_id = 159\n  AND active = 1\n  AND support_level = 'enterprise';",
+      "SELECT COUNT(*) AS open_case_count\nFROM customer_case\nWHERE assignment_group_id = 3\n  AND state NOT IN ('closed', 'canceled', 'resolved');\n",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 52 AND assignment_group_id = 3 AND state = 'in_progress';\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "1e4687d6f653baa56fcec405e2ce0a48cc5566b3954d8e20a59404bd860c0c2d",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260107_111503_670_2aa6b0ad_e9611a77": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = '1233' AND account_id = '21' AND installed_product_id IS NULL AND channel = 'email' AND priority = 'critical' AND product_id = '164' AND state = 'new' AND contact_id = '125';",
+      "SELECT COUNT(*) FROM contact WHERE contact_id = '125' AND account_id = '21' AND portal_user_id = '784' AND is_primary = '0';",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = '463' AND state = 'canceled';",
+      "SELECT COUNT(*) FROM case_knowledge WHERE case_id = '1233' AND knowledge_id = '244' AND used_as = 'suggested';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "4f81d007ede264c2b8436405c300eafdb6a87d77ed87cdbd8afec8e81dd5f9ba",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260107_162554_472_accab84d_41d2e871": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS case_1233_created\nFROM customer_case\nWHERE case_id = 1233\n  AND account_id = 25\n  AND contact_id = 48\n  AND product_id = 32\n  AND installed_product_id = 134\n  AND channel = 'web'\n  AND priority = 'high';",
+      "SELECT COUNT(*) AS case_1234_created\nFROM customer_case\nWHERE case_id = 1234\n  AND account_id = 52\n  AND contact_id = 120\n  AND product_id = 52\n  AND installed_product_id = 293\n  AND channel = 'web'\n  AND priority = 'high';",
+      "SELECT COUNT(*) AS case_1233_sla_response\nFROM case_sla\nWHERE case_sla_id = 2465\n  AND case_id = 1233\n  AND sla_def_id = 2;",
+      "SELECT COUNT(*) AS case_1233_sla_resolution\nFROM case_sla\nWHERE case_sla_id = 2466\n  AND case_id = 1233\n  AND sla_def_id = 7;",
+      "SELECT COUNT(*) AS case_1234_sla_response\nFROM case_sla\nWHERE case_sla_id = 2467\n  AND case_id = 1234\n  AND sla_def_id = 2;",
+      "SELECT COUNT(*) AS case_1234_sla_resolution\nFROM case_sla\nWHERE case_sla_id = 2468\n  AND case_id = 1234\n  AND sla_def_id = 7;",
+      "SELECT COUNT(*) AS case_kb_link_1233\nFROM case_knowledge\nWHERE case_kb_id = 528\n  AND case_id = 1233\n  AND knowledge_id = 18\n  AND used_as = 'suggested';",
+      "SELECT COUNT(*) AS case_kb_link_1234\nFROM case_knowledge\nWHERE case_kb_id = 529\n  AND case_id = 1234\n  AND knowledge_id = 77\n  AND used_as = 'suggested';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "278fd59e935615952963a0b5635d33d1159fc8d641dd1b63f39fb61d61ffff15",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260107_164033_273_a8eea1c0_c0de2fed": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM installed_product WHERE installed_product_id = 21 AND account_id = 4 AND product_id = 152 AND serial_number = 'P152-537224-3992' AND status = 'retired' AND location_id = 809;",
+      "SELECT COUNT(*) FROM installed_product WHERE installed_product_id = 301 AND account_id = 4 AND product_id = 152 AND serial_number = 'P152-648335-99' AND status = 'in_use' AND location_id = 809;",
+      "SELECT COUNT(*) FROM installed_product WHERE account_id = 4 AND product_id = 152 AND location_id = 809 AND EXISTS (SELECT 1 FROM installed_product WHERE account_id = 4 AND product_id = 152 AND location_id = 809 AND serial_number = 'P152-537224-3992' AND status = 'retired') AND EXISTS (SELECT 1 FROM installed_product WHERE account_id = 4 AND product_id = 152 AND location_id = 809 AND serial_number = 'P152-648335-99' AND status = 'in_use');",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 1233 AND number = 'CS-0001233' AND account_id = 4 AND contact_id = 2 AND product_id = 152 AND installed_product_id = 301 AND channel = 'web' AND priority = 'moderate' AND state = 'new' AND assigned_to = 3 AND assignment_group_id IS NULL AND escalation = 0 AND reopen_count = 0 AND closed_on IS NULL;",
+      "SELECT COUNT(*) FROM customer_case c INNER JOIN installed_product ip ON c.installed_product_id = ip.installed_product_id WHERE c.case_id = 1233 AND c.installed_product_id = 301 AND ip.status = 'in_use' AND ip.serial_number = 'P152-648335-99' AND NOT EXISTS (SELECT 1 FROM customer_case WHERE case_id = 1233 AND installed_product_id = 21);",
+      "SELECT COUNT(*) FROM entitlement WHERE entitlement_id = 32 AND account_id = 4 AND product_id = 152 AND active = 1 AND support_level = 'premium';",
+      "SELECT COUNT(*) FROM customer_case c INNER JOIN user u ON c.assigned_to = u.user_id WHERE c.case_id = 1233 AND c.assigned_to = 3 AND u.email = 'tabitha.bullock@servicenow.com' AND u.role = 'agent' AND u.active = 1;",
+      "SELECT COUNT(*) FROM customer_case c INNER JOIN installed_product ip ON c.installed_product_id = ip.installed_product_id WHERE c.case_id = 1233 AND ip.status = 'in_use' AND ip.status NOT IN ('retired', 'repair');"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "25b7893c6a7c2c98f7662cc9a81d3dea7005e5408384839637dbfdfe80e0c780",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260108_160928_699_391f1eff_905701cb": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM Interaction WHERE case_id= 58 AND interaction_id = 1233 AND interacted_user= 47 AND status = \"open\" AND account_id = 3;",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id = 58 AND state = 'in_progress' AND priority= 'critical' AND escalation_reason = 'customer_request' AND assigned_to= 59;",
+      "SELECT COUNT(*) FROM case_sla WHERE case_id = 58 AND stage = 'in_progress' AND ((sla_def_id = 4 AND case_sla_id = 115) OR (sla_def_id = 9 AND case_sla_id = 116));",
+      "SELECT COUNT(*) FROM notification WHERE notification_id = 734 AND case_id = 58 AND type = 'update' AND email = 'michael.ward53@acme.com';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "047b3be5431c972cfd8b574083555e5148976b130280d344fb3396418059f653",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260121_143201_590_1afb323a_5a03bf03": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM user WHERE user_id=11 AND location_id= 907",
+      "SELECT COUNT(*) FROM user_group_member WHERE user_id=11 AND group_id= 81",
+      "SELECT COUNT(*) FROM user_group_member WHERE user_id=11 AND group_id= 64",
+      "SELECT COUNT(*) FROM user_group_member WHERE user_id=11 AND group_id= 75",
+      "SELECT COUNT(*) FROM product WHERE name= \"ServiceNow OOOP\" AND category=\"software\" AND lifecycle_state=\"active\"\n\n",
+      "SELECT COUNT(*) FROM location WHERE plot_no= \"1234\" AND street=\"JM Road\" AND city=\"mumbai\" AND country=\"india\"\n\n",
+      "SELECT COUNT(*) FROM user_group WHERE name= \"OOPS Issues Team\" AND active=true AND type=\"support\""
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "7c5c32238f863ef4f0d88546ecf50b82b6d63b0bc468eb88506e79e57b2a32d5",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260121_145409_648_1afb323a_4e203caa": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS count FROM contract WHERE account_id = '45' AND start_date = '2025-11-15' AND end_date = '2026-11-15' AND status = 'active' AND contract_type = 'support' AND contract_price = '72000';",
+      "SELECT COUNT(*) AS count FROM sla_definition WHERE metric = 'response' AND target_mins = 45 AND applies_to_priority = 'high' AND active = 1;",
+      "SELECT COUNT(*) AS count FROM entitlement WHERE account_id = '45' AND product_id = '31' AND support_level = 'premium' AND coverage_hours = 'h24x7' AND max_cases_per_month = 15 AND active = 1;",
+      "SELECT COUNT(*) AS count FROM sla_definition WHERE metric = 'resolution' AND target_mins = 240 AND applies_to_priority = 'high' AND active = 1;"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "2f986ed78bb30185ed0b0ca1087f4aeeacf3d3a2bac0d9d94ad0ed3f17a448b6",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260121_150447_596_1afb323a_0a1e4085": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS member_added FROM user_group_member WHERE user_id = 219 AND group_id = 36;",
+      "SELECT COUNT(*) AS case_modified FROM customer_case WHERE case_id = 122 AND account_id = '5' AND product_id = '174' AND installed_product_id = '25' AND assigned_to = '219' AND priority = 'high' AND state = 'in_progress' AND escalation = 1 AND escalation_reason = 'customer_request';",
+      "SELECT COUNT(*) AS low_slas_remaining FROM case_sla WHERE case_id = 122 AND sla_def_id IN (4, 9);\n",
+      "SELECT COUNT(*) AS high_sla_applied FROM case_sla WHERE case_id = 122 AND sla_def_id IN (7, 11) AND stage = 'in_progress';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "82a0c67b28b17e1302e1c25de46708786c20991a56929b23faa4a022d0c2d69c",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260121_162252_344_1afb323a_f878fac7": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS count FROM contract WHERE contract_id = 100 AND contract_price = 2678;\n",
+      "SELECT COUNT(*) AS count FROM user WHERE user_id = 55 AND phone = '+12125516299' AND location_id = 903;\n",
+      "SELECT COUNT(*) AS count FROM contract WHERE contract_id = 101 AND contract_price = 33414;\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "f2aac02fbe7a2bdc4625cbc7d6aca2f0484d4bfd1738dc64787cea4e4a9491bb",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260121_163208_054_1afb323a_7f40ee66": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) AS count FROM user WHERE user_id = 55 AND phone = '+12125516299' AND location_id = 903;\n",
+      "SELECT COUNT(*) AS count FROM contract WHERE contract_id = 101 AND contract_price = 99108;\n"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "d969c9657cbb54bfbdac90532223034e352ad3eb40624820b1053068583e4356",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  },
+  "task_20260121_183027_058_1afb323a_c53cb400": {
+   "native_state": {
+    "sn-csm-server": {
+     "service": "enterpriseops_csm",
+     "queries": [
+      "SELECT COUNT(*) FROM user WHERE first_name = 'Susan' AND last_name = 'Adams' AND email = 'susan.adams075@servicenow.com' AND role = 'agent' AND active = 1;",
+      "SELECT COUNT(*) FROM location WHERE name = 'User 803 - Mumbai' AND plot_no = 'Plot 685' AND street = 'Ferguson Neck' AND city = 'mumbai' AND country = 'india' AND active = 1;",
+      "SELECT COUNT(*) FROM user_group_member WHERE group_id = '6' AND user_id = '803';\n",
+      "SELECT COUNT(*) FROM customer_case WHERE case_id IN (223, 751, 1155) AND assigned_to = 803;",
+      "SELECT active FROM user WHERE user_id = 38 AND first_name = 'Samuel' AND last_name = 'Kemp' AND email = 'samuel.kemp@servicenow.com';"
+     ]
+    }
+   },
+   "files": {
+    "test.sh": "2552670f69bf36c915043bbba6920d62c250426ef6072016f21ff22e60f616b5",
+    "grade.py": "261f673acb3a3974f00b8e34cfe6066d882d1b8edffacc3916d3195463575185",
+    "verifiers.json": "f6641747a54631a8974c0950be035e4ab4b587427ff8194acde392d32107e082",
+    "ports.json": "1223c8951a2ea6a39dc67c1d941b943fd85d301d94f0133513837f5f33a577ce"
+   },
+   "inputs": [
+    "/tests/verifiers.json"
+   ],
+   "trees": []
+  }
+ }
+}

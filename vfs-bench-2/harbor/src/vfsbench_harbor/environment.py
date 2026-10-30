@@ -73,6 +73,19 @@ DONE = {"done", "failed", "canceled"}
 # fake escapes a file's path (mocks/upstream/fake.ts).
 URI_SAFE = "-_.!~*'()"
 
+# How many trials' daemons boot at once, however many trials run: a daemon
+# that cannot get the CPU to boot in time fails its Fastify ready hook (10 s),
+# as 103 booting together on 14 cores did. Each waits here only to start.
+BOOTS = int(os.environ.get("VFSBENCH_DAEMON_BOOTS") or os.cpu_count() or 4)
+_boots: asyncio.Semaphore | None = None
+
+
+def _boot_slot() -> asyncio.Semaphore:
+    global _boots
+    if _boots is None:
+        _boots = asyncio.Semaphore(BOOTS)
+    return _boots
+
 
 def _free_port() -> int:
     with socket.socket() as s:
@@ -153,6 +166,7 @@ class MirageEnvironment(BaseEnvironment):
         self._verifier: dict = {}
         self._state: list[tuple[Path, Path]] = []
         self._routes: dict[str, str] = {}
+        self._verifier_routes: dict[str, str] = {}
         self._env: dict[str, str] = {}
         self._runs: list[fakes.Run] = []
         self._url = ""
@@ -313,7 +327,13 @@ class MirageEnvironment(BaseEnvironment):
     async def _start_daemon(self, routes: dict[str, str], allow: list[str],
                             tools: dict | None) -> str:
         """Start the trial's own daemon, routing its network and with the
-        task's tools as CLIs, if it has some; wait for it."""
+        task's tools as CLIs, if it has some; wait for it. At most
+        ``BOOTS`` daemons boot at once."""
+        async with _boot_slot():
+            return await self._boot_daemon(routes, allow, tools)
+
+    async def _boot_daemon(self, routes: dict[str, str], allow: list[str],
+                           tools: dict | None) -> str:
         port = _free_port()
         self._ssh_port = _free_port()
         _, authorized = ssh_key()
@@ -398,6 +418,8 @@ class MirageEnvironment(BaseEnvironment):
         self._env = dict(plan["config"].get("env") or {})
         routes = {} if self._network_disabled else plan["routes"]
         self._routes = dict(routes)
+        # Never the daemon's: the agent does not reach these.
+        self._verifier_routes = dict(plan.get("verifierRoutes") or {})
         # A mount or CLI reaches its service at the trial's run directly,
         # so these stay reachable with the network off.
         allow = plan.get("allow", [])
@@ -581,7 +603,9 @@ class MirageEnvironment(BaseEnvironment):
             run = runs.get(definition["service"])
             if run is None:
                 raise ValueError(f"No live state source for {alias}")
-            value = await fakes.pool().snapshot(run, definition["tables"])
+            value = await fakes.pool().snapshot(run,
+                                                definition.get("tables", []),
+                                                definition.get("queries", []))
             return alias, value
 
         return dict(
@@ -616,6 +640,19 @@ class MirageEnvironment(BaseEnvironment):
         behind it: its own mock, or its run of a shared fake. Empty when the
         task turns the network off."""
         return {int(port): url for port, url in self._routes.items()}
+
+    @property
+    def verifier_routes(self) -> dict[int, str]:
+        """The routes a verifier outside the workspace reaches: ``routes``,
+        and the ports a task gives its verifier alone (mirage.yaml's
+        ``verifierPorts``), which the agent never reaches."""
+        return {
+            **self.routes,
+            **{
+                int(port): url
+                for port, url in self._verifier_routes.items()
+            }
+        }
 
     @property
     def container_env(self) -> dict[str, str]:

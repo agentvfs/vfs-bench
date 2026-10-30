@@ -3,6 +3,7 @@
  */
 import type { Dmmf, Fake, MinimalClient } from '../submodule/mirage/integ/server/kit/typescript/index.ts'
 import { route } from '../submodule/mirage/integ/server/kit/typescript/index.ts'
+import type { VerifierQuery } from '../mocks/enterpriseops/fake.ts'
 export function withVerifierState<C extends MinimalClient>(fake: Fake<C>, token: string): Fake<C> {
   if (!token) throw new Error('Verifier state requires a capability token')
   return {
@@ -15,9 +16,23 @@ export function withVerifierState<C extends MinimalClient>(fake: Fake<C>, token:
           if (ctx.headers['x-vfsbench-state-token'] !== token)
             return { status: 403, body: { error: 'forbidden' } }
           const requested = ctx.query.getAll('table')
-          if (!requested.length || new Set(requested).size !== requested.length)
+          const queries = ctx.query.getAll('query')
+          if ((!requested.length && !queries.length) || new Set(requested).size !== requested.length)
             return { status: 400, body: { error: 'invalid_tables' } }
           const tables: Record<string, unknown[]> = {}
+          // A fake whose upstream verifier asks the server's SQL runner
+          // (EnterpriseOps-Gym's) answers each query itself, read-only, at
+          // the run's clock: `query-<i>` is its rows, or one row with the
+          // runner's `__error__`. The store never leaves the fake.
+          if (queries.length) {
+            const answer = (fake as Fake<C> & { verifierQuery?: VerifierQuery<C> }).verifierQuery
+            if (!answer) return { status: 400, body: { error: 'queries_unsupported' } }
+            const now = ctx.clock.nowMs()
+            queries.forEach((query, i) => {
+              const out = answer(ctx.db, query, now)
+              tables[`query-${i}`] = 'error' in out ? [{ __error__: out.error }] : out.rows
+            })
+          }
           for (const name of requested) {
             // Prisma cannot model this nullable primary key. The fake's store
             // client exports it in reference order (the public API sorts it).

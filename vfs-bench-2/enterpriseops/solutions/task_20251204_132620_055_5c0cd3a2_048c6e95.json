@@ -1,0 +1,14 @@
+[
+ {"tool": "find_user", "args": {"name": "Michael Ward"}},
+ {"tool": "find_account", "args": {"name": "Acme Systems"}},
+ {"tool": "find_contact_by_portal_user", "args": {"portal_user_id": 47}},
+ {"tool": "search_cases", "args": {"account_id": 3, "contact_id": 1, "channel": "alert", "state": "new"}},
+ {"tool": "list_user_groups", "args": {"name": "CSM Tier 2 Support"}},
+ {"tool": "find_user", "args": {"name": "Travis Wood"}},
+ {"tool": "check_user_membership", "args": {"user_id": 11, "group_id": 2}},
+ {"tool": "add_new_group_member", "args": {"group_id": 2, "user_id": 11}},
+ {"tool": "update_case", "args": {"case_id": 71, "assignment_group_id": 2, "assigned_to": 11, "priority": "high", "state": "in_progress", "escalation": true, "escalation_reason": "impact"}},
+ {"tool": "find_product", "args": {"name": "Atlassian Jira Data Center Variant 77"}},
+ {"tool": "find_entitlements", "args": {"account_id": 3, "product_id": 97}},
+ {"tool": "update_entitlement", "args": {"entitlement_id": 22, "support_level": "premium", "coverage_hours": "h12x6", "max_cases_per_month": 30}}
+]

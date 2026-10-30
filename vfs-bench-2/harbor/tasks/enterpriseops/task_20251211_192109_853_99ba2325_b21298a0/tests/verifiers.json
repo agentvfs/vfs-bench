@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify case updated.",
+  "description": "Verify case updated.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = '513' AND state = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify linked knowledge.",
+  "description": "Verify linked knowledge.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge WHERE case_id = '513' AND knowledge_id = '300' AND used_as = 'suggested';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify that internal article is not sent to customer.",
+  "description": "Verify that internal article is not sent to customer.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM notification WHERE case_id = '513' AND email = 'christopher.lee94@clarkandsons.com' AND type = 'alert' AND knowledge_id = '300';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify a proper SLA is linked for in progress case 1",
+  "description": "Verify a proper SLA is linked for in progress case 1",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla WHERE case_id = '513' AND stage = 'in_progress' AND sla_def_id = 3;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify a proper SLA is linked for in progress case 2",
+  "description": "Verify a proper SLA is linked for in progress case 2",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla WHERE case_id = '513' AND stage = 'in_progress' AND sla_def_id = 12;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

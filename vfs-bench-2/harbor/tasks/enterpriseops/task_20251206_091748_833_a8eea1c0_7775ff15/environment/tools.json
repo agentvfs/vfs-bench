@@ -1,0 +1,444 @@
+[
+ {
+  "name": "sn-csm-server",
+  "description": "sn-csm-server's tools.",
+  "tools": [
+   {
+    "name": "find_user",
+    "call": "find_user",
+    "description": "Look up a user (portal customer, portal user or internal agent) by full name.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "Full name of user, e.g., 'Harry Middleton'."
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_user",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_user_group",
+    "call": "find_user_group",
+    "description": "Retrieve a user group by exact name. User Group represents a collection of users grouped together for assignment or organizational purposes.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "Exact name of the user group (unique).",
+       "minLength": 1
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_user_group",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "check_user_membership",
+    "call": "check_user_membership",
+    "description": "Verify that a user is a member of a specific user group. User Group represents a collection of users grouped together for assignment or organizational purposes.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_id": {
+       "type": "integer",
+       "description": "User's unique id to check"
+      },
+      "group_id": {
+       "type": "integer",
+       "description": "User group's unique id to check"
+      }
+     },
+     "required": [
+      "user_id",
+      "group_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/check_user_membership",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_contacts",
+    "call": "find_contacts",
+    "description": "Find contacts with optional filters.All the inputs are optional, not providing any filter will return all accounts. Contact represents an individual associated with an account or a point of contact.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contact_id": {
+       "type": "integer",
+       "description": "Unique identifier of the contact."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "ID of the account this contact belongs to."
+      },
+      "portal_user_id": {
+       "type": "integer",
+       "description": "Unique identifier of the portal user associated with this record. This value references the primary key of the user in the User table."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Whether the contact is currently active."
+      },
+      "is_primary": {
+       "type": "boolean",
+       "description": "True if this is the primary contact for the account."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Filter for contacts created after this timestamp (ISO format)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Filter for contacts created before this timestamp (ISO format)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_contacts",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search_cases",
+    "call": "search_cases",
+    "description": "Search cases with rich filters and date bounds on sys_created_on. All inputs are optional; not providing any filter will return all cases. A case represents a customer-reported issue or request that requires tracking and resolution.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case."
+      },
+      "number": {
+       "type": "string",
+       "description": "Case number (unique human-readable reference)."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Filter by account ID. An account represents a business entity or organization."
+      },
+      "contact_id": {
+       "type": "integer",
+       "description": "Filter by contact ID."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Filter by product ID. Unique identifier which relates to the product table record."
+      },
+      "installed_product_id": {
+       "type": "integer",
+       "description": "Filter by installed product ID. Unique identifier which relates to the installed product table record."
+      },
+      "channel": {
+       "type": "string",
+       "enum": [
+        "web",
+        "email",
+        "phone",
+        "chat",
+        "social",
+        "alert",
+        "community"
+       ],
+       "description": "Channel through which the case was communicated/created."
+      },
+      "priority": {
+       "type": "string",
+       "enum": [
+        "critical",
+        "high",
+        "moderate",
+        "low"
+       ],
+       "description": "Priority of the case."
+      },
+      "state": {
+       "type": "string",
+       "enum": [
+        "new",
+        "in_progress",
+        "pending",
+        "resolved",
+        "closed",
+        "canceled"
+       ],
+       "description": "State of the case."
+      },
+      "short_description": {
+       "type": "string",
+       "description": "Short description of the case."
+      },
+      "escalation": {
+       "type": "boolean",
+       "description": "Whether the case is escalated."
+      },
+      "escalation_reason": {
+       "type": "string",
+       "enum": [
+        "urgency",
+        "vip",
+        "impact",
+        "breach_risk",
+        "customer_request"
+       ],
+       "description": "Reason for escalation."
+      },
+      "reopen_count": {
+       "type": "integer",
+       "description": "Filter by number of times the case was reopened."
+      },
+      "closed_on": {
+       "type": "string",
+       "description": "Filter cases closed on a specific date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return cases created before this date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return cases created after this date (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/search_cases",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_case_slas",
+    "call": "find_case_slas",
+    "description": "Find case_sla rows with flexible filters. All inputs are optional; not providing any filter will return all case_sla records. A case_sla record tracks the SLA status for a specific case based on the applied SLA definition.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_sla_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case_sla record."
+      },
+      "case_id": {
+       "type": "integer",
+       "description": "ID of the case linked to this SLA record."
+      },
+      "sla_def_id": {
+       "type": "integer",
+       "description": "ID of the SLA definition applied to the case."
+      },
+      "stage": {
+       "type": "string",
+       "enum": [
+        "in_progress",
+        "paused",
+        "completed",
+        "canceled"
+       ],
+       "description": "Current stage of the SLA tracking."
+      },
+      "start_time": {
+       "type": "string",
+       "description": "Timestamp when SLA tracking started (YYYY-MM-DD HH:MM:SS)."
+      },
+      "breach_time": {
+       "type": "string",
+       "description": "Expected SLA breach timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "has_breached": {
+       "type": "boolean",
+       "description": "Indicates whether the SLA was breached (true/false)."
+      },
+      "completed_time": {
+       "type": "string",
+       "description": "Timestamp when SLA was completed, if applicable."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_case_slas",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_case",
+    "call": "update_case",
+    "description": "Update an existing case (partial updates). A case represents a customer issue or request that needs to be tracked and resolved.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case to update."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Update the associated account ID."
+      },
+      "contact_id": {
+       "type": "integer",
+       "description": "Update the associated contact ID."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Update the product ID associated with the case."
+      },
+      "installed_product_id": {
+       "type": "integer",
+       "description": "Update the installed product ID."
+      },
+      "channel": {
+       "type": "string",
+       "enum": [
+        "web",
+        "email",
+        "phone",
+        "chat",
+        "social",
+        "alert",
+        "community"
+       ],
+       "description": "Update the channel used to create the case."
+      },
+      "priority": {
+       "type": "string",
+       "enum": [
+        "critical",
+        "high",
+        "moderate",
+        "low"
+       ],
+       "description": "Update the case priority."
+      },
+      "state": {
+       "type": "string",
+       "enum": [
+        "new",
+        "in_progress",
+        "pending",
+        "resolved",
+        "closed",
+        "canceled"
+       ],
+       "description": "Update the case state."
+      },
+      "short_description": {
+       "type": "string",
+       "description": "Update the case short description.",
+       "minLength": 1,
+       "maxLength": 500
+      },
+      "escalation": {
+       "type": "boolean",
+       "description": "Update whether the case is escalated."
+      },
+      "escalation_reason": {
+       "type": "string",
+       "enum": [
+        "urgency",
+        "vip",
+        "impact",
+        "breach_risk",
+        "customer_request"
+       ],
+       "description": "Update the escalation reason.",
+       "minLength": 1
+      },
+      "reopen_count": {
+       "type": "integer",
+       "description": "Update the reopen count."
+      },
+      "closed_on": {
+       "type": "string",
+       "description": "Update the closed date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "assignment_group_id": {
+       "type": "integer",
+       "description": "Update the assignment group ID."
+      },
+      "assigned_to": {
+       "type": "integer",
+       "description": "Update the assigned user ID."
+      }
+     },
+     "required": [
+      "case_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_case",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_case_sla_details",
+    "call": "update_case_sla_details",
+    "description": "Update a case_sla record (partial updates). A case_sla links a support case to a specific SLA definition, tracking the SLA status for that case.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_sla_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case_sla record to update."
+      },
+      "case_id": {
+       "type": "integer",
+       "description": "Update the case ID linked to the SLA."
+      },
+      "sla_def_id": {
+       "type": "integer",
+       "description": "Update the SLA definition ID."
+      },
+      "stage": {
+       "type": "string",
+       "enum": [
+        "in_progress",
+        "paused",
+        "completed",
+        "canceled"
+       ],
+       "description": "Update the stage of SLA tracking."
+      },
+      "start_time": {
+       "type": "string",
+       "description": "Update the SLA start time."
+      },
+      "breach_time": {
+       "type": "string",
+       "description": "Update the expected breach time."
+      },
+      "has_breached": {
+       "type": "boolean",
+       "description": "Update whether the SLA is breached."
+      },
+      "completed_time": {
+       "type": "string",
+       "description": "Update the completion time."
+      }
+     },
+     "required": [
+      "case_sla_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_case_sla_details",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

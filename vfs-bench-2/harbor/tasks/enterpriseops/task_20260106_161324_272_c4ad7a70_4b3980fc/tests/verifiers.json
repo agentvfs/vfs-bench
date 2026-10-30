@@ -1,0 +1,46 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Case CS-0000071 is escalated as VIP for Acme Systems SUSE boot issue",
+  "description": "Case CS-0000071 is escalated as VIP for Acme Systems SUSE boot issue",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE case_id = 71\n  AND account_id = 3              \n  AND product_id = 25             \n  AND state = 'new'\n  AND priority = 'high'\n  AND escalation = 1\n  AND escalation_reason = 'vip';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Case ownership moved to Tabitha Bullock in the correct support group",
+  "description": "Case ownership moved to Tabitha Bullock in the correct support group",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case\nWHERE case_id = 71\n  AND assigned_to = 3             \n  AND assignment_group_id = 30;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Tabitha is now a member of the Installed Base Support_2 group",
+  "description": "Tabitha is now a member of the Installed Base Support_2 group",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM user_group_member\nWHERE user_id = 3 \n  AND group_id = 30;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Case is still correctly tied to Michael Ward’s contact for Acme Systems",
+  "description": "Case is still correctly tied to Michael Ward’s contact for Acme Systems",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case cc\nJOIN contact c ON cc.contact_id = c.contact_id\nWHERE cc.case_id = 71\n  AND c.account_id = 3            \n  AND c.portal_user_id = 47;     \n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

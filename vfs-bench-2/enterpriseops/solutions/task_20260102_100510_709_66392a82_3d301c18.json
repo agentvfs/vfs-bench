@@ -1,0 +1,9 @@
+[
+ {"tool": "list_user_groups", "args": {"name": "Entitlement Verification"}},
+ {"tool": "list_group_members", "args": {"group_id": 5}},
+ {"tool": "list_users", "args": {"role": "manager", "active": true}},
+ {"tool": "add_new_user_group", "args": {"name": "Emergency Entitlement Oversight", "type": "support", "active": true}},
+ {"tool": "add_new_group_member", "args": {"group_id": 81, "user_id": 59}},
+ {"tool": "add_new_group_member", "args": {"group_id": 81, "user_id": 170}},
+ {"tool": "add_new_group_member", "args": {"group_id": 81, "user_id": 31}}
+]

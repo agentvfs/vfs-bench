@@ -1,0 +1,10 @@
+[
+ {"tool": "find_account", "args": {"name": "Cooper PLC"}},
+ {"tool": "find_product", "args": {"name": "Red Hat Enterprise Linux 9 Variant 63"}},
+ {"tool": "search_cases", "args": {"account_id": 31, "product_id": 83}},
+ {"tool": "find_entitlements", "args": {"account_id": 31, "active": true}},
+ {"tool": "find_user_by_email", "args": {"email": "daniel.hanson@servicenow.com"}},
+ {"tool": "find_user_group", "args": {"name": "Returns Authorization Desk_3"}},
+ {"tool": "check_user_membership", "args": {"user_id": 103, "group_id": 55}},
+ {"tool": "update_case", "args": {"case_id": 700, "escalation": true, "escalation_reason": "customer_request", "assigned_to": 103}}
+]

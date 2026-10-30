@@ -1,6 +1,6 @@
 """Preserve the original grade while checking a native port on the same state.
 
-Use --verifier vfsbench_harbor:MirageParityVerifier with any of the six
+Use --verifier vfsbench_harbor:MirageParityVerifier with any of the seven
 Mirage-agent job configs. Unported tasks still run their original grader;
 they are explicitly reported as unported, never as parity successes.
 """
@@ -14,6 +14,7 @@ from vfsbench_harbor.automationbench_verifier import \
 from vfsbench_harbor.complexmcp_verifier import definitions
 from vfsbench_harbor.dataspace_verifier import \
     definitions as dataspace_definitions
+from vfsbench_harbor.enterpriseops_verifier import definitions as enterpriseops
 from vfsbench_harbor.microsandbox import MicrosandboxVerifier
 from vfsbench_harbor.mirage_verifier import MANIFEST, MirageVerifier
 
@@ -24,6 +25,7 @@ REFERENCE_BACKENDS = {
     "complexmcp": "microsandbox",
     "automationbench": "microsandbox",
     "gaia2": "microsandbox",
+    "enterpriseops": "microsandbox",
 }
 
 
@@ -53,11 +55,10 @@ class MirageParityVerifier(Verifier):
         (default True), retaining reference rewards and the parity report.
     require_native: also fail unported tasks (default False).
 
-    The 70 LiveClawBench, 47 ComplexMCP, 46 DataSpace and 600 AutomationBench
-    graders have native ports. Future ports must define their frozen input
-    contract, including
-    recorded API
-    replies/model judgments where needed, before being registered here.
+    The 70 LiveClawBench, 47 ComplexMCP, 46 DataSpace, 600 AutomationBench
+    and 103 EnterpriseOps-Gym graders have native ports. Future ports must
+    define their frozen input contract, including recorded API replies/model
+    judgments where needed, before being registered here.
     Calling a live judge twice is not a differential test.
     """
 
@@ -115,9 +116,11 @@ class MirageParityVerifier(Verifier):
             manifest = dataspace_definitions()
         elif dataset == "automationbench":
             manifest = automationbench_definitions()
-        supported = dataset in ("liveclawbench", "dataspace",
+        elif dataset == "enterpriseops":
+            manifest = enterpriseops()
+        supported = dataset in ("liveclawbench", "dataspace", "complexmcp",
                                 "automationbench",
-                                "complexmcp") and task in manifest
+                                "enterpriseops") and task in manifest
         report = {
             "dataset": dataset,
             "task": task,

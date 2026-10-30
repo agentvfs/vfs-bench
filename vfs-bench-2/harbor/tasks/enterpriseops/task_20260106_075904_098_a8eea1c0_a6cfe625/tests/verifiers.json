@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "update_contact",
+  "description": "Verify Marc Henry's contact record is set as primary.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT is_primary FROM contact WHERE contact_id = 10 AND portal_user_id = 20;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_case",
+  "description": "Verify Case CS-0000181 priority, state, and escalation status.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 181 AND priority = 'critical' AND state = 'in_progress' AND escalation = 1 AND escalation_reason = 'vip';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_new_case_sla",
+  "description": "Verify the Critical Resolution SLA is linked to Case CS-0000181 and is in progress.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla WHERE case_id = 181 AND sla_def_id = 6 AND stage = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "assign_case_to_user",
+  "description": "Verify Case CS-0000181 is assigned to Escalation Management (ID 18) and Curtis Mccoy (ID 177).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 181 AND assignment_group_id = 18 AND assigned_to = 177;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_knowledge",
+  "description": "Verify KB-0000103 is retired and visibility is set to internal.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM knowledge WHERE knowledge_id = 103 AND state = 'retired' AND visibility = 'internal';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

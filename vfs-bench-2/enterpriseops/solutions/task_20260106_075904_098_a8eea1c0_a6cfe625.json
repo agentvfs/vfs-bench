@@ -1,0 +1,20 @@
+[
+ {"tool": "find_account", "args": {"name": "Stark Industries"}},
+ {"tool": "find_product", "args": {"name": "Palo Alto Networks PA-3220 Variant 8"}},
+ {"tool": "retrieve_installed_products", "args": {"account_id": 8, "product_id": 140}},
+ {"tool": "search_cases", "args": {"account_id": 8, "installed_product_id": 42, "state": "new"}},
+ {"tool": "find_entitlements", "args": {"account_id": 8, "product_id": 140, "active": true}},
+ {"tool": "update_case", "args": {"case_id": 181, "priority": "critical", "state": "in_progress", "escalation": true, "escalation_reason": "vip"}},
+ {"tool": "find_sla_definitions", "args": {"applies_to_priority": "critical", "active": true}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 181, "sla_def_id": 1, "stage": "in_progress"}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 181, "sla_def_id": 6, "stage": "in_progress"}},
+ {"tool": "find_user", "args": {"name": "Curtis Mccoy"}},
+ {"tool": "find_user_group", "args": {"name": "Escalation Management"}},
+ {"tool": "check_user_membership", "args": {"user_id": 177, "group_id": 18}},
+ {"tool": "set_case_assignment_group", "args": {"case_id": 181, "assignment_group_id": 18}},
+ {"tool": "assign_case_to_user", "args": {"case_id": 181, "assigned_to_user_id": 177}},
+ {"tool": "find_user", "args": {"name": "Marc Henry"}},
+ {"tool": "find_contacts", "args": {"account_id": 8}},
+ {"tool": "retrieve_knowledge", "args": {"kb_number": "KB-0000103"}},
+ {"tool": "update_knowledge", "args": {"knowledge_id": 103, "state": "retired", "visibility": "internal"}}
+]

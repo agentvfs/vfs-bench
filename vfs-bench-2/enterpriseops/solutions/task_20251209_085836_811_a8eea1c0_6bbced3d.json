@@ -1,0 +1,12 @@
+[
+ {"tool": "list_users", "args": {"first_name": "Thomas", "last_name": "Green"}},
+ {"tool": "update_user_details", "args": {"user_id": 1, "active": true}},
+ {"tool": "find_user_by_email", "args": {"email": "sarah.connor.new@servicenow.com"}},
+ {"tool": "find_location", "args": {"name": "User 4 - Tokyo"}},
+ {"tool": "add_new_user", "args": {"first_name": "Sarah", "last_name": "Connor", "email": "sarah.connor.new@servicenow.com", "role": "agent", "location_id": 4, "active": true}},
+ {"tool": "find_user_group", "args": {"name": "CSM Tier 1 Support"}},
+ {"tool": "add_new_group_member", "args": {"group_id": 1, "user_id": 803}},
+ {"tool": "find_products", "args": {"name": "Quantum Firewall 5000"}},
+ {"tool": "add_new_product", "args": {"name": "Quantum Firewall 5000", "category": "hardware", "lifecycle_state": "active"}},
+ {"tool": "create_knowledge", "args": {"title": "Quantum Firewall 5000 release: preliminary support guide", "body": "Preliminary notes for the Quantum Firewall 5000 hardware release, handled by CSM Tier 1 Support.", "state": "draft", "visibility": "internal", "product_id": 241, "owner_id": 803}}
+]

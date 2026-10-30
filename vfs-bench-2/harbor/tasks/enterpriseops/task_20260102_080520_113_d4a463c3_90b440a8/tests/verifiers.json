@@ -1,0 +1,35 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify that the product is moved to new active location",
+  "description": "Verify that the product is moved to new active location",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM installed_product WHERE installed_product_id = 4 AND location_id = 803 AND serial_number = 'P237-136518-2272';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify that location is reactivated",
+  "description": "Verify that location is reactivated",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM location WHERE location_id = 803 AND active = true;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify that current location is inactivated",
+  "description": "Verify that current location is inactivated",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM location WHERE location_id = 804 AND active = false;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

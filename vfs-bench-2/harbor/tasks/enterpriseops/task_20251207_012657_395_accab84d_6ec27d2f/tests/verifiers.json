@@ -1,0 +1,35 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Case for Thomas at Initech is reopened and routed to Michael in the right group",
+  "description": "Case for Thomas at Initech is reopened and routed to Michael in the right group",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM customer_case cc\nJOIN account a ON cc.account_id = a.account_id\nJOIN contact c ON cc.contact_id = c.contact_id\nJOIN \"user\" u ON cc.assigned_to = u.user_id\nJOIN user_group g ON cc.assignment_group_id = g.group_id\nWHERE a.name = 'Initech'\n  AND u.first_name = 'Michael'\n  AND u.last_name = 'Lee'\n  AND g.name = 'CSM Tier 1 Support'\n  AND cc.state = 'in_progress'\n  AND cc.reopen_count >= 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Old resolution KB removed",
+  "description": "Old resolution KB removed",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM case_knowledge ck\nJOIN customer_case cc ON ck.case_id = cc.case_id\nJOIN account a ON cc.account_id = a.account_id\nWHERE a.name = 'Initech'\n  AND ck.used_as = 'resolution'\n  AND ck.knowledge_id = 46;",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "New suggested KB attached",
+  "description": "New suggested KB attached",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt\nFROM case_knowledge ck\nJOIN customer_case cc ON ck.case_id = cc.case_id\nJOIN account a ON cc.account_id = a.account_id\nWHERE a.name = 'Initech'\n  AND ck.used_as = 'suggested'\n  AND ck.knowledge_id = 170;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

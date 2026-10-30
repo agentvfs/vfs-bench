@@ -1,0 +1,101 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Case created with correct attributes",
+  "description": "Verify case was created with account_id=52, product_id=133, installed_product_id=295, priority=moderate, channel=community, exact description, and assignment_group_id=10",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE account_id = 52 AND product_id = 133 AND installed_product_id = 295 AND priority = 'moderate' AND channel = 'community' AND short_description = 'Product: Dell PowerEdge R740 (Config 1), Issue: is not working as expected.' AND assignment_group_id = 10;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Case linked to primary contact",
+  "description": "Verify the case is associated with a primary contact (contact with is_primary=1) for account_id=52",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case cc JOIN contact c ON cc.contact_id = c.contact_id WHERE cc.account_id = 52 AND cc.product_id = 133 AND c.is_primary = 1 AND cc.short_description = 'Product: Dell PowerEdge R740 (Config 1), Issue: is not working as expected.';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Case state updated to in_progress",
+  "description": "Verify case state was changed to 'in_progress' (required by policy before SLA linking)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE account_id = 52 AND product_id = 133 AND state = 'in_progress' AND short_description = 'Product: Dell PowerEdge R740 (Config 1), Issue: is not working as expected.';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Correct installed product linked (serial ends with 9300)",
+  "description": "Verify the case is linked to installed_product_id=295 (Dell PowerEdge with serial ending in 9300 at Mumbai location)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE account_id = 52 AND product_id = 133 AND installed_product_id = 295 AND priority = 'moderate' AND channel = 'community' AND assignment_group_id = 10 AND short_description = 'Product: Dell PowerEdge R740 (Config 1), Issue: is not working as expected.';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Case assigned to Installed Base Support group",
+  "description": "Verify case was assigned to Installed Base Support (group_id=10) - the 'first foundation-level installed product support squad'",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE account_id = 52 AND product_id = 133 AND assignment_group_id = 10 AND short_description = 'Product: Dell PowerEdge R740 (Config 1), Issue: is not working as expected.';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Response SLA linked for moderate priority",
+  "description": "Verify a response SLA for moderate priority was linked to the case (any moderate response SLA acceptable, since none with pause_on_pending=false exist)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla cs JOIN customer_case cc ON cs.case_id = cc.case_id JOIN sla_definition sd ON cs.sla_def_id = sd.sla_def_id WHERE cc.account_id = 52 AND cc.product_id = 133 AND sd.metric = 'response' AND sd.applies_to_priority = 'moderate' AND sd.active = 1 AND cc.short_description = 'Product: Dell PowerEdge R740 (Config 1), Issue: is not working as expected.';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "SLA timer started (stage in_progress)",
+  "description": "Verify the SLA was started with stage='in_progress' and start_time is set ('get that timer ticking')",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla cs JOIN customer_case cc ON cs.case_id = cc.case_id WHERE cc.account_id = 52 AND cc.product_id = 133 AND cs.stage = 'in_progress' AND cs.start_time IS NOT NULL AND cc.short_description = 'Product: Dell PowerEdge R740 (Config 1), Issue: is not working as expected.';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "No duplicate cases created",
+  "description": "Verify exactly ONE case was created for this scenario (no duplicates)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE account_id = 52 AND product_id = 133 AND priority = 'moderate' AND channel = 'community' AND short_description = 'Product: Dell PowerEdge R740 (Config 1), Issue: is not working as expected.';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Case sys_updated_on changed after state transition",
+  "description": "Verify case sys_updated_on timestamp is later than sys_created_on (confirms state was updated after creation)",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE account_id = 52 AND product_id = 133 AND short_description = 'Product: Dell PowerEdge R740 (Config 1), Issue: is not working as expected.' AND sys_updated_on > sys_created_on;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

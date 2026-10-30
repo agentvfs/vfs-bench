@@ -1,0 +1,11 @@
+[
+ {"tool": "add_location", "args": {"name": "Servicenow Office - Mumbai", "plot_no": "1234", "street": "JM Road", "city": "mumbai", "country": "india", "active": true}},
+ {"tool": "add_new_user_group", "args": {"name": "OOPS Issues Team", "type": "support", "active": true}},
+ {"tool": "add_new_product", "args": {"name": "ServiceNow OOOP", "category": "software", "lifecycle_state": "active"}},
+ {"tool": "find_user", "args": {"name": "Travis Wood"}},
+ {"tool": "update_user_details", "args": {"user_id": 11, "location_id": 907}},
+ {"tool": "list_group_members", "args": {"user_id": 11}},
+ {"tool": "remove_group_membership", "args": {"member_id": 172}},
+ {"tool": "remove_group_membership", "args": {"member_id": 549}},
+ {"tool": "add_new_group_member", "args": {"group_id": 81, "user_id": 11}}
+]

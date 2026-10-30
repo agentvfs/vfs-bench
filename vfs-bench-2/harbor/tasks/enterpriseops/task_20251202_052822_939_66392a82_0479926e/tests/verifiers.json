@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Lumina Healthcare Customer Account Creation",
+  "description": "Ensures that the Lumina Healthcare account was successfully created in the system as an active customer.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM account WHERE name = 'Lumina Healthcare' AND account_type = 'customer' AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Creation of Lumina Implementation Coordination Group",
+  "description": "Confirms that the support coordination group named \"Lumina Implementation Coordination\" was created and marked as an active support-type group.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group WHERE name = 'Lumina Implementation Coordination' AND type = 'support' AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Exactly Three Members Assigned to the New Coordination Group",
+  "description": "Checks that the new \"Lumina Implementation Coordination\" group contains exactly three assigned.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS member_count FROM user_group_member ugm JOIN user_group ug ON ugm.group_id = ug.group_id WHERE ug.name = 'Lumina Implementation Coordination';",
+   "expected_value": 3,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify One Manager from Installed Base Support Assigned",
+  "description": "Validates that exactly one of the users added to the \"Lumina Implementation Coordination\" group is both a manager and originally part of the Installed Base Support team.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS manager_count FROM user u JOIN user_group_member new_g ON u.user_id = new_g.user_id JOIN user_group ng ON new_g.group_id = ng.group_id JOIN user_group_member ib_g ON u.user_id = ib_g.user_id JOIN user_group ibg ON ib_g.group_id = ibg.group_id WHERE ng.name = 'Lumina Implementation Coordination' AND ibg.name = 'Installed Base Support' AND u.role = 'manager';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Two Non-Managers from Installed Base Support Assigned",
+  "description": "Ensures that exactly two assigned users in the \"Lumina Implementation Coordination\" group are non-managers and originally members of the Installed Base Support team.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS non_manager_count FROM user u JOIN user_group_member new_g ON u.user_id = new_g.user_id JOIN user_group ng ON new_g.group_id = ng.group_id JOIN user_group_member ib_g ON u.user_id = ib_g.user_id JOIN user_group ibg ON ib_g.group_id = ibg.group_id WHERE ng.name = 'Lumina Implementation Coordination' AND ibg.name = 'Installed Base Support' AND u.role != 'manager';",
+   "expected_value": 2,
+   "comparison_type": "equals"
+  }
+ }
+]

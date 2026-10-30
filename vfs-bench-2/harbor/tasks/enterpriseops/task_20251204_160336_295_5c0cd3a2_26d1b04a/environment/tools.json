@@ -1,0 +1,434 @@
+[
+ {
+  "name": "sn-csm-server",
+  "description": "sn-csm-server's tools.",
+  "tools": [
+   {
+    "name": "find_account",
+    "call": "find_account",
+    "description": "Retrieve an account by its exact name. Account is a company or organization that has a relationship with the business.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "Exact account name, e.g., 'Wood and Sons'.",
+       "minLength": 1
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_account",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_installed_product_by_serial",
+    "call": "find_installed_product_by_serial",
+    "description": "Retrieve an installed product by its serial number. Installed Product represents a specific instance of a product that has been installed for a customer. The serial number is a unique identifier assigned to each installed product.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "serial_number": {
+       "type": "string",
+       "description": "Exact serial number of product.",
+       "minLength": 1
+      }
+     },
+     "required": [
+      "serial_number"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_installed_product_by_serial",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_location",
+    "call": "find_location",
+    "description": "Look up a location (site/campus) by exact given name for it. Location represents a physical site or campus or user's location where services or products are installed or the user resides.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "Given Location name",
+       "minLength": 1
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_location",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_contracts",
+    "call": "find_contracts",
+    "description": "Find contracts with multiple filters including price range. All inputs are optional; not providing any filter will return all contracts. A contract represents a formal agreement between two or more parties.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contract_id": {
+       "type": "integer",
+       "description": "Unique identifier of the contract."
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "draft",
+        "active",
+        "suspended",
+        "expired"
+       ],
+       "description": "Filter contracts by their current status."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Filter contracts by the owning account’s ID. An account represents a business entity or organization."
+      },
+      "contract_type": {
+       "type": "string",
+       "enum": [
+        "support",
+        "warranty",
+        "subscription"
+       ],
+       "description": "Filter by contract type."
+      },
+      "start_date": {
+       "type": "string",
+       "description": "Contract start date (YYYY-MM-DD)."
+      },
+      "end_date": {
+       "type": "string",
+       "description": "Contract end date (YYYY-MM-DD)."
+      },
+      "contract_price": {
+       "type": "integer",
+       "description": "Exact price of the contract in system currency."
+      },
+      "contract_price_range_start": {
+       "type": "integer",
+       "description": "Lower bound of contract price range filter."
+      },
+      "contract_price_range_end": {
+       "type": "integer",
+       "description": "Upper bound of contract price range filter."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Find contracts created before this timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Find contracts created after this timestamp (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_contracts",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_entitlements",
+    "call": "find_entitlements",
+    "description": "Find entitlements with filters. All inputs are optional; not providing any filter will return all entitlements. An entitlement represents a customer's right to receive specific services or support based on their agreement.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "entitlement_id": {
+       "type": "integer",
+       "description": "Unique identifier of the entitlement."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Filter entitlements by associated account ID. An account represents a business entity or organization."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Filter entitlements by product ID. Unique identifier which relates to the product table record."
+      },
+      "contract_id": {
+       "type": "integer",
+       "description": "Filter entitlements by contract ID. Unique identifier which relates to the contract table record."
+      },
+      "support_level": {
+       "type": "string",
+       "enum": [
+        "standard",
+        "premium",
+        "enterprise"
+       ],
+       "description": "Support level associated with the entitlement."
+      },
+      "coverage_hours": {
+       "type": "string",
+       "enum": [
+        "h8x5",
+        "h12x6",
+        "h24x7"
+       ],
+       "description": "Coverage hours offered under the entitlement (8x5, 12x6, 24x7)."
+      },
+      "max_cases_per_month": {
+       "type": "integer",
+       "description": "Maximum number of support cases allowed per month under this entitlement."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Filter by entitlement status (true = active, false = inactive)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return entitlements created before this date (YYYY-MM-DD format)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return entitlements created after this date (YYYY-MM-DD format)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_entitlements",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_location",
+    "call": "update_location",
+    "description": "Update an existing location (partial updates allowed). A location represents a physical site or office associated with the organization, such as branch offices, warehouses, or service centers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location_id": {
+       "type": "integer",
+       "description": "Unique identifier of the location to update."
+      },
+      "name": {
+       "type": "string",
+       "description": "Updated name of the location/site.",
+       "minLength": 1
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Updated active status (true = active, false = inactive)."
+      },
+      "plot_no": {
+       "type": "string",
+       "description": "Updated plot number for the location."
+      },
+      "street": {
+       "type": "string",
+       "description": "Updated street address for the location."
+      },
+      "city": {
+       "type": "string",
+       "enum": [
+        "new_york",
+        "london",
+        "mumbai",
+        "tokyo",
+        "sydney"
+       ],
+       "description": "Updated city where the location is situated."
+      },
+      "country": {
+       "type": "string",
+       "enum": [
+        "usa",
+        "uk",
+        "india",
+        "japan",
+        "australia"
+       ],
+       "description": "Updated country where the location is situated."
+      }
+     },
+     "required": [
+      "location_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_location",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_installed_product_details",
+    "call": "update_installed_product_details",
+    "description": "Update an installed product (partial updates allowed). Combination of Account ID, Product ID, Serial Number should be unique.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "installed_product_id": {
+       "type": "integer",
+       "description": "Unique installed product ID (required)."
+      },
+      "location_id": {
+       "type": "integer",
+       "description": "Location/site ID where the product is installed."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Owning account ID for this installed product."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Product ID that was installed."
+      },
+      "serial_number": {
+       "type": "string",
+       "description": "Unique serial number of the installed product.",
+       "minLength": 1
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "in_use",
+        "in_stock",
+        "repair",
+        "retired"
+       ],
+       "description": "Status of the installed product."
+      },
+      "warranty_end": {
+       "type": "string",
+       "description": "Warranty end date (YYYY-MM-DD)."
+      }
+     },
+     "required": [
+      "installed_product_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_installed_product_details",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_contract",
+    "call": "update_contract",
+    "description": "Update an existing contract (partial updates allowed). Contracts define the terms of service, support, or warranty agreements between the organization and its customers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contract_id": {
+       "type": "integer",
+       "description": "Unique identifier of the contract to update."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Update the account ID associated with this contract."
+      },
+      "contract_price": {
+       "type": "integer",
+       "description": "Update the price value of the contract."
+      },
+      "contract_type": {
+       "type": "string",
+       "enum": [
+        "support",
+        "warranty",
+        "subscription"
+       ],
+       "description": "Update the contract type."
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "draft",
+        "active",
+        "suspended",
+        "expired"
+       ],
+       "description": "Update the contract’s status."
+      },
+      "start_date": {
+       "type": "string",
+       "description": "Update the contract’s start date (YYYY-MM-DD)."
+      },
+      "end_date": {
+       "type": "string",
+       "description": "Update the contract’s end date (YYYY-MM-DD)."
+      }
+     },
+     "required": [
+      "contract_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_contract",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_entitlement",
+    "call": "update_entitlement",
+    "description": "Update an entitlement (partial updates allowed). Entitlements define the support and service levels provided to an account for specific products or contracts.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "entitlement_id": {
+       "type": "integer",
+       "description": "Unique ID of the entitlement to update."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Update the associated account ID."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Update the product ID linked to the entitlement."
+      },
+      "contract_id": {
+       "type": "integer",
+       "description": "Update the contract ID linked to the entitlement."
+      },
+      "support_level": {
+       "type": "string",
+       "enum": [
+        "standard",
+        "premium",
+        "enterprise"
+       ],
+       "description": "Update the support level."
+      },
+      "coverage_hours": {
+       "type": "string",
+       "enum": [
+        "h8x5",
+        "h12x6",
+        "h24x7"
+       ],
+       "description": "Update the coverage hours."
+      },
+      "max_cases_per_month": {
+       "type": "integer",
+       "description": "Update the maximum number of support cases per month."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Set entitlement status as active (true) or inactive (false)."
+      }
+     },
+     "required": [
+      "entitlement_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_entitlement",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

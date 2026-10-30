@@ -1,0 +1,21 @@
+[
+ {"tool": "find_account", "args": {"name": "Stark Industries"}},
+ {"tool": "find_user", "args": {"name": "Marc Henry"}},
+ {"tool": "find_contacts", "args": {"account_id": 8, "portal_user_id": 20}},
+ {"tool": "find_product", "args": {"name": "Juniper EX4300 Variant 7"}},
+ {"tool": "find_entitlements", "args": {"account_id": 8}},
+ {"tool": "add_location", "args": {"name": "Stark Industries - New Lab", "active": true, "city": "london", "country": "uk"}},
+ {"tool": "register_new_installed_product", "args": {"location_id": 907, "account_id": 8, "product_id": 139, "serial_number": "JEX-987654-NL", "status": "in_use"}},
+ {"tool": "enlist_new_contract", "args": {"account_id": 8, "contract_type": "support", "status": "active", "start_date": "2025-11-27", "end_date": "2026-11-27"}},
+ {"tool": "add_new_entitlement", "args": {"account_id": 8, "product_id": 139, "contract_id": 154, "support_level": "enterprise", "coverage_hours": "h24x7", "max_cases_per_month": 0, "active": true}},
+ {"tool": "create_new_case", "args": {"account_id": 8, "contact_id": 10, "product_id": 139, "installed_product_id": 301, "channel": "phone", "priority": "critical", "state": "new", "short_description": "Product: Juniper EX4300 Variant 7, Issue: critical failure at the new London Lab"}},
+ {"tool": "find_user_group", "args": {"name": "CSM Tier 2 Support"}},
+ {"tool": "list_group_members", "args": {"group_id": 2}},
+ {"tool": "update_case", "args": {"case_id": 1233, "assignment_group_id": 2, "assigned_to": 127, "state": "in_progress"}},
+ {"tool": "find_sla_definitions", "args": {"applies_to_priority": "critical", "active": true}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 1233, "sla_def_id": 1, "stage": "in_progress"}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 1233, "sla_def_id": 6, "stage": "in_progress"}},
+ {"tool": "retrieve_knowledge", "args": {"product_id": 139, "state": "published", "limit": 5}},
+ {"tool": "link_case_knowledge", "args": {"case_id": 1233, "knowledge_id": 209, "used_as": "suggested"}},
+ {"tool": "send_notification", "args": {"case_id": 1233, "knowledge_id": 209, "email": "marc.henry@stark-industries.com", "type": "solution_proposal"}}
+]

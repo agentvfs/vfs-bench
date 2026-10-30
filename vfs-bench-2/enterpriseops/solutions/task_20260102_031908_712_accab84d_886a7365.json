@@ -1,0 +1,21 @@
+[
+ {"tool": "find_account", "args": {"name": "Zebra Partners"}},
+ {"tool": "find_product", "args": {"name": "Health Check & Optimization Variant 10"}},
+ {"tool": "search_cases", "args": {"account_id": 2, "product_id": 202}},
+ {"tool": "find_entitlements", "args": {"account_id": 2, "product_id": 202, "active": true}},
+ {"tool": "find_user_by_email", "args": {"email": "amelia.jones@servicenow.com"}},
+ {"tool": "find_locations", "args": {"name": "User 1 - New York"}},
+ {"tool": "add_new_user", "args": {"first_name": "Amelia", "last_name": "Jones", "email": "amelia.jones@servicenow.com", "role": "agent", "location_id": 1, "active": true}},
+ {"tool": "find_user_group", "args": {"name": "CSM Tier 2 Support"}},
+ {"tool": "add_new_group_member", "args": {"group_id": 2, "user_id": 803}},
+ {"tool": "search_cases", "args": {"number": "CS-0000032"}},
+ {"tool": "set_case_assignment_group", "args": {"case_id": 32, "assignment_group_id": 2}},
+ {"tool": "assign_case_to_user", "args": {"case_id": 32, "assigned_to_user_id": 803}},
+ {"tool": "update_case", "args": {"case_id": 32, "state": "in_progress", "escalation": true, "escalation_reason": "breach_risk"}},
+ {"tool": "find_sla_definitions", "args": {"name": "SLA Resolution - Critical"}},
+ {"tool": "search_cases", "args": {"number": "CS-0000030"}},
+ {"tool": "update_case", "args": {"case_id": 30, "state": "in_progress", "escalation": true, "escalation_reason": "urgency"}},
+ {"tool": "search_cases", "args": {"number": "CS-0000047"}},
+ {"tool": "update_case", "args": {"case_id": 47, "state": "resolved"}},
+ {"tool": "update_case", "args": {"case_id": 47, "state": "closed"}}
+]

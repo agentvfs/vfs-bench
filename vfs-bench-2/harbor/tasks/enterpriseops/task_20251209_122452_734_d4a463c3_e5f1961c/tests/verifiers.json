@@ -1,0 +1,46 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Update Case",
+  "description": "Verify Update Case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_1127_state_cnt\nFROM customer_case AS cc\nWHERE cc.case_id = 1127\nAND cc.state = 'in_progress';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Update Case",
+  "description": "Verify Update Case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_888_update_cnt\nFROM customer_case AS cc\nWHERE cc.case_id = 888\nAND cc.priority = 'high'\nAND cc.state = 'resolved';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify link new case SLA",
+  "description": "Verify link new case SLA",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_1127_sla_cnt\nFROM case_sla AS s\nWHERE s.case_id = 1127\nAND s.sla_def_id = 1\nAND s.stage = 'in_progress';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify link new case SLA",
+  "description": "Verify link new case SLA",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_1127_sla_cnt\nFROM case_sla AS s\nWHERE s.case_id = 1127\nAND s.sla_def_id = 6\nAND s.stage = 'in_progress';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

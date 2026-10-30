@@ -1,0 +1,374 @@
+[
+ {
+  "name": "sn-csm-server",
+  "description": "sn-csm-server's tools.",
+  "tools": [
+   {
+    "name": "find_user",
+    "call": "find_user",
+    "description": "Look up a user (portal customer, portal user or internal agent) by full name.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "Full name of user, e.g., 'Harry Middleton'."
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_user",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_user_group",
+    "call": "find_user_group",
+    "description": "Retrieve a user group by exact name. User Group represents a collection of users grouped together for assignment or organizational purposes.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "Exact name of the user group (unique).",
+       "minLength": 1
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_user_group",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "check_user_membership",
+    "call": "check_user_membership",
+    "description": "Verify that a user is a member of a specific user group. User Group represents a collection of users grouped together for assignment or organizational purposes.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_id": {
+       "type": "integer",
+       "description": "User's unique id to check"
+      },
+      "group_id": {
+       "type": "integer",
+       "description": "User group's unique id to check"
+      }
+     },
+     "required": [
+      "user_id",
+      "group_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/check_user_membership",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_users",
+    "call": "list_users",
+    "description": "List users with optional filters. None of the filters are mandatory. If no filters are provided, all users will be returned.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "email": {
+       "type": "string",
+       "description": "Filter by user email address (exact match) (unique)."
+      },
+      "user_id": {
+       "type": "integer",
+       "description": "Filter by unique user identifier."
+      },
+      "first_name": {
+       "type": "string",
+       "description": "Filter by user's first name."
+      },
+      "last_name": {
+       "type": "string",
+       "description": "Filter by user's last name."
+      },
+      "phone": {
+       "type": "string",
+       "description": "Filter by phone number."
+      },
+      "role": {
+       "type": "string",
+       "enum": [
+        "admin",
+        "agent",
+        "manager",
+        "customer"
+       ],
+       "description": "Filter by user role (admin, agent, manager, or customer)."
+      },
+      "location_id": {
+       "type": "integer",
+       "description": "Filter by location identifier."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Filter by active status (true = active, false = inactive)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return only users created after this timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return only users created before this timestamp (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/list_users",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_group_members",
+    "call": "list_group_members",
+    "description": "List user group members with optional filters. Combination of group_id and user_id is unique.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "member_id": {
+       "type": "integer",
+       "description": "Filter by unique membership identifier."
+      },
+      "group_id": {
+       "type": "integer",
+       "description": "Filter by group identifier."
+      },
+      "user_id": {
+       "type": "integer",
+       "description": "Filter by user identifier."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return only memberships created after this timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return only memberships created before this timestamp (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/list_group_members",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_cases_assigned_to",
+    "call": "get_cases_assigned_to",
+    "description": "List cases filtered by assignment_group_id and/or assigned_to.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "assignment_group_id": {
+       "type": "integer",
+       "description": "Filter by the assignment group responsible for the case."
+      },
+      "assigned_to": {
+       "type": "integer",
+       "description": "Filter by the specific user ID the case is assigned to."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/get_cases_assigned_to",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "add_new_group_member",
+    "call": "add_new_group_member",
+    "description": "Add a user to a group. Combination of group_id and user_id should be unique.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "group_id": {
+       "type": "integer",
+       "description": "Identifier of the group the user will be added to."
+      },
+      "user_id": {
+       "type": "integer",
+       "description": "Identifier of the user being added to the group."
+      }
+     },
+     "required": [
+      "group_id",
+      "user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/add_new_group_member",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_case",
+    "call": "update_case",
+    "description": "Update an existing case (partial updates). A case represents a customer issue or request that needs to be tracked and resolved.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case to update."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Update the associated account ID."
+      },
+      "contact_id": {
+       "type": "integer",
+       "description": "Update the associated contact ID."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Update the product ID associated with the case."
+      },
+      "installed_product_id": {
+       "type": "integer",
+       "description": "Update the installed product ID."
+      },
+      "channel": {
+       "type": "string",
+       "enum": [
+        "web",
+        "email",
+        "phone",
+        "chat",
+        "social",
+        "alert",
+        "community"
+       ],
+       "description": "Update the channel used to create the case."
+      },
+      "priority": {
+       "type": "string",
+       "enum": [
+        "critical",
+        "high",
+        "moderate",
+        "low"
+       ],
+       "description": "Update the case priority."
+      },
+      "state": {
+       "type": "string",
+       "enum": [
+        "new",
+        "in_progress",
+        "pending",
+        "resolved",
+        "closed",
+        "canceled"
+       ],
+       "description": "Update the case state."
+      },
+      "short_description": {
+       "type": "string",
+       "description": "Update the case short description.",
+       "minLength": 1,
+       "maxLength": 500
+      },
+      "escalation": {
+       "type": "boolean",
+       "description": "Update whether the case is escalated."
+      },
+      "escalation_reason": {
+       "type": "string",
+       "enum": [
+        "urgency",
+        "vip",
+        "impact",
+        "breach_risk",
+        "customer_request"
+       ],
+       "description": "Update the escalation reason.",
+       "minLength": 1
+      },
+      "reopen_count": {
+       "type": "integer",
+       "description": "Update the reopen count."
+      },
+      "closed_on": {
+       "type": "string",
+       "description": "Update the closed date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "assignment_group_id": {
+       "type": "integer",
+       "description": "Update the assignment group ID."
+      },
+      "assigned_to": {
+       "type": "integer",
+       "description": "Update the assigned user ID."
+      }
+     },
+     "required": [
+      "case_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_case",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "send_notification",
+    "call": "send_notification",
+    "description": "Create a notification for a case (optionally tied to knowledge). Returns the created notification record. A notification represents a message sent to a customer or user regarding updates, alerts, or information related to a support case.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "Case ID this notification is related to."
+      },
+      "knowledge_id": {
+       "type": "integer",
+       "description": "Optional knowledge article ID linked to this notification."
+      },
+      "email": {
+       "type": "string",
+       "description": "Recipient email address of the notification.",
+       "minLength": 1
+      },
+      "type": {
+       "type": "string",
+       "enum": [
+        "report",
+        "update",
+        "alert",
+        "reminder",
+        "solution_proposal",
+        "next_steps",
+        "other"
+       ],
+       "description": "Type of notification being sent."
+      }
+     },
+     "required": [
+      "case_id",
+      "email",
+      "type"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/send_notification",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

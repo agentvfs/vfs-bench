@@ -1,0 +1,11 @@
+[
+ {"tool": "find_account", "args": {"name": "Carrillo Inc"}},
+ {"tool": "retrieve_installed_products", "args": {"account_id": 19}},
+ {"tool": "find_locations", "args": {"location_id": 840}},
+ {"tool": "find_locations", "args": {"location_id": 839}},
+ {"tool": "update_location", "args": {"location_id": 839, "active": true}},
+ {"tool": "update_installed_product_details", "args": {"installed_product_id": 98, "location_id": 839}},
+ {"tool": "retrieve_installed_products", "args": {"location_id": 839}},
+ {"tool": "update_installed_product_details", "args": {"installed_product_id": 102, "status": "in_use"}},
+ {"tool": "update_location", "args": {"location_id": 840, "active": false}}
+]

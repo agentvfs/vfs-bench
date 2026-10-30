@@ -1,0 +1,29 @@
+// An EnterpriseOps-Gym server's store: one of ServiceNow/EnterpriseOps-Gym's
+// MCP servers, one SQLite file per run. Each server's fake links its
+// `<service>.prisma` here.
+//
+// The fixture names the task's seed (`seed`: upstream's SQL snapshot, a
+// file under gym_dbs.zip). The server's own tables are not Prisma's: each
+// run's file gets them as upstream's server makes them, from upstream's
+// CREATE TABLE statements (the fake's `schema.sql`), and the seed's rows as
+// upstream's server inserts them (mocks/enterpriseops/fake.ts). Every tool
+// is SQL on that file, as upstream's are.
+//
+// No tenant column: a run is one database, as upstream's `x-database-id` is.
+
+datasource db {
+  provider = "sqlite"
+  url      = env("INTEG_DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "client"
+}
+
+model Seed {
+  id Int    @id @default(1)
+  db String
+
+  @@map("_seed")
+}

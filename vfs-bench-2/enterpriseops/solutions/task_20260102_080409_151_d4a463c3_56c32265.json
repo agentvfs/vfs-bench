@@ -1,0 +1,11 @@
+[
+ {"tool": "search_cases", "args": {"number": "CS-0000005"}},
+ {"tool": "find_case_slas", "args": {"case_id": 5}},
+ {"tool": "find_case_knowledge_linkages", "args": {"case_id": 5}},
+ {"tool": "retrieve_knowledge", "args": {"knowledge_id": 195}},
+ {"tool": "update_case", "args": {"case_id": 5, "state": "resolved"}},
+ {"tool": "update_case_sla_details", "args": {"case_sla_id": 9, "stage": "completed", "completed_time": "2026-01-02 08:04:00"}},
+ {"tool": "update_case_sla_details", "args": {"case_sla_id": 10, "stage": "completed", "completed_time": "2026-01-02 08:04:00"}},
+ {"tool": "delete_case_knowledge_linkages", "args": {"case_kb_id": 1}},
+ {"tool": "update_case", "args": {"case_id": 5, "state": "closed", "closed_on": "2026-01-02 08:04:00"}}
+]

@@ -1,4 +1,4 @@
-"""Count migration coverage from the six job configs, not directory names.
+"""Count migration coverage from the seven job configs, not directory names.
 
     uv run --project harbor python -I harbor/grader_inventory.py
 """
@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 import yaml
+from vfsbench_harbor.enterpriseops_verifier import definitions as enterpriseops
 from vfsbench_harbor.environment import ROOT
 from vfsbench_harbor.parity import REFERENCE_BACKENDS
 
@@ -35,11 +36,14 @@ def inventory(root: Path = ROOT) -> dict:
             if identity in seen:
                 raise ValueError(f"Task appears more than once: {task}")
             seen.add(identity)
-            if ((dataset == "liveclawbench" and task.name in manifest)
-                    or (dataset == "complexmcp" and task.name in complexmcp)
-                    or (dataset == "dataspace" and task.name in dataspace)
-                    or (dataset == "automationbench"
-                        and task.name in automationbench)):
+            ported = ((dataset == "liveclawbench" and task.name in manifest)
+                      or (dataset == "complexmcp" and task.name in complexmcp)
+                      or (dataset == "dataspace" and task.name in dataspace)
+                      or (dataset == "automationbench"
+                          and task.name in automationbench)
+                      or (dataset == "enterpriseops"
+                          and task.name in enterpriseops()))
+            if ported:
                 native.append(task.name)
         datasets[dataset] = {
             "tasks": len(tasks),

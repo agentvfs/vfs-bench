@@ -1,0 +1,10 @@
+[
+ {"tool": "find_user_group", "args": {"name": "Case Triage"}},
+ {"tool": "get_cases_assigned_to", "args": {"assignment_group_id": 3}},
+ {"tool": "list_users", "args": {"first_name": "Jason"}},
+ {"tool": "find_user_group", "args": {"name": "Proactive Case Monitoring_4"}},
+ {"tool": "check_user_membership", "args": {"user_id": 173, "group_id": 71}},
+ {"tool": "add_new_group_member", "args": {"group_id": 71, "user_id": 173}},
+ {"tool": "update_case", "args": {"case_id": 1010, "assignment_group_id": 71, "assigned_to": 173}},
+ {"tool": "send_notification", "args": {"case_id": 1010, "email": "jason.smith10@servicenow.com", "type": "report"}}
+]

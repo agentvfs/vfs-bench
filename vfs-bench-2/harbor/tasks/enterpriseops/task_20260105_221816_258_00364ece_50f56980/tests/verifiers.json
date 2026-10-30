@@ -1,0 +1,46 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Validating case count.",
+  "description": "Validating whether case count of Case Triage group is less than or equal to 4.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM customer_case cc\nJOIN user_group ug ON cc.assignment_group_id = ug.group_id\nWHERE ug.name = 'Case Triage'\n  AND ug.type = 'support'\n  AND cc.STATE NOT IN ('canceled', 'closed', 'resolved');",
+   "expected_value": 5,
+   "comparison_type": "less_than"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating case reassignment. ",
+  "description": "Validating whether additional cases are reassigned. ",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM customer_case cc\nJOIN user_group ug ON cc.assignment_group_id = ug.group_id\nJOIN user u ON cc.assigned_to = u.user_id\nWHERE cc.case_id = 1010\n  AND u.first_name = 'Jason'\n  AND u.last_name = 'Smith'\n  AND ug.name = 'Proactive Case Monitoring_4';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating membership.",
+  "description": "Validating Jason Smith's group membership in Proactive Case Monitoring_4 group.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM user_group_member ugm\nJOIN user u ON ugm.user_id = u.user_id\nJOIN user_group g ON ugm.group_id = g.group_id\nWHERE u.first_name = 'Jason'\n  AND u.last_name = 'Smith'\n  AND g.name = 'Proactive Case Monitoring_4';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating notification.",
+  "description": "Validating report notification success.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM notification n\nJOIN user u ON n.email = u.email\nWHERE n.type = 'report'\n  AND u.first_name = 'Jason'\n  AND u.last_name = 'Smith'\n  AND n.status = 'success';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

@@ -1,0 +1,134 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "enlist_new_contract",
+  "description": "Verify the new active contract for Stark Industries has been created.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM contract WHERE account_id = 8 AND contract_type = 'support' AND status = 'active' AND contract_id = 154 AND end_date = '2026-11-18';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "enlist_new_contract",
+  "description": "Verify the contract table was updated.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM contract WHERE contract_id = 154 AND sys_updated_on IS NOT NULL;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "add_new_entitlement",
+  "description": "Verify the new Enterprise 24x7 entitlement for PA-3220 V8 exists.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM entitlement WHERE account_id = 8 AND product_id = 140 AND contract_id = 154 AND support_level = 'enterprise' AND coverage_hours = 'h24x7' AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "add_new_entitlement",
+  "description": "Verify the contract record has been updated since entitlement creation.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM contract WHERE contract_id = 154 AND sys_updated_on > '2025-11-18';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "create_new_case",
+  "description": "Verify the critical case was created and associated with the correct product/asset.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 1233 AND account_id = 8 AND product_id = 140 AND installed_product_id = 42 AND priority = 'critical';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "create_new_case",
+  "description": "Verify the contact's record was updated upon case creation.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM contact WHERE contact_id = 10 AND sys_updated_on IS NOT NULL;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "set_case_assignment_group",
+  "description": "Verify the critical case 1233 is assigned to Escalation Management.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 1233 AND assignment_group_id = 18;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "set_case_assignment_group",
+  "description": "Verify the Escalation Management group record timestamp was updated.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group WHERE group_id = 18 AND sys_updated_on IS NOT NULL;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_case",
+  "description": "Verify case 1233 moved to 'in_progress' status.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 1233 AND state = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_new_case_sla",
+  "description": "Verify the critical resolution SLA is linked to case 1233 and started.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla WHERE case_id = 1233 AND sla_def_id = 6 AND stage = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_case_knowledge",
+  "description": "Verify the KB article 210 related to the PA-3220 V8 issue is linked to the case.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge WHERE case_id = 1233 AND knowledge_id = 210 AND used_as = 'suggested';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_case_knowledge",
+  "description": "Verify case record was updated after linking knowledge.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 1233 AND sys_updated_on IS NOT NULL;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

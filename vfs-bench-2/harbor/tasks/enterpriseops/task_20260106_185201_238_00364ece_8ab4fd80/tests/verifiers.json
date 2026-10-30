@@ -1,0 +1,35 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Validating whether the new high-priority case has been created. ",
+  "description": "Validating whether a new high-priority case for Marc Henry has been created and assigned to Tabitha Bullock and Proactive Case Monitoring group. ",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM customer_case cc\nJOIN product p ON cc.product_id = p.product_id\nJOIN user u ON cc.assigned_to = u.user_id\nJOIN user_group ug ON cc.assignment_group_id = ug.group_id\nJOIN contact c ON cc.contact_id = c.contact_id\nJOIN user cu ON c.portal_user_id = cu.user_id\nWHERE p.name = 'SUSE Linux Enterprise Server 15 Variant 5'\n  AND cc.priority = 'high'\n  AND cc.state = 'new'\n  AND cc.channel = 'email'\n  AND u.first_name = 'Tabitha'\n  AND u.last_name = 'Bullock'\n  AND ug.name = 'Proactive Case Monitoring'\n  AND cu.first_name = 'Marc'\n  AND cu.last_name = 'Henry';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating assignment policy. ",
+  "description": "Validating whether Tabitha Bullock is a member of Proactive Case Monitoring.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM user_group_member ugm\nJOIN user u ON ugm.user_id = u.user_id\nJOIN user_group g ON ugm.group_id = g.group_id\nWHERE u.first_name = 'Tabitha'\n  AND u.last_name = 'Bullock'\n  AND g.name = 'Proactive Case Monitoring';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating report notification. ",
+  "description": "Validating successful report notification without knowledge article has been sent. ",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM notification n\nJOIN customer_case c ON n.case_id = c.case_id\nWHERE c.number = 'CS-0001233'\n  AND n.type = 'report'\n  AND n.status = 'success'\n  AND n.email = 'marc.henry@stark-industries.com'\n  AND n.knowledge_id IS NULL;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

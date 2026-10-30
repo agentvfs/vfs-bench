@@ -1,0 +1,46 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Location was renamed and plot updated for Globex Sydney HQ.",
+  "description": "Location was renamed and plot updated for Globex Sydney HQ.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT count(*) FROM location WHERE name='Globex HQ - Sydney' and plot_no='114B';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Installed product moved to repair and warranty extended",
+  "description": "Installed product moved to repair and warranty extended",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT count(*) FROM installed_product WHERE installed_product_id = 20 and warranty_end='2029-09-14' and status='repair';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Entitlement for product 47 under the active support contract upgraded to premium with 24x7 coverage and monthly cap set",
+  "description": "Entitlement for product 47 under the active support contract upgraded to premium with 24x7 coverage and monthly cap set",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT count(*) FROM entitlement WHERE entitlement_id = 31 and coverage_hours='h24x7' and support_level='premium';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Active support contract extended by 6 months with updated price",
+  "description": "Active support contract extended by 6 months with updated price",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT count(*) FROM contract WHERE contract_id = 10 and end_date='2028-08-15';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

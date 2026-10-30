@@ -1,0 +1,101 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "user_group_member_addition_verifier",
+  "description": "Verifies that Tabitha Bullock (user_id 3) was successfully added as a member of the CSM Tier 1 Support group (group_id 1).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group_member WHERE group_id = 1 AND user_id = 3 AND member_id IS NOT NULL;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "case_reassignment_state_update_verifier",
+  "description": "Verifies that case CS-0000001 was reassigned to Tabitha Bullock, moved to in_progress state, and communication channel updated to email.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 1 AND number = 'CS-0000001' AND assignment_group_id = 1 AND assigned_to = 3 AND state = 'in_progress' AND channel = 'email' AND account_id = 1 AND product_id = 128;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "case_sla_stage_resumption_verifier",
+  "description": "Verifies that the Resolution SLA for case CS-0000001 was resumed and is now in in_progress stage without breach.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla WHERE case_sla_id = 2 AND case_id = 1 AND sla_def_id = 6 AND stage = 'in_progress' AND has_breached = 0 AND completed_time IS NULL;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "knowledge_article_publication_verifier",
+  "description": "Verifies that knowledge article KB-0000195 was updated to published state and is internally visible for product 128.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM knowledge WHERE knowledge_id = 195 AND kb_number = 'KB-0000195' AND state = 'published' AND product_id = 128 AND visibility = 'internal';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "case_knowledge_unsuccessful_linkage_removal_verifier",
+  "description": "Verifies that the unsuccessful resolution linkage between case CS-0000010 and knowledge article KB-0000195 was removed.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge WHERE case_kb_id = 3 AND case_id = 10 AND knowledge_id = 195 AND used_as = 'resolution';",
+   "expected_value": 0,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "case_knowledge_suggested_linkage_addition_verifier",
+  "description": "Verifies that knowledge article KB-0000195 was linked to case CS-0000001 with suggested usage.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_knowledge WHERE case_id = 1 AND knowledge_id = 195 AND used_as = 'suggested';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "assigned_user_active_status_verifier",
+  "description": "Verifies that Tabitha Bullock is an active agent and the previous assignee Thomas Green is inactive.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT() FROM user WHERE (user_id = 3 AND active = 1 AND role = 'agent') OR (user_id = 1 AND active = 0 AND role = 'agent') HAVING COUNT() = 2;",
+   "expected_value": 2,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "sla_definition_pause_configuration_verifier",
+  "description": "Verifies that the Resolution SLA definition for critical priority has pause_on_pending enabled and is active.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM sla_definition WHERE sla_def_id = 6 AND metric = 'resolution' AND applies_to_priority = 'critical' AND pause_on_pending = 1 AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "case_historical_data_preservation_verifier",
+  "description": "Verifies that critical historical data for case CS-0000001 remains unchanged after updates.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 1 AND account_id = 1 AND contact_id = 123 AND product_id = 128 AND installed_product_id = 3 AND priority = 'critical' AND escalation = 1 AND escalation_reason = 'urgency' AND reopen_count = 0 AND sys_created_on = '2025-08-27 15:34:44' AND closed_on IS NULL;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Create Knowledge",
+  "description": "Verify Create Knowledge",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) \nFROM knowledge AS k\nWHERE k.title = 'Restore PA-3220 connection queue and restart monitoring service'\n  AND k.state = 'published'\n  AND k.visibility = 'external'\n  AND k.owner_id = 32\n  AND k.product_id = 128;\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify New Interaction",
+  "description": "Verify New Interation",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*)\nFROM interaction AS i\nWHERE i.case_id = 5\n  AND i.account_id = 1\n  AND i.contact_id = 123\n  AND i.channel = 'email'\n  AND i.status = 'handled'\n  AND i.interacted_user = 32;\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Send Notification",
+  "description": "Verify Send Notification",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*)\nFROM notification AS n\nWHERE n.case_id = 5\n  AND n.email = 'elizabeth.chase32@servicenow.com'\n  AND n.type = 'solution_proposal'\n  AND n.knowledge_id = 370;\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Update Case",
+  "description": "Verify Update Case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*)\nFROM customer_case AS c\nWHERE c.case_id = 10\n  AND c.state = 'closed';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify Update Case",
+  "description": "Verify Update Case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*)\nFROM customer_case AS c\nWHERE c.case_id = 5\n  AND c.state = 'resolved';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

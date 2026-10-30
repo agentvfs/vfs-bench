@@ -1,0 +1,46 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Agent Membership Added",
+  "description": "Ensures that agent Mark Smith (user_id 219) has been added to the same assignment group (group_id 36) of the case.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS member_added FROM user_group_member WHERE user_id = 219 AND group_id = 36;",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Case Updated & Escalated to High",
+  "description": "Confirms reassignment to the Tokyo agent, escalation fields, and priority/state for the specific case.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS case_modified FROM customer_case WHERE case_id = 122 AND account_id = '5' AND product_id = '174' AND installed_product_id = '25' AND assigned_to = '219' AND priority = 'high' AND state = 'in_progress' AND escalation = 1 AND escalation_reason = 'customer_request';",
+   "expected_value": "1",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Old Low-Priority SLAs Removed",
+  "description": "Ensures previous low-priority SLA links (Response-Low sla_def_id = 4, Resolution-Low sla_def_id = 9) are removed from the case.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS low_slas_remaining FROM case_sla WHERE case_id = 122 AND sla_def_id IN (4, 9);\n",
+   "expected_value": "0",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "High Priority SLA Set Applied (Response + Resolution)",
+  "description": "Ensures both High SLAs are active on the escalated case —  SLA Response - High (No Pause) (sla_def_id = 11),  SLA Resolution - High (sla_def_id = 7). Both must be in stage in_progress.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS high_sla_applied FROM case_sla WHERE case_id = 122 AND sla_def_id IN (7, 11) AND stage = 'in_progress';",
+   "expected_value": "2",
+   "comparison_type": "equals"
+  }
+ }
+]

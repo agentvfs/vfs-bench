@@ -1,0 +1,686 @@
+[
+ {
+  "name": "sn-csm-server",
+  "description": "sn-csm-server's tools.",
+  "tools": [
+   {
+    "name": "find_product_by_id",
+    "call": "find_product_by_id",
+    "description": "Retrieve a product by product ID. Product represents an item or service offered by the company. Each Product has a unique identifier called product_id.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "product_id": {
+       "type": "integer",
+       "description": " Unique identifier of the product."
+      }
+     },
+     "required": [
+      "product_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_product_by_id",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_users",
+    "call": "list_users",
+    "description": "List users with optional filters. None of the filters are mandatory. If no filters are provided, all users will be returned.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "email": {
+       "type": "string",
+       "description": "Filter by user email address (exact match) (unique)."
+      },
+      "user_id": {
+       "type": "integer",
+       "description": "Filter by unique user identifier."
+      },
+      "first_name": {
+       "type": "string",
+       "description": "Filter by user's first name."
+      },
+      "last_name": {
+       "type": "string",
+       "description": "Filter by user's last name."
+      },
+      "phone": {
+       "type": "string",
+       "description": "Filter by phone number."
+      },
+      "role": {
+       "type": "string",
+       "enum": [
+        "admin",
+        "agent",
+        "manager",
+        "customer"
+       ],
+       "description": "Filter by user role (admin, agent, manager, or customer)."
+      },
+      "location_id": {
+       "type": "integer",
+       "description": "Filter by location identifier."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Filter by active status (true = active, false = inactive)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return only users created after this timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return only users created before this timestamp (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/list_users",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_contacts",
+    "call": "find_contacts",
+    "description": "Find contacts with optional filters.All the inputs are optional, not providing any filter will return all accounts. Contact represents an individual associated with an account or a point of contact.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contact_id": {
+       "type": "integer",
+       "description": "Unique identifier of the contact."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "ID of the account this contact belongs to."
+      },
+      "portal_user_id": {
+       "type": "integer",
+       "description": "Unique identifier of the portal user associated with this record. This value references the primary key of the user in the User table."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Whether the contact is currently active."
+      },
+      "is_primary": {
+       "type": "boolean",
+       "description": "True if this is the primary contact for the account."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Filter for contacts created after this timestamp (ISO format)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Filter for contacts created before this timestamp (ISO format)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_contacts",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "retrieve_installed_products",
+    "call": "retrieve_installed_products",
+    "description": "Retrieve installed products with rich filters. All filters are optional. If no filters are provided, all installed products will be returned. Installed products are items that have been deployed or set up for use at specific locations or accounts.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "installed_product_id": {
+       "type": "integer",
+       "description": "Unique installed product ID."
+      },
+      "location_id": {
+       "type": "integer",
+       "description": "Filter by location/site ID. Unique identifier which relates to the location table record."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Filter by account ID. Unique identifier which relates to the account table record. An account represents a business entity or organization."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Filter by product ID. Unique identifier which relates to the product table record."
+      },
+      "serial_number": {
+       "type": "string",
+       "description": "Exact serial number of the installed product. Unique identifier assigned to the product by the manufacturer."
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "in_use",
+        "in_stock",
+        "repair",
+        "retired"
+       ],
+       "description": "Current status of the installed product."
+      },
+      "warranty_end": {
+       "type": "string",
+       "description": "Exact warranty end date (YYYY-MM-DD)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return products created before this date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return products created after this date (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/retrieve_installed_products",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_contracts",
+    "call": "find_contracts",
+    "description": "Find contracts with multiple filters including price range. All inputs are optional; not providing any filter will return all contracts. A contract represents a formal agreement between two or more parties.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contract_id": {
+       "type": "integer",
+       "description": "Unique identifier of the contract."
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "draft",
+        "active",
+        "suspended",
+        "expired"
+       ],
+       "description": "Filter contracts by their current status."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Filter contracts by the owning account’s ID. An account represents a business entity or organization."
+      },
+      "contract_type": {
+       "type": "string",
+       "enum": [
+        "support",
+        "warranty",
+        "subscription"
+       ],
+       "description": "Filter by contract type."
+      },
+      "start_date": {
+       "type": "string",
+       "description": "Contract start date (YYYY-MM-DD)."
+      },
+      "end_date": {
+       "type": "string",
+       "description": "Contract end date (YYYY-MM-DD)."
+      },
+      "contract_price": {
+       "type": "integer",
+       "description": "Exact price of the contract in system currency."
+      },
+      "contract_price_range_start": {
+       "type": "integer",
+       "description": "Lower bound of contract price range filter."
+      },
+      "contract_price_range_end": {
+       "type": "integer",
+       "description": "Upper bound of contract price range filter."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Find contracts created before this timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Find contracts created after this timestamp (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_contracts",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_entitlements",
+    "call": "find_entitlements",
+    "description": "Find entitlements with filters. All inputs are optional; not providing any filter will return all entitlements. An entitlement represents a customer's right to receive specific services or support based on their agreement.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "entitlement_id": {
+       "type": "integer",
+       "description": "Unique identifier of the entitlement."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Filter entitlements by associated account ID. An account represents a business entity or organization."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Filter entitlements by product ID. Unique identifier which relates to the product table record."
+      },
+      "contract_id": {
+       "type": "integer",
+       "description": "Filter entitlements by contract ID. Unique identifier which relates to the contract table record."
+      },
+      "support_level": {
+       "type": "string",
+       "enum": [
+        "standard",
+        "premium",
+        "enterprise"
+       ],
+       "description": "Support level associated with the entitlement."
+      },
+      "coverage_hours": {
+       "type": "string",
+       "enum": [
+        "h8x5",
+        "h12x6",
+        "h24x7"
+       ],
+       "description": "Coverage hours offered under the entitlement (8x5, 12x6, 24x7)."
+      },
+      "max_cases_per_month": {
+       "type": "integer",
+       "description": "Maximum number of support cases allowed per month under this entitlement."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Filter by entitlement status (true = active, false = inactive)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return entitlements created before this date (YYYY-MM-DD format)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return entitlements created after this date (YYYY-MM-DD format)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_entitlements",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search_cases",
+    "call": "search_cases",
+    "description": "Search cases with rich filters and date bounds on sys_created_on. All inputs are optional; not providing any filter will return all cases. A case represents a customer-reported issue or request that requires tracking and resolution.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case."
+      },
+      "number": {
+       "type": "string",
+       "description": "Case number (unique human-readable reference)."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Filter by account ID. An account represents a business entity or organization."
+      },
+      "contact_id": {
+       "type": "integer",
+       "description": "Filter by contact ID."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Filter by product ID. Unique identifier which relates to the product table record."
+      },
+      "installed_product_id": {
+       "type": "integer",
+       "description": "Filter by installed product ID. Unique identifier which relates to the installed product table record."
+      },
+      "channel": {
+       "type": "string",
+       "enum": [
+        "web",
+        "email",
+        "phone",
+        "chat",
+        "social",
+        "alert",
+        "community"
+       ],
+       "description": "Channel through which the case was communicated/created."
+      },
+      "priority": {
+       "type": "string",
+       "enum": [
+        "critical",
+        "high",
+        "moderate",
+        "low"
+       ],
+       "description": "Priority of the case."
+      },
+      "state": {
+       "type": "string",
+       "enum": [
+        "new",
+        "in_progress",
+        "pending",
+        "resolved",
+        "closed",
+        "canceled"
+       ],
+       "description": "State of the case."
+      },
+      "short_description": {
+       "type": "string",
+       "description": "Short description of the case."
+      },
+      "escalation": {
+       "type": "boolean",
+       "description": "Whether the case is escalated."
+      },
+      "escalation_reason": {
+       "type": "string",
+       "enum": [
+        "urgency",
+        "vip",
+        "impact",
+        "breach_risk",
+        "customer_request"
+       ],
+       "description": "Reason for escalation."
+      },
+      "reopen_count": {
+       "type": "integer",
+       "description": "Filter by number of times the case was reopened."
+      },
+      "closed_on": {
+       "type": "string",
+       "description": "Filter cases closed on a specific date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return cases created before this date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return cases created after this date (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/search_cases",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "register_new_installed_product",
+    "call": "register_new_installed_product",
+    "description": "Register a new installed product at an account/location. Combination of Account ID, Product ID, Serial Number should be unique.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location_id": {
+       "type": "integer",
+       "description": "Location/site ID where the product is installed."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Owning account ID for this installed product."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Product ID that was installed."
+      },
+      "serial_number": {
+       "type": "string",
+       "description": "Unique serial number of the installed product.",
+       "minLength": 1
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "in_use",
+        "in_stock",
+        "repair",
+        "retired"
+       ],
+       "description": "Status of the installed product."
+      },
+      "warranty_end": {
+       "type": "string",
+       "description": "Warranty end date (YYYY-MM-DD)."
+      }
+     },
+     "required": [
+      "account_id",
+      "product_id",
+      "serial_number",
+      "status"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/register_new_installed_product",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_installed_product_details",
+    "call": "update_installed_product_details",
+    "description": "Update an installed product (partial updates allowed). Combination of Account ID, Product ID, Serial Number should be unique.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "installed_product_id": {
+       "type": "integer",
+       "description": "Unique installed product ID (required)."
+      },
+      "location_id": {
+       "type": "integer",
+       "description": "Location/site ID where the product is installed."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Owning account ID for this installed product."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Product ID that was installed."
+      },
+      "serial_number": {
+       "type": "string",
+       "description": "Unique serial number of the installed product.",
+       "minLength": 1
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "in_use",
+        "in_stock",
+        "repair",
+        "retired"
+       ],
+       "description": "Status of the installed product."
+      },
+      "warranty_end": {
+       "type": "string",
+       "description": "Warranty end date (YYYY-MM-DD)."
+      }
+     },
+     "required": [
+      "installed_product_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_installed_product_details",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_case",
+    "call": "update_case",
+    "description": "Update an existing case (partial updates). A case represents a customer issue or request that needs to be tracked and resolved.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "Unique identifier of the case to update."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Update the associated account ID."
+      },
+      "contact_id": {
+       "type": "integer",
+       "description": "Update the associated contact ID."
+      },
+      "product_id": {
+       "type": "integer",
+       "description": "Update the product ID associated with the case."
+      },
+      "installed_product_id": {
+       "type": "integer",
+       "description": "Update the installed product ID."
+      },
+      "channel": {
+       "type": "string",
+       "enum": [
+        "web",
+        "email",
+        "phone",
+        "chat",
+        "social",
+        "alert",
+        "community"
+       ],
+       "description": "Update the channel used to create the case."
+      },
+      "priority": {
+       "type": "string",
+       "enum": [
+        "critical",
+        "high",
+        "moderate",
+        "low"
+       ],
+       "description": "Update the case priority."
+      },
+      "state": {
+       "type": "string",
+       "enum": [
+        "new",
+        "in_progress",
+        "pending",
+        "resolved",
+        "closed",
+        "canceled"
+       ],
+       "description": "Update the case state."
+      },
+      "short_description": {
+       "type": "string",
+       "description": "Update the case short description.",
+       "minLength": 1,
+       "maxLength": 500
+      },
+      "escalation": {
+       "type": "boolean",
+       "description": "Update whether the case is escalated."
+      },
+      "escalation_reason": {
+       "type": "string",
+       "enum": [
+        "urgency",
+        "vip",
+        "impact",
+        "breach_risk",
+        "customer_request"
+       ],
+       "description": "Update the escalation reason.",
+       "minLength": 1
+      },
+      "reopen_count": {
+       "type": "integer",
+       "description": "Update the reopen count."
+      },
+      "closed_on": {
+       "type": "string",
+       "description": "Update the closed date (YYYY-MM-DD HH:MM:SS)."
+      },
+      "assignment_group_id": {
+       "type": "integer",
+       "description": "Update the assignment group ID."
+      },
+      "assigned_to": {
+       "type": "integer",
+       "description": "Update the assigned user ID."
+      }
+     },
+     "required": [
+      "case_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_case",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "send_notification",
+    "call": "send_notification",
+    "description": "Create a notification for a case (optionally tied to knowledge). Returns the created notification record. A notification represents a message sent to a customer or user regarding updates, alerts, or information related to a support case.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "case_id": {
+       "type": "integer",
+       "description": "Case ID this notification is related to."
+      },
+      "knowledge_id": {
+       "type": "integer",
+       "description": "Optional knowledge article ID linked to this notification."
+      },
+      "email": {
+       "type": "string",
+       "description": "Recipient email address of the notification.",
+       "minLength": 1
+      },
+      "type": {
+       "type": "string",
+       "enum": [
+        "report",
+        "update",
+        "alert",
+        "reminder",
+        "solution_proposal",
+        "next_steps",
+        "other"
+       ],
+       "description": "Type of notification being sent."
+      }
+     },
+     "required": [
+      "case_id",
+      "email",
+      "type"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/send_notification",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

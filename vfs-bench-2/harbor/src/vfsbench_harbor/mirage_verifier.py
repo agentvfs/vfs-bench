@@ -30,6 +30,7 @@ from vfsbench_harbor.complexmcp_verifier import freeze as freeze_complexmcp
 from vfsbench_harbor.dataspace_verifier import \
     definitions as dataspace_definitions
 from vfsbench_harbor.dataspace_verifier import freeze as freeze_dataspace
+from vfsbench_harbor.enterpriseops_verifier import definitions as enterpriseops
 from vfsbench_harbor.environment import HARBOR, ROOT, MirageEnvironment
 
 MANIFEST = HARBOR / "graders/manifest.json"
@@ -190,6 +191,7 @@ class MirageVerifier(Verifier):
         manifest.update(definitions())
         manifest.update(dataspace_definitions())
         manifest.update(automationbench_definitions())
+        manifest.update(enterpriseops())
         definition = manifest.get(task)
         if definition is None:
             raise ValueError(f"No Mirage grader for {task}; use Harbor's "

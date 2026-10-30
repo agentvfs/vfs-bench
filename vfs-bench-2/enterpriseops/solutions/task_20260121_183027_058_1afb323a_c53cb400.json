@@ -1,0 +1,13 @@
+[
+ {"tool": "list_users", "args": {"email": "susan.adams075@servicenow.com"}},
+ {"tool": "add_new_user", "args": {"first_name": "Susan", "last_name": "Adams", "email": "susan.adams075@servicenow.com", "role": "agent", "active": true}},
+ {"tool": "find_locations", "args": {"plot_no": "Plot 685", "street": "Ferguson Neck", "city": "mumbai"}},
+ {"tool": "add_location", "args": {"name": "User 803 - Mumbai", "active": true, "plot_no": "Plot 685", "street": "Ferguson Neck", "city": "mumbai", "country": "india"}},
+ {"tool": "update_user_details", "args": {"user_id": 803, "location_id": 907}},
+ {"tool": "find_user", "args": {"name": "Samuel Kemp"}},
+ {"tool": "get_cases_assigned_to", "args": {"assigned_to": 38}},
+ {"tool": "add_new_group_member", "args": {"group_id": 6, "user_id": 803}},
+ {"tool": "assign_case_to_user", "args": {"case_id": 223, "assigned_to_user_id": 803}},
+ {"tool": "assign_case_to_user", "args": {"case_id": 751, "assigned_to_user_id": 803}},
+ {"tool": "update_user_details", "args": {"user_id": 38, "active": false}}
+]

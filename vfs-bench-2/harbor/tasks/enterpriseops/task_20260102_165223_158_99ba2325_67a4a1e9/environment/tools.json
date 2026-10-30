@@ -1,0 +1,365 @@
+[
+ {
+  "name": "sn-csm-server",
+  "description": "sn-csm-server's tools.",
+  "tools": [
+   {
+    "name": "find_account",
+    "call": "find_account",
+    "description": "Retrieve an account by its exact name. Account is a company or organization that has a relationship with the business.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "Exact account name, e.g., 'Wood and Sons'.",
+       "minLength": 1
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_account",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "list_users",
+    "call": "list_users",
+    "description": "List users with optional filters. None of the filters are mandatory. If no filters are provided, all users will be returned.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "email": {
+       "type": "string",
+       "description": "Filter by user email address (exact match) (unique)."
+      },
+      "user_id": {
+       "type": "integer",
+       "description": "Filter by unique user identifier."
+      },
+      "first_name": {
+       "type": "string",
+       "description": "Filter by user's first name."
+      },
+      "last_name": {
+       "type": "string",
+       "description": "Filter by user's last name."
+      },
+      "phone": {
+       "type": "string",
+       "description": "Filter by phone number."
+      },
+      "role": {
+       "type": "string",
+       "enum": [
+        "admin",
+        "agent",
+        "manager",
+        "customer"
+       ],
+       "description": "Filter by user role (admin, agent, manager, or customer)."
+      },
+      "location_id": {
+       "type": "integer",
+       "description": "Filter by location identifier."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Filter by active status (true = active, false = inactive)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Return only users created after this timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Return only users created before this timestamp (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/list_users",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_contacts",
+    "call": "find_contacts",
+    "description": "Find contacts with optional filters.All the inputs are optional, not providing any filter will return all accounts. Contact represents an individual associated with an account or a point of contact.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contact_id": {
+       "type": "integer",
+       "description": "Unique identifier of the contact."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "ID of the account this contact belongs to."
+      },
+      "portal_user_id": {
+       "type": "integer",
+       "description": "Unique identifier of the portal user associated with this record. This value references the primary key of the user in the User table."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Whether the contact is currently active."
+      },
+      "is_primary": {
+       "type": "boolean",
+       "description": "True if this is the primary contact for the account."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Filter for contacts created after this timestamp (ISO format)."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Filter for contacts created before this timestamp (ISO format)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_contacts",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_locations",
+    "call": "find_locations",
+    "description": "Find locations with optional filters. All the inputs are optional, not providing any filter will return all locations. Location represents a physical site or campus or user's location where services or products are installed or the user resides.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "location_id": {
+       "type": "integer",
+       "description": "Unique identifier of the location."
+      },
+      "name": {
+       "type": "string",
+       "description": "Name of the location."
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Whether the location is currently active."
+      },
+      "plot_no": {
+       "type": "string",
+       "description": "Plot number of the location."
+      },
+      "street": {
+       "type": "string",
+       "description": "Street address of the location."
+      },
+      "city": {
+       "type": "string",
+       "description": "City where the location is situated."
+      },
+      "country": {
+       "type": "string",
+       "description": "Country where the location is situated."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Filter for locations created before this timestamp (ISO format)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Filter for locations created after this timestamp (ISO format)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_locations",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "find_contracts",
+    "call": "find_contracts",
+    "description": "Find contracts with multiple filters including price range. All inputs are optional; not providing any filter will return all contracts. A contract represents a formal agreement between two or more parties.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contract_id": {
+       "type": "integer",
+       "description": "Unique identifier of the contract."
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "draft",
+        "active",
+        "suspended",
+        "expired"
+       ],
+       "description": "Filter contracts by their current status."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Filter contracts by the owning account’s ID. An account represents a business entity or organization."
+      },
+      "contract_type": {
+       "type": "string",
+       "enum": [
+        "support",
+        "warranty",
+        "subscription"
+       ],
+       "description": "Filter by contract type."
+      },
+      "start_date": {
+       "type": "string",
+       "description": "Contract start date (YYYY-MM-DD)."
+      },
+      "end_date": {
+       "type": "string",
+       "description": "Contract end date (YYYY-MM-DD)."
+      },
+      "contract_price": {
+       "type": "integer",
+       "description": "Exact price of the contract in system currency."
+      },
+      "contract_price_range_start": {
+       "type": "integer",
+       "description": "Lower bound of contract price range filter."
+      },
+      "contract_price_range_end": {
+       "type": "integer",
+       "description": "Upper bound of contract price range filter."
+      },
+      "created_before": {
+       "type": "string",
+       "description": "Find contracts created before this timestamp (YYYY-MM-DD HH:MM:SS)."
+      },
+      "created_after": {
+       "type": "string",
+       "description": "Find contracts created after this timestamp (YYYY-MM-DD HH:MM:SS)."
+      }
+     }
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/find_contracts",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_user_details",
+    "call": "update_user_details",
+    "description": "Update an existing user (partial updates supported). A user represents an individual who interacts with the system, such as support agents, managers, or customers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "user_id": {
+       "type": "integer",
+       "description": "Unique identifier of the user to update."
+      },
+      "email": {
+       "type": "string",
+       "description": "New email address for the user.",
+       "minLength": 1
+      },
+      "first_name": {
+       "type": "string",
+       "description": "Updated first name of the user.",
+       "minLength": 1
+      },
+      "last_name": {
+       "type": "string",
+       "description": "Updated last name of the user.",
+       "minLength": 1
+      },
+      "active": {
+       "type": "boolean",
+       "description": "Updated active status (true = active, false = inactive)."
+      },
+      "phone": {
+       "type": "string",
+       "description": "Updated phone number."
+      },
+      "role": {
+       "type": "string",
+       "enum": [
+        "admin",
+        "agent",
+        "manager",
+        "customer"
+       ],
+       "description": "Updated role of the user."
+      },
+      "location_id": {
+       "type": "integer",
+       "description": "Updated location identifier."
+      }
+     },
+     "required": [
+      "user_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_user_details",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "update_contract",
+    "call": "update_contract",
+    "description": "Update an existing contract (partial updates allowed). Contracts define the terms of service, support, or warranty agreements between the organization and its customers.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "contract_id": {
+       "type": "integer",
+       "description": "Unique identifier of the contract to update."
+      },
+      "account_id": {
+       "type": "integer",
+       "description": "Update the account ID associated with this contract."
+      },
+      "contract_price": {
+       "type": "integer",
+       "description": "Update the price value of the contract."
+      },
+      "contract_type": {
+       "type": "string",
+       "enum": [
+        "support",
+        "warranty",
+        "subscription"
+       ],
+       "description": "Update the contract type."
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "draft",
+        "active",
+        "suspended",
+        "expired"
+       ],
+       "description": "Update the contract’s status."
+      },
+      "start_date": {
+       "type": "string",
+       "description": "Update the contract’s start date (YYYY-MM-DD)."
+      },
+      "end_date": {
+       "type": "string",
+       "description": "Update the contract’s end date (YYYY-MM-DD)."
+      }
+     },
+     "required": [
+      "contract_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://localhost:8001/update_contract",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

@@ -1,0 +1,244 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the case was escalated.",
+  "description": "Verify if the case was escalated.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request' AND priority = 'high';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the notification was sent.",
+  "description": "Verify if the notification was sent.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the case was escalated.",
+  "description": "Verify if the case was escalated.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the notification was sent.",
+  "description": "Verify if the notification was sent.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the case was escalated.",
+  "description": "Verify if the case was escalated.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the notification was sent.",
+  "description": "Verify if the notification was sent.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the case was escalated.",
+  "description": "Verify if the case was escalated.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the notification was sent.",
+  "description": "Verify if the notification was sent.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the case was escalated.",
+  "description": "Verify if the case was escalated.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the notification was sent.",
+  "description": "Verify if the notification was sent.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the case was escalated.",
+  "description": "Verify if the case was escalated.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the notification was sent.",
+  "description": "Verify if the notification was sent.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the case was escalated.",
+  "description": "Verify if the case was escalated.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the notification was sent.",
+  "description": "Verify if the notification was sent.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the case was escalated.",
+  "description": "Verify if the case was escalated.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the notification was sent.",
+  "description": "Verify if the notification was sent.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the case was escalated.",
+  "description": "Verify if the case was escalated.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the notification was sent.",
+  "description": "Verify if the notification was sent.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the case was escalated.",
+  "description": "Verify if the case was escalated.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the notification was sent.",
+  "description": "Verify if the notification was sent.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the case was escalated.",
+  "description": "Verify if the case was escalated.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = '102' AND account_id = '5' AND product_id = '48' AND escalation = '1' AND escalation_reason = 'customer_request';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Verify if the notification was sent.",
+  "description": "Verify if the notification was sent.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM notification WHERE case_id = '102' AND email = 'thomas.bailey63@initech.io' AND type = 'update';\n",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

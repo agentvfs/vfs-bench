@@ -1,0 +1,46 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Old Site Deactivation Verification",
+  "description": "Confirms that the original Carrillo Inc site (location_id 840) has been correctly deactivated after the shutdown request",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM location WHERE location_id = 840 AND name = 'Carrillo Inc Site A - Tokyo' AND city = 'tokyo' AND country = 'japan' AND active = 0;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Alternate Site Reactivation Verification",
+  "description": "Ensures that the alternate Carrillo Inc site (location_id 839) has been reactivated to support relocation of the installed product.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM location WHERE location_id = 839 AND name = 'Carrillo Inc Hq - Japan' AND city = 'tokyo' AND country = 'japan' AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Installed Product Relocation Verification",
+  "description": "Validates that the target device with serial number P97-245230-8224 (installed_product_id 98) was successfully moved to the reactivated site (location_id 839).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM installed_product WHERE installed_product_id = 98 AND account_id = 19 AND product_id = 97 AND serial_number = 'P97-245230-8224' AND location_id = 839 AND status = 'in_use';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Product status changed to 'in_use'",
+  "description": "Validates that all the products at the newly re-activated location have status as 'in_use'",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM installed_product WHERE installed_product_id = 102 AND account_id = 19 AND product_id = 229 AND serial_number = 'P229-742915-6468' AND location_id = 839 AND status = 'in_use';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

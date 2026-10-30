@@ -1,0 +1,10 @@
+[
+ {"tool": "list_user_groups", "args": {"name": "Field Service Coordination"}},
+ {"tool": "list_user_groups", "args": {"type": "field", "active": true}},
+ {"tool": "list_group_members", "args": {"group_id": 54}},
+ {"tool": "list_users", "args": {"role": "manager", "user_id": 518}},
+ {"tool": "create_new_account", "args": {"name": "Horizon Fleet Services", "account_type": "customer", "active": true}},
+ {"tool": "add_new_user_group", "args": {"name": "Horizon Field Response Coordination", "type": "field", "active": true}},
+ {"tool": "add_new_group_member", "args": {"group_id": 81, "user_id": 518}},
+ {"tool": "remove_group_membership", "args": {"member_id": 54, "group_id": 54, "user_id": 518}}
+]

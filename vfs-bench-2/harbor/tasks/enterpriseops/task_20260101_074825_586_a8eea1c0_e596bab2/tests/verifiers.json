@@ -1,0 +1,90 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "installed_product_status_update_to_repair",
+  "description": "Verifies that the installed product with ID 42 was updated to repair status for the hardware swap.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM installed_product WHERE installed_product_id = 42 AND account_id = 8 AND product_id = 140 AND serial_number = 'P140-898548-8853' AND status = 'repair';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "replacement_installed_product_registration",
+  "description": "Verifies that the replacement installed product RMA-STARK-001 was registered at the same location with in_use status.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM installed_product WHERE installed_product_id = 301 AND account_id = 8 AND product_id = 140 AND location_id = 817 AND serial_number = 'RMA-STARK-001' AND status = 'in_use';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "case_escalation_critical_priority_update",
+  "description": "Verifies that customer case 181 was escalated to critical priority with escalation flag and reason set.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 181 AND priority = 'critical' AND escalation = 1 AND escalation_reason = 'impact';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "case_state_transition_in_progress",
+  "description": "Verifies that customer case 181 state was transitioned to in_progress.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 181 AND state = 'in_progress';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "case_assignment_group_update",
+  "description": "Verifies that customer case 181 was assigned to the Installed Base Support group.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 181 AND assignment_group_id = 10;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "case_installed_product_reference_update",
+  "description": "Verifies that customer case 181 now references the replacement installed product instead of the broken unit.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM customer_case WHERE case_id = 181 AND installed_product_id = 301 AND product_id = 140;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "critical_resolution_sla_linkage",
+  "description": "Verifies that the critical resolution SLA was linked to customer case 181 and is in progress without breach.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM case_sla WHERE case_sla_id = 2465 AND case_id = 181 AND sla_def_id = 6 AND stage = 'in_progress' AND has_breached = 0;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "confirmation_email_notification",
+  "description": "Verifies that a confirmation update notification was successfully sent for customer case 181.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM notification WHERE notification_id = 734 AND case_id = 181 AND email = 'marc.henry@stark-industries.com' AND type = 'update' AND status = 'success';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

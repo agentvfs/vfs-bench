@@ -1,0 +1,14 @@
+[
+ {"tool": "search_cases", "args": {"number": "CS-0000020"}},
+ {"tool": "list_group_members", "args": {"user_id": 4}},
+ {"tool": "list_user_groups", "args": {"group_id": 1}},
+ {"tool": "list_user_groups", "args": {"group_id": 66}},
+ {"tool": "update_case", "args": {"case_id": 20, "state": "in_progress", "priority": "critical", "escalation": true, "escalation_reason": "customer_request", "assignment_group_id": 1}},
+ {"tool": "find_case_slas", "args": {"case_id": 20}},
+ {"tool": "update_case_sla_details", "args": {"case_sla_id": 39, "stage": "canceled"}},
+ {"tool": "update_case_sla_details", "args": {"case_sla_id": 40, "stage": "canceled"}},
+ {"tool": "find_sla_definitions", "args": {"applies_to_priority": "critical", "active": true}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 20, "sla_def_id": 1, "stage": "in_progress"}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 20, "sla_def_id": 6, "stage": "in_progress"}},
+ {"tool": "send_notification", "args": {"case_id": 20, "email": "joanne.simpson@servicenow.com", "type": "update"}}
+]

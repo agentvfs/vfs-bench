@@ -1,0 +1,19 @@
+[
+ {"tool": "find_account", "args": {"name": "Acme Systems"}},
+ {"tool": "find_product", "args": {"name": "MySQL Enterprise 8.0 Variant 28"}},
+ {"tool": "retrieve_installed_products", "args": {"account_id": 3, "product_id": 48}},
+ {"tool": "find_contacts", "args": {"account_id": 3, "is_primary": true}},
+ {"tool": "find_entitlements", "args": {"account_id": 3, "active": true}},
+ {"tool": "find_user_group", "args": {"name": "CSM Tier 1 Support"}},
+ {"tool": "find_user", "args": {"name": "Stephanie Todd"}},
+ {"tool": "create_new_case", "args": {"account_id": 3, "contact_id": 1, "product_id": 48, "installed_product_id": 14, "channel": "alert", "priority": "critical", "state": "new", "short_description": "Product: MySQL Enterprise 8.0 Variant 28, Issue: is not working as expected."}},
+ {"tool": "register_new_interaction", "args": {"channel": "alert", "account_id": 3, "contact_id": 1, "case_id": 1233, "status": "open"}},
+ {"tool": "set_case_assignment_group", "args": {"case_id": 1233, "assignment_group_id": 1}},
+ {"tool": "check_user_membership", "args": {"user_id": 6, "group_id": 1}},
+ {"tool": "add_new_group_member", "args": {"group_id": 1, "user_id": 6}},
+ {"tool": "assign_case_to_user", "args": {"case_id": 1233, "assigned_to_user_id": 6}},
+ {"tool": "update_installed_product_details", "args": {"installed_product_id": 14, "status": "repair"}},
+ {"tool": "update_case", "args": {"case_id": 1233, "state": "in_progress"}},
+ {"tool": "find_sla_definitions", "args": {"metric": "resolution", "applies_to_priority": "critical", "active": true}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 1233, "sla_def_id": 6, "stage": "in_progress"}}
+]

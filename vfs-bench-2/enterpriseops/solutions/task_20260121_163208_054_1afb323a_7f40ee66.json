@@ -1,0 +1,9 @@
+[
+ {"tool": "find_account", "args": {"name": "Russell, Johnson and Clark"}},
+ {"tool": "find_contracts", "args": {"account_id": 40, "contract_type": "support"}},
+ {"tool": "update_contract", "args": {"contract_id": 101, "contract_price": 99108}},
+ {"tool": "find_contacts", "args": {"account_id": 40, "is_primary": true}},
+ {"tool": "list_users", "args": {"user_id": 55}},
+ {"tool": "find_location", "args": {"name": "Smith Llc Hq - London"}},
+ {"tool": "update_user_details", "args": {"user_id": 55, "location_id": 903}}
+]

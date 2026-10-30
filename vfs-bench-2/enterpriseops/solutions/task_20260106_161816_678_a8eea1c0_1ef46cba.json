@@ -1,0 +1,19 @@
+[
+ {"tool": "search_cases", "args": {"number": "CS-0000783"}},
+ {"tool": "find_user", "args": {"name": "Ashley Krueger"}},
+ {"tool": "find_user", "args": {"name": "Thomas Green"}},
+ {"tool": "update_user_details", "args": {"user_id": 1, "active": true}},
+ {"tool": "check_user_membership", "args": {"user_id": 1, "group_id": 1}},
+ {"tool": "add_new_group_member", "args": {"group_id": 1, "user_id": 1}},
+ {"tool": "find_entitlements", "args": {"account_id": 34, "product_id": 35, "active": true}},
+ {"tool": "update_case", "args": {"case_id": 783, "assigned_to": 1, "state": "in_progress"}},
+ {"tool": "find_sla_definitions", "args": {"metric": "resolution", "applies_to_priority": "critical"}},
+ {"tool": "update_sla_definition", "args": {"sla_def_id": 6, "target_mins": 360}},
+ {"tool": "link_new_case_sla", "args": {"case_id": 783, "sla_def_id": 6, "stage": "in_progress"}},
+ {"tool": "list_users", "args": {"email": "thomas.clark70@servicenow.com"}},
+ {"tool": "register_new_interaction", "args": {"channel": "email", "account_id": 34, "contact_id": 73, "case_id": 783, "interacted_user": 576, "status": "handled"}},
+ {"tool": "add_new_user_group", "args": {"name": "Security Policy Review", "type": "support", "active": true}},
+ {"tool": "add_new_user", "args": {"first_name": "Lisa", "last_name": "Casey", "email": "lisa.casey@servicenow.com", "role": "agent", "active": true}},
+ {"tool": "add_new_group_member", "args": {"group_id": 81, "user_id": 803}},
+ {"tool": "add_new_product", "args": {"name": "Advanced Security Module", "category": "software", "lifecycle_state": "active"}}
+]

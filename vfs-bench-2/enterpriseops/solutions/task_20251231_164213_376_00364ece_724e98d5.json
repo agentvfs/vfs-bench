@@ -1,0 +1,13 @@
+[
+ {"tool": "find_user", "args": {"name": "Diana Johnson"}},
+ {"tool": "get_cases_assigned_to", "args": {"assigned_to": 15}},
+ {"tool": "find_user", "args": {"name": "Casey Green"}},
+ {"tool": "find_user_group", "args": {"name": "Case Assignment_3"}},
+ {"tool": "check_user_membership", "args": {"user_id": 52, "group_id": 44}},
+ {"tool": "add_new_group_member", "args": {"group_id": 44, "user_id": 52}},
+ {"tool": "update_case", "args": {"case_id": 179, "assignment_group_id": 44, "assigned_to": 52}},
+ {"tool": "update_user_details", "args": {"user_id": 15, "active": false}},
+ {"tool": "find_contacts", "args": {"contact_id": 10}},
+ {"tool": "list_users", "args": {"user_id": 20}},
+ {"tool": "send_notification", "args": {"case_id": 179, "email": "marc.henry@stark-industries.com", "type": "report"}}
+]

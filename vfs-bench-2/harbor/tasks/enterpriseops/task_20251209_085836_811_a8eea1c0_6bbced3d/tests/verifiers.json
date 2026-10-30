@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "update_user_details, add_new_user",
+  "description": "Verify Thomas Green (ID 1) is active and the new agent Sarah Connor (ID 803, role 'agent') was successfully created.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user WHERE (user_id = 1 AND active = 1) OR (user_id = 803 AND first_name = 'Sarah' AND last_name = 'Connor' AND role = 'agent');",
+   "expected_value": 2,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "add_new_product",
+  "description": "Verify the new product 'Quantum Firewall 5000' was created as active hardware (product_id 241).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM product WHERE product_id = 241 AND name = 'Quantum Firewall 5000' AND category = 'hardware' AND lifecycle_state = 'active';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "add_new_group_member",
+  "description": "Verify the new agent (user_id 803) was successfully added to the correct support group (group_id 1).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group_member WHERE group_id = 1 AND user_id = 803;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "create_knowledge",
+  "description": "Verify the knowledge article (KB-0000370) related to the new product (product_id 241) and owned by the new agent (owner_id 803) exists in draft state.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM knowledge WHERE kb_number = 'KB000370' AND product_id = 241 AND owner_id = 803 AND state = 'draft';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "find_user_group",
+  "description": "Confirm the target support group (ID 1) is active and correctly classified as 'support' type.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) FROM user_group WHERE group_id = 1 AND name = 'CSM Tier 1 Support' AND type = 'support' AND active = 1;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

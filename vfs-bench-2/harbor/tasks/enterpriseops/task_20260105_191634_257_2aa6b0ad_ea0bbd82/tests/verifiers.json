@@ -1,0 +1,35 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "Validating case CS-0000280 assignment.",
+  "description": "Validating case CS-0000280 assignment to William Wyatt (group with lower active cases) and Proactive Case Management (active group).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM customer_case cc\nJOIN user u ON cc.assigned_to = u.user_id\nJOIN user_group g ON cc.assignment_group_id = g.group_id\nWHERE cc.number = 'CS-0000280'\n  AND u.first_name = 'William'\n  AND u.last_name = 'Wyatt'\n  AND g.name = 'Proactive Case Monitoring';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating William Wyatt's group membership.",
+  "description": "Validating whether William Wyatt is a member of Proactive Case Monitoring group.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM user_group_member ugm\nJOIN user u ON ugm.user_id = u.user_id\nJOIN user_group g ON ugm.group_id = g.group_id\nWHERE u.first_name = 'William'\n  AND u.last_name = 'Wyatt'\n  AND g.name = 'Proactive Case Monitoring';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "Validating remind notification. ",
+  "description": "Validating whether a successful reminder notification has been sent to the customer of case CS-0000280.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS count\nFROM notification n\nJOIN customer_case cc ON n.case_id = cc.case_id\nJOIN contact c ON cc.contact_id = c.contact_id\nJOIN user u ON c.portal_user_id = u.user_id\nWHERE cc.number = 'CS-0000280'\n  AND n.email = u.email\n  AND n.type = 'reminder'\n  AND n.status = 'success';",
+   "expected_value": 2,
+   "comparison_type": "equals"
+  }
+ }
+]

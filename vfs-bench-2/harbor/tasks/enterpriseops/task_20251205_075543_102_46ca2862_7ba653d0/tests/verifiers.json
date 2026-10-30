@@ -1,0 +1,57 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "update_knowledge",
+  "description": "update_knowledge",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM knowledge WHERE knowledge_id = 197 AND state = 'published'",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_case_knowledge",
+  "description": "link_case_knowledge",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM case_knowledge WHERE knowledge_id = 197 AND case_id = 2 AND used_as = 'suggested'",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "add_new_user_group",
+  "description": "add_new_user_group",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM user_group WHERE name = 'Case Management' AND type = 'support'",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "add_new_group_member",
+  "description": "add_new_group_member",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM user_group_member WHERE group_id = 81 AND user_id = 4",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_case",
+  "description": "update_case",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(*) AS cnt FROM customer_case WHERE case_id = 2 AND assignment_group_id = 81 AND assigned_to = 4 AND state = 'pending'",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ }
+]

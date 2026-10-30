@@ -1,9 +1,12 @@
 """Native snapshot, source pins, artifact provenance and detailed parity."""
+import io
 import json
 import os
 import shutil
+import tarfile
 import tempfile
 import unittest
+from contextlib import asynccontextmanager
 from pathlib import Path
 from unittest.mock import AsyncMock, patch
 
@@ -12,6 +15,7 @@ from harbor.models.trial.paths import TrialPaths
 from harbor.models.verifier.result import VerifierResult
 from vfsbench_harbor import MirageEnvironment, MirageVerifier
 from vfsbench_harbor.environment import HARBOR
+from vfsbench_harbor.microsandbox import MicrosandboxVerifier
 from vfsbench_harbor.parity import GradeMismatchError, MirageParityVerifier
 
 
@@ -104,6 +108,86 @@ class AutomationVerifierTests(unittest.IsolatedAsyncioTestCase):
         report = json.loads(
             (self.paths.verifier_dir / "mirage_parity.json").read_text())
         self.assertIn("reward_details", report["differences"])
+
+    async def test_parity_preserves_reference_details_with_log_filters(self):
+        expected = self.fixture["expected"]
+
+        @asynccontextmanager
+        async def sandbox(*args):
+            # Exercise the real VM-output extraction without starting a VM.
+            output = io.BytesIO()
+            with tarfile.open(fileobj=output, mode="w") as archive:
+                for name, value in {
+                        "reward.txt": "1.0\n",
+                        "reward_details.json": json.dumps(expected),
+                        "debug.log": "filtered reference log\n"
+                }.items():
+                    data = value.encode()
+                    member = tarfile.TarInfo(name)
+                    member.size = len(data)
+                    archive.addfile(member, io.BytesIO(data))
+            output.seek(0)
+            vm = AsyncMock()
+            vm.guest.return_value = (0, output, b"")
+            vm.metrics.return_value = {}
+            yield vm
+
+        async def reference(backend):
+            await backend._attempt("test", "/logs/verifier", [], [], {})
+            return VerifierResult(rewards=backend._parse_reward_text())
+
+        for filters in ({
+                "exclude_logs": ["*"]
+        }, {
+                "include_logs": ["reward.txt"]
+        }):
+            for mismatch in (False, True):
+                with self.subTest(filters=filters, mismatch=mismatch):
+                    details = self.paths.verifier_dir / "reward_details.json"
+                    details.unlink(missing_ok=True)
+                    parity = MirageParityVerifier(task=self.task,
+                                                  environment=self.env,
+                                                  trial_paths=self.paths,
+                                                  **filters)
+                    native = json.loads(json.dumps(expected))
+                    if mismatch:
+                        native["assertions"][0]["excluded"] = True
+                    result = {
+                        "score": 1,
+                        "checks": native,
+                        "timings": {},
+                        "artifacts": {
+                            "reward_details.json": native
+                        }
+                    }
+                    with patch("vfsbench_harbor.microsandbox._msb",
+                               return_value="unused"), patch.object(
+                                   MicrosandboxVerifier, "sandbox",
+                                   sandbox), patch.object(
+                                       MicrosandboxVerifier, "verify",
+                                       reference), patch.object(
+                                           MirageVerifier, "evaluate",
+                                           AsyncMock(return_value=result)):
+                        if mismatch:
+                            with self.assertRaisesRegex(
+                                    GradeMismatchError, ": mismatch;"):
+                                await parity.verify()
+                        else:
+                            self.assertEqual((await parity.verify()).rewards,
+                                             {"reward": 1})
+                    self.assertEqual(json.loads(details.read_text()), expected)
+                    self.assertFalse(
+                        (self.paths.verifier_dir / "debug.log").exists())
+                    self.assertEqual(parity.include_logs,
+                                     filters.get("include_logs"))
+                    self.assertEqual(parity.exclude_logs,
+                                     filters.get("exclude_logs"))
+                    report = json.loads((self.paths.verifier_dir /
+                                         "mirage_parity.json").read_text())
+                    self.assertEqual(report["status"],
+                                     "mismatch" if mismatch else "matched")
+                    self.assertEqual("reward_details" in report["differences"],
+                                     mismatch)
 
 
 if __name__ == "__main__":

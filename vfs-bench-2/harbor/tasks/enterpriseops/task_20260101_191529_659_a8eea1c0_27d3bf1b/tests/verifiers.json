@@ -1,0 +1,222 @@
+[
+ {
+  "verifier_type": "database_state",
+  "name": "create_new_case",
+  "description": "Verify new critical case 1233 was created for Acme Systems on the specified product.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT count(*) FROM customer_case WHERE case_id = 1233 AND account_id = 3 AND product_id = 48 AND priority = 'critical';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_installed_product_details",
+  "description": "Verify the installed product associated with the critical case has been put into 'repair' status.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT status FROM installed_product WHERE installed_product_id = 14;",
+   "expected_value": "repair",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "set_case_assignment_group",
+  "description": "Verify case 1233 is assigned to the CSM Tier 1 Support group (ID 1).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT assignment_group_id FROM customer_case WHERE case_id = 1233;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "assign_case_to_user",
+  "description": "Verify case 1233 is assigned to Stephanie Todd (ID 6).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT assigned_to FROM customer_case WHERE case_id = 1233;",
+   "expected_value": 6,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_new_case_sla",
+  "description": "Verify the Critical Resolution SLA (ID 6) is linked to the new case.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT count(*) FROM case_sla WHERE case_id = 1233 AND sla_def_id = 6;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_new_case_sla",
+  "description": "Verify the SLA associated with the case is actively 'in_progress'.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT stage FROM case_sla WHERE case_id = 1233 AND sla_def_id = 6;",
+   "expected_value": "in_progress",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_installed_product_details",
+  "description": "Verify the installed_product table's system update time was modified after changing the status.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(sys_updated_on) FROM installed_product WHERE installed_product_id = 14 AND status = 'repair' AND sys_updated_on IS NOT NULL;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "create_new_case",
+  "description": "Verify the case channel reflects the alert channel prescribed in the prompt.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT channel FROM customer_case WHERE case_id = 1233;",
+   "expected_value": "alert",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "register_new_interaction",
+  "description": "Verify an interaction record exists related to the newly created case.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT count(*) FROM interaction WHERE case_id = 1233;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "register_new_interaction",
+  "description": "Verify the interaction accurately reflects the handling status.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT status FROM interaction WHERE interaction_id = 1233;",
+   "expected_value": "open",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "create_new_case",
+  "description": "Verify new critical case 1233 was created for Acme Systems on the specified product.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT count(*) FROM customer_case WHERE case_id = 1233 AND account_id = 3 AND product_id = 48 AND priority = 'critical';",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_installed_product_details",
+  "description": "Verify the installed product associated with the critical case has been put into 'repair' status.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT status FROM installed_product WHERE installed_product_id = 14;",
+   "expected_value": "repair",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "set_case_assignment_group",
+  "description": "Verify case 1233 is assigned to the CSM Tier 1 Support group (ID 1).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT assignment_group_id FROM customer_case WHERE case_id = 1233;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "assign_case_to_user",
+  "description": "Verify case 1233 is assigned to Stephanie Todd (ID 6).",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT assigned_to FROM customer_case WHERE case_id = 1233;",
+   "expected_value": 6,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_new_case_sla",
+  "description": "Verify the Critical Resolution SLA (ID 6) is linked to the new case.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT count(*) FROM case_sla WHERE case_id = 1233 AND sla_def_id = 6;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "link_new_case_sla",
+  "description": "Verify the SLA associated with the case is actively 'in_progress'.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT stage FROM case_sla WHERE case_id = 1233 AND sla_def_id = 6;",
+   "expected_value": "in_progress",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "update_installed_product_details",
+  "description": "Verify the installed_product table's system update time was modified after changing the status.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT COUNT(sys_updated_on) FROM installed_product WHERE installed_product_id = 14 AND status = 'repair' AND sys_updated_on IS NOT NULL;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "create_new_case",
+  "description": "Verify the case channel reflects the alert channel prescribed in the prompt.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT channel FROM customer_case WHERE case_id = 1233;",
+   "expected_value": "alert",
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "register_new_interaction",
+  "description": "Verify an interaction record exists related to the newly created case.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT count(*) FROM interaction WHERE case_id = 1233;",
+   "expected_value": 1,
+   "comparison_type": "equals"
+  }
+ },
+ {
+  "verifier_type": "database_state",
+  "name": "register_new_interaction",
+  "description": "Verify the interaction accurately reflects the handling status.",
+  "gym_name": "sn-csm-server",
+  "validation_config": {
+   "query": "SELECT status FROM interaction WHERE interaction_id = 1233;",
+   "expected_value": "open",
+   "comparison_type": "equals"
+  }
+ }
+]
