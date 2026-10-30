@@ -194,13 +194,27 @@ export function round(value: number, digits = 0): number {
 }
 export const lower = (value: any): string => String(value ?? '').toLowerCase()
 export const containsAny = (text: string, needles: string[]) => needles.some((s) => text.includes(s))
-export const lines = (text: string) =>
-  text === ''
-    ? []
-    : text
-        .replace(/\r\n/g, '\n')
-        .replace(/\n$/, '')
-        .split(/\n|\r|\v|\f|\u0085|\u2028|\u2029/)
+// Python str.strip includes the information separators and NEL, but not BOM.
+const pythonWhitespace = /[\p{White_Space}\u001c-\u001f]/u
+export function strip(text: string): string {
+  let start = 0,
+    end = text.length
+  // All Python whitespace is in the BMP. Inspect only boundary characters:
+  // an unanchored trailing-whitespace regex retries long internal runs.
+  while (start < end && pythonWhitespace.test(text[start]!)) start++
+  while (end > start && pythonWhitespace.test(text[end - 1]!)) end--
+  return text.slice(start, end)
+}
+function splitLines(text: string, separator: RegExp): string[] {
+  if (!text) return []
+  const result = text.split(separator)
+  // A final terminator does not add a line; earlier empty lines are significant.
+  if (result.at(-1) === '') result.pop()
+  return result
+}
+// Python str.splitlines has more boundaries than universal-newline file reads.
+export const lines = (text: string) => splitLines(text, /\r\n|[\n\r\v\f\u001c-\u001e\u0085\u2028\u2029]/)
+export const fileLines = (text: string) => splitLines(text, /\r\n|[\n\r]/)
 export const GWS = '/var/lib/mock-data/gws/gws.db'
 export const FINANCE = '/opt/mock/data/finance_app.sqlite'
 export const SOCIAL = '/var/lib/mock-data/social/social.db'

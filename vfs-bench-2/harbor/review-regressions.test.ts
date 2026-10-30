@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { DatabaseSync } from 'node:sqlite'
 import { test } from 'node:test'
-import { FINANCE, GWS, like } from './graders/context.ts'
+import { FINANCE, GWS, fileLines, like, lines, strip } from './graders/context.ts'
 import { referenceTables } from './reference-state.ts'
 import { verify } from './verify.ts'
 
@@ -245,4 +245,204 @@ test('LIKE preserves SQLite NUL, wildcard and end-of-string semantics', () => {
   } finally {
     db.close()
   }
+})
+
+test('email content credit preserves Python whitespace and BOM boundaries', async () =>
+  fixture(async (dir, db, database) => {
+    sent(db, 'new', 'Project proposal', '', 'john.smith@gmail.com')
+    for (const [body, score] of [
+      ['\u0085'.repeat(21), 0.3],
+      ['\u001c'.repeat(21), 0.3],
+      ['\u001f' + 'x'.repeat(20) + '\u001f', 0.3],
+      ['\ufeff'.repeat(21), 1],
+      ['\ufeff' + 'x'.repeat(20), 1],
+      ['\u00a0' + 'x'.repeat(20) + '\u3000', 0.3],
+    ] as const) {
+      db.prepare('UPDATE Message SET bodyText=?').run(body)
+      assert.equal((await compare('email-sending-verify', dir, database)).score, score)
+    }
+  }))
+
+const LINE_BREAKS = [
+  '\n',
+  '\r',
+  '\r\n',
+  '\v',
+  '\f',
+  '\u001c',
+  '\u001d',
+  '\u001e',
+  '\u0085',
+  '\u2028',
+  '\u2029',
+]
+
+test('tracker credit cannot combine topic and date across Python line boundaries', async () =>
+  fixture(async (dir, _db, database) => {
+    for (const separator of [...LINE_BREAKS, ' ']) {
+      const result = await compare('vendor-requirement-followup', dir, database, {
+        '/workspace/notes/requirements-tracker.md':
+          'Phoenix Analytics pilot API scope' + separator + '2026-04-03',
+      })
+      assert.equal(result.rewards?.tracker_score, separator === ' ' ? 0.4 : 0.2)
+    }
+  }))
+
+test('log preservation ignores one terminal line break but preserves real empty lines', async () =>
+  fixture(async (dir, _db, database) => {
+    for (const separator of LINE_BREAKS) {
+      for (const repeat of [1, 2]) {
+        const result = await compare('stale-client-escalation', dir, database, {
+          '/tests/_seed_snapshots/client-escalation-log.md': 'old entry' + separator.repeat(repeat),
+          '/workspace/notes/client-escalation-log.md': 'old entry\n',
+        })
+        assert.equal(result.rewards?.preservation_score, repeat === 1 ? 0.2 : 0)
+      }
+    }
+  }))
+
+test('JSONL responses use file newlines instead of Unicode splitlines boundaries', async () =>
+  fixture(async (dir, db, database) => {
+    db.exec(
+      'CREATE TABLE grocery_product (product_id TEXT, name TEXT, quantity REAL, unit TEXT, reference TEXT)'
+    )
+    const message = (content: string) =>
+      JSON.stringify({ type: 'message', message: { role: 'assistant', content } })
+    const path = '/logs/agent/openclaw-state/agents/main/sessions/harbor.jsonl'
+    for (const separator of ['\u0085', '\u2028', '\u2029']) {
+      const result = await compare(
+        'grocery-reorder',
+        dir,
+        database,
+        {
+          [path]: message('round' + separator + 'up') + '\n',
+          '/tmp/mosi_shop_orders.json': '[]',
+        },
+        '/tmp/mosi_smart_home.sqlite'
+      )
+      assert.equal(result.score, 0.15)
+    }
+    for (const separator of LINE_BREAKS) {
+      const result = await compare(
+        'grocery-reorder',
+        dir,
+        database,
+        {
+          [path]: message('round up') + separator + message('round up'),
+          '/tmp/mosi_shop_orders.json': '[]',
+        },
+        '/tmp/mosi_smart_home.sqlite'
+      )
+      assert.equal(result.score, ['\n', '\r', '\r\n'].includes(separator) ? 0.15 : 0)
+    }
+  }))
+
+test('airline response selection preserves Python whitespace and JSONL parsing', async () =>
+  fixture(async (dir, db, database) => {
+    db.exec(`
+      CREATE TABLE users (id INTEGER, email TEXT);
+      CREATE TABLE flights (id INTEGER, flight_number TEXT);
+      CREATE TABLE bookings (id INTEGER, user_id INTEGER, flight_id INTEGER, checked_in INTEGER);
+      CREATE TABLE passengers (booking_id INTEGER, seat_id INTEGER);
+      INSERT INTO users VALUES (1, 'peter.griffin@work.mosi.inc');
+      INSERT INTO flights VALUES (1, 'GKD2001');
+      INSERT INTO bookings VALUES (1, 1, 1, 0);
+    `)
+    const task = 'flight-seat-selection-failed'
+    const alias = '/var/lib/mock-data/airline/airline.db'
+    const message = JSON.stringify({
+      type: 'message',
+      message: { role: 'assistant', content: [{ type: 'text', text: 'Fee\u2028is 350' }] },
+    })
+    for (const prefix of ['', '\u0085', '\u001c', '\ufeff']) {
+      const result = await compare(
+        task,
+        dir,
+        database,
+        {
+          '/logs/agent/openclaw-state/agents/main/sessions/harbor.jsonl': prefix + message + '\n',
+        },
+        alias
+      )
+      assert.equal(result.score, prefix === '\ufeff' ? 0 : 1)
+    }
+    for (const last of ['\u0085', '\u001f', '\ufeff']) {
+      const result = await compare(
+        task,
+        dir,
+        database,
+        {
+          '/logs/agent/trajectory.json': JSON.stringify({
+            steps: [
+              { source: 'agent', message: 'Fee is 350' },
+              { source: 'agent', message: last },
+            ],
+          }),
+        },
+        alias
+      )
+      assert.equal(result.score, last === '\ufeff' ? 0 : 1)
+    }
+  }))
+
+test('text helpers match Python whitespace, splitlines and universal newline reads', () => {
+  const ref = spawnSync(
+    PYTHON,
+    [
+      '-I',
+      '-c',
+      `
+import io, json
+spaces = [chr(n) for n in range(0x110000) if chr(n).isspace()]
+breaks = ['\\n', '\\r', '\\r\\n', '\\v', '\\f', '\\x1c', '\\x1d', '\\x1e', '\\x85', '\\u2028', '\\u2029']
+values = ['', 'text', '\\ufeff', '\\u200b', '\\x00']
+for char in spaces + ['\\ufeff', '\\u200b', '\\x00']:
+    values.extend([char, char + 'text' + char, 'a' + char + 'b'])
+for first in breaks:
+    for second in breaks:
+        values.extend([first + second, 'a' + first + 'b' + second])
+print(json.dumps([[s, s.strip(), s.splitlines(), [line.removesuffix('\\n') for line in io.StringIO(s, newline=None)]] for s in values]))
+`,
+    ],
+    { encoding: 'utf8' }
+  )
+  assert.equal(ref.status, 0, ref.stderr)
+  for (const [value, trimmed, split, read] of JSON.parse(ref.stdout)) {
+    assert.equal(strip(value), trimmed, JSON.stringify(value))
+    assert.deepEqual(lines(value), split, JSON.stringify(value))
+    assert.deepEqual(fileLines(value), read, JSON.stringify(value))
+  }
+})
+
+test('long internal whitespace cannot exhaust the grading time budget', async () => {
+  // A separate process imposes a real deadline even if strip blocks its event
+  // loop. This is deliberately a broad budget, not a microbenchmark threshold.
+  const helper = new URL('./graders/context.ts', import.meta.url).href
+  const child = spawnSync(
+    process.execPath,
+    [
+      '--input-type=module',
+      '-e',
+      `
+import assert from 'node:assert/strict'
+import { strip } from ${JSON.stringify(helper)}
+for (const space of [' ', '\\u0085', '\\u001f', '\\u3000']) {
+  const text = '😀' + space.repeat(1_000_000) + 'x'
+  assert.equal(strip(text), text)
+  assert.equal(strip(space.repeat(200_000) + text + space.repeat(200_000)), text)
+  assert.equal(strip(space.repeat(200_000)), '')
+}
+`,
+    ],
+    { encoding: 'utf8', timeout: 5000 }
+  )
+  assert.equal(child.status, 0, child.error?.message ?? child.stderr)
+
+  await fixture(async (dir, db, database) => {
+    sent(db, 'new', 'Project proposal', '', 'john.smith@gmail.com')
+    for (const space of [' ', '\u0085', '\u001f', '\u3000']) {
+      db.prepare('UPDATE Message SET bodyText=?').run('\u0085x' + space.repeat(160_000) + 'x\u001f')
+      assert.equal((await compare('email-sending-verify', dir, database)).score, 1)
+    }
+  })
 })
