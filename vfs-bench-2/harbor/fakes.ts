@@ -110,7 +110,7 @@ async function main(): Promise<void> {
   const ours = existsSync(join(MOCKS, service, 'main.ts'))
   if (ours) ensureClient(service)
   const run = new Run(`fakes-${service}`, root)
-  const stateView = Boolean(process.env.VFSBENCH_STATE_TOKEN) && ['airline', 'chat', 'expense', 'finance', 'gws', 'health', 'insurance', 'mintdiet', 'smarthome', 'social', 'workspace'].includes(service)
+  const stateView = Boolean(process.env.VFSBENCH_STATE_TOKEN) && ['airline', 'automationbench', 'chat', 'expense', 'finance', 'gws', 'health', 'insurance', 'mintdiet', 'smarthome', 'social', 'workspace'].includes(service)
   const entry = stateView ? join(ROOT, 'harbor/fake-entry.ts') : ours ? join(MOCKS, service, 'main.ts') : undefined
   const spec = kit(run, service, fixture, entry)
   if (stateView) spec.env = {

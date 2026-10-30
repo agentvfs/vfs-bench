@@ -1,0 +1,77 @@
+{
+  "upstream_commit": "4a8e1061254004d9dac807054eed33fad7d1ff14",
+  "reference": {
+    "python": "3.12.11",
+    "pydantic": "2.12.5"
+  },
+  "native": {
+    "monty": "1.4.0",
+    "mirage_commit": "9dd69a316242deddee79b40ce41aafaa2be6065c"
+  },
+  "parity": {
+    "tasks": 600,
+    "evaluations": 3611,
+    "mismatches": 0,
+    "assertion_results_compared": 58009,
+    "configured_assertion_types_exercised": 335,
+    "assertion_types_observed_both_true_and_false": 104,
+    "score_counts_by_case": {
+      "noop": {
+        "zero": 600
+      },
+      "empty": {
+        "zero": 595,
+        "partial": 5
+      },
+      "remove": {
+        "zero": 595,
+        "partial": 5
+      },
+      "duplicate": {
+        "zero": 598,
+        "partial": 2
+      },
+      "synthetic-writes": {
+        "one": 9,
+        "partial": 527,
+        "zero": 64
+      },
+      "saved": {
+        "zero": 600,
+        "one": 11
+      }
+    },
+    "report_sha256": "8fa8a8ed491df0d9390b8b23612db11fbd1895d512514e187ae2fd37b361af1a"
+  },
+  "harbor": {
+    "oracle": {
+      "tasks": 11,
+      "concurrency": 11,
+      "reward_1": 11,
+      "errors": 0,
+      "retries": 0,
+      "job_seconds": 6.320333
+    },
+    "nop": {
+      "tasks": 600,
+      "concurrency": 32,
+      "reward_0": 600,
+      "errors": 0,
+      "retries": 0,
+      "job_seconds": 257.597599,
+      "note": "Other validation ran concurrently; this is not an isolated throughput benchmark."
+    }
+  },
+  "checks": {
+    "harbor_typescript_tests": 52,
+    "python_verifier_tests": 24,
+    "python_parity_tests": 20,
+    "typecheck": "passed",
+    "exporter_check_tasks": 600,
+    "pre_commit": "passed (SKIP=fixture-lineage, matching CI)"
+  },
+  "limits": [
+    "Only 11 tasks have real oracle scripts; synthetic writes are differential fixtures, not solutions.",
+    "Parity evidence covers the recorded inputs; it is not exhaustive branch or all-input equivalence."
+  ]
+}
