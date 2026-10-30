@@ -10,6 +10,7 @@ import hashlib
 import importlib.util
 import io
 import json
+import stat
 import subprocess
 import sys
 import tempfile
@@ -18,6 +19,7 @@ from pathlib import Path
 HARBOR = Path(__file__).resolve().parent
 ROOT = HARBOR.parent
 STATE = ROOT / 'state/dataspace'
+MAX_CSV_BYTES = 20 * 1024 * 1024  # pinned evaluator's input limit
 
 
 def csv_bytes(rows):
@@ -164,7 +166,59 @@ def cases(manifest):
         prediction = None if name.endswith('prediction') else b'v\na\n'
         yield task, name, changed_config, gold, prediction, None
     for kind in ('directory', 'symlink', 'missing'):
-        yield task, 'path-' + kind, config, b'v\na\n', None, kind
+        yield (task, 'path-' + kind, config, b'v\na\n', None, {
+            'kind': kind,
+            'size': 0
+        })
+
+
+def saved_prediction(path):
+    """Freeze grading-relevant metadata without reading rejected inputs.
+
+    The reference checks existence, regular-file status and symlinks before
+    size or contents. A dangling link is missing; a link to a directory is
+    non-regular. Match those categories, as the live native freezer does.
+    """
+    if not path.parent.is_dir():
+        raise FileNotFoundError(
+            f'Saved output mount is unavailable: {path.parent}; '
+            'retain the workspace with --no-delete before replaying')
+    try:
+        details = path.stat()
+    except FileNotFoundError:
+        return None, {'kind': 'missing', 'size': 0}
+    if not stat.S_ISREG(details.st_mode):
+        kind = 'directory'
+    elif path.is_symlink():
+        kind = 'symlink'
+    else:
+        kind = 'file'
+    info = {'kind': kind, 'size': details.st_size}
+    data = None
+    if kind == 'file' and details.st_size <= MAX_CSV_BYTES:
+        data = path.read_bytes()
+        if len(data) != details.st_size:
+            raise ValueError(f'Saved prediction changed while reading: {path}')
+    return data, info
+
+
+def restore_prediction(path, data, status):
+    """Recreate the reference's file checks, including rejected file sizes."""
+    kind = status['kind']
+    if kind == 'directory':
+        path.mkdir()
+    elif kind in ('file', 'symlink'):
+        target = path
+        if kind == 'symlink':
+            target = path.with_name('symlink-target.csv')
+            path.symlink_to(target)
+        with target.open('wb') as handle:
+            if data is not None:
+                handle.write(data)
+            # Oversized files need only their size, not a copy of the bytes.
+            handle.truncate(status['size'])
+    elif kind != 'missing':
+        raise ValueError(f'Unknown prediction kind: {kind}')
 
 
 def inputs(manifest, args):
@@ -182,8 +236,9 @@ def inputs(manifest, args):
             gold = (STATE /
                     f'benchmark/output/{task_id}/gold.csv').read_bytes()
             prediction = result.parent / 'mirage/output/prediction.csv'
-            data = prediction.read_bytes() if prediction.is_file() else None
-            yield task, f'saved-{job.name}', config, gold, data, None
+            data, info = saved_prediction(prediction)
+            yield (task, f'saved-{job.name}/{result.parent.name}', config,
+                   gold, data, info)
 
 
 def main():
@@ -213,8 +268,8 @@ def main():
         text=True,
         cwd=ROOT)
     try:
-        for task, label, config_bytes, gold_bytes, prediction, kind in inputs(
-                manifest, args):
+        for (task, label, config_bytes, gold_bytes, prediction,
+             metadata) in inputs(manifest, args):
             with tempfile.TemporaryDirectory() as temp:
                 root = Path(temp)
                 task_id = manifest['tasks'][task]['task_id']
@@ -223,12 +278,13 @@ def main():
                 gold = root / 'gold.csv'
                 gold.write_bytes(gold_bytes)
                 pred = root / 'prediction.csv'
-                if kind == 'directory':
-                    pred.mkdir()
-                elif kind == 'symlink':
-                    pred.symlink_to(gold)
-                elif prediction is not None:
-                    pred.write_bytes(prediction)
+                status = {
+                    'kind': 'missing' if prediction is None else 'file',
+                    'size': len(prediction or b''),
+                    **(metadata or {}),
+                    'task_id': task_id,
+                }
+                restore_prediction(pred, prediction, status)
                 try:
                     reference = evaluator.evaluate_task(
                         config=evaluator.load_task_config(config),
@@ -239,12 +295,6 @@ def main():
                             str(pred), '/output/prediction.csv')
                 except Exception as error:
                     reference = {'fatal': type(error).__name__}
-                status = {
-                    'task_id': task_id,
-                    'kind': kind
-                    or ('missing' if prediction is None else 'file'),
-                    'size': len(prediction or b'')
-                }
                 files = {
                     f'/opt/dataspace-evaluation/configs/{task_id}.json':
                     config_bytes,
@@ -293,6 +343,7 @@ def main():
     finally:
         process.stdin.close()
         process.wait(timeout=20)
+        process.stdout.close()
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(
             json.dumps(

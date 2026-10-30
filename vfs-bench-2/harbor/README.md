@@ -1641,8 +1641,8 @@ There are no services.
 python3 -I dataspace/setup.py   # the tasks' data, into state/dataspace/ (about 1.7 GB)
 uv run --project harbor python -I harbor/dataspace.py [--check] [task ...]
 # Only eleven tasks have committed oracle solutions.
-uv run --project harbor harbor run -c harbor/dataspace-oracle.yaml -a oracle -n 8 -o state/harbor/dataspace-monty --job-name oracle-final
-uv run --project harbor harbor run -c harbor/dataspace.yaml -a nop -n 8 -o state/harbor/dataspace-monty --job-name nop-final
+uv run --project harbor harbor run -c harbor/dataspace-oracle.yaml -a oracle -n 8 --no-delete -o state/harbor/dataspace-monty --job-name oracle-final
+uv run --project harbor harbor run -c harbor/dataspace.yaml -a nop -n 8 --no-delete -o state/harbor/dataspace-monty --job-name nop-final
 ```
 
 | Upstream | Here |
@@ -1694,6 +1694,11 @@ uv run --no-project --python 3.12 python -I harbor/audit_dataspace.py \
 # Unit tests need Node 24, built Mirage dependencies and CPython 3.12.
 VFSBENCH_REFERENCE_PYTHON=python3.12 node --test harbor/dataspace-monty.test.ts
 ```
+
+Saved-trial replay requires retained output mounts (`--no-delete`). It
+preserves rejected symlinks, non-regular paths and oversized files without
+reading their contents. Deleted workspaces are rejected as unavailable,
+instead of being mistaken for missing submissions.
 
 The reference VM still uses `verifier.copy` for the evaluator/config/gold
 and `verifier.omit` to exclude `/workspace`. Native grading freezes only
