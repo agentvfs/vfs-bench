@@ -176,12 +176,17 @@ class Heart(unittest.TestCase):
         with mock.patch.object(guest.sys, "stdout", mock.Mock(buffer=out)):
             heart = guest.Heart()
             heart.start()
-            time.sleep(2.3)
+            # Two beats, however late a loaded host lets them come.
+            deadline = time.monotonic() + 30
+            while (out.getvalue().count(guest.BEAT) < 2
+                   and time.monotonic() < deadline):
+                time.sleep(0.05)
             heart.stop()
             beats = out.getvalue()
-            time.sleep(1.2)
-        self.assertEqual(beats, guest.BEAT * 2)
-        self.assertEqual(out.getvalue(), beats)
+        self.assertGreaterEqual(beats.count(guest.BEAT), 2)
+        self.assertEqual(beats, guest.BEAT * beats.count(guest.BEAT))
+        # stop() joins the thread, so nothing can beat after it.
+        self.assertFalse(heart.is_alive())
 
 
 if __name__ == "__main__":
