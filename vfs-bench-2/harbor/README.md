@@ -2482,11 +2482,20 @@ and reworded app content with absent, accepting and rejecting judge responses.
 Each case matched the unchanged CPython daemon parser, final-turn collector and
 judge in both recorded-response replay and default-order local HTTP runs
 (7,146 comparisons, zero differences).
-These are synthetic event fixtures, not 460 full agent trajectories. Live Harbor
-oracle trials for search-0002, execution-0052 and ambiguity-0132 scored 1.0;
-matching no-op trials scored 0.0, with no exceptions. Tests also check prompt
-formatting, Unicode/path/date comparisons, VFS isolation, source drift, staging
-limits and a local HTTP judge. No paid model was used for validation.
+These synthetic cases complement the full Harbor oracle run recorded in
+`graders/gaia2/validation.json`: **460/460 unique tasks passed**, in four disjoint
+115-task batches with `-n 115`, no retries, no exceptions and no nonzero oracle
+exits. All 460 saved trial states and trajectories also matched the pinned
+CPython reference's binary reward. The run reached 115 workspace server
+processes alive at once; oracle and verifier phases overlapped, including
+19 oracles and 86 verifiers at one instant. Phase timings include staging and
+waits; separate process samples observed up to 76 verifier processes.
+
+The full oracle run made no LLM requests: every output matched directly.
+Earlier no-op trials for search-0002, execution-0052 and ambiguity-0132 scored
+0.0. Tests also check prompt formatting, Unicode/path/date comparisons, VFS
+isolation, source drift, staging limits and a local HTTP judge. No paid model
+or microVM reference run was used for this validation.
 
 ```sh
 uv run --project harbor python -I harbor/test_gaia2_verifier.py

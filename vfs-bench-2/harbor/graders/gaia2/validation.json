@@ -1,0 +1,110 @@
+{
+  "kind": "GAIA2 Harbor oracle concurrency validation",
+  "tested_commit": "d9e918aa1c7724770adee26e6ab1cfbdcb632fe8",
+  "platform": {
+    "os": "macOS",
+    "architecture": "arm64",
+    "cpu_count": 12,
+    "memory_gib": 32
+  },
+  "configuration": {
+    "environment": "vfsbench_harbor:MirageEnvironment",
+    "verifier": "vfsbench_harbor:MirageVerifier",
+    "agent": "oracle",
+    "batches": 4,
+    "tasks_per_batch": 115,
+    "n_concurrent_trials": 115,
+    "partition": "Round-robin over harbor/gaia2.yaml tasks: tasks[batch_index::4]",
+    "max_retries": 0,
+    "daemon_boot_limit": 12,
+    "command_template": "harbor run -y -c <batch-config.yaml> -a oracle -n 115 --verifier vfsbench_harbor:MirageVerifier --max-retries 0 --no-delete"
+  },
+  "coverage": {
+    "configured_tasks": 460,
+    "unique_completed_tasks": 460,
+    "duplicates": 0,
+    "missing": 0,
+    "reward_1": 460,
+    "exceptions": 0,
+    "nonzero_oracle_exits": 0,
+    "task_names_sha256": "769f201665a4e8a0fd15659cd6251166780bf85f5d95af6e08ad240357c236e0"
+  },
+  "batches": [
+    {
+      "batch": 1,
+      "tasks": 115,
+      "passed": 115,
+      "errors": 0,
+      "started_at": "2026-10-30T10:16:39.956725+00:00",
+      "finished_at": "2026-10-30T10:19:51.544264+00:00",
+      "elapsed_seconds": 191.588
+    },
+    {
+      "batch": 2,
+      "tasks": 115,
+      "passed": 115,
+      "errors": 0,
+      "started_at": "2026-10-30T10:19:51.551526+00:00",
+      "finished_at": "2026-10-30T10:23:55.485192+00:00",
+      "elapsed_seconds": 243.934
+    },
+    {
+      "batch": 3,
+      "tasks": 115,
+      "passed": 115,
+      "errors": 0,
+      "started_at": "2026-10-30T10:23:55.489237+00:00",
+      "finished_at": "2026-10-30T10:27:00.931897+00:00",
+      "elapsed_seconds": 185.443
+    },
+    {
+      "batch": 4,
+      "tasks": 115,
+      "passed": 115,
+      "errors": 0,
+      "started_at": "2026-10-30T10:27:00.935542+00:00",
+      "finished_at": "2026-10-30T10:31:31.371744+00:00",
+      "elapsed_seconds": 270.436
+    }
+  ],
+  "concurrency": {
+    "peak_overlapping_phases": {
+      "trial": 115,
+      "oracle": 47,
+      "verifier": 97
+    },
+    "oracle_and_verifier_overlap": true,
+    "peak_mixed_phase_concurrency": {
+      "total": 105,
+      "oracle": 19,
+      "verifier": 86
+    },
+    "sampled_workspace_server_processes": 115,
+    "sampled_verifier_processes": 76,
+    "sample_interval_seconds": 2,
+    "peak_sum_process_rss_mib": 21813.4,
+    "note": "Phase peaks include setup and waits within that phase; process counts are sampled. Sum of process RSS can count shared pages more than once."
+  },
+  "reference_parity": {
+    "actual_saved_trials": 460,
+    "matched": 460,
+    "differences": 0,
+    "reference": "Pinned CPython daemon parser, final-turn collector and judge, over saved service snapshots and actual trajectories",
+    "compared_fields": [
+      "binary reward"
+    ],
+    "reference_judge_calls": 1,
+    "native_judge_calls": 0,
+    "note": "The reference used its default sibling ordering and an in-process judge stub. Additional matching probes can differ with oracle ordering; no reference network calls were made."
+  },
+  "judge": {
+    "configured": "Local constant-response HTTP mock",
+    "requests": 0,
+    "paid_requests": 0,
+    "note": "All oracle outputs matched without consulting the configured mock judge."
+  },
+  "limitations": [
+    "Oracle trials validate integration; they are not model-agent benchmark results.",
+    "The preserved microVM reference was not run."
+  ]
+}
