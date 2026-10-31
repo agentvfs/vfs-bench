@@ -5,7 +5,7 @@ category = "operations"
 upstream = "zapier/AutomationBench@4a8e106 operations.contractor_badge_expiration (example 1339)"
 
 [verifier]
-# The rubric takes seconds; a hung microVM fails the trial soon, to be rerun.
+# The rubric takes seconds.
 timeout_sec = 120.0
 
 [agent]

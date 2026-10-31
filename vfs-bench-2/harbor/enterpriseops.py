@@ -19,9 +19,8 @@ each of its servers has a fake (``mocks/enterpriseops_<domain>/``):
   seeded from the row's seed (``gym_dbs.zip``), its tools a CLI
   (``harbor/tools.ts``) that calls as the row's user (``x-user-email``):
   the agent reaches the fake through that CLI alone, so neither another
-  tool, another user nor the SQL runner. Upstream's port reaches the fake
-  from the reference grader's VM only (``verifierPorts``). The trial's
-  clock starts at the task's id's time.
+  tool, another user nor the SQL runner. The trial's clock starts at the
+  task's id's time.
 - ``environment/kit/<service>.json``: each fake's fixture, the seed's path.
 - ``environment/tools.json``: the tools, by CLI.
 - ``tests/test.sh``, ``tests/grade.py`` (``enterpriseops_grade.py``),
@@ -247,9 +246,8 @@ def mirage_yaml(row: dict) -> str:
         "seed; its",
         "# selected tools are a CLI (harbor/tools.ts) that calls as the "
         "task's user, the",
-        "# agent's only way to it. Upstream's port is the reference grader's "
-        "alone, for",
-        "# the SQL runner. The trial's clock starts at the task id's time.",
+        "# agent's only way to it. The trial's clock starts at the task id's "
+        "time.",
         "fakes:",
     ]
     for cfg in row["gym_servers_config"]:
@@ -258,7 +256,6 @@ def mirage_yaml(row: dict) -> str:
             f"  {service(server)}:",
             f"    fixture: kit/{service(server)}.json",
             f"    epoch: '{epoch(row)}'",
-            f"    verifierPorts: [{servers()[server]['port']}]"
         ]
     lines += [
         "tools:", "  file: tools.json", f"  dispatches: {DISPATCHES}",

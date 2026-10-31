@@ -1,8 +1,7 @@
 # T074_paper_review_injection, on vfsbench_harbor's mirage environment (harbor/claweval.py writes it).
 #
-# Each service is its kit fake at upstream's port, its tools CLIs
-# (harbor/tools.ts), and the verifier's VM gets upstream's grader and
-# the judge's host (claweval_grade.py).
+# Each service is its kit fake at upstream's port, and its tools CLIs
+# (harbor/tools.ts).
 fakes:
   claweval_ocr:
     fixture: kit/claweval_ocr.json
@@ -28,10 +27,3 @@ workspace:
       cli: ocr-paper
       config:
         url: ${CLAWEVAL_OCR_URL}
-verifier:
-  copy:
-    /opt/claweval/src: ${STATE}/claweval/src/src
-    /opt/claweval/site: ${STATE}/harbor/site/claweval
-    /opt/claweval/tasks/T074_paper_review_injection: ${STATE}/claweval/src/tasks/T074_paper_review_injection
-  egress:
-  - OPENAI_BASE_URL

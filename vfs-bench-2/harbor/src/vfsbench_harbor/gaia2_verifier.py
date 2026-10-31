@@ -55,17 +55,6 @@ async def freeze(verifier, definition, stage, budget):
                 '/input/scenario.json': str(scenario_path)
             }
         }
-        if getattr(verifier, 'gaia2_judge_replay', None) is not None:
-            details = json.loads(b''.join(
-                budget.chunks(verifier.gaia2_judge_replay)))
-            if not isinstance(details.get('judge_calls'), list):
-                raise ValueError('GAIA2 parity requires recorded judge calls')
-            frozen['judgeReplay'] = details['judge_calls']
-            judgments = details.get('judgments', [])
-            if judgments:
-                state['oracle_order'] = [
-                    e['id'] for e in judgments[-1]['oracle_events']
-                ]
         budget.write_json(target, state)
         target.chmod(0o400)
         # Keep replay evidence after temporary staging and fake runs are

@@ -5,8 +5,7 @@
 # its clock frozen at the scenario's start; its commands are a CLI each
 # (tools.json, harbor/tools.ts). The Files app's drive is a mount, a copy
 # of its own each trial, which the apps with attachments reach too
-# (extras). The verifier's VM gets each run's SQLite (its
-# state and event log), the scenario and upstream's judge (gaia2_grade.py).
+# (extras).
 fakes:
   gaia2_calendar:
     fixture: kit/gaia2_calendar.json
@@ -69,9 +68,3 @@ workspace:
     shopping: {cli: shopping, config: {url: '${GAIA2_SHOPPING_URL}'}}
     cabs: {cli: cabs, config: {url: '${GAIA2_CABS_URL}'}}
     city: {cli: city, config: {url: '${GAIA2_CITY_URL}'}}
-verifier:
-  copy:
-    /opt/gaia2/site: ${STATE}/harbor/site/gaia2
-    /opt/gaia2/task: ${STATE}/gaia2/harbor/search-0290
-  egress: [OPENAI_BASE_URL]
-  omit: [/cloud-drive, /workspace]

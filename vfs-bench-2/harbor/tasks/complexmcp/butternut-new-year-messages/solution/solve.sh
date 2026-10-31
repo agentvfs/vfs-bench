@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# The pre-Harbor port's oracle (complexmcp/butternut-new-year-messages/tests/oracle.sh).
+# Ours, written by hand through the CLIs.
 # Upstream's reference trajectory (data.parquet row 46), with its ids read
 # from each response. The cart starts with items in it, which go first.
 light-shop get-cart-summary

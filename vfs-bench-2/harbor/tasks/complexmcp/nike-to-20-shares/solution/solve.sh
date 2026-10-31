@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# The pre-Harbor port's oracle (complexmcp/nike-to-20-shares/tests/oracle.sh).
+# Ours, written by hand through the CLIs.
 # Upstream's reference trajectory (data.parquet row 43), with the number of
 # shares to buy read from the portfolio.
 light-stock search-stocks --query Nike

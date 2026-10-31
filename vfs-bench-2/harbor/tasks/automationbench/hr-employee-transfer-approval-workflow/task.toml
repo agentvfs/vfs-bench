@@ -5,7 +5,7 @@ category = "hr"
 upstream = "zapier/AutomationBench@4a8e106 hr.employee_transfer_approval_workflow (example 5087)"
 
 [verifier]
-# The rubric takes seconds; a hung microVM fails the trial soon, to be rerun.
+# The rubric takes seconds.
 timeout_sec = 120.0
 
 [agent]

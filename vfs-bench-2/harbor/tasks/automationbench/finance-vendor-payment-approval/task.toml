@@ -5,7 +5,7 @@ category = "finance"
 upstream = "zapier/AutomationBench@4a8e106 finance.vendor_payment_approval (example 4009)"
 
 [verifier]
-# The rubric takes seconds; a hung microVM fails the trial soon, to be rerun.
+# The rubric takes seconds.
 timeout_sec = 120.0
 
 [agent]

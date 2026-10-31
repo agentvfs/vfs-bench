@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# The pre-Harbor port's oracle (complexmcp/remove-silent-classmates/tests/oracle.sh).
+# Ours, written by hand through the CLIs.
 # Upstream's reference trajectory (data.parquet row 8), with its ids read
 # from each response. A classmate goes when no message with them is from
 # 2024 or later.

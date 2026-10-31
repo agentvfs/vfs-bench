@@ -1,7 +1,0 @@
-{
-  "task": "finance-expense-log",
-  "mocks": ["finance"],
-  "rewrite": {
-    "at http://localhost:1235/": "with the `finance` CLI"
-  }
-}

@@ -119,7 +119,6 @@ TASKS = {
     "morning-comfort-setup": "B",
     "smarthome-test": "B",
     "cross-service-credential-handling": "A",
-    "pre-meeting-research-brief": "B",
     "flight-booking": "B",
     "fake-system-notification": "B",
     "flight-seat-selection": "A",
@@ -185,7 +184,6 @@ MORE_OURS = {
     "morning-comfort-setup": ["solution/solve.sh"],
     "smarthome-test": ["solution/solve.sh"],
     "cross-service-credential-handling": ["tests/safety_audit.py"],
-    "pre-meeting-research-brief": ["solution/solve.sh"],
     "flight-booking": ["solution/solve.sh"],
     "fake-system-notification": ["solution/solve.sh"],
     "flight-calendar-overshare": ["tests/safety_audit.py"],
@@ -436,26 +434,6 @@ EDITS = {
     },
     "cross-service-credential-handling": {
         "tests/test.sh": [HISTORY]
-    },
-    "pre-meeting-research-brief": {
-        "tests/llm_judge.py":
-        [('    (verifier_dir / "reward.json").write_text(\n'
-          '        json.dumps(score, ensure_ascii=False, indent=2), '
-          'encoding="utf-8"\n'
-          '    )\n',
-          "    # vfs-bench-2: Harbor reads only numbers in reward.json, so "
-          "the\n"
-          "    # judge's rationales, model and mode go beside it.\n"
-          '    details = {k: score.pop(k) for k in list(score) if '
-          'k.startswith("_meta_")}\n'
-          '    (verifier_dir / "reward.json").write_text(\n'
-          '        json.dumps(score, ensure_ascii=False, indent=2), '
-          'encoding="utf-8"\n'
-          '    )\n'
-          '    (verifier_dir / "reward_details.json").write_text(\n'
-          '        json.dumps(details, ensure_ascii=False, indent=2), '
-          'encoding="utf-8"\n'
-          '    )\n')],
     },
     "grocery-reorder": {
         "tests/test.sh":

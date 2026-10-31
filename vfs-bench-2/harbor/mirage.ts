@@ -1,15 +1,11 @@
 /**
- * The adapter of harbor/mocks.ts for a task that states its environment in
- * `environment/mirage.yaml`, in place of a Dockerfile: the tasks committed
- * under `harbor/tasks/`.
+ * The adapter of harbor/mocks.ts for a task's `environment/mirage.yaml`.
  *
  *     fakes:                     # kit fakes, shared by every trial of a job
  *       chat:
  *         fixture: fixtures/chat.json   # the run's seed, from environment/
  *         epoch: '2026-04-03T09:00:00Z' # the run's frozen clock
  *         ports: [5003]                 # localhost:<port> reaches the run
- *         verifierPorts: [8001]         # the same, for a verifier outside
- *                                       # the workspace alone (microsandbox.py)
  *         state: /opt/mock/data/chat/chat.sqlite  # where its SQLite is read
  *         faults: [{method: POST, route: /api/stickers, status: 500}]
  *                                       # kit fault plans armed on the run
@@ -29,10 +25,6 @@
  *       file: tools.json         # in environment/; `clis:` installs each
  *       dispatches: /var/lib/mock-data/tools/dispatches.jsonl
  *                                # where the verifier reads their calls
- *     verifier:                  # for MicrosandboxVerifier's VM
- *       copy: {/opt/claweval: '${STATE}/claweval/src'}
- *                                # host directories it gets, by VM path
- *       egress: [OPENAI_BASE_URL]  # variables whose URLs' hosts it reaches
  *
  * The fakes' epoch (one for all) is the run's, which the workspace's clock
  * starts at too (clock.ts).
@@ -42,8 +34,7 @@
  * `${<SERVICE>_URL}` in `workspace` is that service's run URL, and
  * `${RUN_DIR}` the trial's run dir, under which a mount the task adds keeps
  * its files (`/home/node: {vfs: disk, config: {root: '${RUN_DIR}/home'}}`).
- * `${STATE}` in `verifier.copy` is vfs-bench-2's `state/`, where setup
- * downloads upstream.
+ * `${STATE}` is vfs-bench-2's `state/`, where setup downloads upstream.
  */
 import { existsSync, readFileSync } from 'node:fs'
 import { basename, join, relative } from 'node:path'
@@ -67,7 +58,6 @@ interface FakeBlock {
   fixture: string
   epoch?: string
   ports?: number[]
-  verifierPorts?: number[]
   state?: string
   /** Armed by the environment, not here (fakes.py). */
   faults?: unknown[]
@@ -81,13 +71,6 @@ interface MirageYaml {
   workdir?: string
   workspace?: Record<string, unknown>
   tools?: { file: string; dispatches: string }
-  verifier?: Verifier
-}
-
-/** What a verifier outside the workspace gets besides the trial's files (microsandbox.py). */
-export interface Verifier {
-  copy?: Record<string, string>
-  egress?: string[]
 }
 
 /**
@@ -96,7 +79,7 @@ export interface Verifier {
  */
 type CopyValue = string[] | string | { src: string; entries?: string[] }[]
 
-const KEYS = new Set(['fakes', 'env', 'copy', 'run', 'workdir', 'workspace', 'tools', 'verifier'])
+const KEYS = new Set(['fakes', 'env', 'copy', 'run', 'workdir', 'workspace', 'tools'])
 
 /** The task's mirage.yaml, if it has one. */
 export function file(taskDir: string): string | undefined {
@@ -144,18 +127,14 @@ export function plan(taskDir: string, run: Run, external: Record<string, Externa
   if (unknown.length > 0) throw new Error(`${path}: unknown keys ${unknown.join(', ')}`)
   const environmentDir = join(taskDir, 'environment')
   const routes: Record<number, string> = {}
-  const verifierRoutes: Record<number, string> = {}
   const state: Record<string, string> = {}
   for (const [service, fake] of Object.entries(spec.fakes)) {
     const run = external[service]
     if (run === undefined) throw new Error(`${path}: the environment started no '${service}' fake`)
-    for (const [port, only] of [
-      ...(fake.ports ?? []).map((p) => [p, false] as const),
-      ...(fake.verifierPorts ?? []).map((p) => [p, true] as const),
-    ]) {
-      const taken = routes[port] ?? verifierRoutes[port]
+    for (const port of fake.ports ?? []) {
+      const taken = routes[port]
       if (taken !== undefined) throw new Error(`${path}: port ${port} is both ${taken} and ${service}`)
-      ;(only ? verifierRoutes : routes)[port] = service
+      routes[port] = service
     }
     if (fake.state !== undefined) state[fake.state] = run.db
   }
@@ -172,7 +151,6 @@ export function plan(taskDir: string, run: Run, external: Record<string, Externa
     name: spec.env?.TASK_NAME ?? basename(taskDir),
     fakes: [],
     routes,
-    verifierRoutes,
     state,
     env: spec.env ?? {},
     copies,
@@ -182,7 +160,6 @@ export function plan(taskDir: string, run: Run, external: Record<string, Externa
     ...(spec.tools === undefined
       ? {}
       : { tools: { file: join(environmentDir, spec.tools.file), dispatches: spec.tools.dispatches } }),
-    ...(spec.verifier === undefined ? {} : { verifier: interpolate(spec.verifier, vars, path) }),
     ...(epochs.length === 0 ? {} : { epoch: epochs[0] }),
   }
 }

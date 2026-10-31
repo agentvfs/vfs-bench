@@ -1,6 +1,6 @@
 """Check that trials run side by side cannot reach each other.
 
-    uv run --project harbor python -I harbor/isolation.py [--out <dir>] [--msb]
+    uv run --project harbor python -I harbor/isolation.py [--out <dir>]
 
 Starts nine trials at once from the committed tasks, each with its own
 daemon, on kit fakes they share: chat-sticker-engagement twice (A and B,
@@ -17,27 +17,19 @@ shared fakes' real ports, and not another run's session; and that each
 run's fault fires once, for that run alone. A trial's own commands keep
 apart too: several at once each see its state, and one canceled stops.
 
-With ``--msb``, it then boots the verifier microVMs of A to E at once, as
-``MicrosandboxVerifier`` boots them, and checks from inside them that each
-sees only its own trial's files and state, reaches its own runs through its
-upstream ports, and reaches nothing else: not another trial's run or
-proxy, not the shared fakes' real ports, no other host port and not the
-internet. Exits 1 if any check fails.
+Exits 1 if any check fails.
 """
 import argparse
 import asyncio
-import contextlib
 import json
 import shlex
-import subprocess
 import sys
 from pathlib import Path
 from urllib.parse import urlsplit
 
 from harbor.models.task.task import Task
 from harbor.models.trial.paths import TrialPaths
-from vfsbench_harbor import MicrosandboxVerifier, MirageEnvironment
-from vfsbench_harbor.microsandbox import ATTEMPTS, Hung, Sandbox
+from vfsbench_harbor import MirageEnvironment
 
 ROOT = Path(__file__).resolve().parents[1]
 TASKS = ROOT / "harbor/tasks/liveclawbench"
@@ -133,9 +125,6 @@ def origin(url: str) -> str:
 async def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--out", type=Path, default=OUT)
-    parser.add_argument("--msb",
-                        action="store_true",
-                        help="also check the verifiers' microVMs")
     args = parser.parse_args()
     out = args.out.resolve()
     a, b = (trial(out, "chat-sticker-engagement", n) for n in ("a", "b"))
@@ -369,190 +358,11 @@ async def main() -> int:
                     refused)
         await check(i, "cannot reach the shared finance fake outside its run",
                     f"curl -sS {finance}/api/transactions", refused)
-        if args.msb:
-            await microvms(trials[:5], real, runs, report)
     finally:
         await asyncio.gather(*(t.stop(delete=True) for t in trials))
     print(
         f"{'all checks passed' if failed == 0 else f'{failed} checks failed'}")
     return 1 if failed else 0
-
-
-async def microvms(trials, real, runs, report) -> None:
-    """Boot every trial's verifier VM at once, as MicrosandboxVerifier
-    boots it, and check from inside each what it reaches."""
-    a, b, c, d, e = trials
-    of = dict(zip("abcde", trials))
-    logs: dict[str, list[str]] = {t.session_id: [] for t in trials}
-    stacks: dict[str, contextlib.AsyncExitStack] = {}
-    booted: list[str] = []
-
-    async def boot(who: str) -> Sandbox:
-        t = of[who]
-        verifier = MicrosandboxVerifier(task=Task(t.environment_dir.parent),
-                                        trial_paths=t.trial_paths,
-                                        environment=t)
-        for _ in range(ATTEMPTS):
-            stack = contextlib.AsyncExitStack()
-            try:
-                vm = await stack.enter_async_context(
-                    verifier.sandbox("true", logs[t.session_id], []))
-            except Hung as e:
-                print(f"note [{who} vm] {e}; booting another", flush=True)
-                continue
-            stacks[who] = stack
-            booted.append(vm.name)
-            return vm
-        raise RuntimeError(f"msb hung on all {ATTEMPTS} boots of {who}")
-
-    try:
-        vms = dict(zip("abcde", await asyncio.gather(*map(boot, "abcde"))))
-        names = [vm.name for vm in vms.values()]
-        report(
-            len(set(names)) == 5, "a-e", "boot five VMs at once, each its "
-            "own", "  ".join(names))
-
-        async def check(who: str, what: str, line: str, ok) -> str:
-            # A VM msb leaves a command unrun in is booted again, as the
-            # verifier does.
-            for _ in range(ATTEMPTS):
-                try:
-                    code, answer, err = await vms[who].guest(line)
-                    with answer:
-                        out = answer.read()
-                    break
-                except Hung as e:
-                    print(f"note [{who} vm] {e}; booting another", flush=True)
-                    await stacks.pop(who).aclose()
-                    vms[who] = await boot(who)
-            else:
-                raise RuntimeError(f"msb hung on all {ATTEMPTS} tries")
-            text = (out + err).decode(errors='replace').strip()
-            shown = line.replace(f"python3 -c {shlex.quote(PROBE)}", "probe")
-            report(ok(code, text), f"{who} vm", what,
-                   f"$ {shown[-120:]}\n    {text[:200]}")
-            return text
-
-        ok = lambda code, out: code == 0  # noqa: E731
-        status = lambda n: lambda code, out: out.startswith(f"{n} ")  # noqa
-        unreachable = lambda code, out: out.startswith("error ")  # noqa
-        chat = urlsplit(real["a"]["5003"])
-        gws = urlsplit(runs["d"][0])
-        daemon = urlsplit(str(a._client.base_url))
-        await check(
-            "a", "runs real CPython, with time zones",
-            "python3 -c \"import sys, zoneinfo; "
-            "print(sys.implementation.name, "
-            "zoneinfo.ZoneInfo('Asia/Shanghai'))\"",
-            lambda code, out: out == "cpython Asia/Shanghai")
-        await check("a", "sees its pack in its copy of the data mount", PACKS,
-                    lambda code, out: out == "1")
-        await check("b", "does not see A's pack in its copy", PACKS,
-                    lambda code, out: out == "0")
-        await check(
-            "a", "reaches its own run at localhost:5003",
-            probe("localhost", 5003, "/api/stickers"),
-            lambda code, out: out.startswith("200 ") and '"pack_id":1' in out)
-        await check(
-            "b", "reaches its own run, without A's pack",
-            probe("localhost", 5003, "/api/stickers"), lambda code, out: out.
-            startswith("200 ") and '"pack_id":1' not in out)
-        b_run = urlsplit(real["b"]["5003"]).path
-        await check("a", "cannot reach B's run by path through its own URL",
-                    probe("localhost", 5003, f"{b_run}/api/stickers"),
-                    status(404))
-        await check("a", "cannot climb out of its run with dot segments",
-                    probe("localhost", 5003, "/../../_run/b/api/stickers"),
-                    status(404))
-        await check(
-            "a", "cannot climb out with encoded dot segments",
-            probe("localhost", 5003, "/%2e%2e/%2E%2E/_run/b/api"
-                  "/stickers"), status(404))
-        # A URL parser reads a backslash in an http path as a slash.
-        await check("a", "cannot climb out with backslashes",
-                    probe("localhost", 5003, "/..\\..\\_run/b/api/stickers"),
-                    status(404))
-        await check("a", "cannot reset its run",
-                    probe("localhost", 5003, "/reset", "POST"), status(404))
-        await check("a", "cannot reset it with an escaped path",
-                    probe("localhost", 5003, "/%72eset", "POST"), status(404))
-        await check("a", "cannot drop B's run with an escaped kit path",
-                    probe("localhost", 5003, "/%5fkit/runs/b", "DELETE"),
-                    status(404))
-        await check("a", "cannot reset it with a doubled slash",
-                    probe("localhost", 5003, "//reset", "POST"), status(404))
-        await check("a", "cannot reach the kit's endpoints",
-                    probe("localhost", 5003, "/_kit/health"), status(404))
-        await check("a", "reaches its own proxy on the host directly",
-                    probe(HOST, vms["a"].ports[5003], "/health"), status(200))
-        await check("a", "cannot reach B's proxy on the host",
-                    probe(HOST, vms["b"].ports[5003], "/api/stickers"),
-                    unreachable)
-        await check("a", "cannot reach C's proxy on the host",
-                    probe(HOST, vms["c"].ports[3000], "/health"), unreachable)
-        await check("a", "cannot reach the shared chat fake's real port",
-                    probe(HOST, chat.port, f"{b_run}/api/stickers"),
-                    unreachable)
-        await check("a", "cannot reach the shared gws fake's real port",
-                    probe(HOST, gws.port, "/health"), unreachable)
-        await check("a", "cannot reach its Mirage daemon's port",
-                    probe(HOST, daemon.port, "/v1/health"), unreachable)
-        await check("a", "cannot reach the fake's port on its own loopback",
-                    probe("localhost", chat.port, "/health"), unreachable)
-        await check("a", "cannot reach the internet by name",
-                    probe("example.com", 80), unreachable)
-        await check("a", "cannot reach the internet by address",
-                    probe("1.1.1.1", 80), unreachable)
-        await check("c", "reaches its own weather run at localhost:3000",
-                    probe("localhost", 3000, "/health"), status(200))
-        await check("c", "has no chat port", probe("localhost", 5003),
-                    unreachable)
-        await check("d", "sees its mail in its copy of the gws data", MAILS,
-                    lambda code, out: out == "1")
-        await check("e", "does not see D's mail in its copy", MAILS,
-                    lambda code, out: out == "0")
-        await check("d", "with no routes, cannot reach the host",
-                    probe(HOST, vms["a"].ports[5003], "/health"), unreachable)
-        await check("d", "with no routes, cannot reach the internet",
-                    probe("1.1.1.1", 80), unreachable)
-
-        # Files: each VM has copies of its own trial's, and nothing else.
-        written = ("/workspace/iso-vm", "/tmp/iso-vm", "/logs/verifier/iso-vm")
-        await check(
-            "a", "writes into its own copies, and reads them back",
-            " && ".join(f"echo a > {f}" for f in written) +
-            f" && cat {' '.join(written)} | tr -d '\\n'",
-            lambda code, out: code == 0 and out == "aaa")
-        await check("b", "does not see A's writes, at the same time",
-                    " && ".join(f"test ! -e {f}" for f in written), ok)
-        on_host = [
-            a._run_dir / "workspace/iso-vm", a._run_dir / "tmp/iso-vm",
-            a._run_dir / "logs/verifier/iso-vm"
-        ]
-        report(not any(f.exists() for f in on_host), "a vm",
-               "its writes do not reach the trial's files on the host",
-               str(on_host[0]))
-        await check("a", "cannot see its trial's run directory",
-                    f"ls {shlex.quote(str(a._run_dir))}",
-                    lambda code, out: code != 0)
-        await check("a", "cannot see B's run directory",
-                    f"ls {shlex.quote(str(b._run_dir))}",
-                    lambda code, out: code != 0)
-        await check("a", "has its trial's /workspace and /logs",
-                    "test -d /workspace/environment && test -d /logs/agent",
-                    ok)
-    finally:
-        await asyncio.gather(*(s.aclose() for s in stacks.values()))
-    # Every VM booted, a replacement for a hung one included.
-    listed = subprocess.run([vms["a"].msb, "ls"],
-                            capture_output=True,
-                            text=True,
-                            stdin=subprocess.DEVNULL)
-    report(
-        listed.returncode == 0 and not any(name in listed.stdout
-                                           for name in booted), "a-e",
-        "every VM is removed afterwards",
-        (listed.stdout + listed.stderr).strip()[:200])
 
 
 if __name__ == "__main__":

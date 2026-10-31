@@ -5,7 +5,7 @@ category = "operations"
 upstream = "zapier/AutomationBench@4a8e106 operations.salesforce_escalated_customer (example 1244)"
 
 [verifier]
-# The rubric takes seconds; a hung microVM fails the trial soon, to be rerun.
+# The rubric takes seconds.
 timeout_sec = 120.0
 
 [agent]

@@ -1,16 +1,12 @@
 """A Harbor environment served from a Mirage workspace instead of a container.
 
 ``harbor run --env vfsbench_harbor:MirageEnvironment`` builds nothing. A
-task states its environment in one of two ways:
+task states its environment in ``environment/mirage.yaml``: its services
+are kit fakes the whole job shares (``fakes.py``). For each trial,
+``start()`` seeds a run of its own on each fake, from the task's fixture,
+then runs ``harbor/mocks.ts`` to lay out its workspace.
 
-- ``environment/mirage.yaml`` (the tasks under ``harbor/tasks/``): its
-  services are kit fakes the whole job shares (``fakes.py``). For each
-  trial, ``start()`` seeds a run of its own on each fake, from the task's
-  fixture, then runs ``harbor/mocks.ts`` to lay out its workspace.
-- ``environment/Dockerfile`` (an upstream LiveClawBench task): ``mocks.ts``
-  starts the trial's own copy of upstream's mocks.
-
-Either way the trial then gets a Mirage daemon of its own, and its
+The trial then gets a Mirage daemon of its own, and its
 workspace is created through the daemon's HTTP API. ``exec`` is the
 daemon's ``/shell``. Every path Harbor uses is a disk mount, so uploads and
 downloads are copies into and out of the mounts' host directories.
@@ -61,9 +57,6 @@ PRELOAD = HARBOR / "preload.ts"
 DAEMON = ROOT / "submodule/mirage/typescript/packages/server/src/bin/daemon.ts"
 CLAWEVAL_DAEMON = HARBOR / "daemon.ts"
 
-# The task image's base, which runs LiveClawBench's mocks.
-BASE = re.compile(r"FROM\s+liveclawbench-[a-z0-9-]+-base(:\S+)?",
-                  re.IGNORECASE)
 # The model's credentials stay with Harbor; neither the mocks nor the
 # workspace gets them.
 MODEL_ENV = re.compile(r".*_API_KEY|OPENAI_BASE_URL|OPENAI_API_BASE")
@@ -166,10 +159,8 @@ class MirageEnvironment(BaseEnvironment):
         self._client: httpx.AsyncClient | None = None
         self._workspace_id = ""
         self._mounts: dict[str, dict[str, str]] = {}
-        self._verifier: dict = {}
         self._state: list[tuple[Path, Path]] = []
         self._routes: dict[str, str] = {}
-        self._verifier_routes: dict[str, str] = {}
         self._env: dict[str, str] = {}
         self._runs: list[fakes.Run] = []
         self._url = ""
@@ -210,30 +201,10 @@ class MirageEnvironment(BaseEnvironment):
         return self.environment_dir / "mirage.yaml"
 
     def _validate_definition(self):
-        if self._mirage_yaml.is_file():
-            if self.task_env_config.docker_image:
-                raise ValueError("a mirage.yaml task names no image")
-            return
-        dockerfile = self.environment_dir / "Dockerfile"
-        if not dockerfile.is_file():
-            raise FileNotFoundError(
-                f"{dockerfile} not found: the mirage environment runs a task "
-                "with an environment/mirage.yaml, or a LiveClawBench task, "
-                "whose environment/Dockerfile is FROM "
-                "liveclawbench-<task>-base")
-        lines = [
-            line.strip() for line in dockerfile.read_text().splitlines()
-            if line.strip() and not line.strip().startswith("#")
-        ]
-        if not lines or BASE.fullmatch(lines[0]) is None:
-            first = lines[0] if lines else "(empty)"
-            raise ValueError(
-                f"{dockerfile} is not FROM liveclawbench-<task>-base, so the "
-                f"mirage environment cannot run it (first line: {first!r})")
-        if self.task_env_config.docker_image or (
-                self.environment_dir / "docker-compose.yaml").exists():
-            raise ValueError("the mirage environment runs a Dockerfile only, "
-                             "not an image or Compose")
+        if not self._mirage_yaml.is_file():
+            raise FileNotFoundError(f"{self._mirage_yaml} not found")
+        if self.task_env_config.docker_image:
+            raise ValueError("a mirage.yaml task names no image")
 
     def _host_env(self) -> dict[str, str]:
         env = {
@@ -406,10 +377,9 @@ class MirageEnvironment(BaseEnvironment):
                 "and reaches only its mocks",
                 self.environment_name,
             )
-        runs = await self._open_runs() if self._mirage_yaml.is_file() else {}
+        runs = await self._open_runs()
         plan = await self._plan(runs)
         self._mounts = plan["mounts"]
-        self._verifier = plan.get("verifier") or {}
         if plan.get("epoch"):
             self._epoch = int(
                 datetime.fromisoformat(plan["epoch"].replace(
@@ -426,8 +396,6 @@ class MirageEnvironment(BaseEnvironment):
         self._env = dict(plan["config"].get("env") or {})
         routes = {} if self._network_disabled else plan["routes"]
         self._routes = dict(routes)
-        # Never the daemon's: the agent does not reach these.
-        self._verifier_routes = dict(plan.get("verifierRoutes") or {})
         # A mount or CLI reaches its service at the trial's run directly,
         # so these stay reachable with the network off.
         allow = plan.get("allow", [])
@@ -445,12 +413,12 @@ class MirageEnvironment(BaseEnvironment):
         if reply.status_code >= 300:
             raise RuntimeError("creating the workspace failed "
                                f"({reply.status_code}): {reply.text}")
-        # The Dockerfile's RUN lines, as its build would run them.
+        # mirage.yaml's `run` lines, as a build would run them.
         for step in plan["run"]:
             done = await self.exec(step["line"], cwd=step["cwd"])
             if done.return_code != 0:
                 raise RuntimeError(
-                    f"the Dockerfile's RUN {step['line']!r} exited "
+                    f"mirage.yaml's run {step['line']!r} exited "
                     f"{done.return_code} in the workspace:\n"
                     f"{done.stderr or done.stdout}")
 
@@ -682,19 +650,6 @@ class MirageEnvironment(BaseEnvironment):
         return {int(port): url for port, url in self._routes.items()}
 
     @property
-    def verifier_routes(self) -> dict[int, str]:
-        """The routes a verifier outside the workspace reaches: ``routes``,
-        and the ports a task gives its verifier alone (mirage.yaml's
-        ``verifierPorts``), which the agent never reaches."""
-        return {
-            **self.routes,
-            **{
-                int(port): url
-                for port, url in self._verifier_routes.items()
-            }
-        }
-
-    @property
     def container_env(self) -> dict[str, str]:
         """The environment every command sees, as the container's ``ENV``."""
         return dict(self._env)
@@ -726,13 +681,6 @@ class MirageEnvironment(BaseEnvironment):
     def mcp_url(self) -> str:
         """The workspace's MCP endpoint on its daemon (streamable HTTP)."""
         return f"{self._url}/v1/workspaces/{self._workspace_id}/mcp"
-
-    @property
-    def verifier(self) -> dict:
-        """What the task gives a verifier outside the workspace besides its
-        files (mirage.ts's ``Verifier``): host directories to copy in, by VM
-        path, and the variables whose URLs' hosts it reaches."""
-        return self._verifier
 
     @property
     def workdir(self) -> str:

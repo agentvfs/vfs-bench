@@ -1,8 +1,7 @@
 # T156_onsite_support_dispatch, on vfsbench_harbor's mirage environment (harbor/claweval.py writes it).
 #
-# Each service is its kit fake at upstream's port, its tools CLIs
-# (harbor/tools.ts), and the verifier's VM gets upstream's grader and
-# the judge's host (claweval_grade.py).
+# Each service is its kit fake at upstream's port, and its tools CLIs
+# (harbor/tools.ts).
 #
 # Gmail and calendar are Mirage's gws fake: the /gmail and /calendar
 # mounts and the gws CLI, at this trial's run of it, with upstream's
@@ -83,11 +82,3 @@ workspace:
       config:
         accessToken: gws-integ-token
         apiBase: ${GWS_URL}
-verifier:
-  copy:
-    /opt/claweval/src: ${STATE}/claweval/src/src
-    /opt/claweval/site: ${STATE}/harbor/site/claweval
-    /opt/claweval/tasks/T156_onsite_support_dispatch: ${STATE}/claweval/src/tasks/T156_onsite_support_dispatch
-    /opt/claweval/tasks/T155zh_onsite_support_dispatch: ${STATE}/claweval/src/tasks/T155zh_onsite_support_dispatch
-  egress:
-  - OPENAI_BASE_URL

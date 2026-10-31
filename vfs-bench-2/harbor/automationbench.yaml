@@ -1,6 +1,5 @@
 # All 600 tasks: Mirage agent + separate Mirage VFS/Monty verifier.
 # Generate fixtures with harbor/automationbench.py first.
-# The unchanged VM reference config is automationbench-msb.yaml.
 environment:
   import_path: vfsbench_harbor:MirageEnvironment
 verifier:

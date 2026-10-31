@@ -13,7 +13,6 @@ from harbor.models.trial.paths import TrialPaths
 from harbor.models.verifier.result import VerifierResult
 from vfsbench_harbor import MirageEnvironment, MirageVerifier
 from vfsbench_harbor.environment import HARBOR
-from vfsbench_harbor.parity import MirageParityVerifier
 
 
 class ComplexMCPVerifierTests(unittest.IsolatedAsyncioTestCase):
@@ -122,34 +121,6 @@ class ComplexMCPVerifierTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.requests, [])
         await self.client.aclose()
 
-    async def test_parity_uses_reference_and_compares_counts(self):
-        rewards = {'reward': 1, 'total': 2, 'recall': 2, 'misbehave': 0}
-        verifier = MirageParityVerifier(task=self.task,
-                                        environment=self.env,
-                                        trial_paths=self.paths)
-        reference = AsyncMock()
-        reference.verify.return_value = VerifierResult(rewards=rewards)
-        native = {
-            'score': 1,
-            'rewards': rewards,
-            'checks': rewards,
-            'timings': {}
-        }
-        with (
-                patch.object(verifier, '_reference', return_value=reference) as
-                selected,
-                patch.object(MirageVerifier, 'evaluate',
-                             AsyncMock(return_value=native)) as evaluate,
-        ):
-            result = await verifier.verify()
-        selected.assert_called_once_with('microsandbox')
-        evaluate.assert_awaited_once_with(refresh=False)
-        self.assertEqual(result.rewards, rewards)
-        self.assertEqual(
-            json.loads((self.paths.verifier_dir /
-                        'mirage_parity.json').read_text())['status'],
-            'matched')
-        await self.client.aclose()
 
 
 if __name__ == '__main__':

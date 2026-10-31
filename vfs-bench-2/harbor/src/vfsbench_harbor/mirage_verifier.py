@@ -229,7 +229,7 @@ class MirageVerifier(Verifier):
                        self.trial_paths.reward_json_path):
             reward.unlink(missing_ok=True)
         started = time.monotonic()
-        result = await self.evaluate(refresh=True)
+        result = await self.evaluate()
         score = result.get("score")
         if (type(score) not in (float, int) or not math.isfinite(score)
                 or not 0 <= score <= 1):
@@ -258,24 +258,17 @@ class MirageVerifier(Verifier):
                 json.dumps(value, indent=2) + "\n")
         return VerifierResult(rewards=rewards)
 
-    async def evaluate(self, *, refresh: bool) -> dict:
-        """Evaluate staged state without changing Harbor's reference outputs.
-
-        Parity mode passes refresh=False: the reference verifier's final exec
-        already refreshed the state views its Python grader read.
-        Refreshing again could compare two different states.
-        """
+    async def evaluate(self) -> dict:
         async with asyncio.timeout(self.task.config.verifier.timeout_sec):
-            return await self._evaluate(refresh=refresh)
+            return await self._evaluate()
 
-    async def _evaluate(self, *, refresh: bool) -> dict:
+    async def _evaluate(self) -> dict:
         env = self.environment
         assert isinstance(env, MirageEnvironment)
         started = time.monotonic()
         task, definition = self._definition()
         definition, verifier_env = self._effective_inputs(definition)
-        if refresh:
-            await env.refresh_verifier_files()
+        await env.refresh_verifier_files()
         with tempfile.TemporaryDirectory(prefix="vfsbench-verify-") as temp:
             stage = Path(temp)
             frozen = await self.freeze(definition, stage)

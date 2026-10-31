@@ -4,9 +4,7 @@
 # No services. The task's context is upstream's, from state/ (run
 # dataspace/setup.py), mounted read-only at /workspace in place of the
 # trial's own; the answer goes to /output/prediction.csv, as upstream's
-# harness lays them out. The gold CSV, the task's frozen config and
-# upstream's evaluator reach the verifier's VM alone (MicrosandboxVerifier),
-# which does not get the context (`omit`): it reads only /output.
+# harness lays them out.
 fakes: {}
 copy:
   /opt/dataspace: workbench/
@@ -26,9 +24,3 @@ workspace:
       vfs: disk
       mode: read
       config: {root: '${RUN_DIR}/opt/dataspace'}
-verifier:
-  omit: [/workspace]
-  copy:
-    /opt/dataspace-evaluation/evaluator: '${STATE}/dataspace/evaluation'
-    /opt/dataspace-evaluation/configs: '${STATE}/dataspace/benchmark/evaluation/configs'
-    /opt/dataspace-evaluation/gold: '${STATE}/dataspace/benchmark/output/task_337'

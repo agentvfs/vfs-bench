@@ -1,8 +1,7 @@
 # T162_automation_failure_recovery, on vfsbench_harbor's mirage environment (harbor/claweval.py writes it).
 #
-# Each service is its kit fake at upstream's port, its tools CLIs
-# (harbor/tools.ts), and the verifier's VM gets upstream's grader and
-# the judge's host (claweval_grade.py).
+# Each service is its kit fake at upstream's port, and its tools CLIs
+# (harbor/tools.ts).
 fakes:
   claweval_scheduler:
     fixture: kit/claweval_scheduler.json
@@ -62,11 +61,3 @@ workspace:
       cli: kb
       config:
         url: ${CLAWEVAL_KB_URL}
-verifier:
-  copy:
-    /opt/claweval/src: ${STATE}/claweval/src/src
-    /opt/claweval/site: ${STATE}/harbor/site/claweval
-    /opt/claweval/tasks/T162_automation_failure_recovery: ${STATE}/claweval/src/tasks/T162_automation_failure_recovery
-    /opt/claweval/tasks/T161zh_automation_failure_recovery: ${STATE}/claweval/src/tasks/T161zh_automation_failure_recovery
-  egress:
-  - OPENAI_BASE_URL

@@ -4,11 +4,9 @@
  *
  *     node harbor/mocks.ts --task <task dir> --run <run dir> [--fakes <json>]
  *
- * An adapter reads the task directory into a `Plan`: `mirage.ts` a task
- * with an `environment/mirage.yaml` (the tasks under harbor/tasks/), and
- * `liveclawbench.ts` an upstream task's Dockerfile. This starts the plan's
- * own fakes with harness/fakes.ts, each on a free port, fills the run's
- * directories, and writes `<run>/plan.json`: the Mirage workspace config to
+ * `mirage.ts` reads the task's `environment/mirage.yaml` into a `Plan`.
+ * This starts the plan's own fakes with harness/fakes.ts, each on a free
+ * port, fills the run's directories, and writes `<run>/plan.json`: the Mirage workspace config to
  * create, each mount's host directory, the mocks' state files, the routes
  * from upstream's ports to the mocks and the `RUN` lines. It prints
  * `PLAN=<path>` once the mocks are listening, as a fake prints its URL, and
@@ -29,9 +27,7 @@ import { type FakeSpec, start } from '../harness/fakes.ts'
 import { STATE } from '../harness/paths.ts'
 import { Run } from '../harness/runs.ts'
 import { type Copy, copyInto } from './copies.ts'
-import * as liveclawbench from './liveclawbench.ts'
 import * as mirage from './mirage.ts'
-import type { Verifier } from './mirage.ts'
 
 /** What a task's environment needs, as an adapter reads it from the task. */
 export interface Plan {
@@ -40,20 +36,14 @@ export interface Plan {
   fakes: FakeSpec[]
   /** Each port the task reaches a fake at on localhost, and the fake's name. */
   routes: Record<number, string>
-  /**
-   * Each port a verifier outside the workspace (microsandbox.py) reaches a
-   * fake at besides `routes`, and the fake's name: one the agent must not
-   * reach, such as a fake's SQL runner.
-   */
-  verifierRoutes?: Record<number, string>
   /** Each file a fake keeps its state in, by the workspace path the task reads it at. */
   state: Record<string, string>
   /** The environment every command sees, as the container's. */
   env: Record<string, string>
-  /** Host paths copied into the workspace, in the Dockerfile's order (copies.ts). */
+  /** Host paths copied into the workspace, in mirage.yaml's order (copies.ts). */
   copies: Copy[]
   /**
-   * The Dockerfile's `RUN` lines, each with the directory it runs in, which
+   * mirage.yaml's `run` lines, each with the directory it runs in, which
    * run in the workspace once it opens, as a build's would.
    */
   run: { cwd: string; line: string }[]
@@ -66,8 +56,6 @@ export interface Plan {
    * path the verifier reads their dispatch log at.
    */
   tools?: { file: string; dispatches: string }
-  /** What a verifier outside the workspace gets besides the trial's files. */
-  verifier?: Verifier
   /** The run's epoch, which the workspace's clock starts at (clock.ts). */
   epoch?: string
 }
@@ -119,7 +107,7 @@ async function main(): Promise<void> {
   const run = new Run(basename(runDir), runDir)
   const task = resolve(values.task)
   const external = JSON.parse(values.fakes ?? '{}') as Record<string, mirage.External>
-  const plan = mirage.file(task) === undefined ? liveclawbench.plan(task, run) : mirage.plan(task, run, external)
+  const plan = mirage.plan(task, run, external)
 
   // Stop the fakes and keep their logs, once, however the run ends.
   let stopping: Promise<void> | undefined
@@ -203,19 +191,12 @@ async function prepare(plan: Plan, run: Run, external: Record<string, mirage.Ext
         routes: Object.fromEntries(
           Object.entries(plan.routes).map(([port, name]) => [port, run.fakes.get(name)?.url ?? external[name]!.url]),
         ),
-        verifierRoutes: Object.fromEntries(
-          Object.entries(plan.verifierRoutes ?? {}).map(([port, name]) => [
-            port,
-            run.fakes.get(name)?.url ?? external[name]!.url,
-          ]),
-        ),
         // The shared fakes' runs, which this trial's mounts and CLIs reach
         // directly; nothing else on those ports is reachable.
         allow: Object.values(external).map((e) => e.url),
         run: plan.run,
         workdir: plan.workdir ?? '/',
         ...(plan.tools === undefined ? {} : { tools: { file: plan.tools.file, dispatches } }),
-        ...(plan.verifier === undefined ? {} : { verifier: plan.verifier }),
         ...(plan.epoch === undefined ? {} : { epoch: plan.epoch }),
       },
       null,

@@ -3,13 +3,11 @@
 #
 # Each of the task's servers is its kit fake, seeded from the task's seed; its
 # selected tools are a CLI (harbor/tools.ts) that calls as the task's user, the
-# agent's only way to it. Upstream's port is the reference grader's alone, for
-# the SQL runner. The trial's clock starts at the task id's time.
+# agent's only way to it. The trial's clock starts at the task id's time.
 fakes:
   enterpriseops_csm:
     fixture: kit/enterpriseops_csm.json
     epoch: '2026-01-07T11:15:03Z'
-    verifierPorts: [8001]
 tools:
   file: tools.json
   dispatches: /var/lib/mock-data/enterpriseops/dispatches.jsonl

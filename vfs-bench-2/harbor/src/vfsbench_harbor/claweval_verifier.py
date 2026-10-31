@@ -7,7 +7,6 @@ is used here. The existing fake owns its storage and exports JSON.
 import ast
 import hashlib
 import json
-from pathlib import Path
 from urllib.parse import urlsplit
 
 import httpx
@@ -129,11 +128,6 @@ async def freeze(verifier, definition, stage, budget):
         budget.write_json(target, inputs)
         target.chmod(0o400)
         frozen["files"]["/input/state.json"] = str(target)
-        recording = getattr(verifier, "claweval_recording", None)
-        if recording is not None:
-            target = stage / "recording.json"
-            budget.copy(Path(recording), target)
-            frozen["files"]["/input/recording.json"] = str(target)
         return frozen
 
     return await verifier._background(store, budget=budget)

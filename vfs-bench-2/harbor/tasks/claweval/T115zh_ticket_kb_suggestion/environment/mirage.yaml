@@ -1,8 +1,7 @@
 # T115zh_ticket_kb_suggestion, on vfsbench_harbor's mirage environment (harbor/claweval.py writes it).
 #
-# Each service is its kit fake at upstream's port, its tools CLIs
-# (harbor/tools.ts), and the verifier's VM gets upstream's grader and
-# the judge's host (claweval_grade.py).
+# Each service is its kit fake at upstream's port, and its tools CLIs
+# (harbor/tools.ts).
 fakes:
   claweval_helpdesk:
     fixture: kit/claweval_helpdesk.json
@@ -35,10 +34,3 @@ workspace:
       cli: kb
       config:
         url: ${CLAWEVAL_KB_URL}
-verifier:
-  copy:
-    /opt/claweval/src: ${STATE}/claweval/src/src
-    /opt/claweval/site: ${STATE}/harbor/site/claweval
-    /opt/claweval/tasks/T115zh_ticket_kb_suggestion: ${STATE}/claweval/src/tasks/T115zh_ticket_kb_suggestion
-  egress:
-  - OPENAI_BASE_URL

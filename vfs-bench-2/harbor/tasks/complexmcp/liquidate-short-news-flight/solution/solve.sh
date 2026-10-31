@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# The pre-Harbor port's oracle (complexmcp/liquidate-short-news-flight/tests/oracle.sh).
+# Ours, written by hand through the CLIs.
 # Upstream's reference trajectory (data.parquet row 45), with its ids read
 # from each response. Each trade needs the trading password first.
 light-system now

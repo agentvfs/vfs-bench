@@ -2,8 +2,6 @@
 
     uv run --project automationbench python -I harbor/automationbench.py \
         [--check] [task ...]
-    uv run --project automationbench python -I harbor/automationbench.py \
-        --site
 
 AutomationBench (zapier/AutomationBench v1.0.6, ``4a8e106``, MIT; the
 package ``automationbench/pyproject.toml`` pins) is 600 public tasks over 47
@@ -13,8 +11,7 @@ the world's end state. Here the world is one kit fake,
 ``mocks/automationbench/``, a TypeScript port of upstream's API routes and
 handlers over the world's JSON; the tools are the ``api`` CLI
 (``harbor/tools.ts``); the pinned rubric grades the world's JSON in a
-separate Mirage VFS/Monty workspace. The original tests remain available for
-the reference VM.
+separate Mirage VFS/Monty workspace.
 
 Each task under ``harbor/tasks/automationbench/<task>/`` (the task's name,
 ``<domain>.<name>``, with ``.`` as ``-`` and ``_`` as ``-``) has:
@@ -45,8 +42,7 @@ A task is written only if every service its world is subscribed to has a
 port in the fake (``PORTED``), its nop scores below 1.0 (computed here, on
 the world as built) and it is not ``SKIPPED``. ``--check`` writes nothing
 and exits 1 if a file differs from what this would write, or a file is
-unaccounted for. ``--site`` installs the rubric's packages for the VM's
-Linux into ``state/harbor/site/automationbench``.
+unaccounted for.
 """
 import argparse
 import datetime as _dt
@@ -54,10 +50,7 @@ import enum
 import inspect
 import json
 import os
-import platform
 import random
-import shutil
-import subprocess
 import sys
 import textwrap
 import time
@@ -84,7 +77,6 @@ ROOT = HARBOR.parent
 OUT = HARBOR / "tasks" / "automationbench"
 MOCK = ROOT / "mocks" / "automationbench"
 DATA = MOCK / "data"
-SITE = ROOT / "state" / "harbor" / "site" / "automationbench"
 GRADE = HARBOR / "automationbench_grade.py"
 COMMIT = "4a8e1061254004d9dac807054eed33fad7d1ff14"
 PACKAGE = Path(sys.modules["automationbench"].__file__).resolve().parent
@@ -588,7 +580,7 @@ category = "{info['task_name'].split('.')[0]}"
 upstream = "{upstream}"
 
 [verifier]
-# The rubric takes seconds; a hung microVM fails the trial soon, to be rerun.
+# The rubric takes seconds.
 timeout_sec = 120.0
 
 [agent]
@@ -613,8 +605,7 @@ def mirage_yaml(name: str, epoch: str) -> str:
 # The task's world is the automationbench kit fake (mocks/automationbench),
 # seeded with the world upstream builds for the task (kit/, written from
 # upstream, not committed), its clock at the task's epoch. Its tools are the
-# api CLI (tools.json, harbor/tools.ts). The verifier's VM gets the run's
-# SQLite and upstream's rubric (automationbench_grade.py).
+# api CLI (tools.json, harbor/tools.ts).
 fakes:
   automationbench:
     fixture: kit/automationbench.json
@@ -632,10 +623,6 @@ workspace:
           reason: the world is reached through the api CLI
   clis:
     api: {{cli: api, config: {{url: '${{AUTOMATIONBENCH_URL}}'}}}}
-verifier:
-  copy:
-    /opt/automationbench/site: ${{STATE}}/harbor/site/automationbench
-  omit: [/workspace]
 """
 
 
@@ -711,7 +698,6 @@ def job_yaml(tasks: list[str]) -> str:
     lines = [
         "# All 600 tasks: Mirage agent + separate Mirage VFS/Monty verifier.",
         "# Generate fixtures with harbor/automationbench.py first.",
-        "# The unchanged VM reference config is automationbench-msb.yaml.",
         "environment:",
         "  import_path: vfsbench_harbor:MirageEnvironment",
         "verifier:",
@@ -723,48 +709,6 @@ def job_yaml(tasks: list[str]) -> str:
         for task in sorted(tasks)
     ]
     return "\n".join(lines) + "\n"
-
-
-def site() -> int:
-    """The rubric's packages for the VM: CPython 3.12 on Linux, the host's
-    architecture, as msb boots its image; and upstream's package, as pinned.
-
-    The rubric's ``google_sheets_row_updated`` imports
-    ``automationbench.tools``, whose Zapier Salesforce module imports
-    ``openai`` (never called here), so the VM gets upstream's pinned
-    ``openai`` too."""
-    arch = {
-        "arm64": "aarch64",
-        "aarch64": "aarch64"
-    }.get(platform.machine(), "x86_64")
-    import openai
-    import pydantic
-    import pydantic_core
-    code = subprocess.run([
-        "uv",
-        "pip",
-        "install",
-        "--quiet",
-        "--target",
-        str(SITE),
-        "--python-version",
-        "3.12",
-        "--python-platform",
-        f"{arch}-manylinux_2_28",
-        "--only-binary",
-        ":all:",
-        f"pydantic=={pydantic.VERSION}",
-        f"pydantic-core=={pydantic_core.__version__}",
-        f"openai=={openai.__version__}",
-    ]).returncode
-    if code:
-        return code
-    target = SITE / "automationbench"
-    shutil.rmtree(target, ignore_errors=True)
-    shutil.copytree(PACKAGE,
-                    target,
-                    ignore=shutil.ignore_patterns("__pycache__", "domains"))
-    return 0
 
 
 def selected(
@@ -790,14 +734,11 @@ def selected(
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--check", action="store_true")
-    parser.add_argument("--site", action="store_true")
     parser.add_argument("--data",
                         action="store_true",
                         help="write only the fake's data files")
     parser.add_argument("tasks", nargs="*")
     args = parser.parse_args()
-    if args.site:
-        return site()
     failed = 0
 
     def put(path: Path, data: bytes) -> None:

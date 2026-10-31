@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# The pre-Harbor port's oracle (complexmcp/family-group-airpods/tests/oracle.sh).
+# Ours, written by hand through the CLIs.
 # Upstream's reference trajectory (data.parquet row 2), with its ids read
 # from each response since the apps mint new ones every session.
 light-talk get-contacts-by-tag --tag family

@@ -1,7 +1,0 @@
-[{"tool":"find_product","args":{"name":"NGINX"}},
- {"tool":"find_account","args":{"name":"Carrillo Inc"}},
- {"tool":"create_new_account","args":{"name":"Apex Industries","email_domain":"apex-ind.com","account_type":"customer","active":true}},
- {"tool":"create_new_account","args":{"name":"Apex Industries","account_type":"customer","active":true}},
- {"tool":"create_new_account","args":{"account_type":"x","active":"maybe"}},
- {"tool":"create_contact","args":{"account_id":1,"portal_user_id":999999,"active":true,"is_primary":false}},
- {"tool":"create_contact","args":{"account_id":53,"portal_user_id":5,"active":true,"is_primary":true}}]

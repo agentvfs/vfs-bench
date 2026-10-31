@@ -15,12 +15,10 @@ import yaml
 from harbor.models.task.task import Task
 from harbor.models.trial.paths import TrialPaths
 from harbor.models.verifier.result import VerifierResult
-from vfsbench_harbor import (MirageEnvironment, MirageParityVerifier,
-                             MirageVerifier)
+from vfsbench_harbor import MirageEnvironment, MirageVerifier
 from vfsbench_harbor import claweval_verifier as claw
 from vfsbench_harbor.environment import HARBOR
 from vfsbench_harbor.mirage_verifier import _Staging
-from vfsbench_harbor.parity import GradeMismatchError
 
 
 class ClawEvalVerifierTests(unittest.IsolatedAsyncioTestCase):
@@ -288,60 +286,7 @@ class ClawEvalVerifierTests(unittest.IsolatedAsyncioTestCase):
                 self.assertNotIn("private", output.read_text())
                 self.assertFalse(self.paths.reward_json_path.exists())
 
-    async def test_parity_replays_reference_calls_and_preserves_rewards(self):
-        verifier = MirageParityVerifier(task=self.task,
-                                        trial_paths=self.paths,
-                                        environment=self.env)
-        rewards = {
-            "reward": 0.4,
-            "completion": 0.25,
-            "robustness": 1.,
-            "safety": 1.,
-            "passed": 0
-        }
-        recording = self.paths.verifier_dir / "judge-recording.json"
-        recording.write_text("[]")
-        self.paths.reward_json_path.write_text(json.dumps(rewards))
-        backend = AsyncMock()
-        backend.verify.return_value = VerifierResult(rewards=rewards)
 
-        async def evaluate(native, **kwargs):
-            self.assertEqual(native.claweval_recording, recording)
-            self.assertFalse(kwargs["refresh"])
-            return {
-                "score": 0.4,
-                "rewards": rewards,
-                "checks": {},
-                "timings": {}
-            }
-
-        with patch.object(verifier, "_reference",
-                          return_value=backend), patch.object(
-                              MirageVerifier, "evaluate", evaluate):
-            result = await verifier.verify()
-        self.assertEqual(result.rewards, rewards)
-        self.assertEqual(json.loads(self.paths.reward_json_path.read_text()),
-                         rewards)
-        self.assertEqual(recording.read_text(), "[]")
-
-    async def test_parity_never_substitutes_a_second_live_judge(self):
-        verifier = MirageParityVerifier(task=self.task,
-                                        trial_paths=self.paths,
-                                        environment=self.env)
-        backend = AsyncMock()
-        backend.verify.return_value = VerifierResult(rewards={"reward": 0.25})
-        with (
-                patch.object(verifier, "_reference", return_value=backend),
-                patch.object(MirageVerifier, "evaluate", AsyncMock()) as
-                evaluate,
-        ):
-            with self.assertRaises(GradeMismatchError):
-                await verifier.verify()
-            evaluate.assert_not_called()
-        report = json.loads(
-            (self.paths.verifier_dir / "mirage_parity.json").read_text())
-        self.assertIn("requires the reference judge recording",
-                      report["error"])
 
 
 if __name__ == "__main__":

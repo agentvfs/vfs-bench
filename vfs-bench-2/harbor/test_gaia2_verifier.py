@@ -160,30 +160,6 @@ class Gaia2VerifierTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaisesRegex(ValueError, 'leaves its workspace'):
             await self.snapshot()
 
-    async def test_recording_is_required_and_transported_only_for_parity(self):
-        recording = self.root / 'reward_details.json'
-        recording.write_text('{}')
-        self.verifier.gaia2_judge_replay = recording
-        with self.assertRaisesRegex(ValueError, 'recorded judge calls'):
-            await self.snapshot()
-        recording.write_text(
-            json.dumps({
-                'judge_calls': [],
-                'judgments': [{
-                    'oracle_events': [{
-                        'id': 'second'
-                    }, {
-                        'id': 'first'
-                    }]
-                }]
-            }))
-        for file in self.stage.iterdir():
-            file.unlink()
-        self.assertEqual((await self.snapshot())['judgeReplay'], [])
-        logged = self.verifier.trial_paths.verifier_dir / 'gaia2-inputs.json'
-        self.assertEqual(
-            json.loads(logged.read_text())['oracle_order'],
-            ['second', 'first'])
 
     async def test_staging_limit_is_enforced(self):
         with patch('vfsbench_harbor.mirage_verifier.MAX_STAGING_BYTES', 1):
@@ -201,46 +177,6 @@ class Gaia2VerifierTests(unittest.IsolatedAsyncioTestCase):
                                     name).read_bytes()).hexdigest(), expected)
             self.assertEqual(definition['runtime'], 'gaia2-monty')
 
-    async def test_parity_passes_reference_recording_and_preserves_reward(
-            self):
-        from harbor.models.task.task import Task
-        from harbor.models.trial.paths import TrialPaths
-        from harbor.models.verifier.result import VerifierResult
-        from vfsbench_harbor.environment import HARBOR
-        from vfsbench_harbor.parity import MirageParityVerifier
-        task_dir = self.root / 'gaia2/search-0002'
-        task_dir.mkdir(parents=True)
-        shutil.copyfile(HARBOR / 'tasks/gaia2/search-0002/task.toml',
-                        task_dir / 'task.toml')
-        shutil.copytree(HARBOR / 'tasks/gaia2/search-0002/tests',
-                        task_dir / 'tests')
-        (task_dir / 'instruction.md').write_text('Routing fixture')
-        paths = TrialPaths(self.root / 'trial')
-        paths.mkdir()
-        recording = paths.verifier_dir / 'reward_details.json'
-        recording.write_text('{"judge_calls": [], "judgments": []}')
-        verifier = MirageParityVerifier(task=Task(task_dir),
-                                        environment=self.verifier.environment,
-                                        trial_paths=paths)
-        backend = AsyncMock()
-        backend.verify.return_value = VerifierResult(rewards={'reward': 0})
-
-        async def candidate(native, **kwargs):
-            self.assertEqual(native.gaia2_judge_replay, recording)
-            self.assertFalse(kwargs['refresh'])
-            return {'score': 0, 'checks': {}, 'timings': {}}
-
-        with patch.object(verifier, '_reference',
-                          return_value=backend), patch.object(
-                              MirageVerifier, 'evaluate', candidate):
-            result = await verifier.verify()
-        self.assertEqual(result.rewards, {'reward': 0})
-        self.assertEqual(recording.read_text(),
-                         '{"judge_calls": [], "judgments": []}')
-        self.assertEqual(
-            json.loads((paths.verifier_dir /
-                        'mirage_parity.json').read_text())['status'],
-            'matched')
 
 
 if __name__ == '__main__':

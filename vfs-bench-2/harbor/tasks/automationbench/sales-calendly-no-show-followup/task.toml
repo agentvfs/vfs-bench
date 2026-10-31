@@ -5,7 +5,7 @@ category = "sales"
 upstream = "zapier/AutomationBench@4a8e106 sales.calendly_no_show_followup (example 704)"
 
 [verifier]
-# The rubric takes seconds; a hung microVM fails the trial soon, to be rerun.
+# The rubric takes seconds.
 timeout_sec = 120.0
 
 [agent]

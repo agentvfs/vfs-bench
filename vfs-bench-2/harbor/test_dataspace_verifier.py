@@ -12,7 +12,6 @@ from harbor.models.trial.paths import TrialPaths
 from harbor.models.verifier.result import VerifierResult
 from vfsbench_harbor import MirageEnvironment, MirageVerifier
 from vfsbench_harbor.environment import HARBOR
-from vfsbench_harbor.parity import MirageParityVerifier
 
 
 class DataSpaceVerifierTests(unittest.IsolatedAsyncioTestCase):
@@ -142,22 +141,6 @@ class DataSpaceVerifierTests(unittest.IsolatedAsyncioTestCase):
             await self.verifier.verify()
         self.verifier._run.assert_not_called()
 
-    async def test_parity_preserves_microvm_reference(self):
-        verifier = MirageParityVerifier(task=self.task,
-                                        environment=self.env,
-                                        trial_paths=self.paths)
-        reference = AsyncMock()
-        reference.verify.return_value = VerifierResult(rewards={'reward': 1})
-        native = {'score': 1, 'checks': {}, 'timings': {}}
-        with (patch.object(verifier, '_reference', return_value=reference) as
-              selected,
-              patch.object(MirageVerifier, 'evaluate',
-                           AsyncMock(return_value=native))):
-            self.assertEqual((await verifier.verify()).rewards, {'reward': 1})
-        selected.assert_called_once_with('microsandbox')
-        report = json.loads(
-            (self.paths.verifier_dir / 'mirage_parity.json').read_text())
-        self.assertEqual(report['status'], 'matched')
 
 
 if __name__ == '__main__':

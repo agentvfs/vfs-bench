@@ -7,8 +7,7 @@
 # each fake making its session from kit/login.json; the others answer that
 # they were not logged into. A Light app's CLI names the trial's run of
 # LightSystem, whose clock every app steps, as upstream's connector does.
-# The trial's clock starts at LightSystem's time at login. The verifier's VM
-# gets upstream's checkout and rows, and the judge's packages.
+# The trial's clock starts at LightSystem's time at login.
 fakes:
   complexmcp_math:
     fixture: kit/none.json
@@ -90,7 +89,3 @@ workspace:
     light-flight: {cli: light-flight, config: {url: '${COMPLEXMCP_FLIGHT_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
     light-stock: {cli: light-stock, config: {url: '${COMPLEXMCP_STOCK_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
     light-news: {cli: light-news, config: {url: '${COMPLEXMCP_NEWS_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
-verifier:
-  copy:
-    /opt/complexmcp: '${STATE}/complexmcp'
-    /opt/complexmcp-site: '${STATE}/harbor/site/complexmcp'

@@ -1,7 +1,6 @@
 """Write the committed Claw-Eval tasks from upstream, or check them.
 
     uv run --project harbor python -I harbor/claweval.py [--check] [task ...]
-    uv run --project harbor python -I harbor/claweval.py --site
 
 Each task under ``harbor/tasks/claweval/<task id>/`` is a Harbor task made
 from upstream's ``tasks/<task id>/task.yaml`` (claw-eval/claw-eval, pinned
@@ -19,10 +18,7 @@ for the solutions of ``SOLVED``, which are ours:
   (``mocks/claweval_<service>``) at upstream's port; gmail and calendar as
   Mirage's gws fake, the ``/gmail`` and ``/calendar`` mounts and the gws
   CLI, but for gmail's drafts, a fake of their own; the task's
-  ``sandbox_files`` copied into ``/workspace``; the tools as CLIs; and what
-  the verifier's VM gets: upstream's ``claw_eval``, the task's directory
-  and its peer's, the packages they import (``--site`` builds them) and the
-  judge's host.
+  ``sandbox_files`` copied into ``/workspace``; and the tools as CLIs.
 - ``environment/kit/<fake>.json``: each fake's fixture, the task's fixtures
   as the service loads them; ``gws.json``, gmail's and calendar's as Gmail
   messages and Calendar events under upstream's ids.
@@ -33,23 +29,19 @@ for the solutions of ``SOLVED``, which are ours:
 - ``tests/test.sh`` and ``tests/grade.py`` (``claweval_grade.py``): the
   task's ``grader.py``, run as upstream's runner runs it, over the agent's
   Harbor trajectory; ``tests/gws_seed.json``, a gws task's gmail and
-  calendar fixtures, from which ``grade.py`` builds their calls. It needs
-  ``MicrosandboxVerifier`` (claweval-msb.yaml) for reference runs. The
-  default ``MirageVerifier`` reads frozen JSON and pinned upstream sources
-  in a separate Pyodide workspace; it does not use the VM copies or site.
+  calendar fixtures, from which ``grade.py`` builds their calls.
+  ``MirageVerifier`` runs it on frozen JSON and pinned upstream sources in
+  a separate Pyodide workspace.
 - ``solution/trajectory.py`` (``claweval_trajectory.py``), for a task with
   a solution: writes the solution's run as the agent's trajectory.
 
 ``--check`` writes nothing and exits 1 if a generated file differs from what
 upstream gives, if a solved task's ``solve.sh`` or ``reply.md`` is missing,
-or if a file is unaccounted for. ``--site`` installs the grader's packages
-for the VM's Linux, into ``state/harbor/site/claweval``.
+or if a file is unaccounted for.
 """
 import argparse
 import json
-import platform
 import re
-import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
 from email.utils import format_datetime
@@ -61,12 +53,8 @@ HARBOR = Path(__file__).resolve().parent
 ROOT = HARBOR.parent
 UPSTREAM = ROOT / "state" / "claweval" / "src"
 OUT = HARBOR / "tasks" / "claweval"
-SITE = ROOT / "state" / "harbor" / "site" / "claweval"
 GRADE = HARBOR / "claweval_grade.py"
 COMMIT = "5680b8b"
-# The packages upstream's graders import, beyond the standard library
-# (claweval/pyproject.toml's, less the services' own).
-PACKAGES = ["httpx>=0.27", "openai>=1.0", "pydantic>=2.0", "pyyaml>=6.0"]
 # The epoch a run's clock starts at where the task gives no mock_today:
 # upstream's services read the wall clock, and only stamp their audit logs.
 EPOCH = "2026-04-03T09:00:00Z"
@@ -647,20 +635,11 @@ def mirage_yaml(task: dict) -> str:
     if not workspace["clis"]:
         del workspace["clis"]
     spec["workspace"] = workspace
-    copy = {
-        "/opt/claweval/src": "${STATE}/claweval/src/src",
-        "/opt/claweval/site": "${STATE}/harbor/site/claweval",
-    }
-    for task_id in [task["task_id"], *peers(task["task_id"])]:
-        source = f"${{STATE}}/claweval/src/tasks/{task_id}"
-        copy[f"/opt/claweval/tasks/{task_id}"] = source
-    spec["verifier"] = {"copy": copy, "egress": ["OPENAI_BASE_URL"]}
     head = [
         f"# {task['task_id']}, on vfsbench_harbor's mirage environment "
         "(harbor/claweval.py writes it).", "#",
-        "# Each service is its kit fake at upstream's port, its tools CLIs",
-        "# (harbor/tools.ts), and the verifier's VM gets upstream's grader "
-        "and", "# the judge's host (claweval_grade.py)."
+        "# Each service is its kit fake at upstream's port, and its tools CLIs",
+        "# (harbor/tools.ts)."
     ]
     if used:
         head += [
@@ -739,28 +718,11 @@ def expected(task_id: str) -> dict[str, bytes]:
     return out
 
 
-def site() -> int:
-    """The grader's packages for the VM: CPython 3.12 on Linux, the host's
-    architecture, as msb boots its image."""
-    arch = {
-        "arm64": "aarch64",
-        "aarch64": "aarch64"
-    }.get(platform.machine(), "x86_64")
-    return subprocess.run([
-        "uv", "pip", "install", "--quiet", "--target",
-        str(SITE), "--python-version", "3.12", "--python-platform",
-        f"{arch}-manylinux_2_28", "--only-binary", ":all:", *PACKAGES
-    ]).returncode
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--check", action="store_true")
-    parser.add_argument("--site", action="store_true")
     parser.add_argument("tasks", nargs="*", default=TASKS)
     args = parser.parse_args()
-    if args.site:
-        return site()
     failed = 0
     for task_id in args.tasks:
         target = OUT / task_id

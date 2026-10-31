@@ -1,8 +1,7 @@
 # T036_vendor_procurement, on vfsbench_harbor's mirage environment (harbor/claweval.py writes it).
 #
-# Each service is its kit fake at upstream's port, its tools CLIs
-# (harbor/tools.ts), and the verifier's VM gets upstream's grader and
-# the judge's host (claweval_grade.py).
+# Each service is its kit fake at upstream's port, and its tools CLIs
+# (harbor/tools.ts).
 fakes:
   claweval_finance:
     fixture: kit/claweval_finance.json
@@ -64,11 +63,3 @@ workspace:
       cli: finance
       config:
         url: ${CLAWEVAL_FINANCE_URL}
-verifier:
-  copy:
-    /opt/claweval/src: ${STATE}/claweval/src/src
-    /opt/claweval/site: ${STATE}/harbor/site/claweval
-    /opt/claweval/tasks/T036_vendor_procurement: ${STATE}/claweval/src/tasks/T036_vendor_procurement
-    /opt/claweval/tasks/T035zh_vendor_procurement: ${STATE}/claweval/src/tasks/T035zh_vendor_procurement
-  egress:
-  - OPENAI_BASE_URL

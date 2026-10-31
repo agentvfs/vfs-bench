@@ -10,25 +10,20 @@ committed: the task's context, its gold CSV and frozen config, and the
 evaluator stay in ``state/dataspace/`` and reach a trial from there.
 
 - ``instruction.md``: upstream's user prompt (``relation_task_prompt``,
-  contract relation-v2) over the task's question, verbatim, as the
-  pre-Harbor port (``dataspace/index.ts``) gives it.
+  contract relation-v2) over the task's question, verbatim.
 - ``task.toml``: the upstream task id, upstream's wall time for the agent.
 - ``environment/mirage.yaml``: the context mounted read-only at
   ``/workspace`` from ``${STATE}`` in place of the trial's own, the answer
-  written to ``/output``, ``/opt/dataspace/TOOLS.md``; and what only the
-  reference verifier's VM gets: upstream's evaluator, config and gold CSV,
-  and not the context (``omit``).
+  written to ``/output``, and ``/opt/dataspace/TOOLS.md``.
 - ``environment/workbench/TOOLS.md``: ``dataspace/workbench/TOOLS.md``.
 - ``tests/test.sh`` and ``tests/grade.py`` (``dataspace_grade.py``):
-  upstream's evaluator on ``/output/prediction.csv``. They need
-  ``MicrosandboxVerifier`` (``harbor/dataspace-msb.yaml``). The default
-  ``MirageVerifier`` uses the pinned shared evaluator port instead.
-- ``solution/solve.sh``: the pre-Harbor port's ``tests/oracle.sh``, for the
-  tasks that have one.
+  upstream's evaluator on ``/output/prediction.csv``. ``MirageVerifier``
+  runs its pinned Monty port instead.
+- ``solution/solve.sh``: ours, by hand, for the tasks that have one.
 
 ``--check`` writes nothing and exits 1 if a file differs from what upstream
-and the pre-Harbor port give, if a file is unaccounted for, or if the
-task's data is missing from ``state/``.
+gives, if a file is unaccounted for, or if the task's data is missing from
+``state/``.
 """
 import argparse
 import json
@@ -180,9 +175,7 @@ def mirage_yaml(slug: str, task_id: str) -> str:
 # No services. The task's context is upstream's, from state/ (run
 # dataspace/setup.py), mounted read-only at /workspace in place of the
 # trial's own; the answer goes to /output/prediction.csv, as upstream's
-# harness lays them out. The gold CSV, the task's frozen config and
-# upstream's evaluator reach the verifier's VM alone (MicrosandboxVerifier),
-# which does not get the context (`omit`): it reads only /output.
+# harness lays them out.
 fakes: {{}}
 copy:
   /opt/dataspace: workbench/
@@ -202,12 +195,6 @@ workspace:
       vfs: disk
       mode: read
       config: {{root: '${{RUN_DIR}}/opt/dataspace'}}
-verifier:
-  omit: [/workspace]
-  copy:
-    /opt/dataspace-evaluation/evaluator: '${{STATE}}/dataspace/evaluation'
-    /opt/dataspace-evaluation/configs: '{benchmark}/evaluation/configs'
-    /opt/dataspace-evaluation/gold: '{benchmark}/output/{task_id}'
 """
 
 
@@ -240,10 +227,9 @@ def expected(slug: str) -> dict[str, bytes]:
         "tests/grade.py":
         GRADE.read_bytes(),
     }
-    oracle = PORT / slug / "tests" / "oracle.sh"
-    if oracle.is_file():
-        shebang = b"#!/usr/bin/env bash\n"
-        out["solution/solve.sh"] = shebang + oracle.read_bytes()
+    ours = OUT / slug / "solution" / "solve.sh"
+    if ours.is_file():
+        out["solution/solve.sh"] = ours.read_bytes()
     return out
 
 

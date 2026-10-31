@@ -4,7 +4,6 @@
     uv run --project complexmcp python -I complexmcp/setup.py
     uv run --project complexmcp python -I harbor/complexmcp.py \
         [--check] [task ...]
-    uv run --project complexmcp python -I harbor/complexmcp.py --site
 
 Each task under ``harbor/tasks/complexmcp/<slug>/`` is one row of
 upstream's ``benchmark/data/data.parquet`` (ATH-MaaS/complex-mcp, pinned by
@@ -15,31 +14,26 @@ upstream's ``benchmark/data/data.parquet`` (ATH-MaaS/complex-mcp, pinned by
 - ``task.toml``: the row, its level and apps.
 - ``environment/mirage.yaml``: each of upstream's 15 servers as its kit fake
   (``mocks/complexmcp_<server>``) at upstream's port, its tools as a CLI
-  (``harbor/tools.ts``), and what the verifier's VM gets: upstream's
-  checkout and tasks (``state/complexmcp``), with the judge, and its
-  packages (``--site`` builds them).
+  (``harbor/tools.ts``).
 - ``environment/kit/login.json``: the task's login, the seed and the apps
   in order, which each Light app's fake makes its session from;
   ``environment/kit/none.json``, the plain servers', which keep nothing.
 - ``environment/tools.json``: the tools, by CLI.
 - ``tests/test.sh`` and ``tests/grade.py`` (``complexmcp_grade.py``):
   upstream's judge over what each app's login and logout answer and the
-  row's expected environment. This preserved reference runs with
-  ``MicrosandboxVerifier`` (``complexmcp-msb.yaml``); ``complexmcp.yaml``
-  runs the hash-pinned Monty port in a separate Mirage workspace.
+  row's expected environment. ``MirageVerifier`` runs its Monty port in a
+  separate Mirage workspace.
 - ``solution/solve.sh``: the reference trajectory, each tool call as the
-  CLI that makes it (``ORACLES``), or the pre-Harbor port's oracle
-  (``complexmcp/<slug>/tests/oracle.sh``) where it has one.
+  CLI that makes it (``ORACLES``), or ours, by hand, where its second line
+  says so (``OURS``).
 
 ``--check`` writes nothing and exits 1 if a file differs from what upstream
-gives, or if a file is unaccounted for. ``--site`` installs the judge's
-packages for the VM's Linux, into ``state/harbor/site/complexmcp``.
+gives, or if a file is unaccounted for.
 """
 import argparse
 import functools
 import importlib.util
 import json
-import platform
 import shlex
 import subprocess
 import sys
@@ -49,14 +43,10 @@ HARBOR = Path(__file__).resolve().parent
 ROOT = HARBOR.parent
 STATE = ROOT / "state" / "complexmcp"
 UPSTREAM = STATE / "src"
-PORT = ROOT / "complexmcp"
+OURS = b"\n# Ours, written by hand through the CLIs.\n"
 OUT = HARBOR / "tasks" / "complexmcp"
-SITE = ROOT / "state" / "harbor" / "site" / "complexmcp"
 GRADE = HARBOR / "complexmcp_grade.py"
 COMMIT = "7c01f92"
-# What upstream's judge imports beyond the standard library
-# (complexmcp/pyproject.toml's pin).
-PACKAGES = ["levenshtein==0.27.3"]
 
 # Each task, by slug: the row of data.parquet. The pre-Harbor port's
 # eleven keep their slugs (complexmcp/<slug>/task.json).
@@ -410,9 +400,7 @@ def mirage_yaml(slug: str, index: int, row: dict) -> str:
         "of",
         "# LightSystem, whose clock every app steps, as upstream's connector "
         "does.",
-        "# The trial's clock starts at LightSystem's time at login. The "
-        "verifier's VM",
-        "# gets upstream's checkout and rows, and the judge's packages.",
+        "# The trial's clock starts at LightSystem's time at login.",
         "fakes:",
     ]
     for server, (port, _, desc) in SERVERS.items():
@@ -434,12 +422,6 @@ def mirage_yaml(slug: str, index: int, row: dict) -> str:
         config += "}"
         lines.append(
             f"    {cli(server)}: {{cli: {cli(server)}, config: {config}}}")
-    lines += [
-        "verifier:",
-        "  copy:",
-        "    /opt/complexmcp: '${STATE}/complexmcp'",
-        "    /opt/complexmcp-site: '${STATE}/harbor/site/complexmcp'",
-    ]
     return "\n".join(lines) + "\n"
 
 
@@ -453,13 +435,11 @@ python3 /tests/grade.py {index}
 
 
 def oracle(slug: str, index: int, row: dict) -> bytes | None:
-    """The task's solution: the pre-Harbor port's oracle, or the reference
+    """The task's solution: ours where we wrote one, or the reference
     trajectory's calls as CLI lines."""
-    ported = PORT / slug / "tests" / "oracle.sh"
-    if ported.is_file():
-        return ("#!/usr/bin/env bash\n# The pre-Harbor port's oracle "
-                f"(complexmcp/{slug}/tests/oracle.sh).\n" +
-                ported.read_text()).encode()
+    ours = OUT / slug / "solution" / "solve.sh"
+    if ours.is_file() and OURS in ours.read_bytes():
+        return ours.read_bytes()
     if index not in ORACLES:
         return None
     lines = [
@@ -552,28 +532,11 @@ def expected(slug: str) -> dict[str, bytes]:
     return out
 
 
-def site() -> int:
-    """The judge's packages for the VM: CPython 3.12 on Linux, the host's
-    architecture, as msb boots its image."""
-    arch = {
-        "arm64": "aarch64",
-        "aarch64": "aarch64"
-    }.get(platform.machine(), "x86_64")
-    return subprocess.run([
-        "uv", "pip", "install", "--quiet", "--target",
-        str(SITE), "--python-version", "3.12", "--python-platform",
-        f"{arch}-manylinux_2_28", "--only-binary", ":all:", *PACKAGES
-    ]).returncode
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--check", action="store_true")
-    parser.add_argument("--site", action="store_true")
     parser.add_argument("tasks", nargs="*", default=list(TASKS))
     args = parser.parse_args()
-    if args.site:
-        return site()
     failed = 0
     for slug in args.tasks:
         target = OUT / slug

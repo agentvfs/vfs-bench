@@ -5,7 +5,7 @@ category = "hr"
 upstream = "zapier/AutomationBench@4a8e106 hr.calendly_exit_interviews (example 5049)"
 
 [verifier]
-# The rubric takes seconds; a hung microVM fails the trial soon, to be rerun.
+# The rubric takes seconds.
 timeout_sec = 120.0
 
 [agent]

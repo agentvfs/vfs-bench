@@ -136,10 +136,6 @@ class MirageVerifierTests(unittest.IsolatedAsyncioTestCase):
         self.verifier._run.assert_not_called()
         self.assertFalse(self.paths.reward_text_path.exists())
 
-    async def test_unported_task_requires_an_explicit_other_backend(self):
-        self.verifier.task = Task(TASKS / "pre-meeting-research-brief")
-        with self.assertRaisesRegex(ValueError, "No Mirage grader"):
-            await self.verifier.verify()
 
     async def test_invalid_state_does_not_leave_a_reward(self):
         self.env.snapshot_verifier_states = AsyncMock(return_value={
