@@ -24,6 +24,6 @@ createServer((req, res) => {
     res.setHeader('content-type', TYPES[extname(file)] ?? 'text/html; charset=utf-8')
     res.end(data)
   })
-}).listen(port, '127.0.0.1', () => {
-  console.log(`VFS-Bench UI on http://127.0.0.1:${port}, driving ${rootDir()}`)
+}).listen(port, '127.0.0.1', async () => {
+  console.log(`VFS-Bench UI on http://127.0.0.1:${port}, driving ${await rootDir()}`)
 })

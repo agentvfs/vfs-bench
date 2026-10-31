@@ -246,10 +246,16 @@ export class Harbor {
   /** Each running trial's daemon, once found. */
   private readonly daemons = new Map<string, string>()
 
-  constructor(root: string) {
+  /** `root` is a vfs-bench-2 checkout; `jobsRoot` where its jobs go, `state/harbor` in it by default. */
+  constructor(root: string, jobsRoot = join(root, 'state', 'harbor')) {
     this.root = root
-    this.jobsRoot = join(root, 'state', 'harbor')
+    this.jobsRoot = jobsRoot
     this.configDir = join(this.jobsRoot, 'console')
+  }
+
+  /** Whether runs this UI started are still going. */
+  get busy(): boolean {
+    return this.launches.size > 0
   }
 
   /** The job configs under `harbor/`: each YAML that lists tasks. */
@@ -282,7 +288,7 @@ export class Harbor {
     return join(this.jobsRoot, id)
   }
 
-  /** Every job directory under `state/harbor/*`, newest first. */
+  /** Every job directory in the runs folder (`<jobs dir>/<job>`), newest first. */
   async jobs(): Promise<JobBrief[]> {
     const ids = new Set(this.launches.keys())
     for (const jobsDir of await dirs(this.jobsRoot))
@@ -454,7 +460,7 @@ export class Harbor {
     return {
       ...brief,
       status: retrying && brief.status !== 'running' ? 'running' : brief.status,
-      command: launch?.command ?? `harbor run -c ${join('state/harbor', id, 'config.json')}`,
+      command: launch?.command ?? `harbor run -c ${join(this.dir(id), 'config.json')}`,
       cells,
       log: launch ? await this.tail(launch.log, 6) : null,
     }
@@ -667,12 +673,12 @@ export class Harbor {
     doc.n_attempts = Math.max(1, Math.floor(request.attempts))
     const short = agent.split(':').pop()!.toLowerCase().replace(/[^\w.-]+/g, '-')
     doc.job_name = `${source.dataset}-${short}-${stamp()}`
-    doc.jobs_dir = 'state/harbor/jobs-console'
+    doc.jobs_dir = join(this.jobsRoot, 'jobs-console')
     await mkdir(this.configDir, { recursive: true })
     const file = join(this.configDir, `${doc.job_name}.json`)
     await writeFile(file, JSON.stringify(doc, null, 2))
     const id = `jobs-console/${doc.job_name}`
-    this.start(id, ['run', '-c', `state/harbor/console/${doc.job_name}.json`, '-y'], doc.tasks.map(taskOf))
+    this.start(id, ['run', '-c', file, '-y'], doc.tasks.map(taskOf))
     return id
   }
 
@@ -720,7 +726,7 @@ export class Harbor {
   async resume(id: string): Promise<void> {
     this.dir(id)
     if (this.launches.has(id)) throw new Error('The job is running')
-    this.start(id, ['job', 'resume', '-p', join('state/harbor', id), '-y'], [])
+    this.start(id, ['job', 'resume', '-p', this.dir(id), '-y'], [])
   }
 
   /**
@@ -744,7 +750,7 @@ export class Harbor {
     const doc = {
       ...config,
       job_name: jobName,
-      jobs_dir: join('state/harbor', jobsDir),
+      jobs_dir: join(this.jobsRoot, jobsDir),
       tasks: chosen.map((t) => paths.get(t)),
       datasets: [],
       n_attempts: 1,
@@ -753,7 +759,7 @@ export class Harbor {
     await mkdir(this.configDir, { recursive: true })
     await writeFile(join(this.configDir, `${jobName}.json`), JSON.stringify(doc, null, 2))
     const retryId = `${jobsDir}/${jobName}`
-    this.start(retryId, ['run', '-c', `state/harbor/console/${jobName}.json`, '-y'], chosen)
+    this.start(retryId, ['run', '-c', join(this.configDir, `${jobName}.json`), '-y'], chosen)
     return retryId
   }
 }

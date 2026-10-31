@@ -15,10 +15,10 @@ ran in its Mirage workspace. The run's page stops or resumes it, and each
 terminal stops or retries its trial. Runs are read from disk, so leaving a page loses nothing.
 
 The UI has no run format of its own. A job is the directory Harbor
-writes under `state/harbor/<jobs dir>/<job>/`. Run starts
-`harbor run -c state/harbor/console/<job>.json -y`, where that config is
+writes under `<runs folder>/<jobs dir>/<job>/`. Run starts
+`harbor run -c <runs folder>/console/<job>.json -y`, where that config is
 `harbor/<dataset>.yaml` with the form's agent, model, concurrency and
-attempts written over it. The job lands in `state/harbor/jobs-console/`.
+attempts written over it. The job lands in `<runs folder>/jobs-console/`.
 
 - **Stop** (a run) sends the job Ctrl-C, SIGINT to its process group; a
   second Stop sends SIGTERM. Trials in progress are cancelled, which counts
@@ -30,7 +30,7 @@ attempts written over it. The job lands in `state/harbor/jobs-console/`.
 - **Delete** (a run) removes Harbor's directory for it and its retries',
   and the UI's configs, logs and terminal histories of them. It asks
   first, refuses a run still running, and cannot be undone. Each delete is
-  recorded in `state/harbor/console/deleted.log`.
+  recorded in `<runs folder>/console/deleted.log`.
 - **Retry** runs the task again as a job of its own beside the original,
   `<job>__retry-<n>`, with the original's resolved `config.json`. The
   original's directory is left as Harbor wrote it, and the task's cell shows
@@ -42,16 +42,30 @@ so a terminal keeps its commands even if no page watched the trial.
 
 ## Run
 
-From `vfs-bench-2/ui/`, after the Harbor setup in
-[../harbor/README.md](../harbor/README.md):
+From `ui/`, after vfs-bench-2's setup in
+[../vfs-bench-2/README.md](../vfs-bench-2/README.md) and the Harbor setup in
+[../vfs-bench-2/harbor/README.md](../vfs-bench-2/harbor/README.md):
 
 ```sh
 pnpm install
 pnpm start                      # build, then serve on http://127.0.0.1:8787
 pnpm dev                        # or Vite with the API, on http://127.0.0.1:5174
-VFSBENCH_ROOT=<a vfs-bench-2 checkout> pnpm start   # drive another checkout
 pnpm typecheck && pnpm test
 ```
+
+## Settings
+
+The Settings page (bottom of the left nav) sets the two folders the UI works
+in, kept in `ui/settings.json`, which is gitignored:
+
+- **Benchmark folder**: the vfs-bench-2 checkout whose `harbor/*.yaml`
+  configs and tasks it lists and runs; Harbor runs in it. By default
+  `VFSBENCH_ROOT`, else `../vfs-bench-2`.
+- **Runs folder**: where Harbor's jobs are written and read. By default the
+  benchmark folder's `state/harbor`.
+
+A folder is checked before it is saved, and the folders cannot change while
+runs this UI started are going.
 
 `pnpm dev` restarts its server when `server/` changes, and forgets which jobs
 it started. Use `pnpm start` for long runs. Model agents read their keys
@@ -62,7 +76,7 @@ from `vfs-bench-2/.env`, passed to Harbor as `--env-file`.
 A terminal shows Mirage's own record of the commands its workspace ran, the
 workspace's `/.bash_history`. Every session writes to it, an agent working
 over SSH included. The UI reads it from the trial's daemon while the
-trial runs, and keeps a copy under `state/harbor/console/observed/`, since
+trial runs, and keeps a copy under `<runs folder>/console/observed/`, since
 the daemon goes when the trial ends. It finds the daemon's port from
 `HARBOR_SERVER=` in `mirage/daemon.log` (Claw-Eval's daemon), or from the pid
 in `mirage/mirage-home/daemon.pid` and the port that pid listens on (Mirage's

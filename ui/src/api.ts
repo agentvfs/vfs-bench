@@ -13,6 +13,18 @@ async function call<T>(path: string, body?: unknown): Promise<T> {
   return value as T
 }
 
+export interface SettingsView {
+  benchmark: string
+  runs: string
+  defaultBenchmark: string
+  defaultRuns: string
+  inUse: { benchmark: string; runs: string }
+  datasets: number
+  jobs: number
+}
+
+export const settings = () => call<SettingsView>('/api/settings')
+export const saveSettings = (benchmark: string, runs: string) => call<SettingsView>('/api/settings', { benchmark, runs })
 export const configs = () => call<Config[]>('/api/configs')
 export const jobs = () => call<JobBrief[]>('/api/jobs')
 export const job = (id: string) => call<JobDetail>(`/api/job?id=${encodeURIComponent(id)}`)

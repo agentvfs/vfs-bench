@@ -272,7 +272,8 @@ committed fixture traces back to its source through a `dvc.yaml` stage
 (`uv run dvc status` names what has drifted).
 
 The benchmark lives in `vfs-bench-1/`, so a later version can sit beside it;
-the repository root holds only this page and its images.
+the repository root holds this page, its images, and [`ui/`](ui/README.md), a
+page to start and watch `vfs-bench-2/`'s Harbor runs.
 
 ```
 vfs-bench-1/

@@ -65,6 +65,8 @@ gitignored, so nothing third-party is committed.
 
 ## Run
 
+To start runs and watch them from a page instead, see [../ui](../ui/README.md).
+
 ```sh
 # A model, through the OpenAI Agents SDK (OPENAI_API_KEY, OPENAI_BASE_URL;
 # a .env here is read if present).
@@ -116,7 +118,6 @@ harness/      the run, oracle and determinism runners; fakes, workspace, dumps
 clis/         CLI generators: from tool schemas (tools.ts), from OpenAPI
               (openapi.ts), and complete-task (answer.ts)
 bridge/       serves a Python simulation as a fake (POST /reset, /call, GET /snapshot)
-ui/           a page to run Harbor jobs and watch their trials (ui/README.md)
 harbor/       a Harbor environment on a Mirage workspace, and thirteen LiveClawBench
               tasks as Harbor task directories on shared kit fakes (harbor/README.md)
 mocks/        kit fakes this repo adds on Mirage's integ kit (chat, weather)

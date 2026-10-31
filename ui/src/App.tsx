@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import * as api from './api.ts'
-import type { Cell, Config, JobBrief, JobDetail, TaskBrief } from './api.ts'
+import type { Cell, Config, JobBrief, JobDetail, SettingsView, TaskBrief } from './api.ts'
 import { Brand } from './Logo.tsx'
 import { Select } from './Select.tsx'
 
@@ -75,6 +75,12 @@ const Icon = {
     </svg>
   ),
   close: <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><path d="M1 1l6 6M7 1L1 7" stroke="currentColor" strokeWidth="1.2" /></svg>,
+  settings: (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <circle cx="7" cy="7" r="2" stroke="currentColor" strokeWidth="1.2" />
+      <path d="M7 1v1.6M7 11.4V13M1 7h1.6M11.4 7H13M2.8 2.8l1.1 1.1M10.1 10.1l1.1 1.1M2.8 11.2l1.1-1.1M10.1 3.9l1.1-1.1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  ),
   search: (
     <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
       <circle cx="5.5" cy="5.5" r="4.3" stroke="currentColor" strokeWidth="1.2" />
@@ -103,12 +109,14 @@ const Icon = {
 
 /** Where the page is: a dataset's runs or tasks, or one run. Kept in the URL's hash. */
 type Route =
+  | { dataset: string; view: 'settings' }
   | { dataset: string; view: 'runs' | 'tasks' }
   | { dataset: string; view: 'run'; run: string }
   | { dataset: string; view: 'task'; task: string }
 
 function readRoute(): Route | null {
   const [dataset, view, ...rest] = location.hash.replace(/^#\/?/, '').split('/').map(decodeURIComponent)
+  if (dataset === 'settings') return { dataset: '', view: 'settings' }
   if (!dataset) return null
   if (view === 'run' && rest.length) return { dataset, view, run: rest.join('/') }
   if (view === 'task' && rest.length) return { dataset, view, task: rest[0] }
@@ -116,6 +124,10 @@ function readRoute(): Route | null {
 }
 
 function writeRoute(route: Route) {
+  if (route.view === 'settings') {
+    location.hash = '/settings'
+    return
+  }
   const parts = [
     route.dataset,
     route.view,
@@ -560,6 +572,62 @@ function RunView({ id, onChange, head }: { id: string; onChange: () => void; hea
   )
 }
 
+/** The folders the UI works in: the benchmark checkout and where its runs go. */
+function SettingsPage({ onSaved }: { onSaved: () => void }) {
+  const [current, setCurrent] = useState<SettingsView | null>(null)
+  const [benchmark, setBenchmark] = useState('')
+  const [runs, setRuns] = useState('')
+  const [error, setError] = useState('')
+  const [saved, setSaved] = useState(false)
+  const [busy, setBusy] = useState(false)
+  useEffect(() => {
+    api.settings().then((s) => {
+      setCurrent(s)
+      setBenchmark(s.benchmark)
+      setRuns(s.runs)
+    }, (e: Error) => setError(e.message))
+  }, [])
+  const save = async () => {
+    setBusy(true)
+    setError('')
+    setSaved(false)
+    try {
+      setCurrent(await api.saveSettings(benchmark, runs))
+      setSaved(true)
+      onSaved()
+    } catch (e) {
+      setError((e as Error).message)
+    } finally {
+      setBusy(false)
+    }
+  }
+  if (!current) return error ? <div className="err">{error}</div> : null
+  return (
+    <>
+      <div className="page-head"><h1>Settings</h1></div>
+      <div className="settings">
+        <label>
+          <span className="label">Benchmark folder</span>
+          <input value={benchmark} placeholder={current.defaultBenchmark} onChange={(e) => { setBenchmark(e.target.value); setSaved(false) }} />
+          <span className="note">A vfs-bench-2 checkout, with its <code>harbor/</code> configs and tasks.</span>
+        </label>
+        <label>
+          <span className="label">Runs folder</span>
+          <input value={runs} placeholder={current.defaultRuns} onChange={(e) => { setRuns(e.target.value); setSaved(false) }} />
+          <span className="note">Where Harbor's jobs are written and read.</span>
+        </label>
+        <div className="settings-foot">
+          <button className="primary" disabled={busy} onClick={save}>Save</button>
+          <span className="count">
+            {saved ? 'saved · ' : ''}{current.datasets} datasets · {current.jobs} runs
+          </span>
+        </div>
+        {error && <div className="err">{error}</div>}
+      </div>
+    </>
+  )
+}
+
 export function App() {
   const [configs, setConfigs] = useState<Config[]>([])
   const [jobs, setJobs] = useState<JobBrief[]>([])
@@ -585,28 +653,78 @@ export function App() {
     writeRoute(next)
     setRoute(next)
   }
+  const reload = () => {
+    api.configs().then(setConfigs, () => setConfigs([]))
+    refreshJobs()
+  }
   const config = choices.find((c) => c.dataset === route?.dataset) ?? choices[0]
-  if (!config) return <div className="shell" />
-  const here: Route = route && route.dataset === config.dataset ? route : { dataset: config.dataset, view: 'runs' }
-  const runs = jobs.filter((j) => j.dataset === config.dataset && !j.retryOf)
+  const settings = route?.view === 'settings' || !config
+  const here: Route = settings
+    ? { dataset: '', view: 'settings' }
+    : route && route.dataset === config.dataset
+      ? route
+      : { dataset: config.dataset, view: 'runs' }
+  const runs = config ? jobs.filter((j) => j.dataset === config.dataset && !j.retryOf) : []
   const open = (id: string) => {
     refreshJobs()
-    go({ dataset: config.dataset, view: 'run', run: id })
+    if (config) go({ dataset: config.dataset, view: 'run', run: id })
   }
+
+  let page: ReactNode = null
+  if (here.view === 'settings' || !config) page = <SettingsPage onSaved={reload} />
+  else if (here.view === 'task') page = <TaskView dataset={config.dataset} task={here.task} />
+  else if (here.view === 'run')
+    page = (
+      <RunView
+        key={here.run}
+        id={here.run}
+        onChange={refreshJobs}
+        head={(job, actions) => (
+          <div className="page-head">
+            <div>
+              <h1 className="mono">{shortId(job.id)}</h1>
+              <p className="sub">
+                {agentLabel(job.agent)}{job.model ? ` · ${job.model}` : ''} · {when(job.startedAt)} · {live(job.status) ? 'running' : job.status}
+              </p>
+            </div>
+            <div className="actions">{actions}</div>
+          </div>
+        )}
+      />
+    )
+  else
+    page = (
+      <>
+        <div className="page-head"><h1>{config.dataset}</h1></div>
+        <div className="subtabs">
+          <button className={here.view === 'runs' ? 'on' : ''} onClick={() => go({ dataset: config.dataset, view: 'runs' })}>{Icon.runs} Runs</button>
+          <button className={here.view === 'tasks' ? 'on' : ''} onClick={() => go({ dataset: config.dataset, view: 'tasks' })}>{Icon.tasks} Tasks</button>
+        </div>
+        {here.view === 'runs' ? (
+          <RunsView config={config} runs={runs} onOpen={open} onChange={refreshJobs} />
+        ) : (
+          <TasksView dataset={config.dataset} onOpen={(task) => go({ dataset: config.dataset, view: 'task', task })} />
+        )}
+      </>
+    )
 
   return (
     <div className="shell">
       <header className="topbar">
         <Brand />
         <span className="crumb">/</span>
-        <button className="crumb-link" onClick={() => go({ dataset: config.dataset, view: 'runs' })}>{config.dataset}</button>
+        {here.view === 'settings' || !config ? (
+          <span>settings</span>
+        ) : (
+          <button className="crumb-link" onClick={() => go({ dataset: config.dataset, view: 'runs' })}>{config.dataset}</button>
+        )}
         {here.view === 'run' && (
           <>
             <span className="crumb">/</span>
             <span className="mono">{shortId(here.run)}</span>
           </>
         )}
-        {here.view === 'task' && (
+        {here.view === 'task' && config && (
           <>
             <span className="crumb">/</span>
             <button className="crumb-link" onClick={() => go({ dataset: config.dataset, view: 'tasks' })}>tasks</button>
@@ -619,44 +737,23 @@ export function App() {
         <nav className="sidenav">
           <span className="section">Datasets</span>
           {choices.map((c) => (
-            <button key={c.dataset} className={`nav-item${c.dataset === config.dataset ? ' on' : ''}`} onClick={() => go({ dataset: c.dataset, view: 'runs' })}>
+            <button
+              key={c.dataset}
+              className={`nav-item${here.view !== 'settings' && c.dataset === config?.dataset ? ' on' : ''}`}
+              onClick={() => go({ dataset: c.dataset, view: 'runs' })}
+            >
               {Icon.dataset}
               <span>{c.dataset}</span>
               <span className="muted push">{c.tasks.length}</span>
             </button>
           ))}
+          <span className="section">Configure</span>
+          <button className={`nav-item${here.view === 'settings' ? ' on' : ''}`} onClick={() => go({ dataset: '', view: 'settings' })}>
+            {Icon.settings}
+            <span>Settings</span>
+          </button>
         </nav>
-        <main className="page">
-          {here.view === 'task' ? (
-            <TaskView dataset={config.dataset} task={here.task} />
-          ) : here.view === 'run' ? (
-            <RunView
-              key={here.run}
-              id={here.run}
-              onChange={refreshJobs}
-              head={(job, actions) => (
-                <div className="page-head">
-                  <div>
-                    <h1 className="mono">{shortId(job.id)}</h1>
-                    <p className="sub">
-                      {agentLabel(job.agent)}{job.model ? ` · ${job.model}` : ''} · {when(job.startedAt)} · {live(job.status) ? 'running' : job.status}
-                    </p>
-                  </div>
-                  <div className="actions">{actions}</div>
-                </div>
-              )}
-            />
-          ) : (
-            <>
-              <div className="page-head"><h1>{config.dataset}</h1></div>
-              <div className="subtabs">
-                <button className={here.view === 'runs' ? 'on' : ''} onClick={() => go({ dataset: config.dataset, view: 'runs' })}>{Icon.runs} Runs</button>
-                <button className={here.view === 'tasks' ? 'on' : ''} onClick={() => go({ dataset: config.dataset, view: 'tasks' })}>{Icon.tasks} Tasks</button>
-              </div>
-              {here.view === 'runs' ? <RunsView config={config} runs={runs} onOpen={open} onChange={refreshJobs} /> : <TasksView dataset={config.dataset} onOpen={(task) => go({ dataset: config.dataset, view: 'task', task })} />}
-            </>
-          )}
-        </main>
+        <main className="page">{page}</main>
       </div>
     </div>
   )
