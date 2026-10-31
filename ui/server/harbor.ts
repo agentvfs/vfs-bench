@@ -11,7 +11,8 @@
  * have been started from a shell.
  */
 import { execFile, spawn, type ChildProcess } from 'node:child_process'
-import { existsSync, openSync, closeSync } from 'node:fs'
+import { randomBytes } from 'node:crypto'
+import { closeSync, existsSync, mkdirSync, openSync } from 'node:fs'
 import { appendFile, mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { basename, dirname, join } from 'node:path'
 import { promisify } from 'node:util'
@@ -41,6 +42,8 @@ export interface Cell {
   trial: string | null
   /** 1 for the job's own trial, one more for each retry. */
   attempt: number
+  /** Which of the job's attempts at this task the cell is, from 0 (`-k` gives several). */
+  slot: number
   /** The last commands its Mirage workspace ran, as Mirage's history records them. */
   commands: string[]
 }
@@ -97,11 +100,17 @@ const JOB_ID = /^[\w.-]+\/[\w.-]+$/
 const RETRY = /__retry-(\d+)$/
 const CANCELLED = 'CancelledError'
 
+/** A task to run again, and which of its attempts the new trial stands in for. */
+export interface Pick {
+  task: string
+  slot: number
+}
+
 interface Launch {
   child: ChildProcess
   command: string
   log: string
-  tasks: string[]
+  picks: Pick[]
   stopping: boolean
 }
 
@@ -237,6 +246,8 @@ export class Harbor {
   private readonly launches = new Map<string, Launch>()
   /** Jobs whose process this UI saw end: not running, whatever Harbor last wrote. */
   private readonly exited = new Set<string>()
+  /** Retry names chosen but not yet launched. */
+  private readonly reserved = new Set<string>()
   /** Each dataset's task catalogue, with the version of the config it was read from. */
   private readonly catalog = new Map<string, { version: string; tasks: TaskBrief[] }>()
   /** The cells of runs that have ended, keyed by their retries, for the run list. */
@@ -311,6 +322,15 @@ export class Harbor {
       const task = config?.tasks?.[0] ?? config?.datasets?.[0]
       const found = task && owner.get(taskOf(task))
       if (found) j.dataset = found
+    }
+    // A job with a retry going is running, and stoppable here if this UI
+    // started the retry.
+    const byId = new Map(out.map((j) => [j.id, j]))
+    for (const r of out) {
+      const parent = r.retryOf ? byId.get(r.retryOf) : undefined
+      if (!parent || !(r.status === 'running' || r.status === 'starting')) continue
+      parent.status = 'running'
+      parent.owned ||= r.owned
     }
     // Harbor's counts are the job's own; a job that was retried counts each
     // task's latest attempt, as its cells do.
@@ -407,9 +427,9 @@ export class Harbor {
     return out.sort((a, b) => a.started - b.started)
   }
 
-  private async cell(task: string, trial: string, attempt: number, commands = true): Promise<Cell> {
+  private async cell(task: string, slot: number, trial: string, attempt: number, commands = true): Promise<Cell> {
     const result = await json(join(this.jobsRoot, trial, 'result.json'))
-    const base = { task, trial, attempt, reward: null, error: null, commands: commands ? await this.observed(trial, !result) : [] }
+    const base = { task, slot, trial, attempt, reward: null, error: null, commands: commands ? await this.observed(trial, !result) : [] }
     if (!result) return { ...base, state: 'in-progress' }
     const error = result.exception_info?.exception_type ?? null
     if (error === CANCELLED) return { ...base, state: 'not-started', error }
@@ -432,38 +452,55 @@ export class Harbor {
     const used = new Map<string, number>()
     const cells: Cell[] = []
     for (const task of planned) {
-      const i = used.get(task) ?? 0
-      used.set(task, i + 1)
-      const trial = started.get(task)?.[i]
+      const slot = used.get(task) ?? 0
+      used.set(task, slot + 1)
+      const trial = started.get(task)?.[slot]
       cells.push(
         trial
-          ? await this.cell(task, trial, 1, commands)
-          : { task, trial: null, attempt: 1, state: 'not-started', reward: null, error: null, commands: [] }
+          ? await this.cell(task, slot, trial, 1, commands)
+          : { task, slot, trial: null, attempt: 1, state: 'not-started', reward: null, error: null, commands: [] }
       )
     }
-    // A retry's trial stands in for the task's first cell, the latest winning.
-    for (const [n, retry] of (await this.retries(id)).entries()) {
+    // A retry's trial stands in for the attempt it was asked to redo, the
+    // latest retry winning.
+    const at = (task: string, slot: number) => cells.findIndex((c) => c.task === task && c.slot === slot)
+    const retries = await this.retries(id)
+    for (const [n, retry] of retries.entries()) {
+      const picks = await this.picksOf(retry)
+      const seen = new Map<string, number>()
       for (const t of await this.trials(retry)) {
-        const i = cells.findIndex((c) => c.task === t.task)
-        if (i >= 0) cells[i] = await this.cell(t.task, t.trial, n + 2, commands)
+        const k = seen.get(t.task) ?? 0
+        seen.set(t.task, k + 1)
+        const slot = picks.filter((p) => p.task === t.task)[k]?.slot ?? 0
+        const i = at(t.task, slot)
+        if (i >= 0) cells[i] = await this.cell(t.task, slot, t.trial, n + 2, commands)
       }
       const launch = this.launches.get(retry)
       if (launch)
-        for (const task of launch.tasks) {
-          const i = cells.findIndex((c) => c.task === task)
+        for (const { task, slot } of launch.picks) {
+          const i = at(task, slot)
           if (i >= 0 && cells[i].attempt < n + 2)
-            cells[i] = { task, trial: null, attempt: n + 2, state: 'not-started', reward: null, error: null, commands: [] }
+            cells[i] = { task, slot, trial: null, attempt: n + 2, state: 'not-started', reward: null, error: null, commands: [] }
         }
     }
-    const retrying = (await this.retries(id)).some((r) => this.launches.has(r))
+    const retrying = retries.some((r) => this.launches.has(r))
     const launch = this.launches.get(id)
     return {
       ...brief,
       status: retrying && brief.status !== 'running' ? 'running' : brief.status,
+      owned: brief.owned || retrying,
       command: launch?.command ?? `harbor run -c ${join(this.dir(id), 'config.json')}`,
       cells,
       log: launch ? await this.tail(launch.log, 6) : null,
     }
+  }
+
+  /** Which attempts a retry redoes, as `retry()` recorded them; slot 0 for one it did not start. */
+  private async picksOf(retry: string): Promise<Pick[]> {
+    const launched = this.launches.get(retry)?.picks
+    if (launched) return launched
+    const saved = await json(join(this.configDir, `${basename(retry)}.picks.json`))
+    return Array.isArray(saved) ? saved : []
   }
 
   private async tail(path: string, n: number): Promise<string> {
@@ -473,13 +510,20 @@ export class Harbor {
 
   /**
    * A run's cells without their terminals, retries merged in. A run that has
-   * ended, with no retry of it running, is read once and kept until another
-   * retry of it appears.
+   * ended, with every retry of it ended too, is read once and kept until
+   * another retry of it appears.
    */
   private async cellsOf(id: string, status: JobStatus): Promise<Cell[]> {
     const retries = await this.retries(id)
     const key = retries.join(',')
-    const ended = (status === 'done' || status === 'stopped') && !retries.some((r) => this.launches.has(r))
+    // Ended only when the job and each retry has: a retry started from a
+    // shell, or before this server, is in no launch but may still be going.
+    let ended = status === 'done' || status === 'stopped'
+    for (const r of retries) {
+      if (!ended) break
+      const s = this.launches.has(r) ? 'running' : (await this.brief(r))?.status
+      ended = s === 'done' || s === 'stopped'
+    }
     const hit = this.settled.get(id)
     if (ended && hit?.key === key) return hit.cells
     const cells = (await this.detail(id, false)).cells
@@ -489,13 +533,16 @@ export class Harbor {
 
   /**
    * The tasks of a dataset's config, each as its directory describes it:
-   * `task.toml` and `instruction.md`. Read once per config file version.
+   * `task.toml` and `instruction.md`. Read again when any of them changes.
    */
   async tasks(dataset: string): Promise<TaskBrief[]> {
     const config = (await this.configs()).find((c) => c.dataset === dataset && c.file === `harbor/${dataset}.yaml`) ??
       (await this.configs()).find((c) => c.dataset === dataset)
     if (!config) throw new Error(`No dataset ${dataset}`)
-    const version = await stat(join(this.root, config.file)).then((s) => `${config.file}@${s.mtimeMs}`)
+    // The config's version and every task file's, so an edited task is read again.
+    const mtime = (path: string) => stat(path).then((s) => s.mtimeMs, () => 0)
+    const files = config.paths.flatMap((p) => ['task.toml', 'instruction.md'].map((f) => join(this.root, p, f)))
+    const version = [config.file, ...(await Promise.all([join(this.root, config.file), ...files].map(mtime)))].join('@')
     const hit = this.catalog.get(dataset)
     if (hit?.version === version) return hit.tasks
     const tasks: TaskBrief[] = []
@@ -520,9 +567,9 @@ export class Harbor {
   /**
    * The commands a trial's workspace ran: Mirage's own record of them, its
    * `/.bash_history`, which every session writes to (an agent over SSH
-   * too). Read from the trial's daemon while it runs and kept under
-   * `state/harbor/console/observed/`, since the daemon goes with the trial;
-   * for a trial the UI never watched, the copy a verifier saved.
+   * too). Read from the trial's daemon while it runs; once it has ended, the
+   * copy a verifier saved, else the last one kept under
+   * `<runs folder>/console/observed/`, since the daemon goes with the trial.
    */
   private async observed(trial: string, live: boolean): Promise<string[]> {
     const kept = join(this.configDir, 'observed', `${trial}.txt`)
@@ -537,7 +584,7 @@ export class Harbor {
             body: body ? JSON.stringify(body) : undefined,
             signal: AbortSignal.timeout(800),
           }).then((r) => (r.ok ? r.json() : null), () => null)
-        const id = await this.workspace(base, get)
+        const id = await this.workspace(trial, base, get)
         const read = id ? await get(`/v1/workspaces/${id}/vfs/read`, { path: '/.bash_history' }) : null
         if (typeof read === 'string') {
           text = Buffer.from(read, 'base64').toString('utf8')
@@ -546,19 +593,27 @@ export class Harbor {
         }
       }
     }
+    // A verifier's copy is taken after the agent's last command; the kept
+    // copy is only the last look before the daemon went.
     text ??=
-      (await readFile(kept, 'utf8').catch(() => null)) ??
-      (await readFile(join(this.jobsRoot, trial, 'verifier', 'bash_history'), 'utf8').catch(() => ''))
+      (await readFile(join(this.jobsRoot, trial, 'verifier', 'bash_history'), 'utf8').catch(() => null)) ??
+      (await readFile(kept, 'utf8').catch(() => ''))
     const plan = await json(join(this.jobsRoot, trial, 'mirage', 'plan.json'))
     const setup = (Array.isArray(plan?.run) ? plan.run : []).map((r: any) => String(r?.line ?? r).trim())
     return agentCommands(text, setup)
   }
 
-  /** The trial's workspace on its daemon: Harbor names it `<trial>__env`. */
-  private async workspace(base: string, get: (path: string) => Promise<any>): Promise<string | null> {
+  /**
+   * The trial's workspace on the daemon at `base`: Harbor names it
+   * `<trial>__env`. A daemon without it is not this trial's (its port was
+   * reused after the trial ended), so it is forgotten.
+   */
+  private async workspace(trial: string, base: string, get: (path: string) => Promise<any>): Promise<string | null> {
     const listed = await get('/v1/workspaces')
     const all = (Array.isArray(listed) ? listed : (listed?.workspaces ?? [])) as { id: string }[]
-    return (all.find((w) => w.id.endsWith('__env')) ?? all[0])?.id ?? null
+    const mine = all.find((w) => w.id === `${basename(trial)}__env`)?.id ?? null
+    if (!mine && this.daemons.get(trial) === base) this.daemons.delete(trial)
+    return mine
   }
 
   /** Stop one trial: kill its workspace, so the agent's next command fails and the trial ends. */
@@ -568,8 +623,8 @@ export class Harbor {
     const base = await this.daemon(trial)
     if (!base) throw new Error('The trial is not running')
     const get = (path: string) => fetch(base + path, { signal: AbortSignal.timeout(800) }).then((r) => (r.ok ? r.json() : null), () => null)
-    const id = await this.workspace(base, get)
-    if (!id) throw new Error('The trial has no workspace')
+    const id = await this.workspace(trial, base, get)
+    if (!id) throw new Error('The trial is not running')
     const res = await fetch(`${base}/v1/workspaces/${id}/kill`, { method: 'POST', signal: AbortSignal.timeout(3000) })
     if (!res.ok) throw new Error(`Mirage refused: ${res.status}`)
   }
@@ -604,16 +659,28 @@ export class Harbor {
     return null
   }
 
-  private start(id: string, args: string[], tasks: string[]): Launch {
+  /**
+   * Start Harbor for job `id`. `agent` is the job's agent: dspy-rlm needs
+   * the harbor project's `dspy` extra and `DENO_NO_PACKAGE_JSON=1`, as
+   * harbor/README.md runs it.
+   */
+  private start(id: string, args: string[], picks: Pick[], agent: string | undefined): Launch {
+    mkdirSync(this.configDir, { recursive: true })
     const log = join(this.configDir, `${basename(id)}.log`)
     const env = existsSync(join(this.root, '.env')) ? ['--env-file', '.env'] : []
-    const argv = ['run', '--project', 'harbor', 'harbor', ...args, ...env]
+    const dspy = agent === 'dspy-rlm'
+    const argv = ['run', '--project', 'harbor', ...(dspy ? ['--extra', 'dspy'] : []), 'harbor', ...args, ...env]
     const fd = openSync(log, 'a')
     // A process group of its own, so Stop reaches Harbor, its fakes and its
     // daemons as Ctrl-C would; and it outlives this server.
-    const child = spawn('uv', argv, { cwd: this.root, detached: true, stdio: ['ignore', fd, fd] })
+    const child = spawn('uv', argv, {
+      cwd: this.root,
+      detached: true,
+      stdio: ['ignore', fd, fd],
+      env: dspy ? { ...process.env, DENO_NO_PACKAGE_JSON: '1' } : process.env,
+    })
     closeSync(fd)
-    const launch: Launch = { child, command: `uv ${argv.join(' ')}`, log, tasks, stopping: false }
+    const launch: Launch = { child, command: `uv ${argv.join(' ')}`, log, picks, stopping: false }
     this.launches.set(id, launch)
     this.exited.delete(id)
     const end = () => {
@@ -646,6 +713,9 @@ export class Harbor {
         for (const id of this.launches.keys())
           for (const t of await this.trials(id))
             if (!existsSync(join(this.jobsRoot, t.trial, 'result.json'))) await this.observed(t.trial, true)
+      } catch (error) {
+        // One failed look must not take the server, and the runs' controls, down.
+        console.error('watching trials:', error)
       } finally {
         busy = false
       }
@@ -672,13 +742,14 @@ export class Harbor {
     doc.n_concurrent_trials = Math.max(1, Math.floor(request.concurrency))
     doc.n_attempts = Math.max(1, Math.floor(request.attempts))
     const short = agent.split(':').pop()!.toLowerCase().replace(/[^\w.-]+/g, '-')
-    doc.job_name = `${source.dataset}-${short}-${stamp()}`
+    // A second's stamp and a random tag: two runs started together differ.
+    doc.job_name = `${source.dataset}-${short}-${stamp()}-${randomBytes(2).toString('hex')}`
     doc.jobs_dir = join(this.jobsRoot, 'jobs-console')
     await mkdir(this.configDir, { recursive: true })
     const file = join(this.configDir, `${doc.job_name}.json`)
     await writeFile(file, JSON.stringify(doc, null, 2))
     const id = `jobs-console/${doc.job_name}`
-    this.start(id, ['run', '-c', file, '-y'], doc.tasks.map(taskOf))
+    this.start(id, ['run', '-c', file, '-y'], [], agent.includes(':') ? undefined : agent)
     return id
   }
 
@@ -716,7 +787,7 @@ export class Harbor {
       const name = basename(t)
       await rm(join(this.jobsRoot, t), { recursive: true, force: true })
       await rm(join(this.configDir, 'observed', t), { recursive: true, force: true })
-      for (const ext of ['.json', '.log']) await rm(join(this.configDir, name + ext), { force: true })
+      for (const ext of ['.json', '.log', '.picks.json']) await rm(join(this.configDir, name + ext), { force: true })
       this.settled.delete(t)
       this.exited.delete(t)
     }
@@ -726,15 +797,17 @@ export class Harbor {
   async resume(id: string): Promise<void> {
     this.dir(id)
     if (this.launches.has(id)) throw new Error('The job is running')
-    this.start(id, ['job', 'resume', '-p', this.dir(id), '-y'], [])
+    const config = await json(join(this.dir(id), 'config.json'))
+    this.start(id, ['job', 'resume', '-p', this.dir(id), '-y'], [], config?.agents?.[0]?.name)
   }
 
   /**
    * Run some of a job's tasks again, as a job of their own beside it,
    * `<job>__retry-<n>`, with the job's own resolved config. The job's
-   * directory is left as Harbor wrote it.
+   * directory is left as Harbor wrote it. A pick names the attempt to redo
+   * (`slot`, for a job run with several); a bare task name means its first.
    */
-  async retry(id: string, tasks: string[]): Promise<string> {
+  async retry(id: string, wanted: (string | Pick)[]): Promise<string> {
     const dir = this.dir(id)
     const config = await json(join(dir, 'config.json'))
     if (!config) throw new Error('The job has no config yet')
@@ -742,24 +815,38 @@ export class Harbor {
     const paths = new Map<string, any>()
     for (const t of [...(config.tasks ?? []), ...(lock?.trials ?? []).map((t: any) => t.task)])
       if (t?.path && !paths.has(taskOf(t))) paths.set(taskOf(t), { path: t.path })
-    const chosen = [...new Set(tasks)].filter((t) => paths.has(t))
-    if (!chosen.length) throw new Error('None of those tasks is in the job')
-    const [jobsDir, name] = id.split('/')
-    const n = (await this.retries(id)).length + 1
-    const jobName = `${name}__retry-${n}`
-    const doc = {
-      ...config,
-      job_name: jobName,
-      jobs_dir: join(this.jobsRoot, jobsDir),
-      tasks: chosen.map((t) => paths.get(t)),
-      datasets: [],
-      n_attempts: 1,
-      n_concurrent_trials: Math.min(config.n_concurrent_trials ?? 4, chosen.length),
+    const picks: Pick[] = []
+    for (const w of wanted) {
+      const p = typeof w === 'string' ? { task: w, slot: 0 } : { task: String(w.task), slot: Math.max(0, Math.floor(Number(w.slot) || 0)) }
+      if (paths.has(p.task) && !picks.some((q) => q.task === p.task && q.slot === p.slot)) picks.push(p)
     }
-    await mkdir(this.configDir, { recursive: true })
-    await writeFile(join(this.configDir, `${jobName}.json`), JSON.stringify(doc, null, 2))
-    const retryId = `${jobsDir}/${jobName}`
-    this.start(retryId, ['run', '-c', join(this.configDir, `${jobName}.json`), '-y'], chosen)
-    return retryId
+    if (!picks.length) throw new Error('None of those tasks is in the job')
+    const [jobsDir, name] = id.split('/')
+    // The next free number, held from here until its process is launched, so
+    // two retries asked for together never take the same one.
+    const taken = new Set([...(await this.retries(id)).map((r) => basename(r)), ...this.reserved])
+    let n = 1
+    while (taken.has(`${name}__retry-${n}`)) n++
+    const jobName = `${name}__retry-${n}`
+    this.reserved.add(jobName)
+    try {
+      const doc = {
+        ...config,
+        job_name: jobName,
+        jobs_dir: join(this.jobsRoot, jobsDir),
+        tasks: picks.map((p) => paths.get(p.task)),
+        datasets: [],
+        n_attempts: 1,
+        n_concurrent_trials: Math.min(config.n_concurrent_trials ?? 4, picks.length),
+      }
+      await mkdir(this.configDir, { recursive: true })
+      await writeFile(join(this.configDir, `${jobName}.json`), JSON.stringify(doc, null, 2))
+      await writeFile(join(this.configDir, `${jobName}.picks.json`), JSON.stringify(picks))
+      const retryId = `${jobsDir}/${jobName}`
+      this.start(retryId, ['run', '-c', join(this.configDir, `${jobName}.json`), '-y'], picks, config.agents?.[0]?.name)
+      return retryId
+    } finally {
+      this.reserved.delete(jobName)
+    }
   }
 }

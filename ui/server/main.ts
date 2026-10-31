@@ -2,7 +2,7 @@
 import { createServer } from 'node:http'
 import { readFile } from 'node:fs/promises'
 import { extname, join, normalize } from 'node:path'
-import { api, rootDir } from './api.ts'
+import { api, localHost, rootDir } from './api.ts'
 
 const DIST = new URL('../dist/', import.meta.url).pathname
 const TYPES: Record<string, string> = {
@@ -17,6 +17,11 @@ const port = Number(process.env.PORT ?? 8787)
 const handle = api()
 
 createServer((req, res) => {
+  if (!localHost(req.headers.host)) {
+    res.statusCode = 403
+    res.end('Forbidden host')
+    return
+  }
   void handle(req, res, async () => {
     const path = normalize(new URL(req.url ?? '/', 'http://ui').pathname).replace(/^(\.\.[/\\])+/, '')
     const file = join(DIST, path === '/' ? 'index.html' : path)

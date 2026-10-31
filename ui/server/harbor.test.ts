@@ -1,8 +1,12 @@
 import assert from 'node:assert/strict'
+import { existsSync } from 'node:fs'
 import { mkdtemp, mkdir, writeFile } from 'node:fs/promises'
+import { createServer } from 'node:http'
+import type { AddressInfo } from 'node:net'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
+import { localHost } from './api.ts'
 import { agentCommands, globs, Harbor, parseToml } from './harbor.ts'
 
 async function put(path: string, value: unknown) {
@@ -97,4 +101,66 @@ test('task.toml reads as its sections', () => {
   const toml = parseToml(['version = "1.0"', '', '[metadata]', 'category = "finance"  # a note', 'tags = ["a", "b"]', 'level = 1', '', '[environment]', 'allow_internet = false'].join('\n'))
   assert.deepEqual(toml.metadata, { category: 'finance', tags: ['a', 'b'], level: 1 })
   assert.deepEqual(toml.environment, { allow_internet: false })
+})
+
+test('a retry stands in for the attempt it was asked to redo', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'ui-'))
+  const dir = join(root, 'state/harbor/jobs/k2')
+  const task = { path: 'harbor/tasks/demo/a' }
+  await put(join(dir, 'config.json'), { n_attempts: 2, tasks: [task] })
+  await put(join(dir, 'lock.json'), { trials: [{ task }, { task }] })
+  await put(join(dir, 'result.json'), { finished_at: '2026-10-30T00:01:00', stats: {} })
+  await put(join(dir, 'a__1/config.json'), { task })
+  await put(join(dir, 'a__1/result.json'), { verifier_result: { rewards: { reward: 1 } } })
+  await new Promise((r) => setTimeout(r, 20))
+  await put(join(dir, 'a__2/config.json'), { task })
+  await put(join(dir, 'a__2/result.json'), { verifier_result: { rewards: { reward: 0 } } })
+  const retry = join(root, 'state/harbor/jobs/k2__retry-1')
+  await put(join(retry, 'config.json'), { tasks: [task] })
+  await put(join(retry, 'a__3/config.json'), { task })
+  await put(join(retry, 'a__3/result.json'), { verifier_result: { rewards: { reward: 1 } } })
+  await put(join(root, 'state/harbor/console/k2__retry-1.picks.json'), [{ task: 'a', slot: 1 }])
+  const cells = (await new Harbor(root).detail('jobs/k2', false)).cells
+  assert.deepEqual(cells.map((c) => [c.slot, c.state, c.attempt]), [
+    [0, 'succeeded', 1],
+    [1, 'succeeded', 2],
+  ])
+})
+
+test('resume works on a runs folder this UI never used', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'ui-'))
+  await job(root)
+  const harbor = new Harbor(root)
+  await harbor.resume('jobs/j1')
+  assert.ok(existsSync(join(root, 'state/harbor/console/j1.log')))
+  // uv finds no harbor project here and exits; wait for it.
+  for (let i = 0; i < 100 && harbor.busy; i++) await new Promise((r) => setTimeout(r, 100))
+})
+
+test('stopping a trial leaves a daemon that is not serving it alone', async () => {
+  const kills: string[] = []
+  const daemon = createServer((req, res) => {
+    if (req.method === 'POST') kills.push(req.url ?? '')
+    res.setHeader('content-type', 'application/json')
+    res.end(req.url === '/v1/workspaces' ? JSON.stringify([{ id: 'another__env' }]) : '{}')
+  })
+  await new Promise<void>((r) => daemon.listen(0, '127.0.0.1', r))
+  const port = (daemon.address() as AddressInfo).port
+  const root = await mkdtemp(join(tmpdir(), 'ui-'))
+  await mkdir(join(root, 'state/harbor/jobs/j/t__1/mirage'), { recursive: true })
+  await writeFile(join(root, 'state/harbor/jobs/j/t__1/mirage/daemon.log'), `HARBOR_SERVER=${JSON.stringify({ port })}\n`)
+  try {
+    await assert.rejects(new Harbor(root).stopTrial('jobs/j/t__1'), /not running/)
+    assert.deepEqual(kills, [])
+  } finally {
+    daemon.close()
+  }
+})
+
+test('only this machine by name may reach the server', () => {
+  assert.ok(localHost('localhost:8787'))
+  assert.ok(localHost('127.0.0.1:5174'))
+  assert.ok(localHost('[::1]:8787'))
+  assert.ok(!localHost('evil.example:8787'))
+  assert.ok(!localHost(undefined))
 })

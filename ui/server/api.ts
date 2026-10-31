@@ -12,7 +12,7 @@
  *   POST /api/stop    {id}
  *   POST /api/stop-trial {trial}
  *   POST /api/resume  {id}
- *   POST /api/retry   {id, tasks}
+ *   POST /api/retry   {id, tasks}     tasks: names, or {task, slot} for one attempt
  *   POST /api/delete  {id}           the run's directory and its retries', for good
  */
 import type { IncomingMessage, ServerResponse } from 'node:http'
@@ -78,6 +78,21 @@ function send(res: ServerResponse, status: number, value: unknown) {
   res.end(JSON.stringify(value ?? null))
 }
 
+/**
+ * Whether a request was addressed to this machine by name. The server binds
+ * to 127.0.0.1, but a page whose own name later resolves there (DNS
+ * rebinding) would reach it as that name; refusing every other Host keeps
+ * such a page from reading jobs, histories and settings.
+ */
+export function localHost(host: string | undefined): boolean {
+  if (!host) return false
+  try {
+    return ['localhost', '127.0.0.1', '[::1]'].includes(new URL(`http://${host}`).hostname)
+  } catch {
+    return false
+  }
+}
+
 export function api() {
   let harbor: Promise<Harbor> = readSettings().then((s) => {
     const f = folders(s)
@@ -97,9 +112,19 @@ export function api() {
     }
   }
 
+  // Settings changes and launches take turns: a run being started when the
+  // folders change would start in the old ones, out of this UI's reach.
+  let turn: Promise<unknown> = Promise.resolve()
+  const exclusive = <T>(work: () => Promise<T>): Promise<T> => {
+    const done = turn.then(work)
+    turn = done.catch(() => {})
+    return done
+  }
+
   return async (req: IncomingMessage, res: ServerResponse, next: () => void) => {
     const url = new URL(req.url ?? '/', 'http://ui')
     if (!url.pathname.startsWith('/api/')) return next()
+    if (!localHost(req.headers.host)) return send(res, 403, { error: 'Forbidden host' })
     // Only this machine's own pages may start or stop runs.
     const origin = req.headers.origin
     if (req.method === 'POST' && origin && !/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin))
@@ -112,25 +137,31 @@ export function api() {
         const next: Settings = { benchmark: String(given.benchmark ?? '').trim(), runs: String(given.runs ?? '').trim() }
         const f = folders(next)
         await check(f.benchmark, f.runs)
-        if ((await harbor).busy) throw new Error('Runs this UI started are still going; stop them first')
-        await writeFile(SETTINGS, JSON.stringify(next, null, 2) + '\n')
-        harbor = Promise.resolve(new Harbor(f.benchmark, f.runs))
+        await exclusive(async () => {
+          if ((await harbor).busy) throw new Error('Runs this UI started are still going; stop them first')
+          await writeFile(SETTINGS, JSON.stringify(next, null, 2) + '\n')
+          harbor = Promise.resolve(new Harbor(f.benchmark, f.runs))
+        })
         return send(res, 200, await settings())
+      }
+      if (route === 'POST /api/run' || route === 'POST /api/resume' || route === 'POST /api/retry') {
+        const given = await body(req)
+        const result = await exclusive(async () => {
+          const h = await harbor
+          if (route === 'POST /api/run') return { id: await h.run(given) }
+          if (route === 'POST /api/resume') return h.resume(given.id)
+          return { id: await h.retry(given.id, given.tasks) }
+        })
+        return send(res, 200, result)
       }
       const h = await harbor
       if (route === 'GET /api/configs') return send(res, 200, await h.configs())
       if (route === 'GET /api/jobs') return send(res, 200, await h.jobs())
       if (route === 'GET /api/job') return send(res, 200, await h.detail(url.searchParams.get('id') ?? ''))
       if (route === 'GET /api/tasks') return send(res, 200, await h.tasks(url.searchParams.get('dataset') ?? ''))
-      if (route === 'POST /api/run') return send(res, 200, { id: await h.run(await body(req)) })
       if (route === 'POST /api/stop') return send(res, 200, await h.stop((await body(req)).id))
       if (route === 'POST /api/stop-trial') return send(res, 200, await h.stopTrial((await body(req)).trial))
-      if (route === 'POST /api/resume') return send(res, 200, await h.resume((await body(req)).id))
       if (route === 'POST /api/delete') return send(res, 200, await h.remove((await body(req)).id))
-      if (route === 'POST /api/retry') {
-        const { id, tasks } = await body(req)
-        return send(res, 200, { id: await h.retry(id, tasks) })
-      }
       send(res, 404, { error: 'Not found' })
     } catch (error) {
       send(res, 400, { error: error instanceof Error ? error.message : String(error) })

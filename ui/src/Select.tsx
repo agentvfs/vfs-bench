@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 
 /**
  * A dropdown drawn in the page's own style: the system's menu sets its own
@@ -18,6 +18,10 @@ export function Select({
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState(0)
   const root = useRef<HTMLDivElement>(null)
+  // Focus stays on the button; aria-activedescendant names the highlighted
+  // option, so a screen reader says which one Enter will choose.
+  const id = useId()
+  const optionId = (i: number) => `${id}-option-${i}`
 
   useEffect(() => {
     if (!open) return
@@ -55,6 +59,8 @@ export function Select({
         aria-label={label}
         aria-haspopup="listbox"
         aria-expanded={open}
+        aria-controls={open ? `${id}-list` : undefined}
+        aria-activedescendant={open ? optionId(active) : undefined}
         onClick={() => {
           setActive(Math.max(0, options.indexOf(value)))
           setOpen((o) => !o)
@@ -67,10 +73,11 @@ export function Select({
         </svg>
       </button>
       {open && (
-        <ul role="listbox" aria-label={label}>
+        <ul role="listbox" id={`${id}-list`} aria-label={label}>
           {options.map((o, i) => (
             <li
               key={o}
+              id={optionId(i)}
               role="option"
               aria-selected={o === value}
               className={`${o === value ? 'chosen' : ''}${i === active ? ' active' : ''}`}

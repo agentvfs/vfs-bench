@@ -40,6 +40,7 @@ body * { scrollbar-width: thin; scrollbar-color: var(--edge) transparent; }
 .push { margin-left: auto; }
 .label { display: block; font: 11px/1.4 var(--mono); color: var(--ink-muted); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 4px; }
 .err { color: var(--error); font-size: 12px; margin: 0 0 12px; }
+.err.inline { margin: 0; }
 
 /* The shell: a bar across the top, the datasets down the left, the page. */
 .shell { display: flex; flex-direction: column; min-height: 100%; }

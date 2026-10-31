@@ -369,16 +369,29 @@ const minutes = (v: unknown) => (typeof v === 'number' ? `${Math.round(v / 60)} 
 
 function TasksView({ dataset, onOpen }: { dataset: string; onOpen: (task: string) => void }) {
   const [tasks, setTasks] = useState<TaskBrief[] | null>(null)
+  const [error, setError] = useState('')
+  const [attempt, setAttempt] = useState(0)
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState('all categories')
   useEffect(() => {
     setTasks(null)
+    setError('')
     let on = true
-    api.tasks(dataset).then((t) => on && setTasks(t), () => {})
+    api.tasks(dataset).then(
+      (t) => on && setTasks(t),
+      (e: Error) => on && setError(e.message)
+    )
     return () => {
       on = false
     }
-  }, [dataset])
+  }, [dataset, attempt])
+  if (error)
+    return (
+      <div className="toolbar">
+        <span className="err inline">Couldn't load the tasks: {error}</span>
+        <button className="ghost" onClick={() => setAttempt((n) => n + 1)}>{Icon.retry} Try again</button>
+      </div>
+    )
   if (!tasks) return null
   const categories = ['all categories', ...new Set(tasks.map((t) => String(t.metadata.category ?? '')).filter(Boolean))]
   const hasDifficulty = tasks.some((t) => t.metadata.difficulty)
@@ -563,7 +576,7 @@ function RunView({ id, onChange, head }: { id: string; onChange: () => void; hea
       <div className="terms">
         {job.cells.map((c, i) => (
           <div key={`${c.task}-${i}`} className={c.task === focus ? 'focus' : undefined}>
-            <Terminal cell={c} onStop={() => act(() => api.stopTrial(c.trial!))} onRetry={() => act(() => api.retry(id, [c.task]))} />
+            <Terminal cell={c} onStop={() => act(() => api.stopTrial(c.trial!))} onRetry={() => act(() => api.retry(id, [{ task: c.task, slot: c.slot }]))} />
           </div>
         ))}
       </div>
