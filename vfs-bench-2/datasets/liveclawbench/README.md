@@ -12,7 +12,7 @@ From `vfs-bench-2/`:
 
 ```sh
 uv run --project datasets/liveclawbench python -I datasets/liveclawbench/fetch.py
-uv run --project formats/harbor python -I datasets/liveclawbench/generate.py --check
+uv run --project datasets/liveclawbench python -I datasets/liveclawbench/generate.py --check
 uv run --project formats/harbor harbor run -c datasets/liveclawbench/jobs/harbor.yaml -a nop -n 32
 uv run --project formats/harbor harbor run -c datasets/liveclawbench/jobs/harbor.yaml -a oracle -n 32
 ```
@@ -603,4 +603,3 @@ Skipped, each for a reason a run here cannot meet:
 - **Model run.** dspy-rlm with `openai/gpt-5.6-luna` reached 1.0 on
   weather-aqi-report from its upstream directory: it fetched the mock's
   page with curl through the workspace and wrote the report.
-

@@ -67,4 +67,3 @@ print(json.dumps([[s, s.strip(), s.splitlines(), [line.removesuffix('\\n') for l
     assert.deepEqual(fileLines(value), read, JSON.stringify(value))
   }
 })
-

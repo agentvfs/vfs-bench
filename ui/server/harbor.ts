@@ -685,7 +685,7 @@ export class Harbor {
   /**
    * Start Harbor for job `id`. `agent` is the job's agent: dspy-rlm needs
    * the formats/harbor project's `dspy` extra and `DENO_NO_PACKAGE_JSON=1`.
-   * 
+   *
    */
   private start(id: string, args: string[], picks: Pick[], agent: string | undefined): Launch {
     const log = this.file(id, '.log')

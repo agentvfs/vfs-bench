@@ -38,4 +38,3 @@ test('Judge transport cancels unsuccessful response bodies before recording HTTP
     assert.equal(canceled, retry + 1)
   }
 })
-

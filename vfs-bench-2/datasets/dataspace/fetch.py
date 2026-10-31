@@ -1,6 +1,7 @@
 """Fetch the DataSpace tasks this repo ports, without the whole archive.
 
-    uv run --project datasets/dataspace python -I datasets/dataspace/fetch.py [task_N ...]
+    uv run --project datasets/dataspace \
+        python -I datasets/dataspace/fetch.py [task_N ...]
 
 DataSpace (HKUSTDial/DataSpace, MIT code and data) ships its 410 tasks as
 one 2.9 GB zip on Hugging Face. This reads only the ported tasks' entries

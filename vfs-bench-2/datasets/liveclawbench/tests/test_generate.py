@@ -1,6 +1,7 @@
 """generate.py's check of workspace.yaml's ``copy`` against a Dockerfile.
 
-    uv run --project formats/harbor python -I datasets/liveclawbench/tests/test_generate.py
+    uv run --project formats/harbor \
+        python -I datasets/liveclawbench/tests/test_generate.py
 
 Two COPYs to one destination are two entries, in order: a ``copy`` that
 states one of them, or names the destination twice, fails the check. So

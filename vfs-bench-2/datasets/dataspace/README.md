@@ -90,4 +90,3 @@ lets a model find it. `generate.py`'s `SKIPPED` lists them.
 - **Scratch space.** `TOOLS.md` has the agent write its scripts and
   intermediate files to the output directory; `/output` takes them, and
   `/tmp` too. The evaluator reads `/output/prediction.csv` alone.
-

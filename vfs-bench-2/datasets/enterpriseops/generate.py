@@ -1,7 +1,9 @@
 """Write the committed EnterpriseOps-Gym tasks from upstream, or check them.
 
-    uv run --project enterpriseops python -I fetch.py
-    uv run --project datasets/enterpriseops python -I datasets/enterpriseops/generate.py \
+    uv run --project datasets/enterpriseops \
+        python -I datasets/enterpriseops/fetch.py
+    uv run --project datasets/enterpriseops \
+        python -I datasets/enterpriseops/generate.py \
         [--check] [--domain <domain> ...] [task id ...]
 
 Each task under ``datasets/enterpriseops/<task id>/`` is one row of the
@@ -35,9 +37,9 @@ each of its servers has a fake (``mocks/enterpriseops_<domain>/``):
 ``--check`` writes nothing and exits 1 if a file differs from what upstream
 gives, or if a file is unaccounted for.
 
-It names each file by its place in Harbor's layout (``environment/mirage.yaml``,
-``tests/<file>``); ``datasets/layout.py`` lays them out in the task's
-``workspace/`` and ``harbor/``.
+It names each file by its place in Harbor's layout
+(``environment/mirage.yaml``, ``tests/<file>``); ``datasets/layout.py`` lays
+them out in the task's ``workspace/`` and ``harbor/``.
 """
 import argparse
 import functools
@@ -55,12 +57,13 @@ OUT = HERE
 TEST_SH = ROOT / "formats" / "harbor" / "test.sh"
 sys.path.insert(0, str(HERE.parent))
 from layout import placed  # noqa: E402
+
 SOLUTIONS = HERE / "solutions"
 MANIFEST = HERE / "graders" / "manifest.json"
 # The reference tests the native grader ports: MirageVerifier refuses a task
 # whose files no longer hash as its definition says.
 # What the native grader reads from the task's tests/, pinned in its manifest.
-INPUTS = ("verifiers.json",)
+INPUTS = ("verifiers.json", )
 DATASET = "ServiceNow-AI/EnterpriseOps-Gym@c8e538e"
 MODE = "oracle"
 DOMAINS = [
@@ -283,8 +286,6 @@ def context_headers(cfg: dict) -> dict[str, str]:
             f"x-{key.lower().replace('_', '-')}")
         out[name.lower()] = str(value)
     return out
-
-
 
 
 def expected(row: dict) -> dict[str, bytes]:

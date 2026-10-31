@@ -1,6 +1,7 @@
 """Pin the ComplexMCP rows and original graders; --check detects drift.
 
-Run after datasets/complexmcp/fetch.py. Reference files are deliberately untouched.
+Run after datasets/complexmcp/fetch.py. Reference files are deliberately
+untouched.
 """
 import argparse
 import hashlib

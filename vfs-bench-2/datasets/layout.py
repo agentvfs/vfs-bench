@@ -24,8 +24,8 @@ POINTER_TEXT = b"workspace: ../../workspace\n"
 
 def place(rel: str) -> str:
     """A file's path in the task, from its path in Harbor's layout."""
-    if rel in ("instruction.md", "task.toml", "tests/test.sh") or rel.startswith(
-            "solution/"):
+    if rel in ("instruction.md", "task.toml",
+               "tests/test.sh") or rel.startswith("solution/"):
         return f"harbor/{rel}"
     if rel.startswith("tests/"):
         return "workspace/verifier/" + rel.removeprefix("tests/")

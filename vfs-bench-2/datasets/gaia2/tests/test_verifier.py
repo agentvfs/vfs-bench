@@ -8,11 +8,11 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, patch
 
-from vfsbench_harbor.mirage_verifier import dataset_module
+from vfsbench_harbor.mirage_verifier import (MirageVerifier, _Staging,
+                                             dataset_module)
 
 definitions = dataset_module('gaia2').definitions
 freeze = dataset_module('gaia2').freeze
-from vfsbench_harbor.mirage_verifier import MirageVerifier, _Staging
 
 
 class Gaia2VerifierTests(unittest.IsolatedAsyncioTestCase):
@@ -162,7 +162,6 @@ class Gaia2VerifierTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaisesRegex(ValueError, 'leaves its workspace'):
             await self.snapshot()
 
-
     async def test_staging_limit_is_enforced(self):
         with patch('vfsbench_harbor.mirage_verifier.MAX_STAGING_BYTES', 1):
             with self.assertRaisesRegex(ValueError, 'byte limit'):
@@ -173,7 +172,6 @@ class Gaia2VerifierTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(registered), 460)
         for definition in registered.values():
             self.assertEqual(definition['runtime'], 'gaia2-monty')
-
 
 
 if __name__ == '__main__':

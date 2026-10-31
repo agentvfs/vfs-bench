@@ -23,9 +23,10 @@ class AutomationVerifierTests(unittest.IsolatedAsyncioTestCase):
             (ROOT / "datasets/automationbench/graders/fixtures/"
              "finance-invoice-email-extract.json").read_text())
         task = root / "automationbench" / self.fixture["task"]
-        shutil.copytree(
-            ROOT / "datasets/automationbench" / self.fixture["task"], task,
-            ignore=shutil.ignore_patterns("fixtures", "task.json"))
+        shutil.copytree(ROOT / "datasets/automationbench" /
+                        self.fixture["task"],
+                        task,
+                        ignore=shutil.ignore_patterns("fixtures", "task.json"))
         (task / "workspace/verifier").mkdir(exist_ok=True)
         (task / "workspace/verifier/task.json").write_text(
             self.fixture["task_json"])
@@ -66,15 +67,13 @@ class AutomationVerifierTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_task_tampering_fails_before_state_export_and_clears_rewards(
             self):
-        (self.task.paths.task_dir.parent / "workspace/verifier/task.json"
-         ).write_text("{}")
+        (self.task.paths.task_dir.parent /
+         "workspace/verifier/task.json").write_text("{}")
         self.paths.reward_json_path.write_text('{"reward": 1}')
         with self.assertRaisesRegex(ValueError, "task.json changed"):
             await self.verifier.verify()
         self.env.snapshot_verifier_states.assert_not_called()
         self.assertFalse(self.paths.reward_json_path.exists())
-
-
 
 
 if __name__ == "__main__":

@@ -41,9 +41,10 @@ def main() -> int:
         json.dumps(tasks, indent=1, ensure_ascii=False))
     print(f"{len(tasks)} tasks from {COMMIT[:7]} in {STATE}")
     # Each task's row, which its grader reads (workspace/verifier/row.json).
-    return subprocess.run(
-        [sys.executable, "-I",
-         str(Path(__file__).resolve().parent / "generate.py")]).returncode
+    return subprocess.run([
+        sys.executable, "-I",
+        str(Path(__file__).resolve().parent / "generate.py")
+    ]).returncode
 
 
 if __name__ == "__main__":

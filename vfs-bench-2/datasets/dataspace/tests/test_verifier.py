@@ -77,7 +77,7 @@ class DataSpaceVerifierTests(unittest.IsolatedAsyncioTestCase):
             patch.object(self.verifier,
                          '_definition',
                          return_value=(self.task.paths.task_dir.parent.name,
-                                           self.definition)))
+                                       self.definition)))
 
     async def test_frozen_prediction_and_gold_are_independent_of_agent_reward(
             self):
@@ -141,7 +141,6 @@ class DataSpaceVerifierTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaisesRegex(ValueError, 'leaves its workspace'):
             await self.verifier.verify()
         self.verifier._run.assert_not_called()
-
 
 
 if __name__ == '__main__':

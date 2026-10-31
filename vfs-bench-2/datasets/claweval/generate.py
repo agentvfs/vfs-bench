@@ -1,6 +1,7 @@
 """Write the committed Claw-Eval tasks from upstream, or check them.
 
-    uv run --project formats/harbor python -I datasets/claweval/generate.py [--check] [task ...]
+    uv run --project formats/harbor \
+        python -I datasets/claweval/generate.py [--check] [task ...]
 
 Each task under ``datasets/claweval/<task id>/`` is a Harbor task made
 from upstream's ``tasks/<task id>/task.yaml`` (claw-eval/claw-eval, pinned
@@ -39,9 +40,9 @@ for the solutions of ``SOLVED``, which are ours:
 upstream gives, if a solved task's ``solve.sh`` or ``reply.md`` is missing,
 or if a file is unaccounted for.
 
-It names each file by its place in Harbor's layout (``environment/mirage.yaml``,
-``tests/<file>``); ``datasets/layout.py`` lays them out in the task's
-``workspace/`` and ``harbor/``.
+It names each file by its place in Harbor's layout
+(``environment/mirage.yaml``, ``tests/<file>``); ``datasets/layout.py`` lays
+them out in the task's ``workspace/`` and ``harbor/``.
 """
 import argparse
 import json
@@ -60,6 +61,7 @@ OUT = HERE
 TEST_SH = ROOT / "formats" / "harbor" / "test.sh"
 sys.path.insert(0, str(HERE.parent))
 from layout import place, placed  # noqa: E402
+
 COMMIT = "5680b8b"
 # The epoch a run's clock starts at where the task gives no mock_today:
 # upstream's services read the wall clock, and only stamp their audit logs.
@@ -644,8 +646,8 @@ def mirage_yaml(task: dict) -> str:
     head = [
         f"# {task['task_id']}, on vfsbench_harbor's mirage environment "
         "(datasets/claweval/generate.py writes it).", "#",
-        "# Each service is its kit fake at upstream's port, and its tools CLIs",
-        "# (workspace/tools.ts)."
+        "# Each service is its kit fake at upstream's port, and its tools "
+        "CLIs", "# (workspace/tools.ts)."
     ]
     if used:
         head += [

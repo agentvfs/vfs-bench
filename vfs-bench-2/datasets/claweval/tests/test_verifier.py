@@ -61,10 +61,14 @@ class ClawEvalVerifierTests(unittest.IsolatedAsyncioTestCase):
     def test_oracle_config_contains_every_packaged_solution(self):
         config = yaml.safe_load(
             (ROOT / "datasets/claweval/jobs/oracle.yaml").read_text())
-        configured = {Path(item["path"]).parent.name for item in config["tasks"]}
+        configured = {
+            Path(item["path"]).parent.name
+            for item in config["tasks"]
+        }
         available = {
-            p.parents[2].name for p in (ROOT / "datasets/claweval").glob(
-                "*/harbor/solution/solve.sh")
+            p.parents[2].name
+            for p in (ROOT /
+                      "datasets/claweval").glob("*/harbor/solution/solve.sh")
         }
         self.assertEqual(configured, available)
         self.assertEqual(len(config["tasks"]), len(available))
@@ -88,7 +92,8 @@ class ClawEvalVerifierTests(unittest.IsolatedAsyncioTestCase):
         with patch("sqlite3.connect",
                    side_effect=AssertionError("verifier opened SQLite")):
             frozen = await self.verifier.freeze(
-                claw.definitions()[self.task.paths.task_dir.parent.name], stage)
+                claw.definitions()[self.task.paths.task_dir.parent.name],
+                stage)
         self.assertEqual(frozen["states"], {})
         self.assertNotIn("/input/recording.json", frozen["files"])
         self.assertFalse(
@@ -286,8 +291,6 @@ class ClawEvalVerifierTests(unittest.IsolatedAsyncioTestCase):
                     self.assertNotIn("error", saved[0])
                 self.assertNotIn("private", output.read_text())
                 self.assertFalse(self.paths.reward_json_path.exists())
-
-
 
 
 if __name__ == "__main__":

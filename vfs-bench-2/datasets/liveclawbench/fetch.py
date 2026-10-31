@@ -1,6 +1,7 @@
 """Fetch LiveClawBench at its pinned commit and install its mocks.
 
-    uv run --project datasets/liveclawbench python -I datasets/liveclawbench/fetch.py
+    uv run --project datasets/liveclawbench \
+        python -I datasets/liveclawbench/fetch.py
 
 Clones upstream (MIT) into ``state/liveclawbench/src``, checking out only
 ``mock-platform/`` and ``tasks/``, and installs the mock platform's

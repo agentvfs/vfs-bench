@@ -1,6 +1,7 @@
 """Fetch EnterpriseOps-Gym at its pinned commit, its seeds and its tasks.
 
-    uv run --project datasets/enterpriseops python -I datasets/enterpriseops/fetch.py
+    uv run --project datasets/enterpriseops \
+        python -I datasets/enterpriseops/fetch.py
 
 Clones upstream (ServiceNow/EnterpriseOps-Gym, Apache-2.0) into
 ``state/enterpriseops/src``, unzips its seed databases (``gym_dbs.zip``) into

@@ -1,6 +1,7 @@
 """Write the AutomationBench tasks for Harbor on Mirage, or check them.
 
-    uv run --project datasets/automationbench python -I datasets/automationbench/generate.py \
+    uv run --project datasets/automationbench \
+        python -I datasets/automationbench/generate.py \
         [--check] [task ...]
 
 AutomationBench (zapier/AutomationBench v1.0.6, ``4a8e106``, MIT; the
@@ -44,9 +45,9 @@ the world as built) and it is not ``SKIPPED``. ``--check`` writes nothing
 and exits 1 if a file differs from what this would write, or a file is
 unaccounted for.
 
-It names each file by its place in Harbor's layout (``environment/mirage.yaml``,
-``tests/<file>``); ``datasets/layout.py`` lays them out in the task's
-``workspace/`` and ``harbor/``.
+It names each file by its place in Harbor's layout
+(``environment/mirage.yaml``, ``tests/<file>``); ``datasets/layout.py`` lays
+them out in the task's ``workspace/`` and ``harbor/``.
 """
 import argparse
 import datetime as _dt
@@ -84,6 +85,7 @@ DATA = MOCK / "data"
 TEST_SH = ROOT / "formats" / "harbor" / "test.sh"
 sys.path.insert(0, str(HERE.parent))
 from layout import place, placed  # noqa: E402
+
 COMMIT = "4a8e1061254004d9dac807054eed33fad7d1ff14"
 PACKAGE = Path(sys.modules["automationbench"].__file__).resolve().parent
 

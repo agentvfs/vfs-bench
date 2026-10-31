@@ -4,7 +4,6 @@ import json
 import stat
 from pathlib import Path
 
-
 HERE = Path(__file__).resolve().parent
 MANIFEST = HERE / 'manifest.json'
 MAX_CSV_BYTES = 20 * 1024 * 1024  # reference limit; don't stage larger files

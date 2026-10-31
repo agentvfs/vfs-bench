@@ -1,7 +1,9 @@
 """Write the committed DataSpace tasks from upstream, or check them.
 
-    uv run --project datasets/dataspace python -I datasets/dataspace/fetch.py      # upstream's data, into state/
-    uv run --project formats/harbor python -I datasets/dataspace/generate.py [--check] [task ...]
+    # Upstream's data, into state/.
+    uv run --project datasets/dataspace python -I datasets/dataspace/fetch.py
+    uv run --project formats/harbor \
+        python -I datasets/dataspace/generate.py [--check] [task ...]
 
 Each task under ``datasets/dataspace/<slug>/`` is a Harbor task made
 from upstream's ``input/task_N/task.json`` (HKUSTDial/DataSpace, code and
@@ -19,7 +21,8 @@ writes the task's context, gold CSV and frozen config into the task from
   upstream's.
 - ``tests/gold.csv``, ``tests/config.json``: upstream's gold answer and the
   task's frozen config, which only the grader reads.
-- ``environment/workbench/TOOLS.md``: ``datasets/dataspace/workbench/TOOLS.md``.
+- ``environment/workbench/TOOLS.md``:
+  ``datasets/dataspace/workbench/TOOLS.md``.
 - ``tests/test.sh``: the stub (``harbor/test.sh``). ``MirageVerifier`` runs
   upstream's evaluator on ``/output/prediction.csv``, ported to Monty.
 - ``solution/solve.sh``: ours, by hand, for the tasks that have one.
@@ -28,9 +31,9 @@ writes the task's context, gold CSV and frozen config into the task from
 gives, if a file is unaccounted for, or if the task's data is missing from
 ``state/``.
 
-It names each file by its place in Harbor's layout (``environment/mirage.yaml``,
-``tests/<file>``); ``datasets/layout.py`` lays them out in the task's
-``workspace/`` and ``harbor/``.
+It names each file by its place in Harbor's layout
+(``environment/mirage.yaml``, ``tests/<file>``); ``datasets/layout.py`` lays
+them out in the task's ``workspace/`` and ``harbor/``.
 """
 import argparse
 import json
@@ -47,6 +50,7 @@ OUT = HERE
 TEST_SH = ROOT / "formats" / "harbor" / "test.sh"
 sys.path.insert(0, str(HERE.parent))
 from layout import placed  # noqa: E402
+
 COMMIT = "6491caa"
 REVISION = "96be192"
 # Upstream's `wall_time_seconds` (baseline/configs/harness.yaml).
@@ -228,8 +232,8 @@ def expected(slug: str) -> dict[str, bytes]:
         # task's frozen config (not committed: .gitignore).
         "tests/gold.csv":
         (BENCHMARK / "output" / task_id / "gold.csv").read_bytes(),
-        "tests/config.json":
-        (BENCHMARK / "evaluation" / "configs" / f"{task_id}.json").read_bytes(),
+        "tests/config.json": (BENCHMARK / "evaluation" / "configs" /
+                              f"{task_id}.json").read_bytes(),
     }
     ours = OUT / slug / "harbor" / "solution" / "solve.sh"
     if ours.is_file():
@@ -274,7 +278,8 @@ def data_problems(task_id: str) -> list[str]:
         STATE / "evaluation" / "evaluate.py",
     ]
     return [
-        f"{p.relative_to(ROOT)} is missing (uv run --project datasets/dataspace python -I datasets/dataspace/fetch.py)"
+        f"{p.relative_to(ROOT)} is missing (uv run --project "
+        "datasets/dataspace python -I datasets/dataspace/fetch.py)"
         for p in needed if not p.exists()
     ]
 

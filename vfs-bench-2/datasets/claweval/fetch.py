@@ -35,8 +35,11 @@ def main() -> int:
     # PDFs and the config-audit fixtures.
     for script, project in ((HERE / "graders" / "pyodide.py", HARBOR),
                             (HERE / "generate.py", HARBOR)):
-        done = subprocess.run(["uv", "run", "--project", str(project),
-                               "python", "-I", str(script)])
+        done = subprocess.run([
+            "uv", "run", "--project",
+            str(project), "python", "-I",
+            str(script)
+        ])
         if done.returncode:
             return done.returncode
     return 0

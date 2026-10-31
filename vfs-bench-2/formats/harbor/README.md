@@ -277,4 +277,3 @@ scoped to a workspace. Sharing one daemon needs a per-workspace network
 policy in the workspace config, an allowlist with host and port mapping
 (`localhost:1235` to `127.0.0.1:53211`) that curl's HTTP layer applies for
 the workspace it runs in.
-

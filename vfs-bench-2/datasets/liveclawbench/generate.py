@@ -1,6 +1,7 @@
 """Write the committed LiveClawBench tasks from upstream, or check them.
 
-    uv run --project formats/harbor python -I datasets/liveclawbench/generate.py [--check] [task ...]
+    uv run --project formats/harbor \
+        python -I datasets/liveclawbench/generate.py [--check] [task ...]
 
 Each task under ``datasets/liveclawbench/<task>/`` is upstream's task
 directory (``state/liveclawbench/src/tasks/<task>/``, pinned by
@@ -41,9 +42,9 @@ looks like it holds a credential.
 Upstream's AgentBay harnesses (``LEFT_OUT``) are not exported either: they
 carry upstream's own keys.
 
-It names each file by its place in Harbor's layout (``environment/mirage.yaml``,
-``tests/<file>``); ``datasets/layout.py`` lays them out in the task's
-``workspace/`` and ``harbor/``.
+It names each file by its place in Harbor's layout
+(``environment/mirage.yaml``, ``tests/<file>``); ``datasets/layout.py`` lays
+them out in the task's ``workspace/`` and ``harbor/``.
 """
 import argparse
 import fnmatch

@@ -12,8 +12,8 @@ stdin closes then, and each stops.
 A pool the environment starts lazily, rather than a Harbor job plugin, works
 with every ``harbor run`` as it is: Harbor 0.25 takes plugins only as
 ``--plugin`` on the command line (a job config's ``plugins`` key is
-ignored), and ``formats/harbor/isolation.py`` drives environments with no job at
-all.
+ignored), and ``formats/harbor/isolation.py`` drives environments with no
+job at all.
 
 Each fixture is registered under the pool's own root, named by its task and
 content, so one fake seeds every task's runs from its own task directory.

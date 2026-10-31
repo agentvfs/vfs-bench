@@ -1,9 +1,10 @@
 """Write the Gaia2 tasks from upstream, or check them.
 
-    uv run --project gaia2 python -I harbor/gaia2.py [--check] [task ...]
+    uv run --project datasets/gaia2 \
+        python -I datasets/gaia2/generate.py [--check] [task ...]
 
-(``--project formats/harbor`` works too: the script then runs itself in the gaia2
-project, which has gaia2-cli.)
+(``--project formats/harbor`` works too: the script then runs itself in the
+gaia2 project, which has gaia2-cli.)
 
 Each task, ``datasets/gaia2/<split>-<NNNN>/`` (the search,
 execution and ambiguity splits) is one Gaia2 scenario
@@ -43,9 +44,9 @@ Committed:
 gives, if a solution of ``SOLVED`` is missing, or if a file is unaccounted
 for.
 
-It names each file by its place in Harbor's layout (``environment/mirage.yaml``,
-``tests/<file>``); ``datasets/layout.py`` lays them out in the task's
-``workspace/`` and ``harbor/``.
+It names each file by its place in Harbor's layout
+(``environment/mirage.yaml``, ``tests/<file>``); ``datasets/layout.py`` lays
+them out in the task's ``workspace/`` and ``harbor/``.
 """
 import argparse
 import contextlib
@@ -89,6 +90,7 @@ OUT = HERE
 TEST_SH = ROOT / "formats" / "harbor" / "test.sh"
 sys.path.insert(0, str(HERE.parent))
 from layout import place, placed  # noqa: E402
+
 COMMIT = "a9fd2edccb4bc7e22fbf45c8482a5fef30a2a5a4"
 DATASET = "78ea3bdbdeec2bdcd6afa5420915d8a22f23ed99"
 SPLITS = ("search", "execution", "ambiguity")

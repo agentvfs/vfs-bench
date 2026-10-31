@@ -179,8 +179,9 @@ class MirageVerifier(Verifier):
             raise ValueError("MirageVerifier does not support this "
                              "MOCK_FINANCE_DB_PATH override")
         paths = list(definition.get("inputs", []))
-        dashboard = (self.dataset, self.task_id) == (
-            "liveclawbench", "finance-dashboard-repair")
+        dashboard = (self.dataset,
+                     self.task_id) == ("liveclawbench",
+                                       "finance-dashboard-repair")
         if dashboard and "POLICY_PATH" in env:
             policy = env["POLICY_PATH"]
             virtual = PurePosixPath(policy)

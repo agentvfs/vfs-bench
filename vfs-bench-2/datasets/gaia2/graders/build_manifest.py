@@ -28,8 +28,8 @@ def build():
             (ROOT / 'state/gaia2/scenarios' / split).glob(f'{number}_*.json'))
         if len(scenarios) != 1:
             raise ValueError(
-                f'Run datasets/gaia2/fetch.py first: no unique scenario for {task.name}'
-            )
+                'Run datasets/gaia2/fetch.py first: no unique scenario for '
+                f'{task.name}')
         environment = yaml.safe_load(
             (task / 'workspace/workspace.yaml').read_text())
         tasks[task.name] = {
@@ -47,7 +47,6 @@ if __name__ == '__main__':
     path = HERE / 'manifest.json'
     if args.check:
         if path.read_text() != data:
-            raise SystemExit(
-                'GAIA2 manifest changed; regenerate it')
+            raise SystemExit('GAIA2 manifest changed; regenerate it')
     else:
         path.write_text(data)

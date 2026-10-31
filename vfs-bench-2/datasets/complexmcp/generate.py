@@ -1,6 +1,7 @@
 """Write the committed ComplexMCP tasks from upstream, or check them.
 
-    uv run --project datasets/complexmcp python -I datasets/complexmcp/generate.py \
+    uv run --project datasets/complexmcp \
+        python -I datasets/complexmcp/generate.py \
         [--check] [task ...]
 
 Each task, ``datasets/complexmcp/<slug>/``, is one row of upstream's
@@ -48,6 +49,7 @@ OUT = HERE
 TEST_SH = ROOT / "formats" / "harbor" / "test.sh"
 sys.path.insert(0, str(HERE.parent))
 from layout import placed  # noqa: E402
+
 COMMIT = "7c01f92"
 
 # Each task, by slug: the row of data.parquet.
@@ -390,8 +392,8 @@ def mirage_yaml(slug: str, index: int, row: dict) -> str:
         "#",
         "# Each of upstream's servers is its kit fake at upstream's port, its "
         "tools a",
-        "# CLI (workspace/tools.ts) whose calls reach this trial's run of it. A "
-        "Light app",
+        "# CLI (workspace/tools.ts) whose calls reach this trial's run of "
+        "it. A Light app",
         f"# logs in as upstream's client logs in: seed {seed}, then "
         f"{', '.join(apps)},",
         "# each fake making its session from kit/login.json; the others "

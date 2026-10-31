@@ -74,9 +74,10 @@ def main() -> int:
     fetch(TEMPLATE, STATE / "AGENTS_TEMPLATE.md")
     # Each task's files made from the data: its instruction, fixtures, drive,
     # scenario and replayed solution.
-    return subprocess.run(
-        [sys.executable, "-I",
-         str(Path(__file__).resolve().parent / "generate.py")]).returncode
+    return subprocess.run([
+        sys.executable, "-I",
+        str(Path(__file__).resolve().parent / "generate.py")
+    ]).returncode
 
 
 if __name__ == "__main__":

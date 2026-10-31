@@ -167,4 +167,3 @@ the workspace sees it.
   `/var/lib/mock-data/gaia2/`, as every committed task's services' are. They
   hold the apps' state and the calls' log, which the CLIs show anyway; the
   oracle is only in the separate verifier workspace.
-

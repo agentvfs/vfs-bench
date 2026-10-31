@@ -126,17 +126,18 @@ class MirageVerifierTests(unittest.IsolatedAsyncioTestCase):
         # The task's dataset is the name of the directory it is in.
         copied = self.root / "liveclawbench" / "stale-client-escalation"
         shutil.copytree(TASKS / "stale-client-escalation", copied)
-        source = (copied /
-                  "workspace/verifier/_seed_snapshots/client-escalation-log.md")
+        source = (
+            copied /
+            "workspace/verifier/_seed_snapshots/client-escalation-log.md")
         source.write_text(source.read_text() + "\n# changed\n")
         self.verifier.task = Task(copied / "harbor")
         self.verifier._run = AsyncMock()
         self.paths.reward_text_path.write_text("1.0\n")
-        with self.assertRaisesRegex(ValueError, "client-escalation-log.md changed"):
+        with self.assertRaisesRegex(ValueError,
+                                    "client-escalation-log.md changed"):
             await self.verifier.verify()
         self.verifier._run.assert_not_called()
         self.assertFalse(self.paths.reward_text_path.exists())
-
 
     async def test_invalid_state_does_not_leave_a_reward(self):
         self.env.snapshot_verifier_states = AsyncMock(return_value={

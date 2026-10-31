@@ -1,7 +1,8 @@
 """Pin the Claw-Eval sources the Mirage compatibility verifier may execute.
 
-Run after datasets/claweval/fetch.py. --check detects drift without updating pins.
-The upstream graders, models, scoring and judge parsing are not rewritten.
+Run after datasets/claweval/fetch.py. --check detects drift without updating
+pins. The upstream graders, models, scoring and judge parsing are not
+rewritten.
 """
 import argparse
 import hashlib
@@ -91,8 +92,8 @@ def build():
         "adapter_sha256":
         digest(HERE / "grade.py"),
         "assembly_sha256":
-        hashlib.sha256(
-            assembly((HERE / "grade.py").read_text()).encode()).hexdigest(),
+        hashlib.sha256(assembly(
+            (HERE / "grade.py").read_text()).encode()).hexdigest(),
         "tasks":
         tasks
     }
@@ -105,8 +106,7 @@ if __name__ == "__main__":
     data = json.dumps(build(), indent=2, sort_keys=True) + "\n"
     if args.check:
         if not MANIFEST.exists() or MANIFEST.read_text() != data:
-            raise SystemExit(
-                "Claw-Eval manifest drift; regenerate it")
+            raise SystemExit("Claw-Eval manifest drift; regenerate it")
     else:
         MANIFEST.parent.mkdir(parents=True, exist_ok=True)
         MANIFEST.write_text(data)

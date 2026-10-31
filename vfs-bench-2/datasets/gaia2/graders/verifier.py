@@ -3,7 +3,6 @@ import hashlib
 import json
 from pathlib import Path
 
-
 HERE = Path(__file__).resolve().parent
 MANIFEST = HERE / 'manifest.json'
 

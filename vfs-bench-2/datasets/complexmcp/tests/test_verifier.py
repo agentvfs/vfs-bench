@@ -21,7 +21,8 @@ class ComplexMCPVerifierTests(unittest.IsolatedAsyncioTestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
-        self.task = Task(ROOT / 'datasets/complexmcp/mark-sean-baker-read/harbor')
+        self.task = Task(ROOT /
+                         'datasets/complexmcp/mark-sean-baker-read/harbor')
         self.paths = TrialPaths(self.root / 'trial')
         self.paths.mkdir()
         self.env = MirageEnvironment(
@@ -63,14 +64,18 @@ class ComplexMCPVerifierTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_freezes_only_trial_json_and_runs_in_monty(self):
         with (
-                patch.object(self.verifier,
-                             '_definition',
-                             return_value=(self.task.paths.task_dir.parent.name,
-                                           self.definition)),
-                patch.object(MirageVerifier, 'inputs_dir', new_callable=PropertyMock,
+                patch.object(
+                    self.verifier,
+                    '_definition',
+                    return_value=(self.task.paths.task_dir.parent.name,
+                                  self.definition)),
+                patch.object(MirageVerifier,
+                             'inputs_dir',
+                             new_callable=PropertyMock,
                              return_value=self.inputs),
-                patch.object(dataset_module('complexmcp').httpx, 'AsyncClient',
-                      return_value=self.client),
+                patch.object(dataset_module('complexmcp').httpx,
+                             'AsyncClient',
+                             return_value=self.client),
         ):
             result = await self.verifier.verify()
         self.assertEqual(result.rewards, {
@@ -92,11 +97,14 @@ class ComplexMCPVerifierTests(unittest.IsolatedAsyncioTestCase):
         self.paths.reward_text_path.write_text('1')
         self.definition['row_sha256'] = 'invalid'
         with (
-                patch.object(self.verifier,
-                             '_definition',
-                             return_value=(self.task.paths.task_dir.parent.name,
-                                           self.definition)),
-                patch.object(MirageVerifier, 'inputs_dir', new_callable=PropertyMock,
+                patch.object(
+                    self.verifier,
+                    '_definition',
+                    return_value=(self.task.paths.task_dir.parent.name,
+                                  self.definition)),
+                patch.object(MirageVerifier,
+                             'inputs_dir',
+                             new_callable=PropertyMock,
                              return_value=self.inputs),
         ):
             with self.assertRaisesRegex(ValueError, 'row changed'):
@@ -104,8 +112,6 @@ class ComplexMCPVerifierTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(self.paths.reward_text_path.exists())
         self.assertEqual(self.requests, [])
         await self.client.aclose()
-
-
 
 
 if __name__ == '__main__':

@@ -24,4 +24,3 @@ test('Server verifier requires a private capability and the configured trial tas
     assert.equal((await app.inject('/health')).statusCode, 200)
   } finally { await app.close() }
 })
-

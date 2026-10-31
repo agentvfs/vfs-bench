@@ -118,4 +118,3 @@ the fake, which runs nothing.
   differ (`complexmcp_plain_probes.py` lists them).
 - **Logout.** It answers the end environment and leaves the session, where
   upstream's ends it; only the verifier calls it.
-
