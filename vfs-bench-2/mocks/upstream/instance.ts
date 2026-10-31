@@ -135,7 +135,8 @@ function timed(connection: DatabaseSync, now: () => number): DatabaseSync {
 
 /** The run's file, opened for a request: its time functions read 'now' as `now()`. */
 export function openRun(file: string, now: () => number, options?: DatabaseSyncOptions): DatabaseSync {
-  return timed(new DatabaseSync(file, options), now)
+  // Node 24.15 and later refuse an undefined options argument.
+  return timed(options === undefined ? new DatabaseSync(file) : new DatabaseSync(file, options), now)
 }
 
 /**
