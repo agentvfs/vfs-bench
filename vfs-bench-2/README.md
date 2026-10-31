@@ -69,6 +69,10 @@ TypeScript build) and Bun (for LiveClawBench's seeds). From `vfs-bench-2/`:
 git submodule update --init submodule/mirage
 (cd submodule/mirage/typescript && pnpm install && pnpm --filter @struktoai/mirage-core \
   --filter @struktoai/mirage-node --filter @struktoai/mirage-openai-agents build)
+# The Prisma clients of Mirage's integ fakes (gws, slack, ...), which the
+# Harbor tasks on them import from integ/generated.
+(cd submodule/mirage/integ && ls prisma/*.prisma | INTEG_DB_URL=file:/tmp/mirage-generate.db \
+  xargs -P 4 -n 1 node_modules/.bin/prisma generate --schema)
 pnpm install
 uv sync --project formats/harbor
 python3 -I workspace/python.py      # the workspace's python3 packages, into state/python
@@ -86,6 +90,8 @@ committed: upstream's data, which cannot be redistributed here. `state/`
 and those files are gitignored.
 
 ## Run
+
+To start runs and watch them from a page instead, see [../ui](../ui/README.md).
 
 ```sh
 # Every task's solution, then doing nothing.
