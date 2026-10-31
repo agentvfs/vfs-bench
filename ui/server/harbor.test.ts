@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { existsSync } from 'node:fs'
-import { mkdtemp, mkdir, writeFile } from 'node:fs/promises'
+import { mkdtemp, mkdir, readFile, writeFile } from 'node:fs/promises'
 import { createServer } from 'node:http'
 import type { AddressInfo } from 'node:net'
 import { tmpdir } from 'node:os'
@@ -119,7 +119,7 @@ test('a retry stands in for the attempt it was asked to redo', async () => {
   await put(join(retry, 'config.json'), { tasks: [task] })
   await put(join(retry, 'a__3/config.json'), { task })
   await put(join(retry, 'a__3/result.json'), { verifier_result: { rewards: { reward: 1 } } })
-  await put(join(root, 'state/harbor/console/k2__retry-1.picks.json'), [{ task: 'a', slot: 1 }])
+  await put(join(root, 'state/harbor/console/jobs/k2__retry-1.picks.json'), [{ task: 'a', slot: 1 }])
   const cells = (await new Harbor(root).detail('jobs/k2', false)).cells
   assert.deepEqual(cells.map((c) => [c.slot, c.state, c.attempt]), [
     [0, 'succeeded', 1],
@@ -132,7 +132,7 @@ test('resume works on a runs folder this UI never used', async () => {
   await job(root)
   const harbor = new Harbor(root)
   await harbor.resume('jobs/j1')
-  assert.ok(existsSync(join(root, 'state/harbor/console/j1.log')))
+  assert.ok(existsSync(join(root, 'state/harbor/console/jobs/j1.log')))
   // uv finds no harbor project here and exits; wait for it.
   for (let i = 0; i < 100 && harbor.busy; i++) await new Promise((r) => setTimeout(r, 100))
 })
@@ -163,4 +163,35 @@ test('only this machine by name may reach the server', () => {
   assert.ok(localHost('[::1]:8787'))
   assert.ok(!localHost('evil.example:8787'))
   assert.ok(!localHost(undefined))
+})
+
+test('a new retry numbers above every retry there is', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'ui-'))
+  await job(root)
+  // retry-1 was deleted; retry-2 is still there.
+  await put(join(root, 'state/harbor/jobs/j1__retry-2/config.json'), { tasks: [] })
+  const harbor = new Harbor(root)
+  const id = await harbor.retry('jobs/j1', [{ task: 'b', slot: 0 }])
+  assert.equal(id, 'jobs/j1__retry-3')
+  assert.ok(existsSync(join(root, 'state/harbor/console/jobs/j1__retry-3.picks.json')))
+  for (let i = 0; i < 100 && harbor.busy; i++) await new Promise((r) => setTimeout(r, 100))
+})
+
+test('jobs of one name in two jobs folders keep their own retry files', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'ui-'))
+  const task = { path: 'harbor/tasks/demo/a' }
+  for (const folder of ['jobs', 'reference']) {
+    const dir = join(root, `state/harbor/${folder}/baseline`)
+    await put(join(dir, 'config.json'), { n_attempts: 2, tasks: [task] })
+    await put(join(dir, 'lock.json'), { trials: [{ task }, { task }] })
+    await put(join(dir, 'result.json'), { finished_at: '2026-10-30T00:01:00', stats: {} })
+  }
+  const harbor = new Harbor(root)
+  await harbor.retry('jobs/baseline', [{ task: 'a', slot: 0 }])
+  await harbor.retry('reference/baseline', [{ task: 'a', slot: 1 }])
+  const picks = (folder: string) =>
+    readFile(join(root, `state/harbor/console/${folder}/baseline__retry-1.picks.json`), 'utf8').then(JSON.parse)
+  assert.deepEqual(await picks('jobs'), [{ task: 'a', slot: 0 }])
+  assert.deepEqual(await picks('reference'), [{ task: 'a', slot: 1 }])
+  for (let i = 0; i < 100 && harbor.busy; i++) await new Promise((r) => setTimeout(r, 100))
 })

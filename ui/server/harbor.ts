@@ -246,7 +246,7 @@ export class Harbor {
   private readonly launches = new Map<string, Launch>()
   /** Jobs whose process this UI saw end: not running, whatever Harbor last wrote. */
   private readonly exited = new Set<string>()
-  /** Retry names chosen but not yet launched. */
+  /** Retry ids chosen but not yet launched. */
   private readonly reserved = new Set<string>()
   /** Each dataset's task catalogue, with the version of the config it was read from. */
   private readonly catalog = new Map<string, { version: string; tasks: TaskBrief[] }>()
@@ -262,6 +262,15 @@ export class Harbor {
     this.root = root
     this.jobsRoot = jobsRoot
     this.configDir = join(this.jobsRoot, 'console')
+  }
+
+  /**
+   * A file the UI keeps for job `id` (its config, log, retry picks): under
+   * `console/<jobs dir>/<job>`, by the whole id, so two jobs of one name in
+   * different jobs folders never share one.
+   */
+  private file(id: string, ext: string): string {
+    return join(this.configDir, ...id.split('/')) + ext
   }
 
   /** Whether runs this UI started are still going. */
@@ -348,7 +357,7 @@ export class Harbor {
 
   private async brief(id: string): Promise<JobBrief | null> {
     const dir = this.dir(id)
-    const config = (await json(join(dir, 'config.json'))) ?? (await json(join(this.configDir, `${basename(id)}.json`)))
+    const config = (await json(join(dir, 'config.json'))) ?? (await json(this.file(id, '.json')))
     if (!config) return null
     const result = await json(join(dir, 'result.json'))
     const lock = config.agents?.length ? null : await json(join(dir, 'lock.json'))
@@ -442,7 +451,7 @@ export class Harbor {
     const brief = await this.brief(id)
     if (!brief) throw new Error(`No job ${id}`)
     const lock = await json(join(dir, 'lock.json'))
-    const config = (await json(join(dir, 'config.json'))) ?? (await json(join(this.configDir, `${brief.name}.json`)))
+    const config = (await json(join(dir, 'config.json'))) ?? (await json(this.file(id, '.json')))
     // What the job will run: Harbor's lock once it has one, else its config.
     const planned: string[] = lock?.trials
       ? lock.trials.map(taskOf)
@@ -499,7 +508,7 @@ export class Harbor {
   private async picksOf(retry: string): Promise<Pick[]> {
     const launched = this.launches.get(retry)?.picks
     if (launched) return launched
-    const saved = await json(join(this.configDir, `${basename(retry)}.picks.json`))
+    const saved = await json(this.file(retry, '.picks.json'))
     return Array.isArray(saved) ? saved : []
   }
 
@@ -665,8 +674,8 @@ export class Harbor {
    * harbor/README.md runs it.
    */
   private start(id: string, args: string[], picks: Pick[], agent: string | undefined): Launch {
-    mkdirSync(this.configDir, { recursive: true })
-    const log = join(this.configDir, `${basename(id)}.log`)
+    const log = this.file(id, '.log')
+    mkdirSync(dirname(log), { recursive: true })
     const env = existsSync(join(this.root, '.env')) ? ['--env-file', '.env'] : []
     const dspy = agent === 'dspy-rlm'
     const argv = ['run', '--project', 'harbor', ...(dspy ? ['--extra', 'dspy'] : []), 'harbor', ...args, ...env]
@@ -745,10 +754,10 @@ export class Harbor {
     // A second's stamp and a random tag: two runs started together differ.
     doc.job_name = `${source.dataset}-${short}-${stamp()}-${randomBytes(2).toString('hex')}`
     doc.jobs_dir = join(this.jobsRoot, 'jobs-console')
-    await mkdir(this.configDir, { recursive: true })
-    const file = join(this.configDir, `${doc.job_name}.json`)
-    await writeFile(file, JSON.stringify(doc, null, 2))
     const id = `jobs-console/${doc.job_name}`
+    const file = this.file(id, '.json')
+    await mkdir(dirname(file), { recursive: true })
+    await writeFile(file, JSON.stringify(doc, null, 2))
     this.start(id, ['run', '-c', file, '-y'], [], agent.includes(':') ? undefined : agent)
     return id
   }
@@ -784,10 +793,9 @@ export class Harbor {
     await mkdir(this.configDir, { recursive: true })
     await appendFile(join(this.configDir, 'deleted.log'), `${new Date().toISOString()} ${targets.join(' ')}\n`)
     for (const t of targets) {
-      const name = basename(t)
       await rm(join(this.jobsRoot, t), { recursive: true, force: true })
       await rm(join(this.configDir, 'observed', t), { recursive: true, force: true })
-      for (const ext of ['.json', '.log', '.picks.json']) await rm(join(this.configDir, name + ext), { force: true })
+      for (const ext of ['.json', '.log', '.picks.json']) await rm(this.file(t, ext), { force: true })
       this.settled.delete(t)
       this.exited.delete(t)
     }
@@ -822,13 +830,18 @@ export class Harbor {
     }
     if (!picks.length) throw new Error('None of those tasks is in the job')
     const [jobsDir, name] = id.split('/')
-    // The next free number, held from here until its process is launched, so
-    // two retries asked for together never take the same one.
-    const taken = new Set([...(await this.retries(id)).map((r) => basename(r)), ...this.reserved])
-    let n = 1
-    while (taken.has(`${name}__retry-${n}`)) n++
-    const jobName = `${name}__retry-${n}`
-    this.reserved.add(jobName)
+    // One above every number taken or held, so a new retry is always the
+    // latest (the highest number wins a cell) even after an older one was
+    // deleted; held from here until its process is launched, so two retries
+    // asked for together never take the same one.
+    const prefix = `${id}__retry-`
+    const numbers = [...(await this.retries(id)), ...this.reserved]
+      .filter((r) => r.startsWith(prefix))
+      .map((r) => Number(r.slice(prefix.length)))
+      .filter((n) => Number.isInteger(n))
+    const jobName = `${name}__retry-${Math.max(0, ...numbers) + 1}`
+    const retryId = `${jobsDir}/${jobName}`
+    this.reserved.add(retryId)
     try {
       const doc = {
         ...config,
@@ -839,14 +852,14 @@ export class Harbor {
         n_attempts: 1,
         n_concurrent_trials: Math.min(config.n_concurrent_trials ?? 4, picks.length),
       }
-      await mkdir(this.configDir, { recursive: true })
-      await writeFile(join(this.configDir, `${jobName}.json`), JSON.stringify(doc, null, 2))
-      await writeFile(join(this.configDir, `${jobName}.picks.json`), JSON.stringify(picks))
-      const retryId = `${jobsDir}/${jobName}`
-      this.start(retryId, ['run', '-c', join(this.configDir, `${jobName}.json`), '-y'], picks, config.agents?.[0]?.name)
+      const file = this.file(retryId, '.json')
+      await mkdir(dirname(file), { recursive: true })
+      await writeFile(file, JSON.stringify(doc, null, 2))
+      await writeFile(this.file(retryId, '.picks.json'), JSON.stringify(picks))
+      this.start(retryId, ['run', '-c', file, '-y'], picks, config.agents?.[0]?.name)
       return retryId
     } finally {
-      this.reserved.delete(jobName)
+      this.reserved.delete(retryId)
     }
   }
 }

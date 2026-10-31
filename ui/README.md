@@ -16,7 +16,7 @@ terminal stops or retries its trial. Runs are read from disk, so leaving a page 
 
 The UI has no run format of its own. A job is the directory Harbor
 writes under `<runs folder>/<jobs dir>/<job>/`. Run starts
-`harbor run -c <runs folder>/console/<job>.json -y`, where that config is
+`harbor run -c <runs folder>/console/jobs-console/<job>.json -y`, where that config is
 `harbor/<dataset>.yaml` with the form's agent, model, concurrency and
 attempts written over it. The job lands in `<runs folder>/jobs-console/`.
 
