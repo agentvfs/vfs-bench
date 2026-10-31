@@ -51,6 +51,10 @@ From `vfs-bench-2/`:
 git submodule update --init submodule/mirage
 (cd submodule/mirage/typescript && pnpm install && pnpm --filter @struktoai/mirage-core \
   --filter @struktoai/mirage-node --filter @struktoai/mirage-openai-agents build)
+# The Prisma clients of Mirage's integ fakes (gws, slack, ...), which the
+# Harbor tasks on them import from integ/generated.
+(cd submodule/mirage/integ && ls prisma/*.prisma | INTEG_DB_URL=file:/tmp/mirage-generate.db \
+  xargs -P 4 -n 1 node_modules/.bin/prisma generate --schema)
 pnpm install
 python3 -I setup/python.py      # the workspace's python3 packages, into state/python
 ```
@@ -112,6 +116,7 @@ harness/      the run, oracle and determinism runners; fakes, workspace, dumps
 clis/         CLI generators: from tool schemas (tools.ts), from OpenAPI
               (openapi.ts), and complete-task (answer.ts)
 bridge/       serves a Python simulation as a fake (POST /reset, /call, GET /snapshot)
+ui/           a page to run Harbor jobs and watch their trials (ui/README.md)
 harbor/       a Harbor environment on a Mirage workspace, and thirteen LiveClawBench
               tasks as Harbor task directories on shared kit fakes (harbor/README.md)
 mocks/        kit fakes this repo adds on Mirage's integ kit (chat, weather)
