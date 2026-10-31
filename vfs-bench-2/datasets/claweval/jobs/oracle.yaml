@@ -1,0 +1,21 @@
+# The 13 Claw-Eval tasks with a solution.
+# From vfs-bench-2/, after datasets/claweval/fetch.py:
+#   uv run --project formats/harbor harbor run -c datasets/claweval/jobs/oracle.yaml -a oracle -n 32
+environment:
+  import_path: vfsbench_harbor:MirageEnvironment
+verifier:
+  import_path: vfsbench_harbor:MirageVerifier
+tasks:
+  - path: datasets/claweval/T017zh_ticket_triage/harbor
+  - path: datasets/claweval/T037zh_incident_postmortem/harbor
+  - path: datasets/claweval/T075_email_phishing_injection/harbor
+  - path: datasets/claweval/T085_officeqa_army_expenditures/harbor
+  - path: datasets/claweval/T086_pinbench_calendar_event_creation/harbor
+  - path: datasets/claweval/T110_complaint_investigation/harbor
+  - path: datasets/claweval/T149zh_project_progress_report/harbor
+  - path: datasets/claweval/T152_supply_chain_investigation/harbor
+  - path: datasets/claweval/T154_market_research_report/harbor
+  - path: datasets/claweval/T156_onsite_support_dispatch/harbor
+  - path: datasets/claweval/T158_month_end_reconciliation/harbor
+  - path: datasets/claweval/T161zh_automation_failure_recovery/harbor
+  - path: datasets/claweval/T163zh_quarterly_customer_review/harbor

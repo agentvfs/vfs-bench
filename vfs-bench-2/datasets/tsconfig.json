@@ -1,0 +1,5 @@
+{
+  "extends": "../tsconfig.json",
+  "include": ["*/mocks/*/*.ts", "*/mocks/*/*/*.ts"],
+  "exclude": ["*/mocks/*/client*", "*/mocks/*/generated*"]
+}

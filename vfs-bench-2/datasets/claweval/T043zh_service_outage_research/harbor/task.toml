@@ -1,0 +1,32 @@
+version = "1.0"
+
+[task]
+name = "vfs-bench-2/claweval.T043zh_service_outage_research"
+
+[metadata]
+difficulty = "easy"
+category = "ops"
+tags = ["general"]
+upstream = "claw-eval/claw-eval@5680b8b tasks/T043zh_service_outage_research"
+
+[verifier]
+timeout_sec = 900.0
+
+# Upstream's LLM judge, over the chat completions API.
+[verifier.env]
+OPENAI_API_KEY = "${OPENAI_API_KEY}"
+OPENAI_BASE_URL = "${OPENAI_BASE_URL:-https://api.openai.com/v1}"
+JUDGE_MODEL = "${JUDGE_MODEL:-google/gemini-3-flash-preview}"
+
+[agent]
+timeout_sec = 600.0
+
+[environment]
+build_timeout_sec = 300.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 4096
+# The trial's routes to its services, which the verifier fetches each
+# service's audit log over; the agent's curl and wget are off
+# (environment/mirage.yaml), so it reaches them through their tools alone.
+allow_internet = true

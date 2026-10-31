@@ -1,0 +1,78 @@
+# All 70 LiveClawBench tasks.
+# From vfs-bench-2/, after datasets/liveclawbench/fetch.py:
+#   uv run --project formats/harbor harbor run -c datasets/liveclawbench/jobs/harbor.yaml -a oracle -n 32
+environment:
+  import_path: vfsbench_harbor:MirageEnvironment
+verifier:
+  import_path: vfsbench_harbor:MirageVerifier
+tasks:
+  - path: datasets/liveclawbench/chat-sticker-engagement/harbor
+  - path: datasets/liveclawbench/sticker-store-acquire/harbor
+  - path: datasets/liveclawbench/weather-aqi-report/harbor
+  - path: datasets/liveclawbench/newsletter-digest-forward/harbor
+  - path: datasets/liveclawbench/procurement-quote-compare-reply/harbor
+  - path: datasets/liveclawbench/stale-client-escalation/harbor
+  - path: datasets/liveclawbench/vendor-requirement-followup/harbor
+  - path: datasets/liveclawbench/candidate-interview-slot-confirm/harbor
+  - path: datasets/liveclawbench/email-reply/harbor
+  - path: datasets/liveclawbench/email-sending-verify/harbor
+  - path: datasets/liveclawbench/email-writing/harbor
+  - path: datasets/liveclawbench/interview-slot-verify/harbor
+  - path: datasets/liveclawbench/meeting-slot-race/harbor
+  - path: datasets/liveclawbench/finance-anomaly-detect/harbor
+  - path: datasets/liveclawbench/finance-dashboard-repair/harbor
+  - path: datasets/liveclawbench/finance-depreciation-audit/harbor
+  - path: datasets/liveclawbench/finance-expense-log/harbor
+  - path: datasets/liveclawbench/finance-monthly-close/harbor
+  - path: datasets/liveclawbench/finance-portfolio-rebalancing/harbor
+  - path: datasets/liveclawbench/finance-analysis-generate/harbor
+  - path: datasets/liveclawbench/finance-budget-alert/harbor
+  - path: datasets/liveclawbench/finance-invoice-process/harbor
+  - path: datasets/liveclawbench/finance-tax-prepare/harbor
+  - path: datasets/liveclawbench/finance-budget-shift/harbor
+  - path: datasets/liveclawbench/meeting-reschedule-response/harbor
+  - path: datasets/liveclawbench/email-phishing-injection/harbor
+  - path: datasets/liveclawbench/weather-outdoor-window/harbor
+  - path: datasets/liveclawbench/weather-city-travel-pick/harbor
+  - path: datasets/liveclawbench/social-unlike-post/harbor
+  - path: datasets/liveclawbench/social-unlike-verify/harbor
+  - path: datasets/liveclawbench/social-media-posting/harbor
+  - path: datasets/liveclawbench/social-post-rate-limit/harbor
+  - path: datasets/liveclawbench/social-comment-moderation/harbor
+  - path: datasets/liveclawbench/social-data-anomaly-report/harbor
+  - path: datasets/liveclawbench/social-event-campaign/harbor
+  - path: datasets/liveclawbench/social-keyword-cleanup/harbor
+  - path: datasets/liveclawbench/social-cross-publish/harbor
+  - path: datasets/liveclawbench/social-pinned-post-update/harbor
+  - path: datasets/liveclawbench/phishing-in-inbox/harbor
+  - path: datasets/liveclawbench/health-daily-record/harbor
+  - path: datasets/liveclawbench/health-record-verify/harbor
+  - path: datasets/liveclawbench/mint-diet-snack-log/harbor
+  - path: datasets/liveclawbench/nutrition-log-meal/harbor
+  - path: datasets/liveclawbench/mint-diet-comprehensive/harbor
+  - path: datasets/liveclawbench/mint-diet-stockout/harbor
+  - path: datasets/liveclawbench/expense-draft-delete/harbor
+  - path: datasets/liveclawbench/expense-submit-verify/harbor
+  - path: datasets/liveclawbench/insurance-deductible-selection/harbor
+  - path: datasets/liveclawbench/health-insurance-optimization/harbor
+  - path: datasets/liveclawbench/workspace-brief-tracking/harbor
+  - path: datasets/liveclawbench/workspace-task-record-batch/harbor
+  - path: datasets/liveclawbench/washer-change/harbor
+  - path: datasets/liveclawbench/washer-shop/harbor
+  - path: datasets/liveclawbench/watch-shop/harbor
+  - path: datasets/liveclawbench/watch-shop-silent-fail/harbor
+  - path: datasets/liveclawbench/watch-shop-stockout/harbor
+  - path: datasets/liveclawbench/info-change/harbor
+  - path: datasets/liveclawbench/email-washer-change/harbor
+  - path: datasets/liveclawbench/email-watch-shop/harbor
+  - path: datasets/liveclawbench/grocery-reorder/harbor
+  - path: datasets/liveclawbench/morning-comfort-setup/harbor
+  - path: datasets/liveclawbench/smarthome-test/harbor
+  - path: datasets/liveclawbench/cross-service-credential-handling/harbor
+  - path: datasets/liveclawbench/flight-booking/harbor
+  - path: datasets/liveclawbench/fake-system-notification/harbor
+  - path: datasets/liveclawbench/flight-seat-selection/harbor
+  - path: datasets/liveclawbench/flight-seat-selection-failed/harbor
+  - path: datasets/liveclawbench/flight-cancel-claim/harbor
+  - path: datasets/liveclawbench/flight-info-change-notice/harbor
+  - path: datasets/liveclawbench/flight-calendar-overshare/harbor

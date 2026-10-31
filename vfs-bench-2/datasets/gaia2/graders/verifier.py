@@ -1,0 +1,68 @@
+"""Freeze GAIA2 JSON and trajectory; all grading runs in Mirage/Monty."""
+import hashlib
+import json
+from pathlib import Path
+
+
+HERE = Path(__file__).resolve().parent
+MANIFEST = HERE / 'manifest.json'
+
+
+def definitions():
+    manifest = json.loads(MANIFEST.read_text())
+    return {
+        task: {
+            'runtime': 'gaia2-monty',
+            'task_id': task,
+            **definition, 'native_state': {
+                service: {
+                    'service': service,
+                    'tables': ['doc', 'event']
+                }
+                for service in definition['services']
+            }
+        }
+        for task, definition in manifest['tasks'].items()
+    }
+
+
+async def freeze(verifier, definition, stage, budget):
+    states = await verifier.environment.snapshot_verifier_states(
+        definition['native_state'])
+
+    def snapshot(budget):
+        scenario = verifier.inputs_dir / 'scenario.json'
+        source = b''.join(budget.chunks(scenario))
+        if hashlib.sha256(source).hexdigest() != definition['scenario_sha256']:
+            raise ValueError('GAIA2 scenario changed; regenerate the task')
+        scenario_path = stage / 'scenario.json'
+        scenario_path.write_bytes(source)
+        scenario_path.chmod(0o400)
+        path = verifier.environment.host_path('/logs/agent/trajectory.json')
+        trajectory = {}
+        if path.exists():
+            if not any(path.resolve().is_relative_to(root.resolve())
+                       for root in verifier.environment.disk_mounts.values()):
+                raise ValueError('GAIA2 trajectory leaves its workspace mount')
+            trajectory = json.loads(b''.join(budget.chunks(path)))
+        state = {'states': states, 'trajectory': trajectory}
+        target = stage / 'state.json'
+        frozen = {
+            'states': {},
+            'files': {
+                '/input/state.json': str(target),
+                '/input/scenario.json': str(scenario_path)
+            }
+        }
+        budget.write_json(target, state)
+        target.chmod(0o400)
+        # Keep replay evidence after temporary staging and fake runs are
+        # removed. These host-only logs obey Harbor's output filters.
+        verifier._log(verifier.trial_paths.verifier_dir / 'gaia2-inputs.json',
+                      target.read_text())
+        verifier._log(
+            verifier.trial_paths.verifier_dir / 'gaia2-scenario.json',
+            source.decode('utf-8'))
+        return frozen
+
+    return await verifier._background(snapshot, budget=budget)

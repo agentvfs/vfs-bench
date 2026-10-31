@@ -1,0 +1,23 @@
+# marketing.hashtag_performance, on vfsbench_harbor's mirage environment (datasets/automationbench/generate.py writes it).
+#
+# The task's world is the automationbench kit fake (mocks/automationbench),
+# seeded with the world upstream builds for the task (kit/, written from
+# upstream, not committed), its clock at the task's epoch. Its tools are the
+# api CLI (tools.json, workspace/tools.ts).
+fakes:
+  automationbench:
+    fixture: fixtures/automationbench.json
+    epoch: '2026-04-01T09:00:00Z'
+    state: /var/lib/mock-data/automationbench/automationbench.db
+tools:
+  file: tools.json
+  dispatches: /var/lib/mock-data/automationbench/dispatches.jsonl
+workspace:
+  profiles:
+    default:
+      commands:
+        deny:
+        - commands: [curl, wget]
+          reason: the world is reached through the api CLI
+  clis:
+    api: {cli: api, config: {url: '${AUTOMATIONBENCH_URL}'}}

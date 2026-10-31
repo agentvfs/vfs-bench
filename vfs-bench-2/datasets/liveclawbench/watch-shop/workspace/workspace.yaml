@@ -1,0 +1,28 @@
+# watch-shop, on vfsbench_harbor's mirage environment.
+#
+# In place of upstream's environment/Dockerfile: the mocks of its base
+# image are the fakes below, and its COPY, RUN, ENV and WORKDIR lines are
+# `copy`, `run`, `env` and `workdir`.
+#
+# Rule B: Mirage has no such service, so each upstream mock is this repo's
+# kit fake that runs upstream's own app: shop (mocks/shop).
+# One fake of each serves the whole job; this trial is a run of its own on
+# each.
+fakes:
+  shop:
+    # Upstream's shop seed for the task (generate.py writes it):
+    # its products, and the orders, cart and user files its image
+    # starts with.
+    fixture: fixtures/shop.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports: [1234]
+    # The files the mock keeps on disk, where verify.py reads them
+    # (mocks/upstream).
+    files:
+      /tmp/mosi_shop_orders.json: /var/lib/mock-data/shop/mosi_shop_orders.json
+      /tmp/mosi_shop_cart.json: /var/lib/mock-data/shop/mosi_shop_cart.json
+      /tmp/mosi_shop_user.json: /var/lib/mock-data/shop/mosi_shop_user.json
+env:
+  TASK_NAME: watch-shop
+copy:
+  /workspace/environment: []
