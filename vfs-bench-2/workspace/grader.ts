@@ -11,6 +11,15 @@ export interface Grade {
   artifacts?: Record<string, unknown>
   completionOutput?: string
 }
+/** A grade that failed, with the artifacts it had so far (a judge's paid
+ * replies, say), which the verifier still saves. */
+export class GradeError extends Error {
+  readonly artifacts: Record<string, unknown>
+  constructor(cause: unknown, artifacts: Record<string, unknown>) {
+    super(cause instanceof Error ? cause.message : String(cause), { cause })
+    this.artifacts = artifacts
+  }
+}
 /** Serializable input transport; file values are base64 bytes, never host paths. */
 export interface Inputs {
   /** The dataset whose graders/index.ts grades the task. */
@@ -24,9 +33,10 @@ export interface Inputs {
   timeoutSeconds: number
 }
 export type Grader = (context: Context) => Grade
-/** What a dataset's graders/index.ts exports. */
+/** What a dataset's graders/index.ts exports: the tasks it grades, by
+ * name, and the grade of one. */
 export interface Graders {
-  GRADERS: Readonly<Record<string, Grader>>
+  GRADERS: Readonly<Record<string, unknown>>
   evaluate(input: InputSpec, command: import('@struktoai/mirage-core/commands/config').Context): Promise<Grade>
 }
 export type InputSpec = Omit<Inputs, 'states' | 'files'> & { states: Record<string, string>; files: string[] }

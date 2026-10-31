@@ -66,10 +66,10 @@ as `docker exec` does, so `cd` and `export` do not carry over.
 private state view, and the files the definition names, then runs the
 dataset's grader in a fresh RAM Mirage workspace: `workspace/verify.ts` for
 a TypeScript grader (`graders/index.ts`), or the dataset's own
-`graders/verify.ts` for a Monty one. Claw-Eval's grades in the trial's
-daemon, upstream's Python under Pyodide. The grader reads state through
-the workspace's VFS alone: no host files, database, interpreter process or
-network, and the agent's mounts are never its. `workspace/verifier/` is
+`graders/verify.ts` for a Monty one. The grader reads state through the
+workspace's VFS alone: no host files, database or interpreter process, and
+the agent's mounts are never its; a judge call (GAIA2's, Claw-Eval's) is
+its only network. `workspace/verifier/` is
 its `/tests/`; the definition pins each file it reads there.
 
 Each grader writes the reward and its dimensions; `verifier/checks.json`

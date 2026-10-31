@@ -2,8 +2,7 @@
 
 Only tasks in the registered grader manifests are supported, and the data
 files a grader reads from a task's tests/ are pinned there. Only registered,
-pinned code is executed; agent-supplied code is never loaded. Claw-Eval uses
-a Pyodide compatibility backend for its upstream Python.
+pinned code is executed; agent-supplied code is never loaded.
 """
 import asyncio
 import base64
@@ -129,16 +128,23 @@ class _Staging:
                     yield Path(entry.path)
 
 
+class GradeFailed(RuntimeError):
+    """A failed grade, with the artifacts it had so far."""
+
+    def __init__(self, message: str, artifacts: dict):
+        super().__init__(message)
+        self.artifacts = artifacts
+
+
 class MirageVerifier(Verifier):
     """Run a registered grader in a fresh, verifier-only Mirage workspace.
 
-    Claw-Eval grades through the trial HTTP server; other runtimes use a
-    disposable Node process. This is trusted host code, not an isolation
-    boundary for arbitrary scripts.
-    LiveClawBench uses the workspace runtime; ComplexMCP, DataSpace,
-    AutomationBench and GAIA2 use Monty. Claw-Eval runs pinned Python in
-    Pyodide and records model calls through an explicit host transport in
-    that server.
+    Each grade runs in a disposable Node process. This is trusted host
+    code, not an isolation boundary for arbitrary scripts.
+    LiveClawBench, EnterpriseOps-Gym and Claw-Eval use the workspace
+    runtime; ComplexMCP, DataSpace, AutomationBench and GAIA2 use Monty.
+    Claw-Eval's and GAIA2's judge calls leave from that process, with the
+    judge's credentials in the request, never in a VFS.
     Each grader reads declared JSON and file bytes through read-only VFS
     mounts and writes rewards to a separate RAM output mount.
     """
@@ -248,7 +254,11 @@ class MirageVerifier(Verifier):
                        self.trial_paths.reward_json_path):
             reward.unlink(missing_ok=True)
         started = time.monotonic()
-        result = await self.evaluate()
+        try:
+            result = await self.evaluate()
+        except GradeFailed as error:
+            self._artifacts(error.artifacts)
+            raise
         score = result.get("score")
         if (type(score) not in (float, int) or not math.isfinite(score)
                 or not 0 <= score <= 1):
@@ -268,14 +278,17 @@ class MirageVerifier(Verifier):
         timings = {**result["timings"], "total_s": time.monotonic() - started}
         self._log(self.trial_paths.verifier_dir / "timings.json",
                   json.dumps(timings, indent=2) + "\n")
-        for name, value in result.get("artifacts", {}).items():
+        self._artifacts(result.get("artifacts", {}))
+        return VerifierResult(rewards=rewards)
+
+    def _artifacts(self, artifacts: dict) -> None:
+        for name, value in artifacts.items():
             if name != Path(name).name:
                 raise ValueError(f"Invalid grader artifact name: {name}")
             self._log(
                 self.trial_paths.verifier_dir / name,
                 value if name == "judge.log" and isinstance(value, str) else
                 json.dumps(value, indent=2) + "\n")
-        return VerifierResult(rewards=rewards)
 
     async def evaluate(self) -> dict:
         async with asyncio.timeout(self.task.config.verifier.timeout_sec):
@@ -431,18 +444,9 @@ class MirageVerifier(Verifier):
                 finally:
                     temporary.unlink(missing_ok=True)
 
-    def _claw_artifact(self, name: str, value) -> None:
-        if name not in ("claweval-inputs.json", "judge-recording.json"):
-            raise ValueError(f"Unexpected Claw-Eval artifact: {name}")
-        self._log(self.trial_paths.verifier_dir / name,
-                  json.dumps(value, indent=2) + "\n")
-
     async def _run(self, node: str, request: Path) -> dict:
         payload = await self._background(self._request_bytes, request)
         runtime = json.loads(payload).get("runtime", "typescript")
-        if runtime == "claweval-pyodide":
-            return await self.environment.verify_claweval(
-                payload, self._claw_artifact)
         own = DATASETS / self.dataset / "graders" / "verify.ts"
         if runtime == "typescript":
             runner = RUNNER
@@ -480,8 +484,13 @@ class MirageVerifier(Verifier):
             await process.wait()
         if process.returncode:
             diagnostic = stderr.decode(errors="replace")
-            raise RuntimeError(f"Mirage grader exited {process.returncode}: "
-                               f"{diagnostic[-4000:]}")
+            message = (f"Mirage grader exited {process.returncode}: "
+                       f"{diagnostic[-4000:]}")
+            try:
+                artifacts = json.loads(stdout)["artifacts"]
+            except (ValueError, TypeError, KeyError):
+                raise RuntimeError(message) from None
+            raise GradeFailed(message, artifacts)
         return json.loads(stdout)
 
     @staticmethod

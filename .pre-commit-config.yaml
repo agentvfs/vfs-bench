@@ -50,14 +50,15 @@
 # stripping it edits the value, and dvc rewrites the file back on the next
 # repro either way, so the two would fight over every commit.
 # vfs-bench-2/datasets/*/graders/reference/ contains hash-pinned upstream
-# judge source. DataSpace, AutomationBench and GAIA2 port.py are generated
-# from that source. Their local grader-pin hooks detect drift; keep their
+# judge source. DataSpace, AutomationBench and GAIA2 port.py, and Claw-Eval's
+# port/, are generated from that source; prompts in them keep upstream's
+# trailing spaces. Their local grader-pin hooks detect drift; keep their
 # bytes intact.
 # vfs-bench-2/datasets/<dataset>/<task>/ is written by the dataset's
 # generate.py, each file upstream's bytes or an edit of them; `generate.py
 # --check` holds them to it, and a formatter's rewrite fails it.
 exclude: |
-  (?x)^vfs-bench-2/datasets/(dataspace|automationbench|gaia2)/graders/port\.py$|^vfs-bench-2/datasets/[^/]+/[^/]+/(workspace|harbor)/.*$|^vfs-bench-2/datasets/[^/]+/graders/reference/.*$|^vfs-bench-1/(
+  (?x)^vfs-bench-2/datasets/(dataspace|automationbench|gaia2)/graders/port\.py$|^vfs-bench-2/datasets/claweval/graders/port/.*$|^vfs-bench-2/datasets/[^/]+/[^/]+/(workspace|harbor)/.*$|^vfs-bench-2/datasets/[^/]+/graders/reference/.*$|^vfs-bench-1/(
       task/[^/]+/.*/vfs/.*\.md|
       task/[^/]+/.*/shared/task\.md|
       task/[^/]+/.*/shared/system_prompt\.md|
@@ -175,6 +176,14 @@ repos:
         language_version: python3.12
         files: ^vfs-bench-2/datasets/gaia2/graders/
         pass_filenames: false
+      - id: claweval-grader-pin
+        name: Check Claw-Eval's grader port
+        entry: python vfs-bench-2/datasets/claweval/graders/build.py --check
+        language: python
+        language_version: python3.12
+        files: ^vfs-bench-2/datasets/claweval/graders/
+        pass_filenames: false
+        always_run: true
       - id: dataspace-grader-pin
         name: Check pinned DataSpace evaluator port
         entry: python vfs-bench-2/datasets/dataspace/graders/build_manifest.py --check-port

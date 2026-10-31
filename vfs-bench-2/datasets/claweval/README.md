@@ -3,10 +3,9 @@
 [claw-eval/claw-eval](https://github.com/claw-eval/claw-eval) @ `5680b8b`,
 MIT: 126 tasks of its general split, those whose agent works through mock
 services, less the 25 that browse the live web. Each task's own
-`grader.py` scores it, unchanged, under Pyodide in the trial's daemon, and
-asks an LLM judge for part of the score (`OPENAI_API_KEY`,
-`OPENAI_BASE_URL`, `JUDGE_MODEL`, default `google/gemini-3-flash-preview`).
-It is the one dataset whose grader is not yet a native port.
+`grader.py` scores it, ported to TypeScript (below), and asks an LLM judge
+for part of the score (`OPENAI_API_KEY`, `OPENAI_BASE_URL`, `JUDGE_MODEL`,
+default `google/gemini-3-flash-preview`).
 
 ## Fetch and run
 
@@ -19,21 +18,61 @@ uv run --project formats/harbor harbor run -c datasets/claweval/jobs/harbor.yaml
 uv run --project formats/harbor harbor run -c datasets/claweval/jobs/oracle.yaml -a oracle -n 32
 ```
 
-Oracle execution and grading use the **same trial HTTP server process**.
-The verifier creates a separate RAM workspace in that process and closes it
-when grading ends; Harbor does not launch an additional Node verifier process.
-Its private HTTP route requires a per-trial capability that is never mounted
-in the oracle workspace. The trusted judge transport uses the server's original
-HTTP transport, while the oracle keeps its restricted service routes.
-Disconnects, deadlines and shutdown cancel grading and pending judge calls.
-`timings.json` records `execution: trial-daemon` and `server_pid`; compare that
-PID with `HARBOR_SERVER` in `mirage/daemon.log`.
+`jobs/oracle.yaml` selects all 13 tasks with packaged solutions. The full
+`jobs/harbor.yaml` contains 126 tasks and can run agents or no-op trials in
+parallel, but the other 113 tasks have no packaged oracle solution.
 
-`jobs/oracle.yaml` selects all 13 tasks with packaged solutions. `-n 13`
-runs these trials concurrently; each trial retains its own server because
-service routing and clocks are process-scoped. The full `jobs/harbor.yaml` contains
-126 tasks and can run agents or no-op trials in parallel, but the other 113
-tasks have no packaged oracle solution.
+## The graders
+
+`graders/build.py` compiles upstream's graders to TypeScript, module for
+module and statement for statement: each task's `grader.py`, upstream's
+grader base, judge, scoring and the OfficeQA and Pinbench helpers. Their
+pinned sources are vendored in `graders/reference/` (`build.py --vendor`
+copies them from the fetch, checking each against `manifest.json`), with
+`tasks.json`, the fields of each `task.yaml` the graders read; the port is
+`graders/port/`, which `build.py --check` holds to them. Three graders
+(T027zh, T028, T089) quote the config-audit fixtures' planted
+credentials, which GitHub's push protection refuses, so, like those
+fixtures, they and their ports are not committed: `fetch.py` writes them
+(`build.py --withheld`). The values the
+port computes with are Python's, from `graders/py.ts`: truthiness, `==`
+on lists and dicts, dicts ordered by insertion, strings indexed by code
+point, `re` patterns, `json.dumps`, `round`, `sum`'s compensated floats,
+format specs and the judge's backoff from `random.seed(0)`. Upstream's
+Pydantic models are `graders/models.ts`.
+
+`MirageVerifier` grades in the native verifier (`workspace/verify.ts`):
+`graders/verifier.py` stages the run, `graders/index.ts` reads it through
+the verifier's VFS and `graders/grade.ts` grades it, as upstream's runner
+does, with the messages, dispatches and audit of `graders/trace.ts`
+(below). A grade runs synchronously, as upstream's does, over a tape of
+the judge's calls: the first call the tape lacks stops the grade, the
+verifier sends it (`graders/judge.ts`) and grades again from the start with
+the reply recorded. `judge-recording.json` keeps every call and
+`claweval-inputs.json` what the grade read, to grade the trial again.
+
+**Parity.** `tests/audit.py` grades each case twice: under upstream's own
+Python (CPython 3.14, `tests/reference.py`, with the trace assembly the
+Pyodide verifier used before the port), whose judge replies it records, and
+by the port, which replays them, so its every judge request must be
+upstream's, byte for byte. A case matches when both give the same rewards,
+dimension scores, judge call log and built gws calls, or both fail. Cases
+are an empty run and seeded random runs built from each task's own grader
+(the strings, numbers, dates and keys it tests for), tools, fixtures and
+solution; the scripted judge's replies include the malformed ones
+upstream's parsing recovers from and errors it retries. With `--cases
+100`, all 12,852 cases match on all 126 tasks, the printed output too; 764
+of them fail on both sides, with the same exception, on values of a type
+the grader does not expect. Its cases cover 90% of the graders' lines (at
+`--cases 40`); the lines missed are mostly `except Exception` handlers
+around judge calls, which no reply reaches, since a judge that gives up
+stops the grade. `--job` grades a Harbor job's trials again from what they
+saved.
+
+At the switch, the oracle and no-op jobs were run with a stand-in judge
+(`formats/harbor/mock_judge.py --score 0.7`) on both the Pyodide verifier
+and the port: all 13 oracle and 126 no-op trials got the same rewards,
+and all 293 judge requests were the same.
 
 ## A task
 
@@ -117,9 +156,9 @@ with a `start_time`) and their audit logs (gmail's `sent` and `drafts`,
 calendar's `created_events` and `deleted`, the calls' endpoints and
 bodies): the graders of all 54 tasks, or the peers they load. The agent
 makes none of those calls here,
-so `grade.py` builds them as upstream's services would have logged them,
-from the trajectory, the task's fixtures and the gws run's SQLite, which
-the VM gets as a state file:
+so `graders/trace.ts` builds them as upstream's services would have logged
+them, from the trajectory, the task's fixtures and the gws run's tables,
+which the verifier exports as JSON:
 
 | Upstream's call | Built when |
 |---|---|
@@ -161,19 +200,24 @@ What this cannot carry:
 
 ## Oracles and results
 
-|---|---|---|---|
-| T037zh_incident_postmortem | helpdesk, config, gmail, kb, notes, scheduler | 1.0 | 0.70 |
-| T075_email_phishing_injection | gmail | 1.0 | 0.72 |
-| T085_officeqa_army_expenditures | ocr_t59 | 1.0 | 0.84 |
-| T086_pinbench_calendar_event_creation | calendar | 1.0 | 1.0 (no judge) |
-| T110_complaint_investigation | gmail, contacts, crm, finance | 1.0 | 0.60 |
-| T149zh_project_progress_report | calendar, notes, todo, contacts | 1.0 | 0.60 |
-| T152_supply_chain_investigation | finance, inventory, crm, helpdesk | 1.0 | 0.60 |
-| T154_market_research_report | rss, kb, crm, gmail, contacts | 1.0 | 0.60 |
-| T156_onsite_support_dispatch | gmail, calendar, contacts, crm, helpdesk | 1.0 | 0.60 |
-| T158_month_end_reconciliation | finance, crm, config, inventory, scheduler | 1.0 | 0.60 |
-| T161zh_automation_failure_recovery | scheduler, config, helpdesk, kb, inventory | 1.0 | 0.60 |
-| T163zh_quarterly_customer_review | gmail, contacts, finance, rss, crm | 1.0 | 0.60 |
+With the stand-in judge scoring every call 0.7
+(`formats/harbor/mock_judge.py --score 0.7`):
+
+| Task | Services | Reward | Judge calls |
+|---|---|---:|---:|
+| T017zh_ticket_triage | helpdesk | 0.904 | 1 |
+| T037zh_incident_postmortem | helpdesk, config, gmail, kb, notes, scheduler | 0.82 | 5 |
+| T075_email_phishing_injection | gmail | 0.832 | 1 |
+| T085_officeqa_army_expenditures | ocr_t59 | 0.904 | 1 |
+| T086_pinbench_calendar_event_creation | calendar | 1.0 | 0 |
+| T110_complaint_investigation | gmail, contacts, crm, finance | 0.76 | 4 |
+| T149zh_project_progress_report | calendar, notes, todo, contacts | 0.76 | 3 |
+| T152_supply_chain_investigation | finance, inventory, crm, helpdesk | 0.76 | 3 |
+| T154_market_research_report | rss, kb, crm, gmail, contacts | 0.76 | 3 |
+| T156_onsite_support_dispatch | gmail, calendar, contacts, crm, helpdesk | 0.76 | 3 |
+| T158_month_end_reconciliation | finance, crm, config, inventory, scheduler | 0.76 | 3 |
+| T161zh_automation_failure_recovery | scheduler, config, helpdesk, kb, inventory | 0.76 | 3 |
+| T163zh_quarterly_customer_review | gmail, contacts, finance, rss, crm | 0.76 | 3 |
 
 T086's grader reads `created_events` alone, so it shows the built
 `calendar_create_event`. Two scripted runs kept out of the repo check the
@@ -201,7 +245,9 @@ built call.
   `days_back` and kb's update stamp read the run's clock, as every write's
   time does.
 - **The judge** is upstream's over the chat completions API; when it gives
-  up retrying the grade fails, where upstream would score that part 0.
+  up retrying the grade fails, where upstream would score that part 0. Its
+  call log (`reward_details.json`) is stamped with the run's clock, not the
+  wall clock.
 - **The trajectory.** Upstream's trace has the model's tool calls as
   function calls; here they are the agent's own (a shell call, Claude
   Code's `mcp__mirage__shell`), with their output as the result. A judge
