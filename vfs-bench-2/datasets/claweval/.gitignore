@@ -13,3 +13,11 @@
 /T089_pinbench_config_workflow_notes/workspace/files/workspace/tasks/T027zh_api_config_audit/fixtures/config/integrations.json
 /T090_pinbench_config_change_plan/workspace/fixtures/claweval_config.json
 /T090_pinbench_config_change_plan/workspace/files/workspace/tasks/T027zh_api_config_audit/fixtures/config/integrations.json
+# The graders that quote those credentials, and their ports: fetch.py
+# writes them too (graders/build.py --withheld).
+/graders/reference/tasks/T027zh_api_config_audit/
+/graders/reference/tasks/T028_api_config_audit/
+/graders/reference/tasks/T089_pinbench_config_workflow_notes/
+/graders/port/tasks/T027zh_api_config_audit.ts
+/graders/port/tasks/T028_api_config_audit.ts
+/graders/port/tasks/T089_pinbench_config_workflow_notes.ts

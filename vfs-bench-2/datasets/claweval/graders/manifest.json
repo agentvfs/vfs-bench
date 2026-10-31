@@ -1,6 +1,4 @@
 {
-  "adapter_sha256": "87733e3e81cd0e4cccc93dbb3d3004a05acf1ace8aec6f9cd4ed74cc6b185389",
-  "assembly_sha256": "b1613c305c9dcc3b8b39b6b961d91a781e97612ee0b27dad1409d06941317d9c",
   "tasks": {
     "T001zh_email_triage": {
       "audits": {},
@@ -14,7 +12,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -46,7 +44,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -79,7 +77,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -111,7 +109,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -146,7 +144,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -180,7 +178,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -211,7 +209,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -241,7 +239,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -272,7 +270,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -302,7 +300,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -333,7 +331,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -363,7 +361,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -394,7 +392,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -424,7 +422,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -455,7 +453,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -485,7 +483,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -516,7 +514,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -546,7 +544,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -577,7 +575,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -607,7 +605,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -638,7 +636,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -668,7 +666,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -699,7 +697,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -729,7 +727,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -765,7 +763,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -800,7 +798,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -831,7 +829,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -861,7 +859,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -898,7 +896,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -934,7 +932,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -973,7 +971,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1011,7 +1009,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1047,7 +1045,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1082,7 +1080,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1117,7 +1115,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1151,7 +1149,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1190,7 +1188,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1228,7 +1226,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1268,7 +1266,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1307,7 +1305,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1344,7 +1342,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1380,7 +1378,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1411,7 +1409,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1441,7 +1439,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1472,7 +1470,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1504,7 +1502,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1534,7 +1532,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1564,7 +1562,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1594,7 +1592,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1624,7 +1622,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1654,7 +1652,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1684,7 +1682,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1714,7 +1712,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1744,7 +1742,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1774,7 +1772,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1804,7 +1802,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1836,7 +1834,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1866,7 +1864,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1896,7 +1894,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1926,7 +1924,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1956,7 +1954,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -1986,7 +1984,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2018,7 +2016,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2050,7 +2048,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2080,7 +2078,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2110,7 +2108,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2141,7 +2139,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2172,7 +2170,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2205,7 +2203,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2237,7 +2235,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2275,7 +2273,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2312,7 +2310,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2347,7 +2345,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2381,7 +2379,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2416,7 +2414,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2450,7 +2448,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2482,7 +2480,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2513,7 +2511,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2549,7 +2547,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2584,7 +2582,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2616,7 +2614,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2647,7 +2645,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2683,7 +2681,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2718,7 +2716,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2753,7 +2751,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2787,7 +2785,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2819,7 +2817,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2850,7 +2848,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2882,7 +2880,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2913,7 +2911,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2949,7 +2947,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -2984,7 +2982,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3017,7 +3015,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3049,7 +3047,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3086,7 +3084,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3122,7 +3120,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3158,7 +3156,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3193,7 +3191,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3226,7 +3224,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3258,7 +3256,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3295,7 +3293,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3331,7 +3329,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3364,7 +3362,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3396,7 +3394,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3429,7 +3427,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3461,7 +3459,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3498,7 +3496,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3534,7 +3532,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3568,7 +3566,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3601,7 +3599,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3638,7 +3636,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3674,7 +3672,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3708,7 +3706,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3741,7 +3739,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3780,7 +3778,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3818,7 +3816,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3857,7 +3855,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3895,7 +3893,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3930,7 +3928,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -3964,7 +3962,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -4003,7 +4001,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -4041,7 +4039,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -4076,7 +4074,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -4110,7 +4108,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -4148,7 +4146,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
@@ -4185,7 +4183,7 @@
         "/logs/agent/trajectory.json",
         "/var/lib/mock-data/claweval/dispatches.jsonl"
       ],
-      "runtime": "claweval-pyodide",
+      "runtime": "typescript",
       "sources": {
         "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
         "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",

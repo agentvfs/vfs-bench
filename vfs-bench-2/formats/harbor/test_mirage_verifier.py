@@ -18,7 +18,7 @@ from harbor.models.task.task import Task
 from harbor.models.trial.paths import TrialPaths
 from vfsbench_harbor import MirageEnvironment, MirageVerifier
 from vfsbench_harbor.environment import ROOT
-from vfsbench_harbor.mirage_verifier import _Staging
+from vfsbench_harbor.mirage_verifier import GradeFailed, _Staging
 
 TASKS = ROOT / "datasets/liveclawbench"
 NODE = os.environ.get("VFSBENCH_TEST_NODE", "node")
@@ -148,6 +148,34 @@ class MirageVerifierTests(unittest.IsolatedAsyncioTestCase):
         self.paths.reward_text_path.write_text("1\n")
         with self.assertRaisesRegex(RuntimeError, "Mirage grader exited"):
             await self.verifier.verify()
+        self.assertFalse(self.paths.reward_text_path.exists())
+
+    async def test_a_failed_grade_keeps_its_artifacts(self):
+        recording = [{
+            "request": {
+                "model": "fixture"
+            },
+            "error": {
+                "message": "x"
+            }
+        }]
+        process = Mock(returncode=1, pid=12345)
+        process.communicate = AsyncMock(return_value=(json.dumps({
+            "artifacts": {
+                "judge-recording.json": recording
+            }
+        }).encode(), b"Judge timed out"))
+        process.wait = AsyncMock(return_value=1)
+        self.paths.reward_text_path.write_text("1\n")
+        with patch(
+                "vfsbench_harbor.mirage_verifier.asyncio."
+                "create_subprocess_exec",
+                AsyncMock(return_value=process)), patch(
+                    "vfsbench_harbor.mirage_verifier.os.killpg"):
+            with self.assertRaisesRegex(GradeFailed, "Judge timed out"):
+                await self.verifier.verify()
+        saved = self.paths.verifier_dir / "judge-recording.json"
+        self.assertEqual(json.loads(saved.read_text()), recording)
         self.assertFalse(self.paths.reward_text_path.exists())
 
     async def test_native_grading_never_opens_sqlite(self):

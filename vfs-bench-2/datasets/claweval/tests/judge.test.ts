@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict'
 import { createServer } from 'node:http'
 import { test } from 'node:test'
-import { judgeTransport } from '../graders/verify.ts'
+import { judgeTransport } from '../graders/judge.ts'
 
 test('Judge transport sends the configured model and keeps credentials out of recordings', async () => {
   let auth = '', body: unknown
