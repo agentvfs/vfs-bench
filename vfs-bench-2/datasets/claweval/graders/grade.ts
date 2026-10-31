@@ -126,9 +126,15 @@ export function gradeOnce(
 }
 
 /** The grade, sending each judge call the tape lacks through `transport`
- * (after upstream's backoff, unless `wait` is false: a replay). */
-export async function grade(inputs: Inputs, transport: Transport, signal?: AbortSignal, wait = true): Promise<Result> {
-  const tape: Recording[] = []
+ * (after upstream's backoff, unless `wait` is false: a replay). Each reply
+ * goes onto `tape`, which keeps them when the grade fails. */
+export async function grade(
+  inputs: Inputs,
+  transport: Transport,
+  signal?: AbortSignal,
+  wait = true,
+  tape: Recording[] = []
+): Promise<Result> {
   const Grader = await graderOf(inputs.task)
   for (;;) {
     signal?.throwIfAborted()
@@ -146,13 +152,14 @@ export function replay(recording: Recording[]): Transport {
   let i = 0
   return async (request) => {
     const entry = recording[i++]
-    const [want, got] = [JSON.stringify(entry?.request), JSON.stringify(request)]
-    if (!entry || want !== got) {
+    if (!entry) throw new Error(`Judge request ${i} is past the recording's ${recording.length}`)
+    const [want, got] = [JSON.stringify(entry.request), JSON.stringify(request)]
+    if (want !== got) {
       let at = 0
       while (at < want.length && want[at] === got[at]) at++
       throw new Error(
         `Judge request ${i} differs from recording at ${at}: ` +
-          `${JSON.stringify(want?.slice(at - 40, at + 80))} != ${JSON.stringify(got.slice(at - 40, at + 80))}`
+          `${JSON.stringify(want.slice(at - 40, at + 80))} != ${JSON.stringify(got.slice(at - 40, at + 80))}`
       )
     }
     const { request: _, ...reply } = entry

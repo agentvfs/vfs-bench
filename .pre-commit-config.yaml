@@ -183,6 +183,7 @@ repos:
         language_version: python3.12
         files: ^vfs-bench-2/datasets/claweval/graders/
         pass_filenames: false
+        always_run: true
       - id: dataspace-grader-pin
         name: Check pinned DataSpace evaluator port
         entry: python vfs-bench-2/datasets/dataspace/graders/build_manifest.py --check-port

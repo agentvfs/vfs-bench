@@ -112,8 +112,7 @@ class AgentTrajectory(unittest.TestCase):
             asyncio.run(self.env.refresh_verifier_files())
         snapshot.assert_called_once_with(root / "view.json", output)
 
-    def test_exec_refreshes_trajectory_before_running_a_command(
-            self) -> None:
+    def test_exec_refreshes_trajectory_before_running_a_command(self) -> None:
         self.source.write_text('{"steps": []}')
 
         async def post(*args, **kwargs):

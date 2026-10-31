@@ -6,11 +6,11 @@ dispatches, each service's audit and the gws run's tables. The reference
 judge and records the judge's tape; the port grades it replaying that
 tape, so its every judge request must be the reference's, byte for byte.
 A case matches when both give the same rewards, dimension scores, judge
-call log and built gws calls, or both fail. Cases are generated from each
-task's own grader (the strings, numbers and keys it tests for), its tools
-and fixtures, and its packaged solution's reply: an empty run, the
-solution, and seeded random runs. The scripted judge's replies are test
-fixtures, not model judgments.
+call log, built gws calls and printed output, or both fail the same way.
+Cases are generated from each task's own grader (the strings, numbers
+and keys it tests for), its tools and fixtures, and its packaged
+solution's reply: an empty run, the solution, and seeded random runs.
+The scripted judge's replies are test fixtures, not model judgments.
 
   uv run --project datasets/claweval python -I \\
       datasets/claweval/tests/audit.py [--task T...] [--cases N] \\
@@ -440,6 +440,11 @@ def case(task, index, empty=False, solution=None):
     }
 
 
+def kind(error):
+    """An error's exception name, or None for no error."""
+    return None if error is None else error.split(":", 1)[0]
+
+
 def responder(case_id):
     """The scripted judge: seeded replies, among them the malformed ones
     upstream's parsing recovers from and errors it retries."""
@@ -581,7 +586,8 @@ def main(args):
     for i, ((task, name, c), ref) in enumerate(zip(cases, references)):
         port = ports.get(i, {"error": "no output"})
         if "error" in ref or "error" in port:
-            ok = "error" in ref and "error" in port
+            # The same exception; CPython's wording varies by version.
+            ok = kind(ref.get("error")) == kind(port.get("error"))
             entry = {
                 "task": task,
                 "case": name,
@@ -597,23 +603,17 @@ def main(args):
                 f"details.{k}" for k in ("scores", "judge", "gws_dispatches")
                 if not same(ref["details"][k], port["details"][k])
             ]
+            if ref["details"]["output"] != port["details"]["output"]:
+                diffs.append("details.output")
             if args.job and not same(trials[i], ref["rewards"]):
                 diffs.append("trial reward.json")
             entry = {
-                "task":
-                task,
-                "case":
-                name,
-                "matched":
-                not diffs,
-                "differences":
-                diffs,
-                "stdout_matches":
-                ref["details"]["output"] == port["details"]["output"],
-                "judge_calls":
-                len(ref["tape"]),
-                "reward":
-                ref["rewards"]["reward"]
+                "task": task,
+                "case": name,
+                "matched": not diffs,
+                "differences": diffs,
+                "judge_calls": len(ref["tape"]),
+                "reward": ref["rewards"]["reward"]
             }
             if diffs:
                 entry["reference"] = {
@@ -650,12 +650,9 @@ def main(args):
             },
             indent=1,
             ensure_ascii=False) + "\n")
-    stdout_ok = sum(1 for e in report if e.get("stdout_matches"))
-    graded = sum(1 for e in report if "stdout_matches" in e)
     errors = sum(1 for e in report if e.get("reference_error"))
     print(f"{matched}/{len(report)} cases match ({errors} where both fail); "
-          f"{tasks_ok}/{len(by_task)} tasks match on every case; "
-          f"printed output matches on {stdout_ok}/{graded}")
+          f"{tasks_ok}/{len(by_task)} tasks match on every case")
     return 0 if matched == len(report) else 1
 
 

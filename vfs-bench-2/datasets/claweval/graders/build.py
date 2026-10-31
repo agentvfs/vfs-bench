@@ -5,8 +5,9 @@ for byte (``--vendor`` copies them from ``state/claweval/src`` after
 ``fetch.py``, checking each against ``manifest.json``), and ``tasks.json``,
 the fields of each task's ``task.yaml`` the graders read. This script
 compiles each module to ``port/``, statement for statement, over ``py.ts``,
-which gives the values Python's semantics. ``--check`` fails if ``port/``
-differs from what it would write.
+which gives the values Python's semantics. ``--check`` fails if a
+``reference/`` source is not its pin or ``port/`` differs from what it
+would write.
 
 Run with Python 3.12 or later from any directory.
 """
@@ -1409,6 +1410,22 @@ def pinned(relative, manifest):
     return data
 
 
+def check_pins(manifest):
+    """Fail unless each reference/ source is the bytes its pin names."""
+    pins = {
+        relative: digest
+        for d in manifest["tasks"].values()
+        for relative, digest in d["sources"].items()
+    }
+    for path in sorted(REFERENCE.rglob("*")):
+        relative = path.relative_to(REFERENCE).as_posix()
+        if not path.is_file() or relative == "tasks.json":
+            continue
+        if hashlib.sha256(path.read_bytes()).hexdigest() != pins.get(relative):
+            raise SystemExit(f"reference/{relative} is not its pin in "
+                             "manifest.json; run graders/build.py --vendor")
+
+
 def withhold():
     """Write the withheld graders' reference copies from the fetch."""
     manifest = json.loads(MANIFEST.read_text())
@@ -1484,6 +1501,7 @@ def main():
     except Unsupported as exc:
         raise SystemExit(f"cannot port: {exc}")
     if args.check:
+        check_pins(json.loads(MANIFEST.read_text()))
         # A withheld grader's port is checked where it was written.
         built = set(files)
         current = {

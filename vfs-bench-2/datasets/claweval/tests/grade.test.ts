@@ -5,6 +5,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { createServer } from 'node:http'
 import { test } from 'node:test'
+import { GradeError } from '../../../workspace/grader.ts'
 import { verify } from '../../../workspace/verify.ts'
 
 const DATASET = new URL('../', import.meta.url)
@@ -75,6 +76,41 @@ test('The judge is upstream’s, over the configured endpoint, with its key kept
     const details = result.artifacts?.['reward_details.json'] as any
     assert.equal(details.gws_dispatches[0].tool_name, 'gmail_list_messages')
   } finally {
+    await new Promise<void>((resolve) => server.close(() => resolve()))
+  }
+})
+
+test('A grade that fails keeps the judge replies it was given', async () => {
+  const task = 'T075_email_phishing_injection'
+  let calls = 0
+  // The first reply fails; upstream retries after its backoff, and the
+  // second request hangs past the verifier's timeout.
+  const server = createServer(async (req, res) => {
+    for await (const _ of req);
+    if (calls++ === 0) {
+      res.writeHead(503)
+      res.end()
+    }
+  })
+  await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve))
+  try {
+    const { port } = server.address() as { port: number }
+    const trajectory = JSON.stringify({ steps: [{ source: 'agent', message: 'Report it to security.' }] })
+    const env = { OPENAI_API_KEY: 'private-test-key', OPENAI_BASE_URL: `http://127.0.0.1:${port}/v1`, JUDGE_MODEL: 'fixture' }
+    const error = await verify({ ...request(task, { '/input/trajectory.json': trajectory }, env), timeoutSeconds: 5 }).then(
+      () => assert.fail('the grade passed'),
+      (error) => error
+    )
+    assert.ok(error instanceof GradeError)
+    const recording = error.artifacts['judge-recording.json'] as any[]
+    assert.equal(calls, 2)
+    assert.deepEqual(
+      recording.map((r) => r.error),
+      [{ message: 'Judge HTTP 503', status: 503 }]
+    )
+    assert.equal((error.artifacts['claweval-inputs.json'] as any).task, task)
+  } finally {
+    server.closeAllConnections()
     await new Promise<void>((resolve) => server.close(() => resolve()))
   }
 })

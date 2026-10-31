@@ -726,6 +726,15 @@ export function print(...args: any[]) {
 /** What the grade printed. */
 export const stdout: string[] = []
 
+/** Unicode decimal digits as ASCII ones, as `int()` and `float()` read them. */
+function asciiDigits(s: string): string {
+  return s.replace(/\p{Nd}/gu, (d) => {
+    const at = d.codePointAt(0)!
+    let start = at
+    while (/\p{Nd}/u.test(String.fromCodePoint(start - 1))) start--
+    return String((at - start) % 10)
+  })
+}
 export function int(x: any = 0, base?: any): number {
   if (typeof x === 'number') {
     if (!Number.isFinite(x)) throw new ValueError('cannot convert float to integer')
@@ -733,7 +742,7 @@ export function int(x: any = 0, base?: any): number {
   }
   if (typeof x === 'boolean') return Number(x)
   if (typeof x === 'string') {
-    const s = pyStrip(x).replace(/_/g, '')
+    const s = asciiDigits(pyStrip(x)).replace(/_/g, '')
     const b = base == null ? 10 : number(base)
     const ok = b === 10 ? /^[+-]?\d+$/.test(s) : /^[+-]?[0-9a-z]+$/i.test(s)
     if (!ok) throw new ValueError(`invalid literal for int() with base ${b}: ${reprStr(x)}`)
@@ -746,7 +755,7 @@ export function float(x: any = 0): number {
   if (typeof x === 'number') return x
   if (typeof x === 'boolean') return Number(x)
   if (typeof x === 'string') {
-    const s = pyStrip(x).toLowerCase()
+    const s = asciiDigits(pyStrip(x)).toLowerCase()
     if (/^[+-]?(inf|infinity)$/.test(s)) return s.startsWith('-') ? -Infinity : Infinity
     if (/^[+-]?nan$/.test(s)) return NaN
     if (/^[+-]?(\d(_?\d)*(\.(\d(_?\d)*)?)?|\.\d(_?\d)*)(e[+-]?\d(_?\d)*)?$/.test(s)) return Number(s.replace(/_/g, ''))

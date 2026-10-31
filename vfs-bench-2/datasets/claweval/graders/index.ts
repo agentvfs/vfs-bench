@@ -9,9 +9,10 @@
  * - `/input/gws_seed.json`: a gws task's gmail and calendar fixtures.
  */
 import type { Context as CommandContext } from '@struktoai/mirage-core/commands/config'
-import { Context, type Grade, type InputSpec } from '../../../workspace/grader.ts'
+import { Context, GradeError, type Grade, type InputSpec } from '../../../workspace/grader.ts'
 import { grade, JUDGE_MODEL } from './grade.ts'
 import { judgeTransport } from './judge.ts'
+import type { Recording } from './judge-client.ts'
 import { TASKS } from './port/registry.ts'
 import * as $ from './py.ts'
 
@@ -27,32 +28,40 @@ export async function evaluate(input: InputSpec, command: CommandContext): Promi
   const env = input.env ?? {}
   const model = env.JUDGE_MODEL || JUDGE_MODEL
   const files = Object.fromEntries(input.files.map((path) => [path, context.text(path)]))
-  const result = await grade(
-    {
-      task: input.task,
-      model,
-      audit: $.json.dumps($.gi(state, 'audit')),
-      run: {
-        trajectory: file('/input/trajectory.json'),
-        dispatches: file('/input/dispatches.jsonl'),
-        seed: file('/input/gws_seed.json'),
-        gws: $.gi(state, 'gws'),
-        epoch: $.gi(state, 'epoch'),
+  // What the grade read and the judge's replies, to grade it again
+  // (tests/audit.py --job), kept when the grade fails too.
+  const tape: Recording[] = []
+  const saved = () => ({
+    'judge-recording.json': tape,
+    'claweval-inputs.json': { task: input.task, model, files },
+  })
+  let result
+  try {
+    result = await grade(
+      {
+        task: input.task,
+        model,
+        audit: $.json.dumps($.gi(state, 'audit')),
+        run: {
+          trajectory: file('/input/trajectory.json'),
+          dispatches: file('/input/dispatches.jsonl'),
+          seed: file('/input/gws_seed.json'),
+          gws: $.gi(state, 'gws'),
+          epoch: $.gi(state, 'epoch'),
+        },
       },
-    },
-    judgeTransport(env),
-    command.signal
-  )
+      judgeTransport(env),
+      command.signal,
+      true,
+      tape
+    )
+  } catch (error) {
+    throw new GradeError(error, saved())
+  }
   return {
     score: result.score,
     checks: result.rewards,
     rewards: result.rewards,
-    artifacts: {
-      'reward_details.json': result.details,
-      // What the grade read and the judge's replies, to grade it again
-      // (tests/audit.py --job).
-      'judge-recording.json': result.tape,
-      'claweval-inputs.json': { task: input.task, model, files },
-    },
+    artifacts: { 'reward_details.json': result.details, ...saved() },
   }
 }

@@ -4,7 +4,7 @@
  */
 import { createInterface } from 'node:readline'
 import { grade, replay } from '../graders/grade.ts'
-import { fromJSON } from '../graders/py.ts'
+import { BaseException, fromJSON } from '../graders/py.ts'
 
 for await (const line of createInterface({ input: process.stdin })) {
   if (!line) continue
@@ -24,7 +24,14 @@ for await (const line of createInterface({ input: process.stdin })) {
     )
     out = { id, ...result }
   } catch (error) {
-    out = { id, error: error instanceof Error ? `${error.name}: ${error.message}` : String(error), stack: (error as Error)?.stack }
+    // As the reference prints it: `type(exc).__name__: str(exc)`.
+    const text =
+      error instanceof BaseException
+        ? `${error.name.replace(/_$/, '')}: ${error}`
+        : error instanceof Error
+          ? `${error.name}: ${error.message}`
+          : String(error)
+    out = { id, error: text, stack: (error as Error)?.stack }
   }
   process.stdout.write(JSON.stringify(out) + '\n')
 }

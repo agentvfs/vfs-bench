@@ -5,7 +5,7 @@ import { IOResult } from '@struktoai/mirage-core/io/types'
 import { Limit, MountMode, PathSpec } from '@struktoai/mirage-core/types'
 import { RAMVFS } from '@struktoai/mirage-core/vfs/ram/ram'
 import { Workspace } from '@struktoai/mirage-core/workspace/workspace/workspace'
-import { type Inputs, type InputSpec, type Grade, type Graders } from './grader.ts'
+import { GradeError, type Inputs, type InputSpec, type Grade, type Graders } from './grader.ts'
 export type VerifyRequest = Inputs
 /** A dataset's graders: `datasets/<dataset>/graders/index.ts`. */
 async function graders(dataset: string): Promise<Graders> {
@@ -20,7 +20,7 @@ function pathSpec(path: string) {
 }
 export async function verifierWorkspace(
   request: VerifyRequest
-): Promise<{ workspace: Workspace; result: () => Grade | undefined }> {
+): Promise<{ workspace: Workspace; result: () => Grade | undefined; artifacts: () => Record<string, unknown> }> {
   const { GRADERS, evaluate } = await graders(request.dataset)
   if (!Object.hasOwn(GRADERS, request.task)) throw new Error(`No Mirage grader for ${request.task}`)
   if (!Number.isFinite(request.timeoutSeconds) || request.timeoutSeconds <= 0)
@@ -47,6 +47,7 @@ export async function verifierWorkspace(
     )
   }
   let grade: Grade | undefined
+  let artifacts: Record<string, unknown> = {}
   const workspace = new Workspace(
     { '/': [input, MountMode.READ], '/.verifier-output': [output, MountMode.WRITE] },
     {
@@ -61,23 +62,29 @@ export async function verifierWorkspace(
       handlers: {
         '': new CLIHandler({
           fn: async (_accessor, _paths, _texts, command) => {
-            grade = await evaluate(spec, command)
+            try {
+              grade = await evaluate(spec, command)
+            } catch (error) {
+              if (error instanceof GradeError) artifacts = error.artifacts
+              throw error
+            }
             return [encoder.encode(`${grade.score}\n`), new IOResult()]
           },
         }),
       },
     })
   )
-  return { workspace, result: () => grade }
+  return { workspace, result: () => grade, artifacts: () => artifacts }
 }
 export async function verify(request: VerifyRequest) {
   const started = performance.now()
-  const { workspace, result } = await verifierWorkspace(request)
+  const { workspace, result, artifacts } = await verifierWorkspace(request)
   try {
     const io = await workspace.shell(
       'grade > /.verifier-output/reward.txt && cat /.verifier-output/reward.txt'
     )
-    if (io.exitCode !== 0) throw new Error(`Grader failed (${io.exitCode}): ${io.stderrText}`)
+    if (io.exitCode !== 0)
+      throw new GradeError(new Error(`Grader failed (${io.exitCode}): ${io.stderrText}`), artifacts())
     const grade = result()
     if (!grade || Number(io.stdoutText.trim()) !== grade.score)
       throw new Error('Grader did not write its reward')
@@ -100,6 +107,8 @@ if (import.meta.main) {
     process.stdout.write(`${JSON.stringify(await verify(JSON.parse(text)))}\n`)
   } catch (error) {
     console.error(error instanceof Error ? error.stack : error)
+    // A failed grade's artifacts, for the verifier to save.
+    if (error instanceof GradeError) process.stdout.write(`${JSON.stringify({ artifacts: error.artifacts })}\n`)
     process.exitCode = 1
   }
 }

@@ -128,6 +128,14 @@ class _Staging:
                     yield Path(entry.path)
 
 
+class GradeFailed(RuntimeError):
+    """A failed grade, with the artifacts it had so far."""
+
+    def __init__(self, message: str, artifacts: dict):
+        super().__init__(message)
+        self.artifacts = artifacts
+
+
 class MirageVerifier(Verifier):
     """Run a registered grader in a fresh, verifier-only Mirage workspace.
 
@@ -246,7 +254,11 @@ class MirageVerifier(Verifier):
                        self.trial_paths.reward_json_path):
             reward.unlink(missing_ok=True)
         started = time.monotonic()
-        result = await self.evaluate()
+        try:
+            result = await self.evaluate()
+        except GradeFailed as error:
+            self._artifacts(error.artifacts)
+            raise
         score = result.get("score")
         if (type(score) not in (float, int) or not math.isfinite(score)
                 or not 0 <= score <= 1):
@@ -266,14 +278,17 @@ class MirageVerifier(Verifier):
         timings = {**result["timings"], "total_s": time.monotonic() - started}
         self._log(self.trial_paths.verifier_dir / "timings.json",
                   json.dumps(timings, indent=2) + "\n")
-        for name, value in result.get("artifacts", {}).items():
+        self._artifacts(result.get("artifacts", {}))
+        return VerifierResult(rewards=rewards)
+
+    def _artifacts(self, artifacts: dict) -> None:
+        for name, value in artifacts.items():
             if name != Path(name).name:
                 raise ValueError(f"Invalid grader artifact name: {name}")
             self._log(
                 self.trial_paths.verifier_dir / name,
                 value if name == "judge.log" and isinstance(value, str) else
                 json.dumps(value, indent=2) + "\n")
-        return VerifierResult(rewards=rewards)
 
     async def evaluate(self) -> dict:
         async with asyncio.timeout(self.task.config.verifier.timeout_sec):
@@ -469,8 +484,13 @@ class MirageVerifier(Verifier):
             await process.wait()
         if process.returncode:
             diagnostic = stderr.decode(errors="replace")
-            raise RuntimeError(f"Mirage grader exited {process.returncode}: "
-                               f"{diagnostic[-4000:]}")
+            message = (f"Mirage grader exited {process.returncode}: "
+                       f"{diagnostic[-4000:]}")
+            try:
+                artifacts = json.loads(stdout)["artifacts"]
+            except (ValueError, TypeError, KeyError):
+                raise RuntimeError(message) from None
+            raise GradeFailed(message, artifacts)
         return json.loads(stdout)
 
     @staticmethod
