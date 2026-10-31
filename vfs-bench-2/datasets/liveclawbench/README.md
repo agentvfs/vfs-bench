@@ -4,7 +4,7 @@
 MIT. Seventy of its tasks, each upstream's task directory with its
 Dockerfile replaced by `workspace/workspace.yaml`, on kit fakes of its
 services. Their graders are TypeScript ports of each task's `verify.py`
-(`graders/`).
+(`<task>/grader.ts`, over helpers in `graders/`).
 
 ## Fetch and run
 
@@ -90,7 +90,7 @@ at the trial's run of the fake. These tasks differ from upstream:
   APIs. Where upstream's runs `openclaw agent`, a model, with no script,
   the script is ours: it reads what it sends and schedules from `/gmail`
   and `/calendar`, and checks what it did as the instruction asks.
-- The grader (`graders/`) ports every check and weight of upstream's
+- The grader (`grader.ts`) ports every check and weight of upstream's
   `verify.py`, reading the gws run's state in place of the mocks'.
 - `workspace.yaml` leaves out the Dockerfile's `RUN` that installs a browser
   (Playwright's Chromium) for upstream's web apps.

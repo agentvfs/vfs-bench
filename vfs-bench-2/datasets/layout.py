@@ -13,6 +13,8 @@ runs it with, and ``harbor/`` what Harbor reads.
     harbor/environment/mirage.yaml   the way to ../../workspace
     harbor/solution/
     harbor/tests/test.sh       a stub: MirageVerifier grades the task
+    grader.ts                  its own grader, where it has one; the
+                               dataset's shared code is in ../graders/
 
 A generator writes a task's files by their place in Harbor's own layout
 (``environment/mirage.yaml``, ``tests/<file>``), and ``placed`` lays them

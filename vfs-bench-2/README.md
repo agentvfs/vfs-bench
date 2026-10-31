@@ -37,6 +37,7 @@ vfs-bench-2/
       <task>/
         workspace/
         harbor/
+        grader.ts
 ```
 
 - `workspace/`: the Mirage side every task shares: the daemon, the
@@ -46,7 +47,10 @@ vfs-bench-2/
   `MirageEnvironment`, `MirageVerifier`, and the Codex and Claude Code
   agents.
 - `datasets/<dataset>/`: one benchmark, its mocks and graders, and its
-  tasks. `datasets/layout.py` says what goes where in a task.
+  tasks. A task's own grader is its `grader.ts`, where it has one;
+  `graders/` holds what the dataset's graders share and the entry that
+  runs them. Neither is ever mounted in the agent's workspace.
+  `datasets/layout.py` says what goes where in a task.
 
 ## Datasets
 
