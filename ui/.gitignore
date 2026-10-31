@@ -1,0 +1,4 @@
+node_modules/
+dist/
+# The folders set in the UI's Settings: this machine's own.
+settings.json
