@@ -540,15 +540,23 @@ def recorded(trial):
 
 
 def main(args):
-    cases, responders, trials = [], [], []
+    cases, responders, trials, failed = [], [], [], []
     if args.job:
         for inputs in sorted(
                 Path(args.job).rglob("verifier/claweval-inputs.json")):
             trial = inputs.parent.parent
+            # A failed grade saves its inputs and replies but no reward.
+            if not (trial / "verifier/reward.json").exists():
+                failed.append(trial.name)
+                continue
             c, respond, reward = recorded(trial)
             cases.append((c["task"], trial.name, c))
             responders.append(respond)
             trials.append(reward)
+    if failed:
+        print(f"skipped {len(failed)} trials whose grade failed: " +
+              ", ".join(failed[:10]),
+              file=sys.stderr)
     for task in [] if args.job else args.task or tasks():
         reply = DATASET / task / "harbor/solution/reply.md"
         solution = reply.read_text() if reply.exists() else None
