@@ -125,6 +125,20 @@ Claw-Eval
   Fetched:   mock_services/, tasks/ and src/, by claweval/setup.py.
   Committed: nothing.
 
+ERPBench-100 (Blobfish AI's ERP Agent Simulation)
+  Source:    https://github.com/blobfishai/erp-agent-simulation
+             @ 5bdf458165fee71f6a7965ea30ca33dfbbce1332
+  License:   code Apache-2.0, Copyright 2026 Blobfish AI (its LICENSE and
+             NOTICE: "This product includes software developed by
+             Blobfish AI."); the ERPBench-100 dataset content CC BY 4.0,
+             Copyright 2026 Blobfish AI (its LICENSE-DATA).
+  Fetched:   the repository, by erpbench/setup.py.
+  Committed: harbor/tasks/erpbench/*/instruction.md quote each task's
+             instruction and list its tools' descriptions;
+             harbor/tasks/erpbench/*/environment/tools.json carry the tools'
+             descriptions and schemas; mocks/erpbench/world.ts ports the
+             world's tools (erpbench100/world.py) to TypeScript.
+
 
 Runtime
 -------
