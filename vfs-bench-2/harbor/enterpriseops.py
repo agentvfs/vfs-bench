@@ -23,20 +23,14 @@ each of its servers has a fake (``mocks/enterpriseops_<domain>/``):
   task's id's time.
 - ``environment/kit/<service>.json``: each fake's fixture, the seed's path.
 - ``environment/tools.json``: the tools, by CLI.
-- ``tests/test.sh``, ``tests/grade.py`` (``enterpriseops_grade.py``),
-  ``tests/verifiers.json`` (the row's verifiers, verbatim) and
-  ``tests/ports.json``: upstream's SQL verifiers on each fake's SQL
-  runner, the reference grader, for ``MicrosandboxVerifier``
-  (``enterpriseops-msb.yaml``). ``enterpriseops.yaml`` grades natively
-  instead (``MirageVerifier``, ``graders/enterpriseops.ts``), its
-  definitions in ``graders/enterpriseops/manifest.json``, which this
-  writes too, with each task's verifier queries and the hashes of the
-  reference tests the native grader ports.
+- ``tests/test.sh``, the stub (``harbor/test.sh``), and
+  ``tests/verifiers.json``, the row's verifiers, verbatim, which the native
+  grader (``MirageVerifier``, ``graders/enterpriseops.ts``) reads. Its
+  definitions are in ``graders/enterpriseops/manifest.json``, which this
+  writes too, with each task's verifier queries.
 - ``solution/solve.sh``, where ``enterpriseops/solutions/<task id>.json``
   has one (upstream ships no reference solutions): its calls, each as the
-  CLI line that makes it. ``harbor/enterpriseops_compare.py --task`` checks
-  that one passes upstream's verifiers both on upstream's image and on the
-  fake.
+  CLI line that makes it.
 
 ``--check`` writes nothing and exits 1 if a file differs from what upstream
 gives, or if a file is unaccounted for.
@@ -55,12 +49,13 @@ ROOT = HARBOR.parent
 STATE = ROOT / "state" / "enterpriseops"
 PORT = ROOT / "enterpriseops"
 OUT = HARBOR / "tasks" / "enterpriseops"
-GRADE = HARBOR / "enterpriseops_grade.py"
+TEST_SH = HARBOR / "test.sh"
 SOLUTIONS = PORT / "solutions"
 MANIFEST = HARBOR / "graders" / "enterpriseops" / "manifest.json"
 # The reference tests the native grader ports: MirageVerifier refuses a task
 # whose files no longer hash as its definition says.
-REFERENCE = ("test.sh", "grade.py", "verifiers.json", "ports.json")
+# What the native grader reads from the task's tests/, pinned in its manifest.
+INPUTS = ("verifiers.json",)
 DATASET = "ServiceNow-AI/EnterpriseOps-Gym@c8e538e"
 MODE = "oracle"
 DOMAINS = [
@@ -285,21 +280,10 @@ def context_headers(cfg: dict) -> dict[str, str]:
     return out
 
 
-TEST_SH = """#!/usr/bin/env bash
-# Upstream's SQL verifiers on each server's end state (grade.py), in
-# MicrosandboxVerifier's VM; MirageVerifier runs its native port instead.
-set -euo pipefail
-mkdir -p /logs/verifier
-python3 /tests/grade.py
-"""
 
 
 def expected(row: dict) -> dict[str, bytes]:
     """Every file this writes for a task, by path in its directory."""
-    ports = {
-        c["mcp_server_name"]: servers()[c["mcp_server_name"]]["port"]
-        for c in row["gym_servers_config"]
-    }
     out = {
         "instruction.md":
         instruction(row).encode(),
@@ -311,13 +295,10 @@ def expected(row: dict) -> dict[str, bytes]:
         (json.dumps(tools_json(row), ensure_ascii=False, indent=1) +
          "\n").encode(),
         "tests/test.sh":
-        TEST_SH.encode(),
-        "tests/grade.py":
-        GRADE.read_bytes(),
+        TEST_SH.read_bytes(),
         "tests/verifiers.json":
         (json.dumps(row["verifiers"], ensure_ascii=False, indent=1) +
          "\n").encode(),
-        "tests/ports.json": (json.dumps(ports, indent=1) + "\n").encode(),
     }
     for cfg in row["gym_servers_config"]:
         kit = f"environment/kit/{service(cfg['mcp_server_name'])}.json"
@@ -393,7 +374,7 @@ def definition(row: dict, files: dict[str, bytes]) -> dict:
         "native_state": state,
         "files": {
             name: hashlib.sha256(files[f"tests/{name}"]).hexdigest()
-            for name in REFERENCE
+            for name in INPUTS
         },
         "inputs": ["/tests/verifiers.json"],
         "trees": [],

@@ -1,10 +1,9 @@
 """Registered graders in separate Mirage VFS workspaces.
 
-Only tasks in the registered grader manifests are supported. Original Python
-and shell files stay untouched as references; a changed reference must be
-ported and parity-tested before its manifest hashes are updated. Only
-registered, pinned code is executed; agent-supplied code is never loaded.
-Claw-Eval uses a Pyodide compatibility backend for its upstream Python.
+Only tasks in the registered grader manifests are supported, and the data
+files a grader reads from a task's tests/ are pinned there. Only registered,
+pinned code is executed; agent-supplied code is never loaded. Claw-Eval uses
+a Pyodide compatibility backend for its upstream Python.
 """
 import asyncio
 import base64
@@ -165,8 +164,7 @@ class MirageVerifier(Verifier):
         if finance in states and env.get("MOCK_FINANCE_DB_PATH",
                                          finance) not in states:
             raise ValueError("MirageVerifier does not support this "
-                             "MOCK_FINANCE_DB_PATH override; "
-                             "use the reference verifier")
+                             "MOCK_FINANCE_DB_PATH override")
         paths = list(definition.get("inputs", []))
         dashboard = self.task.name == "finance-dashboard-repair"
         if dashboard and "POLICY_PATH" in env:
@@ -193,8 +191,8 @@ class MirageVerifier(Verifier):
     def _definition(self) -> tuple[str, dict]:
         if self._skip_tests_upload or self.step_name is not None:
             raise ValueError("MirageVerifier requires a single-step task with "
-                             "its reference tests available on the host")
-        _, tests, script = self._resolve_tests()
+                             "its tests available on the host")
+        _, tests, _ = self._resolve_tests()
         task = self.task.paths.task_dir.name
         manifest = json.loads(MANIFEST.read_text())
         manifest.update(definitions())
@@ -205,18 +203,13 @@ class MirageVerifier(Verifier):
         manifest.update(claweval_definitions())
         definition = manifest.get(task)
         if definition is None:
-            raise ValueError(f"No Mirage grader for {task}; use Harbor's "
-                             "default verifier or MicrosandboxVerifier")
-        if script != tests / "test.sh":
-            raise ValueError(
-                "MirageVerifier only supports the registered test.sh")
-        for name, expected in definition["files"].items():
+            raise ValueError(f"No Mirage grader for {task}")
+        for name, expected in definition.get("files", {}).items():
             source = tests / name
             self.task.file_filter.require_included(source)
             if hashlib.sha256(source.read_bytes()).hexdigest() != expected:
-                raise ValueError(
-                    f"The reference {task}/tests/{name} changed; "
-                    "update the port and verify score parity first")
+                raise ValueError(f"{task}/tests/{name} changed; "
+                                 "regenerate the task and its manifest")
         return task, definition
 
     async def verify(self) -> VerifierResult:

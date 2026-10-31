@@ -16,9 +16,8 @@ evaluator stay in ``state/dataspace/`` and reach a trial from there.
   ``/workspace`` from ``${STATE}`` in place of the trial's own, the answer
   written to ``/output``, and ``/opt/dataspace/TOOLS.md``.
 - ``environment/workbench/TOOLS.md``: ``dataspace/workbench/TOOLS.md``.
-- ``tests/test.sh`` and ``tests/grade.py`` (``dataspace_grade.py``):
-  upstream's evaluator on ``/output/prediction.csv``. ``MirageVerifier``
-  runs its pinned Monty port instead.
+- ``tests/test.sh``: the stub (``harbor/test.sh``). ``MirageVerifier`` runs
+  upstream's evaluator on ``/output/prediction.csv``, ported to Monty.
 - ``solution/solve.sh``: ours, by hand, for the tasks that have one.
 
 ``--check`` writes nothing and exits 1 if a file differs from what upstream
@@ -36,7 +35,7 @@ STATE = ROOT / "state" / "dataspace"
 BENCHMARK = STATE / "benchmark"
 PORT = ROOT / "dataspace"
 OUT = HARBOR / "tasks" / "dataspace"
-GRADE = HARBOR / "dataspace_grade.py"
+TEST_SH = HARBOR / "test.sh"
 COMMIT = "6491caa"
 REVISION = "96be192"
 # Upstream's `wall_time_seconds` (baseline/configs/harness.yaml).
@@ -198,15 +197,6 @@ workspace:
 """
 
 
-TEST_SH = """#!/usr/bin/env bash
-# Upstream's evaluator on /output/prediction.csv, against the task's gold
-# CSV under its frozen config, in MicrosandboxVerifier's VM (grade.py).
-set -euo pipefail
-mkdir -p /logs/verifier
-python3 /tests/grade.py {task_id}
-"""
-
-
 def expected(slug: str) -> dict[str, bytes]:
     """Every file this writes for a task, by path in its directory."""
     task_id = TASKS[slug]
@@ -223,9 +213,7 @@ def expected(slug: str) -> dict[str, bytes]:
         "environment/workbench/TOOLS.md":
         (PORT / "workbench" / "TOOLS.md").read_bytes(),
         "tests/test.sh":
-        TEST_SH.format(task_id=task_id).encode(),
-        "tests/grade.py":
-        GRADE.read_bytes(),
+        TEST_SH.read_bytes(),
     }
     ours = OUT / slug / "solution" / "solve.sh"
     if ours.is_file():

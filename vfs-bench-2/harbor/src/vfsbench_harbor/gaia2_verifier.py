@@ -13,7 +13,6 @@ def definitions():
         task: {
             'runtime': 'gaia2-monty',
             'task_id': task,
-            'files': manifest['files'],
             **definition, 'native_state': {
                 service: {
                     'service': service,

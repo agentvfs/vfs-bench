@@ -26,16 +26,11 @@ def expected():
     slugs = runpy.run_path(str(HARBOR / 'complexmcp.py'))['TASKS']
     tasks = {}
     for slug, index in slugs.items():
-        tests = HARBOR / 'tasks/complexmcp' / slug / 'tests'
         tasks[slug] = {
             'runtime': 'complexmcp-monty',
             'row': index,
             'row_sha256': row_digest(rows[index]),
             'apps': ['LightSystem', *rows[index]['apps']],
-            'files': {
-                name: digest((tests / name).read_bytes())
-                for name in ('grade.py', 'test.sh')
-            },
         }
     sources = {
         'benchmark/judge.py': 'judge.py',

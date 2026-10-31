@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-set -e
-mkdir -p /logs/verifier
-python3 /tests/verify.py
+# vfsbench_harbor:MirageVerifier grades this task; this script is not run.
+echo "grade this task with --verifier vfsbench_harbor:MirageVerifier" >&2
+exit 1

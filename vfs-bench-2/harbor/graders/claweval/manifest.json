@@ -5,9 +5,7 @@
     "T001zh_email_triage": {
       "audits": {},
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "47caec68d9c00db1e72677059618e7e5da64e8b0c94415fd5aa9da051c3b7629",
-        "test.sh": "53bba4f2904de62afd14a78a1daf252bb40f4fb4d032e0b3c3ee1d422ddf716a"
+        "gws_seed.json": "47caec68d9c00db1e72677059618e7e5da64e8b0c94415fd5aa9da051c3b7629"
       },
       "gws": [
         "gmail"
@@ -39,9 +37,7 @@
     "T002_email_triage": {
       "audits": {},
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "b300a2f1f2839528e83659857573362f5aa1ba35d1830b1f95de1da292ea707c",
-        "test.sh": "930b788034b9da49c823bc93de2e4e1414389a471e1140b8de48f4b84ec99ffd"
+        "gws_seed.json": "b300a2f1f2839528e83659857573362f5aa1ba35d1830b1f95de1da292ea707c"
       },
       "gws": [
         "gmail"
@@ -74,9 +70,7 @@
     "T003zh_calendar_scheduling": {
       "audits": {},
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "fe656c3786fa4a626613f679e9a4650851cdce61ea0f54de353dc4b30f994569",
-        "test.sh": "fecdaca64743a59418a843f2c667020611697c8fddfc0276e8fa7ae6431688c2"
+        "gws_seed.json": "fe656c3786fa4a626613f679e9a4650851cdce61ea0f54de353dc4b30f994569"
       },
       "gws": [
         "calendar"
@@ -108,9 +102,7 @@
     "T004_calendar_scheduling": {
       "audits": {},
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "88b4ae55e322be38ec6072c8d9a0bbea6fb837ebda41d753dd705ff2606e7d90",
-        "test.sh": "66e44149bb664171c82ff87ea05c966451441cfe904a99d175cc637df4658121"
+        "gws_seed.json": "88b4ae55e322be38ec6072c8d9a0bbea6fb837ebda41d753dd705ff2606e7d90"
       },
       "gws": [
         "calendar"
@@ -145,9 +137,7 @@
         "gmail": "http://localhost:9100/gmail/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "888862a1b2e102cd9169f6ffe4f2932fe6be2941ac57f6fe9a7cc989c8452d15",
-        "test.sh": "a742b244b54e9fdf22b630bb6403a509ae97d25f5011a5f3ea1eb8c361927397"
+        "gws_seed.json": "888862a1b2e102cd9169f6ffe4f2932fe6be2941ac57f6fe9a7cc989c8452d15"
       },
       "gws": [
         "gmail"
@@ -181,9 +171,7 @@
         "gmail": "http://localhost:9100/gmail/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "72c4a7888eb67b2bf29f41908c69be449e46bee0f361b0b02df6d2cec0694c17",
-        "test.sh": "94f595091fd0e48446bb977f0e6efd01480dde0609fd61a4716d0df6383e51da"
+        "gws_seed.json": "72c4a7888eb67b2bf29f41908c69be449e46bee0f361b0b02df6d2cec0694c17"
       },
       "gws": [
         "gmail"
@@ -217,10 +205,7 @@
       "audits": {
         "todo": "http://localhost:9102/todo/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "37b10644bc2c2e9acf092e59590c677d2ce61d8f5bf44506f97dde4328c2fd22"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -250,10 +235,7 @@
       "audits": {
         "todo": "http://localhost:9102/todo/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "cb5c38ede32d7d8767edd226fd7525e3a72598e9a6161c06b4049b99466d09b4"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -284,10 +266,7 @@
       "audits": {
         "contacts": "http://localhost:9103/contacts/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "552d4c45964052c8b3549bf1697727d8328df8d995e8fc4e29183745df30f429"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -317,10 +296,7 @@
       "audits": {
         "contacts": "http://localhost:9103/contacts/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "2ffa038ba16002c911bd36293510807cb63a2ced4aa0a7b6ef5e667b82f5ca02"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -351,10 +327,7 @@
       "audits": {
         "finance": "http://localhost:9104/finance/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "f7a3523358efc152a8b6ecd3d8b3d7511856f3e3d7effd9121044ca5b779c31d"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -384,10 +357,7 @@
       "audits": {
         "finance": "http://localhost:9104/finance/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "0cc4c680caa2a41e16b48d8222b8627156da4a5c6de21d00aca7f2e1645068c5"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -418,10 +388,7 @@
       "audits": {
         "notes": "http://localhost:9105/notes/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "6cd5c0dee78d730ea310750737594f155cadc8c59dda4e18e300622251a6b068"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -451,10 +418,7 @@
       "audits": {
         "notes": "http://localhost:9105/notes/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "0c3fd8c0a5cab649c94b026ea25183df17359fc8f0ad6743c94141596ae234a2"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -485,10 +449,7 @@
       "audits": {
         "kb": "http://localhost:9106/kb/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "b6930f31a203e76966bc0e19969c4ffb358e44b1547a86b8ac8a500db5203939"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -518,10 +479,7 @@
       "audits": {
         "kb": "http://localhost:9106/kb/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "631fe882ff44b207b473ad21657b36a547d90a866db8affac21168966220bda1"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -552,10 +510,7 @@
       "audits": {
         "helpdesk": "http://localhost:9107/helpdesk/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "5ab5f477ffcfd1110169167e49b7be6a0ec71fcd644afcd107098c1bb8c2c8e4"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -585,10 +540,7 @@
       "audits": {
         "helpdesk": "http://localhost:9107/helpdesk/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "5f1b2b036c93e75f85d19cfeaba12fe6d701d18004957de20d501facaae17dab"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -619,10 +571,7 @@
       "audits": {
         "inventory": "http://localhost:9108/inventory/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "606dfdf5027a0e24a03789aad009345b5d25d725de04fcdbbe4bec8cd1bc2ab2"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -652,10 +601,7 @@
       "audits": {
         "inventory": "http://localhost:9108/inventory/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "f963ede2b8d64d31fec4ce3b34abd8fe756ccfb736c3770b0035edbfa46ce14e"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -686,10 +632,7 @@
       "audits": {
         "rss": "http://localhost:9109/rss/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "1cd03accf08242f25baa4ffe432bde4d4a7b52eb3d655aebaedccdf974e940cf"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -719,10 +662,7 @@
       "audits": {
         "rss": "http://localhost:9109/rss/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "65284ba10c7988abc03212e08d331e79b7b95e17e489a6500c28c02aa30e5a83"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -753,10 +693,7 @@
       "audits": {
         "crm": "http://localhost:9110/crm/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "76d4c899814fbd6022172ad9874f740f4d8d054a87aa10ace65bf03e8ac08571"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -786,10 +723,7 @@
       "audits": {
         "crm": "http://localhost:9110/crm/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "927e8bdf990ce5169526ed40e1811635dd195cc6276f65ee150eaf107f390f2b"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -822,9 +756,7 @@
         "gmail": "http://localhost:9100/gmail/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "bcf76d149b78cc5736f6992c00bb7f1dfc2281d2637427c7103f66f60d1a135f",
-        "test.sh": "62a13cb1a89a0bb6cbfc542f8a3a3bef4797d33c0e5e3b2f71fc0574756a353a"
+        "gws_seed.json": "bcf76d149b78cc5736f6992c00bb7f1dfc2281d2637427c7103f66f60d1a135f"
       },
       "gws": [
         "gmail"
@@ -859,9 +791,7 @@
         "gmail": "http://localhost:9100/gmail/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "41750da499b13ca208823f9e0ee20f27bdc5a0676af76e04ff2749c1644d47e3",
-        "test.sh": "e94ea49757afa86fdeb7bb8eed51f9768919c3f6efbc664592144495a27b9e25"
+        "gws_seed.json": "41750da499b13ca208823f9e0ee20f27bdc5a0676af76e04ff2749c1644d47e3"
       },
       "gws": [
         "gmail"
@@ -895,10 +825,7 @@
       "audits": {
         "config": "http://localhost:9111/config/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "7013080adc9ce6af1e39bfd49976c8d215b98a409cec79bcde878a251595134e"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -928,10 +855,7 @@
       "audits": {
         "config": "http://localhost:9111/config/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "8e321272c656806bb08155fe7bca4988ca01528032cd7e3ef68aa088da934240"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -964,9 +888,7 @@
         "gmail": "http://localhost:9100/gmail/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "dc27d80d56d8f4524826369a0275d770e356913dd40d9443a05adb6656a95387",
-        "test.sh": "fc948d04d68b9cb003edf1937e1edbedbd942646dfab9e2340204f3c798793da"
+        "gws_seed.json": "dc27d80d56d8f4524826369a0275d770e356913dd40d9443a05adb6656a95387"
       },
       "gws": [
         "gmail",
@@ -1002,9 +924,7 @@
         "gmail": "http://localhost:9100/gmail/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "ceda6a19e03eba0a348582487b8e4479c50e5747e7c41d6d01f190eb706775ad",
-        "test.sh": "a91956a906b550025ae2d3c77a5083f0c7664a51d78ff45373dc3a98be49a313"
+        "gws_seed.json": "ceda6a19e03eba0a348582487b8e4479c50e5747e7c41d6d01f190eb706775ad"
       },
       "gws": [
         "gmail",
@@ -1044,9 +964,7 @@
         "helpdesk": "http://localhost:9107/helpdesk/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "1f5d004d505859b2c003ddbd1779086de9a4c3fe9239af2a46aad37125c59077",
-        "test.sh": "648f261b95d6c131764ea4bc667b34cd96521d36bc63d03a8938c0ae485dccb3"
+        "gws_seed.json": "1f5d004d505859b2c003ddbd1779086de9a4c3fe9239af2a46aad37125c59077"
       },
       "gws": [
         "gmail"
@@ -1084,9 +1002,7 @@
         "helpdesk": "http://localhost:9107/helpdesk/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "f52d3d643911ec6415470cece67086c53dc780afc1805b368cfb3781757a6d64",
-        "test.sh": "4bbd828fbb2c9bf4c839056486247a8e7943afc09cddbea1a5310f3b61076fe3"
+        "gws_seed.json": "f52d3d643911ec6415470cece67086c53dc780afc1805b368cfb3781757a6d64"
       },
       "gws": [
         "gmail"
@@ -1125,10 +1041,7 @@
         "kb": "http://localhost:9106/kb/audit",
         "scheduler": "http://localhost:9112/scheduler/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "f60052d498c6a2d2df11e918fd24d01c30535db700aab8a8c7beb48d998cdcca"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -1163,10 +1076,7 @@
         "kb": "http://localhost:9106/kb/audit",
         "scheduler": "http://localhost:9112/scheduler/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "8c4a5226e115bcdf217d3dd5699218e73558e10ff18fa9cae6b4ce0317a63af6"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -1201,10 +1111,7 @@
         "kb": "http://localhost:9106/kb/audit",
         "rss": "http://localhost:9109/rss/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "848d8e70845095f1678826d1c4b2c8164bf2bc236e07dec2723f7931c2f3006d"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -1238,10 +1145,7 @@
         "kb": "http://localhost:9106/kb/audit",
         "rss": "http://localhost:9109/rss/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "875bd22124f344226b19ac892a4d0c7511c0ada002623dab4983ce3dd6211437"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -1277,9 +1181,7 @@
         "scheduler": "http://localhost:9112/scheduler/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "043c1e3b88d9457c8482e5005893a5efcd5e82c51383c97d4bb9c1d9fa289179",
-        "test.sh": "37249d6637488a04247d1960beac2e8e5e0240cdf9daa97bc5bec4ec3c9dbb28"
+        "gws_seed.json": "043c1e3b88d9457c8482e5005893a5efcd5e82c51383c97d4bb9c1d9fa289179"
       },
       "gws": [
         "gmail"
@@ -1317,9 +1219,7 @@
         "scheduler": "http://localhost:9112/scheduler/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "673209b6ecd72718c4f11c18ea40f126f668f7ed71db70dc390f823c22a3c2c9",
-        "test.sh": "94b5037d7935cb5ec67b4df1d159937b738b5e480ad56a358e1a61cc20778579"
+        "gws_seed.json": "673209b6ecd72718c4f11c18ea40f126f668f7ed71db70dc390f823c22a3c2c9"
       },
       "gws": [
         "gmail"
@@ -1358,9 +1258,7 @@
         "todo": "http://localhost:9102/todo/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "63ed31758e87d403c75735cac0340e9000ef7aa029d1a950c6ddaf299d68e8b0",
-        "test.sh": "dfc3b4ba04fd332a2eb468e5b2c9d71c91325857927564d11f147ed41431cb29"
+        "gws_seed.json": "63ed31758e87d403c75735cac0340e9000ef7aa029d1a950c6ddaf299d68e8b0"
       },
       "gws": [
         "gmail",
@@ -1399,9 +1297,7 @@
         "todo": "http://localhost:9102/todo/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "3f3d6aef8e34fa9c38f13a059c19daa16ff49866d6b8f7a94309b59d7f1fa771",
-        "test.sh": "cc950e0a7f9f160d291e81ea84eae63b24f9b28266030dd92f3c801ea8ae772c"
+        "gws_seed.json": "3f3d6aef8e34fa9c38f13a059c19daa16ff49866d6b8f7a94309b59d7f1fa771"
       },
       "gws": [
         "gmail",
@@ -1439,9 +1335,7 @@
         "scheduler": "http://localhost:9112/scheduler/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "113cd09d39791c5bc12aa977507c1b9a2b7e0bc79bc6f9324d481f5a4163901c",
-        "test.sh": "5ca2c524b49048751bc8dd8d058d1fac4c2ec14363dd0086b8dbc200afcd000b"
+        "gws_seed.json": "113cd09d39791c5bc12aa977507c1b9a2b7e0bc79bc6f9324d481f5a4163901c"
       },
       "gws": [
         "gmail"
@@ -1477,9 +1371,7 @@
         "scheduler": "http://localhost:9112/scheduler/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "4287c1bbbb3147662b9e5a062f8e1ad0451e681406335747f1a4b9c8326f5c19",
-        "test.sh": "41402641adaa78c9fc3f7f9d499b0ecf6c654449b287e0498c725cef994d206c"
+        "gws_seed.json": "4287c1bbbb3147662b9e5a062f8e1ad0451e681406335747f1a4b9c8326f5c19"
       },
       "gws": [
         "gmail"
@@ -1513,10 +1405,7 @@
       "audits": {
         "web": "http://localhost:9113/web/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "ba1041c10e6dae1ed6d018ba78a2393fa1eba55cc7563dd28799f5c3f8f282b0"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -1546,10 +1435,7 @@
       "audits": {
         "web": "http://localhost:9113/web/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "0492ea472a5bc3ff9294051b015df90860069409cbc0520ac599e9feb3c3e065"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -1580,10 +1466,7 @@
       "audits": {
         "ocr_paper": "http://localhost:9117/ocr/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "93f0cfb417916af2502281a788bcfca9c2fa4281ecda3a270dd8420cb40d9d3c"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -1612,9 +1495,7 @@
     "T075_email_phishing_injection": {
       "audits": {},
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "cf7fc2d93eed700cdb4f331966a5bb76ae11321923edf22d3024cae3863de47e",
-        "test.sh": "4e3f043594e501e8384d600572f2ffb8c08df41970b49628dde72f38931ba171"
+        "gws_seed.json": "cf7fc2d93eed700cdb4f331966a5bb76ae11321923edf22d3024cae3863de47e"
       },
       "gws": [
         "gmail"
@@ -1647,10 +1528,7 @@
       "audits": {
         "ocr_t50": "http://localhost:9120/ocr/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "1489aaca94fe98814d30fd8e176ac453b4f09c683963ab9ced4f4e2960ba9493"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -1680,10 +1558,7 @@
       "audits": {
         "ocr_t51": "http://localhost:9121/ocr/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "0eeb26421a2e0a662142004476273d40e93e1f514804faf3683fb39e2e5a6165"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -1713,10 +1588,7 @@
       "audits": {
         "ocr_t52": "http://localhost:9122/ocr/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "85343def613db7657bb55b446dead915f1ca325bbdc8ddaf618f46bdb6839c04"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -1746,10 +1618,7 @@
       "audits": {
         "ocr_t53": "http://localhost:9123/ocr/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "f9cff08a5983525484f4b7b815730fe260678d18862c83b36a6b607219a07493"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -1779,10 +1648,7 @@
       "audits": {
         "ocr_t54": "http://localhost:9124/ocr/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "33dc965919790e2f25191ee27c1c73c4ef34b60a90fe3aca07d72e491b51e453"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -1812,10 +1678,7 @@
       "audits": {
         "ocr_t55": "http://localhost:9125/ocr/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "a5e5ea1092f06d4288d0477f38ea14d704f29f6d2ff9c3639cff36ffaa3663b7"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -1845,10 +1708,7 @@
       "audits": {
         "ocr_t56": "http://localhost:9126/ocr/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "a902c0e5466d998df5e0458a76c7df46e7e3fbf290e86004711dfa82c3bd7ae7"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -1878,10 +1738,7 @@
       "audits": {
         "ocr_t57": "http://localhost:9127/ocr/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "667e03f8b302e0743beb01d794bc957dfc9dd502cea6be0ffa46ca264b209a58"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -1911,10 +1768,7 @@
       "audits": {
         "ocr_t58": "http://localhost:9128/ocr/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "3f0e5be8e498c4994e94187269485f957de1a368c7e1dd0d18294d8c544fea91"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -1944,10 +1798,7 @@
       "audits": {
         "ocr_t59": "http://localhost:9129/ocr/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "153e9ae10f1813d15f18f070ed4327021648096a9efe041d782c5036b9d8c17d"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -1976,9 +1827,7 @@
     "T086_pinbench_calendar_event_creation": {
       "audits": {},
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "98dca1d9ebe726da374cf437a77d0cc65ff030005312d9b695b0da87d091ce5c",
-        "test.sh": "a424c37e2b5dd57836f03fdf35b60e8535336841262c27ba07a173680f4c5a2f"
+        "gws_seed.json": "98dca1d9ebe726da374cf437a77d0cc65ff030005312d9b695b0da87d091ce5c"
       },
       "gws": [
         "calendar"
@@ -2011,10 +1860,7 @@
       "audits": {
         "rss": "http://localhost:9109/rss/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "dbe82c86025c0671c5fbb6b34151527c65b0f5a91fce8e86d1d1a8efc9dc40f9"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -2044,10 +1890,7 @@
       "audits": {
         "todo": "http://localhost:9102/todo/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "ab254e93d6c91497e6d290cbb974949b2ea04f7e2fabd9a3a275973dc09deb0b"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -2077,10 +1920,7 @@
       "audits": {
         "config": "http://localhost:9111/config/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "f01bb1c25a12013fdd61eb0db5bdc0c51650e9b49a7eaa583aca8c6833e1b7b9"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -2110,10 +1950,7 @@
       "audits": {
         "config": "http://localhost:9111/config/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "3673ba43bd260805282b4492c78a8fa8d664cc2f192f2548695a35184b95fec0"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -2143,10 +1980,7 @@
       "audits": {
         "rss": "http://localhost:9109/rss/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "d89d41bc0f489c71730dd2c867c770cf153cf7d0fc8ad518d1a5b50c0910ea55"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -2175,9 +2009,7 @@
     "T093_pinbench_email_triage_report": {
       "audits": {},
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "12314e2186f6c91b410557d84c72b74336a01cd47aba79f779ddf245d93e2f7c",
-        "test.sh": "b009e8a7f6ebddbea595aea7ef82b1bf460103218c25f25f0ddfb6d45d8f00cd"
+        "gws_seed.json": "12314e2186f6c91b410557d84c72b74336a01cd47aba79f779ddf245d93e2f7c"
       },
       "gws": [
         "gmail"
@@ -2209,9 +2041,7 @@
     "T094_pinbench_project_alpha_summary": {
       "audits": {},
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "f7a301710e923f4782143d5ee339d0bfd042d9bfc4b8fab87f3f56afd6f2474a",
-        "test.sh": "dde9a346ec980715e8c95b8953e1e36c8143465dccabb0b40b7c5ffac7cc6239"
+        "gws_seed.json": "f7a301710e923f4782143d5ee339d0bfd042d9bfc4b8fab87f3f56afd6f2474a"
       },
       "gws": [
         "gmail"
@@ -2244,10 +2074,7 @@
       "audits": {
         "kb": "http://localhost:9106/kb/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "d7bba009c52f64edbd642d38e2dd215620e193531a1b2f64b8f50c56262062dc"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -2277,10 +2104,7 @@
       "audits": {
         "notes": "http://localhost:9105/notes/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "8a9f6a2d19eb6330698745de51f19c4e6afa5a6d14d0209ba0ecf7ad1bff4176"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -2311,10 +2135,7 @@
         "helpdesk": "http://localhost:9107/helpdesk/audit",
         "scheduler": "http://localhost:9112/scheduler/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "168587b861a86d500e0537d90f7033e1311c100c0c6341d21106a71f77f6170e"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -2345,10 +2166,7 @@
         "helpdesk": "http://localhost:9107/helpdesk/audit",
         "scheduler": "http://localhost:9112/scheduler/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "cb54487a0e6dcef5bc41cbd37667b1aef037587f932db54c04f318c74a5c6905"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -2381,10 +2199,7 @@
         "helpdesk": "http://localhost:9107/helpdesk/audit",
         "kb": "http://localhost:9106/kb/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "eb39ed9d25a20a770322e35d48826c3fc872dd79ad6eda99aac13ed9c1a63b7c"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -2416,10 +2231,7 @@
         "helpdesk": "http://localhost:9107/helpdesk/audit",
         "kb": "http://localhost:9106/kb/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "011f07509d2564ef57ee1a08f112b40fbbe4a87aa3d275ae07fe718e82b425a8"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -2454,9 +2266,7 @@
         "gmail": "http://localhost:9100/gmail/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "3959d4d319dd7da2a0620d81f04abfaa7e8aa3738aaa44e8270d54c099e1afbf",
-        "test.sh": "2f96b3628ba7020aacbe4c70e087635eb8f47ff406e73f30cf62b85133ebc126"
+        "gws_seed.json": "3959d4d319dd7da2a0620d81f04abfaa7e8aa3738aaa44e8270d54c099e1afbf"
       },
       "gws": [
         "gmail"
@@ -2493,9 +2303,7 @@
         "gmail": "http://localhost:9100/gmail/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "88343707bfebca07dbd033ccbe34c9feeb8e1de33a78c9629a9e5b02ac60f4b6",
-        "test.sh": "3e93c404d19d0a4b6f18950dc33729bf111a9856b16aa1b30e8538a4617f60ed"
+        "gws_seed.json": "88343707bfebca07dbd033ccbe34c9feeb8e1de33a78c9629a9e5b02ac60f4b6"
       },
       "gws": [
         "gmail"
@@ -2530,9 +2338,7 @@
         "finance": "http://localhost:9104/finance/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "f86795e17e6dffcf407c777b41939c44e4d775ddfddc6787786a4271f26fcc40",
-        "test.sh": "ecdd547bddc18215e998c5e1308ec872e5f3b5fade5d8a7e3758b1a0190db794"
+        "gws_seed.json": "f86795e17e6dffcf407c777b41939c44e4d775ddfddc6787786a4271f26fcc40"
       },
       "gws": [
         "gmail"
@@ -2566,9 +2372,7 @@
         "finance": "http://localhost:9104/finance/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "10ce50918f841b3a74ec667b9efa842d51b0ad923036bd8131875af42818fddc",
-        "test.sh": "13c7b859b43a175fa7f50ee40a4b1d6845335f4a5c337465eeeba4ba96ca3a69"
+        "gws_seed.json": "10ce50918f841b3a74ec667b9efa842d51b0ad923036bd8131875af42818fddc"
       },
       "gws": [
         "gmail"
@@ -2603,9 +2407,7 @@
         "contacts": "http://localhost:9103/contacts/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "53a200c7116ba6cf15a1c424d82a65fbeeeb089bfe4e2dc3f1810db60ce13977",
-        "test.sh": "13096e21a0c15a3dcd54baa050f9abbaa31a6b299dabd9743ae0c22f4fde8d6a"
+        "gws_seed.json": "53a200c7116ba6cf15a1c424d82a65fbeeeb089bfe4e2dc3f1810db60ce13977"
       },
       "gws": [
         "calendar"
@@ -2639,9 +2441,7 @@
         "contacts": "http://localhost:9103/contacts/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "5c88e228e6d7db751f538ccb4f00374af522b45a902d58b015752f8fb078aa5b",
-        "test.sh": "fff080de5985ded25abe864929d04b9aac5cdeeecf32add1272fd3ba162a0eb9"
+        "gws_seed.json": "5c88e228e6d7db751f538ccb4f00374af522b45a902d58b015752f8fb078aa5b"
       },
       "gws": [
         "calendar"
@@ -2676,10 +2476,7 @@
         "helpdesk": "http://localhost:9107/helpdesk/audit",
         "kb": "http://localhost:9106/kb/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "62f7772100921ec683dcd473f5d4dec7e94d812d9b0d428bed724a273a419444"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -2710,10 +2507,7 @@
         "helpdesk": "http://localhost:9107/helpdesk/audit",
         "kb": "http://localhost:9106/kb/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "36b6b717a4a83368ef5edad79b64f9c1eef1ba4986b55827e8cd5be2ae8aa57d"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -2746,9 +2540,7 @@
         "gmail": "http://localhost:9100/gmail/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "74b89f8676a70335fdc95b1571ad778d2857a786eb833379819512100ecbcbe4",
-        "test.sh": "45c717605c41261709a84743de69d81b28138be1e49c05dfc654ac5ff9907a2e"
+        "gws_seed.json": "74b89f8676a70335fdc95b1571ad778d2857a786eb833379819512100ecbcbe4"
       },
       "gws": [
         "gmail"
@@ -2783,9 +2575,7 @@
         "gmail": "http://localhost:9100/gmail/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "0b0f572a982cb57851181d8dde73b6b6be230256f09895b590971fc5d8c7897d",
-        "test.sh": "525d8bd9d64ae47615e38faea222e93e3fa37193db6b4557eedc4cd6ad169dbf"
+        "gws_seed.json": "0b0f572a982cb57851181d8dde73b6b6be230256f09895b590971fc5d8c7897d"
       },
       "gws": [
         "gmail"
@@ -2820,10 +2610,7 @@
         "finance": "http://localhost:9104/finance/audit",
         "inventory": "http://localhost:9108/inventory/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "8fbf65d36324399f55031d371afd36b15e1eb8e37808b70c8f9e11fc60d31117"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -2854,10 +2641,7 @@
         "finance": "http://localhost:9104/finance/audit",
         "inventory": "http://localhost:9108/inventory/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "56e04ff062b5f06feda1051eca843689d7d7887cb3a4ea979485a79aaf5a85fd"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -2890,9 +2674,7 @@
         "rss": "http://localhost:9109/rss/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "5cd6f42c3b4c5bfe0b3019bc141e818c9165f703fe143744796d0279f365a504",
-        "test.sh": "b149adb60016e7e2c1a0a54cf24a5aae21d81b2826c08c5921f072c418f26354"
+        "gws_seed.json": "5cd6f42c3b4c5bfe0b3019bc141e818c9165f703fe143744796d0279f365a504"
       },
       "gws": [
         "gmail"
@@ -2927,9 +2709,7 @@
         "rss": "http://localhost:9109/rss/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "edcbc3689b9d4d7c4326fbfd592452d4f6d90291b6bfd79f22620ac3ae1b2248",
-        "test.sh": "4c7d11b7d3757ce16e16a431852e44777e1796e5fd6d88aad004106b40c42f62"
+        "gws_seed.json": "edcbc3689b9d4d7c4326fbfd592452d4f6d90291b6bfd79f22620ac3ae1b2248"
       },
       "gws": [
         "gmail"
@@ -2964,9 +2744,7 @@
         "todo": "http://localhost:9102/todo/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "b6fed1804664ec90f800540d40e8ffc4228ba1820f690bfdc154278b59876de7",
-        "test.sh": "b3dacf39021c092301ef2314261ac36a9fe5b6de61817a020535db61ac2a62f6"
+        "gws_seed.json": "b6fed1804664ec90f800540d40e8ffc4228ba1820f690bfdc154278b59876de7"
       },
       "gws": [
         "calendar"
@@ -3000,9 +2778,7 @@
         "todo": "http://localhost:9102/todo/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "8a419f0fa349e9ccddb8904bfb98279c3b5a6f8054a972532b84fa66487ba056",
-        "test.sh": "dafbf8bcbd3ec08d256f4d91e3e6b42a780c43d6e67ffd23fa74fc737f037c1f"
+        "gws_seed.json": "8a419f0fa349e9ccddb8904bfb98279c3b5a6f8054a972532b84fa66487ba056"
       },
       "gws": [
         "calendar"
@@ -3037,10 +2813,7 @@
         "notes": "http://localhost:9105/notes/audit",
         "todo": "http://localhost:9102/todo/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "80058b9423906ef7b2f6399bcb87529a4992ddc28f924bcf95a0a843053f985b"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -3071,10 +2844,7 @@
         "notes": "http://localhost:9105/notes/audit",
         "todo": "http://localhost:9102/todo/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "924f91aca6a1cb215c8fa58de6385b83a5c27698b4ce98e583a74f6403b33aa0"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -3106,10 +2876,7 @@
         "contacts": "http://localhost:9103/contacts/audit",
         "helpdesk": "http://localhost:9107/helpdesk/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "c6ed55244e2c2b520732bb497a12f658495732e7f94ea1c577ebf82c441bdcb0"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -3140,10 +2907,7 @@
         "contacts": "http://localhost:9103/contacts/audit",
         "helpdesk": "http://localhost:9107/helpdesk/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "d076bbbfe07b22281b96fe9fdf9de1b641f6901942e3008ebe1d2b6c89366f25"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -3175,9 +2939,7 @@
         "contacts": "http://localhost:9103/contacts/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "2b81662edf2bd7052560be706716b6dad1c66646bbeb28e0ea50b327cc76475c",
-        "test.sh": "ee9b13eec9756ef50ae31a2983e35b8af6b0794fa716b26becef4dd02b87060c"
+        "gws_seed.json": "2b81662edf2bd7052560be706716b6dad1c66646bbeb28e0ea50b327cc76475c"
       },
       "gws": [
         "gmail",
@@ -3212,9 +2974,7 @@
         "contacts": "http://localhost:9103/contacts/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "214781016ec63eaa457f8d427fb9462b6bd745f0da829b891fc91cc651a0ff21",
-        "test.sh": "1aa63f797b7898147a6e622dd129b0b2cf9664e197691df29f1963b4ba9af648"
+        "gws_seed.json": "214781016ec63eaa457f8d427fb9462b6bd745f0da829b891fc91cc651a0ff21"
       },
       "gws": [
         "gmail",
@@ -3251,10 +3011,7 @@
         "finance": "http://localhost:9104/finance/audit",
         "inventory": "http://localhost:9108/inventory/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "5c9bccfeea6e847a6c71270eec359705537c1e1d6f55ff71e33f1a7bce29bbbe"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -3286,10 +3043,7 @@
         "finance": "http://localhost:9104/finance/audit",
         "inventory": "http://localhost:9108/inventory/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "6c1b3b43c71f8bdf1662d0bff0cf8a35d90a98806b50db1542344ce8de51cb10"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -3323,9 +3077,7 @@
         "rss": "http://localhost:9109/rss/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "f349dc4aca2631321101518721ae70868c388919130f24a805674f7de756d278",
-        "test.sh": "7a7b7407303468c932ab1c4e253716abfaed3fb4045bc0bc5ea58de5ba5ebd87"
+        "gws_seed.json": "f349dc4aca2631321101518721ae70868c388919130f24a805674f7de756d278"
       },
       "gws": [
         "gmail"
@@ -3361,9 +3113,7 @@
         "rss": "http://localhost:9109/rss/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "8dc7d3df532577a610ddccc6074b5349e47ca825faa7669b4f544accb119cc6a",
-        "test.sh": "be0c559725100bd539d473be3240ebd4ef1930f249e78c677ddf39dbe1015523"
+        "gws_seed.json": "8dc7d3df532577a610ddccc6074b5349e47ca825faa7669b4f544accb119cc6a"
       },
       "gws": [
         "gmail"
@@ -3399,9 +3149,7 @@
         "todo": "http://localhost:9102/todo/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "0cf11219ed67b1311318c7406516540a99a0c4aa033da070d477a4454d5d5e74",
-        "test.sh": "c997af2f5c330ca24f38f9dd84768de953e142c2e6375701335237d77712fd1b"
+        "gws_seed.json": "0cf11219ed67b1311318c7406516540a99a0c4aa033da070d477a4454d5d5e74"
       },
       "gws": [
         "calendar"
@@ -3436,9 +3184,7 @@
         "todo": "http://localhost:9102/todo/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "b9918e825052b9ad778338effbfd8481cff07c2cd2fa2ce98a21eb5ca8ecc1fd",
-        "test.sh": "9b7e3829cd6a2b80d2cce0c1527ad807e9de703d6853fd27a9ff77dc3c5a17b3"
+        "gws_seed.json": "b9918e825052b9ad778338effbfd8481cff07c2cd2fa2ce98a21eb5ca8ecc1fd"
       },
       "gws": [
         "calendar"
@@ -3474,10 +3220,7 @@
         "inventory": "http://localhost:9108/inventory/audit",
         "scheduler": "http://localhost:9112/scheduler/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "b7ea066b25d54c701a5b518da356d5711d9f9abf0c549b4b00792d4560090b34"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -3509,10 +3252,7 @@
         "inventory": "http://localhost:9108/inventory/audit",
         "scheduler": "http://localhost:9112/scheduler/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "50c0489361e203ed264878514fa7603e400679058bdd3dd0681ff002256619f0"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -3546,9 +3286,7 @@
         "gmail": "http://localhost:9100/gmail/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "a2e7e14c32619961f12eebd043e989d9c03c8908ecb64977a6656ac43eed1f33",
-        "test.sh": "da9d2abdb896d41b5d089abbd57305a3f45d34a5c58ba11546db5cfae15c5084"
+        "gws_seed.json": "a2e7e14c32619961f12eebd043e989d9c03c8908ecb64977a6656ac43eed1f33"
       },
       "gws": [
         "gmail"
@@ -3584,9 +3322,7 @@
         "gmail": "http://localhost:9100/gmail/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "e1d2f6dd06057f945a5265f43eb2b99b9fb3bb81e4054cb02eace3dea2fafcd7",
-        "test.sh": "e042adcaa0bd59e650f5aa1b76b5f27bde237630a929bd4c213b92fded2f20d8"
+        "gws_seed.json": "e1d2f6dd06057f945a5265f43eb2b99b9fb3bb81e4054cb02eace3dea2fafcd7"
       },
       "gws": [
         "gmail"
@@ -3622,10 +3358,7 @@
         "helpdesk": "http://localhost:9107/helpdesk/audit",
         "scheduler": "http://localhost:9112/scheduler/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "7a2002d7f271aa8e0a546037dd24b9d6d9087af082de9edc4c2a98c63e4ab38d"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -3657,10 +3390,7 @@
         "helpdesk": "http://localhost:9107/helpdesk/audit",
         "scheduler": "http://localhost:9112/scheduler/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "f35bc353cc7d00ee77c78d5faa3208b509970b4b939a858ccaee4c58709755a0"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -3693,10 +3423,7 @@
         "finance": "http://localhost:9104/finance/audit",
         "rss": "http://localhost:9109/rss/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "63a0fe05e73e83beaa875a116b5fd4b9ce875e264091aa065a75cc41cd2b9b76"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -3728,10 +3455,7 @@
         "finance": "http://localhost:9104/finance/audit",
         "rss": "http://localhost:9109/rss/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "0eba789ef80f2ba49acfe0ac78f0f2d05e8ca64c5bc794d6aa661c389cc0b1eb"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -3765,9 +3489,7 @@
         "todo": "http://localhost:9102/todo/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "813b7db19cf2955eccd7ac2d97eacdbaad636390f3439a0375e30ade5f4d086f",
-        "test.sh": "80689f85547d3c410b1568105de09bee844ce46cffba0499211d8d1d56854785"
+        "gws_seed.json": "813b7db19cf2955eccd7ac2d97eacdbaad636390f3439a0375e30ade5f4d086f"
       },
       "gws": [
         "gmail"
@@ -3803,9 +3525,7 @@
         "todo": "http://localhost:9102/todo/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "44d3baafd6f51209c7b4893ac345bd9f593c5740671247fb28f3ee1ed04a77df",
-        "test.sh": "55cc6a7404db13cfb03d604d4d49c87cdf0611efe8ca29f9a80259daafe257b8"
+        "gws_seed.json": "44d3baafd6f51209c7b4893ac345bd9f593c5740671247fb28f3ee1ed04a77df"
       },
       "gws": [
         "gmail"
@@ -3842,10 +3562,7 @@
         "kb": "http://localhost:9106/kb/audit",
         "scheduler": "http://localhost:9112/scheduler/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "591666791c78087f8009c51f8bb670e0f67a3d61ed8e866b91690c8275be4d84"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -3878,10 +3595,7 @@
         "kb": "http://localhost:9106/kb/audit",
         "scheduler": "http://localhost:9112/scheduler/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "488ec1cdb69fe87752dd763adc148a73b5bf88bbbe35359b0abbf7e721f37fde"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -3915,9 +3629,7 @@
         "todo": "http://localhost:9102/todo/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "7c1a65baa8a67cbed3bd72dc9fd23324c1759bb76619073794c6cef94fce50ad",
-        "test.sh": "e4e2d6c2e67666c43ff3c29e4eb7c004b64f142b15cea54cbe2eebe25222b1a7"
+        "gws_seed.json": "7c1a65baa8a67cbed3bd72dc9fd23324c1759bb76619073794c6cef94fce50ad"
       },
       "gws": [
         "calendar"
@@ -3953,9 +3665,7 @@
         "todo": "http://localhost:9102/todo/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "03c2e24f15866e37c2a349ea5f9d7b4718ebed7eb0679552e470395c6354ea1c",
-        "test.sh": "cd3983b823c7ce9357c29bf345253ca2883735270d0d25254b48a6aa7688fc2d"
+        "gws_seed.json": "03c2e24f15866e37c2a349ea5f9d7b4718ebed7eb0679552e470395c6354ea1c"
       },
       "gws": [
         "calendar"
@@ -3992,10 +3702,7 @@
         "helpdesk": "http://localhost:9107/helpdesk/audit",
         "inventory": "http://localhost:9108/inventory/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "70dc78442ef60cfa35b674efa2a5f24ab5c7d2b07713b10b44f8a6f239f3bdef"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -4028,10 +3735,7 @@
         "helpdesk": "http://localhost:9107/helpdesk/audit",
         "inventory": "http://localhost:9108/inventory/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "2abd850625d1f8abea362adbeae8809ca072ce59b2d369fe9270a00af5fe03d0"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -4067,9 +3771,7 @@
         "rss": "http://localhost:9109/rss/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "fe56a88798a3199f28339a73931ad881290f841c2f64195844408185b7e6858f",
-        "test.sh": "2c5e6fce93d65b872c4d1648bd3c11de83c42e89b90f92a036564ae1d7771da4"
+        "gws_seed.json": "fe56a88798a3199f28339a73931ad881290f841c2f64195844408185b7e6858f"
       },
       "gws": [
         "gmail"
@@ -4107,9 +3809,7 @@
         "rss": "http://localhost:9109/rss/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "457fba04b9e0f9c981da40d1782899cd857e44f8a9098dc2949f1c3b88fe9e94",
-        "test.sh": "c5c9345485d53dcf1842bb7487a53b25462a7a0dfc0ffa658a0b4300d89dc1b6"
+        "gws_seed.json": "457fba04b9e0f9c981da40d1782899cd857e44f8a9098dc2949f1c3b88fe9e94"
       },
       "gws": [
         "gmail"
@@ -4147,9 +3847,7 @@
         "helpdesk": "http://localhost:9107/helpdesk/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "6942bf89476aa9750d930fde2b8c2eb24d82fbeced28428c12b355c2ad9106fc",
-        "test.sh": "b48a8189afb399e802d6ba05308dc7be7c83dbeda543db0ab002dfdc2931742e"
+        "gws_seed.json": "6942bf89476aa9750d930fde2b8c2eb24d82fbeced28428c12b355c2ad9106fc"
       },
       "gws": [
         "gmail",
@@ -4187,9 +3885,7 @@
         "helpdesk": "http://localhost:9107/helpdesk/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "fe429fa9d1000b236a82624631b69128a171daa8aff19d630cf19d8d4ef227a1",
-        "test.sh": "7a2d71bf18e0156653480ff533c3f179fd84bd102f22e5142a1f38edc1b62a4e"
+        "gws_seed.json": "fe429fa9d1000b236a82624631b69128a171daa8aff19d630cf19d8d4ef227a1"
       },
       "gws": [
         "gmail",
@@ -4228,10 +3924,7 @@
         "inventory": "http://localhost:9108/inventory/audit",
         "scheduler": "http://localhost:9112/scheduler/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "696e4e67c7c9bb162bcc5c060b7301c36088d859974e09706cc4d4956a54f685"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -4265,10 +3958,7 @@
         "inventory": "http://localhost:9108/inventory/audit",
         "scheduler": "http://localhost:9112/scheduler/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "d8eeea79151eb33192ab90603ad16cdd690d748b1a63c9e2436025565e1f2bab"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -4304,9 +3994,7 @@
         "kb": "http://localhost:9106/kb/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "a51c9e18356da9e7443273535ee3406753a30755e03e752f11edc4836ccd7917",
-        "test.sh": "b040525adb13dbb1fbdb92fca1fef20b186d80de5bce42eaef80fb107e021ce8"
+        "gws_seed.json": "a51c9e18356da9e7443273535ee3406753a30755e03e752f11edc4836ccd7917"
       },
       "gws": [
         "gmail"
@@ -4344,9 +4032,7 @@
         "kb": "http://localhost:9106/kb/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "54d1bfa204fba3305be1778b2ac74466bf1dbcafb7fc1780c5a0e057889ea137",
-        "test.sh": "b9cbbc34cb958c6f97f9eb509c0102f13000ae4c311c0bbf097b24a751b6e6cd"
+        "gws_seed.json": "54d1bfa204fba3305be1778b2ac74466bf1dbcafb7fc1780c5a0e057889ea137"
       },
       "gws": [
         "gmail"
@@ -4384,10 +4070,7 @@
         "kb": "http://localhost:9106/kb/audit",
         "scheduler": "http://localhost:9112/scheduler/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "bd578a929561f61c55714a8772f3bf59ece1653d040d55a1a54953ea9f42dc02"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -4421,10 +4104,7 @@
         "kb": "http://localhost:9106/kb/audit",
         "scheduler": "http://localhost:9112/scheduler/audit"
       },
-      "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "test.sh": "e319b3a9e1393782228cda6f552c02d8a8654f8acceee19088e1d1504356a3cb"
-      },
+      "files": {},
       "gws": [],
       "inputs": [
         "/logs/agent/trajectory.json",
@@ -4459,9 +4139,7 @@
         "rss": "http://localhost:9109/rss/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "34151e41cb37cb023683e95b167c2734f6c45804c1cc75c22fc110cb6882013f",
-        "test.sh": "ffc0759e77f1f1765bceb31bfb515957a886362eb63c1fdd9b7ad69412b3c1af"
+        "gws_seed.json": "34151e41cb37cb023683e95b167c2734f6c45804c1cc75c22fc110cb6882013f"
       },
       "gws": [
         "gmail"
@@ -4498,9 +4176,7 @@
         "rss": "http://localhost:9109/rss/audit"
       },
       "files": {
-        "grade.py": "db31ab30dfed3020469920f3818ab7205a493aece7804979c4f1432e999b764a",
-        "gws_seed.json": "5dd206dbf7eccdc91104acc767814ad0b6f704c9c0da93e28f110426cc7e03db",
-        "test.sh": "9d9243e8914c46bc6842bdca5f9d0ffc9ff9db5e1fe68d307bd59656e6a2ab9d"
+        "gws_seed.json": "5dd206dbf7eccdc91104acc767814ad0b6f704c9c0da93e28f110426cc7e03db"
       },
       "gws": [
         "gmail"

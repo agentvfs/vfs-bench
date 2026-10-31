@@ -20,7 +20,7 @@ Each task under ``harbor/tasks/automationbench/<task>/`` (the task's name,
   carries them (upstream's tool descriptions), then upstream's user message,
   verbatim.
 - ``task.toml``, ``environment/mirage.yaml``, ``environment/tools.json``,
-  ``tests/test.sh``, ``tests/grade.py`` (``automationbench_grade.py``).
+  ``tests/test.sh`` (the stub, ``harbor/test.sh``).
 - ``environment/kit/automationbench.json``: the fake's fixture, the world
   as upstream builds it from the task's ``initial_state`` (its services
   gated as ``setup_state`` gates them), on the task's clock and with ids
@@ -77,7 +77,7 @@ ROOT = HARBOR.parent
 OUT = HARBOR / "tasks" / "automationbench"
 MOCK = ROOT / "mocks" / "automationbench"
 DATA = MOCK / "data"
-GRADE = HARBOR / "automationbench_grade.py"
+TEST_SH = HARBOR / "test.sh"
 COMMIT = "4a8e1061254004d9dac807054eed33fad7d1ff14"
 PACKAGE = Path(sys.modules["automationbench"].__file__).resolve().parent
 
@@ -626,14 +626,6 @@ workspace:
 """
 
 
-TEST_SH = ("#!/usr/bin/env bash\n"
-           "# Upstream's rubric on the world the trial's run of the fake ends "
-           "with (grade.py).\n"
-           "set -euo pipefail\n"
-           "mkdir -p /logs/verifier\n"
-           "python3 /tests/grade.py\n")
-
-
 def nop_score(row: dict) -> float:
     """``partial_credit`` on the world as built, which is a nop's end world."""
     from automationbench.rubric import partial_credit
@@ -666,9 +658,7 @@ def task_files(
         "environment/tools.json":
         (json.dumps(tools_json(schemas), indent=1) + "\n").encode(),
         "tests/test.sh":
-        TEST_SH.encode(),
-        "tests/grade.py":
-        GRADE.read_bytes(),
+        TEST_SH.read_bytes(),
     }
     task = {
         "task_name": info["task_name"],

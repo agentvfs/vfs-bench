@@ -70,7 +70,8 @@ def build():
             sources,
             "files": {
                 p.name: digest(p)
-                for p in sorted(tests.iterdir()) if p.is_file()
+                for p in sorted(tests.iterdir())
+                if p.is_file() and p.name not in ("grade.py", "test.sh")
             },
             "audits":
             audits,
@@ -103,7 +104,7 @@ if __name__ == "__main__":
     if args.check:
         if not MANIFEST.exists() or MANIFEST.read_text() != data:
             raise SystemExit(
-                "Claw-Eval manifest drift; review and test before repinning")
+                "Claw-Eval manifest drift; regenerate it")
     else:
         MANIFEST.parent.mkdir(parents=True, exist_ok=True)
         MANIFEST.write_text(data)

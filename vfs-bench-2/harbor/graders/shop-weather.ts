@@ -56,8 +56,8 @@ export const SHOP_WEATHER_GRADERS: Record<string, Grader> = {
     const phone = users.every((u) => u.phone === 12345678901 || u.phone === '12345678901')
     return grade(address && phone ? 1 : address || phone ? 0.5 : 0)
   },
-  // These are the reference's offline ground truths. Pyodide cannot call
-  // urllib HTTP, so the preserved graders always use these fallbacks.
+  // Upstream's verifier's offline ground truths, which it uses when it
+  // cannot fetch the page, as in an offline workspace.
   'weather-aqi-report': (c) => {
     let r: any
     try {

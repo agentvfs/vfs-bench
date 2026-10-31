@@ -1,8 +1,4 @@
 {
-  "files": {
-    "test.sh": "57d156662882d4d7e791e73c6c171608c35f96bd9a15f34e97ae754d0356f10a",
-    "grade.py": "5c53dc134ed1caf25ee988f5f38d3ddf54c8e6dca291e528da7aded80887e938"
-  },
   "tasks": {
     "ambiguity-0132": {
       "scenario_sha256": "0098b450758fa0ffe85bf2de9b41af1416e6faac21f21c21e31cdb0eae2fc7ca",

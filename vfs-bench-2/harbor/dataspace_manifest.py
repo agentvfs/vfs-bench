@@ -74,16 +74,11 @@ def manifest():
     tasks = {}
     for slug, task_id in runpy.run_path(str(HARBOR /
                                             'dataspace.py'))['TASKS'].items():
-        tests = HARBOR / 'tasks/dataspace' / slug / 'tests'
         tasks[slug] = {
             'runtime':
             'dataspace-monty',
             'task_id':
             task_id,
-            'files': {
-                name: digest((tests / name).read_bytes())
-                for name in ('test.sh', 'grade.py')
-            },
             'config_sha256':
             digest(
                 (STATE /

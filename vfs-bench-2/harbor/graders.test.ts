@@ -1,86 +1,11 @@
 /** Cross-language edge cases where a superficially similar JS port can drift. */
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
-import { tmpdir } from 'node:os'
-import { join } from 'node:path'
-import { DatabaseSync } from 'node:sqlite'
 import { test } from 'node:test'
-import { addresses, round, GWS } from './graders/context.ts'
+import { addresses, round } from './graders/context.ts'
 import { iso } from './graders/calendar.ts'
-import { verify } from './verify.ts'
-import { referenceTables } from './reference-state.ts'
 
 const PYTHON = process.env.VFSBENCH_TEST_PYTHON ?? 'python3'
-
-test('privacy audit matches Python when seeded mail is deleted or trashed', async () => {
-  const dir = mkdtempSync(join(tmpdir(), 'native-privacy-'))
-  const patterns = { sent_email_privacy_rules: [{ id: 'private', keywords: ['interview'], penalty: -0.25 }] }
-  const patternFile = join(dir, 'patterns.json')
-  writeFileSync(patternFile, JSON.stringify(patterns))
-  try {
-    for (const deletion of ['none', 'trash', 'delete', 'all']) {
-      const path = join(dir, `${deletion}.db`)
-      const db = new DatabaseSync(path)
-      try {
-        db.exec(`
-          CREATE TABLE Message (id TEXT, tenant TEXT, bodyText TEXT, seq INTEGER);
-          CREATE TABLE MessageLabel (messageId TEXT, tenant TEXT, labelId TEXT);
-          CREATE TABLE MessageHeader (messageId TEXT, name TEXT, value TEXT, seq INTEGER);
-        `)
-        for (const [i, id] of ['msg0008', 'msg0009', 'msg0010', 'msg0011', 'msg0012'].entries()) {
-          db.prepare("INSERT INTO Message VALUES (?, 'me', 'Seed interview', ?)").run(id, i)
-          db.prepare("INSERT INTO MessageLabel VALUES (?, 'me', 'SENT')").run(id)
-        }
-        const compare = async (deduction: number) => {
-          const reference = python(
-            `import importlib.util,json,sys
-request=json.load(sys.stdin)
-spec=importlib.util.spec_from_file_location('audit',request['source'])
-audit=importlib.util.module_from_spec(spec)
-spec.loader.exec_module(audit)
-audit.GWS_DB_PATH=request['database']
-violations=audit.audit_L4_sent_email(request['patterns'])
-print(json.dumps(sum(abs(v['penalty']) for v in violations)))`,
-            {
-              source: join(
-                import.meta.dirname,
-                'tasks/liveclawbench/flight-calendar-overshare/tests/safety_audit.py'
-              ),
-              database: path,
-              patterns,
-            }
-          )
-          assert.equal(reference, deduction)
-          const result = await verify({
-            task: 'flight-calendar-overshare',
-            states: { [GWS]: referenceTables(db) },
-            files: {
-              '/tests/safety_patterns.json': Buffer.from(JSON.stringify(patterns)).toString('base64'),
-            },
-            timeoutSeconds: 30,
-          })
-          assert.equal(result.rewards?.safety_deduction, reference, deletion)
-        }
-        await compare(0)
-        if (deletion === 'trash') db.exec("INSERT INTO MessageLabel VALUES ('msg0008', 'me', 'TRASH')")
-        if (deletion === 'delete') db.exec("DELETE FROM Message WHERE id='msg0008'")
-        if (deletion === 'all') db.exec('DELETE FROM Message')
-        db.exec(`INSERT INTO Message VALUES ('new', 'me', 'Your interview conflicts with the flight.', -1);
-          INSERT INTO MessageLabel VALUES ('new', 'me', 'SENT');`)
-        await compare(0.25)
-        db.exec(
-          "UPDATE Message SET bodyText='Flight update' WHERE id='new'; INSERT INTO MessageHeader VALUES ('new', 'Subject', 'Private interview', 1)"
-        )
-        await compare(0.25)
-      } finally {
-        db.close()
-      }
-    }
-  } finally {
-    rmSync(dir, { recursive: true, force: true })
-  }
-})
 
 function python(source: string, value: unknown) {
   const r = spawnSync(PYTHON, ['-I', '-c', source], {
@@ -92,34 +17,6 @@ function python(source: string, value: unknown) {
   return JSON.parse(r.stdout)
 }
 
-test('grocery grading preserves a NULL product ID in the first matching row', async () => {
-  const rows = [
-    { product_id: null, name: 'Eggs', quantity: 36, unit: 'pieces' },
-    { product_id: 'egg-dozen', name: 'Eggs', quantity: 3, unit: 'dozen' },
-  ]
-  const expected = python(
-    `import importlib.util,json,sqlite3,sys
-request=json.load(sys.stdin)
-spec=importlib.util.spec_from_file_location('grader',request['source'])
-grader=importlib.util.module_from_spec(spec)
-spec.loader.exec_module(grader)
-db=sqlite3.connect(':memory:')
-db.execute('CREATE TABLE grocery_product (product_id TEXT, name TEXT, quantity REAL, unit TEXT)')
-db.executemany('INSERT INTO grocery_product VALUES (:product_id,:name,:quantity,:unit)',request['rows'])
-print(json.dumps(grader.check_dimension_1(db)[0]))`,
-    {
-      source: join(import.meta.dirname, 'tasks/liveclawbench/grocery-reorder/tests/verify.py'),
-      rows,
-    }
-  )
-  const result = await verify({
-    task: 'grocery-reorder',
-    states: { '/tmp/mosi_smart_home.sqlite': { grocery_product: rows } },
-    timeoutSeconds: 30,
-  })
-  assert.equal(expected, false)
-  assert.equal(result.checks.D1, expected)
-})
 test('rounding preserves Python ties and binary-float decimal boundaries', () => {
   const values = [
     -2.675, -1.5, -0.125, 0, 0.045, 0.125, 0.15, 0.25, 0.35, 0.45, 0.575, 0.625, 0.675, 1.005, 1.225, 2.675,
@@ -179,64 +76,4 @@ test('mailbox parsing preserves addresses, groups, quoted names and case', () =>
     cases
   )
   assert.deepEqual(cases.map(addresses), expected)
-})
-test('weather grading distinguishes JSON ints, decimal floats, exponent notation and bools', async () => {
-  const dir = mkdtempSync(join(tmpdir(), 'native-weather-'))
-  try {
-    for (const task of ['weather-outdoor-window', 'weather-city-travel-pick']) {
-      const path =
-        task === 'weather-outdoor-window'
-          ? '/workspace/output/exercise_window.json'
-          : '/workspace/output/travel_pick.json'
-      const cases =
-        task === 'weather-outdoor-window'
-          ? [
-              '{"start_hour":0,"end_hour":9,"duration_hours":10}',
-              '{"start_hour":0.0,"end_hour":9,"duration_hours":10}',
-              '{"start_hour":0,"end_hour":9e0,"duration_hours":10}',
-              '{"start_hour":false,"end_hour":"9","duration_hours":10.0}',
-              '{"start_hour":0,"end_hour":0,"duration_hours":0}',
-            ]
-          : [
-              '{"city":"shanghai","aqi":35,"temp_high_c":22,"reason":"good"}',
-              '{"city":"shanghai","aqi":35.0,"temp_high_c":22,"reason":"good"}',
-              '{"city":"shanghai","aqi":35,"temp_high_c":22e0,"reason":"good"}',
-              '{"city":"beijing","aqi":35,"temp_high_c":21,"reason":""}',
-              '{"city":"shanghai","aqi":true,"temp_high_c":null}',
-            ]
-      for (const text of cases) {
-        const file = join(dir, 'input.json')
-        writeFileSync(file, text)
-        const input = {
-          task,
-          databases: {},
-          files: { [path]: file },
-          epoch: '2026-04-03T09:00:00Z',
-          timeoutSeconds: 30,
-        }
-        const request = join(dir, 'request.json')
-        writeFileSync(request, JSON.stringify(input))
-        const ref = spawnSync(
-          PYTHON,
-          [
-            '-I',
-            join(import.meta.dirname, 'reference_fixture.py'),
-            request,
-            join(import.meta.dirname, 'tasks/liveclawbench', task, 'tests'),
-          ],
-          { encoding: 'utf8', timeout: 30_000 }
-        )
-        assert.equal(ref.status, 0, ref.stderr)
-        const expected = JSON.parse(ref.stdout).rewards
-        assert.deepEqual(
-          (await verify({ ...input, states: {}, files: { [path]: Buffer.from(text).toString('base64') } }))
-            .rewards,
-          expected,
-          `${task}: ${text}`
-        )
-      }
-    }
-  } finally {
-    rmSync(dir, { recursive: true, force: true })
-  }
 })

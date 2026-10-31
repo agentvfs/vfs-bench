@@ -1,9 +1,4 @@
 #!/usr/bin/env bash
-set -euo pipefail
-mkdir -p /logs/verifier
-
-cd /workspace
-python3 /tests/verify.py 2>&1 | tee /tmp/verify_output.txt || true
-
-SCORE=$(grep -oE 'Score:[[:space:]]*[0-9.]+' /tmp/verify_output.txt | tail -1 | grep -oE '[0-9.]+$' || echo "0")
-echo "$SCORE" > /logs/verifier/reward.txt
+# vfsbench_harbor:MirageVerifier grades this task; this script is not run.
+echo "grade this task with --verifier vfsbench_harbor:MirageVerifier" >&2
+exit 1

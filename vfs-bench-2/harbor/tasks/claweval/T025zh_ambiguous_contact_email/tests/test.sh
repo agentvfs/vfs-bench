@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# The task's grader, as upstream's runner runs it (grade.py).
-set -euo pipefail
-mkdir -p /logs/verifier
-python3 /tests/grade.py T025zh_ambiguous_contact_email
+# vfsbench_harbor:MirageVerifier grades this task; this script is not run.
+echo "grade this task with --verifier vfsbench_harbor:MirageVerifier" >&2
+exit 1

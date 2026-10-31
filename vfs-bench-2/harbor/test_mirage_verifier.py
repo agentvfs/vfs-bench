@@ -122,16 +122,15 @@ class MirageVerifierTests(unittest.IsolatedAsyncioTestCase):
         self.assertGreater(timings["peak_node_mib"], 0)
         self.assertGreater(timings["total_s"], timings["run_s"])
 
-    async def test_changed_reference_is_rejected_and_stale_rewards_removed(
-            self):
-        copied = self.root / "chat-sticker-engagement"
-        shutil.copytree(self.task.paths.task_dir, copied)
-        source = copied / "tests/verify.py"
+    async def test_changed_input_is_rejected_and_stale_rewards_removed(self):
+        copied = self.root / "stale-client-escalation"
+        shutil.copytree(TASKS / "stale-client-escalation", copied)
+        source = copied / "tests/_seed_snapshots/client-escalation-log.md"
         source.write_text(source.read_text() + "\n# changed\n")
         self.verifier.task = Task(copied)
         self.verifier._run = AsyncMock()
         self.paths.reward_text_path.write_text("1.0\n")
-        with self.assertRaisesRegex(ValueError, "reference .* changed"):
+        with self.assertRaisesRegex(ValueError, "client-escalation-log.md changed"):
             await self.verifier.verify()
         self.verifier._run.assert_not_called()
         self.assertFalse(self.paths.reward_text_path.exists())

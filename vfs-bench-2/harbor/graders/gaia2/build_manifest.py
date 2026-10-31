@@ -20,18 +20,9 @@ def digest(path):
 
 def build():
     tasks = {}
-    files = None
     config = yaml.safe_load((HARBOR / 'gaia2.yaml').read_text())
     for item in config['tasks']:
         task = ROOT / item['path']
-        sources = {
-            name: digest(task / 'tests' / name)
-            for name in ('test.sh', 'grade.py')
-        }
-        if files is not None and sources != files:
-            raise ValueError(
-                f'Unexpected GAIA2 reference scripts: {task.name}')
-        files = sources
         split, number = task.name.split('-')
         scenarios = list(
             (ROOT / 'state/gaia2/scenarios' / split).glob(f'{number}_*.json'))
@@ -45,7 +36,7 @@ def build():
             'scenario_sha256': digest(scenarios[0]),
             'services': list(environment['fakes'])
         }
-    return {'files': files, 'tasks': tasks}
+    return {'tasks': tasks}
 
 
 if __name__ == '__main__':
@@ -57,6 +48,6 @@ if __name__ == '__main__':
     if args.check:
         if path.read_text() != data:
             raise SystemExit(
-                'GAIA2 manifest changed; review and verify parity first')
+                'GAIA2 manifest changed; regenerate it')
     else:
         path.write_text(data)

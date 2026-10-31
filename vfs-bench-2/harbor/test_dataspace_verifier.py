@@ -9,7 +9,6 @@ from unittest.mock import AsyncMock, patch
 
 from harbor.models.task.task import Task
 from harbor.models.trial.paths import TrialPaths
-from harbor.models.verifier.result import VerifierResult
 from vfsbench_harbor import MirageEnvironment, MirageVerifier
 from vfsbench_harbor.environment import HARBOR
 

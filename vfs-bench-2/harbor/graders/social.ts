@@ -18,7 +18,7 @@ import {
 } from './context.ts'
 import DATA from './reference-data.json' with { type: 'json' }
 
-/** The read-only social_api.py contract used by the preserved Pyodide graders. */
+/** The social mock's read-only answers, from the run's state. */
 class Social {
   private c: Context
   constructor(c: Context) {

@@ -14,7 +14,6 @@ import httpx
 import yaml
 from harbor.models.task.task import Task
 from harbor.models.trial.paths import TrialPaths
-from harbor.models.verifier.result import VerifierResult
 from vfsbench_harbor import MirageEnvironment, MirageVerifier
 from vfsbench_harbor import claweval_verifier as claw
 from vfsbench_harbor.environment import HARBOR

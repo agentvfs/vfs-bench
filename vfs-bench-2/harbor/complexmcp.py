@@ -19,10 +19,9 @@ upstream's ``benchmark/data/data.parquet`` (ATH-MaaS/complex-mcp, pinned by
   in order, which each Light app's fake makes its session from;
   ``environment/kit/none.json``, the plain servers', which keep nothing.
 - ``environment/tools.json``: the tools, by CLI.
-- ``tests/test.sh`` and ``tests/grade.py`` (``complexmcp_grade.py``):
-  upstream's judge over what each app's login and logout answer and the
-  row's expected environment. ``MirageVerifier`` runs its Monty port in a
-  separate Mirage workspace.
+- ``tests/test.sh``: the stub (``harbor/test.sh``). ``MirageVerifier`` runs
+  upstream's judge, over what each app's login and logout answer and the
+  row's expected environment, on Monty in a separate Mirage workspace.
 - ``solution/solve.sh``: the reference trajectory, each tool call as the
   CLI that makes it (``ORACLES``), or ours, by hand, where its second line
   says so (``OURS``).
@@ -45,7 +44,7 @@ STATE = ROOT / "state" / "complexmcp"
 UPSTREAM = STATE / "src"
 OURS = b"\n# Ours, written by hand through the CLIs.\n"
 OUT = HARBOR / "tasks" / "complexmcp"
-GRADE = HARBOR / "complexmcp_grade.py"
+TEST_SH = HARBOR / "test.sh"
 COMMIT = "7c01f92"
 
 # Each task, by slug: the row of data.parquet. The pre-Harbor port's
@@ -425,15 +424,6 @@ def mirage_yaml(slug: str, index: int, row: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
-TEST_SH = """#!/usr/bin/env bash
-# Upstream's judge over each app's login and logout and row {index}'s
-# expected environment, in MicrosandboxVerifier's VM (grade.py).
-set -euo pipefail
-mkdir -p /logs/verifier
-python3 /tests/grade.py {index}
-"""
-
-
 def oracle(slug: str, index: int, row: dict) -> bytes | None:
     """The task's solution: ours where we wrote one, or the reference
     trajectory's calls as CLI lines."""
@@ -522,9 +512,7 @@ def expected(slug: str) -> dict[str, bytes]:
         (json.dumps(tools_json(), ensure_ascii=False, indent=1) +
          "\n").encode(),
         "tests/test.sh":
-        TEST_SH.format(index=index).encode(),
-        "tests/grade.py":
-        GRADE.read_bytes(),
+        TEST_SH.read_bytes(),
     }
     solve = oracle(slug, index, row)
     if solve is not None:

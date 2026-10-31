@@ -26,12 +26,12 @@ for the solutions of ``SOLVED``, which are ours:
 - ``environment/workspace/``: the task's ``sandbox_files``; its PDFs are
   written but not committed (``tasks/claweval/.gitignore``: 250 MB), as
   are the config-audit fixtures, whose planted keys GitHub refuses.
-- ``tests/test.sh`` and ``tests/grade.py`` (``claweval_grade.py``): the
-  task's ``grader.py``, run as upstream's runner runs it, over the agent's
-  Harbor trajectory; ``tests/gws_seed.json``, a gws task's gmail and
-  calendar fixtures, from which ``grade.py`` builds their calls.
-  ``MirageVerifier`` runs it on frozen JSON and pinned upstream sources in
-  a separate Pyodide workspace.
+- ``tests/test.sh``: the stub (``harbor/test.sh``). ``MirageVerifier`` runs
+  the task's ``grader.py`` as upstream's runner runs it, over the agent's
+  Harbor trajectory (``claweval_grade.py``), on frozen JSON and pinned
+  upstream sources in a separate Pyodide workspace.
+- ``tests/gws_seed.json``: a gws task's gmail and calendar fixtures, from
+  which ``claweval_grade.py`` builds their calls.
 - ``solution/trajectory.py`` (``claweval_trajectory.py``), for a task with
   a solution: writes the solution's run as the agent's trajectory.
 
@@ -53,7 +53,7 @@ HARBOR = Path(__file__).resolve().parent
 ROOT = HARBOR.parent
 UPSTREAM = ROOT / "state" / "claweval" / "src"
 OUT = HARBOR / "tasks" / "claweval"
-GRADE = HARBOR / "claweval_grade.py"
+TEST_SH = HARBOR / "test.sh"
 COMMIT = "5680b8b"
 # The epoch a run's clock starts at where the task gives no mock_today:
 # upstream's services read the wall clock, and only stamp their audit logs.
@@ -666,14 +666,6 @@ def peers(task_id: str) -> list[str]:
     return re.findall(r'load_peer_grader\(\s*"([^"]+)"', text)
 
 
-TEST_SH = """#!/usr/bin/env bash
-# The task's grader, as upstream's runner runs it (grade.py).
-set -euo pipefail
-mkdir -p /logs/verifier
-python3 /tests/grade.py {task_id}
-"""
-
-
 def expected(task_id: str) -> dict[str, bytes]:
     """Every file this writes for a task, by path in its directory."""
     source = UPSTREAM / "tasks" / task_id
@@ -687,8 +679,7 @@ def expected(task_id: str) -> dict[str, bytes]:
         "instruction.md": instruction(task).encode(),
         "task.toml": task_toml(task).encode(),
         "environment/mirage.yaml": mirage_yaml(task).encode(),
-        "tests/test.sh": TEST_SH.format(task_id=task_id).encode(),
-        "tests/grade.py": GRADE.read_bytes(),
+        "tests/test.sh": TEST_SH.read_bytes(),
     }
     clis = tools(task)
     if clis:

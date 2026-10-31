@@ -1,12 +1,4 @@
-#!/bin/bash
-set -e
-
-# Create verifier output directory
-mkdir -p /logs/verifier
-
-# Run verifier
-python3 /tests/verify.py
-exit_code=$?
-
-# Preserve exit status
-exit $exit_code
+#!/usr/bin/env bash
+# vfsbench_harbor:MirageVerifier grades this task; this script is not run.
+echo "grade this task with --verifier vfsbench_harbor:MirageVerifier" >&2
+exit 1

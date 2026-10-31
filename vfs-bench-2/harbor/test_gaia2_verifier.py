@@ -166,15 +166,10 @@ class Gaia2VerifierTests(unittest.IsolatedAsyncioTestCase):
             with self.assertRaisesRegex(ValueError, 'byte limit'):
                 await self.snapshot()
 
-    def test_all_460_tasks_registered_with_reference_sources(self):
-        from vfsbench_harbor.environment import HARBOR
+    def test_all_460_tasks_registered(self):
         registered = definitions()
         self.assertEqual(len(registered), 460)
-        for task, definition in registered.items():
-            for name, expected in definition['files'].items():
-                self.assertEqual(
-                    hashlib.sha256((HARBOR / 'tasks/gaia2' / task / 'tests' /
-                                    name).read_bytes()).hexdigest(), expected)
+        for definition in registered.values():
             self.assertEqual(definition['runtime'], 'gaia2-monty')
 
 

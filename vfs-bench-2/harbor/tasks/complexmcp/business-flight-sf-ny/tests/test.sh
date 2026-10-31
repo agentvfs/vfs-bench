@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# Upstream's judge over each app's login and logout and row 21's
-# expected environment, in MicrosandboxVerifier's VM (grade.py).
-set -euo pipefail
-mkdir -p /logs/verifier
-python3 /tests/grade.py 21
+# vfsbench_harbor:MirageVerifier grades this task; this script is not run.
+echo "grade this task with --verifier vfsbench_harbor:MirageVerifier" >&2
+exit 1

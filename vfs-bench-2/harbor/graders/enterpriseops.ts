@@ -1,6 +1,5 @@
 /**
- * EnterpriseOps-Gym's grader, native: the port of tests/grade.py
- * (harbor/enterpriseops_grade.py), which runs upstream's
+ * EnterpriseOps-Gym's grader, native: a port of upstream's
  * benchmark/verifier.py (ServiceNow/EnterpriseOps-Gym, Apache-2.0).
  *
  * Upstream's verifier sends each `database_state` verifier's query to the

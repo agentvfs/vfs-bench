@@ -1,18 +1,14 @@
 """Native snapshot, source pins, artifact provenance and detailed parity."""
-import io
 import json
 import os
 import shutil
-import tarfile
 import tempfile
 import unittest
-from contextlib import asynccontextmanager
 from pathlib import Path
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock
 
 from harbor.models.task.task import Task
 from harbor.models.trial.paths import TrialPaths
-from harbor.models.verifier.result import VerifierResult
 from vfsbench_harbor import MirageEnvironment, MirageVerifier
 from vfsbench_harbor.environment import HARBOR
 
@@ -69,7 +65,7 @@ class AutomationVerifierTests(unittest.IsolatedAsyncioTestCase):
             self):
         (self.task.paths.task_dir / "tests/task.json").write_text("{}")
         self.paths.reward_json_path.write_text('{"reward": 1}')
-        with self.assertRaisesRegex(ValueError, "reference.*changed"):
+        with self.assertRaisesRegex(ValueError, "task.json changed"):
             await self.verifier.verify()
         self.env.snapshot_verifier_states.assert_not_called()
         self.assertFalse(self.paths.reward_json_path.exists())

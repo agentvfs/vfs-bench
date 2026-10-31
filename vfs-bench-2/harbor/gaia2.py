@@ -34,7 +34,7 @@ Made from the scenario (ignored by git):
 Committed:
 - ``task.toml``, ``environment/mirage.yaml``, ``environment/tools.json``
   (each app's commands, from upstream's click programs), ``tests/test.sh``
-  ``tests/grade.py`` (``gaia2_grade.py``), ``solution/trajectory.py``
+  (the stub, ``harbor/test.sh``), ``solution/trajectory.py``
   (``gaia2_trajectory.py``), and ``harbor/tasks/gaia2/.gitignore``: written
   here.
 - ``solution/solve.sh`` for the tasks of ``SOLVED``: ours, which find the
@@ -85,7 +85,7 @@ ROOT = HARBOR.parent
 STATE = ROOT / "state" / "gaia2"
 SCENARIOS = STATE / "scenarios"
 OUT = HARBOR / "tasks" / "gaia2"
-GRADE = HARBOR / "gaia2_grade.py"
+TEST_SH = HARBOR / "test.sh"
 COMMIT = "a9fd2edccb4bc7e22fbf45c8482a5fef30a2a5a4"
 DATASET = "78ea3bdbdeec2bdcd6afa5420915d8a22f23ed99"
 SPLITS = ("search", "execution", "ambiguity")
@@ -676,14 +676,6 @@ def mirage_yaml(task: str, data: dict, services: list[str]) -> str:
     return "\n".join(lines) + "\n"
 
 
-TEST_SH = """#!/usr/bin/env bash
-# Upstream's judge on the trial's event log and answer (grade.py).
-set -euo pipefail
-mkdir -p /logs/verifier
-python3 /tests/grade.py
-"""
-
-
 def expected(task: str) -> tuple[dict[str, bytes], dict[str, bytes]]:
     """A task's files, by path in its directory: those committed, and those
     made from Gaia2's data, which git ignores."""
@@ -702,9 +694,7 @@ def expected(task: str) -> tuple[dict[str, bytes], dict[str, bytes]]:
         "environment/tools.json":
         (json.dumps(tools(), ensure_ascii=False, indent=1) + "\n").encode(),
         "tests/test.sh":
-        TEST_SH.encode(),
-        "tests/grade.py":
-        GRADE.read_bytes(),
+        TEST_SH.read_bytes(),
     }
     committed["solution/trajectory.py"] = TRAJECTORY.read_bytes()
     ignored = {"instruction.md": instruction(scenario, data).encode()}

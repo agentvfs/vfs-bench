@@ -5,7 +5,7 @@
 Each solved Gaia2 task's ``solution/trajectory.py`` is this file (written by
 ``harbor/gaia2.py``). Upstream's agent hands in its answer by replying, and
 its adapter logs the reply as the turn's ``send_message_to_user``;
-``gaia2_grade.py`` reads that reply from the trajectory's last agent
+the native grader reads that reply from the trajectory's last agent
 message. A solution runs the apps' commands itself, then this, with the
 answer it found.
 """
