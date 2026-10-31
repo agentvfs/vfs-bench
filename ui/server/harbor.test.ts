@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { existsSync } from 'node:fs'
-import { mkdtemp, mkdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { createServer } from 'node:http'
 import type { AddressInfo } from 'node:net'
 import { tmpdir } from 'node:os'
@@ -168,7 +168,9 @@ test('only this machine by name may reach the server', () => {
 test('a new retry numbers above every retry there is', async () => {
   const root = await mkdtemp(join(tmpdir(), 'ui-'))
   await job(root)
-  // retry-1 was deleted; retry-2 is still there.
+  // retry-1 was deleted; retry-2 is still there. Filling the gap would
+  // give retry-1, which retry-2 would then hide.
+  await rm(join(root, 'state/harbor/jobs/j1__retry-1'), { recursive: true })
   await put(join(root, 'state/harbor/jobs/j1__retry-2/config.json'), { tasks: [] })
   const harbor = new Harbor(root)
   const id = await harbor.retry('jobs/j1', [{ task: 'b', slot: 0 }])
@@ -194,4 +196,20 @@ test('jobs of one name in two jobs folders keep their own retry files', async ()
   assert.deepEqual(await picks('jobs'), [{ task: 'a', slot: 0 }])
   assert.deepEqual(await picks('reference'), [{ task: 'a', slot: 1 }])
   for (let i = 0; i < 100 && harbor.busy; i++) await new Promise((r) => setTimeout(r, 100))
+})
+
+test('a retry from before picks were kept by full id still redoes its attempt', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'ui-'))
+  const dir = join(root, 'state/harbor/jobs/old')
+  const task = { path: 'harbor/tasks/demo/a' }
+  await put(join(dir, 'config.json'), { n_attempts: 2, tasks: [task] })
+  await put(join(dir, 'lock.json'), { trials: [{ task }, { task }] })
+  await put(join(dir, 'result.json'), { finished_at: '2026-10-30T00:01:00', stats: {} })
+  const retry = join(root, 'state/harbor/jobs/old__retry-1')
+  await put(join(retry, 'config.json'), { tasks: [task] })
+  await put(join(retry, 'a__3/config.json'), { task })
+  await put(join(retry, 'a__3/result.json'), { verifier_result: { rewards: { reward: 1 } } })
+  await put(join(root, 'state/harbor/console/old__retry-1.picks.json'), [{ task: 'a', slot: 1 }])
+  const cells = (await new Harbor(root).detail('jobs/old', false)).cells
+  assert.deepEqual(cells.map((c) => [c.slot, c.attempt]), [[0, 1], [1, 2]])
 })

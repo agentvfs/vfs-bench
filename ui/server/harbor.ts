@@ -508,7 +508,9 @@ export class Harbor {
   private async picksOf(retry: string): Promise<Pick[]> {
     const launched = this.launches.get(retry)?.picks
     if (launched) return launched
-    const saved = await json(this.file(retry, '.picks.json'))
+    // Retries from before picks were kept by full id left theirs at
+    // console/<job>.picks.json; read that when the new one is missing.
+    const saved = (await json(this.file(retry, '.picks.json'))) ?? (await json(join(this.configDir, `${basename(retry)}.picks.json`)))
     return Array.isArray(saved) ? saved : []
   }
 
