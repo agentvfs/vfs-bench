@@ -1,0 +1,4 @@
+# Upstream's rows, which fetch.py writes into each task: what the grader
+# reads besides the run's state (the app order, seed and expected
+# environment).
+*/workspace/verifier/

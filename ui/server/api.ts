@@ -2,7 +2,7 @@
  * The UI's HTTP API, as a Connect-style middleware so Vite's dev
  * server and `main.ts` mount the same thing.
  *
- *   GET  /api/configs              the dataset configs under harbor/
+ *   GET  /api/configs              the job configs, datasets/<dataset>/jobs/*.yaml
  *   GET  /api/jobs                 every job in the runs folder
  *   GET  /api/job?id=<dir>/<name>  one job's cells, live terminals and status
  *   GET  /api/tasks?dataset=        a dataset's tasks, as their directories describe them
@@ -17,15 +17,15 @@
  */
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { existsSync, statSync } from 'node:fs'
-import { readdir, readFile, writeFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
-import { Harbor } from './harbor.ts'
+import { Harbor, jobConfigs } from './harbor.ts'
 
 /** Where the UI keeps its settings: beside it, gitignored. */
 const SETTINGS = new URL('../settings.json', import.meta.url).pathname
 
 export interface Settings {
-  /** The vfs-bench-2 checkout: its harbor/ configs and tasks. '' for the default. */
+  /** The vfs-bench-2 checkout: its datasets' job configs and tasks. '' for the default. */
   benchmark: string
   /** Where Harbor's jobs go and are read from. '' for the default. */
   runs: string
@@ -56,8 +56,8 @@ const isDir = (path: string) => existsSync(path) && statSync(path).isDirectory()
 /** Refuse folders the UI could not work in, before they are saved. */
 async function check(benchmark: string, runs: string) {
   if (!isDir(benchmark)) throw new Error(`No folder ${benchmark}`)
-  const yaml = (await readdir(join(benchmark, 'harbor')).catch(() => [] as string[])).filter((n) => n.endsWith('.yaml'))
-  if (!yaml.length) throw new Error(`${benchmark} has no harbor/*.yaml configs; is it a vfs-bench-2 checkout?`)
+  if (!(await jobConfigs(benchmark)).length)
+    throw new Error(`${benchmark} has no datasets/*/jobs/*.yaml configs; is it a vfs-bench-2 checkout?`)
   if (!isDir(runs)) throw new Error(`No folder ${runs}`)
 }
 

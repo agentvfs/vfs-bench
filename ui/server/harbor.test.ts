@@ -17,7 +17,7 @@ async function put(path: string, value: unknown) {
 /** A job as Harbor leaves it: four tasks, three trials, one retry. */
 async function job(root: string) {
   const dir = join(root, 'state/harbor/jobs/j1')
-  const task = (name: string) => ({ path: `harbor/tasks/demo/${name}` })
+  const task = (name: string) => ({ path: `datasets/demo/${name}/harbor` })
   await put(join(dir, 'config.json'), { n_concurrent_trials: 2, agents: [{ name: 'oracle' }], tasks: ['a', 'b', 'c', 'd'].map(task) })
   await put(join(dir, 'lock.json'), { trials: ['a', 'b', 'c', 'd'].map((t) => ({ task: task(t) })) })
   await put(join(dir, 'result.json'), { started_at: '2026-10-30T00:00:00', finished_at: '2026-10-30T00:01:00', n_total_trials: 4, stats: {} })
@@ -106,7 +106,7 @@ test('task.toml reads as its sections', () => {
 test('a retry stands in for the attempt it was asked to redo', async () => {
   const root = await mkdtemp(join(tmpdir(), 'ui-'))
   const dir = join(root, 'state/harbor/jobs/k2')
-  const task = { path: 'harbor/tasks/demo/a' }
+  const task = { path: 'datasets/demo/a/harbor' }
   await put(join(dir, 'config.json'), { n_attempts: 2, tasks: [task] })
   await put(join(dir, 'lock.json'), { trials: [{ task }, { task }] })
   await put(join(dir, 'result.json'), { finished_at: '2026-10-30T00:01:00', stats: {} })
@@ -181,7 +181,7 @@ test('a new retry numbers above every retry there is', async () => {
 
 test('jobs of one name in two jobs folders keep their own retry files', async () => {
   const root = await mkdtemp(join(tmpdir(), 'ui-'))
-  const task = { path: 'harbor/tasks/demo/a' }
+  const task = { path: 'datasets/demo/a/harbor' }
   for (const folder of ['jobs', 'reference']) {
     const dir = join(root, `state/harbor/${folder}/baseline`)
     await put(join(dir, 'config.json'), { n_attempts: 2, tasks: [task] })
@@ -201,7 +201,7 @@ test('jobs of one name in two jobs folders keep their own retry files', async ()
 test('a retry from before picks were kept by full id still redoes its attempt', async () => {
   const root = await mkdtemp(join(tmpdir(), 'ui-'))
   const dir = join(root, 'state/harbor/jobs/old')
-  const task = { path: 'harbor/tasks/demo/a' }
+  const task = { path: 'datasets/demo/a/harbor' }
   await put(join(dir, 'config.json'), { n_attempts: 2, tasks: [task] })
   await put(join(dir, 'lock.json'), { trials: [{ task }, { task }] })
   await put(join(dir, 'result.json'), { finished_at: '2026-10-30T00:01:00', stats: {} })
@@ -212,4 +212,17 @@ test('a retry from before picks were kept by full id still redoes its attempt', 
   await put(join(root, 'state/harbor/console/old__retry-1.picks.json'), [{ task: 'a', slot: 1 }])
   const cells = (await new Harbor(root).detail('jobs/old', false)).cells
   assert.deepEqual(cells.map((c) => [c.slot, c.attempt]), [[0, 1], [1, 2]])
+})
+
+test("each dataset's job configs, their tasks named by the directory above harbor/", async () => {
+  const root = await mkdtemp(join(tmpdir(), 'ui-'))
+  await mkdir(join(root, 'datasets/demo/jobs'), { recursive: true })
+  await writeFile(
+    join(root, 'datasets/demo/jobs/harbor.yaml'),
+    'tasks:\n  - path: datasets/demo/a/harbor\n  - path: datasets/demo/b/harbor\n',
+  )
+  const [config] = await new Harbor(root).configs()
+  assert.equal(config?.file, 'datasets/demo/jobs/harbor.yaml')
+  assert.equal(config?.dataset, 'demo')
+  assert.deepEqual(config?.tasks, ['a', 'b'])
 })

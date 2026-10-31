@@ -1,0 +1,86 @@
+# T038_incident_postmortem, on vfsbench_harbor's mirage environment (datasets/claweval/generate.py writes it).
+#
+# Each service is its kit fake at upstream's port, and its tools CLIs
+# (workspace/tools.ts).
+#
+# Gmail and calendar are Mirage's gws fake: the /gmail and /calendar
+# mounts and the gws CLI, at this trial's run of it, with upstream's
+# fixtures under upstream's ids; gws-integ-token is the fake's own
+# credential. Its SQLite is what the verifier reads them from.
+fakes:
+  claweval_helpdesk:
+    fixture: fixtures/claweval_helpdesk.json
+    epoch: '2026-03-02T01:00:00Z'
+    ports:
+    - 9107
+  claweval_config:
+    fixture: fixtures/claweval_config.json
+    epoch: '2026-03-02T01:00:00Z'
+    ports:
+    - 9111
+  claweval_kb:
+    fixture: fixtures/claweval_kb.json
+    epoch: '2026-03-02T01:00:00Z'
+    ports:
+    - 9106
+  claweval_notes:
+    fixture: fixtures/claweval_notes.json
+    epoch: '2026-03-02T01:00:00Z'
+    ports:
+    - 9105
+  claweval_scheduler:
+    fixture: fixtures/claweval_scheduler.json
+    epoch: '2026-03-02T01:00:00Z'
+    ports:
+    - 9112
+  gws:
+    fixture: fixtures/gws.json
+    epoch: '2026-03-02T01:00:00Z'
+    state: /var/lib/mock-data/gws/gws.db
+copy:
+  /workspace: workspace/
+tools:
+  file: tools.json
+  dispatches: /var/lib/mock-data/claweval/dispatches.jsonl
+workspace:
+  profiles:
+    default:
+      commands:
+        deny:
+        - commands:
+          - curl
+          - wget
+          reason: the services are reached through their tools
+  mounts:
+    /gmail:
+      vfs: gmail
+      mode: read
+      config:
+        accessToken: gws-integ-token
+        apiBase: ${GWS_URL}
+  clis:
+    helpdesk:
+      cli: helpdesk
+      config:
+        url: ${CLAWEVAL_HELPDESK_URL}
+    config:
+      cli: config
+      config:
+        url: ${CLAWEVAL_CONFIG_URL}
+    kb:
+      cli: kb
+      config:
+        url: ${CLAWEVAL_KB_URL}
+    notes:
+      cli: notes
+      config:
+        url: ${CLAWEVAL_NOTES_URL}
+    scheduler:
+      cli: scheduler
+      config:
+        url: ${CLAWEVAL_SCHEDULER_URL}
+    gws:
+      cli: gws
+      config:
+        accessToken: gws-integ-token
+        apiBase: ${GWS_URL}

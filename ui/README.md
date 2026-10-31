@@ -17,7 +17,7 @@ terminal stops or retries its trial. Runs are read from disk, so leaving a page 
 The UI has no run format of its own. A job is the directory Harbor
 writes under `<runs folder>/<jobs dir>/<job>/`. Run starts
 `harbor run -c <runs folder>/console/jobs-console/<job>.json -y`, where that config is
-`harbor/<dataset>.yaml` with the form's agent, model, concurrency and
+`datasets/<dataset>/jobs/harbor.yaml` with the form's agent, model, concurrency and
 attempts written over it. The job lands in `<runs folder>/jobs-console/`.
 
 - **Stop** (a run) sends the job Ctrl-C, SIGINT to its process group; a
@@ -44,7 +44,7 @@ so a terminal keeps its commands even if no page watched the trial.
 
 From `ui/`, after vfs-bench-2's setup in
 [../vfs-bench-2/README.md](../vfs-bench-2/README.md) and the Harbor setup in
-[../vfs-bench-2/harbor/README.md](../vfs-bench-2/harbor/README.md):
+[../vfs-bench-2/formats/harbor/README.md](../vfs-bench-2/formats/harbor/README.md):
 
 ```sh
 pnpm install
@@ -58,8 +58,8 @@ pnpm typecheck && pnpm test
 The Settings page (bottom of the left nav) sets the two folders the UI works
 in, kept in `ui/settings.json`, which is gitignored:
 
-- **Benchmark folder**: the vfs-bench-2 checkout whose `harbor/*.yaml`
-  configs and tasks it lists and runs; Harbor runs in it. By default
+- **Benchmark folder**: the vfs-bench-2 checkout whose
+  `datasets/*/jobs/*.yaml` configs and tasks it lists and runs; Harbor runs in it. By default
   `VFSBENCH_ROOT`, else `../vfs-bench-2`.
 - **Runs folder**: where Harbor's jobs are written and read. By default the
   benchmark folder's `state/harbor`.

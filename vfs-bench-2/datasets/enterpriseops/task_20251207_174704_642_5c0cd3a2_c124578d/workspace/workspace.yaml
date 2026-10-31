@@ -1,0 +1,16 @@
+# task_20251207_174704_642_5c0cd3a2_c124578d, EnterpriseOps-Gym's oracle/csm task, on vfsbench_harbor's
+# mirage environment (datasets/enterpriseops/generate.py writes it).
+#
+# Each of the task's servers is its kit fake, seeded from the task's seed; its
+# selected tools are a CLI (workspace/tools.ts) that calls as the task's user, the
+# agent's only way to it. The trial's clock starts at the task id's time.
+fakes:
+  enterpriseops_csm:
+    fixture: fixtures/enterpriseops_csm.json
+    epoch: '2025-12-07T17:47:04Z'
+tools:
+  file: tools.json
+  dispatches: /var/lib/mock-data/enterpriseops/dispatches.jsonl
+workspace:
+  clis:
+    sn-csm-server: {cli: sn-csm-server, config: {url: '${ENTERPRISEOPS_CSM_URL}', headers: {x-user-email: "amanda.austin@servicenow.com"}}}

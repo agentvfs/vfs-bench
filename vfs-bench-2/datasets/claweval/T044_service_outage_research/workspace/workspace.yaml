@@ -1,0 +1,29 @@
+# T044_service_outage_research, on vfsbench_harbor's mirage environment (datasets/claweval/generate.py writes it).
+#
+# Each service is its kit fake at upstream's port, and its tools CLIs
+# (workspace/tools.ts).
+fakes:
+  claweval_web:
+    fixture: fixtures/claweval_web.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports:
+    - 9113
+copy:
+  /workspace: workspace/
+tools:
+  file: tools.json
+  dispatches: /var/lib/mock-data/claweval/dispatches.jsonl
+workspace:
+  profiles:
+    default:
+      commands:
+        deny:
+        - commands:
+          - curl
+          - wget
+          reason: the services are reached through their tools
+  clis:
+    web:
+      cli: web
+      config:
+        url: ${CLAWEVAL_WEB_URL}

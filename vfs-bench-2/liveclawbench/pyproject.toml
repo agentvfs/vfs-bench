@@ -1,9 +1,0 @@
-[project]
-name = "vfs-bench-2-liveclawbench"
-version = "0.1.0"
-description = "LiveClawBench's task verifiers"
-requires-python = ">=3.11"
-dependencies = []
-
-[tool.uv]
-package = false

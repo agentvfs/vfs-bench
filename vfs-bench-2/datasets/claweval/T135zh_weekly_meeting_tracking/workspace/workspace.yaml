@@ -1,0 +1,58 @@
+# T135zh_weekly_meeting_tracking, on vfsbench_harbor's mirage environment (datasets/claweval/generate.py writes it).
+#
+# Each service is its kit fake at upstream's port, and its tools CLIs
+# (workspace/tools.ts).
+#
+# Gmail and calendar are Mirage's gws fake: the /gmail and /calendar
+# mounts and the gws CLI, at this trial's run of it, with upstream's
+# fixtures under upstream's ids; gws-integ-token is the fake's own
+# credential. Its SQLite is what the verifier reads them from.
+fakes:
+  claweval_notes:
+    fixture: fixtures/claweval_notes.json
+    epoch: '2026-03-26T09:00:00Z'
+    ports:
+    - 9105
+  claweval_todo:
+    fixture: fixtures/claweval_todo.json
+    epoch: '2026-03-26T09:00:00Z'
+    ports:
+    - 9102
+  gws:
+    fixture: fixtures/gws.json
+    epoch: '2026-03-26T09:00:00Z'
+    state: /var/lib/mock-data/gws/gws.db
+tools:
+  file: tools.json
+  dispatches: /var/lib/mock-data/claweval/dispatches.jsonl
+workspace:
+  profiles:
+    default:
+      commands:
+        deny:
+        - commands:
+          - curl
+          - wget
+          reason: the services are reached through their tools
+  mounts:
+    /calendar:
+      vfs: gcal
+      mode: read
+      config:
+        accessToken: gws-integ-token
+        apiBase: ${GWS_URL}
+        today: '2026-03-26'
+  clis:
+    notes:
+      cli: notes
+      config:
+        url: ${CLAWEVAL_NOTES_URL}
+    todo:
+      cli: todo
+      config:
+        url: ${CLAWEVAL_TODO_URL}
+    gws:
+      cli: gws
+      config:
+        accessToken: gws-integ-token
+        apiBase: ${GWS_URL}

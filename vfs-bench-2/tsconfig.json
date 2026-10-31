@@ -11,6 +11,6 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["harness", "clis", "*/index.ts", "*/*.ts"],
+  "include": ["workspace", "datasets/*/graders", "datasets/*/tests"],
   "exclude": ["node_modules", "submodule", "state", "fakes"]
 }

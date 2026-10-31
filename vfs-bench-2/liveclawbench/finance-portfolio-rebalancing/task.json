@@ -1,7 +1,0 @@
-{
-  "task": "finance-portfolio-rebalancing",
-  "mocks": ["finance"],
-  "rewrite": {
-    "(http://localhost:1235/)": "(the `finance` CLI)"
-  }
-}

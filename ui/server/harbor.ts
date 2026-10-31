@@ -19,7 +19,7 @@ import { promisify } from 'node:util'
 import { parse } from 'yaml'
 
 export interface Config {
-  /** The YAML's path from the root, e.g. `harbor/gaia2.yaml`. */
+  /** The YAML's path from the root, e.g. `datasets/gaia2/jobs/harbor.yaml`. */
   file: string
   dataset: string
   tasks: string[]
@@ -193,21 +193,25 @@ function agentOf(config: any, lock: any): { agent: string; model: string | null 
   return { agent: a.name ?? a.import_path ?? 'oracle', model: a.model_name ?? null }
 }
 
-/** The task a planned or started trial runs: the last part of its path. */
+/**
+ * The task a planned or started trial runs: the last part of its path, less
+ * the format directory a task keeps Harbor's files in
+ * (`datasets/<dataset>/<task>/harbor`).
+ */
 function taskOf(entry: any): string {
   const t = entry?.task ?? entry
-  return basename(t?.path ?? t?.name ?? '?')
+  const path: string = t?.path ?? t?.name ?? '?'
+  return basename(basename(path) === 'harbor' ? dirname(path) : path)
 }
 
 /**
- * A job's dataset: the `<dataset>` of `harbor/tasks/<dataset>[/<task>]`, or
- * of upstream's own tasks under `state/<dataset>/`; else the directory its
- * first task is in.
+ * A job's dataset: the `<dataset>` of `datasets/<dataset>/<task>/harbor`;
+ * else the directory its first task is in.
  */
 function datasetOf(config: any): string {
   const path: string | undefined = config?.tasks?.[0]?.path ?? config?.datasets?.[0]?.path
   if (!path) return '?'
-  const named = path.match(/(?:^|\/)harbor\/tasks\/([^/]+)/) ?? path.match(/(?:^|\/)state\/([^/]+)\//)
+  const named = path.match(/(?:^|\/)datasets\/([^/]+)\//)
   return named ? named[1] : basename(dirname(path))
 }
 
@@ -237,6 +241,16 @@ export function agentCommands(histfile: string, setup: string[] = []): string[] 
     out.push(line.replace(/^\((.+)\) > \/logs\/agent\/\S+ 2>&1$/, '$1').slice(0, 240))
   }
   return out.slice(-8)
+}
+
+/** Every dataset's job configs, `datasets/<dataset>/jobs/*.yaml`, by path from `root`. */
+export async function jobConfigs(root: string): Promise<string[]> {
+  const out: string[] = []
+  for (const dataset of (await readdir(join(root, 'datasets')).catch(() => [] as string[])).sort()) {
+    const names = await readdir(join(root, 'datasets', dataset, 'jobs')).catch(() => [] as string[])
+    for (const name of names.filter((n) => n.endsWith('.yaml')).sort()) out.push(`datasets/${dataset}/jobs/${name}`)
+  }
+  return out
 }
 
 export class Harbor {
@@ -278,21 +292,19 @@ export class Harbor {
     return this.launches.size > 0
   }
 
-  /** The job configs under `harbor/`: each YAML that lists tasks. */
+  /** The job configs, `datasets/<dataset>/jobs/*.yaml`: each YAML that lists tasks. */
   async configs(): Promise<Config[]> {
-    const dir = join(this.root, 'harbor')
     const out: Config[] = []
-    const names = await readdir(dir).catch(() => [] as string[])
-    for (const name of names.filter((n) => n.endsWith('.yaml')).sort()) {
+    for (const file of await jobConfigs(this.root)) {
       let doc: any
       try {
-        doc = parse(await readFile(join(dir, name), 'utf8'))
+        doc = parse(await readFile(join(this.root, file), 'utf8'))
       } catch {
         continue
       }
       if (!Array.isArray(doc?.tasks) || !doc.tasks.length) continue
       out.push({
-        file: `harbor/${name}`,
+        file,
         dataset: datasetOf(doc),
         tasks: doc.tasks.map(taskOf),
         paths: doc.tasks.map((t: any) => t.path).filter((p: unknown) => typeof p === 'string'),
@@ -547,7 +559,7 @@ export class Harbor {
    * `task.toml` and `instruction.md`. Read again when any of them changes.
    */
   async tasks(dataset: string): Promise<TaskBrief[]> {
-    const config = (await this.configs()).find((c) => c.dataset === dataset && c.file === `harbor/${dataset}.yaml`) ??
+    const config = (await this.configs()).find((c) => c.dataset === dataset && c.file === `datasets/${dataset}/jobs/harbor.yaml`) ??
       (await this.configs()).find((c) => c.dataset === dataset)
     if (!config) throw new Error(`No dataset ${dataset}`)
     // The config's version and every task file's, so an edited task is read again.
@@ -568,7 +580,7 @@ export class Harbor {
     for (const section of ['agent', 'verifier', 'environment'])
       for (const [k, v] of Object.entries(toml[section] ?? {})) limits[`${section}.${k}`] = v
     return {
-      task: basename(dir),
+      task: taskOf({ path: dir }),
       metadata: toml.metadata ?? {},
       limits,
       instruction: await readFile(join(dir, 'instruction.md'), 'utf8').catch(() => ''),
@@ -672,15 +684,15 @@ export class Harbor {
 
   /**
    * Start Harbor for job `id`. `agent` is the job's agent: dspy-rlm needs
-   * the harbor project's `dspy` extra and `DENO_NO_PACKAGE_JSON=1`, as
-   * harbor/README.md runs it.
+   * the formats/harbor project's `dspy` extra and `DENO_NO_PACKAGE_JSON=1`.
+   *
    */
   private start(id: string, args: string[], picks: Pick[], agent: string | undefined): Launch {
     const log = this.file(id, '.log')
     mkdirSync(dirname(log), { recursive: true })
     const env = existsSync(join(this.root, '.env')) ? ['--env-file', '.env'] : []
     const dspy = agent === 'dspy-rlm'
-    const argv = ['run', '--project', 'harbor', ...(dspy ? ['--extra', 'dspy'] : []), 'harbor', ...args, ...env]
+    const argv = ['run', '--project', 'formats/harbor', ...(dspy ? ['--extra', 'dspy'] : []), 'harbor', ...args, ...env]
     const fd = openSync(log, 'a')
     // A process group of its own, so Stop reaches Harbor, its fakes and its
     // daemons as Ctrl-C would; and it outlives this server.

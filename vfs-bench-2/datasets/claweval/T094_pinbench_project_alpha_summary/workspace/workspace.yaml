@@ -1,0 +1,38 @@
+# T094_pinbench_project_alpha_summary, on vfsbench_harbor's mirage environment (datasets/claweval/generate.py writes it).
+#
+# Each service is its kit fake at upstream's port, and its tools CLIs
+# (workspace/tools.ts).
+#
+# Gmail and calendar are Mirage's gws fake: the /gmail and /calendar
+# mounts and the gws CLI, at this trial's run of it, with upstream's
+# fixtures under upstream's ids; gws-integ-token is the fake's own
+# credential. Its SQLite is what the verifier reads them from.
+fakes:
+  gws:
+    fixture: fixtures/gws.json
+    epoch: '2026-02-26T20:45:00Z'
+    state: /var/lib/mock-data/gws/gws.db
+copy:
+  /workspace: workspace/
+workspace:
+  profiles:
+    default:
+      commands:
+        deny:
+        - commands:
+          - curl
+          - wget
+          reason: the services are reached through their tools
+  mounts:
+    /gmail:
+      vfs: gmail
+      mode: read
+      config:
+        accessToken: gws-integ-token
+        apiBase: ${GWS_URL}
+  clis:
+    gws:
+      cli: gws
+      config:
+        accessToken: gws-integ-token
+        apiBase: ${GWS_URL}

@@ -1,0 +1,54 @@
+# All 46 DataSpace tasks.
+# From vfs-bench-2/, after datasets/dataspace/fetch.py:
+#   uv run --project formats/harbor harbor run -c datasets/dataspace/jobs/harbor.yaml -a oracle -n 32
+environment:
+  import_path: vfsbench_harbor:MirageEnvironment
+verifier:
+  import_path: vfsbench_harbor:MirageVerifier
+tasks:
+  - path: datasets/dataspace/fund-ytd-returns/harbor
+  - path: datasets/dataspace/china-credit-trends/harbor
+  - path: datasets/dataspace/weekly-benchmark-top10/harbor
+  - path: datasets/dataspace/latest-treatments/harbor
+  - path: datasets/dataspace/regional-gdp-sectors/harbor
+  - path: datasets/dataspace/culture-before-admission/harbor
+  - path: datasets/dataspace/nonlisted-shares-by-province/harbor
+  - path: datasets/dataspace/deposit-corp-reserve-assets/harbor
+  - path: datasets/dataspace/pre-2000-money-banking/harbor
+  - path: datasets/dataspace/manager-alpha-top10/harbor
+  - path: datasets/dataspace/icu-stay-calendar-days/harbor
+  - path: datasets/dataspace/monetary-authority-total-assets/harbor
+  - path: datasets/dataspace/fund-ten-year-returns/harbor
+  - path: datasets/dataspace/latest-rmb-new-loans/harbor
+  - path: datasets/dataspace/placements-over-10bn/harbor
+  - path: datasets/dataspace/underwriting-over-50m-shares/harbor
+  - path: datasets/dataspace/diphtheria-screening-term/harbor
+  - path: datasets/dataspace/shanxi-listed-companies/harbor
+  - path: datasets/dataspace/qdii-managers-over-20bn/harbor
+  - path: datasets/dataspace/archived-funds-monthly-top10/harbor
+  - path: datasets/dataspace/funds-positive-daily-benchmark/harbor
+  - path: datasets/dataspace/lowest-initial-subscription/harbor
+  - path: datasets/dataspace/short-tenure-managers/harbor
+  - path: datasets/dataspace/full-float-companies/harbor
+  - path: datasets/dataspace/retail-catering-records/harbor
+  - path: datasets/dataspace/one-year-benchmark-top10/harbor
+  - path: datasets/dataspace/fund-awards-by-appraiser/harbor
+  - path: datasets/dataspace/fund-returns-since-start/harbor
+  - path: datasets/dataspace/three-year-benchmark-positive/harbor
+  - path: datasets/dataspace/shareholder-allocation-000423/harbor
+  - path: datasets/dataspace/most-bond-kinds-fund/harbor
+  - path: datasets/dataspace/kesi-trading-days-over-100m/harbor
+  - path: datasets/dataspace/jiangsu-full-float-count/harbor
+  - path: datasets/dataspace/lof-weekly-benchmark/harbor
+  - path: datasets/dataspace/electronics-manufacturers-count/harbor
+  - path: datasets/dataspace/enteral-formula-daily-max/harbor
+  - path: datasets/dataspace/deposit-corp-asset-extremes/harbor
+  - path: datasets/dataspace/repeat-seasoned-issuers/harbor
+  - path: datasets/dataspace/jiangsu-full-float-count-zh/harbor
+  - path: datasets/dataspace/three-year-benchmark-positive-zh/harbor
+  - path: datasets/dataspace/fund-returns-since-start-en/harbor
+  - path: datasets/dataspace/non-chinese-managers/harbor
+  - path: datasets/dataspace/top-daily-return-fund-type/harbor
+  - path: datasets/dataspace/latest-deposit-corp-over-50m/harbor
+  - path: datasets/dataspace/trust-company-holdings-2021/harbor
+  - path: datasets/dataspace/patient-max-respiration/harbor

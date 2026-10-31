@@ -1,7 +1,0 @@
-{
-  "task": "chat-sticker-engagement",
-  "mocks": ["chat"],
-  "rewrite": {
-    "at http://localhost:5003/chat": "with the `chat` CLI"
-  }
-}

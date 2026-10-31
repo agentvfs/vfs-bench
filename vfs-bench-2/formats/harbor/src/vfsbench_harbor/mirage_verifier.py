@@ -1,0 +1,505 @@
+"""Registered graders in separate Mirage VFS workspaces.
+
+Only tasks in the registered grader manifests are supported, and the data
+files a grader reads from a task's tests/ are pinned there. Only registered,
+pinned code is executed; agent-supplied code is never loaded. Claw-Eval uses
+a Pyodide compatibility backend for its upstream Python.
+"""
+import asyncio
+import base64
+import functools
+import hashlib
+import importlib.util
+import json
+import math
+import os
+import signal
+import sys
+import tempfile
+import threading
+import time
+from pathlib import Path, PurePosixPath
+
+from harbor.models.verifier.result import VerifierResult
+from harbor.utils.env import resolve_env_vars
+from harbor.utils.path_filter import filter_paths_by_patterns
+from harbor.verifier.verifier import Verifier
+from vfsbench_harbor.environment import ROOT, MirageEnvironment
+
+DATASETS = ROOT / "datasets"
+RUNNER = ROOT / "workspace" / "verify.ts"
+MAX_STAGING_BYTES = 64 * 1024 * 1024
+MAX_STAGING_PATHS = 10_000
+COPY_CHUNK = 1024 * 1024
+
+
+@functools.cache
+def dataset_module(dataset: str):
+    """``datasets/<dataset>/graders/verifier.py``, which states the dataset's
+    grader definitions and stages their inputs, or None: then its definitions
+    are ``graders/manifest.json`` and its inputs the declared files."""
+    path = DATASETS / dataset / "graders" / "verifier.py"
+    if not path.is_file():
+        return None
+    name = f"vfsbench_datasets.{dataset}.verifier"
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def definitions(dataset: str) -> dict:
+    """Each of the dataset's tasks' grader definition, by task."""
+    module = dataset_module(dataset)
+    if module is not None and hasattr(module, "definitions"):
+        return module.definitions()
+    return json.loads(
+        (DATASETS / dataset / "graders" / "manifest.json").read_text())
+
+
+class _Staging:
+    """Bound file traversal/copies and cooperatively stop a staging thread."""
+
+    def __init__(self, timeout: float):
+        self.deadline = time.monotonic() + timeout
+        self.cancelled = threading.Event()
+        self.bytes = 0
+        self.paths = 0
+
+    def check(self):
+        if self.cancelled.is_set() or time.monotonic() >= self.deadline:
+            raise TimeoutError("Mirage verifier staging stopped")
+
+    def path(self):
+        self.check()
+        self.paths += 1
+        if self.paths > MAX_STAGING_PATHS:
+            raise ValueError("Mirage verifier staging exceeds path limit")
+
+    def charge(self, size: int):
+        self.check()
+        self.bytes += size
+        if self.bytes > MAX_STAGING_BYTES:
+            raise ValueError("Mirage verifier staging exceeds byte limit")
+
+    def chunks(self, path: Path):
+        self.check()
+        if path.stat().st_size > MAX_STAGING_BYTES - self.bytes:
+            raise ValueError("Mirage verifier staging exceeds byte limit")
+        with path.open("rb") as source:
+            while True:
+                self.check()
+                chunk = source.read(COPY_CHUNK)
+                if not chunk:
+                    break
+                self.charge(len(chunk))
+                yield chunk
+
+    def copy(self, source: Path, target: Path):
+        with target.open("wb") as output:
+            for chunk in self.chunks(source):
+                output.write(chunk)
+        target.chmod(0o400)
+
+    def write_json(self, target: Path, value):
+        with target.open("wb") as output:
+            for chunk in json.JSONEncoder().iterencode(value):
+                data = chunk.encode()
+                self.charge(len(data))
+                output.write(data)
+
+    def walk(self, root: Path):
+        pending = [root]
+        while pending:
+            self.check()
+            directory = pending.pop()
+            entries = []
+            with os.scandir(directory) as scan:
+                for entry in scan:
+                    self.path()
+                    entries.append(entry)
+            for entry in sorted(entries, key=lambda e: e.name):
+                self.check()
+                if entry.is_symlink():
+                    continue
+                if entry.is_dir(follow_symlinks=False):
+                    pending.append(Path(entry.path))
+                elif entry.is_file(follow_symlinks=False):
+                    yield Path(entry.path)
+
+
+class MirageVerifier(Verifier):
+    """Run a registered grader in a fresh, verifier-only Mirage workspace.
+
+    Claw-Eval grades through the trial HTTP server; other runtimes use a
+    disposable Node process. This is trusted host code, not an isolation
+    boundary for arbitrary scripts.
+    LiveClawBench uses the workspace runtime; ComplexMCP, DataSpace,
+    AutomationBench and GAIA2 use Monty. Claw-Eval runs pinned Python in
+    Pyodide and records model calls through an explicit host transport in
+    that server.
+    Each grader reads declared JSON and file bytes through read-only VFS
+    mounts and writes rewards to a separate RAM output mount.
+    """
+
+    async def _background(self, work, *args, budget=None):
+        budget = budget or _Staging(self.task.config.verifier.timeout_sec)
+        worker = asyncio.create_task(asyncio.to_thread(work, *args, budget))
+        try:
+            # wait() leaves the worker alive on cancellation without a second
+            # shield future reporting the cooperatively stopped worker's error.
+            await asyncio.wait({worker})
+            return worker.result()
+        except BaseException:
+            budget.cancelled.set()
+            # Do not delete the temporary directory while a copy still owns it.
+            while not worker.done():
+                try:
+                    await asyncio.wait({worker})
+                except asyncio.CancelledError:
+                    continue
+                except Exception:
+                    break
+            if not worker.cancelled():
+                worker.exception()
+            raise
+
+    def _effective_inputs(self, definition: dict) -> tuple[dict, dict]:
+        merged = {
+            **self.task.config.verifier.env,
+            **(self.verifier_env or {}),
+            **self.override_env,
+        }
+        env = {**self.environment.container_env, **resolve_env_vars(merged)}
+        states = definition.get("native_state", {})
+        finance = "/opt/mock/data/finance_app.sqlite"
+        if finance in states and env.get("MOCK_FINANCE_DB_PATH",
+                                         finance) not in states:
+            raise ValueError("MirageVerifier does not support this "
+                             "MOCK_FINANCE_DB_PATH override")
+        paths = list(definition.get("inputs", []))
+        dashboard = (self.dataset,
+                     self.task_id) == ("liveclawbench",
+                                       "finance-dashboard-repair")
+        if dashboard and "POLICY_PATH" in env:
+            policy = env["POLICY_PATH"]
+            virtual = PurePosixPath(policy)
+            if (not virtual.is_absolute() or ".." in virtual.parts
+                    or "\0" in policy or str(virtual) != policy):
+                raise ValueError(
+                    "POLICY_PATH must be a canonical absolute VFS path")
+            if not policy.startswith("/tests/"):
+                try:
+                    self.environment.host_path(policy)
+                except (ValueError, FileNotFoundError) as exc:
+                    raise ValueError(
+                        "POLICY_PATH is outside supported VFS mounts") from exc
+            paths.append(policy)
+        if "/.bash_history" in paths and "HOME" in env:
+            home = PurePosixPath(env["HOME"])
+            if not home.is_absolute() or ".." in home.parts:
+                raise ValueError("HOME must be an absolute VFS path")
+            paths.append(str(home / ".bash_history"))
+        return {**definition, "inputs": list(dict.fromkeys(paths))}, env
+
+    @property
+    def _task_dir(self) -> Path:
+        """``datasets/<dataset>/<task>/``, whose ``harbor/`` Harbor runs."""
+        return self.task.paths.task_dir.resolve().parent
+
+    @property
+    def dataset(self) -> str:
+        return self._task_dir.parent.name
+
+    @property
+    def task_id(self) -> str:
+        """The task as its dataset names it: its directory's name."""
+        return self._task_dir.name
+
+    @property
+    def inputs_dir(self) -> Path:
+        """What the task's grader reads besides the run's state, as its
+        ``/tests/`` (``workspace/verifier/``)."""
+        return self._task_dir / "workspace" / "verifier"
+
+    def _definition(self) -> tuple[str, dict]:
+        if self.step_name is not None:
+            raise ValueError("MirageVerifier requires a single-step task")
+        task = self.task_id
+        definition = definitions(self.dataset).get(task)
+        if definition is None:
+            raise ValueError(f"No Mirage grader for {self.dataset}/{task}")
+        for name, expected in definition.get("files", {}).items():
+            source = self.inputs_dir / name
+            if hashlib.sha256(source.read_bytes()).hexdigest() != expected:
+                raise ValueError(f"{self.dataset}/{task}: verifier/{name} "
+                                 "changed; regenerate the task and its "
+                                 "manifest")
+        return task, definition
+
+    async def verify(self) -> VerifierResult:
+        if not isinstance(self.environment, MirageEnvironment):
+            raise TypeError("MirageVerifier requires MirageEnvironment")
+        # Outputs belong to the host verifier, not the agent's /logs mount.
+        # Remove old rewards even when validation or execution fails.
+        self.trial_paths.verifier_dir.mkdir(parents=True, exist_ok=True)
+        for reward in (self.trial_paths.reward_text_path,
+                       self.trial_paths.reward_json_path):
+            reward.unlink(missing_ok=True)
+        started = time.monotonic()
+        result = await self.evaluate()
+        score = result.get("score")
+        if (type(score) not in (float, int) or not math.isfinite(score)
+                or not 0 <= score <= 1):
+            raise ValueError(f"Invalid Mirage reward: {score!r}")
+        rewards = result.get("rewards", {"reward": score})
+        if any(
+                type(v) not in (int, float) or not math.isfinite(v)
+                for v in rewards.values()):
+            raise ValueError("Native rewards must be finite numbers")
+        self.trial_paths.reward_text_path.write_text(f"{score}\n")
+        if "rewards" in result:
+            self.trial_paths.reward_json_path.write_text(
+                json.dumps(rewards) + "\n")
+        self._log(self.trial_paths.test_stdout_path, result["stdout"])
+        self._log(self.trial_paths.verifier_dir / "checks.json",
+                  json.dumps(result["checks"], indent=2) + "\n")
+        timings = {**result["timings"], "total_s": time.monotonic() - started}
+        self._log(self.trial_paths.verifier_dir / "timings.json",
+                  json.dumps(timings, indent=2) + "\n")
+        for name, value in result.get("artifacts", {}).items():
+            if name != Path(name).name:
+                raise ValueError(f"Invalid grader artifact name: {name}")
+            self._log(
+                self.trial_paths.verifier_dir / name,
+                value if name == "judge.log" and isinstance(value, str) else
+                json.dumps(value, indent=2) + "\n")
+        return VerifierResult(rewards=rewards)
+
+    async def evaluate(self) -> dict:
+        async with asyncio.timeout(self.task.config.verifier.timeout_sec):
+            return await self._evaluate()
+
+    async def _evaluate(self) -> dict:
+        env = self.environment
+        assert isinstance(env, MirageEnvironment)
+        started = time.monotonic()
+        task, definition = self._definition()
+        definition, verifier_env = self._effective_inputs(definition)
+        await env.refresh_verifier_files()
+        with tempfile.TemporaryDirectory(prefix="vfsbench-verify-") as temp:
+            stage = Path(temp)
+            frozen = await self.freeze(definition, stage)
+            request = stage / "request.json"
+            await self._background(lambda budget: budget.write_json(
+                request, {
+                    "dataset": self.dataset,
+                    "task": task,
+                    "runtime": definition.get("runtime", "typescript"),
+                    **frozen,
+                    "epoch": env.now().isoformat(),
+                    "env": verifier_env,
+                    "timeoutSeconds": self.task.config.verifier.timeout_sec,
+                }))
+            result = await self._run(env.node_binary, request)
+            result["timings"]["total_s"] = time.monotonic() - started
+
+            def hashes(budget):
+                result = {}
+                for path, host in {
+                        **frozen["states"],
+                        **frozen["files"]
+                }.items():
+                    digest = hashlib.sha256()
+                    for chunk in budget.chunks(Path(host)):
+                        digest.update(chunk)
+                    result[path] = digest.hexdigest()
+                return result
+
+            result["input_sha256"] = await self._background(hashes)
+            return result
+
+    async def freeze(self, definition: dict, stage: Path) -> dict:
+        """Copy declared files/trees only, keeping all host paths private.
+
+        Reference resources come from the checked host sources. Agent files
+        must resolve within a mounted directory; symlinks cannot read the host.
+        Safety directory scans skip symlinks as the reference's os.walk does.
+        """
+        budget = _Staging(self.task.config.verifier.timeout_sec)
+        module = dataset_module(self.dataset)
+        if module is not None and hasattr(module, "freeze"):
+            return await module.freeze(self, definition, stage, budget)
+        frozen = await self._background(self._freeze_files,
+                                        definition,
+                                        stage,
+                                        budget=budget)
+        states = await self.environment.snapshot_verifier_states(
+            definition.get("native_state", {}))
+        history = None
+        if "/.bash_history" in definition.get("inputs", []):
+            history = await self.environment.read_virtual_file("/.bash_history"
+                                                               )
+
+        def store(budget):
+            for i, (alias, tables) in enumerate(sorted(states.items())):
+                target = stage / f"state-{i}.json"
+                budget.write_json(target, tables)
+                target.chmod(0o400)
+                frozen["states"][alias] = str(target)
+            if history is not None:
+                budget.charge(len(history))
+                target = stage / "shell-history"
+                target.write_bytes(history)
+                target.chmod(0o400)
+                frozen["files"]["/.bash_history"] = str(target)
+                # test.sh copies the virtual history here before the audit.
+                frozen["files"]["/logs/verifier/bash_history"] = str(target)
+            return frozen
+
+        return await self._background(store, budget=budget)
+
+    def _freeze_files(self, definition, stage, budget):
+        env = self.environment
+        sources: dict[str, Path] = {}
+        existing = set()
+        tests = self.inputs_dir
+
+        def source(path: str) -> Path | None:
+            if path.startswith("/tests/"):
+                host = tests / path.removeprefix("/tests/")
+                if not host.resolve().is_relative_to(tests.resolve()):
+                    raise ValueError(
+                        "Verifier resource leaves its verifier directory")
+                return host
+            try:
+                host = env.host_path(path)
+            except (ValueError, FileNotFoundError):
+                return None
+            if host.exists() and not any(
+                    host.resolve().is_relative_to(root.resolve())
+                    for root in env.disk_mounts.values()):
+                raise ValueError(
+                    f"Verifier input leaves its workspace mount: {path}")
+            return host
+
+        for path in definition.get("inputs", []):
+            budget.path()
+            host = source(path)
+            if host is not None and host.exists():
+                existing.add(path)
+                if host.is_file():
+                    sources[path] = host
+        for tree in definition.get("trees", []):
+            roots = {tree: source(tree)}
+            roots.update({
+                p: host
+                for p, host in env.disk_mounts.items()
+                if p.startswith(tree.rstrip("/") + "/")
+            })
+            for virtual, host in roots.items():
+                if host is None or not host.is_dir():
+                    continue
+                existing.add(virtual)
+                for file in budget.walk(host):
+                    path = virtual.rstrip("/") + "/" + file.relative_to(
+                        host).as_posix()
+                    sources[path] = file
+        frozen = {"states": {}, "files": {}, "existingPaths": sorted(existing)}
+        for i, (virtual, host) in enumerate(sorted(sources.items())):
+            target = stage / f"input-{i}"
+            budget.copy(host, target)
+            frozen["files"][virtual] = str(target)
+        return frozen
+
+    def _log(self, path: Path, text: str) -> None:
+        relative = path.relative_to(self.trial_paths.verifier_dir).as_posix()
+        if filter_paths_by_patterns([relative],
+                                    include=self.include_logs,
+                                    exclude=self.exclude_logs):
+            path.parent.mkdir(parents=True, exist_ok=True)
+            # Keep the previous complete artifact if a write is interrupted.
+            with tempfile.NamedTemporaryFile(mode="w",
+                                             dir=path.parent,
+                                             delete=False) as output:
+                temporary = Path(output.name)
+                try:
+                    output.write(text)
+                    output.close()
+                    temporary.replace(path)
+                finally:
+                    temporary.unlink(missing_ok=True)
+
+    def _claw_artifact(self, name: str, value) -> None:
+        if name not in ("claweval-inputs.json", "judge-recording.json"):
+            raise ValueError(f"Unexpected Claw-Eval artifact: {name}")
+        self._log(self.trial_paths.verifier_dir / name,
+                  json.dumps(value, indent=2) + "\n")
+
+    async def _run(self, node: str, request: Path) -> dict:
+        payload = await self._background(self._request_bytes, request)
+        runtime = json.loads(payload).get("runtime", "typescript")
+        if runtime == "claweval-pyodide":
+            return await self.environment.verify_claweval(
+                payload, self._claw_artifact)
+        own = DATASETS / self.dataset / "graders" / "verify.ts"
+        if runtime == "typescript":
+            runner = RUNNER
+        elif runtime.endswith("-monty") and own.is_file():
+            runner = own
+        else:
+            raise ValueError(f"Unknown verifier runtime: {runtime}")
+        process = await asyncio.create_subprocess_exec(
+            node,
+            "--no-warnings",
+            str(runner),
+            cwd=ROOT,
+            # No inherited credentials, NODE_OPTIONS or task-controlled env.
+            # GAIA2 judge settings travel in the request and stay outside
+            # the Python VFS.
+            env={
+                "PATH": os.environ.get("PATH", ""),
+                "TZ": "UTC"
+            },
+            start_new_session=True,
+            stdin=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        try:
+            async with asyncio.timeout(self.task.config.verifier.timeout_sec):
+                stdout, stderr = await process.communicate(payload)
+        finally:
+            # Monty owns child workers. Kill the whole dedicated process
+            # group on timeout/cancellation, even if Node exited first.
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            await process.wait()
+        if process.returncode:
+            diagnostic = stderr.decode(errors="replace")
+            raise RuntimeError(f"Mirage grader exited {process.returncode}: "
+                               f"{diagnostic[-4000:]}")
+        return json.loads(stdout)
+
+    @staticmethod
+    def _request_bytes(request, budget):
+        budget.check()
+        value = json.loads(request.read_text())
+        if "databases" in value:
+            raise ValueError("Native grading takes JSON state, not databases")
+        value["states"] = {
+            alias: json.loads(b"".join(budget.chunks(Path(host))))
+            for alias, host in value["states"].items()
+        }
+        value["files"] = {
+            path:
+            base64.b64encode(b"".join(budget.chunks(
+                Path(host)))).decode("ascii")
+            for path, host in value.get("files", {}).items()
+        }
+        payload = json.dumps(value).encode()
+        budget.check()
+        return payload

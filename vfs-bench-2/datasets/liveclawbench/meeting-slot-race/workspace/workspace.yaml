@@ -1,0 +1,49 @@
+# meeting-slot-race, on vfsbench_harbor's mirage environment.
+#
+# In place of upstream's environment/Dockerfile: the mocks of its base
+# image are the fakes below, and its COPY line is `copy`.
+#
+# Rule A: Mirage fakes Gmail and Google Calendar, so the email and calendar
+# mocks become Mirage's own gws fake. The mailbox is the /gmail mount and the
+# calendar the /calendar mount, with the gws CLI for both, all at this
+# trial's run of it; nothing listens on upstream's ports 5001, 5174 and
+# 5006. One fake serves the whole job.
+fakes:
+  gws:
+    # Upstream's email and calendar seeds for the task, as Gmail messages
+    # and Peter's calendar (generate.py writes it).
+    fixture: fixtures/gws.json
+    epoch: '2026-04-03T09:00:00Z'
+    # The run's SQLite, which the ported verify.py reads.
+    state: /var/lib/mock-data/gws/gws.db
+    # Upstream's C1 fault (c1-slot-race, on the calendar mock's create): the
+    # first insert is refused as a time overlap, with upstream's 409 and its
+    # error, in Google's envelope; a retry is stored. A kit fault plan, armed
+    # on this trial's run; it cannot store upstream's Team Standup in the
+    # slot.
+    faults:
+      - method: POST
+        route: /calendar/v3/calendars/:calendarId/events
+        status: 409
+        body: {error: {code: 409, message: time_overlap, status: ABORTED}}
+env:
+  TASK_NAME: meeting-slot-race
+copy:
+  /workspace/environment: []
+# gws-integ-token is the gws fake's own fixed credential; ${GWS_URL} is this
+# trial's run. The calendar's default listing reaches 90 days past `today`,
+# the epoch's date rather than the host's.
+workspace:
+  mounts:
+    /gmail:
+      vfs: gmail
+      mode: read
+      config: {accessToken: gws-integ-token, apiBase: '${GWS_URL}'}
+    /calendar:
+      vfs: gcal
+      mode: read
+      config: {accessToken: gws-integ-token, apiBase: '${GWS_URL}', today: '2026-04-03'}
+  clis:
+    gws:
+      cli: gws
+      config: {accessToken: gws-integ-token, apiBase: '${GWS_URL}'}

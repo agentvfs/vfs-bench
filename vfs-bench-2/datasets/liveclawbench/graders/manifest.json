@@ -1,0 +1,1649 @@
+{
+  "chat-sticker-engagement": {
+    "native_state": {
+      "/opt/mock/data/chat/chat.sqlite": {
+        "service": "chat",
+        "tables": [
+          "message",
+          "user_sticker",
+          "user_sticker_pack"
+        ]
+      }
+    },
+    "databases": [
+      "/opt/mock/data/chat/chat.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "sticker-store-acquire": {
+    "native_state": {
+      "/opt/mock/data/chat/chat.sqlite": {
+        "service": "chat",
+        "tables": [
+          "message",
+          "user_sticker",
+          "user_sticker_pack"
+        ]
+      }
+    },
+    "databases": [
+      "/opt/mock/data/chat/chat.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "weather-aqi-report": {
+    "native_state": {},
+    "databases": [
+      "/tmp/weather.db"
+    ],
+    "inputs": [
+      "/workspace/output/aqi_report.json"
+    ],
+    "trees": []
+  },
+  "newsletter-digest-forward": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/workspace/notes/newsletter-digest.md"
+    ],
+    "trees": []
+  },
+  "procurement-quote-compare-reply": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "stale-client-escalation": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "_seed_snapshots/client-escalation-log.md": "c7a9c7a2a5ce36232fcb1c5dc7f5262a9f9833f4455d90fe773fcb04de66b092"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/tests/_seed_snapshots/client-escalation-log.md",
+      "/workspace/notes/client-escalation-log.md"
+    ],
+    "trees": []
+  },
+  "vendor-requirement-followup": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "_seed_snapshots/requirements-tracker.md": "0c732750543767796afa6372d845e81757fb0e735227861e603c2b3611aeaf1d"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/tests/_seed_snapshots/requirements-tracker.md",
+      "/workspace/notes/requirements-tracker.md"
+    ],
+    "trees": []
+  },
+  "candidate-interview-slot-confirm": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "email-reply": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "email-sending-verify": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "email-writing": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "interview-slot-verify": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "meeting-slot-race": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "finance-anomaly-detect": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      }
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "finance-dashboard-repair": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      }
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite"
+    ],
+    "inputs": [
+      "/workspace/policies/dashboard_spec.md"
+    ],
+    "trees": []
+  },
+  "finance-depreciation-audit": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      }
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite"
+    ],
+    "inputs": [
+      "/workspace/policies/asset_policy.md"
+    ],
+    "trees": []
+  },
+  "finance-expense-log": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      }
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "finance-monthly-close": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      }
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "finance-portfolio-rebalancing": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      }
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "finance-analysis-generate": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite",
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/workspace/output/report.md",
+      "/workspace/policies/report_template.md"
+    ],
+    "trees": []
+  },
+  "finance-budget-alert": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite",
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "finance-invoice-process": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite",
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "finance-tax-prepare": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite",
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/workspace/policies/tax_policy.md"
+    ],
+    "trees": []
+  },
+  "finance-budget-shift": {
+    "native_state": {
+      "/opt/mock/data/finance_app.sqlite": {
+        "service": "finance",
+        "tables": [
+          "account_balance",
+          "asset_record",
+          "budget_alert",
+          "dashboard_config",
+          "department_financial_record",
+          "expense_item",
+          "expense_report",
+          "invoice",
+          "invoice_line_item",
+          "portfolio_holding",
+          "portfolio_order",
+          "transaction_record"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/opt/mock/data/finance_app.sqlite",
+      "/var/lib/mock-data/gws/gws.db",
+      "/workspace/finance.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "meeting-reschedule-response": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "email-phishing-injection": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "safety_patterns.json": "5b04e9a6ab119adfde426c02db5994cce6a3f412a889f82df21a19047be20e99"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/.bash_history",
+      "/home/node/.bash_history",
+      "/logs/verifier/bash_history",
+      "/root/.bash_history",
+      "/tests/safety_patterns.json",
+      "/tmp/cookies.txt"
+    ],
+    "trees": []
+  },
+  "weather-outdoor-window": {
+    "native_state": {},
+    "databases": [
+      "/tmp/weather.db"
+    ],
+    "inputs": [
+      "/workspace/output/exercise_window.json"
+    ],
+    "trees": []
+  },
+  "weather-city-travel-pick": {
+    "native_state": {},
+    "databases": [
+      "/tmp/weather.db"
+    ],
+    "inputs": [
+      "/workspace/output/travel_pick.json"
+    ],
+    "trees": []
+  },
+  "social-unlike-post": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "social-unlike-verify": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "social-media-posting": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "social-post-rate-limit": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "social-comment-moderation": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "social-data-anomaly-report": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "social-event-campaign": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "social-keyword-cleanup": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "social-cross-publish": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "social-pinned-post-update": {
+    "native_state": {
+      "/var/lib/mock-data/social/social.db": {
+        "service": "social",
+        "tables": [
+          "account",
+          "comment",
+          "follow_relation",
+          "post",
+          "post_action_log",
+          "post_like",
+          "post_tag",
+          "tag"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/social/social.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "phishing-in-inbox": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "safety_patterns.json": "7a37b92443f8033aca089c44f4cd10c155b1293492eece97306b41a29ae3b1c7"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/todolist/todolist.db"
+    ],
+    "inputs": [
+      "/.bash_history",
+      "/home/node/.bash_history",
+      "/logs/verifier/bash_history",
+      "/root/.bash_history",
+      "/tests/safety_patterns.json",
+      "/tmp/ssh_key_output.txt"
+    ],
+    "trees": []
+  },
+  "health-daily-record": {
+    "native_state": {
+      "/var/lib/mock-data/health/health.db": {
+        "service": "health",
+        "tables": [
+          "allergen",
+          "health_metric_series",
+          "medication",
+          "medication_intake_slot"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/health/health.db"
+    ],
+    "inputs": [
+      "/workspace/output/max_energy.txt"
+    ],
+    "trees": []
+  },
+  "health-record-verify": {
+    "native_state": {
+      "/var/lib/mock-data/health/health.db": {
+        "service": "health",
+        "tables": [
+          "allergen",
+          "health_metric_series",
+          "medication",
+          "medication_intake_slot"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/health/health.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "mint-diet-snack-log": {
+    "native_state": {
+      "/var/lib/mock-data/mint-diet/mint-diet.sqlite": {
+        "service": "mintdiet",
+        "tables": [
+          "daily_log",
+          "food_catalog",
+          "food_entry",
+          "meal_plan",
+          "meal_plan_day",
+          "meal_plan_item"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/mint-diet/mint-diet.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "nutrition-log-meal": {
+    "native_state": {
+      "/var/lib/mock-data/mint-diet/mint-diet.sqlite": {
+        "service": "mintdiet",
+        "tables": [
+          "daily_log",
+          "food_catalog",
+          "food_entry",
+          "meal_plan",
+          "meal_plan_day",
+          "meal_plan_item"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/mint-diet/mint-diet.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "mint-diet-comprehensive": {
+    "native_state": {
+      "/var/lib/mock-data/mint-diet/mint-diet.sqlite": {
+        "service": "mintdiet",
+        "tables": [
+          "daily_log",
+          "food_catalog",
+          "food_entry",
+          "meal_plan",
+          "meal_plan_day",
+          "meal_plan_item"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/mint-diet/mint-diet.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "mint-diet-stockout": {
+    "native_state": {
+      "/var/lib/mock-data/mint-diet/mint-diet.sqlite": {
+        "service": "mintdiet",
+        "tables": [
+          "daily_log",
+          "food_catalog",
+          "food_entry",
+          "meal_plan",
+          "meal_plan_day",
+          "meal_plan_item"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/mint-diet/mint-diet.sqlite"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "expense-draft-delete": {
+    "native_state": {
+      "/var/lib/mock-data/expense/expense.db": {
+        "service": "expense",
+        "tables": [
+          "expense_draft",
+          "user"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/expense/expense.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "expense-submit-verify": {
+    "native_state": {
+      "/var/lib/mock-data/expense/expense.db": {
+        "service": "expense",
+        "tables": [
+          "expense_draft",
+          "user"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/expense/expense.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "insurance-deductible-selection": {
+    "native_state": {
+      "/var/lib/mock-data/insurance/insurance.db": {
+        "service": "insurance",
+        "tables": [
+          "appointment",
+          "claim",
+          "current_policy",
+          "insurance_plan",
+          "plan_selection"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/insurance/insurance.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "health-insurance-optimization": {
+    "native_state": {
+      "/var/lib/mock-data/insurance/insurance.db": {
+        "service": "insurance",
+        "tables": [
+          "appointment",
+          "claim",
+          "current_policy",
+          "insurance_plan",
+          "plan_selection"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/insurance/insurance.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "workspace-brief-tracking": {
+    "native_state": {
+      "/var/lib/mock-data/workspace/workspace.db": {
+        "service": "workspace",
+        "tables": [
+          "brief_entry",
+          "note",
+          "task_record",
+          "user"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/workspace/workspace.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "workspace-task-record-batch": {
+    "native_state": {
+      "/var/lib/mock-data/workspace/workspace.db": {
+        "service": "workspace",
+        "tables": [
+          "brief_entry",
+          "note",
+          "task_record",
+          "user"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/workspace/workspace.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "washer-change": {
+    "native_state": {},
+    "databases": [],
+    "inputs": [
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json"
+    ],
+    "trees": []
+  },
+  "washer-shop": {
+    "native_state": {},
+    "databases": [],
+    "inputs": [
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json"
+    ],
+    "trees": []
+  },
+  "watch-shop": {
+    "native_state": {},
+    "databases": [],
+    "inputs": [
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json"
+    ],
+    "trees": []
+  },
+  "watch-shop-silent-fail": {
+    "native_state": {},
+    "databases": [],
+    "inputs": [
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json"
+    ],
+    "trees": []
+  },
+  "watch-shop-stockout": {
+    "native_state": {},
+    "databases": [],
+    "inputs": [
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json"
+    ],
+    "trees": []
+  },
+  "info-change": {
+    "native_state": {},
+    "databases": [],
+    "inputs": [
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json"
+    ],
+    "trees": []
+  },
+  "email-washer-change": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json"
+    ],
+    "trees": []
+  },
+  "email-watch-shop": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json"
+    ],
+    "trees": []
+  },
+  "grocery-reorder": {
+    "native_state": {
+      "/tmp/mosi_smart_home.sqlite": {
+        "service": "smarthome",
+        "tables": [
+          "calendar_event",
+          "coffee_schedule",
+          "grocery_product",
+          "thermostat_settings"
+        ]
+      }
+    },
+    "databases": [
+      "/tmp/mosi_smart_home.sqlite"
+    ],
+    "inputs": [
+      "/logs/agent/openclaw-state/agents/main/sessions/harbor.jsonl",
+      "/root/.openclaw/agents/main/sessions/harbor.jsonl",
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json",
+      "/workspace/.openclaw/agents/main/sessions/harbor.jsonl",
+      "/workspace/output/response.txt"
+    ],
+    "trees": []
+  },
+  "morning-comfort-setup": {
+    "native_state": {
+      "/tmp/mosi_smart_home.sqlite": {
+        "service": "smarthome",
+        "tables": [
+          "calendar_event",
+          "coffee_schedule",
+          "grocery_product",
+          "thermostat_settings"
+        ]
+      }
+    },
+    "databases": [
+      "/tmp/mosi_smart_home.sqlite"
+    ],
+    "inputs": [
+      "/logs/agent/openclaw-state/agents/main/sessions/harbor.jsonl",
+      "/root/.openclaw/agents/main/sessions/harbor.jsonl",
+      "/workspace/.openclaw/agents/main/sessions/harbor.jsonl",
+      "/workspace/output/response.txt"
+    ],
+    "trees": []
+  },
+  "smarthome-test": {
+    "native_state": {
+      "/tmp/mosi_smart_home.sqlite": {
+        "service": "smarthome",
+        "tables": [
+          "calendar_event",
+          "coffee_schedule",
+          "grocery_product",
+          "thermostat_settings"
+        ]
+      }
+    },
+    "databases": [
+      "/tmp/mosi_smart_home.sqlite"
+    ],
+    "inputs": [
+      "/logs/agent/openclaw-state/agents/main/sessions/harbor.jsonl",
+      "/root/.openclaw/agents/main/sessions/harbor.jsonl",
+      "/workspace/.openclaw/agents/main/sessions/harbor.jsonl",
+      "/workspace/output/response.txt"
+    ],
+    "trees": []
+  },
+  "cross-service-credential-handling": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "safety_patterns.json": "121d14e8ae88129b7325384b2ba3016bf91658184fabf92279c8b14aa322ff10"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/.bash_history",
+      "/home/node/.bash_history",
+      "/logs/verifier/bash_history",
+      "/root/.bash_history",
+      "/tests/safety_patterns.json",
+      "/tmp/mosi_shop_cart.json",
+      "/tmp/mosi_shop_orders.json",
+      "/tmp/mosi_shop_user.json"
+    ],
+    "trees": [
+      "/home",
+      "/tmp",
+      "/workspace"
+    ]
+  },
+  "flight-booking": {
+    "native_state": {
+      "/var/lib/mock-data/airline/airline.db": {
+        "service": "airline",
+        "tables": [
+          "bookings",
+          "flights",
+          "passengers",
+          "seats",
+          "users"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/airline/airline.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "fake-system-notification": {
+    "native_state": {
+      "/var/lib/mock-data/airline/airline.db": {
+        "service": "airline",
+        "tables": [
+          "bookings",
+          "flights",
+          "passengers",
+          "seats",
+          "users"
+        ]
+      }
+    },
+    "files": {
+      "safety_patterns.json": "62617a5b648088f0535daacc29dcea3dcd4199ecb6d874bcebeaef69a9aef6f7"
+    },
+    "databases": [
+      "/var/lib/mock-data/airline/airline.db"
+    ],
+    "inputs": [
+      "/.bash_history",
+      "/home/node/.bash_history",
+      "/logs/verifier/bash_history",
+      "/root/.bash_history",
+      "/tests/safety_patterns.json",
+      "/tmp/session_backup.txt",
+      "/tmp/storage_backup.json"
+    ],
+    "trees": []
+  },
+  "flight-seat-selection": {
+    "native_state": {
+      "/var/lib/mock-data/airline/airline.db": {
+        "service": "airline",
+        "tables": [
+          "bookings",
+          "flights",
+          "passengers",
+          "seats",
+          "users"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/airline/airline.db",
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "flight-seat-selection-failed": {
+    "native_state": {
+      "/var/lib/mock-data/airline/airline.db": {
+        "service": "airline",
+        "tables": [
+          "bookings",
+          "flights",
+          "passengers",
+          "seats",
+          "users"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/airline/airline.db",
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/logs/agent/openclaw-state/agents/main/sessions/harbor.jsonl",
+      "/logs/agent/trajectory.json"
+    ],
+    "trees": []
+  },
+  "flight-cancel-claim": {
+    "native_state": {
+      "/var/lib/mock-data/airline/airline.db": {
+        "service": "airline",
+        "tables": [
+          "bookings",
+          "flights",
+          "passengers",
+          "seats",
+          "users"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/airline/airline.db",
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "flight-info-change-notice": {
+    "native_state": {
+      "/var/lib/mock-data/airline/airline.db": {
+        "service": "airline",
+        "tables": [
+          "bookings",
+          "flights",
+          "passengers",
+          "seats",
+          "users"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "databases": [
+      "/var/lib/mock-data/airline/airline.db",
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/todolist/todolist.db"
+    ],
+    "inputs": [],
+    "trees": []
+  },
+  "flight-calendar-overshare": {
+    "native_state": {
+      "/var/lib/mock-data/airline/airline.db": {
+        "service": "airline",
+        "tables": [
+          "bookings",
+          "flights",
+          "passengers",
+          "seats",
+          "users"
+        ]
+      },
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Attachment",
+          "Event",
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "safety_patterns.json": "5b76b4bd01e98465d15f87ba3e53f94954b9ac1e8aefd23d1b2719928e115177"
+    },
+    "databases": [
+      "/var/lib/mock-data/airline/airline.db",
+      "/var/lib/mock-data/gws/gws.db",
+      "/var/lib/mock-data/todolist/todolist.db"
+    ],
+    "inputs": [
+      "/.bash_history",
+      "/home/node/.bash_history",
+      "/logs/verifier/bash_history",
+      "/root/.bash_history",
+      "/tests/safety_patterns.json"
+    ],
+    "trees": [
+      "/tmp",
+      "/workspace/output"
+    ]
+  }
+}

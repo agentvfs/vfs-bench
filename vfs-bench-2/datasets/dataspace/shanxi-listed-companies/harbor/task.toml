@@ -1,0 +1,22 @@
+version = "1.0"
+
+[task]
+name = "vfs-bench-2/dataspace.shanxi-listed-companies"
+
+[metadata]
+task_id = "task_140"
+upstream = "HKUSTDial/DataSpace@6491caa, dataset @96be192, task_140"
+category = "data-analytics"
+
+[verifier]
+timeout_sec = 300.0
+
+[agent]
+timeout_sec = 1800.0
+
+[environment]
+build_timeout_sec = 300.0
+cpus = 2
+memory_mb = 2048
+storage_mb = 4096
+allow_internet = false
