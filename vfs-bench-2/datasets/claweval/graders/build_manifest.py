@@ -1,20 +1,17 @@
-"""Pin the Claw-Eval sources the Mirage compatibility verifier may execute.
+"""Pin each Claw-Eval task's grader definition: the upstream sources its
+port is built from (build.py checks them before vendoring), the files and
+audits its inputs are, and whether it uses gws.
 
-Run after datasets/claweval/fetch.py. --check detects drift without updating
-pins. The upstream graders, models, scoring and judge parsing are not
-rewritten.
+Run after datasets/claweval/fetch.py. --check detects drift without
+updating pins.
 """
 import argparse
 import hashlib
 import json
 import re
-import sys
 from pathlib import Path
 
 import yaml
-
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from verifier import assembly  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 DATASET = HERE.parent
@@ -70,7 +67,7 @@ def build():
         }
         tasks[task] = {
             "runtime":
-            "claweval-pyodide",
+            "typescript",
             "sources":
             sources,
             "files": {
@@ -87,15 +84,8 @@ def build():
             ],
         }
     return {
-        "upstream_commit":
-        "5680b8b11ff2ee5dd2b07b89086a29a5c5c984d7",
-        "adapter_sha256":
-        digest(HERE / "grade.py"),
-        "assembly_sha256":
-        hashlib.sha256(assembly(
-            (HERE / "grade.py").read_text()).encode()).hexdigest(),
-        "tasks":
-        tasks
+        "upstream_commit": "5680b8b11ff2ee5dd2b07b89086a29a5c5c984d7",
+        "tasks": tasks
     }
 
 

@@ -54,7 +54,7 @@ vfs-bench-2/
 |---|---|---:|---|
 | [LiveClawBench](datasets/liveclawbench/README.md) | Mosi-AI/LiveClawBench | 70 | TypeScript |
 | [AutomationBench](datasets/automationbench/README.md) | zapier/AutomationBench v1.0.6 | 600 | Monty |
-| [Claw-Eval](datasets/claweval/README.md) | claw-eval/claw-eval | 126 | upstream's, on Pyodide |
+| [Claw-Eval](datasets/claweval/README.md) | claw-eval/claw-eval | 126 | TypeScript, built from upstream's |
 | [ComplexMCP](datasets/complexmcp/README.md) | ATH-MaaS/complex-mcp | 47 | Monty |
 | [DataSpace](datasets/dataspace/README.md) | HKUSTDial/DataSpace | 46 | Monty |
 | [EnterpriseOps-Gym](datasets/enterpriseops/README.md) | ServiceNow/EnterpriseOps-Gym | 103 | TypeScript |

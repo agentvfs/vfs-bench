@@ -24,9 +24,10 @@ export interface Inputs {
   timeoutSeconds: number
 }
 export type Grader = (context: Context) => Grade
-/** What a dataset's graders/index.ts exports. */
+/** What a dataset's graders/index.ts exports: the tasks it grades, by
+ * name, and the grade of one. */
 export interface Graders {
-  GRADERS: Readonly<Record<string, Grader>>
+  GRADERS: Readonly<Record<string, unknown>>
   evaluate(input: InputSpec, command: import('@struktoai/mirage-core/commands/config').Context): Promise<Grade>
 }
 export type InputSpec = Omit<Inputs, 'states' | 'files'> & { states: Record<string, string>; files: string[] }

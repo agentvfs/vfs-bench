@@ -26,7 +26,6 @@ import functools
 import json
 import os
 import re
-import secrets
 import shlex
 import shutil
 import signal
@@ -55,7 +54,6 @@ WORKSPACE = ROOT / "workspace"
 PLAN = WORKSPACE / "mirage.ts"
 PRELOAD = WORKSPACE / "preload.ts"
 DAEMON = ROOT / "submodule/mirage/typescript/packages/server/src/bin/daemon.ts"
-CLAWEVAL_DAEMON = WORKSPACE / "daemon.ts"
 
 # The model's credentials stay with Harbor; neither the mocks nor the
 # workspace gets them.
@@ -154,7 +152,6 @@ class MirageEnvironment(BaseEnvironment):
                  **kwargs):
         self._node = node
         self._daemon_url = daemon_url
-        self._verifier_token = secrets.token_urlsafe(32)
         self._processes: list[asyncio.subprocess.Process] = []
         self._client: httpx.AsyncClient | None = None
         self._workspace_id = ""
@@ -331,7 +328,6 @@ class MirageEnvironment(BaseEnvironment):
         port = _free_port()
         self._ssh_port = _free_port()
         _, authorized = ssh_key()
-        claweval = self.dataset == "claweval"
         daemon = await self._spawn(
             "daemon",
             self._node,
@@ -339,7 +335,7 @@ class MirageEnvironment(BaseEnvironment):
             "--no-warnings",
             "--import",
             str(PRELOAD),
-            str(CLAWEVAL_DAEMON if claweval else DAEMON),
+            str(DAEMON),
             env={
                 **self._host_env(),
                 "MIRAGE_HOME":
@@ -352,10 +348,6 @@ class MirageEnvironment(BaseEnvironment):
                 str(self._ssh_port),
                 "MIRAGE_SSH_AUTHORIZED_KEYS":
                 str(authorized),
-                **({
-                    "VFSBENCH_VERIFIER_TOKEN": self._verifier_token,
-                    "VFSBENCH_VERIFIER_TASK": self.task_id,
-                } if claweval else {}),
                 "VFSBENCH_ROUTES":
                 json.dumps(routes),
                 "VFSBENCH_ALLOW":
@@ -441,38 +433,6 @@ class MirageEnvironment(BaseEnvironment):
                     f"mirage.yaml's run {step['line']!r} exited "
                     f"{done.return_code} in the workspace:\n"
                     f"{done.stderr or done.stdout}")
-
-    async def verify_claweval(self, payload: bytes, save_artifact) -> dict:
-        """Stream artifacts to Harbor before grading can fail or time out."""
-        if self._client is None or self._daemon_url is not None:
-            raise ValueError(
-                "Claw-Eval grading requires the managed trial server")
-        async with self._client.stream("POST",
-                                       "/v1/harbor/claweval/verify",
-                                       content=payload,
-                                       headers={
-                                           "authorization":
-                                           f"Bearer {self._verifier_token}",
-                                           "content-type": "application/json",
-                                           "accept": "application/x-ndjson"
-                                       }) as reply:
-            if reply.is_error:
-                await reply.aread()
-                raise RuntimeError(
-                    f"Claw-Eval server verifier failed "
-                    f"({reply.status_code}): {reply.text[-4000:]}")
-            async for line in reply.aiter_lines():
-                event = json.loads(line)
-                if event["type"] == "artifact":
-                    save_artifact(event["name"], event["value"])
-                elif event["type"] == "result":
-                    return event["value"]
-                elif event["type"] == "error":
-                    raise RuntimeError("Claw-Eval server verifier failed: " +
-                                       event["detail"])
-                else:
-                    raise ValueError("Unknown Claw-Eval verifier event")
-        raise RuntimeError("Claw-Eval verifier stream ended without a result")
 
     async def stop(self, delete: bool):
         try:

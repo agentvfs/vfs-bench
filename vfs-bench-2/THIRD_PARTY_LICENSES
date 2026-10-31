@@ -114,8 +114,10 @@ Claw-Eval
   License:   MIT, Copyright (c) 2026 claw-eval
   Fetched:   mock_services/, tasks/ and src/, by datasets/claweval/fetch.py.
   Committed: the mocks under mocks/claweval*/ reimplement its services;
-             each task's instruction quotes its prompt; its graders run
-             unchanged from state/.
+             each task's instruction quotes its prompt; graders/reference/
+             holds its graders' sources, verbatim, and the fields of each
+             task.yaml they read; graders/port/ is built from them, and
+             graders/models.ts ports its models.
 
 
 Runtime

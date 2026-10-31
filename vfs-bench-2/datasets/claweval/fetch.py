@@ -31,14 +31,15 @@ def main() -> int:
         "/src/")
     git("checkout", "--quiet", COMMIT)
     print(f"Claw-Eval {COMMIT[:7]} in {SRC}")
-    # The grader's Pyodide packages, then the task files not committed: the
-    # PDFs and the config-audit fixtures.
-    for script, project in ((HERE / "graders" / "pyodide.py", HARBOR),
-                            (HERE / "generate.py", HARBOR)):
+    # The files not committed: the PDFs and the config-audit fixtures, then
+    # the graders that quote those fixtures' credentials, and their ports.
+    for script, project, *args in ((HERE / "generate.py", HARBOR),
+                                   (HERE / "graders" / "build.py", HERE,
+                                    "--withheld")):
         done = subprocess.run([
             "uv", "run", "--project",
             str(project), "python", "-I",
-            str(script)
+            str(script), *args
         ])
         if done.returncode:
             return done.returncode

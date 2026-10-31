@@ -2,8 +2,7 @@
 
 Only tasks in the registered grader manifests are supported, and the data
 files a grader reads from a task's tests/ are pinned there. Only registered,
-pinned code is executed; agent-supplied code is never loaded. Claw-Eval uses
-a Pyodide compatibility backend for its upstream Python.
+pinned code is executed; agent-supplied code is never loaded.
 """
 import asyncio
 import base64
@@ -132,13 +131,12 @@ class _Staging:
 class MirageVerifier(Verifier):
     """Run a registered grader in a fresh, verifier-only Mirage workspace.
 
-    Claw-Eval grades through the trial HTTP server; other runtimes use a
-    disposable Node process. This is trusted host code, not an isolation
-    boundary for arbitrary scripts.
-    LiveClawBench uses the workspace runtime; ComplexMCP, DataSpace,
-    AutomationBench and GAIA2 use Monty. Claw-Eval runs pinned Python in
-    Pyodide and records model calls through an explicit host transport in
-    that server.
+    Each grade runs in a disposable Node process. This is trusted host
+    code, not an isolation boundary for arbitrary scripts.
+    LiveClawBench, EnterpriseOps-Gym and Claw-Eval use the workspace
+    runtime; ComplexMCP, DataSpace, AutomationBench and GAIA2 use Monty.
+    Claw-Eval's and GAIA2's judge calls leave from that process, with the
+    judge's credentials in the request, never in a VFS.
     Each grader reads declared JSON and file bytes through read-only VFS
     mounts and writes rewards to a separate RAM output mount.
     """
@@ -431,18 +429,9 @@ class MirageVerifier(Verifier):
                 finally:
                     temporary.unlink(missing_ok=True)
 
-    def _claw_artifact(self, name: str, value) -> None:
-        if name not in ("claweval-inputs.json", "judge-recording.json"):
-            raise ValueError(f"Unexpected Claw-Eval artifact: {name}")
-        self._log(self.trial_paths.verifier_dir / name,
-                  json.dumps(value, indent=2) + "\n")
-
     async def _run(self, node: str, request: Path) -> dict:
         payload = await self._background(self._request_bytes, request)
         runtime = json.loads(payload).get("runtime", "typescript")
-        if runtime == "claweval-pyodide":
-            return await self.environment.verify_claweval(
-                payload, self._claw_artifact)
         own = DATASETS / self.dataset / "graders" / "verify.ts"
         if runtime == "typescript":
             runner = RUNNER
