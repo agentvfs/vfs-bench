@@ -1,6 +1,7 @@
 """Pin DataSpace inputs and generate its Monty-compatible evaluator.
 
-Run after datasets/dataspace/download.py; --check refuses drift or an edited port.
+Run after datasets/dataspace/download.py; --check refuses drift or an edited
+port.
 The relation/number functions remain verbatim; CSV/date adapters are separate.
 """
 import argparse

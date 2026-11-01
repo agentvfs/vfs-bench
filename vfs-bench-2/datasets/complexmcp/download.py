@@ -1,6 +1,7 @@
-"""Fetch ComplexMCP at its pinned commit and export its tasks.
+"""Download ComplexMCP at its pinned commit and export its tasks.
 
-    uv run --project datasets/complexmcp python -I datasets/complexmcp/download.py
+    uv run --project datasets/complexmcp \
+        python -I datasets/complexmcp/download.py
 
 Clones upstream into ``state/complexmcp/src`` (MIT) and writes its 47
 tasks from ``benchmark/data/data.parquet`` to ``state/complexmcp/tasks.json``

@@ -1,4 +1,4 @@
-"""Fetch Gaia2's scenarios and file tree at pinned revisions.
+"""Download Gaia2's scenarios and file tree at pinned revisions.
 
     uv run --project datasets/gaia2 python -I datasets/gaia2/download.py
 

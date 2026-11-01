@@ -1,4 +1,4 @@
-"""Fetch EnterpriseOps-Gym at its pinned commit, its seeds and its tasks.
+"""Download EnterpriseOps-Gym at its pinned commit, its seeds and its tasks.
 
     uv run --project datasets/enterpriseops \
         python -I datasets/enterpriseops/download.py

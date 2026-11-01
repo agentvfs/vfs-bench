@@ -1,4 +1,4 @@
-"""Fetch Claw-Eval at its pinned commit.
+"""Download Claw-Eval at its pinned commit.
 
     uv run --project datasets/claweval python -I datasets/claweval/download.py
 

@@ -1,4 +1,4 @@
-"""Fetch LiveClawBench at its pinned commit and install its mocks.
+"""Download LiveClawBench at its pinned commit and install its mocks.
 
     uv run --project datasets/liveclawbench \
         python -I datasets/liveclawbench/download.py

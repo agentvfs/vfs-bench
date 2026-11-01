@@ -1,7 +1,8 @@
 """Write the committed DataSpace tasks from upstream, or check them.
 
     # Upstream's data, into state/.
-    uv run --project datasets/dataspace python -I datasets/dataspace/download.py
+    uv run --project datasets/dataspace \
+        python -I datasets/dataspace/download.py
     uv run --project formats/harbor \
         python -I datasets/dataspace/convert.py [--check] [task ...]
 

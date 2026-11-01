@@ -1,4 +1,4 @@
-"""Fetch the DataSpace tasks this repo ports, without the whole archive.
+"""Download the DataSpace tasks this repo ports, without the whole archive.
 
     uv run --project datasets/dataspace \
         python -I datasets/dataspace/download.py [task_N ...]
