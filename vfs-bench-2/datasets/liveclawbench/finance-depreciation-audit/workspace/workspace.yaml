@@ -10,7 +10,7 @@
 # serves the whole job; this trial is a run of its own on it.
 fakes:
   finance:
-    # Upstream's finance seed and the task's seed.sql (generate.py
+    # Upstream's finance seed and the task's seed.sql (convert.py
     # writes it).
     fixture: fixtures/finance.json
     epoch: '2026-04-03T09:00:00Z'

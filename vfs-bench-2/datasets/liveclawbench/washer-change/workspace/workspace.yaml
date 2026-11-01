@@ -10,7 +10,7 @@
 # each.
 fakes:
   shop:
-    # Upstream's shop seed for the task (generate.py writes it):
+    # Upstream's shop seed for the task (convert.py writes it):
     # its products, and the orders, cart and user files its image
     # starts with.
     fixture: fixtures/shop.json

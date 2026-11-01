@@ -1,5 +1,5 @@
 /**
- * `api_fetch` (tools/api/fetch.py): a full API URL to its service's router,
+ * `api_fetch` (tools/api/download.py): a full API URL to its service's router,
  * as upstream maps it (`_url_to_internal_path`), behind the task's service
  * gate, with a `ValidationError` as a 422.
  */

@@ -10,7 +10,7 @@
 # each.
 fakes:
   mintdiet:
-    # Upstream's seed for the task (generate.py writes it).
+    # Upstream's seed for the task (convert.py writes it).
     fixture: fixtures/mintdiet.json
     epoch: '2026-04-03T09:00:00Z'
     ports: [5003]

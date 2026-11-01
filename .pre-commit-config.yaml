@@ -56,7 +56,7 @@
 # trailing spaces. Their local grader-pin hooks detect drift; keep their
 # bytes intact.
 # vfs-bench-2/datasets/<dataset>/<task>/ is written by the dataset's
-# generate.py, each file upstream's bytes or an edit of them; `generate.py
+# convert.py, each file upstream's bytes or an edit of them; `convert.py
 # --check` holds them to it, and a formatter's rewrite fails it.
 exclude: |
   (?x)^vfs-bench-2/datasets/(dataspace|automationbench|gaia2)/graders/port\.py$|^vfs-bench-2/datasets/claweval/graders/port/.*$|^vfs-bench-2/datasets/claweval/[^/]+/grader\.(py|ts)$|^vfs-bench-2/datasets/[^/]+/[^/]+/(workspace|harbor)/.*$|^vfs-bench-2/datasets/[^/]+/graders/reference/.*$|^vfs-bench-1/(

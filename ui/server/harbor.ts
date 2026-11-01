@@ -19,7 +19,7 @@ import { promisify } from 'node:util'
 import { parse } from 'yaml'
 
 export interface Config {
-  /** The YAML's path from the root, e.g. `datasets/gaia2/jobs/harbor.yaml`. */
+  /** The YAML's path from the root, e.g. `datasets/gaia2/harbor/job.yaml`. */
   file: string
   dataset: string
   tasks: string[]
@@ -243,12 +243,12 @@ export function agentCommands(histfile: string, setup: string[] = []): string[] 
   return out.slice(-8)
 }
 
-/** Every dataset's job configs, `datasets/<dataset>/jobs/*.yaml`, by path from `root`. */
+/** Every dataset's job configs, `datasets/<dataset>/harbor/*.yaml`, by path from `root`. */
 export async function jobConfigs(root: string): Promise<string[]> {
   const out: string[] = []
   for (const dataset of (await readdir(join(root, 'datasets')).catch(() => [] as string[])).sort()) {
-    const names = await readdir(join(root, 'datasets', dataset, 'jobs')).catch(() => [] as string[])
-    for (const name of names.filter((n) => n.endsWith('.yaml')).sort()) out.push(`datasets/${dataset}/jobs/${name}`)
+    const names = await readdir(join(root, 'datasets', dataset, 'harbor')).catch(() => [] as string[])
+    for (const name of names.filter((n) => n.endsWith('.yaml')).sort()) out.push(`datasets/${dataset}/harbor/${name}`)
   }
   return out
 }
@@ -292,7 +292,7 @@ export class Harbor {
     return this.launches.size > 0
   }
 
-  /** The job configs, `datasets/<dataset>/jobs/*.yaml`: each YAML that lists tasks. */
+  /** The job configs, `datasets/<dataset>/harbor/*.yaml`: each YAML that lists tasks. */
   async configs(): Promise<Config[]> {
     const out: Config[] = []
     for (const file of await jobConfigs(this.root)) {
@@ -559,7 +559,7 @@ export class Harbor {
    * `task.toml` and `instruction.md`. Read again when any of them changes.
    */
   async tasks(dataset: string): Promise<TaskBrief[]> {
-    const config = (await this.configs()).find((c) => c.dataset === dataset && c.file === `datasets/${dataset}/jobs/harbor.yaml`) ??
+    const config = (await this.configs()).find((c) => c.dataset === dataset && c.file === `datasets/${dataset}/harbor/job.yaml`) ??
       (await this.configs()).find((c) => c.dataset === dataset)
     if (!config) throw new Error(`No dataset ${dataset}`)
     // The config's version and every task file's, so an edited task is read again.

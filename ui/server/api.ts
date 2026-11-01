@@ -2,7 +2,7 @@
  * The UI's HTTP API, as a Connect-style middleware so Vite's dev
  * server and `main.ts` mount the same thing.
  *
- *   GET  /api/configs              the job configs, datasets/<dataset>/jobs/*.yaml
+ *   GET  /api/configs              the job configs, datasets/<dataset>/harbor/*.yaml
  *   GET  /api/jobs                 every job in the runs folder
  *   GET  /api/job?id=<dir>/<name>  one job's cells, live terminals and status
  *   GET  /api/tasks?dataset=        a dataset's tasks, as their directories describe them
@@ -57,7 +57,7 @@ const isDir = (path: string) => existsSync(path) && statSync(path).isDirectory()
 async function check(benchmark: string, runs: string) {
   if (!isDir(benchmark)) throw new Error(`No folder ${benchmark}`)
   if (!(await jobConfigs(benchmark)).length)
-    throw new Error(`${benchmark} has no datasets/*/jobs/*.yaml configs; is it a vfs-bench-2 checkout?`)
+    throw new Error(`${benchmark} has no datasets/*/harbor/*.yaml configs; is it a vfs-bench-2 checkout?`)
   if (!isDir(runs)) throw new Error(`No folder ${runs}`)
 }
 

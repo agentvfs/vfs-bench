@@ -10,7 +10,7 @@
 # each.
 fakes:
   mintdiet:
-    # Upstream's mint-diet seed (generate.py writes it). Its C1
+    # Upstream's mint-diet seed (convert.py writes it). Its C1
     # fault (c1-food-delete) is upstream's own, keyed by the fixture's
     # TASK_NAME: the first catalog search removes the foods it found,
     # once per run.

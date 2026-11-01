@@ -9,7 +9,7 @@
 # the whole job; this trial is a run of its own on it.
 fakes:
   weather:
-    # Upstream's weather seed (generate.py writes it).
+    # Upstream's weather seed (convert.py writes it).
     fixture: fixtures/weather.json
     epoch: '2026-04-03T09:00:00Z'
     ports: [3000]

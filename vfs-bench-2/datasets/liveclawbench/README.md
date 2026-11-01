@@ -11,23 +11,23 @@ services. Their graders are TypeScript ports of each task's `verify.py`
 From `vfs-bench-2/`:
 
 ```sh
-uv run --project datasets/liveclawbench python -I datasets/liveclawbench/fetch.py
-uv run --project datasets/liveclawbench python -I datasets/liveclawbench/generate.py --check
-uv run --project formats/harbor harbor run -c datasets/liveclawbench/jobs/harbor.yaml -a nop -n 32
-uv run --project formats/harbor harbor run -c datasets/liveclawbench/jobs/harbor.yaml -a oracle -n 32
+uv run --project datasets/liveclawbench python -I datasets/liveclawbench/download.py
+uv run --project datasets/liveclawbench python -I datasets/liveclawbench/convert.py --check
+uv run --project formats/harbor harbor run -c datasets/liveclawbench/harbor/job.yaml -a nop -n 32
+uv run --project formats/harbor harbor run -c datasets/liveclawbench/harbor/job.yaml -a oracle -n 32
 ```
 
 Each task directory is upstream's at the pinned commit, with
 `environment/Dockerfile` replaced by `workspace/workspace.yaml`. Its files
-are of four kinds, and `generate.py` says which is which:
+are of four kinds, and `convert.py` says which is which:
 
 | Kind | Files | Written by |
 |---|---|---|
-| Derived | a rule-A `instruction.md`: the phrases naming the mailbox and calendar changed; a file `EDITS` names, with its fixed edit | `generate.py`, from upstream |
-| Generated | `workspace/fixtures/<service>.json`, the run's seed | `generate.py`, from upstream's seed |
+| Derived | a rule-A `instruction.md`: the phrases naming the mailbox and calendar changed; a file `EDITS` names, with its fixed edit | `convert.py`, from upstream |
+| Generated | `workspace/fixtures/<service>.json`, the run's seed | `convert.py`, from upstream's seed |
 | Ours | `workspace/workspace.yaml`; a rule-A `harbor/solution/solve.sh`; the files `MORE_OURS` names; `harbor/tests/test.sh`, the stub | by hand |
 
-`generate.py --check` fails if a verbatim, derived or generated file differs
+`convert.py --check` fails if a verbatim, derived or generated file differs
 from what upstream gives, if `workspace.yaml`'s `env`, `copy` and `run`
 disagree with upstream's Dockerfile, or if a file is missing or
 unaccounted for.
@@ -75,7 +75,7 @@ at the trial's run of the fake. These tasks differ from upstream:
 - `instruction.md`: only how to reach the mailbox and the calendar
   changes. "(http://localhost:5174/, open it in browser)" becomes "(at
   /gmail, or through the gws CLI)", and the calendar's URL "(at /calendar,
-  or through the gws CLI)". `generate.py`'s `PHRASES` has each task's own
+  or through the gws CLI)". `convert.py`'s `PHRASES` has each task's own
   wording of them, and each phrase must appear exactly once. The finance
   tasks phrase it their own way: the email system's URL and login become
   "at /gmail, or through the gws CLI", and an API reference's section on

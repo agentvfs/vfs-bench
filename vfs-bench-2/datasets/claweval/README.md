@@ -12,14 +12,14 @@ default `google/gemini-3-flash-preview`).
 From `vfs-bench-2/`:
 
 ```sh
-uv run --project datasets/claweval python -I datasets/claweval/fetch.py
-uv run --project formats/harbor python -I datasets/claweval/generate.py --check
-uv run --project formats/harbor harbor run -c datasets/claweval/jobs/harbor.yaml -a nop -n 32
-uv run --project formats/harbor harbor run -c datasets/claweval/jobs/oracle.yaml -a oracle -n 32
+uv run --project datasets/claweval python -I datasets/claweval/download.py
+uv run --project formats/harbor python -I datasets/claweval/convert.py --check
+uv run --project formats/harbor harbor run -c datasets/claweval/harbor/job.yaml -a nop -n 32
+uv run --project formats/harbor harbor run -c datasets/claweval/harbor/oracle.yaml -a oracle -n 32
 ```
 
-`jobs/oracle.yaml` selects all 13 tasks with packaged solutions. The full
-`jobs/harbor.yaml` contains 126 tasks and can run agents or no-op trials in
+`harbor/oracle.yaml` selects all 13 tasks with packaged solutions. The full
+`harbor/job.yaml` contains 126 tasks and can run agents or no-op trials in
 parallel, but the other 113 tasks have no packaged oracle solution.
 
 ## The graders
@@ -35,7 +35,7 @@ they share in `graders/reference/`, with `tasks.json`, the fields of each
 `build.py --check` holds the ports to the sources. Three graders
 (T027zh, T028, T089) quote the config-audit fixtures' planted
 credentials, which GitHub's push protection refuses, so, like those
-fixtures, they and their ports are not committed: `fetch.py` writes them
+fixtures, they and their ports are not committed: `download.py` writes them
 (`build.py --withheld`). The values the
 port computes with are Python's, from `graders/py.ts`: truthiness, `==`
 on lists and dicts, dicts ordered by insertion, strings indexed by code
@@ -80,14 +80,14 @@ and all 293 judge requests were the same.
 
 | File | What it is | Written by |
 |---|---|---|
-| `harbor/instruction.md` | Upstream's prompt, verbatim, after `Current date: <mock_today>` where the task sets one (upstream's system prompt gives it), then `## Tools`: where the mailbox and calendar are mounted and what `gws` does, and each tool as the command that carries it, `helpdesk get-ticket --ticket-id <string>: <upstream's description>` | `generate.py` |
-| `harbor/task.toml` | Upstream's metadata, its time limit, the judge's variables for the verifier | `generate.py` |
-| `workspace/workspace.yaml` | Each service's kit fake at upstream's port, gws for gmail and calendar, the tools as CLIs, `/workspace` | `generate.py` |
-| `workspace/fixtures/<fake>.json` | Each fake's fixture: the lists upstream's service loads for the task | `generate.py`, from upstream's fixtures |
-| `workspace/tools.json` | The tools by CLI, each with its upstream endpoint (`tools.ts`) | `generate.py` |
-| `workspace/files/workspace/` | The task's `sandbox_files`; its PDFs (250 MB, ten OfficeQA tasks) are written but not committed (`.gitignore`) | `generate.py`, from upstream |
-| `workspace/verifier/gws_seed.json` | A gws task's gmail and calendar fixtures, as upstream loads them | `generate.py` |
-| `harbor/solution/solve.sh`, `harbor/solution/reply.md` | The oracle, for twelve tasks; `harbor/solution/trajectory.py` (`trajectory.py`) writes its run as the agent's trajectory | ours; `generate.py` |
+| `harbor/instruction.md` | Upstream's prompt, verbatim, after `Current date: <mock_today>` where the task sets one (upstream's system prompt gives it), then `## Tools`: where the mailbox and calendar are mounted and what `gws` does, and each tool as the command that carries it, `helpdesk get-ticket --ticket-id <string>: <upstream's description>` | `convert.py` |
+| `harbor/task.toml` | Upstream's metadata, its time limit, the judge's variables for the verifier | `convert.py` |
+| `workspace/workspace.yaml` | Each service's kit fake at upstream's port, gws for gmail and calendar, the tools as CLIs, `/workspace` | `convert.py` |
+| `workspace/fixtures/<fake>.json` | Each fake's fixture: the lists upstream's service loads for the task | `convert.py`, from upstream's fixtures |
+| `workspace/tools.json` | The tools by CLI, each with its upstream endpoint (`tools.ts`) | `convert.py` |
+| `workspace/files/workspace/` | The task's `sandbox_files`; its PDFs (250 MB, ten OfficeQA tasks) are written but not committed (`.gitignore`) | `convert.py`, from upstream |
+| `workspace/verifier/gws_seed.json` | A gws task's gmail and calendar fixtures, as upstream loads them | `convert.py` |
+| `harbor/solution/solve.sh`, `harbor/solution/reply.md` | The oracle, for twelve tasks; `harbor/solution/trajectory.py` (`trajectory.py`) writes its run as the agent's trajectory | ours; `convert.py` |
 
 `--check` fails if a written file differs from what upstream gives, if a
 solved task lacks its solution, or if a file is unaccounted for.

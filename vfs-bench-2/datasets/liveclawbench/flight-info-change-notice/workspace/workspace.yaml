@@ -5,7 +5,7 @@
 # `copy`, `run`, `env` and `workdir`, but for the RUNs that install the
 # legacy airline app's Python and npm packages, which nothing here starts
 # (the Bun mock is its backend), and a browser, which the workspace has none
-# of (generate.py's RUN_LEFT_OUT).
+# of (convert.py's RUN_LEFT_OUT).
 #
 # Rule B: Mirage has no such service, so each upstream mock is this repo's
 # kit fake that runs upstream's own app: airline (mocks/airline) and
@@ -20,7 +20,7 @@ fakes:
     # Upstream's airline mock seeds 60 days of flights and their seats as it
     # starts, too many rows to commit: the fake runs that seed on each run,
     # and the fixture is a digest of the tables it leaves under Bun, which
-    # the run's must match (generate.py writes it; mocks/upstream).
+    # the run's must match (convert.py writes it; mocks/upstream).
     # 5173 is the image's proxy to it, where its frontend was.
     fixture: fixtures/airline.json
     epoch: '2026-04-03T09:00:00Z'
@@ -28,7 +28,7 @@ fakes:
     # Where upstream's image keeps its SQLite, which verify.py reads.
     state: /var/lib/mock-data/airline/airline.db
   todolist:
-    # Upstream's todolist seed for the task (generate.py writes it); 3000 is the image's proxy to it.
+    # Upstream's todolist seed for the task (convert.py writes it); 3000 is the image's proxy to it.
     fixture: fixtures/todolist.json
     epoch: '2026-04-03T09:00:00Z'
     ports: [5002, 3000]
@@ -36,7 +36,7 @@ fakes:
     state: /var/lib/mock-data/todolist/todolist.db
   gws:
     # Upstream's email seed for the task, as Gmail messages
-    # (generate.py writes it).
+    # (convert.py writes it).
     fixture: fixtures/gws.json
     epoch: '2026-04-03T09:00:00Z'
     # The run's SQLite, which the ported verify.py reads.

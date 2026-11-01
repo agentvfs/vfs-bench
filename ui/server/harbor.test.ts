@@ -216,13 +216,13 @@ test('a retry from before picks were kept by full id still redoes its attempt', 
 
 test("each dataset's job configs, their tasks named by the directory above harbor/", async () => {
   const root = await mkdtemp(join(tmpdir(), 'ui-'))
-  await mkdir(join(root, 'datasets/demo/jobs'), { recursive: true })
+  await mkdir(join(root, 'datasets/demo/harbor'), { recursive: true })
   await writeFile(
-    join(root, 'datasets/demo/jobs/harbor.yaml'),
+    join(root, 'datasets/demo/harbor/job.yaml'),
     'tasks:\n  - path: datasets/demo/a/harbor\n  - path: datasets/demo/b/harbor\n',
   )
   const [config] = await new Harbor(root).configs()
-  assert.equal(config?.file, 'datasets/demo/jobs/harbor.yaml')
+  assert.equal(config?.file, 'datasets/demo/harbor/job.yaml')
   assert.equal(config?.dataset, 'demo')
   assert.deepEqual(config?.tasks, ['a', 'b'])
 })
