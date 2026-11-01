@@ -1,4 +1,4 @@
-"""Count migration coverage from the seven job configs, not directory names.
+"""Count migration coverage from the eight job configs, not directory names.
 
     uv run --project harbor python -I harbor/grader_inventory.py
 """

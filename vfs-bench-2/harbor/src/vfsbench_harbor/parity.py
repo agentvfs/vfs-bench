@@ -29,6 +29,7 @@ REFERENCE_BACKENDS = {
     "automationbench": "microsandbox",
     "gaia2": "microsandbox",
     "enterpriseops": "microsandbox",
+    "erpbench": "workspace",
 }
 
 

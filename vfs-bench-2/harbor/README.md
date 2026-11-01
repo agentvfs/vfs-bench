@@ -101,7 +101,7 @@ configuration and the existing fake services' storage are unchanged.
 The original Python and shell graders are preserved, with source hashes in
 `graders/manifest.json`. `liveclawbench-pyodide.yaml` explicitly runs those
 references; `MirageParityVerifier` runs both and keeps the reference rewards
-authoritative. Coverage across the seven Mirage-agent job configs is:
+authoritative. Coverage across the eight Mirage-agent job configs is:
 
 | Dataset | Tasks | Preserved reference backend | Native ports |
 |---|---:|---|---:|
@@ -112,11 +112,12 @@ authoritative. Coverage across the seven Mirage-agent job configs is:
 | AutomationBench | 600 | microVM | 600 (Monty 1.4.0) |
 | Gaia2 | 460 | microVM | 460 (Monty 1.4.0) |
 | EnterpriseOps-Gym | 103 | microVM | 103 |
-| Total | 1,452 | | 1,326 |
+| ERPBench-100 | 100 | Mirage/Pyodide | 0 |
+| Total | 1,552 | | 1,326 |
 
 Claw-Eval removes its verifier microVM through a compatibility backend;
 its 126 graders are counted separately from the 1,326 native
-TypeScript/Monty ports. All 1,452 configured tasks have a Mirage backend.
+TypeScript/Monty ports. All 1,552 configured tasks have a Mirage backend.
 Run `grader_inventory.py` for current counts and per-dataset coverage.
 
 EnterpriseOps-Gym's upstream verifier asks each server's SQL runner, so its
@@ -409,6 +410,14 @@ ports must consume recorded responses or judgments to make comparisons stable.
   EnterpriseOps-Gym's servers as kit fakes, a shared layer (Python's
   `sqlite3` and `json`, pydantic's checks, the SQL runner) and each
   server's schema, tools, `config.ts`, `fake.ts` and `main.ts`.
+- `tasks/erpbench/<task>/`: the ERPBench-100 tasks
+  (../erpbench/README.md), their files made from upstream's data not
+  committed; `erpbench.py` writes them, or checks them; `erpbench_grade.py`
+  is each one's `tests/grade.py`; `erpbench.yaml`, their job config;
+  `erpbench_compare.py` checks the fake against upstream's `ErpWorld`.
+- `../mocks/erpbench/`: ERPBench-100's world as one kit fake, its 52 tools
+  ported from upstream's `ErpWorld` (`world.ts`), with Python's JSON and
+  number rules (`py.ts`).
 
 ## The committed tasks
 
@@ -2779,67 +2788,3 @@ of the 154 ambiguity ones.
   `/var/lib/mock-data/gaia2/`, as every committed task's services' are. They
   hold the apps' state and the calls' log, which the CLIs show anyway; the
   oracle is only in the separate verifier workspace.
-
-## ERPBench-100
-
-`tasks/erpbench/<task>/`: all 100 tasks of ERPBench-100
-([blobfishai/erp-agent-simulation](https://github.com/blobfishai/erp-agent-simulation)
-@ `5bdf458`, code Apache-2.0, data CC BY 4.0). A task is one tenant of a
-synthetic ERP world in ten workflow families (order import, shipment
-verification, collections, reorder, receiving and AP match, document
-compliance, shift roll-up, channel order sync, hiring, price lists), over
-six systems: `erpbench`, `oracle_fusion`, `gmail`, `google_drive`,
-`google_sheets` and `slack`, 52 tools on one SQLite file. Upstream's grader
-scores the world's end state, the submitted answers and the call trace:
-reads before the first write, a readback after each write.
-
-```sh
-python3 -I erpbench/setup.py                # upstream, into state/erpbench/src
-python3 -I harbor/erpbench.py [--check] [task ...]
-python3 -I harbor/erpbench_compare.py [task ...] [-v]
-uv run --project harbor harbor run -c harbor/erpbench.yaml -a oracle -n 8 \
-  --ek node=<node 24> -o state/harbor/jobs
-```
-
-| Upstream | Here |
-|---|---|
-| `world` container: `service.py`, `ErpWorld` over a task-local SQLite, MCP over HTTP | The `erpbench` kit fake (`mocks/erpbench/`): `world.ts` ports `ErpWorld._dispatch` and its views statement for statement; a run's file is upstream's seeded world, replayed from `iterdump` |
-| `[[environment.mcp_servers]]`, one per system | One CLI per system (`tools.json`, `harbor/tools.ts`): `oracle-fusion sales-orders create --task-id ...`. Slack's is `slack-tools`, as Mirage registers a `slack` CLI of its own |
-| `evidence.json`: baseline, snapshot, trace | The run's database at `/var/lib/mock-data/erpbench/erpbench.db`, its calls in `_trace`, each entry as `ErpWorld._record` makes it |
-| `tests/verify.py` | Unchanged, in the workspace's `python3` (`erpbench_grade.py` builds its evidence: the baseline from upstream's own `ErpWorld.create`) |
-| `solution/solve.py`, the reference's `oracle_steps` over HTTP | `solution/solve.sh`, the same steps as CLI calls |
-
-`harbor/erpbench.py` writes each task, and what the fake reads outside the
-workspace, `state/erpbench/kit/<task>.json`: upstream's seeded world as
-SQL, the world model and the task fields upstream's tools read. The fixture
-names only the task, so the run's database, which the workspace sees, holds
-the world's tables and never the expected answers or the rubric.
-Upstream's data is not committed: the fixtures, the oracle's CLI calls, and
-the grader with the task it reads are written again from the pinned
-checkout (`.gitignore`).
-
-### Results
-
-- `erpbench_compare.py` runs every task under each of upstream's seven
-  policies (`oracle`, `noop`, `shortcut`, `state_only`, `wrong_source`,
-  `wrong_target`, `overprocess`) and a set of malformed calls per workflow
-  family, against upstream's `ErpWorld` and a run of the fake, the arguments
-  as the CLI sends them: 710 runs, 14,934 calls, no difference in replies,
-  error texts, the 31 tables or the trace.
-- On Harbor, all 100 tasks: the oracle scores 1.0 and doing nothing 0.03,
-  as on upstream's Docker environment. The 0.03 is upstream's
-  `containment:task_scope` (3 points), which passes while nothing changes.
-
-### Divergences
-
-- **Whole floats inside untyped JSON arrays.** The CLI reads a JSON flag
-  with `JSON.parse` and sends it with `JSON.stringify`, so `41180.0` in an
-  order's `lines` arrives as `41180`; the fake restores floats only where
-  the schema types a value `number`. It changes what a few stored payloads
-  look like, and none of the 700 compared rewards.
-- **Replies.** The CLI prints a reply as JSON reparsed in JavaScript, so a
-  whole float shows as `41180` where upstream's MCP text has `41180.0`.
-- **The state file** is visible read-only in the workspace, as every
-  committed task's is. It holds what the CLIs show and the calls' log.
-- The Mirage daemon needs Node 24 (`--ek node=`); Node 26 drops
-  `--experimental-transform-types`.

@@ -198,13 +198,13 @@ class ParityTests(helpers.MirageVerifierTests):
         self.assertIn("reward",
                       differences({"reward": 0}, {"reward": float("nan")}))
 
-    def test_job_config_inventory_is_1452_not_24(self):
+    def test_job_config_inventory_is_1552_not_24(self):
         spec = importlib.util.spec_from_file_location(
             "inventory", HARBOR / "grader_inventory.py")
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         result = module.inventory()
-        self.assertEqual(result["total"], 1452)
+        self.assertEqual(result["total"], 1552)
         self.assertEqual({
             k: v["tasks"]
             for k, v in result["datasets"].items()
@@ -216,6 +216,7 @@ class ParityTests(helpers.MirageVerifierTests):
             "automationbench": 600,
             "gaia2": 460,
             "enterpriseops": 103,
+            "erpbench": 100,
         })
         self.assertEqual(result["native_candidates"], 1326)
         self.assertEqual(result["compatibility_candidates"], 126)
