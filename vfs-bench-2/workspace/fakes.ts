@@ -121,10 +121,10 @@ async function main(): Promise<void> {
   const ours = mockDir(service)
   if (ours !== undefined) ensureClient(service, ours)
   const run = new Run(`fakes-${service}`, root)
-  // EnterpriseOps-Gym's fakes answer their verifier queries there (fake-state.ts).
+  // EnterpriseOps-Gym's and ERPBench-100's fakes answer their verifier queries there (fake-state.ts).
   const stateView =
     Boolean(process.env.VFSBENCH_STATE_TOKEN) &&
-    (['airline', 'automationbench', 'chat', 'expense', 'finance', 'gws', 'health', 'insurance', 'mintdiet', 'smarthome', 'social', 'workspace'].includes(service) ||
+    (['airline', 'automationbench', 'chat', 'erpbench', 'expense', 'finance', 'gws', 'health', 'insurance', 'mintdiet', 'smarthome', 'social', 'workspace'].includes(service) ||
       service.startsWith('enterpriseops_') || service.startsWith('gaia2_'))
   const entry = stateView ? join(ROOT, 'workspace/fake-entry.ts') : ours !== undefined ? join(ours, 'main.ts') : undefined
   const spec = kit(run, service, fixture, entry)

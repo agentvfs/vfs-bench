@@ -1,0 +1,5 @@
+# Upstream's data, which fetch.py writes from the pinned checkout
+# (generate.py): each task's task.json, which the grader reads, and the
+# oracle's CLI calls.
+/*/workspace/verifier/task.json
+/*/harbor/solution/

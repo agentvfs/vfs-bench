@@ -99,10 +99,10 @@ test('concurrent verifiers return their own rewards and errors produce no score'
 })
 
 test('native grading has no host filesystem, database, or subprocess imports', () => {
-  // The TypeScript graders: LiveClawBench's, EnterpriseOps-Gym's and
-  // Claw-Eval's, its port included.
+  // The TypeScript graders: LiveClawBench's, EnterpriseOps-Gym's,
+  // Claw-Eval's, its port included, and ERPBench-100's.
   const datasets = join(HERE, '..', 'datasets')
-  const sources = ['liveclawbench', 'enterpriseops', 'claweval'].flatMap((dataset) =>
+  const sources = ['liveclawbench', 'enterpriseops', 'claweval', 'erpbench'].flatMap((dataset) =>
     readdirSync(join(datasets, dataset, 'graders'), { recursive: true, encoding: 'utf8' })
       .filter((f) => f.endsWith('.ts'))
       .map((f) => join(datasets, dataset, 'graders', f))

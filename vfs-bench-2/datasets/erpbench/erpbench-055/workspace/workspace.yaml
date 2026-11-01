@@ -1,0 +1,28 @@
+# erpbench-055, on vfsbench_harbor's mirage environment (datasets/erpbench/generate.py writes it).
+#
+# The task's world is the erpbench kit fake (mocks/erpbench), seeded with
+# the world upstream builds for the task (state/erpbench/kit/, outside the
+# workspace), its clock at upstream's as-of time. Its tools are one CLI per
+# system (tools.json, workspace/tools.ts). MirageVerifier grades it
+# natively, from the fake's private state view.
+fakes:
+  erpbench:
+    fixture: fixtures/erpbench.json
+    epoch: '2026-02-09T09:00:00Z'
+tools:
+  file: tools.json
+  dispatches: /var/lib/mock-data/erpbench/dispatches.jsonl
+workspace:
+  profiles:
+    default:
+      commands:
+        deny:
+        - commands: [curl, wget]
+          reason: the systems are reached through their CLIs
+  clis:
+    erpbench: {cli: erpbench, config: {url: '${ERPBENCH_URL}'}}
+    oracle-fusion: {cli: oracle-fusion, config: {url: '${ERPBENCH_URL}'}}
+    gmail: {cli: gmail, config: {url: '${ERPBENCH_URL}'}}
+    google-drive: {cli: google-drive, config: {url: '${ERPBENCH_URL}'}}
+    google-sheets: {cli: google-sheets, config: {url: '${ERPBENCH_URL}'}}
+    slack-tools: {cli: slack-tools, config: {url: '${ERPBENCH_URL}'}}

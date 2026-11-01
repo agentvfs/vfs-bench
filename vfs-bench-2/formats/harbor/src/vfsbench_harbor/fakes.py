@@ -203,7 +203,8 @@ class SharedFakes:
                        queries: list[str] = ()) -> dict:
         """Read the fake's private JSON view through its async client: each
         table's rows, and each query's as ``query-<i>`` where the fake
-        answers its verifier's SQL itself (EnterpriseOps-Gym)."""
+        answers it itself: its verifier's SQL (EnterpriseOps-Gym) or a view
+        its grader reads (ERPBench-100)."""
         fake = self._fakes[run.service]
         async with httpx.AsyncClient(timeout=120) as client:
             response = await client.get(

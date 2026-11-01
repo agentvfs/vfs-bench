@@ -58,6 +58,7 @@ vfs-bench-2/
 | [ComplexMCP](datasets/complexmcp/README.md) | ATH-MaaS/complex-mcp | 47 | Monty |
 | [DataSpace](datasets/dataspace/README.md) | HKUSTDial/DataSpace | 46 | Monty |
 | [EnterpriseOps-Gym](datasets/enterpriseops/README.md) | ServiceNow/EnterpriseOps-Gym | 103 | TypeScript |
+| [ERPBench-100](datasets/erpbench/README.md) | blobfishai/erp-agent-simulation | 100 | TypeScript |
 | [Gaia2](datasets/gaia2/README.md) | Meta's ARE, gaia2-cli | 460 | Monty |
 
 ## Setup

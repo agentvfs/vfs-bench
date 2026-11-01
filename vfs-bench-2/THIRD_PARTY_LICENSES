@@ -120,6 +120,23 @@ Claw-Eval
              graders/models.ts ports its models.
 
 
+ERPBench-100 (Blobfish AI's ERP Agent Simulation)
+  Source:    https://github.com/blobfishai/erp-agent-simulation
+             @ 5bdf458165fee71f6a7965ea30ca33dfbbce1332
+  License:   code Apache-2.0, Copyright 2026 Blobfish AI (its LICENSE and
+             NOTICE: "This product includes software developed by
+             Blobfish AI."); the ERPBench-100 dataset content CC BY 4.0,
+             Copyright 2026 Blobfish AI (its LICENSE-DATA).
+  Fetched:   the repository, by datasets/erpbench/fetch.py.
+  Committed: the tasks' instruction.md quote each task's instruction and
+             list its tools' descriptions, and their workspace/tools.json
+             carry the tools' descriptions and schemas;
+             mocks/erpbench/world.ts ports the world's tools
+             (erpbench100/world.py) to TypeScript, and graders/index.ts its
+             grader (erpbench100/evaluation.py); graders/manifest.json
+             carries the grader's scoring constants.
+
+
 Runtime
 -------
 
