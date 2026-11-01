@@ -60,7 +60,6 @@ DAEMON = ROOT / "submodule/mirage/typescript/packages/server/src/bin/daemon.ts"
 MODEL_ENV = re.compile(r".*_API_KEY|OPENAI_BASE_URL|OPENAI_API_BASE")
 NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 SQLITE = b"SQLite format 3\x00"
-DONE = {"done", "failed", "canceled"}
 
 # The characters JavaScript's encodeURIComponent leaves as they are, as the
 # fake escapes a file's path (mocks/upstream/fake.ts).
@@ -417,10 +416,16 @@ class MirageEnvironment(BaseEnvironment):
         self._client = httpx.AsyncClient(base_url=url,
                                          timeout=httpx.Timeout(60, read=None))
         self._workspace_id = re.sub(r"[^A-Za-z0-9_-]", "-", self.session_id)
+        # The workspace's clock starts at the trial's time (Mirage's
+        # system_time): `date`, file times and the runtimes read it.
+        config = dict(plan["config"])
+        if self._epoch is not None:
+            config["system_time"] = self.now().isoformat(
+                timespec="milliseconds")
         reply = await self._client.post("/v1/workspaces",
                                         json={
                                             "id": self._workspace_id,
-                                            "config": plan["config"]
+                                            "config": config
                                         })
         if reply.status_code >= 300:
             raise RuntimeError("creating the workspace failed "
@@ -500,51 +505,28 @@ class MirageEnvironment(BaseEnvironment):
             for name, value in (self._merge_env(env) or {}).items()
             if NAME.fullmatch(name))
         await self.refresh_state()
-        reply = await self._client.post(
-            f"/v1/workspaces/{self._workspace_id}/shell",
-            params={"background": "true"},
-            json={
-                "command": exports + command,
-                "cwd": cwd or self._workdir
-            },
-        )
-        reply.raise_for_status()
-        job = reply.json()["job_id"]
+        # The daemon cancels a line whose caller drops it, so a timeout or a
+        # canceled exec (asyncio.wait_for, a trial's timeout) leaves nothing
+        # running behind it to overlap what comes next.
         try:
-            detail = await self._wait(job, timeout_sec)
-        except asyncio.CancelledError:
-            # A canceled exec (asyncio.wait_for, a trial's timeout) leaves
-            # nothing running behind it to overlap what comes next.
-            await asyncio.shield(self._client.delete(f"/v1/jobs/{job}"))
-            raise
-        if detail["status"] != "done":
-            raise RuntimeError(f"the workspace's shell {detail['status']}: "
-                               f"{detail.get('error')}")
-        result = detail["result"]
+            reply = await asyncio.wait_for(
+                self._client.post(
+                    f"/v1/workspaces/{self._workspace_id}/shell",
+                    json={
+                        "command": exports + command,
+                        "cwd": cwd or self._workdir
+                    },
+                ), timeout_sec)
+        except TimeoutError:
+            raise RuntimeError(
+                f"Command timed out after {timeout_sec} seconds") from None
+        if reply.status_code >= 300:
+            raise RuntimeError(f"the workspace's shell failed "
+                               f"({reply.status_code}): {reply.text}")
+        result = reply.json()
         return ExecResult(stdout=result["stdout"],
                           stderr=result["stderr"],
                           return_code=result["exit_code"])
-
-    async def _wait(self, job: str, timeout_sec: int | None) -> dict:
-        """The shell job's detail once it ends; past ``timeout_sec`` the job
-        is canceled and this raises."""
-        assert self._client is not None
-        started = time.monotonic()
-        while True:
-            left = None if timeout_sec is None else timeout_sec - (
-                time.monotonic() - started)
-            waited = await self._client.post(
-                f"/v1/jobs/{job}/wait",
-                json={} if left is None else {"timeout_s": max(left, 0)},
-            )
-            waited.raise_for_status()
-            detail = waited.json()
-            if detail["status"] in DONE:
-                return detail
-            if left is not None and time.monotonic() - started >= timeout_sec:
-                await self._client.delete(f"/v1/jobs/{job}")
-                raise RuntimeError(
-                    f"Command timed out after {timeout_sec} seconds")
 
     def _refresh_state(self, *, files_only: bool = False) -> None:
         """Bring each mock's state file in the workspace up to date; one

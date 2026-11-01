@@ -48,7 +48,7 @@ workspace, then starts the trial's daemon and creates the workspace on it.
 | The image runs the services on fixed ports | The job's shared kit fakes, the trial a run of each. `localhost:<upstream port>` and `127.0.0.1:<upstream port>` reach them |
 | The services' data at `/var/lib/mock-data/...`, `/opt/mock/data/...` | The same paths, mounted read-only, holding a copy of each state file taken before every `exec` |
 | `ENV`, `COPY`, `RUN`, `WORKDIR` | `env`, `copy` (from `workspace/files/`), `run` and `workdir` in `workspace.yaml` |
-| `exec` | `POST /v1/workspaces/:id/shell?background=true`, then `POST /v1/jobs/:id/wait` |
+| `exec` | `POST /v1/workspaces/:id/shell`; a timeout drops the request, which cancels the line |
 | `/workspace`, `/logs`, `/tests`, `/solution`, `/tmp` | Disk mounts on directories under the trial's run dir |
 | `upload_*`, `download_*` | Copies into and out of those directories |
 | `python3` | Pyodide, from `workspace/python.py`'s bundle |
@@ -153,12 +153,15 @@ LiveClawBench's tasks), as their fixtures were seeded; in upstream's container
 the mocks seed relative to the wall clock, and the agent reads that same
 clock. Here the agent runs on the host, so both its CLI and the workspace
 would read the host's date and zone. Three things make them the trial's:
-- **The workspace.** The daemon's clock is the run's epoch when the trial
-  started, moving on since (`clock.ts`, loaded by the preload): `date`, file
-  times and Python's `time` and `datetime`. Mirage starts Pyodide's worker
-  with execArgv of its own, which drops the preload, so the preload wraps
-  `worker_threads.Worker` to give every worker `clock.ts` too. Mirage has no
-  clock setting for a workspace; this stands in for one.
+- **The workspace.** Its clock starts at the trial's time, the run's epoch
+  when the trial started, moving on since: the environment sends it as the
+  workspace's `system_time`, which `date`, file times and Python's `time` and
+  `datetime` read. A few parts of Mirage still read the host's clock: `/gcal`
+  and `/discord` list the days around the host's date, and curl's cookie jar
+  expires cookies by it. So the daemon's own clock is the run's too
+  (`clock.ts`, loaded by the preload). Mirage starts Pyodide's worker with
+  execArgv of its own, which drops the preload, so the preload wraps
+  `worker_threads.Worker` to give every worker `clock.ts` too.
 - **The model.** Codex tells the model `<current_date>` and `<timezone>`,
   Claude Code "Today's date is", from the host. Neither takes a date, and
   both run under the hardened runtime, which a faked clock (libfaketime)

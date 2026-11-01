@@ -35,7 +35,7 @@
  *                                # where the verifier reads their calls
  *
  * The fakes' epoch (one for all) is the run's, which the workspace's clock
- * starts at too (clock.ts).
+ * starts at too (the environment sends it as `system_time`).
  *
  * The environment starts the fakes and resets this trial's run on each
  * before this runs, and hands their run URLs and files in (`--fakes`).
@@ -82,7 +82,7 @@ export interface Plan {
    * path the verifier reads their dispatch log at.
    */
   tools?: { file: string; dispatches: string }
-  /** The run's epoch, which the workspace's clock starts at (clock.ts). */
+  /** The run's epoch, which the workspace's clock starts at (`system_time`). */
   epoch?: string
 }
 

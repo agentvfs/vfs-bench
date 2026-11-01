@@ -120,25 +120,19 @@ class AgentTrajectory(unittest.TestCase):
                              self.source.read_bytes())
             return environment.httpx.Response(
                 200,
-                json={"job_id": "verify"},
-                request=environment.httpx.Request("POST",
-                                                  "http://mirage/shell"))
-
-        async def wait(*args):
-            return {
-                "status": "done",
-                "result": {
+                json={
+                    "kind": "io",
                     "stdout": "",
                     "stderr": "",
                     "exit_code": 0
-                }
-            }
+                },
+                request=environment.httpx.Request("POST",
+                                                  "http://mirage/shell"))
 
         self.env._client = SimpleNamespace(post=post)
         self.env._workspace_id = "trial"
         self.env._workdir = "/workspace"
         self.env._merge_env = lambda env: env
-        self.env._wait = wait
         asyncio.run(self.env.exec("bash /tests/test.sh"))
 
     def test_no_host_trajectory_preserves_oracle_file(self) -> None:
