@@ -36,6 +36,7 @@ from vfsbench_harbor.dataspace_verifier import \
 from vfsbench_harbor.dataspace_verifier import freeze as freeze_dataspace
 from vfsbench_harbor.enterpriseops_verifier import definitions as enterpriseops
 from vfsbench_harbor.environment import HARBOR, ROOT, MirageEnvironment
+from vfsbench_harbor.erpbench_verifier import definitions as erpbench
 from vfsbench_harbor.gaia2_verifier import definitions as gaia2_definitions
 from vfsbench_harbor.gaia2_verifier import freeze as freeze_gaia2
 
@@ -201,6 +202,7 @@ class MirageVerifier(Verifier):
         manifest.update(dataspace_definitions())
         manifest.update(automationbench_definitions())
         manifest.update(enterpriseops())
+        manifest.update(erpbench())
         manifest.update(gaia2_definitions())
         manifest.update(claweval_definitions())
         definition = manifest.get(task)

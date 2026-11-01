@@ -90,6 +90,44 @@ export function pyInt(x: unknown): number | bigint {
   throw typeError(`int() argument must be a string, a bytes-like object or a real number, not '${pyType(x)}'`)
 }
 
+/**
+ * `json.loads` of what `json.dumps` writes: a number with a point or an
+ * exponent a `PyFloat`, an int past 2^53 a bigint, and the `NaN`,
+ * `Infinity` and `-Infinity` tokens JSON lacks.
+ */
+export function pyLoads<T>(text: string): T {
+  // Each non-JSON token becomes a string carrying a mark no data can hold.
+  const mark = `\u0000${crypto.randomUUID()}`
+  let json = text
+  if (/NaN|Infinity/.test(text)) {
+    json = ''
+    let quoted = false
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i]!
+      if (quoted) {
+        json += c
+        if (c === '\\') json += text[++i] ?? ''
+        else if (c === '"') quoted = false
+        continue
+      }
+      const token = /^(?:-?Infinity|NaN)/.exec(text.slice(i, i + 9))?.[0]
+      if (token) {
+        json += JSON.stringify(mark + token)
+        i += token.length - 1
+      } else {
+        quoted = c === '"'
+        json += c
+      }
+    }
+  }
+  return JSON.parse(json, (_key, value: unknown, context?: { source?: string }) => {
+    if (typeof value === 'string' && value.startsWith(mark)) return new PyFloat(Number(value.slice(mark.length)))
+    if (typeof value !== 'number' || context?.source === undefined) return value
+    if (/[.eE]/.test(context.source)) return new PyFloat(value)
+    return Number.isSafeInteger(value) ? value : BigInt(context.source)
+  }) as T
+}
+
 /** `deepcopy` of a JSON value, floats kept floats. */
 export function deepcopy<T>(v: T): T {
   if (Array.isArray(v)) return v.map(deepcopy) as T

@@ -9,8 +9,11 @@ systems (``erpbench``, ``oracle_fusion``, ``gmail``, ``google_drive``,
 ``google_sheets``, ``slack``), 52 tools over one SQLite file, graded on the
 world's end state, the agent's answers and its call trace. Here the world
 is one kit fake, ``mocks/erpbench/``, a TypeScript port of upstream's tools
-over the same SQLite tables; each system is a CLI (``harbor/tools.ts``);
-upstream's own grader scores the run's database (``erpbench_grade.py``).
+over the same SQLite tables; each system is a CLI (``harbor/tools.ts``).
+``graders/erpbench.ts`` grades natively (``MirageVerifier``). The reference
+is upstream's own grader, ``tests/verify.py``, which ``tests/grade.py``
+(``erpbench_grade.py``) runs unchanged on the run's database in the
+workspace's ``python3``.
 
 Each task under ``harbor/tasks/erpbench/<task>/`` has:
 
@@ -24,13 +27,21 @@ Each task under ``harbor/tasks/erpbench/<task>/`` has:
   upstream's grader and what it reads. Not committed.
 - ``solution/solve.sh``: upstream's oracle steps as CLI calls. Not committed.
 
-It also writes what the fake reads outside the workspace,
+It also writes ``harbor/erpbench.yaml`` (native grading),
+``harbor/erpbench-pyodide.yaml`` (the reference) and the native grader's
+manifest, ``graders/erpbench/manifest.json``: upstream's scoring constants,
+and per task the hashes of the reference files it ports, its input
+(``tests/task.json``) and the fake's state-view queries.
+
+And what the fake reads outside the workspace,
 ``state/erpbench/kit/<task>.json``: the world upstream seeds for the task
 (its SQLite as SQL), the task fields and world model upstream's tools read,
 and the tools. The run's database is in the agent's workspace, read-only,
-so it carries the world's tables alone, never the answers.
+so it carries the world's tables, the call log (``_trace``) and the task's
+id (``_seed``), never the expected answers or the rubric.
 """
 import argparse
+import hashlib
 import json
 import shlex
 import shutil
@@ -46,6 +57,7 @@ UPSTREAM = (STATE / "src" / "benchmark" / "erpbench100" / "release" /
             "harbor" / "tasks")
 KIT = STATE / "kit"
 GRADE = HARBOR / "erpbench_grade.py"
+MANIFEST = HARBOR / "graders" / "erpbench" / "manifest.json"
 COMMIT = "5bdf458165fee71f6a7965ea30ca33dfbbce1332"
 SERVERS = ("erpbench", "oracle_fusion", "gmail", "google_drive",
            "google_sheets", "slack")
@@ -56,9 +68,18 @@ RUNTIME_TASK = ("task_id", "prompt", "tenant_code", "company", "answer_schema",
                 "decision_options", "status_options", "register_contract",
                 "allowed_write_tools")
 
-sys.path.insert(0, str(UPSTREAM / "erpbench-001" / "environment"))
-from erpbench100.spec import AS_OF, world_model  # noqa: E402
-from erpbench100.world import ErpWorld, tool_definitions  # noqa: E402
+sys.path.insert(0, str(UPSTREAM / "erpbench-001" / "tests"))
+from erpbench100.evaluation import COMMON_WRITE_TABLES  # noqa: E402
+from erpbench100.evaluation import FAMILY_WRITE_TABLES  # noqa: E402
+from erpbench100.spec import AS_OF  # noqa: E402
+from erpbench100.spec import METRIC  # noqa: E402
+from erpbench100.spec import NUMERIC_FIELDS  # noqa: E402
+from erpbench100.spec import SCORING_CATEGORIES  # noqa: E402
+from erpbench100.spec import world_model  # noqa: E402
+from erpbench100.world import IMMUTABLE_TABLES  # noqa: E402
+from erpbench100.world import WRITE_TOOLS  # noqa: E402
+from erpbench100.world import ErpWorld  # noqa: E402
+from erpbench100.world import tool_definitions  # noqa: E402
 
 # Mirage registers a `slack` CLI of its own, and a name is registered once.
 CLI_NAMES = {"slack": "slack-tools"}
@@ -278,19 +299,78 @@ GITIGNORE = """\
 """
 
 
-def job_yaml(tasks: list[str]) -> str:
+def job_yaml(tasks: list[str], native: bool) -> str:
+    if native:
+        about = [
+            "Mirage agents and native Mirage grading.",
+            "The reference grader is in erpbench-pyodide.yaml."
+        ]
+        verifier = "vfsbench_harbor:MirageVerifier"
+    else:
+        about = [
+            "Mirage agents and upstream's grader in the workspace's python3.",
+            "Use MirageParityVerifier to compare these scores with the "
+            "native port.",
+        ]
+        verifier = "harbor.verifier.verifier:Verifier"
     lines = [
-        "# All ERPBench-100 tasks: Mirage agent, upstream's grader in the "
-        "workspace's python3.",
+        f"# All ERPBench-100 tasks: {about[0]}",
+        f"# {about[1]}",
         "# Write the tasks with harbor/erpbench.py first.",
         "environment:",
         "  import_path: vfsbench_harbor:MirageEnvironment",
         "verifier:",
-        "  import_path: harbor.verifier.verifier:Verifier",
+        f"  import_path: {verifier}",
         "tasks:",
     ]
     lines += [f"  - path: harbor/tasks/erpbench/{task}" for task in tasks]
     return "\n".join(lines) + "\n"
+
+
+# The reference grader's files, pinned: graders/erpbench.ts ports verify.py
+# and what it calls (evaluation.py, spec.py's register row, world.py's write
+# tools); test.sh and grade.py run it. A changed one must be ported again
+# before MirageVerifier grades the task.
+PORTED = ("test.sh", "grade.py", "verify.py", "erpbench100/evaluation.py",
+          "erpbench100/spec.py", "erpbench100/world.py")
+
+
+def manifest(tests: dict[str, dict[str, bytes]]) -> dict:
+    """The native grader's manifest: upstream's scoring constants, and each
+    task's reference hashes, input and state-view queries."""
+    return {
+        "constants": {
+            "metric": METRIC,
+            "write_tools": sorted(WRITE_TOOLS),
+            "immutable_tables": list(IMMUTABLE_TABLES),
+            "common_write_tables": sorted(COMMON_WRITE_TABLES),
+            "family_write_tables": {
+                k: sorted(v)
+                for k, v in FAMILY_WRITE_TABLES.items()
+            },
+            "numeric_fields": {
+                k: list(v)
+                for k, v in NUMERIC_FIELDS.items()
+            },
+            "scoring_categories": [row["key"] for row in SCORING_CATEGORIES],
+        },
+        "tasks": {
+            name: {
+                "files": {
+                    rel: hashlib.sha256(files[rel]).hexdigest()
+                    for rel in PORTED
+                },
+                "inputs": ["/tests/task.json"],
+                "native_state": {
+                    "erpbench": {
+                        "service": "erpbench",
+                        "queries": ["baseline", "snapshot", "trace", "model"],
+                    }
+                },
+            }
+            for name, files in sorted(tests.items())
+        },
+    }
 
 
 def main() -> int:
@@ -312,6 +392,7 @@ def main() -> int:
             path.write_bytes(data)
 
     every = sorted(p.name for p in UPSTREAM.glob("erpbench-*") if p.is_dir())
+    tests: dict[str, dict[str, bytes]] = {}
     for name in args.tasks or every:
         src = UPSTREAM / name
         if not src.is_dir():
@@ -319,6 +400,11 @@ def main() -> int:
             failed += 1
             continue
         committed, ignored = task_files(src)
+        tests[name] = {
+            rel.removeprefix("tests/"): data
+            for rel, data in (committed | ignored).items()
+            if rel.startswith("tests/")
+        }
         target = OUT / name
         if not args.check and (target / "tests" / "erpbench100").is_dir():
             shutil.rmtree(target / "tests" / "erpbench100")
@@ -337,7 +423,9 @@ def main() -> int:
             print(f"written {name}")
     if not args.tasks:
         put(OUT / ".gitignore", GITIGNORE.encode())
-        put(HARBOR / "erpbench.yaml", job_yaml(every).encode())
+        put(HARBOR / "erpbench.yaml", job_yaml(every, True).encode())
+        put(HARBOR / "erpbench-pyodide.yaml", job_yaml(every, False).encode())
+        put(MANIFEST, (json.dumps(manifest(tests), indent=1) + "\n").encode())
     print(f"{len(args.tasks or every)} tasks" +
           (f", {failed} failures" if failed else ""))
     return 1 if failed else 0

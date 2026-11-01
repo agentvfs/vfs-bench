@@ -12,6 +12,7 @@ import { WORKSPACE_GRADERS } from './workspace.ts'
 import { SOCIAL_GRADERS } from './social.ts'
 import { SMARTHOME_GRADERS } from './smarthome.ts'
 import { ENTERPRISEOPS_GRADERS } from './enterpriseops.ts'
+import { ERPBENCH_GRADERS } from './erpbench.ts'
 import { safety } from './safety.ts'
 
 export const GRADERS: Readonly<Record<string, Grader>> = Object.freeze({
@@ -27,6 +28,7 @@ export const GRADERS: Readonly<Record<string, Grader>> = Object.freeze({
   ...SOCIAL_GRADERS,
   ...SMARTHOME_GRADERS,
   ...ENTERPRISEOPS_GRADERS,
+  ...ERPBENCH_GRADERS,
 })
 export async function evaluate(input: InputSpec, command: CommandContext) {
   const grader = GRADERS[input.task]

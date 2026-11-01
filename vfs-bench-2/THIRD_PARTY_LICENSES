@@ -137,7 +137,10 @@ ERPBench-100 (Blobfish AI's ERP Agent Simulation)
              instruction and list its tools' descriptions;
              harbor/tasks/erpbench/*/environment/tools.json carry the tools'
              descriptions and schemas; mocks/erpbench/world.ts ports the
-             world's tools (erpbench100/world.py) to TypeScript.
+             world's tools (erpbench100/world.py) to TypeScript, and
+             harbor/graders/erpbench.ts its grader
+             (erpbench100/evaluation.py); harbor/graders/erpbench/
+             manifest.json carries the grader's scoring constants.
 
 
 Runtime

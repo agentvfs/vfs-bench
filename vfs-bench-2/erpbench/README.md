@@ -25,6 +25,11 @@ uv run --project harbor harbor run -c harbor/erpbench.yaml -a oracle -n 8 \
   --ek node=<node 24> -o state/harbor/jobs
 ```
 
+`harbor/erpbench.yaml` grades natively (`MirageVerifier`);
+`harbor/erpbench-pyodide.yaml` runs upstream's grader instead, and
+`--verifier vfsbench_harbor:MirageParityVerifier` runs both and compares
+them.
+
 `harbor/erpbench.py` writes each task, and what the fake reads outside the
 workspace, `state/erpbench/kit/<task>.json`: upstream's seeded world as
 SQL, the world model and the task fields upstream's tools read. The fixture
@@ -41,7 +46,7 @@ checkout (`harbor/tasks/erpbench/.gitignore`).
 | `world` container: `service.py`, `ErpWorld` over a task-local SQLite, MCP over HTTP | The `erpbench` kit fake (`mocks/erpbench/`), one Node process per Harbor job and a run per trial: `world.ts` ports `ErpWorld._dispatch` and its views statement for statement; a run's file is upstream's seeded world, replayed from `iterdump` |
 | `[[environment.mcp_servers]]`, one per system | One CLI per system (`tools.json`, `harbor/tools.ts`): `oracle-fusion sales-orders create --task-id ...`. Slack's is `slack-tools`, as Mirage registers a `slack` CLI of its own |
 | `evidence.json`: baseline, snapshot, trace | The run's database at `/var/lib/mock-data/erpbench/erpbench.db`, its calls in `_trace`, each entry as `ErpWorld._record` makes it |
-| `tests/verify.py` | Unchanged, in the workspace's `python3` (`harbor/erpbench_grade.py` builds its evidence: the baseline from upstream's own `ErpWorld.create`) |
+| `tests/verify.py` | Ported to TypeScript, `harbor/graders/erpbench.ts`, on `MirageVerifier`: the fake's state view serves the grader the seeded world, the world now, the trace and the world model, as `json.dumps` text, and `tests/task.json` the rubric; no SQLite, Python or VM in grading. The reference is `verify.py` unchanged, in the workspace's `python3` (`harbor/erpbench_grade.py` builds its evidence: the baseline from upstream's own `ErpWorld.create`) |
 | `solution/solve.py`, the reference's `oracle_steps` over HTTP | `solution/solve.sh`, the same steps as CLI calls |
 
 The six systems stay in one fake rather than Mirage's integ fakes: every
@@ -57,7 +62,11 @@ family, against upstream's `ErpWorld` and a fresh run of the fake, the
 arguments as the CLI sends them: 710 runs, 14,934 calls, no difference in
 replies, error texts, the 31 tables (after each seed and at the end) or the
 trace. Upstream's grader over the fake's end state gives upstream's reward
-for all 700 task × policy runs.
+for all 700 task × policy runs. `harbor/erpbench-grader.test.ts` checks the
+native grader on the end states those policies never reach (answers within or past 0.005, figures in other
+formats, labels for ids, register rows misplaced, out-of-scope writes, a
+second record, values upstream raises on): upstream's `score_episode` and
+the native grader must agree on each.
 
 ## Oracle
 

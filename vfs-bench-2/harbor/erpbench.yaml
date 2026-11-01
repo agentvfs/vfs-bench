@@ -1,9 +1,10 @@
-# All ERPBench-100 tasks: Mirage agent, upstream's grader in the workspace's python3.
+# All ERPBench-100 tasks: Mirage agents and native Mirage grading.
+# The reference grader is in erpbench-pyodide.yaml.
 # Write the tasks with harbor/erpbench.py first.
 environment:
   import_path: vfsbench_harbor:MirageEnvironment
 verifier:
-  import_path: harbor.verifier.verifier:Verifier
+  import_path: vfsbench_harbor:MirageVerifier
 tasks:
   - path: harbor/tasks/erpbench/erpbench-001
   - path: harbor/tasks/erpbench/erpbench-002

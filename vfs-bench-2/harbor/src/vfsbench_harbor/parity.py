@@ -1,6 +1,6 @@
 """Check a Mirage backend against the original grade on the same state.
 
-Use --verifier vfsbench_harbor:MirageParityVerifier with any of the seven
+Use --verifier vfsbench_harbor:MirageParityVerifier with any of the eight
 Mirage-agent job configs. Unported tasks still run their original grader;
 they are explicitly reported as unported, never as parity successes.
 """
@@ -17,6 +17,7 @@ from vfsbench_harbor.complexmcp_verifier import definitions
 from vfsbench_harbor.dataspace_verifier import \
     definitions as dataspace_definitions
 from vfsbench_harbor.enterpriseops_verifier import definitions as enterpriseops
+from vfsbench_harbor.erpbench_verifier import definitions as erpbench
 from vfsbench_harbor.gaia2_verifier import definitions as gaia2_definitions
 from vfsbench_harbor.microsandbox import MicrosandboxVerifier
 from vfsbench_harbor.mirage_verifier import MANIFEST, MirageVerifier
@@ -59,10 +60,11 @@ class MirageParityVerifier(Verifier):
         (default True), retaining reference rewards and the parity report.
     require_native: also fail unported tasks (default False).
 
-    The 70 LiveClawBench, 47 ComplexMCP, 46 DataSpace, 600 AutomationBench
-    and 103 EnterpriseOps-Gym graders have native ports. GAIA2 adds 460
-    ports with recorded judge calls and oracle order. Claw-Eval has a
-    Pyodide compatibility backend with raw judge request/response replay.
+    The 70 LiveClawBench, 47 ComplexMCP, 46 DataSpace, 600 AutomationBench,
+    103 EnterpriseOps-Gym and 100 ERPBench-100 graders have native ports.
+    GAIA2 adds 460 ports with recorded judge calls and oracle order.
+    Claw-Eval has a Pyodide compatibility backend with raw judge
+    request/response replay.
     Future ports must define their frozen input contract, including recorded
     API replies/model judgments where needed, before being registered here.
     Calling a live judge twice is not a differential test.
@@ -124,13 +126,15 @@ class MirageParityVerifier(Verifier):
             manifest = automationbench_definitions()
         elif dataset == "enterpriseops":
             manifest = enterpriseops()
+        elif dataset == "erpbench":
+            manifest = erpbench()
         elif dataset == "gaia2":
             manifest = gaia2_definitions()
         elif dataset == "claweval":
             manifest = claweval_definitions()
         supported = dataset in ("liveclawbench", "dataspace", "complexmcp",
-                                "automationbench", "enterpriseops", "gaia2",
-                                "claweval") and task in manifest
+                                "automationbench", "enterpriseops", "erpbench",
+                                "gaia2", "claweval") and task in manifest
         report = {
             "dataset": dataset,
             "task": task,

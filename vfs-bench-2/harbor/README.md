@@ -112,11 +112,11 @@ authoritative. Coverage across the eight Mirage-agent job configs is:
 | AutomationBench | 600 | microVM | 600 (Monty 1.4.0) |
 | Gaia2 | 460 | microVM | 460 (Monty 1.4.0) |
 | EnterpriseOps-Gym | 103 | microVM | 103 |
-| ERPBench-100 | 100 | Mirage/Pyodide | 0 |
-| Total | 1,552 | | 1,326 |
+| ERPBench-100 | 100 | Mirage/Pyodide | 100 |
+| Total | 1,552 | | 1,426 |
 
 Claw-Eval removes its verifier microVM through a compatibility backend;
-its 126 graders are counted separately from the 1,326 native
+its 126 graders are counted separately from the 1,426 native
 TypeScript/Monty ports. All 1,552 configured tasks have a Mirage backend.
 Run `grader_inventory.py` for current counts and per-dataset coverage.
 
@@ -413,8 +413,10 @@ ports must consume recorded responses or judgments to make comparisons stable.
 - `tasks/erpbench/<task>/`: the ERPBench-100 tasks
   (../erpbench/README.md), their files made from upstream's data not
   committed; `erpbench.py` writes them, or checks them; `erpbench_grade.py`
-  is each one's `tests/grade.py`; `erpbench.yaml`, their job config;
-  `erpbench_compare.py` checks the fake against upstream's `ErpWorld`.
+  is each one's `tests/grade.py`; `erpbench.yaml`, their job config, graded
+  natively (`MirageVerifier`, `graders/erpbench.ts` and its manifest),
+  `erpbench-pyodide.yaml` with the reference grader; `erpbench_compare.py`
+  checks the fake against upstream's `ErpWorld`.
 - `../mocks/erpbench/`: ERPBench-100's world as one kit fake, its 52 tools
   ported from upstream's `ErpWorld` (`world.ts`), with Python's JSON and
   number rules (`py.ts`).

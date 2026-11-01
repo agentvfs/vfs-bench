@@ -76,12 +76,13 @@ function state(database: string, packs: number, channels: number, count: number,
 test('the registered reference files match their pinned hashes', () => {
   const manifest = JSON.parse(readFileSync(join(HARBOR, 'graders/manifest.json'), 'utf8'))
   assert.equal(Object.keys(manifest).length, 70)
-  // EnterpriseOps-Gym's tasks share one grader; its own test checks them
-  // (enterpriseops-grader.test.ts), and MirageVerifier their reference hashes.
-  const enterpriseops = Object.keys(
-    JSON.parse(readFileSync(join(HARBOR, 'graders/enterpriseops/manifest.json'), 'utf8')).tasks
+  // EnterpriseOps-Gym's and ERPBench-100's tasks each share one grader; their
+  // own checks cover them (enterpriseops-grader.test.ts, erpbench-grader.test.ts),
+  // and MirageVerifier their reference hashes.
+  const shared = ['enterpriseops', 'erpbench'].flatMap((dataset) =>
+    Object.keys(JSON.parse(readFileSync(join(HARBOR, `graders/${dataset}/manifest.json`), 'utf8')).tasks)
   )
-  assert.deepEqual([...Object.keys(manifest), ...enterpriseops].sort(), Object.keys(GRADERS).sort())
+  assert.deepEqual([...Object.keys(manifest), ...shared].sort(), Object.keys(GRADERS).sort())
   for (const [task, spec] of Object.entries(manifest) as [
     string,
     { files: Record<string, string>; databases: string[] }

@@ -1,0 +1,2567 @@
+{
+ "constants": {
+  "metric": "ERPScore",
+  "write_tools": [
+   "erpbench.record_decision",
+   "erpbench.submit_answer",
+   "gmail.drafts.create",
+   "google_sheets.spreadsheets.values.append",
+   "google_sheets.spreadsheets.values.update",
+   "oracle_fusion.absences.create",
+   "oracle_fusion.document_records.update",
+   "oracle_fusion.invoice_holds.create",
+   "oracle_fusion.invoices.create",
+   "oracle_fusion.invoices.validate",
+   "oracle_fusion.items.update",
+   "oracle_fusion.purchase_requisitions.create",
+   "oracle_fusion.purchase_requisitions.submit",
+   "oracle_fusion.receiving_receipt_requests.create",
+   "oracle_fusion.sales_orders.create",
+   "oracle_fusion.shipment_lines.update",
+   "oracle_fusion.standard_receipts.create",
+   "oracle_fusion.workers.create",
+   "slack.chat_postMessage"
+  ],
+  "immutable_tables": [
+   "tenants",
+   "users",
+   "customers",
+   "suppliers",
+   "onhand_balances",
+   "purchase_orders",
+   "channel_orders",
+   "mail_messages",
+   "drive_files",
+   "chat_messages",
+   "shipments"
+  ],
+  "common_write_tables": [
+   "audit_log",
+   "chat_posts",
+   "decisions",
+   "mail_drafts",
+   "sheet_changes",
+   "spreadsheets",
+   "submissions"
+  ],
+  "family_write_tables": {
+   "order_import": [
+    "sales_orders"
+   ],
+   "shipment_verification": [
+    "shipment_lines"
+   ],
+   "receivables_collection": [
+    "receivables_invoices",
+    "standard_receipts"
+   ],
+   "inventory_reorder": [
+    "purchase_requisitions"
+   ],
+   "receiving_ap_match": [
+    "ap_invoices",
+    "invoice_holds",
+    "purchase_order_lines",
+    "receiving_receipt_requests"
+   ],
+   "document_compliance": [
+    "document_records"
+   ],
+   "shift_rollup": [
+    "absences"
+   ],
+   "channel_order_sync": [
+    "sales_orders"
+   ],
+   "hire_against_requisition": [
+    "workers"
+   ],
+   "price_list_batch": [
+    "items"
+   ]
+  },
+  "numeric_fields": {
+   "order_import": [
+    "accepted_lines",
+    "rejected_lines",
+    "imported_units",
+    "order_total",
+    "duplicate_lines"
+   ],
+   "shipment_verification": [
+    "lines_reviewed",
+    "lines_matching",
+    "lines_corrected",
+    "units_removed",
+    "confirmed_value"
+   ],
+   "receivables_collection": [
+    "open_invoices_before",
+    "receipt_amount",
+    "remaining_past_due",
+    "oldest_days_past_due",
+    "past_due_pct_of_limit"
+   ],
+   "inventory_reorder": [
+    "skus_below_reorder",
+    "total_reorder_units",
+    "requisition_amount",
+    "supplier_lead_time_days",
+    "days_late"
+   ],
+   "receiving_ap_match": [
+    "lines_matched",
+    "matched_amount",
+    "variance_amount",
+    "held_lines",
+    "payable_amount"
+   ],
+   "document_compliance": [
+    "expiring_within_30",
+    "unalerted_expiring",
+    "blocked_workers",
+    "checks_verified",
+    "days_to_earliest_expiry"
+   ],
+   "shift_rollup": [
+    "expected_staff",
+    "reporting_staff",
+    "late_reports",
+    "overtime_hours",
+    "missing_staff"
+   ],
+   "channel_order_sync": [
+    "channel_rows",
+    "already_synced",
+    "created_orders",
+    "duplicate_rows",
+    "synced_value"
+   ],
+   "hire_against_requisition": [
+    "open_headcount",
+    "eligible_candidates",
+    "hires",
+    "monthly_wage_total",
+    "contract_months"
+   ],
+   "price_list_batch": [
+    "batch_lines",
+    "accepted_lines",
+    "rejected_lines",
+    "superseded_lines",
+    "average_change_pct"
+   ]
+  },
+  "scoring_categories": [
+   "discovery",
+   "calculation",
+   "decision",
+   "erp_state",
+   "handoff",
+   "readback",
+   "containment"
+  ]
+ },
+ "tasks": {
+  "erpbench-001": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-002": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-003": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-004": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-005": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-006": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-007": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-008": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-009": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-010": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-011": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-012": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-013": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-014": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-015": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-016": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-017": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-018": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-019": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-020": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-021": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-022": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-023": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-024": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-025": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-026": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-027": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-028": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-029": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-030": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-031": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-032": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-033": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-034": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-035": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-036": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-037": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-038": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-039": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-040": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-041": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-042": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-043": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-044": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-045": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-046": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-047": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-048": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-049": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-050": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-051": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-052": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-053": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-054": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-055": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-056": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-057": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-058": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-059": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-060": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-061": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-062": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-063": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-064": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-065": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-066": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-067": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-068": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-069": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-070": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-071": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-072": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-073": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-074": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-075": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-076": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-077": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-078": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-079": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-080": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-081": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-082": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-083": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-084": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-085": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-086": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-087": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-088": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-089": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-090": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-091": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-092": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-093": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-094": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-095": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-096": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-097": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-098": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-099": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  },
+  "erpbench-100": {
+   "files": {
+    "test.sh": "f8118076794ecaab1cbd40164fbdcebc1f35353679b9ec5a22d72b09743edeeb",
+    "grade.py": "cb71c243fabae5ad13071955f4a9b76fc61d2fc6814abd3568a9e9d094b7fe7a",
+    "verify.py": "0d74bc1e00ee9b867574a300e96447e7639b5c9967f0d7f4e708e9cdc35f2bc5",
+    "erpbench100/evaluation.py": "6cb947a7362b78e4a5e099afb3e14594710dbaae62f4503ff006d3393f8964ba",
+    "erpbench100/spec.py": "dc444eeefac00025d4a8039f28aded02e99be3c5028595acaf470dd408831641",
+    "erpbench100/world.py": "61ab089545b2219c7ddb1f0179640beefc287ee6ad2f3022f4c4662c9bf9c9ec"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   }
+  }
+ }
+}
