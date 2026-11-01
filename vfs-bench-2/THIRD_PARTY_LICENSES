@@ -126,7 +126,7 @@ Runtime
 
 Mirage
   Source:    https://github.com/strukto-ai/mirage
-             @ 9dd69a316242deddee79b40ce41aafaa2be6065c
+             @ 03695b9a148260036bb76f005f1c22c909b5036a
   License:   Apache-2.0 (submodule/mirage/LICENSE)
   Included:  as a git submodule, not vendored.
 
