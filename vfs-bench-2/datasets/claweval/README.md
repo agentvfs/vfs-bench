@@ -27,10 +27,12 @@ parallel, but the other 113 tasks have no packaged oracle solution.
 `graders/build.py` compiles upstream's graders to TypeScript, module for
 module and statement for statement: each task's `grader.py`, upstream's
 grader base, judge, scoring and the OfficeQA and Pinbench helpers. Their
-pinned sources are vendored in `graders/reference/` (`build.py --vendor`
-copies them from the fetch, checking each against `manifest.json`), with
-`tasks.json`, the fields of each `task.yaml` the graders read; the port is
-`graders/port/`, which `build.py --check` holds to them. Three graders
+pinned sources are vendored (`build.py --vendor` copies them from the
+fetch, checking each against `manifest.json`): each task's `grader.py` in
+its task's directory, with its port `grader.ts` beside it; the modules
+they share in `graders/reference/`, with `tasks.json`, the fields of each
+`task.yaml` the graders read, and their ports in `graders/port/`.
+`build.py --check` holds the ports to the sources. Three graders
 (T027zh, T028, T089) quote the config-audit fixtures' planted
 credentials, which GitHub's push protection refuses, so, like those
 fixtures, they and their ports are not committed: `fetch.py` writes them

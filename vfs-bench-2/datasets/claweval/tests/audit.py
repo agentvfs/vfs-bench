@@ -55,7 +55,7 @@ def grader_sources(task):
     out, pending = [], [task]
     while pending:
         name = pending.pop()
-        source = (REFERENCE / "tasks" / name / "grader.py").read_text()
+        source = (DATASET / name / "grader.py").read_text()
         out.append(source)
         for node in ast.walk(ast.parse(source)):
             if isinstance(node, ast.Call) and getattr(

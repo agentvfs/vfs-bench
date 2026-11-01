@@ -90,7 +90,7 @@ class ClawEvalVerifierTests(unittest.IsolatedAsyncioTestCase):
             # fetch.py writes the withheld three.
             if task not in withheld:
                 self.assertTrue(
-                    (GRADERS / "port/tasks" / f"{task}.ts").is_file())
+                    (GRADERS.parent / task / "grader.ts").is_file())
 
     async def test_stages_the_run_as_json_without_sqlite(self):
         trajectory = self.root / "logs/agent/trajectory.json"

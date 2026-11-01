@@ -594,7 +594,9 @@ def main() -> int:
                 path.write_bytes(data)
         for path in sorted(target.rglob("*")):
             rel = path.relative_to(target).as_posix()
-            if path.is_file() and rel not in files and rel not in mine:
+            # Its grader is ours, beside what generate.py writes.
+            if path.is_file() and rel not in files and rel not in mine \
+                    and rel != "grader.ts":
                 problems.append(f"{rel} is not upstream's, derived or ours")
             if path.is_file() and CREDENTIAL.search(path.read_bytes()):
                 problems.append(f"{rel} looks like it holds a credential")

@@ -743,6 +743,9 @@ def main() -> int:
                 path.write_bytes(data)
         for path in sorted(target.rglob("*")):
             rel = path.relative_to(target).as_posix()
+            # Its grader and port are graders/build.py's.
+            if rel in ("grader.py", "grader.ts"):
+                continue
             if path.is_file() and rel not in files and rel not in ours:
                 problems.append(f"{rel} is not generated or ours")
         failed += bool(problems)
