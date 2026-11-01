@@ -1,6 +1,6 @@
 /** Verifier workspace isolation, concurrency and host access. */
 import assert from 'node:assert/strict'
-import { mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs'
+import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { DatabaseSync } from 'node:sqlite'
@@ -100,13 +100,17 @@ test('concurrent verifiers return their own rewards and errors produce no score'
 
 test('native grading has no host filesystem, database, or subprocess imports', () => {
   // The TypeScript graders: LiveClawBench's, EnterpriseOps-Gym's and
-  // Claw-Eval's, its port included.
+  // Claw-Eval's, its port included, both shared and each task's own.
   const datasets = join(HERE, '..', 'datasets')
-  const sources = ['liveclawbench', 'enterpriseops', 'claweval'].flatMap((dataset) =>
-    readdirSync(join(datasets, dataset, 'graders'), { recursive: true, encoding: 'utf8' })
+  const sources = ['liveclawbench', 'enterpriseops', 'claweval'].flatMap((dataset) => [
+    ...readdirSync(join(datasets, dataset, 'graders'), { recursive: true, encoding: 'utf8' })
       .filter((f) => f.endsWith('.ts'))
-      .map((f) => join(datasets, dataset, 'graders', f))
-  )
+      .map((f) => join(datasets, dataset, 'graders', f)),
+    ...readdirSync(join(datasets, dataset))
+      .map((task) => join(datasets, dataset, task, 'grader.ts'))
+      .filter((f) => existsSync(f)),
+  ])
+  assert.ok(sources.some((f) => f.endsWith('/grader.ts')))
   for (const path of [...sources, join(HERE, 'grader.ts'), join(HERE, 'verify.ts')]) {
     const text = readFileSync(path, 'utf8')
     assert.doesNotMatch(

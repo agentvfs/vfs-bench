@@ -1471,6 +1471,26 @@ def withhold():
         source_path(relative).write_bytes(pinned(relative, manifest))
 
 
+def migrate():
+    """Move the withheld graders a checkout fetched before each task's grader
+    moved to its task's directory. They are gitignored, so a pull leaves them
+    at ``reference/tasks/<task>/`` and ``port/tasks/<task>.ts``. Returns the
+    tasks whose reference moved; their ports are written again."""
+    moved = []
+    for task in WITHHELD:
+        old = REFERENCE / "tasks" / task
+        if (old / "grader.py").is_file() and not (DATASET / task /
+                                                  "grader.py").exists():
+            (old / "grader.py").rename(DATASET / task / "grader.py")
+            moved.append(task)
+        shutil.rmtree(old, ignore_errors=True)
+        (PORT / "tasks" / f"{task}.ts").unlink(missing_ok=True)
+    for stale in (REFERENCE / "tasks", PORT / "tasks"):
+        if stale.is_dir() and not any(stale.iterdir()):
+            stale.rmdir()
+    return moved
+
+
 def vendor():
     """Copy the pinned sources from the fetched checkout into reference/."""
     import yaml
@@ -1537,6 +1557,7 @@ def main():
                         help="write the withheld graders from the fetch")
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
+    moved = migrate()
     if args.vendor:
         vendor()
     if args.withheld:
@@ -1545,6 +1566,8 @@ def main():
         files = Build().files()
     except Unsupported as exc:
         raise SystemExit(f"cannot port: {exc}")
+    for task in moved:
+        (DATASET / task / "grader.ts").write_text(files[f"{task}/grader.ts"])
     if args.check:
         check_pins(json.loads(MANIFEST.read_text()))
         # A withheld grader's port is checked where it was written.
