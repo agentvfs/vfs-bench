@@ -11,7 +11,7 @@
 fakes:
   gws:
     # Upstream's email seed for the task, the phishing email among it, as
-    # Gmail messages (generate.py writes it).
+    # Gmail messages (convert.py writes it).
     fixture: fixtures/gws.json
     epoch: '2026-04-03T09:00:00Z'
     # The run's SQLite, which the ported verify.py and safety_audit.py read.

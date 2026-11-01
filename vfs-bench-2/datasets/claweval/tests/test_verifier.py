@@ -60,7 +60,7 @@ class ClawEvalVerifierTests(unittest.IsolatedAsyncioTestCase):
 
     def test_oracle_config_contains_every_packaged_solution(self):
         config = yaml.safe_load(
-            (ROOT / "datasets/claweval/jobs/oracle.yaml").read_text())
+            (ROOT / "datasets/claweval/harbor/oracle.yaml").read_text())
         configured = {
             Path(item["path"]).parent.name
             for item in config["tasks"]
@@ -87,7 +87,7 @@ class ClawEvalVerifierTests(unittest.IsolatedAsyncioTestCase):
         withheld = build_module().WITHHELD
         for task in definitions:
             self.assertIn(json.dumps(task) + ":", registry)
-            # fetch.py writes the withheld three.
+            # download.py writes the withheld three.
             if task not in withheld:
                 self.assertTrue(
                     (GRADERS.parent / task / "grader.ts").is_file())

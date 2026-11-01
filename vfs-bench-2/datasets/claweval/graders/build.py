@@ -1,7 +1,7 @@
 """Build the TypeScript port of Claw-Eval's graders from upstream's Python.
 
 Upstream's grader sources at the pinned commit are vendored byte for byte
-(``--vendor`` copies them from ``state/claweval/src`` after ``fetch.py``,
+(``--vendor`` copies them from ``state/claweval/src`` after ``download.py``,
 checking each against ``manifest.json``): each task's ``grader.py`` in its
 task's directory, the modules they share in ``reference/``, with
 ``tasks.json``, the fields of each task's ``task.yaml`` the graders read.
@@ -30,7 +30,7 @@ MANIFEST = HERE / "manifest.json"
 UPSTREAM = HERE.parents[2] / "state/claweval/src"
 # The graders that quote the config-audit fixtures' planted credentials,
 # which GitHub's push protection refuses (see ../.gitignore): their
-# reference copies and ports are gitignored, and fetch.py writes them
+# reference copies and ports are gitignored, and download.py writes them
 # (--withheld). Each is its grader class, and whether its grade takes
 # media_events, for the registry, which is committed.
 WITHHELD = {

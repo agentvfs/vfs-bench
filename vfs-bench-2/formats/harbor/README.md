@@ -20,7 +20,7 @@ From `vfs-bench-2/`:
 
 ```sh
 uv sync --project formats/harbor
-uv run --project formats/harbor harbor run -c datasets/<dataset>/jobs/harbor.yaml -a oracle -n 32
+uv run --project formats/harbor harbor run -c datasets/<dataset>/harbor/job.yaml -a oracle -n 32
 uv run --project formats/harbor harbor run -p datasets/<dataset>/<task>/harbor \
   --env vfsbench_harbor:MirageEnvironment --verifier vfsbench_harbor:MirageVerifier -a oracle -k 2 -n 2
 # Trials side by side cannot reach each other.

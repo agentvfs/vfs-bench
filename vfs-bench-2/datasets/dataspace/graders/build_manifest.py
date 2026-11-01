@@ -1,6 +1,7 @@
 """Pin DataSpace inputs and generate its Monty-compatible evaluator.
 
-Run after datasets/dataspace/fetch.py; --check refuses drift or an edited port.
+Run after datasets/dataspace/download.py; --check refuses drift or an edited
+port.
 The relation/number functions remain verbatim; CSV/date adapters are separate.
 """
 import argparse
@@ -73,7 +74,7 @@ def manifest():
     assert source == (DIRECTORY / 'reference/evaluate.py').read_bytes()
     tasks = {}
     for slug, task_id in runpy.run_path(str(DATASET /
-                                            'generate.py'))['TASKS'].items():
+                                            'convert.py'))['TASKS'].items():
         tasks[slug] = {
             'runtime':
             'dataspace-monty',

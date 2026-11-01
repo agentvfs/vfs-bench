@@ -10,10 +10,10 @@ mounted read-only at `/workspace` and the answer goes to
 From `vfs-bench-2/`:
 
 ```sh
-uv run --project datasets/dataspace python -I datasets/dataspace/fetch.py
-uv run --project formats/harbor python -I datasets/dataspace/generate.py --check
-uv run --project formats/harbor harbor run -c datasets/dataspace/jobs/harbor.yaml -a nop -n 32
-uv run --project formats/harbor harbor run -c datasets/dataspace/jobs/oracle.yaml -a oracle -n 32
+uv run --project datasets/dataspace python -I datasets/dataspace/download.py
+uv run --project formats/harbor python -I datasets/dataspace/convert.py --check
+uv run --project formats/harbor harbor run -c datasets/dataspace/harbor/job.yaml -a nop -n 32
+uv run --project formats/harbor harbor run -c datasets/dataspace/harbor/oracle.yaml -a oracle -n 32
 ```
 
 | Upstream | Here |
@@ -25,7 +25,7 @@ uv run --project formats/harbor harbor run -c datasets/dataspace/jobs/oracle.yam
 
 ## The answer reaches the verifier alone
 
-`jobs/harbor.yaml` selects `MirageVerifier` for all 46 tasks. Harbor freezes
+`harbor/job.yaml` selects `MirageVerifier` for all 46 tasks. Harbor freezes
 `/output/prediction.csv` plus its file metadata and verifies the source,
 config and gold hashes in `graders/manifest.json`. Only those
 inputs enter a fresh, read-only RAM VFS. Rewards are written to a separate
@@ -78,7 +78,7 @@ The 14 public tasks whose question reads its criteria off
 `task_111`, `task_159`, `task_300`, `task_312`, `task_328`, `task_378`,
 `task_389` and `task_398`. The workspace has no video decoding, frames or
 speech recognition, so the answer cannot be found as upstream's workbench
-lets a model find it. `generate.py`'s `SKIPPED` lists them.
+lets a model find it. `convert.py`'s `SKIPPED` lists them.
 
 ## Divergences
 

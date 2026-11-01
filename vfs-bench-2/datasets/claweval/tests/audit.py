@@ -19,7 +19,7 @@ The scripted judge's replies are test fixtures, not model judgments.
 ``--job`` checks a Harbor job's trials instead: each trial's saved inputs
 and judge replies, graded on both sides, against the reward it got.
 
-From vfs-bench-2/, after datasets/claweval/fetch.py.
+From vfs-bench-2/, after datasets/claweval/download.py.
 """
 import argparse
 import ast

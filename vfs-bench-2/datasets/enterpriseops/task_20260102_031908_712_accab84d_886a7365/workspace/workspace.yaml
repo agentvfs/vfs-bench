@@ -1,5 +1,5 @@
 # task_20260102_031908_712_accab84d_886a7365, EnterpriseOps-Gym's oracle/csm task, on vfsbench_harbor's
-# mirage environment (datasets/enterpriseops/generate.py writes it).
+# mirage environment (datasets/enterpriseops/convert.py writes it).
 #
 # Each of the task's servers is its kit fake, seeded from the task's seed; its
 # selected tools are a CLI (workspace/tools.ts) that calls as the task's user, the

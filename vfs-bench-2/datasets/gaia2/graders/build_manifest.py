@@ -20,7 +20,7 @@ def digest(path):
 
 def build():
     tasks = {}
-    config = yaml.safe_load((DATASET / 'jobs' / 'harbor.yaml').read_text())
+    config = yaml.safe_load((DATASET / 'harbor' / 'job.yaml').read_text())
     for item in config['tasks']:
         task = (ROOT / item['path']).parent
         split, number = task.name.split('-')
@@ -28,7 +28,7 @@ def build():
             (ROOT / 'state/gaia2/scenarios' / split).glob(f'{number}_*.json'))
         if len(scenarios) != 1:
             raise ValueError(
-                'Run datasets/gaia2/fetch.py first: no unique scenario for '
+                'Run datasets/gaia2/download.py first: no unique scenario for '
                 f'{task.name}')
         environment = yaml.safe_load(
             (task / 'workspace/workspace.yaml').read_text())

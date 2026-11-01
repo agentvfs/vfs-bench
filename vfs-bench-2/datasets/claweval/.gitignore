@@ -1,10 +1,10 @@
 # The scanned PDFs some tasks give the agent (250 MB), which
-# fetch.py writes from upstream.
+# download.py writes from upstream.
 *.pdf
 
 # The config-audit fixtures, which plant example credentials for the agent to
 # find (Stripe's documented test key, a Twilio account SID). GitHub's push
-# protection refuses them, so fetch.py writes them from upstream too.
+# protection refuses them, so download.py writes them from upstream too.
 /T027zh_api_config_audit/workspace/fixtures/claweval_config.json
 /T027zh_api_config_audit/workspace/files/workspace/fixtures/config/integrations.json
 /T028_api_config_audit/workspace/fixtures/claweval_config.json
@@ -13,7 +13,7 @@
 /T089_pinbench_config_workflow_notes/workspace/files/workspace/tasks/T027zh_api_config_audit/fixtures/config/integrations.json
 /T090_pinbench_config_change_plan/workspace/fixtures/claweval_config.json
 /T090_pinbench_config_change_plan/workspace/files/workspace/tasks/T027zh_api_config_audit/fixtures/config/integrations.json
-# The graders that quote those credentials, and their ports: fetch.py
+# The graders that quote those credentials, and their ports: download.py
 # writes them too (graders/build.py --withheld).
 /T027zh_api_config_audit/grader.*
 /T028_api_config_audit/grader.*

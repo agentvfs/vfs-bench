@@ -9,7 +9,7 @@
 # own on it.
 fakes:
   social:
-    # Upstream's social seed (generate.py writes it).
+    # Upstream's social seed (convert.py writes it).
     fixture: fixtures/social.json
     epoch: '2026-04-03T09:00:00Z'
     ports: [5008]

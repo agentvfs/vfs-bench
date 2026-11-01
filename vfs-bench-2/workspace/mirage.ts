@@ -44,7 +44,7 @@
  * its files (`/home/node: {vfs: disk, config: {root: '${RUN_DIR}/home'}}`),
  * and `${WORKSPACE}` the task's `workspace/` (DataSpace mounts its context
  * from `${WORKSPACE}/files/context`).
- * `${STATE}` is vfs-bench-2's `state/`, where fetch.py downloads upstream.
+ * `${STATE}` is vfs-bench-2's `state/`, where download.py downloads upstream.
  */
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, dirname, join, relative, resolve } from 'node:path'

@@ -13,7 +13,7 @@
 # each.
 fakes:
   shop:
-    # Upstream's shop seed for the task (generate.py writes it):
+    # Upstream's shop seed for the task (convert.py writes it):
     # its products, and the orders, cart and user files its image
     # starts with.
     fixture: fixtures/shop.json
@@ -27,7 +27,7 @@ fakes:
       /tmp/mosi_shop_user.json: /var/lib/mock-data/shop/mosi_shop_user.json
   gws:
     # Upstream's email seed for the task, as Gmail messages
-    # (generate.py writes it).
+    # (convert.py writes it).
     fixture: fixtures/gws.json
     epoch: '2026-04-03T09:00:00Z'
     # The run's SQLite, which the ported verify.py reads.

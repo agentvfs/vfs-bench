@@ -21,15 +21,15 @@ Ported so far: **CSM** (`sn-csm-server`, 89 tools, 103 tasks).
 From `vfs-bench-2/`:
 
 ```sh
-uv run --project datasets/enterpriseops python -I datasets/enterpriseops/fetch.py
-uv run --project datasets/enterpriseops python -I datasets/enterpriseops/generate.py --check
-uv run --project formats/harbor harbor run -c datasets/enterpriseops/jobs/harbor.yaml -a oracle -n 103
+uv run --project datasets/enterpriseops python -I datasets/enterpriseops/download.py
+uv run --project datasets/enterpriseops python -I datasets/enterpriseops/convert.py --check
+uv run --project formats/harbor harbor run -c datasets/enterpriseops/harbor/job.yaml -a oracle -n 103
 ```
 
-`fetch.py` clones upstream into `state/enterpriseops/src`, unzips its seed
+`download.py` clones upstream into `state/enterpriseops/src`, unzips its seed
 databases (`gym_dbs.zip`) into `state/enterpriseops/dbs`, and downloads the
 dataset's task files into `state/enterpriseops/hf/<mode>/<domain>.parquet`.
-`generate.py` writes the tasks from them, and the oracle job grades all 103
+`convert.py` writes the tasks from them, and the oracle job grades all 103
 solutions at once.
 
 This takes about 60 s, with no errors. Every trial gets its own run of the

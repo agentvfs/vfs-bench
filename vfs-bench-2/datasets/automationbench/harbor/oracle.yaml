@@ -1,0 +1,19 @@
+# The 11 AutomationBench tasks with a solution; upstream ships none.
+# From vfs-bench-2/, after datasets/automationbench/download.py:
+#   uv run --project formats/harbor harbor run -c datasets/automationbench/harbor/oracle.yaml -a oracle -n 32
+environment:
+  import_path: vfsbench_harbor:MirageEnvironment
+verifier:
+  import_path: vfsbench_harbor:MirageVerifier
+tasks:
+  - path: datasets/automationbench/finance-invoice-email-extract/harbor
+  - path: datasets/automationbench/hr-intern-program-coordination/harbor
+  - path: datasets/automationbench/marketing-event-registration-sync/harbor
+  - path: datasets/automationbench/operations-docusign-annual-review/harbor
+  - path: datasets/automationbench/operations-hubspot-ticket-escalation/harbor
+  - path: datasets/automationbench/operations-safety-certification-gap-analysis/harbor
+  - path: datasets/automationbench/operations-twilio-facilities-emergency/harbor
+  - path: datasets/automationbench/sales-competitive-displacement-outreach/harbor
+  - path: datasets/automationbench/support-gorgias-refund-processing/harbor
+  - path: datasets/automationbench/support-helpcrunch-usage-alerts/harbor
+  - path: datasets/automationbench/support-zoho-freshdesk-escalation/harbor

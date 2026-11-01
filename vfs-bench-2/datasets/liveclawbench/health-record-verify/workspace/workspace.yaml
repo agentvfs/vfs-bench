@@ -10,7 +10,7 @@
 # each.
 fakes:
   health:
-    # Upstream's health seed (generate.py writes it). Its C2
+    # Upstream's health seed (convert.py writes it). Its C2
     # fault (c2-skip-persist) is upstream's own, keyed by the
     # fixture's TASK_NAME: the first allergen it is asked to add
     # answers as added and is not stored, once per run.

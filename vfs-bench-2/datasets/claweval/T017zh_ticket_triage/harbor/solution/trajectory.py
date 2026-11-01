@@ -4,7 +4,7 @@
         /logs/agent/trajectory.json
 
 Each committed Claw-Eval solution's ``solution/trajectory.py`` is this file
-(written by ``generate.py``). Upstream's grader reads the model's
+(written by ``convert.py``). Upstream's grader reads the model's
 turns: its tool calls, what they returned and its final reply. A
 solution's ``solve.sh`` runs each of its commands through ``step``, which
 keeps the command as ``<n>.cmd`` and its output as ``<n>.out`` in the

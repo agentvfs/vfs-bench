@@ -9,7 +9,7 @@
 # this trial is a run of its own on it.
 fakes:
   chat:
-    # Upstream's chat seed (generate.py writes it).
+    # Upstream's chat seed (convert.py writes it).
     fixture: fixtures/chat.json
     epoch: '2026-04-03T09:00:00Z'
     ports: [5003]

@@ -28,11 +28,11 @@ vfs-bench-2/
     harbor/
   datasets/
     <dataset>/
-      fetch.py
-      generate.py
+      download.py
+      convert.py
       mocks/
       graders/
-      jobs/
+      harbor/
       tests/
       <task>/
         workspace/
@@ -50,6 +50,10 @@ vfs-bench-2/
   tasks. A task's own grader is its `grader.ts`, where it has one;
   `graders/` holds what the dataset's graders share and the entry that
   runs them. Neither is ever mounted in the agent's workspace.
+  `download.py` downloads upstream at a pinned commit into `state/`,
+  `convert.py` writes the tasks from it (`--check` compares them), and
+  `harbor/` holds the dataset's Harbor job configs (`job.yaml` for every
+  task, `oracle.yaml` where only some have a solution).
   `datasets/layout.py` says what goes where in a task.
 
 ## Datasets
@@ -82,13 +86,13 @@ uv sync --project formats/harbor
 python3 -I workspace/python.py      # the workspace's python3 packages, into state/python
 ```
 
-Then fetch each dataset you run:
+Then download each dataset you run:
 
 ```sh
-uv run --project datasets/<dataset> python -I datasets/<dataset>/fetch.py
+uv run --project datasets/<dataset> python -I datasets/<dataset>/download.py
 ```
 
-`fetch.py` downloads upstream's code and data at a pinned commit into
+`download.py` downloads upstream's code and data at a pinned commit into
 `state/<dataset>/` and writes the files a task needs that are not
 committed: upstream's data, which cannot be redistributed here. `state/`
 and those files are gitignored.
@@ -99,17 +103,17 @@ To start runs and watch them from a page instead, see [../ui](../ui/README.md).
 
 ```sh
 # Every task's solution, then doing nothing.
-uv run --project formats/harbor harbor run -c datasets/<dataset>/jobs/harbor.yaml -a oracle -n 32
-uv run --project formats/harbor harbor run -c datasets/<dataset>/jobs/harbor.yaml -a nop -n 32
+uv run --project formats/harbor harbor run -c datasets/<dataset>/harbor/job.yaml -a oracle -n 32
+uv run --project formats/harbor harbor run -c datasets/<dataset>/harbor/job.yaml -a nop -n 32
 # One task.
 uv run --project formats/harbor harbor run -p datasets/<dataset>/<task>/harbor \
   --env vfsbench_harbor:MirageEnvironment --verifier vfsbench_harbor:MirageVerifier -a oracle
 # Codex or Claude Code on the host, their tools in the trial's workspace.
-OPENAI_API_KEY=... uv run --project formats/harbor harbor run -c datasets/<dataset>/jobs/harbor.yaml \
+OPENAI_API_KEY=... uv run --project formats/harbor harbor run -c datasets/<dataset>/harbor/job.yaml \
   -a vfsbench_harbor:Codex -m openai/gpt-5.6-luna -n 28
 ```
 
-Where only some tasks have a solution, `jobs/oracle.yaml` lists them.
+Where only some tasks have a solution, `harbor/oracle.yaml` lists them.
 [formats/harbor/README.md](formats/harbor/README.md) describes the
 environment, the verifier and the agents.
 
@@ -117,7 +121,7 @@ environment, the verifier and the agents.
 pnpm typecheck
 pnpm test
 uv run --project formats/harbor python -I formats/harbor/test_environment.py
-uv run --project datasets/<dataset> python -I datasets/<dataset>/generate.py --check
+uv run --project datasets/<dataset> python -I datasets/<dataset>/convert.py --check
 ```
 
 ## License
