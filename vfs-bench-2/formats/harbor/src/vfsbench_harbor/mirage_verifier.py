@@ -141,8 +141,9 @@ class MirageVerifier(Verifier):
 
     Each grade runs in a disposable Node process. This is trusted host
     code, not an isolation boundary for arbitrary scripts.
-    LiveClawBench, EnterpriseOps-Gym and Claw-Eval use the workspace
-    runtime; ComplexMCP, DataSpace, AutomationBench and GAIA2 use Monty.
+    LiveClawBench, EnterpriseOps-Gym, Claw-Eval and ERPBench-100 use the
+    workspace runtime; ComplexMCP, DataSpace, AutomationBench and GAIA2 use
+    Monty.
     Claw-Eval's and GAIA2's judge calls leave from that process, with the
     judge's credentials in the request, never in a VFS.
     Each grader reads declared JSON and file bytes through read-only VFS

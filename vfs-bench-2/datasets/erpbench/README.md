@@ -13,12 +13,13 @@ anything.
 
 All 100 tasks are ported (`datasets/erpbench/<task>/`).
 
-## Setup
+## Fetch and run
 
 From `vfs-bench-2/`:
 
 ```sh
 uv run --project datasets/erpbench python -I datasets/erpbench/fetch.py
+uv run --project datasets/erpbench python -I datasets/erpbench/generate.py --check
 uv run --project formats/harbor harbor run -c datasets/erpbench/jobs/harbor.yaml -a oracle -n 8
 ```
 
@@ -30,7 +31,8 @@ what the fake reads outside the workspace, `state/erpbench/kit/<task>.json`:
 upstream's seeded world as SQL, the world model and the task fields
 upstream's tools read. The fixture names only the task, so nothing the
 agent can reach holds the expected answers or the rubric.
-`generate.py --check` checks every task against upstream.
+`generate.py --check` checks every task against upstream. The oracle job
+grades all 100 solutions in about 50 s at `-n 8`, with no errors.
 
 ## How it maps
 
