@@ -1,0 +1,29 @@
+# T089_pinbench_config_workflow_notes, on vfsbench_harbor's mirage environment (datasets/claweval/generate.py writes it).
+#
+# Each service is its kit fake at upstream's port, and its tools CLIs
+# (workspace/tools.ts).
+fakes:
+  claweval_config:
+    fixture: fixtures/claweval_config.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports:
+    - 9111
+copy:
+  /workspace: workspace/
+tools:
+  file: tools.json
+  dispatches: /var/lib/mock-data/claweval/dispatches.jsonl
+workspace:
+  profiles:
+    default:
+      commands:
+        deny:
+        - commands:
+          - curl
+          - wget
+          reason: the services are reached through their tools
+  clis:
+    config:
+      cli: config
+      config:
+        url: ${CLAWEVAL_CONFIG_URL}

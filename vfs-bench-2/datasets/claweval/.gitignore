@@ -1,0 +1,23 @@
+# The scanned PDFs some tasks give the agent (250 MB), which
+# fetch.py writes from upstream.
+*.pdf
+
+# The config-audit fixtures, which plant example credentials for the agent to
+# find (Stripe's documented test key, a Twilio account SID). GitHub's push
+# protection refuses them, so fetch.py writes them from upstream too.
+/T027zh_api_config_audit/workspace/fixtures/claweval_config.json
+/T027zh_api_config_audit/workspace/files/workspace/fixtures/config/integrations.json
+/T028_api_config_audit/workspace/fixtures/claweval_config.json
+/T028_api_config_audit/workspace/files/workspace/fixtures/config/integrations.json
+/T089_pinbench_config_workflow_notes/workspace/fixtures/claweval_config.json
+/T089_pinbench_config_workflow_notes/workspace/files/workspace/tasks/T027zh_api_config_audit/fixtures/config/integrations.json
+/T090_pinbench_config_change_plan/workspace/fixtures/claweval_config.json
+/T090_pinbench_config_change_plan/workspace/files/workspace/tasks/T027zh_api_config_audit/fixtures/config/integrations.json
+# The graders that quote those credentials, and their ports: fetch.py
+# writes them too (graders/build.py --withheld).
+/graders/reference/tasks/T027zh_api_config_audit/
+/graders/reference/tasks/T028_api_config_audit/
+/graders/reference/tasks/T089_pinbench_config_workflow_notes/
+/graders/port/tasks/T027zh_api_config_audit.ts
+/graders/port/tasks/T028_api_config_audit.ts
+/graders/port/tasks/T089_pinbench_config_workflow_notes.ts

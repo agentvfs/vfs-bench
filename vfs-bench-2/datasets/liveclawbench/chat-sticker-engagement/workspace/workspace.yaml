@@ -1,0 +1,20 @@
+# chat-sticker-engagement, on vfsbench_harbor's mirage environment.
+#
+# In place of upstream's environment/Dockerfile: the mocks of its base
+# image are the fakes below, and its COPY line is `copy`.
+#
+# Rule B: Mirage has no chat service with stickers, so the chat mock is this
+# repo's kit fake (mocks/chat), with upstream's API at localhost:5003 and its
+# SQLite tables where verify.py reads them. One fake serves the whole job;
+# this trial is a run of its own on it.
+fakes:
+  chat:
+    # Upstream's chat seed (generate.py writes it).
+    fixture: fixtures/chat.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports: [5003]
+    state: /opt/mock/data/chat/chat.sqlite
+env:
+  TASK_NAME: chat-sticker-engagement
+copy:
+  /workspace/environment: []

@@ -1,0 +1,24 @@
+# workspace-brief-tracking, on vfsbench_harbor's mirage environment.
+#
+# In place of upstream's environment/Dockerfile: the mocks of its base
+# image are the fakes below, and its COPY, RUN, ENV and WORKDIR lines are
+# `copy`, `run`, `env` and `workdir`.
+#
+# Rule B: Mirage has no such service, so each upstream mock is this repo's
+# kit fake that runs upstream's own app: workspace (mocks/workspace).
+# One fake of each serves the whole job; this trial is a run of its own on
+# each.
+fakes:
+  workspace:
+    # Upstream's workspace seed (generate.py writes it).
+    # Upstream's mock keeps it in memory; the run's SQLite is at a
+    # path of the fake's own, which only workspace_api.py reads.
+    fixture: fixtures/workspace.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports: [5009]
+    # Where upstream's image keeps its SQLite, which verify.py reads.
+    state: /var/lib/mock-data/workspace/workspace.db
+env:
+  TASK_NAME: workspace-brief-tracking
+copy:
+  /workspace/environment: ["meeting_minutes.txt"]

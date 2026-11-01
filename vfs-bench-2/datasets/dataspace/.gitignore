@@ -1,0 +1,4 @@
+# Upstream's data, which fetch.py writes into each task from state/: the
+# context the agent reads, and the gold answer and config the grader reads.
+*/workspace/files/context/
+*/workspace/verifier/

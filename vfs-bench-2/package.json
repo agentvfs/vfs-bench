@@ -7,10 +7,8 @@
     "node": ">=24.15"
   },
   "scripts": {
-    "run-task": "node harness/run.ts",
-    "oracle": "node harness/oracle.ts",
     "typecheck": "tsc --noEmit",
-    "test": "node --test harness/*.test.ts clis/*.test.ts harbor/*.test.ts"
+    "test": "node --test workspace/*.test.ts datasets/*/tests/*.test.ts"
   },
   "//": [
     "Mirage TS comes from the submodule, built there with",

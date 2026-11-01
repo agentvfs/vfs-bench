@@ -1,0 +1,25 @@
+# health-record-verify, on vfsbench_harbor's mirage environment.
+#
+# In place of upstream's environment/Dockerfile: the mocks of its base
+# image are the fakes below, and its COPY, RUN, ENV and WORKDIR lines are
+# `copy`, `run`, `env` and `workdir`.
+#
+# Rule B: Mirage has no such service, so each upstream mock is this repo's
+# kit fake that runs upstream's own app: health (mocks/health).
+# One fake of each serves the whole job; this trial is a run of its own on
+# each.
+fakes:
+  health:
+    # Upstream's health seed (generate.py writes it). Its C2
+    # fault (c2-skip-persist) is upstream's own, keyed by the
+    # fixture's TASK_NAME: the first allergen it is asked to add
+    # answers as added and is not stored, once per run.
+    fixture: fixtures/health.json
+    epoch: '2026-05-13T09:00:00Z'
+    ports: [5007]
+    # Where upstream's image keeps its SQLite, which verify.py reads.
+    state: /var/lib/mock-data/health/health.db
+env:
+  TASK_NAME: health-record-verify
+copy:
+  /workspace/environment: []

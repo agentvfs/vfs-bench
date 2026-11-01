@@ -1,8 +1,0 @@
-# Made from upstream's data, which harbor/erpbench.py writes again from the
-# pinned checkout: each task's fixture, upstream's grader and what it reads,
-# and the oracle's CLI calls.
-*/environment/kit/
-*/solution/
-*/tests/task.json
-*/tests/verify.py
-*/tests/erpbench100/

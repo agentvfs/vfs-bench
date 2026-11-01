@@ -1,0 +1,21 @@
+# social-media-posting, on vfsbench_harbor's mirage environment.
+#
+# In place of upstream's environment/Dockerfile: the mocks of its base
+# image are the fakes below, and its COPY line is `copy`.
+#
+# Rule B: Mirage has no social network, so the social mock is this repo's
+# kit fake (mocks/social), with upstream's API, pages and cookie login at
+# localhost:5008. One fake serves the whole job; this trial is a run of its
+# own on it.
+fakes:
+  social:
+    # Upstream's social seed (generate.py writes it).
+    fixture: fixtures/social.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports: [5008]
+    # Where upstream's image keeps it, which verify.py reads.
+    state: /var/lib/mock-data/social/social.db
+env:
+  TASK_NAME: social-media-posting
+copy:
+  /workspace/environment: []

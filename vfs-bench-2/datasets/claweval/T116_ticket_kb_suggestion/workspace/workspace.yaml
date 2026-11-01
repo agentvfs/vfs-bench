@@ -1,0 +1,36 @@
+# T116_ticket_kb_suggestion, on vfsbench_harbor's mirage environment (datasets/claweval/generate.py writes it).
+#
+# Each service is its kit fake at upstream's port, and its tools CLIs
+# (workspace/tools.ts).
+fakes:
+  claweval_helpdesk:
+    fixture: fixtures/claweval_helpdesk.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports:
+    - 9107
+  claweval_kb:
+    fixture: fixtures/claweval_kb.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports:
+    - 9106
+tools:
+  file: tools.json
+  dispatches: /var/lib/mock-data/claweval/dispatches.jsonl
+workspace:
+  profiles:
+    default:
+      commands:
+        deny:
+        - commands:
+          - curl
+          - wget
+          reason: the services are reached through their tools
+  clis:
+    helpdesk:
+      cli: helpdesk
+      config:
+        url: ${CLAWEVAL_HELPDESK_URL}
+    kb:
+      cli: kb
+      config:
+        url: ${CLAWEVAL_KB_URL}

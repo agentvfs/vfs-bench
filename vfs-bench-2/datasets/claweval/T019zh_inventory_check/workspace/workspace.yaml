@@ -1,0 +1,29 @@
+# T019zh_inventory_check, on vfsbench_harbor's mirage environment (datasets/claweval/generate.py writes it).
+#
+# Each service is its kit fake at upstream's port, and its tools CLIs
+# (workspace/tools.ts).
+fakes:
+  claweval_inventory:
+    fixture: fixtures/claweval_inventory.json
+    epoch: '2026-04-03T09:00:00Z'
+    ports:
+    - 9108
+copy:
+  /workspace: workspace/
+tools:
+  file: tools.json
+  dispatches: /var/lib/mock-data/claweval/dispatches.jsonl
+workspace:
+  profiles:
+    default:
+      commands:
+        deny:
+        - commands:
+          - curl
+          - wget
+          reason: the services are reached through their tools
+  clis:
+    inventory:
+      cli: inventory
+      config:
+        url: ${CLAWEVAL_INVENTORY_URL}

@@ -1,0 +1,31 @@
+{
+  "name": "vfs-bench-2-ui",
+  "private": true,
+  "type": "module",
+  "description": "A control plane for Harbor jobs on Mirage: run, watch, stop, resume and retry",
+  "engines": {
+    "node": ">=24.12"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite build && node server/main.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test server/*.test.ts"
+  },
+  "dependencies": {
+    "@fontsource/ibm-plex-mono": "5.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "yaml": "2.9.1"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "typescript": "7.0.2",
+    "vite": "8.3.5"
+  }
+}

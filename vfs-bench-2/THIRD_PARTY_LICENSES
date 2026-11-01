@@ -1,46 +1,33 @@
 Third-party material in vfs-bench-2
 ===================================
 
-vfs-bench-2 is MIT-licensed (see ../LICENSE). It runs other benchmarks
-unchanged where it can. Their code and data are downloaded by each dataset's
-setup script into state/, which is gitignored, at the source pinned below.
-Apart from twenty-four of LiveClawBench's tasks, none of that is
-redistributed here.
+vfs-bench-2 is MIT-licensed (see ../LICENSE). Each dataset's fetch.py
+downloads upstream's code and data into state/, which is gitignored, at the
+source pinned below, and writes into its tasks what they need of it; those
+files are gitignored too.
 
-What this directory does carry from them is small, and each entry names it:
-prompts quoted or adapted in a dataset's index.ts, a rewritten tool guide,
-a pinned dependency list, and LiveClawBench's twenty-four task directories.
-The MIT notices that cover those follow the entries, verbatim.
+What this directory does carry from them, each entry names: prompts and
+task files quoted or adapted in a dataset's tasks, upstream sources its
+graders run (datasets/<dataset>/graders/reference/), and mock servers that
+reimplement upstream's services (datasets/<dataset>/mocks/). The MIT
+notices that cover those follow the entries, verbatim.
 
 
 Datasets
 --------
-
-Agent-Diff
-  Source:    https://github.com/agent-diff-bench/agent-diff
-             @ 3bb9c40707df23d89e5dbc0e40c424ba38c69ff8
-  License:   MIT, Copyright (c) 2025 Hubert Pysklo
-  Fetched:   the backend, its seed templates and the tasks
-             (datasets/agent-diff-bench), by agentdiff/setup.py.
-  Committed: agentdiff/index.ts adapts its ReAct system prompt;
-             agentdiff/requirements.txt is its backend's dependencies,
-             re-resolved and hashed.
-
-Box Platform API description (used by Agent-Diff's Box tasks)
-  Source:    https://github.com/box/box-openapi
-             @ c9a878a9824344129881392e2b08f7117201e82e
-  License:   Apache-2.0, Copyright 2020 Box, Inc.
-  Fetched:   openapi.json and openapi/openapi-v2025.0.json, by
-             agentdiff/setup.py.
-  Committed: nothing.
 
 AutomationBench
   Source:    https://github.com/zapier/AutomationBench
              @ 4a8e1061254004d9dac807054eed33fad7d1ff14 (v1.0.6)
   License:   MIT, Copyright (c) 2026 Zapier, Inc., with the scope note
              below about derived API schema representations.
-  Fetched:   the package, installed by uv from automationbench/pyproject.toml.
-  Committed: nothing.
+  Fetched:   the package, installed by uv from
+             datasets/automationbench/pyproject.toml.
+  Committed: its rubric's source (graders/reference/automationbench/) and
+             the Monty port generated from it (graders/port.py); its API's
+             schemas and endpoints (mocks/automationbench/data/); the
+             mock under mocks/automationbench/ reimplements its API's
+             routes and handlers; each task's instruction quotes its prompt.
 
 Gaia2 (Meta Agents Research Environments)
   Code:      https://github.com/facebookresearch/meta-agents-research-environments
@@ -59,11 +46,13 @@ Gaia2 (Meta Agents Research Environments)
              fine tune, or otherwise improve an AI model, which is
              distributed or made available, you shall also include "Llama"
              at the beginning of any such AI model name."
-  Fetched:   the code by uv from gaia2/pyproject.toml; the data and the
-             template by gaia2/setup.py.
-  Committed: gaia2/index.ts quotes the template sentences it edits;
-             gaia2/prompt.py repeats the few lines of its
-             render_agent_prompt.render.
+  Fetched:   the code by uv from datasets/gaia2/pyproject.toml; the data and
+             the template by datasets/gaia2/fetch.py. None of the data is
+             committed.
+  Committed: its judge's source (graders/reference/) and the Monty port
+             generated from it; the mocks under mocks/gaia2*/ reimplement
+             its apps; each task's tools.json is generated from its click
+             programs.
 
 DataSpace
   Code:      https://github.com/HKUSTDial/DataSpace
@@ -72,31 +61,33 @@ DataSpace
   Data:      https://huggingface.co/datasets/HKUSTDial/DataSpace
              @ 96be19257d7aa251dbce4771d46a26fc36f6dc52
   License:   MIT
-  Fetched:   the tasks and evaluation/evaluate.py, by dataspace/setup.py.
-  Committed: dataspace/index.ts quotes its relation_task_prompt;
-             dataspace/workbench/TOOLS.md is rewritten from its TOOLS.md.
+  Fetched:   the tasks and evaluation/evaluate.py, by datasets/dataspace/fetch.py.
+  Committed: its evaluator (graders/reference/evaluate.py) and its Monty
+             port; each task's instruction quotes its relation_task_prompt;
+             workbench/TOOLS.md is rewritten from its TOOLS.md.
 
 LiveClawBench
   Source:    https://github.com/Mosi-AI/LiveClawBench
              @ 303dc77ea8d8b6c5b6fc561348b24d13f0c4e448
   License:   MIT, Copyright (c) 2026 Mosi AI
-  Fetched:   mock-platform/ and tasks/, by liveclawbench/setup.py.
-  Committed: each task's task.json quotes the instruction phrases it
-             rewrites. harbor/tasks/liveclawbench/ holds twenty-four of its
-             task directories (task.toml, instruction, solution, tests,
-             notes, policies and seed SQL), verbatim or adapted as
-             harbor/export.py says, with fixtures generated from its mocks'
-             seed data. mocks/chat, mocks/weather and mocks/finance
-             reimplement its chat, weather and finance mocks' APIs and
-             tables (mocks/finance its mock-lib login too), and
-             mocks/weather copies its weather pages' markup.
+  Fetched:   mock-platform/ and tasks/, by datasets/liveclawbench/fetch.py.
+  Committed: seventy of its task directories (task.toml, instruction,
+             solution, notes, policies, seed SQL, safety patterns), verbatim
+             or adapted as datasets/liveclawbench/generate.py says, with
+             fixtures generated from its mocks' seed data. The mocks under
+             mocks/ reimplement its chat, weather, finance and social mocks'
+             APIs and tables, and mocks/weather copies its weather pages'
+             markup; mocks/upstream runs its other mocks from state/.
 
 ComplexMCP
   Source:    https://github.com/ATH-MaaS/complex-mcp
              @ 7c01f92e38be6e0c193d5c6c9a55baa92fb628cb
   License:   MIT, Copyright (c) 2025 AIDC-AI
-  Fetched:   the servers, the tasks and the judge, by complexmcp/setup.py.
-  Committed: nothing.
+  Fetched:   the servers, the tasks and the judge, by
+             datasets/complexmcp/fetch.py.
+  Committed: its judge (graders/reference/judge.py, dist.py); the mocks
+             under mocks/complexmcp*/ reimplement its servers; each task's
+             instruction quotes its query.
 
 EnterpriseOps-Gym
   Source:    https://github.com/ServiceNow/EnterpriseOps-Gym
@@ -104,26 +95,30 @@ EnterpriseOps-Gym
   Data:      https://huggingface.co/datasets/ServiceNow-AI/EnterpriseOps-Gym
              @ c8e538eae8a6205294f0a86675fefdc1fac408f6
   Images:    docker.io/shivakrishnareddyma225/enterpriseops-gym-mcp-<domain>,
-             by the digests enterpriseops/tools/<server>.json records
+             by the digests datasets/enterpriseops/tools/<server>.json records
   License:   Apache-2.0 (repository and dataset). The images, which the
              repository's README tells its users to pull, carry no license
              of their own; they are taken here as part of that release.
   Fetched:   the repository and its seeds, and the dataset's tasks, by
-             enterpriseops/setup.py.
+             datasets/enterpriseops/fetch.py.
   Committed: each server's tool list as its image answers tools/list
-             (enterpriseops/tools/); the CSM image's sql/csm_schema_sqlite.sql
-             (mocks/enterpriseops_csm/schema.sql); the fakes under
+             (tools/); the CSM image's sql/csm_schema_sqlite.sql
+             (mocks/enterpriseops_csm/schema.sql); the mocks under
              mocks/enterpriseops*/ reimplement the images' tools; the tasks
-             under harbor/tasks/enterpriseops/ carry the dataset's prompts and
-             verifiers; harbor/enterpriseops_grade.py repeats the logic of
-             benchmark/verifier.py's value extraction and comparison.
+             carry the dataset's prompts and verifiers; graders/index.ts
+             ports benchmark/verifier.py's value extraction and comparison.
 
 Claw-Eval
   Source:    https://github.com/claw-eval/claw-eval
              @ 5680b8b11ff2ee5dd2b07b89086a29a5c5c984d7
   License:   MIT, Copyright (c) 2026 claw-eval
-  Fetched:   mock_services/, tasks/ and src/, by claweval/setup.py.
-  Committed: nothing.
+  Fetched:   mock_services/, tasks/ and src/, by datasets/claweval/fetch.py.
+  Committed: the mocks under mocks/claweval*/ reimplement its services;
+             each task's instruction quotes its prompt; graders/reference/
+             holds its graders' sources, verbatim, and the fields of each
+             task.yaml they read; graders/port/ is built from them, and
+             graders/models.ts ports its models.
+
 
 ERPBench-100 (Blobfish AI's ERP Agent Simulation)
   Source:    https://github.com/blobfishai/erp-agent-simulation
@@ -132,15 +127,14 @@ ERPBench-100 (Blobfish AI's ERP Agent Simulation)
              NOTICE: "This product includes software developed by
              Blobfish AI."); the ERPBench-100 dataset content CC BY 4.0,
              Copyright 2026 Blobfish AI (its LICENSE-DATA).
-  Fetched:   the repository, by erpbench/setup.py.
-  Committed: harbor/tasks/erpbench/*/instruction.md quote each task's
-             instruction and list its tools' descriptions;
-             harbor/tasks/erpbench/*/environment/tools.json carry the tools'
-             descriptions and schemas; mocks/erpbench/world.ts ports the
-             world's tools (erpbench100/world.py) to TypeScript, and
-             harbor/graders/erpbench.ts its grader
-             (erpbench100/evaluation.py); harbor/graders/erpbench/
-             manifest.json carries the grader's scoring constants.
+  Fetched:   the repository, by datasets/erpbench/fetch.py.
+  Committed: the tasks' instruction.md quote each task's instruction and
+             list its tools' descriptions, and their workspace/tools.json
+             carry the tools' descriptions and schemas;
+             mocks/erpbench/world.ts ports the world's tools
+             (erpbench100/world.py) to TypeScript, and graders/index.ts its
+             grader (erpbench100/evaluation.py); graders/manifest.json
+             carries the grader's scoring constants.
 
 
 Runtime
@@ -148,12 +142,12 @@ Runtime
 
 Mirage
   Source:    https://github.com/strukto-ai/mirage
-             @ 6925de0c6173f0095ba494b3b86d07f2acb3cfe6
+             @ 9dd69a316242deddee79b40ce41aafaa2be6065c
   License:   Apache-2.0 (submodule/mirage/LICENSE)
   Included:  as a git submodule, not vendored.
 
 Python packages for the workspace's python3
-  setup/python.py downloads these into state/python: Pyodide's builds from
+  workspace/python.py downloads these into state/python: Pyodide's builds from
   the jsDelivr CDN at the installed Pyodide's version, and pure-Python
   wheels from PyPI. Each keeps its own license, as its wheel's metadata
   states:
@@ -185,30 +179,6 @@ Python packages for the workspace's python3
 
 MIT notices
 -----------
-
---- Agent-Diff
-
-MIT License
-
-Copyright (c) 2025 Hubert Pysklo
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 
 --- AutomationBench
 

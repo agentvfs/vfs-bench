@@ -5,130 +5,116 @@ Work in progress. VFS-Bench 2.0 runs recent, hard agent benchmarks through
 nothing else. The agent never gets MCP tools. It gets one shell over a
 workspace:
 
-- **Files are mounts.** For example, Gaia2's drive is at `/cloud-drive` and
-  Box is at `/box`.
+- **Files are mounts.** For example, Gaia2's drive is at `/cloud-drive`.
 - **Each benchmark's tools are CLIs that mirror them.** Tool
   `<server>__<tool>` becomes `<server> <tool> --param value`, generated from
   upstream's own tool schemas.
-- **Services are local fakes.** Each is seeded per run and acts as the
-  signed-in user. Where upstream ships its own simulation, it runs
-  unchanged.
-- **Graders are upstream's own** wherever possible. They check the
-  services' end state, and an LLM judge only where upstream's grader asks
-  one (Claw-Eval).
+- **Services are local mock servers.** Each is seeded per run and acts as
+  the signed-in user.
+- **Graders are native Mirage graders.** They grade the services' end state
+  in a Mirage workspace of their own, and ask an LLM judge only where
+  upstream's grader does.
 
-The plan and its status are tracked in the roadmap issue,
+Harbor runs the tasks; it is only a wrapper. The plan and its status are
+tracked in the roadmap issue,
 [agentvfs/vfs-bench#6](https://github.com/agentvfs/vfs-bench/issues/6).
-Run dumps stay local; nothing is published yet.
+
+## Layout
+
+```
+vfs-bench-2/
+  workspace/
+  formats/
+    harbor/
+  datasets/
+    <dataset>/
+      fetch.py
+      generate.py
+      mocks/
+      graders/
+      jobs/
+      tests/
+      <task>/
+        workspace/
+        harbor/
+```
+
+- `workspace/`: the Mirage side every task shares: the daemon, the
+  workspace a task's `workspace.yaml` builds, the mock launcher, the CLI
+  generator and the grader runner.
+- `formats/harbor/`: the Harbor wrapper, `vfsbench_harbor`:
+  `MirageEnvironment`, `MirageVerifier`, and the Codex and Claude Code
+  agents.
+- `datasets/<dataset>/`: one benchmark, its mocks and graders, and its
+  tasks. `datasets/layout.py` says what goes where in a task.
 
 ## Datasets
 
-| Dataset | Upstream | Ported | Services |
-|---|---|---|---|
-| [Agent-Diff](agentdiff/README.md) | agent-diff-bench/agent-diff | 11 of 224 | upstream's API replicas, in Docker |
-| [AutomationBench](automationbench/README.md) | zapier/AutomationBench v1.0.6 | 11 of 606 | upstream's Python world |
-| [Gaia2](gaia2/README.md) | Meta's ARE, gaia2-cli | 11 of 320 | upstream's apps, gaia2-cli |
-| [DataSpace](dataspace/README.md) | HKUSTDial/DataSpace | 11 of 60 public | none, files only |
-| [LiveClawBench](liveclawbench/README.md) | Mosi-AI/LiveClawBench | 11 of 113 | upstream's Node mocks, under Bun |
-| [ComplexMCP](complexmcp/README.md) | ATH-MaaS/complex-mcp | 11 of 47 | 14 of upstream's 15 MCP servers |
-| [Claw-Eval](claweval/README.md) | claw-eval/claw-eval | 11 of 126 | upstream's FastAPI mocks |
-
-EnterpriseOps-Gym is skipped for now: its tool servers ship only as amd64
-images of bytecode, with no source and no license.
+| Dataset | Upstream | Tasks | Graders |
+|---|---|---:|---|
+| [LiveClawBench](datasets/liveclawbench/README.md) | Mosi-AI/LiveClawBench | 70 | TypeScript |
+| [AutomationBench](datasets/automationbench/README.md) | zapier/AutomationBench v1.0.6 | 600 | Monty |
+| [Claw-Eval](datasets/claweval/README.md) | claw-eval/claw-eval | 126 | TypeScript, built from upstream's |
+| [ComplexMCP](datasets/complexmcp/README.md) | ATH-MaaS/complex-mcp | 47 | Monty |
+| [DataSpace](datasets/dataspace/README.md) | HKUSTDial/DataSpace | 46 | Monty |
+| [EnterpriseOps-Gym](datasets/enterpriseops/README.md) | ServiceNow/EnterpriseOps-Gym | 103 | TypeScript |
+| [ERPBench-100](datasets/erpbench/README.md) | blobfishai/erp-agent-simulation | 100 | TypeScript |
+| [Gaia2](datasets/gaia2/README.md) | Meta's ARE, gaia2-cli | 460 | Monty |
 
 ## Setup
 
-You need:
-- Node 24.15 or later and pnpm
-- uv, which fetches each dataset's Python
-- Rust (`cargo`), which Mirage's TypeScript build uses
-- Bun, for LiveClawBench
-- Docker, for Agent-Diff
-
-From `vfs-bench-2/`:
+You need Node 24.15 or later and pnpm, uv, Rust (`cargo`, for Mirage's
+TypeScript build) and Bun (for LiveClawBench's seeds). From `vfs-bench-2/`:
 
 ```sh
 git submodule update --init submodule/mirage
 (cd submodule/mirage/typescript && pnpm install && pnpm --filter @struktoai/mirage-core \
   --filter @struktoai/mirage-node --filter @struktoai/mirage-openai-agents build)
+# The Prisma clients of Mirage's integ fakes (gws, slack, ...), which the
+# Harbor tasks on them import from integ/generated.
+(cd submodule/mirage/integ && ls prisma/*.prisma | INTEG_DB_URL=file:/tmp/mirage-generate.db \
+  xargs -P 4 -n 1 node_modules/.bin/prisma generate --schema)
 pnpm install
-python3 -I setup/python.py      # the workspace's python3 packages, into state/python
+uv sync --project formats/harbor
+python3 -I workspace/python.py      # the workspace's python3 packages, into state/python
 ```
 
-Then run each dataset's setup, which its README gives. Setup downloads
-upstream's code and data into `state/` at a pinned commit. `state/` is
-gitignored, so nothing third-party is committed.
+Then fetch each dataset you run:
+
+```sh
+uv run --project datasets/<dataset> python -I datasets/<dataset>/fetch.py
+```
+
+`fetch.py` downloads upstream's code and data at a pinned commit into
+`state/<dataset>/` and writes the files a task needs that are not
+committed: upstream's data, which cannot be redistributed here. `state/`
+and those files are gitignored.
 
 ## Run
 
+To start runs and watch them from a page instead, see [../ui](../ui/README.md).
+
 ```sh
-# A model, through the OpenAI Agents SDK (OPENAI_API_KEY, OPENAI_BASE_URL;
-# a .env here is read if present).
-node harness/run.ts gaia2/chats-cultures-oldest --model gpt-5.6-luna [--effort low] [--max-turns 50]
+# Every task's solution, then doing nothing.
+uv run --project formats/harbor harbor run -c datasets/<dataset>/jobs/harbor.yaml -a oracle -n 32
+uv run --project formats/harbor harbor run -c datasets/<dataset>/jobs/harbor.yaml -a nop -n 32
+# One task.
+uv run --project formats/harbor harbor run -p datasets/<dataset>/<task>/harbor \
+  --env vfsbench_harbor:MirageEnvironment --verifier vfsbench_harbor:MirageVerifier -a oracle
+# Codex or Claude Code on the host, their tools in the trial's workspace.
+OPENAI_API_KEY=... uv run --project formats/harbor harbor run -c datasets/<dataset>/jobs/harbor.yaml \
+  -a vfsbench_harbor:Codex -m openai/gpt-5.6-luna -n 28
+```
 
-# A task's scripted solution (tests/oracle.sh) in place of a model. It must
-# pass, and tests/noop.sh must fail.
-node harness/oracle.ts gaia2/chats-cultures-oldest [script]
+Where only some tasks have a solution, `jobs/oracle.yaml` lists them.
+[formats/harbor/README.md](formats/harbor/README.md) describes the
+environment, the verifier and the agents.
 
-# Seed a task twice and compare the snapshots.
-node harness/determinism.ts gaia2/chats-cultures-oldest
-
+```sh
 pnpm typecheck
-pnpm test       # the harness's own checks, which need no dataset
-```
-
-### What a run does
-
-`harness/execute.ts` runs these steps for every run, and none can be
-skipped:
-1. Start the task's fakes.
-2. Seed them, then snapshot them.
-3. Open the workspace from the task's `workspace.yaml`.
-4. Let the agent work.
-5. Snapshot again and grade.
-6. Write `dumps/<run id>.json`. It holds the agent's items and usage, the
-   checks, what changed between the two snapshots, and the Mirage commit.
-
-The agent is Mirage's own OpenAI Agents integration: `read_file`, `shell`
-and `apply_patch`, with `buildSystemPrompt` and the CLIs' docs. Its model
-requests retry transient errors.
-
-Every workspace is set up the same way:
-- `python3` is Pyodide, with the packages `setup/python.py` bundles, and
-  gets 2 GB.
-- Each shell call gets 600 s in all (`@line` in `command_limits`). Mirage
-  limits a line's time, not a command's.
-- The workspace is offline. Python has no network, and `curl` and `wget`
-  are refused.
-- The workspace can't reach the host's disk outside its mounts.
-- The whole run is in UTC, including its fakes.
-- A dataset with a task clock freezes it. Gaia2's apps, its `python3` and
-  the shell's `date` all read the scenario's start.
-
-## Layout
-
-```
-harness/      the run, oracle and determinism runners; fakes, workspace, dumps
-clis/         CLI generators: from tool schemas (tools.ts), from OpenAPI
-              (openapi.ts), and complete-task (answer.ts)
-bridge/       serves a Python simulation as a fake (POST /reset, /call, GET /snapshot)
-harbor/       a Harbor environment on a Mirage workspace, and thirteen LiveClawBench
-              tasks as Harbor task directories on shared kit fakes (harbor/README.md)
-mocks/        kit fakes this repo adds on Mirage's integ kit (chat, weather)
-setup/        the workspace's python3 packages
-submodule/    Mirage, pinned and unmodified
-<dataset>/
-  index.ts    load(slug): the task's instruction, fakes, seed, CLIs, snapshot and grade
-  setup.py    downloads upstream at a pinned commit into state/<dataset>
-  README.md   conversion rules and every divergence from upstream
-  <task>/
-    task.json        which upstream task this is
-    workspace.yaml   the Mirage workspace: mounts, runtimes, limits
-    tests/oracle.sh  a scripted solution, one shell call per block
-    tests/oracle.reply.md  the solution's last reply, for a grader that judges it
-    tests/noop.sh    doing nothing, which must fail
-    tests/oracle-*.sh  other correct solutions, which must pass
-    tests/wrong-*.sh   near misses, which must fail
+pnpm test
+uv run --project formats/harbor python -I formats/harbor/test_environment.py
+uv run --project datasets/<dataset> python -I datasets/<dataset>/generate.py --check
 ```
 
 ## License
