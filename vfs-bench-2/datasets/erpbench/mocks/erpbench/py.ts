@@ -6,7 +6,7 @@
  * `call_tool` catches.
  */
 import { PyError } from '../../../complexmcp/mocks/complexmcp/common.ts'
-import { PyFloat, isspace, pyType, repr, reprFloat } from '../../../../workspace/py.ts'
+import { PyFloat, asciiDigits, isspace, pyType, repr, reprFloat } from '../../../../workspace/py.ts'
 
 /** An exception upstream's `call_tool` catches: its class and `str(exc)`. */
 export class PyExc extends Error {
@@ -82,7 +82,7 @@ export function pyInt(x: unknown): number | bigint {
     let b = cs.length
     while (a < b && isspace(cs[a]!)) a++
     while (b > a && isspace(cs[b - 1]!)) b--
-    const t = cs.slice(a, b).join('')
+    const t = asciiDigits(cs.slice(a, b).join(''))
     if (!/^[+-]?\d(?:_?\d)*$/.test(t)) throw valueError(`invalid literal for int() with base 10: ${repr(x)}`)
     const n = BigInt(t.replace(/_/g, ''))
     return n >= -(2n ** 53n) && n <= 2n ** 53n ? Number(n) : n

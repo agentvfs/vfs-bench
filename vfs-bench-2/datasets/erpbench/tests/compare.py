@@ -395,6 +395,13 @@ def probes(task: dict, model: dict) -> list[tuple[str, dict]]:
                 "OrderedQuantity": "two"
             }]
         }),
+        # Python's int() reads any Unicode decimal digits: "１２" is 12.
+        ("oracle_fusion.sales_orders.create", {
+            **order, "lines": [{
+                "ProductNumber": item,
+                "OrderedQuantity": "\uff11\uff12"
+            }]
+        }),
         ("oracle_fusion.sales_orders.create", {
             **order, "lines": [{
                 "ProductNumber": item,
