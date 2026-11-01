@@ -42,6 +42,22 @@ function decode(row: Row | null): Dict | null {
   return out
 }
 
+/** `TABLES`: the tables `ErpWorld.snapshot` reads, in its order. */
+const TABLES = [
+  'tenants', 'users', 'items', 'customers', 'suppliers', 'sales_orders', 'shipments', 'shipment_lines',
+  'receivables_invoices', 'standard_receipts', 'onhand_balances', 'purchase_orders', 'purchase_order_lines',
+  'purchase_requisitions', 'receiving_receipt_requests', 'ap_invoices', 'invoice_holds', 'workers',
+  'document_records', 'absences', 'channel_orders', 'mail_messages', 'mail_drafts', 'drive_files',
+  'spreadsheets', 'sheet_changes', 'chat_messages', 'chat_posts', 'decisions', 'submissions', 'audit_log',
+]
+
+/** `ErpWorld.snapshot`: every table's rows, ordered by their first column. */
+export function snapshot(conn: Conn): Dict {
+  const out: Dict = {}
+  for (const table of TABLES) put(out, table, conn.execute(`SELECT * FROM ${table} ORDER BY 1`).fetchall().map((row) => decode(row)!))
+  return out
+}
+
 const plus = (a: unknown, b: unknown) => new PyFloat(asNum(a as PyFloat) + asNum(b as PyFloat))
 const times = (q: number | bigint, p: PyFloat) => new PyFloat(Number(q) * p.v)
 const or = (x: unknown, y: unknown) => (truthy(x) ? x : y)

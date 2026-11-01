@@ -20,12 +20,13 @@ import { fileURLToPath } from 'node:url'
 import { route } from '../../submodule/mirage/integ/server/kit/typescript/index.ts'
 import type { Ctx, Dmmf, Fake, Reply } from '../../submodule/mirage/integ/server/kit/typescript/index.ts'
 import { PyFloat } from '../complexmcp/py.ts'
+import type { VerifierQuery } from '../enterpriseops/fake.ts'
 import { loads } from '../enterpriseops/py.ts'
 import { Conn, SqliteError } from '../enterpriseops/sqlite.ts'
 import { Prisma } from './client/index.js'
 import { ErpClient, config } from './config.ts'
 import { type Dict, caught, deepcopy, dumps, isDict, put } from './py.ts'
-import { type Kit, SERVER_BY_PREFIX, World } from './world.ts'
+import { type Kit, SERVER_BY_PREFIX, World, snapshot } from './world.ts'
 
 /** Upstream's checkout and the exporter's per-task kits. */
 export const STATE = process.env.ERPBENCH_STATE ?? join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'state', 'erpbench')
@@ -90,7 +91,36 @@ function call(ctx: Ctx<ErpClient>): Reply {
   }
 }
 
-export const fake: Fake<ErpClient> = {
+/**
+ * The state view's queries (harbor/fake-state.ts): what upstream's grader
+ * reads. `baseline` is the world as seeded (`ErpWorld.create`, replayed in
+ * memory), `snapshot` the run's world now, `trace` its calls, `model` the
+ * task's world model. Each is one row whose `json` is the value as
+ * `json.dumps` writes it, so floats stay floats.
+ */
+function verifierQuery(db: ErpClient, query: string, nowMs: number): ReturnType<VerifierQuery<ErpClient>> {
+  const answer = (json: string) => ({ rows: [{ json }] })
+  const conn = new Conn(db.file, () => nowMs)
+  try {
+    if (query === 'snapshot') return answer(dumps(snapshot(conn)))
+    if (query === 'trace') return answer(`[${conn.execute('SELECT entry FROM _trace ORDER BY idx').fetchall().map((row) => row.entry).join(', ')}]`)
+    if (query !== 'model' && query !== 'baseline') return { error: `unknown query: ${query}` }
+    const kit = kitOf(String(conn.execute('SELECT task FROM _seed').fetchone()?.task))
+    if (query === 'model') return answer(dumps(kit.model))
+    const seeded = new Conn(':memory:', () => nowMs)
+    try {
+      seeded.executescript(kit.sql)
+      return answer(dumps(snapshot(seeded)))
+    } finally {
+      seeded.close()
+    }
+  } finally {
+    conn.close()
+  }
+}
+
+export const fake: Fake<ErpClient> & { verifierQuery: VerifierQuery<ErpClient> } = {
+  verifierQuery,
   config,
   client: ErpClient,
   dmmf: Prisma.dmmf as unknown as Dmmf,

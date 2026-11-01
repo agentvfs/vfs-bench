@@ -113,7 +113,7 @@ async function main(): Promise<void> {
   // EnterpriseOps-Gym's fakes answer their verifier queries there (fake-state.ts).
   const stateView =
     Boolean(process.env.VFSBENCH_STATE_TOKEN) &&
-    (['airline', 'automationbench', 'chat', 'expense', 'finance', 'gws', 'health', 'insurance', 'mintdiet', 'smarthome', 'social', 'workspace'].includes(service) ||
+    (['airline', 'automationbench', 'chat', 'erpbench', 'expense', 'finance', 'gws', 'health', 'insurance', 'mintdiet', 'smarthome', 'social', 'workspace'].includes(service) ||
       service.startsWith('enterpriseops_') || service.startsWith('gaia2_'))
   const entry = stateView ? join(ROOT, 'harbor/fake-entry.ts') : ours ? join(MOCKS, service, 'main.ts') : undefined
   const spec = kit(run, service, fixture, entry)
