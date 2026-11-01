@@ -21,14 +21,21 @@ and the trace, upstream's ``world.trace`` against the fake's ``_trace``.
 
 Then it grades: upstream's ``score_episode`` on the fake's end state and
 trace must give the reward upstream's ``run_episode`` gives with the
-policy's arguments as upstream wrote them (no CLI in between).
+policy's arguments as upstream wrote them (no CLI in between). And the
+native grader (``graders/erpbench.ts``, through ``verify.ts`` in a Mirage
+workspace), on the state the fake's verifier view serves, as
+``MirageVerifier`` reads it, must give that reward and pass the same
+rubric checks.
 
 Exits 1 on any difference ``KNOWN`` does not accept.
 """
 import argparse
+import base64
 import contextlib
 import hashlib
 import json
+import os
+import secrets
 import shutil
 import sqlite3
 import subprocess
@@ -58,6 +65,21 @@ from erpbench100.world import tool_definitions  # noqa: E402
 
 # Accepted differences: a substring of the call's label -> why.
 KNOWN: dict[str, str] = {}
+# The fake's verifier view takes this token, as Harbor's fakes do.
+TOKEN = secrets.token_hex(16)
+# One request per line: verify.ts's grade, or the error it raised.
+NATIVE = '''
+import { createInterface } from 'node:readline'
+import { verify } from './harbor/verify.ts'
+for await (const line of createInterface({ input: process.stdin })) {
+  try {
+    const grade = await verify(JSON.parse(line))
+    console.log(JSON.stringify({ score: grade.score, checks: grade.checks }))
+  } catch (error) {
+    console.log(JSON.stringify({ error: String(error) }))
+  }
+}
+'''
 
 
 class Fake:
@@ -77,6 +99,10 @@ class Fake:
             str(root / "fake.log")
         ],
                                      cwd=ROOT,
+                                     env={
+                                         **os.environ, "VFSBENCH_STATE_TOKEN":
+                                         TOKEN
+                                     },
                                      stdin=subprocess.PIPE,
                                      stdout=subprocess.PIPE,
                                      text=True)
@@ -138,6 +164,47 @@ class Fake:
                      ) in conn.execute("SELECT entry FROM _trace ORDER BY idx")
             ]
             return (*tables(task, conn), trace)
+
+    def view(self) -> dict:
+        """The run's state as its verifier view serves MirageVerifier."""
+        queries = "&".join(f"query={q}"
+                           for q in ("baseline", "snapshot", "trace", "model"))
+        request = urllib.request.Request(
+            f"{self.url}/_run/{self.run}/_verifier/state?{queries}",
+            headers={"x-vfsbench-state-token": TOKEN})
+        with urllib.request.urlopen(request, timeout=60) as reply:
+            return json.loads(reply.read())
+
+    def stop(self) -> None:
+        self.proc.stdin.close()
+        self.proc.wait()
+
+
+class Native:
+    """verify.ts, one process for every grade."""
+
+    def __init__(self):
+        self.proc = subprocess.Popen(
+            ["node", "--input-type=module", "-e", NATIVE],
+            cwd=ROOT,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            text=True)
+
+    def grade(self, task_id: str, state: dict, task_json: bytes) -> dict:
+        self.proc.stdin.write(
+            json.dumps({
+                "task": task_id,
+                "states": {
+                    "erpbench": state
+                },
+                "files": {
+                    "/tests/task.json": base64.b64encode(task_json).decode()
+                },
+                "timeoutSeconds": 120,
+            }) + "\n")
+        self.proc.stdin.flush()
+        return json.loads(self.proc.stdout.readline())
 
     def stop(self) -> None:
         self.proc.stdin.close()
@@ -703,10 +770,12 @@ def main() -> int:
     probed: set[str] = set()
     with tempfile.TemporaryDirectory(prefix="erpbench-cmp-") as tmp:
         fake = Fake(Path(tmp))
+        native = Native()
         try:
             for name in names:
-                task = json.loads(
-                    (UPSTREAM / name / "tests" / "task.json").read_text())
+                task_json = (UPSTREAM / name / "tests" /
+                             "task.json").read_bytes()
+                task = json.loads(task_json)
                 baseline = run_episode(task, [])["before"]
                 schemas = {
                     t["name"]: t["inputSchema"]
@@ -745,17 +814,29 @@ def main() -> int:
                     upstream = run_episode(
                         task, deepcopy(steps))["verdict"]["reward"]
                     snapshot, _, trace = fake.state(task)
-                    ours = score_episode(task, baseline, snapshot,
-                                         trace)["reward"]
+                    verdict = score_episode(task, baseline, snapshot, trace)
+                    ours = verdict["reward"]
                     rewards[policy][round(ours, 4)] += 1
                     if ours != upstream:
                         failed += 1
                         print(f"  DIFF {name} {policy} reward: upstream "
                               f"{upstream} != fake {ours}")
+                    graded = native.grade(name, fake.view(), task_json)
+                    checks = {c["id"]: c["passed"] for c in verdict["checks"]}
+                    if graded.get("score") != ours or graded.get(
+                            "checks") != checks:
+                        failed += 1
+                        changed = sorted(
+                            k for k in checks
+                            if graded.get("checks", {}).get(k) != checks[k])
+                        print(f"  DIFF {name} {policy} native: reward {ours} "
+                              f"!= {graded.get('score')}, checks {changed}, "
+                              f"{graded.get('error', '')}")
                 print(f"{name}: done ({total} calls, {failed} differences)",
                       flush=True)
         finally:
             fake.stop()
+            native.stop()
     for policy in POLICIES:
         print(f"reward {policy}: {dict(sorted(rewards[policy].items()))}")
     print(

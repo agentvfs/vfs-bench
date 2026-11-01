@@ -416,7 +416,8 @@ ports must consume recorded responses or judgments to make comparisons stable.
   is each one's `tests/grade.py`; `erpbench.yaml`, their job config, graded
   natively (`MirageVerifier`, `graders/erpbench.ts` and its manifest),
   `erpbench-pyodide.yaml` with the reference grader; `erpbench_compare.py`
-  checks the fake against upstream's `ErpWorld`.
+  checks the fake against upstream's `ErpWorld`, and the native grader
+  against upstream's.
 - `../mocks/erpbench/`: ERPBench-100's world as one kit fake, its 52 tools
   ported from upstream's `ErpWorld` (`world.ts`), with Python's JSON and
   number rules (`py.ts`).

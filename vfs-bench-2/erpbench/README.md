@@ -62,8 +62,10 @@ family, against upstream's `ErpWorld` and a fresh run of the fake, the
 arguments as the CLI sends them: 710 runs, 14,934 calls, no difference in
 replies, error texts, the 31 tables (after each seed and at the end) or the
 trace. Upstream's grader over the fake's end state gives upstream's reward
-for all 700 task × policy runs. `harbor/erpbench-grader.test.ts` checks the
-native grader on the end states those policies never reach (answers within or past 0.005, figures in other
+for all 700 task × policy runs, and the native grader, on the state the
+fake's verifier view serves, gives the same reward and passes the same
+rubric checks. `harbor/erpbench-grader.test.ts` covers the end states those
+policies never reach (answers within or past 0.005, figures in other
 formats, labels for ids, register rows misplaced, out-of-scope writes, a
 second record, values upstream raises on): upstream's `score_episode` and
 the native grader must agree on each.
