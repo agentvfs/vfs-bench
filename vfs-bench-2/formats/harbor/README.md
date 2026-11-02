@@ -4,7 +4,8 @@
 wrapper over a task's `workspace/`:
 
 - `MirageEnvironment` (`environment.py`) runs each trial in a Mirage
-  workspace on a daemon of the trial's own, in place of a container.
+  workspace, in place of a container: on a daemon of the trial's own, or
+  on one daemon for the whole job (`--ek workers=<n>`).
 - `MirageVerifier` (`mirage_verifier.py`) grades it with the dataset's
   native grader, in a Mirage workspace of the grader's own.
 - `Codex` and `ClaudeCode` (`agents.py`) run those CLIs on the host, their
@@ -31,16 +32,19 @@ uv run --project formats/harbor python -I formats/harbor/test_mirage_verifier.py
 uv run --project formats/harbor python -I formats/harbor/mock_judge.py --port 8765 --score 1.0
 ```
 
-`--ek node=<path>` names the Node binary if `node` on `PATH` is not 24.15 or
-later. Each trial's environment is under `<trial dir>/mirage/`: the
+`--ek workers=<n>` runs every trial on one daemon for the job, with `n`
+worker processes (see below). `--ek node=<path>` names the Node binary if
+`node` on `PATH` is not 24.15 or later. Each trial's environment is under `<trial dir>/mirage/`: the
 generated `workspace.yaml` and `plan.json`, and the logs of the daemon. The
 shared fakes log into the job's directory, as `fake-<service>.log`.
 
 ## The environment
 
 `start()` seeds the trial's run on each fake the task's `workspace.yaml`
-names (`fakes.py`), then runs `workspace/mirage.ts` to lay out the
-workspace, then starts the trial's daemon and creates the workspace on it.
+names (`fakes.py`), then has `workspace/mirage.ts` lay out the workspace
+(in one of the job's four `mirage.ts --serve` processes,
+`VFSBENCH_PLANNERS`), then starts the trial's daemon, or uses the job's,
+and creates the workspace on it.
 
 | Harbor on Docker | Here |
 |---|---|
@@ -56,7 +60,22 @@ workspace, then starts the trial's daemon and creates the workspace on it.
 
 Mirage revalidates each mount's listings against its folder (`read: fresh`),
 since the host writes them too. Every `exec` runs in a session of its own,
-as `docker exec` does, so `cd` and `export` do not carry over.
+as `docker exec` does, so `cd` and `export` do not carry over. A state file
+is copied only when the mock changed it since its last copy.
+
+## One daemon for the job
+
+With `--ek workers=<n>`, the first trial starts one daemon for the job
+with `n` worker processes, and every trial's workspace is created on it.
+Each workspace still has its own:
+
+- clock: Mirage's `system_time`, the task's epoch when the trial started
+- network: `network.allowed_domains`, its own runs of the fakes alone
+- tools: the task's CLIs, each logging its calls to the trial's own file
+- grade: a workspace of its own on the same daemon (below)
+
+A task that routes an upstream port (`ports:` in its `workspace.yaml`) is
+refused for now: the daemon's routing is one for all its workspaces.
 
 ## The verifier
 
@@ -72,6 +91,11 @@ the agent's mounts are never its; a judge call (GAIA2's, Claw-Eval's) is
 its only network. `workspace/verifier/` is
 its `/tests/`; the definition pins each file it reads there.
 
+On the job's daemon the grade is a workspace there instead: the request
+the grader takes is its read-only `/request.json`, and the `grade` CLI
+(`workspace/grade.ts`, which every worker loads) runs the grader in the
+daemon. No Node process starts per grade.
+
 Each grader writes the reward and its dimensions; `verifier/checks.json`
 and `timings.json` sit beside them in the trial.
 
@@ -86,15 +110,13 @@ in the trial's workspace, and nothing they do reaches the host:
 |---|---|---|
 | The CLI | `codex` on the host's `PATH` (0.147 and 0.165 tried) | `claude` on the host's `PATH` |
 | Its tools | its own: shell, `apply_patch`, file reads | Mirage's MCP tools alone: shell, read, write, edit, ls, grep, glob |
-| How they reach the workspace | a Codex environment (`$CODEX_HOME/environments.toml`, `include_local = false`) that runs `ssh ... <workspace>@127.0.0.1 -s codex-exec` against the trial's daemon; `codex exec -C /` | `--mcp-config` naming the workspace's MCP endpoint on the trial's daemon (`/v1/workspaces/<id>/mcp`), `--strict-mcp-config`, and `--tools ''`, which turns every built-in tool off |
+| How they reach the workspace | a Codex environment (`$CODEX_HOME/environments.toml`, `include_local = false`) whose `url` is the workspace's codex-exec endpoint on its daemon (`ws://.../v1/workspaces/<id>/codex-exec`); `codex exec -C /` | `--mcp-config` naming the workspace's MCP endpoint on its daemon (`/v1/workspaces/<id>/mcp`), `--strict-mcp-config`, and `--tools ''`, which turns every built-in tool off |
 | Off | web search, and the features that reach past the workspace (`CODEX_OFF`): the ChatGPT account's apps and plugins, browser and computer use, image generation | every built-in tool |
 | Its trajectory | Harbor's ATIF, from codex's session rollouts | Harbor's ATIF, from Claude Code's session log |
 
-Each trial's daemon listens for SSH on a loopback port of its own
-(`MIRAGE_SSH_PORT`), and admits one key, which the Harbor process mints
-when the first trial needs it (`environment.py`'s `ssh_key`); the SSH user
-names the workspace. A session runs in the daemon, so its network is the
-trial's, as `exec`'s is.
+Both endpoints are the daemon's own HTTP port, so they work on a trial's
+daemon and on the job's (`--ek workers=<n>`) alike. A session runs in the
+daemon, so its network is the workspace's, as `exec`'s is.
 
 Harbor's agents set themselves up through the container: they write
 their config and credentials under `/installed-agent` and `/tmp`, run the
@@ -239,18 +261,17 @@ it into the trial's read-only mount before each `exec`.
 
 ## Isolation
 
-Each trial has its own daemon. A job's trials share its mocks, each with
-runs of its own.
+A job's trials share its mocks, each with runs of its own.
 
-| Layer | Per-trial daemon (the default) |
-|---|---|
-| Workspace | Its own workspace on its own daemon |
-| Files | Its mounts are its own run dir; no other host path is visible |
-| Services | Its own runs on the shared fakes, each its own SQLite file, clock and ids |
-| Network | Its own routes: its upstream ports and its mounts reach its own runs; every other path and port, another trial's or its own, and the internet are refused |
-| CPU | Its own Node process and event loop, Pyodide included; nothing is capped |
-| Crash | A daemon that dies ends only its trial. A shared fake that dies fails the trials using it |
-| Verifier | A Mirage workspace of its own, which holds only the run's frozen state and the grader's inputs |
+| Layer | Per-trial daemon (the default) | The job's daemon (`--ek workers=<n>`) |
+|---|---|---|
+| Workspace | Its own workspace on its own daemon | Its own workspace, on one of the daemon's workers |
+| Files | Its mounts are its own run dir; no other host path is visible | The same |
+| Services | Its own runs on the shared fakes, each its own SQLite file, clock and ids | The same |
+| Network | Its own routes: its upstream ports and its mounts reach its own runs; every other path and port, another trial's or its own, and the internet are refused | Its mounts and CLIs reach its own runs alone (`network.allowed_domains`); no upstream port is routed |
+| CPU | Its own Node process and event loop, Pyodide included; nothing is capped | Its worker's process and event loop, shared with that worker's other trials |
+| Crash | A daemon that dies ends only its trial. A shared fake that dies fails the trials using it | A worker that dies ends the trials on it |
+| Verifier | A Mirage workspace of its own, which holds only the run's frozen state and the grader's inputs | A workspace of its own on the job's daemon, which holds only the grader's request |
 
 `isolation.py` starts nine trials at once from LiveClawBench's tasks:
 chat-sticker-engagement twice (A and B, on one chat fake), weather-aqi-report

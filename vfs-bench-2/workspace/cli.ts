@@ -55,7 +55,12 @@ export interface Tool {
 
 // `headers` go with every call: what the service needs to know of the session
 // besides its URL (ComplexMCP's apps are told their LightSystem run this way).
-const ConfigSchema = z.strictObject({ url: z.string(), headers: z.record(z.string(), z.string()).optional() })
+const ConfigSchema = z.strictObject({
+  url: z.string(),
+  headers: z.record(z.string(), z.string()).optional(),
+  /** The workspace's dispatch log (tools.ts), where it keeps one. */
+  dispatches: z.string().optional(),
+})
 export type Config = z.infer<typeof ConfigSchema>
 
 const encoder = new TextEncoder()

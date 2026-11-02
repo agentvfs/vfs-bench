@@ -18,12 +18,13 @@
  * outside this trial's runs. Under a run, the kit's own endpoints
  * (`/reset`, `/_kit/...`) answer 404, as the service would.
  *
- * A daemon serves one trial, so this is that trial's network. Mirage has
- * no per-workspace hook for this, so a daemon shared by trials could not
- * give each its own.
+ * A trial's own daemon serves one trial, so this is that trial's network.
+ * A daemon of the job's (`--ek workers`) gives none: each workspace's
+ * `network.allowed_domains` holds it to its own runs.
  *
  * The daemon's clock is the run's (clock.ts), and a task's tools become
- * CLIs here too (tools.ts), when it names some.
+ * CLIs here too (tools.ts), when it names some. A daemon of the job's
+ * grades its trials too (`grade`, grade.ts).
  *
  * The daemon stops, as on SIGTERM, when its stdin closes: the environment
  * that started it is gone.
@@ -102,10 +103,15 @@ const routed = ((input: RequestInfo | URL, init?: RequestInit): Promise<Response
   return send(input instanceof Request ? new Request(hop.to, input) : hop.to, init)
 }) as typeof fetch
 
-globalThis.fetch = routed
-registerInsecureFetch(routed)
+// A daemon of the job's (--ek workers) serves many trials: each workspace's
+// own `network` holds it to its runs, so the process's fetch stays as it is.
+if (process.env.VFSBENCH_ALLOW !== undefined) {
+  globalThis.fetch = routed
+  registerInsecureFetch(routed)
+}
 
 if (process.env.VFSBENCH_TOOLS !== undefined) await import('./tools.ts')
+if (process.env.VFSBENCH_GRADE !== undefined) await import('./grade.ts')
 
 process.stdin.on('close', () => process.kill(process.pid, 'SIGTERM'))
 process.stdin.resume()

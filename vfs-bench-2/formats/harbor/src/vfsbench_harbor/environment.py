@@ -4,7 +4,8 @@
 task states its environment in ``environment/mirage.yaml``: its services
 are kit fakes the whole job shares (``fakes.py``). For each trial,
 ``start()`` seeds a run of its own on each fake, from the task's fixture,
-then runs ``workspace/mirage.ts`` to lay out its workspace.
+then has ``workspace/mirage.ts`` lay out its workspace, in one of a few
+processes for the job.
 
 The trial then gets a Mirage daemon of its own, and its
 workspace is created through the daemon's HTTP API. ``exec`` is the
@@ -13,16 +14,15 @@ downloads are copies into and out of the mounts' host directories.
 
 One daemon per trial keeps trials apart: each has its own network (its
 ``localhost:<port>`` reaches only its own mocks, or its own runs of the
-shared fakes), event loop and crashes. Each daemon also listens for SSH on
-the loopback, for the job's key alone, which is how a coding agent on the
-host runs its tools in the workspace (agents.py).
-``--ek daemon_url=<url>`` points the environment at a shared daemon
-instead, which cannot route each trial to its own mocks until Mirage has a
-per-workspace network map (see the README).
+shared fakes), event loop and crashes. ``--ek workers=<n>`` runs every
+trial's workspace on one daemon of the job's instead, with that many
+worker processes, and ``--ek daemon_url=<url>`` on a daemon already
+running. A coding agent on the host runs its tools in the workspace
+through the daemon's codex-exec or MCP endpoint (agents.py).
 """
 import asyncio
 import atexit
-import functools
+import hashlib
 import json
 import os
 import re
@@ -32,7 +32,6 @@ import signal
 import socket
 import sqlite3
 import subprocess
-import tempfile
 import threading
 import time
 from datetime import datetime, timezone
@@ -60,6 +59,9 @@ DAEMON = ROOT / "submodule/mirage/typescript/packages/server/src/bin/daemon.ts"
 MODEL_ENV = re.compile(r".*_API_KEY|OPENAI_BASE_URL|OPENAI_API_BASE")
 NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 SQLITE = b"SQLite format 3\x00"
+# How long the client keeps an idle connection to a daemon: under Node's
+# 5 s keepAliveTimeout, after which the daemon closes it.
+KEEPALIVE_SECONDS = 2
 
 # The characters JavaScript's encodeURIComponent leaves as they are, as the
 # fake escapes a file's path (mocks/upstream/fake.ts).
@@ -79,10 +81,179 @@ def _boot_slot() -> asyncio.Semaphore:
     return _boots
 
 
+# The job's daemons (--ek workers=N), each started on the first trial that
+# needs it and serving every later one: a key is its Node, its workers and
+# the tools it registers.
+_job_daemons: dict[tuple, asyncio.Task] = {}
+_job_processes: list[subprocess.Popen] = []
+
+
+def _stop_job_daemons() -> None:
+    for process in _job_processes:
+        if process.poll() is None:
+            process.terminate()
+    for process in _job_processes:
+        try:
+            process.wait(15)
+        except subprocess.TimeoutExpired:
+            process.kill()
+
+
+atexit.register(_stop_job_daemons)
+
+
+async def _job_daemon(node: str, workers: int, tools: dict | None,
+                      job_dir: Path) -> str:
+    """The URL of the job's daemon with ``workers`` worker processes,
+    started if it is not yet. Its workspaces each hold to their own runs
+    (``network``), so its process routes nothing (preload.ts)."""
+    file = None if tools is None else tools["file"]
+    digest = None if file is None else hashlib.sha256(
+        Path(file).read_bytes()).hexdigest()
+    key = (node, workers, digest)
+    task = _job_daemons.get(key)
+    if task is None or (task.done() and task.exception() is not None):
+        task = asyncio.ensure_future(
+            _boot_job_daemon(node, workers, file, job_dir))
+        _job_daemons[key] = task
+    return await asyncio.shield(task)
+
+
+async def _boot_job_daemon(node: str, workers: int, tools: str | None,
+                           job_dir: Path) -> str:
+    port = _free_port()
+    home = job_dir / f"mirage-daemon-{port}"
+    home.mkdir(parents=True, exist_ok=True)
+    env = {
+        **{
+            k: v
+            for k, v in os.environ.items() if not MODEL_ENV.fullmatch(k)
+        },
+        "MIRAGE_HOME": str(home),
+        "MIRAGE_DAEMON_PORT": str(port),
+        "MIRAGE_WORKERS": str(workers),
+        "MIRAGE_WORKER_TYPE": "process",
+        "TZ": "UTC",
+        # Each trial's grade is a workspace here too (grade.ts).
+        "VFSBENCH_GRADE": "1",
+        **({} if tools is None else {
+               "VFSBENCH_TOOLS": tools
+           }),
+    }
+    with (home / "daemon.log").open("ab") as log:
+        # Its stdin stays open: it exits when Harbor does (preload.ts).
+        process = subprocess.Popen([
+            node, "--experimental-transform-types", "--no-warnings",
+            "--import",
+            str(PRELOAD),
+            str(DAEMON)
+        ],
+                                   cwd=ROOT,
+                                   env=env,
+                                   stdin=subprocess.PIPE,
+                                   stdout=log,
+                                   stderr=log)
+    _job_processes.append(process)
+    url = f"http://127.0.0.1:{port}"
+    async with httpx.AsyncClient() as client:
+        for _ in range(1200):
+            if process.poll() is not None:
+                raise RuntimeError(
+                    f"the job's Mirage daemon exited ({process.returncode}):"
+                    f"\n{(home / 'daemon.log').read_text()[-4000:]}")
+            try:
+                if (await client.get(f"{url}/v1/ready")).status_code == 200:
+                    return url
+            except httpx.TransportError:
+                pass
+            await asyncio.sleep(0.1)
+    raise RuntimeError(f"the job's Mirage daemon did not answer on {url}")
+
+
+class _Planner:
+    """One of the job's ``mirage.ts --serve`` processes: it lays out one
+    trial's run at a time, so no trial starts a Node process of its own to
+    plan."""
+
+    def __init__(self, node: str, log: Path):
+        self._node = node
+        self._log = log
+        self._process: asyncio.subprocess.Process | None = None
+        self._lock = asyncio.Lock()
+
+    async def plan(self, workspace: Path, run: Path, fakes: dict) -> dict:
+        # A trial canceled while its run is laid out still reads its reply,
+        # so the next trial's is its own.
+        line, process = await asyncio.shield(self._ask(workspace, run, fakes))
+        if line.startswith("PLAN="):
+            return json.loads(
+                Path(line.removeprefix("PLAN=").strip()).read_text())
+        if line.startswith("ERROR="):
+            raise RuntimeError("mirage.ts could not lay out the run:\n" +
+                               json.loads(line.removeprefix("ERROR=")))
+        raise RuntimeError(f"mirage.ts exited ({process.returncode}):\n"
+                           f"{self._log.read_text()[-4000:]}")
+
+    async def _ask(self, workspace: Path, run: Path,
+                   fakes: dict) -> tuple[str, asyncio.subprocess.Process]:
+        async with self._lock:
+            if self._process is None or self._process.returncode is not None:
+                with self._log.open("ab") as log:
+                    self._process = await asyncio.create_subprocess_exec(
+                        self._node,
+                        str(PLAN),
+                        "--serve",
+                        cwd=ROOT,
+                        env={
+                            k: v
+                            for k, v in os.environ.items()
+                            if not MODEL_ENV.fullmatch(k)
+                        },
+                        stdin=asyncio.subprocess.PIPE,
+                        stdout=asyncio.subprocess.PIPE,
+                        stderr=log)
+            process = self._process
+            assert process.stdin is not None and process.stdout is not None
+            process.stdin.write(
+                json.dumps({
+                    "workspace": str(workspace),
+                    "run": str(run),
+                    "fakes": fakes
+                }).encode() + b"\n")
+            await process.stdin.drain()
+            return (await process.stdout.readline()).decode(), process
+
+
+# How many of the job's trials are laid out at once, each by a planner of
+# its own: one queues 256 trials' layouts behind each other.
+PLANNERS = int(os.environ.get("VFSBENCH_PLANNERS") or 4)
+_planners: dict[str, asyncio.Queue[_Planner]] = {}
+
+
 def _free_port() -> int:
     with socket.socket() as s:
         s.bind(("127.0.0.1", 0))
         return s.getsockname()[1]
+
+
+def _stamp(live: Path) -> tuple | None:
+    """A state file's size and time, and its WAL's, where a mock writes
+    first: the same stamp, the same contents. None for no file."""
+    live = Path(live)
+    stamps = []
+    for path in (live, live.with_name(f"{live.name}-wal")):
+        try:
+            stat = path.stat()
+        except FileNotFoundError:
+            stamps.append(None)
+            continue
+        stamps.append((stat.st_size, stat.st_mtime_ns))
+    return None if stamps[0] is None else tuple(stamps)
+
+
+def _copy_file(source: Path, target: Path) -> None:
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(source, target)
 
 
 def _snapshot(view: Path, live: Path) -> None:
@@ -115,25 +286,6 @@ def _snapshot(view: Path, live: Path) -> None:
     os.replace(temp, view)
 
 
-@functools.cache
-def ssh_key() -> tuple[Path, Path]:
-    """The job's SSH key and the authorized_keys file holding it: one
-    for the Harbor process, removed when it exits. Every trial's daemon
-    admits it, and nothing else, on its own loopback port."""
-    directory = Path(tempfile.mkdtemp(prefix="vfsbench-ssh-"))
-    atexit.register(shutil.rmtree, directory, ignore_errors=True)
-    key = directory / "id_ed25519"
-    subprocess.run([
-        "ssh-keygen", "-q", "-t", "ed25519", "-N", "", "-C", "vfsbench-harbor",
-        "-f",
-        str(key)
-    ],
-                   check=True)
-    authorized = directory / "authorized_keys"
-    shutil.copyfile(key.with_suffix(".pub"), authorized)
-    return key, authorized
-
-
 class MirageEnvironment(BaseEnvironment):
     """A trial's environment as a workspace on a Mirage daemon.
 
@@ -142,15 +294,20 @@ class MirageEnvironment(BaseEnvironment):
             daemon.
         daemon_url: a running daemon to create the workspace on, in place of
             starting one for the trial.
+        workers: run every trial's workspace on one daemon of the job's,
+            with this many worker processes, in place of a daemon each. A
+            task that routes a port is refused.
     """
 
     def __init__(self,
                  *args,
                  node: str = "node",
                  daemon_url: str | None = None,
+                 workers: int | None = None,
                  **kwargs):
         self._node = node
         self._daemon_url = daemon_url
+        self._workers = None if workers is None else int(workers)
         self._processes: list[asyncio.subprocess.Process] = []
         self._client: httpx.AsyncClient | None = None
         self._workspace_id = ""
@@ -160,7 +317,6 @@ class MirageEnvironment(BaseEnvironment):
         self._env: dict[str, str] = {}
         self._runs: list[fakes.Run] = []
         self._url = ""
-        self._ssh_port: int | None = None
         # The run's epoch and when the trial started, in ms, which together
         # are its clock: None where the task has no fakes, and the host's.
         self._epoch: int | None = None
@@ -170,6 +326,8 @@ class MirageEnvironment(BaseEnvironment):
         # caller canceled mid-copy (an exec's timeout, an agent's end)
         # leaves it held until the copy is done.
         self._refreshing = threading.Lock()
+        # Each state file's stamp when it was last copied (_stamp).
+        self._stamps: dict[Path, tuple | None] = {}
         self._workdir = "/"
         super().__init__(*args, **kwargs)
         self._run_dir = (self.trial_paths.trial_dir / "mirage").resolve()
@@ -263,8 +421,8 @@ class MirageEnvironment(BaseEnvironment):
         shared = fakes.pool()
         name = fakes.run_name(self.session_id)
         task = f"{self.dataset}.{self.task_id}"
-        runs: dict[str, dict] = {}
-        for service, block in (spec.get("fakes") or {}).items():
+
+        async def open_run(service: str, block: dict) -> dict:
             fixture = shared.register(service, task,
                                       self.workspace_dir / block["fixture"])
             fake = await asyncio.to_thread(shared.fake,
@@ -277,42 +435,38 @@ class MirageEnvironment(BaseEnvironment):
             run = await shared.open(fake, name, fixture, block.get("epoch"),
                                     block.get("faults"), extras)
             self._runs.append(run)
-            runs[service] = {"url": run.url, "db": str(run.db)}
+            opened = {"url": run.url, "db": str(run.db)}
             # Files a fake keeps beside the run's SQLite as upstream's mock
             # keeps them on disk (mocks/upstream), by the workspace path
             # the task reads each at: `<run>.db.files/<path, escaped>`.
             if block.get("files"):
-                runs[service]["files"] = {
+                opened["files"] = {
                     view: f"{run.db}.files/{quote(path, safe=URI_SAFE)}"
                     for view, path in block["files"].items()
                 }
-        return runs
+            return opened
+
+        # Each fake its own process, so the trial's runs open side by side.
+        blocks = spec.get("fakes") or {}
+        opened = await asyncio.gather(*(open_run(service, block)
+                                        for service, block in blocks.items()))
+        return dict(zip(blocks, opened))
 
     async def _plan(self, runs: dict[str, dict]) -> dict:
         """Lay out the workspace and read the plan ``mirage.ts`` writes."""
-        mocks = await self._spawn(
-            "mocks",
-            self._node,
-            str(PLAN),
-            "--workspace",
-            str(self.workspace_dir),
-            "--run",
-            str(self._run_dir),
-            *(["--fakes", json.dumps(runs)] if runs else []),
-            env=self._host_env(),
-            ready_line=True,
-        )
-        assert mocks.stdout is not None
-        while True:
-            line = (await mocks.stdout.readline()).decode()
-            if line == "":
-                await mocks.wait()
-                log = (self._run_dir / "mocks.log").read_text()
-                raise RuntimeError(f"mirage.ts exited ({mocks.returncode}) "
-                                   f"before it was ready:\n{log[-4000:]}")
-            if line.startswith("PLAN="):
-                return json.loads(
-                    Path(line.removeprefix("PLAN=").strip()).read_text())
+        planners = _planners.get(self._node)
+        if planners is None:
+            planners = _planners[self._node] = asyncio.Queue()
+            for i in range(PLANNERS):
+                planners.put_nowait(
+                    _Planner(
+                        self._node,
+                        self.trial_paths.trial_dir.parent / f"mirage-{i}.log"))
+        planner = await planners.get()
+        try:
+            return await planner.plan(self.workspace_dir, self._run_dir, runs)
+        finally:
+            planners.put_nowait(planner)
 
     async def _start_daemon(self, routes: dict[str, str], allow: list[str],
                             tools: dict | None) -> str:
@@ -325,8 +479,6 @@ class MirageEnvironment(BaseEnvironment):
     async def _boot_daemon(self, routes: dict[str, str], allow: list[str],
                            tools: dict | None) -> str:
         port = _free_port()
-        self._ssh_port = _free_port()
-        _, authorized = ssh_key()
         daemon = await self._spawn(
             "daemon",
             self._node,
@@ -341,12 +493,6 @@ class MirageEnvironment(BaseEnvironment):
                 str(self._run_dir / "mirage-home"),
                 "MIRAGE_DAEMON_PORT":
                 str(port),
-                "MIRAGE_SSH_HOST":
-                "127.0.0.1",
-                "MIRAGE_SSH_PORT":
-                str(self._ssh_port),
-                "MIRAGE_SSH_AUTHORIZED_KEYS":
-                str(authorized),
                 "VFSBENCH_ROUTES":
                 json.dumps(routes),
                 "VFSBENCH_ALLOW":
@@ -379,9 +525,7 @@ class MirageEnvironment(BaseEnvironment):
         raise RuntimeError(f"the Mirage daemon did not answer on {url}")
 
     async def start(self, force_build: bool) -> None:
-        if self._run_dir.exists():
-            shutil.rmtree(self._run_dir)
-        self._run_dir.mkdir(parents=True)
+        await asyncio.to_thread(self._fresh_run_dir)
         if self.network_policy.network_mode == NetworkMode.PUBLIC:
             self.logger.warning(
                 "%s asks for the internet; the mirage workspace is offline "
@@ -410,15 +554,38 @@ class MirageEnvironment(BaseEnvironment):
         # A mount or CLI reaches its service at the trial's run directly,
         # so these stay reachable with the network off.
         allow = plan.get("allow", [])
-        url = self._daemon_url or await self._start_daemon(
-            routes, allow, plan.get("tools"))
+        if self._workers is not None and routes:
+            raise RuntimeError(
+                f"{self.environment_name} routes ports "
+                f"{sorted(routes)}, which a daemon of the job's cannot "
+                "give each trial")
+        if self._daemon_url is not None:
+            url = self._daemon_url
+        elif self._workers is not None:
+            url = await _job_daemon(self._node, self._workers,
+                                    plan.get("tools"),
+                                    self.trial_paths.trial_dir.parent)
+        else:
+            url = await self._start_daemon(routes, allow, plan.get("tools"))
         self._url = url
-        self._client = httpx.AsyncClient(base_url=url,
-                                         timeout=httpx.Timeout(60, read=None))
+        # An idle connection is dropped well before the daemon's own 5 s
+        # (Node's keepAliveTimeout): at httpx's default, also 5 s, a request
+        # can go out on a connection the daemon is closing (EPIPE).
+        self._client = httpx.AsyncClient(
+            base_url=url,
+            timeout=httpx.Timeout(60, read=None),
+            limits=httpx.Limits(keepalive_expiry=KEEPALIVE_SECONDS))
         self._workspace_id = re.sub(r"[^A-Za-z0-9_-]", "-", self.session_id)
         # The workspace's clock starts at the trial's time (Mirage's
         # system_time): `date`, file times and the runtimes read it.
         config = dict(plan["config"])
+        if self._workers is not None:
+            # The trial's runs alone, as its own daemon's routing holds it.
+            config["network"] = {
+                "allowed_domains":
+                sorted({httpx.URL(u).netloc.decode()
+                        for u in allow})
+            }
         if self._epoch is not None:
             config["system_time"] = self.now().isoformat(
                 timespec="milliseconds")
@@ -445,7 +612,7 @@ class MirageEnvironment(BaseEnvironment):
                 try:
                     await self._client.post(
                         f"/v1/workspaces/{self._workspace_id}/close")
-                    if self._daemon_url is None:
+                    if self._daemon_url is None and self._workers is None:
                         await self._client.post("/v1/shutdown")
                 except httpx.TransportError:
                     pass
@@ -469,10 +636,18 @@ class MirageEnvironment(BaseEnvironment):
                     pass
             self._runs = []
         if delete:
-            # The logs and the plan stay; the workspace's files go.
-            for child in self._run_dir.iterdir():
-                if child.is_dir():
-                    shutil.rmtree(child)
+            await asyncio.to_thread(self._delete_files)
+
+    def _fresh_run_dir(self) -> None:
+        if self._run_dir.exists():
+            shutil.rmtree(self._run_dir)
+        self._run_dir.mkdir(parents=True)
+
+    def _delete_files(self) -> None:
+        """The logs and the plan stay; the workspace's files go."""
+        for child in self._run_dir.iterdir():
+            if child.is_dir():
+                shutil.rmtree(child)
 
     def _host(self, path: str, *, write: bool = False) -> Path:
         """The host file behind a workspace path, through its mount."""
@@ -529,15 +704,19 @@ class MirageEnvironment(BaseEnvironment):
                           return_code=result["exit_code"])
 
     def _refresh_state(self, *, files_only: bool = False) -> None:
-        """Bring each mock's state file in the workspace up to date; one
-        refresh at a time."""
+        """Bring each mock's state file in the workspace up to date, where
+        it changed since its last copy; one refresh at a time."""
         with self._refreshing:
             for view, live in self._state:
                 if files_only and live.is_file():
                     with live.open("rb") as source:
                         if source.read(len(SQLITE)) == SQLITE:
                             continue
+                stamp = _stamp(live)
+                if stamp is not None and self._stamps.get(view) == stamp:
+                    continue
                 _snapshot(view, live)
+                self._stamps[view] = stamp
             # Host agents write ATIF outside Mirage's /logs mount. Both
             # verifiers refresh before reading it; keep an oracle's own
             # in-workspace trajectory when there is no host trajectory.
@@ -559,6 +738,63 @@ class MirageEnvironment(BaseEnvironment):
 
     # What a verifier run outside the workspace reads (microsandbox.py):
     # the trial's files, its routes and the container's environment.
+
+    @property
+    def grades(self) -> bool:
+        """Whether its daemon grades the trial: the job's does (``grade``)."""
+        return self._workers is not None
+
+    async def grade(self, inputs: Path, timeout_sec: float) -> ExecResult:
+        """Run ``grade`` in a workspace of its own on the job's daemon, over
+        ``inputs`` (``request.json`` and what it names) as its read-only
+        ``/``."""
+        assert self._client is not None and self.grades
+        workspace = f"{self._workspace_id}-grade"
+        # Room for the inputs as ``grade`` reads them, past Mirage's 32 MiB
+        # a workspace (a GAIA2 run's state is 24 MB, more in base64).
+        size = sum(p.stat().st_size for p in inputs.iterdir() if p.is_file())
+        config = {
+            "mounts": {
+                "/": {
+                    "vfs": "disk",
+                    "mode": "read",
+                    "config": {
+                        "root": str(inputs)
+                    }
+                }
+            },
+            "clis": {
+                "grade": {
+                    "cli": "grade"
+                }
+            },
+            "max_memory": 2 * size + 32 * 1024 * 1024,
+        }
+        reply = await self._client.post("/v1/workspaces",
+                                        json={
+                                            "id": workspace,
+                                            "config": config
+                                        })
+        if reply.status_code >= 300:
+            raise RuntimeError("creating the grade workspace failed "
+                               f"({reply.status_code}): {reply.text}")
+        try:
+            # As exec: a timeout drops the request, which cancels the line.
+            reply = await asyncio.wait_for(
+                self._client.post(f"/v1/workspaces/{workspace}/shell",
+                                  json={
+                                      "command": "grade",
+                                      "cwd": "/"
+                                  }), timeout_sec)
+        finally:
+            await self._client.post(f"/v1/workspaces/{workspace}/close")
+        if reply.status_code >= 300:
+            raise RuntimeError(f"the grade workspace's shell failed "
+                               f"({reply.status_code}): {reply.text}")
+        result = reply.json()
+        return ExecResult(stdout=result["stdout"],
+                          stderr=result["stderr"],
+                          return_code=result["exit_code"])
 
     @property
     def node_binary(self) -> str:
@@ -616,20 +852,6 @@ class MirageEnvironment(BaseEnvironment):
         """The environment every command sees, as the container's ``ENV``."""
         return dict(self._env)
 
-    @property
-    def ssh(self) -> dict | None:
-        """How an agent on the host reaches the workspace over SSH: the
-        trial's daemon's loopback port, the workspace as the user, and the
-        job's key. None on a daemon the environment did not start."""
-        if self._ssh_port is None:
-            return None
-        return {
-            "host": "127.0.0.1",
-            "port": self._ssh_port,
-            "user": self._workspace_id,
-            "key": str(ssh_key()[0]),
-        }
-
     def now(self) -> datetime:
         """The trial's time, as its workspace and services read it: the
         run's epoch when the trial started, moving on since; the host's
@@ -638,6 +860,13 @@ class MirageEnvironment(BaseEnvironment):
         if self._epoch is not None:
             now += self._epoch - self._started
         return datetime.fromtimestamp(now / 1000, timezone.utc)
+
+    @property
+    def codex_exec_url(self) -> str:
+        """The workspace's codex-exec endpoint on its daemon (WebSocket),
+        which ``codex`` reaches as a remote environment."""
+        url = f"ws{self._url[len('http'):]}"
+        return f"{url}/v1/workspaces/{self._workspace_id}/codex-exec"
 
     @property
     def mcp_url(self) -> str:
@@ -653,32 +882,38 @@ class MirageEnvironment(BaseEnvironment):
         """The host file behind a workspace path."""
         return self._host(path, write=write)
 
+    # Copies run in a thread, so no trial's holds up the others'.
+
     async def upload_file(self, source_path: Path | str, target_path: str):
         target = self._host(target_path, write=True)
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source_path, target)
+        await asyncio.to_thread(_copy_file, Path(source_path), target)
 
     async def upload_dir(self, source_dir: Path | str, target_dir: str):
-        shutil.copytree(source_dir,
-                        self._host(target_dir, write=True),
-                        dirs_exist_ok=True)
+        await asyncio.to_thread(shutil.copytree,
+                                source_dir,
+                                self._host(target_dir, write=True),
+                                dirs_exist_ok=True)
 
     async def download_file(self, source_path: str, target_path: Path | str):
-        Path(target_path).parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(self._host(source_path), target_path)
+        await asyncio.to_thread(_copy_file, self._host(source_path),
+                                Path(target_path))
 
     async def download_dir(self, source_dir: str, target_dir: Path | str):
-        shutil.copytree(self._host(source_dir), target_dir, dirs_exist_ok=True)
+        await asyncio.to_thread(shutil.copytree,
+                                self._host(source_dir),
+                                target_dir,
+                                dirs_exist_ok=True)
 
     async def download_dir_with_exclusions(self, *, source_dir: str,
                                            target_dir: Path | str,
                                            exclude: list[str]) -> None:
         # Harbor's own packs a tar in the environment; the files are on the
         # host.
-        shutil.copytree(self._host(source_dir),
-                        target_dir,
-                        dirs_exist_ok=True,
-                        ignore=shutil.ignore_patterns(*exclude))
+        await asyncio.to_thread(shutil.copytree,
+                                self._host(source_dir),
+                                target_dir,
+                                dirs_exist_ok=True,
+                                ignore=shutil.ignore_patterns(*exclude))
 
     async def download_dir_filtered(
         self,
@@ -690,17 +925,19 @@ class MirageEnvironment(BaseEnvironment):
         protect=None,
     ) -> None:
         source = self._host(source_dir)
-        paths = [
-            p.relative_to(source).as_posix() for p in source.rglob("*")
-            if p.is_file()
-        ]
-        selected = filter_paths_by_patterns(paths,
-                                            include=include,
-                                            exclude=exclude)
-        selected += [
-            p for p in paths if p in (protect or ()) and p not in selected
-        ]
-        for name in selected:
-            destination = Path(target_dir, name)
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(source / name, destination)
+
+        def copy() -> None:
+            paths = [
+                p.relative_to(source).as_posix() for p in source.rglob("*")
+                if p.is_file()
+            ]
+            selected = filter_paths_by_patterns(paths,
+                                                include=include,
+                                                exclude=exclude)
+            selected += [
+                p for p in paths if p in (protect or ()) and p not in selected
+            ]
+            for name in selected:
+                _copy_file(source / name, Path(target_dir, name))
+
+        await asyncio.to_thread(copy)
