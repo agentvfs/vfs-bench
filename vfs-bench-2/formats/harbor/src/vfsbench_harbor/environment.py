@@ -184,8 +184,7 @@ class _Planner:
     async def plan(self, workspace: Path, run: Path, fakes: dict) -> dict:
         # A trial canceled while its run is laid out still reads its reply,
         # so the next trial's is its own.
-        line, process = await asyncio.shield(
-            self._ask(workspace, run, fakes))
+        line, process = await asyncio.shield(self._ask(workspace, run, fakes))
         if line.startswith("PLAN="):
             return json.loads(
                 Path(line.removeprefix("PLAN=").strip()).read_text())
@@ -754,28 +753,28 @@ class MirageEnvironment(BaseEnvironment):
         # Room for the inputs as ``grade`` reads them, past Mirage's 32 MiB
         # a workspace (a GAIA2 run's state is 24 MB, more in base64).
         size = sum(p.stat().st_size for p in inputs.iterdir() if p.is_file())
-        reply = await self._client.post(
-            "/v1/workspaces",
-            json={
-                "id": workspace,
-                "config": {
-                    "mounts": {
-                        "/": {
-                            "vfs": "disk",
-                            "mode": "read",
-                            "config": {
-                                "root": str(inputs)
-                            }
-                        }
-                    },
-                    "clis": {
-                        "grade": {
-                            "cli": "grade"
-                        }
-                    },
-                    "max_memory": 2 * size + 32 * 1024 * 1024,
+        config = {
+            "mounts": {
+                "/": {
+                    "vfs": "disk",
+                    "mode": "read",
+                    "config": {
+                        "root": str(inputs)
+                    }
                 }
-            })
+            },
+            "clis": {
+                "grade": {
+                    "cli": "grade"
+                }
+            },
+            "max_memory": 2 * size + 32 * 1024 * 1024,
+        }
+        reply = await self._client.post("/v1/workspaces",
+                                        json={
+                                            "id": workspace,
+                                            "config": config
+                                        })
         if reply.status_code >= 300:
             raise RuntimeError("creating the grade workspace failed "
                                f"({reply.status_code}): {reply.text}")
