@@ -134,7 +134,7 @@ test('A canceled grade stops its judge’s request', async () => {
   })
   await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve))
   const until = async (done: () => boolean) => {
-    for (let i = 0; i < 500 && !done(); i++) await new Promise((resolve) => setTimeout(resolve, 10))
+    for (let i = 0; i < 200 && !done(); i++) await new Promise((resolve) => setTimeout(resolve, 10))
     assert.ok(done())
   }
   // The `grade` CLI as a job's daemon runs it, over /request.json.
@@ -151,11 +151,18 @@ test('A canceled grade stops its judge’s request', async () => {
       Buffer.from(JSON.stringify(grade))
     )
     const controller = new AbortController()
-    const grading = workspace.shell('grade', { signal: controller.signal }).catch(() => undefined)
+    let graded = false
+    const grading = workspace
+      .shell('grade', { signal: controller.signal })
+      .catch(() => undefined)
+      .finally(() => (graded = true))
     await until(() => asked)
+    // Both within 2 s of the cancel, well inside the grade's 60 s limit.
+    const canceled = Date.now()
     controller.abort()
+    await until(() => graded && closed)
+    assert.ok(Date.now() - canceled < 2000)
     await grading
-    await until(() => closed)
   } finally {
     await workspace.close()
     server.closeAllConnections()
