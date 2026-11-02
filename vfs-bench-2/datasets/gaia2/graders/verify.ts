@@ -1,6 +1,7 @@
 /** GAIA2's pinned judge, inside a fresh Mirage/Monty workspace. */
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
+import { setTimeout as delay } from 'node:timers/promises'
 import { pathToFileURL } from 'node:url'
 import { MontyRuntime } from '@struktoai/mirage-core/runtime/python/monty/runtime'
 import { Limit, MountMode, PathSpec } from '@struktoai/mirage-core/types'
@@ -82,7 +83,7 @@ export function judgeTransport(env: Record<string, string>, replay: JudgeCall[] 
         } catch (exc) {
           if (signal?.aborted) throw exc
           error = String(exc)
-          if (attempt < 5) await new Promise(resolve => setTimeout(resolve, Math.min(2 ** attempt * 1000, 30_000, Math.max(0, deadline - Date.now()))))
+          if (attempt < 5) await delay(Math.min(2 ** attempt * 1000, 30_000, Math.max(0, deadline - Date.now())), undefined, { signal })
         }
       }
       calls.push({ messages, error })

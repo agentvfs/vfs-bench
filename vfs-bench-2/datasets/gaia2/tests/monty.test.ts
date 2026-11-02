@@ -128,3 +128,20 @@ test('GAIA2 live transport stops at its signal, without retrying', async () => {
     assert.equal(requests, 1)
   } finally { server.closeAllConnections(); await new Promise<void>(resolve => server.close(() => resolve())) }
 })
+
+test('GAIA2 live transport stops at its signal while it waits to retry', async () => {
+  let requests = 0
+  // Fails at once, so the transport waits to retry.
+  const server = createServer((_req, res) => { requests++; res.writeHead(500).end() })
+  await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve))
+  try {
+    const address = server.address() as { port: number }
+    const controller = new AbortController()
+    const transport = judgeTransport({ OPENAI_API_KEY: 'test-only', OPENAI_BASE_URL: `http://127.0.0.1:${address.port}/v1` }, undefined, 60, controller.signal)
+    setTimeout(() => controller.abort(), 300)
+    const started = Date.now()
+    await assert.rejects(transport.complete([{ role: 'user', content: 'check' }]))
+    assert.ok(Date.now() - started < 1000)
+    assert.equal(requests, 1)
+  } finally { await new Promise<void>(resolve => server.close(() => resolve())) }
+})
