@@ -6,8 +6,10 @@ fake (``workspace/fakes.ts``); later trials reuse it, and each trial is a run
 of its own on it: ``POST /reset {"run": <trial>, "fixture": ..., "epoch":
 ...}`` seeds a SQLite file of the run's, ``POST /_run/<run>/_kit/faults``
 arms the task's fault plans on it, and ``DELETE /_kit/runs/<run>`` drops it
-when the trial stops. The fakes stay up until the process exits: their
-stdin closes then, and each stops.
+when the trial stops. Each run also gets a port of its own on the fake's
+launcher, which forwards to that run alone: the trial's workspace reaches
+its run there, and is allowed nothing else. The fakes stay up until the
+process exits: their stdin closes then, and each stops.
 
 A pool the environment starts lazily, rather than a Harbor job plugin, works
 with every ``harbor run`` as it is: Harbor 0.25 takes plugins only as
@@ -20,6 +22,7 @@ content, so one fake seeds every task's runs from its own task directory.
 """
 import asyncio
 import atexit
+import concurrent.futures
 import contextlib
 import hashlib
 import json
@@ -30,7 +33,7 @@ import shutil
 import subprocess
 import tempfile
 import threading
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import httpx
@@ -49,15 +52,21 @@ class Fake:
     state: Path
     process: subprocess.Popen
     state_token: str
+    # Each run's port as its launcher opens it, by run (``_ports``).
+    ports: dict[str, concurrent.futures.Future] = field(default_factory=dict)
+    lock: threading.Lock = field(default_factory=threading.Lock)
 
 
 @dataclass
 class Run:
-    """One trial's run of a shared fake."""
+    """One trial's run of a shared fake: ``url``, the run on the fake, for
+    the environment and the verifier; ``address``, the run's own port, for
+    the trial's workspace."""
     service: str
     name: str
     url: str
     db: Path
+    address: str = ""
 
 
 def run_name(session_id: str) -> str:
@@ -142,6 +151,10 @@ class SharedFakes:
                     f"before it was ready:\n{text[-4000:]}")
             fake = Fake(service, ready["url"], Path(ready["state"]), process,
                         state_token)
+            threading.Thread(target=_ports,
+                             args=(fake, ),
+                             name=f"fake-{service}-ports",
+                             daemon=True).start()
             self._fakes[service] = fake
             return fake
 
@@ -187,6 +200,8 @@ class SharedFakes:
             if len(files) != 1:
                 raise RuntimeError(f"run {run} of the {fake.service} fake has "
                                    f"{len(files)} files under {fake.state}")
+            address = await asyncio.wait_for(
+                asyncio.wrap_future(_send(fake, {"open": run}, run)), 30)
         except BaseException:
             # No trial holds the run yet, so its stop() would never drop it:
             # a run seeded, or half seeded, goes before the error does, a
@@ -195,7 +210,8 @@ class SharedFakes:
                 await asyncio.shield(
                     self.drop(Run(fake.service, run, "", Path())))
             raise
-        return Run(fake.service, run, f"{fake.url}/_run/{run}", files[0])
+        return Run(fake.service, run, f"{fake.url}/_run/{run}", files[0],
+                   address)
 
     async def snapshot(self,
                        run: Run,
@@ -220,6 +236,7 @@ class SharedFakes:
         fake = self._fakes.get(run.service)
         if fake is None or fake.process.poll() is not None:
             return
+        _send(fake, {"close": run.name})
         async with httpx.AsyncClient(timeout=60) as client:
             await client.delete(f"{fake.url}/_kit/runs/{run.name}")
 
@@ -239,6 +256,52 @@ class SharedFakes:
                     fake.process.stdout.close()
             self._fakes = {}
         shutil.rmtree(self.root, ignore_errors=True)
+
+
+def _send(fake: Fake,
+          line: dict,
+          run: str | None = None) -> concurrent.futures.Future:
+    """Write a line to a fake's launcher; the future of ``run``'s port, when
+    the line opens one."""
+    future: concurrent.futures.Future = concurrent.futures.Future()
+    with fake.lock:
+        if run is not None:
+            fake.ports[run] = future
+        assert fake.process.stdin is not None
+        try:
+            fake.process.stdin.write(json.dumps(line).encode() + b"\n")
+            fake.process.stdin.flush()
+        except (BrokenPipeError, ValueError) as error:
+            fake.ports.pop(run, None)
+            future.set_exception(
+                RuntimeError(f"the {fake.service} fake's launcher is gone: "
+                             f"{error}"))
+    return future
+
+
+def _ports(fake: Fake) -> None:
+    """Hand each port the fake's launcher opens to the run that asked for
+    it, until the launcher exits."""
+    assert fake.process.stdout is not None
+    for raw in fake.process.stdout:
+        line = raw.decode().strip()
+        if not line.startswith("RUN="):
+            continue
+        opened = json.loads(line.removeprefix("RUN="))
+        with fake.lock:
+            future = fake.ports.pop(opened["run"], None)
+        # An open that was canceled (its trial stopped, or timed out) has
+        # no one to take the port, so it is closed.
+        if future is not None and future.set_running_or_notify_cancel():
+            future.set_result(opened["url"])
+        else:
+            _send(fake, {"close": opened["run"]})
+    with fake.lock:
+        pending, fake.ports = fake.ports, {}
+    for future in pending.values():
+        if future.set_running_or_notify_cancel():
+            future.set_exception(
+                RuntimeError(f"the {fake.service} fake's launcher exited"))
 
 
 _pool: SharedFakes | None = None

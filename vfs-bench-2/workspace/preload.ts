@@ -2,25 +2,25 @@
  * Loaded into each trial's Mirage daemon before it starts: the trial's
  * network, and the daemon's lifetime.
  *
- *     VFSBENCH_ROUTES='{"5003":"http://127.0.0.1:53211/_run/t1"}' \
- *     VFSBENCH_ALLOW='["http://127.0.0.1:53300/_run/t1"]' \
+ *     VFSBENCH_ROUTES='{"5003":"http://127.0.0.1:53211"}' \
+ *     VFSBENCH_ALLOW='["http://127.0.0.1:53211", "http://127.0.0.1:53300"]' \
  *       node --import ./workspace/preload.ts <daemon>
  *
  * Mirage's curl fetches through the global `fetch`, and through the fetch
  * `registerInsecureFetch` holds for -k, as do the mounts and CLIs that
  * call a service (`/gmail`, `gws`). Both are replaced here. A request to an
- * upstream port on localhost goes to that port's mock, under the route's
- * path: a fake the job shares is reached at this trial's run of it
- * (`/_run/<run>/<path>`). A request under one of this trial's runs (an
- * `ALLOW` base) goes as it is, which is how a mount reaches its service.
- * Every other request fails as an unreachable host does, including one to
- * a mock's real port, this trial's or another's, and to a shared fake
- * outside this trial's runs. Under a run, the kit's own endpoints
- * (`/reset`, `/_kit/...`) answer 404, as the service would.
+ * upstream port on localhost goes to that port's mock: a fake the job
+ * shares is reached at this trial's run's own port (fakes.ts). A request
+ * to one of this trial's runs (an `ALLOW` base) goes as it is, which is how
+ * a mount reaches its service. Every other request fails as an unreachable
+ * host does, including one to a mock's real port and to another trial's
+ * run. The kit's own endpoints (`/reset`, `/_kit/...`) answer 404, as the
+ * service would.
  *
  * A trial's own daemon serves one trial, so this is that trial's network.
  * A daemon of the job's (`--ek workers`) gives none: each workspace's
- * `network.allowed_domains` holds it to its own runs.
+ * `network` (its runs' ports, and its upstream ports routed to them) holds
+ * it to its own runs.
  *
  * The daemon's clock is the run's (clock.ts), and a task's tools become
  * CLIs here too (tools.ts), when it names some. A daemon of the job's
@@ -83,8 +83,9 @@ function target(url: URL): { to: string; under: string } | null {
     return { to: `${route.origin}${route.path}${url.pathname}${url.search}`, under: route.path === '' ? '' : url.pathname }
   }
   for (const run of allowed) {
-    const inside = url.pathname === run.path || url.pathname.startsWith(`${run.path}/`)
-    if (run.path !== '' && url.origin === run.origin && inside) {
+    // A run at a port of its own has no path: the port is the run's.
+    const inside = run.path === '' || url.pathname === run.path || url.pathname.startsWith(`${run.path}/`)
+    if (url.origin === run.origin && inside) {
       return { to: url.href, under: url.pathname.slice(run.path.length) || '/' }
     }
   }

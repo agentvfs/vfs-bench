@@ -13,15 +13,28 @@
  * `FAKE={"url": ..., "state": ...}`, and it stops the fake on SIGTERM or
  * when its stdin closes (its parent is gone), writing the fake's output to
  * `--log`.
+ *
+ * Each run gets a port of its own, on a line of stdin:
+ *
+ *     {"open": "<run>"}    prints RUN={"run": "<run>", "url": "http://127.0.0.1:<port>"}
+ *     {"close": "<run>"}   closes it
+ *
+ * Every request to that port goes to the run, as `/_run/<run>/<path>` on
+ * the fake, so a workspace allowed the port reaches its run alone. The
+ * kit's own endpoints (`/reset`, `/_kit/...`), the verifier's state view
+ * and another run's path answer 404 there.
  */
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, readlinkSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { Agent, type Server } from 'node:http'
 import { dirname, join, relative, resolve } from 'node:path'
+import { createInterface } from 'node:readline'
 import { parseArgs } from 'node:util'
 
 import { type Fake, kit, start } from './kit.ts'
 import { INTEG, ROOT } from './paths.ts'
+import { openPort } from './ports.ts'
 import { Run } from './runs.ts'
 
 /** Every dataset's kit fakes, one directory each: `datasets/<dataset>/mocks/<service>/`. */
@@ -144,7 +157,6 @@ async function main(): Promise<void> {
     })())
   for (const signal of ['SIGTERM', 'SIGINT'] as const) process.on(signal, () => void stop().finally(() => process.exit(0)))
   process.stdin.on('close', () => void stop().finally(() => process.exit(0)))
-  process.stdin.resume()
   try {
     fake = await start(spec, run)
   } catch (error) {
@@ -152,6 +164,22 @@ async function main(): Promise<void> {
     throw error
   }
   console.log(`FAKE=${JSON.stringify({ url: fake.url, state: fake.stateDir })}`)
+  const url = fake.url
+  const agent = new Agent({ keepAlive: true })
+  const ports = new Map<string, Server>()
+  for await (const line of createInterface({ input: process.stdin })) {
+    const { open, close } = JSON.parse(line) as { open?: string; close?: string }
+    if (open !== undefined) {
+      const port = await openPort(url, open, agent)
+      ports.get(open)?.close()
+      ports.set(open, port.server)
+      console.log(`RUN=${JSON.stringify({ run: open, url: port.url })}`)
+    }
+    if (close !== undefined) {
+      ports.get(close)?.close()
+      ports.delete(close)
+    }
+  }
 }
 
 main().catch((error: unknown) => {

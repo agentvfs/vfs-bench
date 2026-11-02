@@ -22,7 +22,6 @@ through the daemon's codex-exec or MCP endpoint (agents.py).
 """
 import asyncio
 import atexit
-import hashlib
 import json
 import os
 import re
@@ -83,7 +82,7 @@ def _boot_slot() -> asyncio.Semaphore:
 
 # The job's daemons (--ek workers=N), each started on the first trial that
 # needs it and serving every later one: a key is its Node, its workers and
-# the tools it registers.
+# the dataset whose tools it registers.
 _job_daemons: dict[tuple, asyncio.Task] = {}
 _job_processes: list[subprocess.Popen] = []
 
@@ -102,19 +101,20 @@ def _stop_job_daemons() -> None:
 atexit.register(_stop_job_daemons)
 
 
-async def _job_daemon(node: str, workers: int, tools: dict | None,
+async def _job_daemon(node: str, workers: int, dataset: Path,
                       job_dir: Path) -> str:
     """The URL of the job's daemon with ``workers`` worker processes,
-    started if it is not yet. Its workspaces each hold to their own runs
-    (``network``), so its process routes nothing (preload.ts)."""
-    file = None if tools is None else tools["file"]
-    digest = None if file is None else hashlib.sha256(
-        Path(file).read_bytes()).hexdigest()
-    key = (node, workers, digest)
+    started if it is not yet, with every task's tools of ``dataset`` as
+    CLIs, each under its spec name (tools.ts). Its workspaces each hold to
+    their own runs (``network``), so its process routes nothing
+    (preload.ts)."""
+    key = (node, workers, dataset)
     task = _job_daemons.get(key)
     if task is None or (task.done() and task.exception() is not None):
+        files = sorted(str(p) for p in dataset.glob("*/workspace/tools.json"))
         task = asyncio.ensure_future(
-            _boot_job_daemon(node, workers, file, job_dir))
+            _boot_job_daemon(node, workers,
+                             os.pathsep.join(files) or None, job_dir))
         _job_daemons[key] = task
     return await asyncio.shield(task)
 
@@ -230,6 +230,11 @@ PLANNERS = int(os.environ.get("VFSBENCH_PLANNERS") or 4)
 _planners: dict[str, asyncio.Queue[_Planner]] = {}
 
 
+def _netloc(url: str) -> str:
+    """A URL's ``host:port``."""
+    return httpx.URL(url).netloc.decode()
+
+
 def _free_port() -> int:
     with socket.socket() as s:
         s.bind(("127.0.0.1", 0))
@@ -295,8 +300,7 @@ class MirageEnvironment(BaseEnvironment):
         daemon_url: a running daemon to create the workspace on, in place of
             starting one for the trial.
         workers: run every trial's workspace on one daemon of the job's,
-            with this many worker processes, in place of a daemon each. A
-            task that routes a port is refused.
+            with this many worker processes, in place of a daemon each.
     """
 
     def __init__(self,
@@ -435,7 +439,8 @@ class MirageEnvironment(BaseEnvironment):
             run = await shared.open(fake, name, fixture, block.get("epoch"),
                                     block.get("faults"), extras)
             self._runs.append(run)
-            opened = {"url": run.url, "db": str(run.db)}
+            # The workspace reaches the run at its own port.
+            opened = {"url": run.address, "db": str(run.db)}
             # Files a fake keeps beside the run's SQLite as upstream's mock
             # keeps them on disk (mocks/upstream), by the workspace path
             # the task reads each at: `<run>.db.files/<path, escaped>`.
@@ -554,16 +559,11 @@ class MirageEnvironment(BaseEnvironment):
         # A mount or CLI reaches its service at the trial's run directly,
         # so these stay reachable with the network off.
         allow = plan.get("allow", [])
-        if self._workers is not None and routes:
-            raise RuntimeError(
-                f"{self.environment_name} routes ports "
-                f"{sorted(routes)}, which a daemon of the job's cannot "
-                "give each trial")
         if self._daemon_url is not None:
             url = self._daemon_url
         elif self._workers is not None:
             url = await _job_daemon(self._node, self._workers,
-                                    plan.get("tools"),
+                                    self.workspace_dir.parent.parent,
                                     self.trial_paths.trial_dir.parent)
         else:
             url = await self._start_daemon(routes, allow, plan.get("tools"))
@@ -580,11 +580,16 @@ class MirageEnvironment(BaseEnvironment):
         # system_time): `date`, file times and the runtimes read it.
         config = dict(plan["config"])
         if self._workers is not None:
-            # The trial's runs alone, as its own daemon's routing holds it.
+            # The trial's runs alone, each at a port of its own, and each
+            # upstream port on localhost routed to its run's.
             config["network"] = {
-                "allowed_domains":
-                sorted({httpx.URL(u).netloc.decode()
-                        for u in allow})
+                "allowed_domains": sorted({_netloc(u)
+                                           for u in allow}),
+                "routes": {
+                    f"{host}:{port}": _netloc(url)
+                    for port, url in routes.items()
+                    for host in ("localhost", "127.0.0.1")
+                },
             }
         if self._epoch is not None:
             config["system_time"] = self.now().isoformat(
