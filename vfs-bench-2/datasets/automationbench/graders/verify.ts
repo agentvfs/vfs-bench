@@ -98,6 +98,9 @@ export async function verifyAutomation(request: AutomationRequest) {
   }
 }
 
+/** The grade, as the `grade` CLI runs it (workspace/grade.ts). */
+export const verify = verifyAutomation
+
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   let input = ''
   for await (const chunk of process.stdin) input += chunk

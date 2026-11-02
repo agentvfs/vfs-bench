@@ -35,6 +35,7 @@ class CanceledRefresh(unittest.TestCase):
         self.env = object.__new__(MirageEnvironment)
         self.env._state = [("view", "live")]
         self.env._refreshing = threading.Lock()
+        self.env._stamps = {}
         self.root = tempfile.TemporaryDirectory()
         self.env.trial_paths = TrialPaths(Path(self.root.name))
 
@@ -87,6 +88,7 @@ class AgentTrajectory(unittest.TestCase):
         }
         self.env._state = []
         self.env._refreshing = threading.Lock()
+        self.env._stamps = {}
         self.source = self.env.trial_paths.agent_dir / "trajectory.json"
         self.source.parent.mkdir(parents=True)
         self.target = self.env.host_path("/logs/agent/trajectory.json")
@@ -111,6 +113,19 @@ class AgentTrajectory(unittest.TestCase):
         with patch.object(environment, "_snapshot") as snapshot:
             asyncio.run(self.env.refresh_verifier_files())
         snapshot.assert_called_once_with(root / "view.json", output)
+
+    def test_refresh_copies_a_state_file_only_once_it_changes(self) -> None:
+        root = Path(self.root.name)
+        live = root / "live.json"
+        live.write_text('{"done": false}')
+        self.env._state = [(root / "view.json", live)]
+        with patch.object(environment, "_snapshot") as snapshot:
+            asyncio.run(self.env.refresh_state())
+            asyncio.run(self.env.refresh_state())
+            self.assertEqual(snapshot.call_count, 1)
+            live.write_text('{"done": true}')
+            asyncio.run(self.env.refresh_state())
+            self.assertEqual(snapshot.call_count, 2)
 
     def test_exec_refreshes_trajectory_before_running_a_command(self) -> None:
         self.source.write_text('{"steps": []}')

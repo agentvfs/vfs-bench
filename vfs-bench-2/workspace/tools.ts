@@ -19,8 +19,9 @@
  * A call goes as upstream's dispatcher sends it (`runner/dispatcher.py`):
  * the arguments as the JSON body to the endpoint's path at that URL, the
  * reply's JSON the result, an error from status 400 up and a failure as a
- * 500. Each is appended to `VFSBENCH_DISPATCHES` as upstream's dispatcher
- * records it, under the endpoint's upstream URL, which the verifier reads.
+ * 500. Each is appended to the CLI's `dispatches` log (else
+ * `VFSBENCH_DISPATCHES`) as upstream's dispatcher records it, under the
+ * endpoint's upstream URL, which the verifier reads.
  */
 import { appendFileSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -55,11 +56,15 @@ interface Dispatch {
 const file = process.env.VFSBENCH_TOOLS
 const log = process.env.VFSBENCH_DISPATCHES
 if (file !== undefined) {
-  if (log === undefined) throw new Error('VFSBENCH_TOOLS needs VFSBENCH_DISPATCHES')
   const clis = JSON.parse(readFileSync(file, 'utf8')) as ToolsCli[]
   const endpoints = new Map(clis.flatMap((cli) => cli.tools.map((tool) => [tool.call ?? tool.name, tool.endpoint] as const)))
-  let calls = 0
-  const send: Send = async (tool, args, { url, headers }) => {
+  // Each log's calls, numbered from 1: a daemon of the job's keeps a log per workspace.
+  const calls = new Map<string, number>()
+  const send: Send = async (tool, args, { url, headers, dispatches }) => {
+    const path = dispatches ?? log
+    if (path === undefined) throw new Error(`${tool.name}: no dispatch log (its CLI's \`dispatches\`, or VFSBENCH_DISPATCHES)`)
+    const call = (calls.get(path) ?? 0) + 1
+    calls.set(path, call)
     const endpoint = endpoints.get(tool.call ?? tool.name)!
     const started = performance.now()
     let status: number
@@ -77,7 +82,7 @@ if (file !== undefined) {
       body = { error: String(error) }
     }
     const dispatch: Dispatch = {
-      tool_use_id: `call_${++calls}`,
+      tool_use_id: `call_${call}`,
       tool_name: tool.call ?? tool.name,
       endpoint_url: endpoint.url,
       request_body: args,
@@ -86,7 +91,7 @@ if (file !== undefined) {
       latency_ms: performance.now() - started,
       timestamp: new Date().toISOString(),
     }
-    appendFileSync(log, `${JSON.stringify(dispatch)}\n`)
+    appendFileSync(path, `${JSON.stringify(dispatch)}\n`)
     // An error's text, where the body is one (a Gaia2 app's stderr), prints as it is.
     return status < 400
       ? { ok: true, result: body }

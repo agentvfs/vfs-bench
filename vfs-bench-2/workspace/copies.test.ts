@@ -77,3 +77,25 @@ test('a file copied onto a directory that is there goes inside it, and an ENV na
     rmSync(dir, { recursive: true, force: true })
   }
 })
+
+test('a directory copied to a destination not there yet, or empty, arrives whole, as a clone of its own', () => {
+  const dir = workspaceDir({})
+  const root = mkdtempSync(join(tmpdir(), 'vfsbench-copies-ws-'))
+  try {
+    mkdirSync(join(root, 'mount'))
+    copyInto([{ to: '/mount', from: join(dir, 'files', 'policies') }], (path) => join(root, path.slice(1)), 'test')
+    assert.equal(readFileSync(join(root, 'mount', 'policy.md'), 'utf8'), 'policy\n')
+    assert.equal(existsSync(join(root, 'mount', 'policies')), false)
+    mkdirSync(join(dir, 'files', 'notes', 'deep'))
+    writeFileSync(join(dir, 'files', 'notes', 'deep', 'more.md'), 'more\n')
+    copyInto([{ to: '/drive/notes', from: join(dir, 'files', 'notes') }], (path) => join(root, path.slice(1)), 'test')
+    assert.equal(readFileSync(join(root, 'drive', 'notes', 'note.md'), 'utf8'), 'note\n')
+    assert.equal(readFileSync(join(root, 'drive', 'notes', 'deep', 'more.md'), 'utf8'), 'more\n')
+    assert.equal(existsSync(join(root, 'drive', 'notes', 'notes')), false)
+    writeFileSync(join(root, 'drive', 'notes', 'note.md'), 'changed\n')
+    assert.equal(readFileSync(join(dir, 'files', 'notes', 'note.md'), 'utf8'), 'note\n')
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+    rmSync(root, { recursive: true, force: true })
+  }
+})

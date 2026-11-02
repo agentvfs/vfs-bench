@@ -140,6 +140,9 @@ export async function verifyGaia2(request: Gaia2Request) {
   } finally { await workspace.close() }
 }
 
+/** The grade, as the `grade` CLI runs it (workspace/grade.ts). */
+export const verify = verifyGaia2
+
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   let input = ''
   for await (const chunk of process.stdin) input += chunk

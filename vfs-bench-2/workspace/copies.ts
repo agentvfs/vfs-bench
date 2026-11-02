@@ -8,8 +8,9 @@
  * two copies to one destination apart, where a map by destination would
  * keep only the last.
  */
-import { constants, cpSync, existsSync, mkdirSync, statSync } from 'node:fs'
-import { basename, join } from 'node:path'
+import { execFileSync } from 'node:child_process'
+import { constants, cpSync, existsSync, mkdirSync, readdirSync, statSync } from 'node:fs'
+import { basename, dirname, join } from 'node:path'
 
 /** One copy: a host path into a workspace path. `from` null makes an empty directory. */
 export interface Copy {
@@ -48,6 +49,11 @@ export function copiedPath(copies: Copy[], path: string): string | undefined {
   return under
 }
 
+/** Whether `path` is nothing yet, or an empty directory. */
+function empty(path: string): boolean {
+  return !existsSync(path) || (statSync(path).isDirectory() && readdirSync(path).length === 0)
+}
+
 /**
  * Lay the copies out in order, each workspace path through `host` to its
  * directory; a file onto a directory that is there goes inside it.
@@ -60,7 +66,12 @@ export function copyInto(copies: Copy[], host: (path: string) => string | undefi
     else if (statSync(from).isFile() && existsSync(target) && statSync(target).isDirectory())
       cpSync(from, join(target, basename(from)))
     // A clone where the file system has them (APFS, Btrfs), else a copy:
-    // a Gaia2 trial's drive is 250 MB.
-    else cpSync(from, target, { recursive: true, mode: constants.COPYFILE_FICLONE })
+    // a Gaia2 trial's drive is 250 MB. On macOS a directory onto nothing,
+    // or onto an empty directory (a mount's own), is cloned by `cp -c`
+    // (clonefile), much faster than cpSync's file by file.
+    else if (process.platform === 'darwin' && statSync(from).isDirectory() && empty(target)) {
+      mkdirSync(dirname(target), { recursive: true })
+      execFileSync('/bin/cp', ['-cR', `${from}/`, target])
+    } else cpSync(from, target, { recursive: true, mode: constants.COPYFILE_FICLONE })
   }
 }
