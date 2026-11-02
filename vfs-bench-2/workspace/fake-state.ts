@@ -21,8 +21,9 @@ export function withVerifierState<C extends MinimalClient>(fake: Fake<C>, token:
             return { status: 400, body: { error: 'invalid_tables' } }
           const tables: Record<string, unknown[]> = {}
           // A fake whose upstream verifier asks the server's SQL runner
-          // (EnterpriseOps-Gym's) answers each query itself, read-only, at
-          // the run's clock: `query-<i>` is its rows, or one row with the
+          // (EnterpriseOps-Gym's), or names the views its grader reads
+          // (ERPBench-100's), answers each query itself, read-only, at the
+          // run's clock: `query-<i>` is its rows, or one row with the
           // runner's `__error__`. The store never leaves the fake.
           if (queries.length) {
             const answer = (fake as Fake<C> & { verifierQuery?: VerifierQuery<C> }).verifierQuery

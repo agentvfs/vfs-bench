@@ -1,0 +1,1650 @@
+[
+ {
+  "name": "erpbench",
+  "description": "ERPBench's erpbench tools.",
+  "tools": [
+   {
+    "name": "get_task",
+    "call": "erpbench.get_task",
+    "description": "Read the task-scoped outcome contract without revealing the gold answer.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Task identifier"
+      }
+     },
+     "required": [
+      "task_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/erpbench.get_task",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_decision",
+    "call": "erpbench.get_decision",
+    "description": "Read back the durable decision record for a task.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Task identifier"
+      }
+     },
+     "required": [
+      "task_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/erpbench.get_decision",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "get_submission",
+    "call": "erpbench.get_submission",
+    "description": "Read back the durable submitted answer.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Task identifier"
+      }
+     },
+     "required": [
+      "task_id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/erpbench.get_submission",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "record_decision",
+    "call": "erpbench.record_decision",
+    "description": "Record the selected option, status, primary ERP record, rationale and source references.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Active task identifier; every write must carry it"
+      },
+      "decision": {
+       "type": "string",
+       "description": "Selected option"
+      },
+      "status": {
+       "type": "string",
+       "description": "Decision status"
+      },
+      "primary_record": {
+       "type": "string",
+       "description": "Primary ERP record number"
+      },
+      "rationale": {
+       "type": "string",
+       "description": "Rationale"
+      },
+      "source_refs": {
+       "type": "array",
+       "description": "Source references",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "task_id",
+      "decision",
+      "status",
+      "primary_record",
+      "rationale",
+      "source_refs"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/erpbench.record_decision",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "submit_answer",
+    "call": "erpbench.submit_answer",
+    "description": "Persist the structured final answer for deterministic grading.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Active task identifier; every write must carry it"
+      },
+      "answers": {
+       "additionalProperties": false,
+       "properties": {
+        "accepted_lines": {
+         "description": "Spreadsheet lines imported",
+         "type": "integer"
+        },
+        "decision_status": {
+         "description": "One of the status ids listed in the task contract",
+         "enum": [
+          "submitted",
+          "awaiting_credit_release"
+         ],
+         "type": "string"
+        },
+        "duplicate_lines": {
+         "description": "Lines already imported on the earlier partial import",
+         "type": "integer"
+        },
+        "imported_units": {
+         "description": "Total quantity on the imported lines",
+         "type": "integer"
+        },
+        "order_total": {
+         "description": "Imported order value at current list prices",
+         "multipleOf": 0.01,
+         "type": "number"
+        },
+        "primary_record": {
+         "description": "The primary ERP record number created or updated (as returned by the system)",
+         "type": "string"
+        },
+        "recommended_option": {
+         "description": "One of the decision option ids listed in the task contract",
+         "enum": [
+          "import_accepted_lines_and_submit",
+          "import_accepted_lines_and_hold_submission",
+          "process_everything_as_received",
+          "escalate_without_executing"
+         ],
+         "type": "string"
+        },
+        "rejected_lines": {
+         "description": "Spreadsheet lines not imported (duplicates and inactive items)",
+         "type": "integer"
+        },
+        "source_reference": {
+         "description": "Drive file id of the operative (current-authority) source document you relied on",
+         "type": "string"
+        }
+       },
+       "required": [
+        "recommended_option",
+        "decision_status",
+        "source_reference",
+        "primary_record",
+        "accepted_lines",
+        "rejected_lines",
+        "imported_units",
+        "order_total",
+        "duplicate_lines"
+       ],
+       "type": "object"
+      }
+     },
+     "required": [
+      "task_id",
+      "answers"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/erpbench.submit_answer",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "oracle-fusion",
+  "description": "ERPBench's oracle_fusion tools.",
+  "tools": [
+   {
+    "name": "items.list",
+    "call": "oracle_fusion.items.list",
+    "description": "Get items for an inventory organization.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "q": {
+       "type": "string",
+       "description": "Provider query expression, e.g. Field='value' and Other='value'"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.items.list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "items.update",
+    "call": "oracle_fusion.items.update",
+    "description": "Update the list price of one item as of an effective date.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Active task identifier; every write must carry it"
+      },
+      "ItemId": {
+       "type": "integer",
+       "description": "Item identifier"
+      },
+      "ListPrice": {
+       "type": "number",
+       "description": "New list price"
+      },
+      "EffectiveDate": {
+       "type": "string",
+       "description": "ISO effective date"
+      }
+     },
+     "required": [
+      "task_id",
+      "ItemId",
+      "ListPrice",
+      "EffectiveDate"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.items.update",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "customer_account_activities.get",
+    "call": "oracle_fusion.customer_account_activities.get",
+    "description": "Get one customer account with open receivables and credit status.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "AccountId": {
+       "type": "string",
+       "description": "Customer account number"
+      }
+     },
+     "required": [
+      "AccountId"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.customer_account_activities.get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "sales_orders.list",
+    "call": "oracle_fusion.sales_orders.list",
+    "description": "Get sales orders from Order Management.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "q": {
+       "type": "string",
+       "description": "Provider query expression, e.g. Field='value' and Other='value'"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.sales_orders.list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "sales_orders.get",
+    "call": "oracle_fusion.sales_orders.get",
+    "description": "Get one sales order with its lines.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "OrderKey": {
+       "type": "string",
+       "description": "Order number"
+      }
+     },
+     "required": [
+      "OrderKey"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.sales_orders.get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "sales_orders.create",
+    "call": "oracle_fusion.sales_orders.create",
+    "description": "Create one sales order; SubmittedFlag false leaves it as a draft awaiting release.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Active task identifier; every write must carry it"
+      },
+      "SourceTransactionNumber": {
+       "type": "string",
+       "description": "Source document reference"
+      },
+      "SourceTransactionSystem": {
+       "type": "string",
+       "description": "Source system"
+      },
+      "BuyingPartyNumber": {
+       "type": "string",
+       "description": "Customer account number"
+      },
+      "BuyingPartyName": {
+       "type": "string",
+       "description": "Customer name when no account exists"
+      },
+      "CustomerPONumber": {
+       "type": "string",
+       "description": "Customer purchase order"
+      },
+      "TransactionType": {
+       "type": "string",
+       "description": "Order type"
+      },
+      "RequestedFulfillmentOrganizationCode": {
+       "type": "string",
+       "description": "Fulfillment organization"
+      },
+      "SubmittedFlag": {
+       "type": "boolean",
+       "description": "Submit the order"
+      },
+      "OrderTotal": {
+       "type": "number",
+       "description": "Header total when lines are not itemized"
+      },
+      "lines": {
+       "type": "array",
+       "description": "Order lines: ProductNumber, OrderedQuantity, OrderedUOM, UnitListPrice",
+       "items": {}
+      }
+     },
+     "required": [
+      "task_id",
+      "SourceTransactionNumber",
+      "SourceTransactionSystem",
+      "CustomerPONumber",
+      "TransactionType",
+      "RequestedFulfillmentOrganizationCode",
+      "SubmittedFlag"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.sales_orders.create",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "shipments.list",
+    "call": "oracle_fusion.shipments.list",
+    "description": "Get shipments.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "q": {
+       "type": "string",
+       "description": "Provider query expression, e.g. Field='value' and Other='value'"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.shipments.list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "shipment_lines.list",
+    "call": "oracle_fusion.shipment_lines.list",
+    "description": "Get shipment lines with requested and shipped quantities.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "q": {
+       "type": "string",
+       "description": "Provider query expression, e.g. Field='value' and Other='value'"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.shipment_lines.list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "shipment_lines.update",
+    "call": "oracle_fusion.shipment_lines.update",
+    "description": "Update the shipped quantity of one unconfirmed shipment line.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Active task identifier; every write must carry it"
+      },
+      "ShipmentLine": {
+       "type": "integer",
+       "description": "Shipment line identifier"
+      },
+      "ShippedQuantity": {
+       "type": "integer",
+       "description": "Corrected shipped quantity"
+      },
+      "Comments": {
+       "type": "string",
+       "description": "Reason"
+      }
+     },
+     "required": [
+      "task_id",
+      "ShipmentLine",
+      "ShippedQuantity"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.shipment_lines.update",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "receivables_invoices.list",
+    "call": "oracle_fusion.receivables_invoices.list",
+    "description": "Get receivables invoices.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "q": {
+       "type": "string",
+       "description": "Provider query expression, e.g. Field='value' and Other='value'"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.receivables_invoices.list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "receivables_invoices.get",
+    "call": "oracle_fusion.receivables_invoices.get",
+    "description": "Get one receivables invoice.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "CustomerTransactionId": {
+       "type": "integer",
+       "description": "Transaction identifier"
+      }
+     },
+     "required": [
+      "CustomerTransactionId"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.receivables_invoices.get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "standard_receipts.list",
+    "call": "oracle_fusion.standard_receipts.list",
+    "description": "Get standard receipts for a customer account.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "q": {
+       "type": "string",
+       "description": "Provider query expression, e.g. Field='value' and Other='value'"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.standard_receipts.list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "standard_receipts.create",
+    "call": "oracle_fusion.standard_receipts.create",
+    "description": "Create a standard receipt and apply it through remittance references.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Active task identifier; every write must carry it"
+      },
+      "ReceiptNumber": {
+       "type": "string",
+       "description": "Receipt number"
+      },
+      "ReceiptAmount": {
+       "type": "number",
+       "description": "Receipt amount"
+      },
+      "ReceiptDate": {
+       "type": "string",
+       "description": "ISO receipt date"
+      },
+      "CustomerAccountNumber": {
+       "type": "string",
+       "description": "Customer account number"
+      },
+      "ReceiptMethod": {
+       "type": "string",
+       "description": "Receipt method"
+      },
+      "BusinessUnit": {
+       "type": "string",
+       "description": "Business unit"
+      },
+      "Currency": {
+       "type": "string",
+       "description": "Currency"
+      },
+      "remittanceReferences": {
+       "type": "array",
+       "description": "Rows of ReferenceType, ReferenceNumber, ApplyAmount",
+       "items": {}
+      }
+     },
+     "required": [
+      "task_id",
+      "ReceiptNumber",
+      "ReceiptAmount",
+      "ReceiptDate",
+      "CustomerAccountNumber",
+      "ReceiptMethod",
+      "BusinessUnit",
+      "Currency",
+      "remittanceReferences"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.standard_receipts.create",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "onhand_balances.list",
+    "call": "oracle_fusion.onhand_balances.list",
+    "description": "Get on-hand and reserved quantities.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "q": {
+       "type": "string",
+       "description": "Provider query expression, e.g. Field='value' and Other='value'"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.onhand_balances.list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "purchase_orders.list",
+    "call": "oracle_fusion.purchase_orders.list",
+    "description": "Get purchase orders.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "q": {
+       "type": "string",
+       "description": "Provider query expression, e.g. Field='value' and Other='value'"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.purchase_orders.list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "purchase_orders.get",
+    "call": "oracle_fusion.purchase_orders.get",
+    "description": "Get one purchase order.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "purchaseOrdersUniqID": {
+       "type": "string",
+       "description": "Purchase order number"
+      }
+     },
+     "required": [
+      "purchaseOrdersUniqID"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.purchase_orders.get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "purchase_order_lines.list",
+    "call": "oracle_fusion.purchase_order_lines.list",
+    "description": "Get the lines of one purchase order.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "purchaseOrdersUniqID": {
+       "type": "string",
+       "description": "Purchase order number"
+      }
+     },
+     "required": [
+      "purchaseOrdersUniqID"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.purchase_order_lines.list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "suppliers.list",
+    "call": "oracle_fusion.suppliers.list",
+    "description": "Get suppliers with lead times.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "q": {
+       "type": "string",
+       "description": "Provider query expression, e.g. Field='value' and Other='value'"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.suppliers.list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "purchase_requisitions.create",
+    "call": "oracle_fusion.purchase_requisitions.create",
+    "description": "Create a purchase requisition with lines.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Active task identifier; every write must carry it"
+      },
+      "RequisitioningBU": {
+       "type": "string",
+       "description": "Requisitioning business unit"
+      },
+      "Preparer": {
+       "type": "string",
+       "description": "Preparer"
+      },
+      "Description": {
+       "type": "string",
+       "description": "Description"
+      },
+      "Justification": {
+       "type": "string",
+       "description": "Justification"
+      },
+      "lines": {
+       "type": "array",
+       "description": "Lines: ItemNumber, Quantity, UOM, UnitPrice, Supplier, RequestedDeliveryDate",
+       "items": {}
+      }
+     },
+     "required": [
+      "task_id",
+      "RequisitioningBU",
+      "Preparer",
+      "Description",
+      "Justification",
+      "lines"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.purchase_requisitions.create",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "purchase_requisitions.submit",
+    "call": "oracle_fusion.purchase_requisitions.submit",
+    "description": "Submit a requisition for approval.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Active task identifier; every write must carry it"
+      },
+      "purchaseRequisitionsUniqID": {
+       "type": "string",
+       "description": "Requisition number"
+      }
+     },
+     "required": [
+      "task_id",
+      "purchaseRequisitionsUniqID"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.purchase_requisitions.submit",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "purchase_requisitions.get",
+    "call": "oracle_fusion.purchase_requisitions.get",
+    "description": "Get one purchase requisition.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "purchaseRequisitionsUniqID": {
+       "type": "string",
+       "description": "Requisition number"
+      }
+     },
+     "required": [
+      "purchaseRequisitionsUniqID"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.purchase_requisitions.get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "receiving_receipt_requests.list",
+    "call": "oracle_fusion.receiving_receipt_requests.list",
+    "description": "Get receiving receipt requests.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "q": {
+       "type": "string",
+       "description": "Provider query expression, e.g. Field='value' and Other='value'"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.receiving_receipt_requests.list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "receiving_receipt_requests.create",
+    "call": "oracle_fusion.receiving_receipt_requests.create",
+    "description": "Create a receiving receipt request for delivered purchase-order lines.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Active task identifier; every write must carry it"
+      },
+      "ReceiptSourceCode": {
+       "type": "string",
+       "description": "Receipt source"
+      },
+      "OrganizationCode": {
+       "type": "string",
+       "description": "Organization"
+      },
+      "VendorName": {
+       "type": "string",
+       "description": "Supplier"
+      },
+      "lines": {
+       "type": "array",
+       "description": "Lines: DocumentNumber, DocumentLineNumber, ItemNumber, Quantity, TransactionType",
+       "items": {}
+      }
+     },
+     "required": [
+      "task_id",
+      "ReceiptSourceCode",
+      "OrganizationCode",
+      "lines"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.receiving_receipt_requests.create",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "invoices.list",
+    "call": "oracle_fusion.invoices.list",
+    "description": "Get Payables invoices.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "q": {
+       "type": "string",
+       "description": "Provider query expression, e.g. Field='value' and Other='value'"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.invoices.list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "invoices.get",
+    "call": "oracle_fusion.invoices.get",
+    "description": "Get one Payables invoice with holds.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "invoicesUniqID": {
+       "type": "string",
+       "description": "Invoice number"
+      }
+     },
+     "required": [
+      "invoicesUniqID"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.invoices.get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "invoices.create",
+    "call": "oracle_fusion.invoices.create",
+    "description": "Create one Payables invoice matched to purchase-order lines.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Active task identifier; every write must carry it"
+      },
+      "BusinessUnit": {
+       "type": "string",
+       "description": "Business unit"
+      },
+      "Supplier": {
+       "type": "string",
+       "description": "Supplier"
+      },
+      "InvoiceNumber": {
+       "type": "string",
+       "description": "Invoice number"
+      },
+      "InvoiceAmount": {
+       "type": "number",
+       "description": "Invoice amount"
+      },
+      "InvoiceCurrency": {
+       "type": "string",
+       "description": "Currency"
+      },
+      "InvoiceDate": {
+       "type": "string",
+       "description": "ISO invoice date"
+      },
+      "invoiceLines": {
+       "type": "array",
+       "description": "Lines: LineNumber, PurchaseOrderNumber, PurchaseOrderLineNumber, ItemNumber, Quantity, UnitPrice",
+       "items": {}
+      }
+     },
+     "required": [
+      "task_id",
+      "BusinessUnit",
+      "Supplier",
+      "InvoiceNumber",
+      "InvoiceAmount",
+      "InvoiceCurrency",
+      "InvoiceDate",
+      "invoiceLines"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.invoices.create",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "invoices.validate",
+    "call": "oracle_fusion.invoices.validate",
+    "description": "Validate an invoice for payment.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Active task identifier; every write must carry it"
+      },
+      "ProcessAction": {
+       "type": "string",
+       "description": "Must be Validate"
+      },
+      "BusinessUnit": {
+       "type": "string",
+       "description": "Business unit"
+      },
+      "Supplier": {
+       "type": "string",
+       "description": "Supplier"
+      },
+      "InvoiceNumber": {
+       "type": "string",
+       "description": "Invoice number"
+      }
+     },
+     "required": [
+      "task_id",
+      "ProcessAction",
+      "BusinessUnit",
+      "Supplier",
+      "InvoiceNumber"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.invoices.validate",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "invoice_holds.create",
+    "call": "oracle_fusion.invoice_holds.create",
+    "description": "Place one Payables invoice on hold with a reason.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Active task identifier; every write must carry it"
+      },
+      "InvoiceId": {
+       "type": "integer",
+       "description": "Invoice identifier"
+      },
+      "HoldName": {
+       "type": "string",
+       "description": "Hold name"
+      },
+      "HoldReason": {
+       "type": "string",
+       "description": "Hold reason"
+      }
+     },
+     "required": [
+      "task_id",
+      "InvoiceId",
+      "HoldName",
+      "HoldReason"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.invoice_holds.create",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "workers.list",
+    "call": "oracle_fusion.workers.list",
+    "description": "Get workers for a legal employer.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "q": {
+       "type": "string",
+       "description": "Provider query expression, e.g. Field='value' and Other='value'"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.workers.list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "workers.create",
+    "call": "oracle_fusion.workers.create",
+    "description": "Hire one worker under a standard contract.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Active task identifier; every write must carry it"
+      },
+      "PersonNumber": {
+       "type": "string",
+       "description": "Person number"
+      },
+      "DisplayName": {
+       "type": "string",
+       "description": "Display name"
+      },
+      "LegalEmployerName": {
+       "type": "string",
+       "description": "Legal employer"
+      },
+      "JobCode": {
+       "type": "string",
+       "description": "Job"
+      },
+      "HireDate": {
+       "type": "string",
+       "description": "ISO hire date"
+      },
+      "ContractEndDate": {
+       "type": "string",
+       "description": "ISO contract end"
+      },
+      "MonthlySalary": {
+       "type": "number",
+       "description": "Monthly salary"
+      },
+      "CandidateId": {
+       "type": "string",
+       "description": "Candidate identifier"
+      }
+     },
+     "required": [
+      "task_id",
+      "PersonNumber",
+      "DisplayName",
+      "LegalEmployerName",
+      "JobCode",
+      "HireDate",
+      "ContractEndDate",
+      "MonthlySalary",
+      "CandidateId"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.workers.create",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "document_records.list",
+    "call": "oracle_fusion.document_records.list",
+    "description": "Get worker documents of record with expiry and check status.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "q": {
+       "type": "string",
+       "description": "Provider query expression, e.g. Field='value' and Other='value'"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.document_records.list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "document_records.update",
+    "call": "oracle_fusion.document_records.update",
+    "description": "Update the status or verification flag of one document record.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Active task identifier; every write must carry it"
+      },
+      "DocumentRecordId": {
+       "type": "integer",
+       "description": "Document record identifier"
+      },
+      "Status": {
+       "type": "string",
+       "description": "New status, e.g. ALERTED"
+      },
+      "VerifiedFlag": {
+       "type": "boolean",
+       "description": "Mark the mandatory check verified"
+      }
+     },
+     "required": [
+      "task_id",
+      "DocumentRecordId"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.document_records.update",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "absences.list",
+    "call": "oracle_fusion.absences.list",
+    "description": "Get absence records.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "q": {
+       "type": "string",
+       "description": "Provider query expression, e.g. Field='value' and Other='value'"
+      }
+     },
+     "required": []
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.absences.list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "absences.create",
+    "call": "oracle_fusion.absences.create",
+    "description": "Record one absence for a worker.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Active task identifier; every write must carry it"
+      },
+      "personNumber": {
+       "type": "string",
+       "description": "Person number"
+      },
+      "absenceType": {
+       "type": "string",
+       "description": "Absence type"
+      },
+      "startDate": {
+       "type": "string",
+       "description": "ISO start"
+      },
+      "endDate": {
+       "type": "string",
+       "description": "ISO end"
+      },
+      "employer": {
+       "type": "string",
+       "description": "Legal employer"
+      },
+      "absenceStatusCd": {
+       "type": "string",
+       "description": "Status code"
+      }
+     },
+     "required": [
+      "task_id",
+      "personNumber",
+      "absenceType",
+      "startDate",
+      "endDate",
+      "employer",
+      "absenceStatusCd"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/oracle_fusion.absences.create",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "gmail",
+  "description": "ERPBench's gmail tools.",
+  "tools": [
+   {
+    "name": "messages.list",
+    "call": "gmail.messages.list",
+    "description": "Search mailbox messages.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "q": {
+       "type": "string",
+       "description": "Gmail search query"
+      }
+     },
+     "required": [
+      "q"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/gmail.messages.list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "messages.get",
+    "call": "gmail.messages.get",
+    "description": "Read one mailbox message.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "id": {
+       "type": "string",
+       "description": "Message identifier"
+      }
+     },
+     "required": [
+      "id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/gmail.messages.get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "drafts.create",
+    "call": "gmail.drafts.create",
+    "description": "Save a review-only email draft; drafts are never sent by the sandbox.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Active task identifier; every write must carry it"
+      },
+      "to": {
+       "type": "string",
+       "description": "Recipient"
+      },
+      "subject": {
+       "type": "string",
+       "description": "Subject"
+      },
+      "body": {
+       "type": "string",
+       "description": "Body"
+      }
+     },
+     "required": [
+      "task_id",
+      "to",
+      "subject",
+      "body"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/gmail.drafts.create",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "drafts.get",
+    "call": "gmail.drafts.get",
+    "description": "Read back one draft.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "id": {
+       "type": "string",
+       "description": "Draft identifier"
+      }
+     },
+     "required": [
+      "id"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/gmail.drafts.get",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "google-drive",
+  "description": "ERPBench's google_drive tools.",
+  "tools": [
+   {
+    "name": "files.list",
+    "call": "google_drive.files.list",
+    "description": "List files; supports name contains 'text'.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "q": {
+       "type": "string",
+       "description": "Drive query"
+      }
+     },
+     "required": [
+      "q"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/google_drive.files.list",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "files.get",
+    "call": "google_drive.files.get",
+    "description": "Read file metadata, version and current-authority flag.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "fileId": {
+       "type": "string",
+       "description": "File identifier"
+      }
+     },
+     "required": [
+      "fileId"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/google_drive.files.get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "files.download",
+    "call": "google_drive.files.download",
+    "description": "Download the content of one file.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "fileId": {
+       "type": "string",
+       "description": "File identifier"
+      }
+     },
+     "required": [
+      "fileId"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/google_drive.files.download",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "google-sheets",
+  "description": "ERPBench's google_sheets tools.",
+  "tools": [
+   {
+    "name": "spreadsheets.values.get",
+    "call": "google_sheets.spreadsheets.values.get",
+    "description": "Read a range from the ops workbook.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "spreadsheetId": {
+       "type": "string",
+       "description": "Spreadsheet identifier"
+      },
+      "range": {
+       "type": "string",
+       "description": "A1 range"
+      }
+     },
+     "required": [
+      "spreadsheetId",
+      "range"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/google_sheets.spreadsheets.values.get",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "spreadsheets.values.update",
+    "call": "google_sheets.spreadsheets.values.update",
+    "description": "Write one controlled range; other cells are preserved.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Active task identifier; every write must carry it"
+      },
+      "spreadsheetId": {
+       "type": "string",
+       "description": "Spreadsheet identifier"
+      },
+      "range": {
+       "type": "string",
+       "description": "A1 range"
+      },
+      "valueInputOption": {
+       "type": "string",
+       "description": "RAW or USER_ENTERED"
+      },
+      "values": {
+       "type": "array",
+       "description": "Two-dimensional values",
+       "items": {}
+      }
+     },
+     "required": [
+      "task_id",
+      "spreadsheetId",
+      "range",
+      "valueInputOption",
+      "values"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/google_sheets.spreadsheets.values.update",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "spreadsheets.values.append",
+    "call": "google_sheets.spreadsheets.values.append",
+    "description": "Append rows to a tab.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Active task identifier; every write must carry it"
+      },
+      "spreadsheetId": {
+       "type": "string",
+       "description": "Spreadsheet identifier"
+      },
+      "range": {
+       "type": "string",
+       "description": "Tab range"
+      },
+      "valueInputOption": {
+       "type": "string",
+       "description": "RAW or USER_ENTERED"
+      },
+      "values": {
+       "type": "array",
+       "description": "Rows to append",
+       "items": {}
+      }
+     },
+     "required": [
+      "task_id",
+      "spreadsheetId",
+      "range",
+      "valueInputOption",
+      "values"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/google_sheets.spreadsheets.values.append",
+     "method": "POST"
+    }
+   }
+  ]
+ },
+ {
+  "name": "slack-tools",
+  "description": "ERPBench's slack tools.",
+  "tools": [
+   {
+    "name": "conversations_history",
+    "call": "slack.conversations_history",
+    "description": "Read a channel's messages, including task posts.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "channel": {
+       "type": "string",
+       "description": "Channel"
+      },
+      "task_id": {
+       "type": "string",
+       "description": "Filter to one task's posts"
+      }
+     },
+     "required": [
+      "channel"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/slack.conversations_history",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "search_messages",
+    "call": "slack.search_messages",
+    "description": "Search messages across channels.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "Search query"
+      }
+     },
+     "required": [
+      "query"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/slack.search_messages",
+     "method": "POST"
+    }
+   },
+   {
+    "name": "chat_postMessage",
+    "call": "slack.chat_postMessage",
+    "description": "Post the review handoff to a channel.",
+    "parameters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Active task identifier; every write must carry it"
+      },
+      "channel": {
+       "type": "string",
+       "description": "Channel"
+      },
+      "text": {
+       "type": "string",
+       "description": "Message"
+      },
+      "review_status": {
+       "type": "string",
+       "description": "Must remain draft_for_review"
+      }
+     },
+     "required": [
+      "task_id",
+      "channel",
+      "text",
+      "review_status"
+     ]
+    },
+    "endpoint": {
+     "url": "http://erpbench/slack.chat_postMessage",
+     "method": "POST"
+    }
+   }
+  ]
+ }
+]

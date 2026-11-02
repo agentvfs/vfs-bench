@@ -1,0 +1,2167 @@
+{
+ "constants": {
+  "metric": "ERPScore",
+  "write_tools": [
+   "erpbench.record_decision",
+   "erpbench.submit_answer",
+   "gmail.drafts.create",
+   "google_sheets.spreadsheets.values.append",
+   "google_sheets.spreadsheets.values.update",
+   "oracle_fusion.absences.create",
+   "oracle_fusion.document_records.update",
+   "oracle_fusion.invoice_holds.create",
+   "oracle_fusion.invoices.create",
+   "oracle_fusion.invoices.validate",
+   "oracle_fusion.items.update",
+   "oracle_fusion.purchase_requisitions.create",
+   "oracle_fusion.purchase_requisitions.submit",
+   "oracle_fusion.receiving_receipt_requests.create",
+   "oracle_fusion.sales_orders.create",
+   "oracle_fusion.shipment_lines.update",
+   "oracle_fusion.standard_receipts.create",
+   "oracle_fusion.workers.create",
+   "slack.chat_postMessage"
+  ],
+  "immutable_tables": [
+   "tenants",
+   "users",
+   "customers",
+   "suppliers",
+   "onhand_balances",
+   "purchase_orders",
+   "channel_orders",
+   "mail_messages",
+   "drive_files",
+   "chat_messages",
+   "shipments"
+  ],
+  "common_write_tables": [
+   "audit_log",
+   "chat_posts",
+   "decisions",
+   "mail_drafts",
+   "sheet_changes",
+   "spreadsheets",
+   "submissions"
+  ],
+  "family_write_tables": {
+   "order_import": [
+    "sales_orders"
+   ],
+   "shipment_verification": [
+    "shipment_lines"
+   ],
+   "receivables_collection": [
+    "receivables_invoices",
+    "standard_receipts"
+   ],
+   "inventory_reorder": [
+    "purchase_requisitions"
+   ],
+   "receiving_ap_match": [
+    "ap_invoices",
+    "invoice_holds",
+    "purchase_order_lines",
+    "receiving_receipt_requests"
+   ],
+   "document_compliance": [
+    "document_records"
+   ],
+   "shift_rollup": [
+    "absences"
+   ],
+   "channel_order_sync": [
+    "sales_orders"
+   ],
+   "hire_against_requisition": [
+    "workers"
+   ],
+   "price_list_batch": [
+    "items"
+   ]
+  },
+  "numeric_fields": {
+   "order_import": [
+    "accepted_lines",
+    "rejected_lines",
+    "imported_units",
+    "order_total",
+    "duplicate_lines"
+   ],
+   "shipment_verification": [
+    "lines_reviewed",
+    "lines_matching",
+    "lines_corrected",
+    "units_removed",
+    "confirmed_value"
+   ],
+   "receivables_collection": [
+    "open_invoices_before",
+    "receipt_amount",
+    "remaining_past_due",
+    "oldest_days_past_due",
+    "past_due_pct_of_limit"
+   ],
+   "inventory_reorder": [
+    "skus_below_reorder",
+    "total_reorder_units",
+    "requisition_amount",
+    "supplier_lead_time_days",
+    "days_late"
+   ],
+   "receiving_ap_match": [
+    "lines_matched",
+    "matched_amount",
+    "variance_amount",
+    "held_lines",
+    "payable_amount"
+   ],
+   "document_compliance": [
+    "expiring_within_30",
+    "unalerted_expiring",
+    "blocked_workers",
+    "checks_verified",
+    "days_to_earliest_expiry"
+   ],
+   "shift_rollup": [
+    "expected_staff",
+    "reporting_staff",
+    "late_reports",
+    "overtime_hours",
+    "missing_staff"
+   ],
+   "channel_order_sync": [
+    "channel_rows",
+    "already_synced",
+    "created_orders",
+    "duplicate_rows",
+    "synced_value"
+   ],
+   "hire_against_requisition": [
+    "open_headcount",
+    "eligible_candidates",
+    "hires",
+    "monthly_wage_total",
+    "contract_months"
+   ],
+   "price_list_batch": [
+    "batch_lines",
+    "accepted_lines",
+    "rejected_lines",
+    "superseded_lines",
+    "average_change_pct"
+   ]
+  },
+  "scoring_categories": [
+   "discovery",
+   "calculation",
+   "decision",
+   "erp_state",
+   "handoff",
+   "readback",
+   "containment"
+  ]
+ },
+ "tasks": {
+  "erpbench-001": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "90df162ed91aacf195382356acb79f60f9af5cc6661fecce9e9e948fbde43db6"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-002": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "b51de70ab839a92e121e9872daf8dbbad45e17120b3330229c6842bd3db8044a"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-003": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "cfeccb097453a72aefbcff23a44b03f3aa712ebbfd0516bee61d3f7d9fb112bd"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-004": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "b72890e2cc93cb748edbe5b4c0e305b6f39d18c181c674a25fc9428e39d8a15b"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-005": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "381cedd249f39e7b28453041a94ef8fd9a49ad0a4c029ab2a8cc1b00cc248610"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-006": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "9202ab15aa43c5cceb66b38dba04889b48a0522d3ae0ee471d16545d39c0557f"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-007": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "9173e34ee2db63721838dd3ee2f7edfa34884f015b37073aea1f7faa4b04f97d"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-008": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "4bd69ddf679e8c1e6d4764e775ff1a893046a07de244e57a0ac0458d1b7e935a"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-009": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "89fffad1f8282d20af0d4589da666c84134a508283788df08f0bdc0592415bda"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-010": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "d7db4e613decec4eb28c071b5c3d1f15a3d6697df030a55cadbc285599f68c6b"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-011": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "b04049ee86f225e554aef34226d79a71cbdd1bcc056e824163353e871c80e9a9"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-012": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "612d45ebd692f124ee674b0bf23cc146a1f807bf47b72dd96790c3ad6a36a7b0"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-013": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "3f44abddd1cbb868e10b9bd3680f84a9202ebb892ecb34fcbca07b9c7feed302"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-014": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "74aa9d5964c7dbf24e7d45c683d4be68a8fa9c9973947bada612c4cf01e52fd5"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-015": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "09f557542d62363a3a1af3b12a03936c9b35dced25022a8ff56d6c1270facc8c"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-016": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "78c2135bab7b984cb74a1f7fbd5fdda16829164dface09c4a3b0db47c64fb607"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-017": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "31bf8f138f78876eb1cc3e6337b7c231a63b2138b8231b34b6e1fe6496c03494"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-018": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "c686908e4468d51dcff237d5307cbb9f3426a85f4b539e451f1fa320b31841d2"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-019": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "ad5663494e44c06bb637b0372c60a4bd913d644e49d985648a641a4e0ed82445"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-020": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "fc1afd1ea203e0ddb01f4b31d830aa77683b53426c4a49e8552adfe6806a778d"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-021": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "9fc3f005687765b5eb476e26f2d4610070a6b19d5a05fe41e128aa509667b983"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-022": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "1d7ef4f7ae880a13225ccabbb5cb748dfd85a7945851fab3e89d8e81af251554"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-023": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "89c54fbb047075a056c98ba8af97d579006dfe9955dd1e0a3fc234547dcc97f8"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-024": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "fe2ad01a9e202e5d78bcc05b7139b3d838871cd51f80c96012bc849ffd162434"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-025": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "cdef2c80313511d8408b1a5965f248a73ebc6f82632df0fd4cabd2ea0fae6556"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-026": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "c762f822a3341cc21f2912bbf99c0d4cb60a4319fd46303314ddaf6905dddb2c"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-027": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "34b74923f98f765a06900daff2c75ad503cd82a3f964c0f39066fba3349a9e37"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-028": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "8cdc2cc8b9bdfd927d88c296ac3ff0bc4afba1a196d778bd8674a6e3bf260ac3"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-029": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "ecee45f0ee1e97fb71b78eb29cf6895a6d0834d35d9d735f44d74c78ce6d72f7"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-030": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "9aa7a378e737c8e3526ae536a847e6631165aae4b735e9d1fb74b9620a645e96"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-031": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "be3280b913ed268645f91a80f3102d881bbd80025f5719ff86aa0cf53bc0f1ea"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-032": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "34f79c2de648d9455845399521aede22924ef559da824f60d76c85c6213113b1"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-033": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "55c34405be025e061700302010f0d8d7cd085df357fbdaf66e92ebe490c1c0f8"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-034": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "e554dd3919bab4606424f4ced09c4ada34221a06e9ef9a6c80f4841892186140"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-035": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "ba46278d0a7c22bffa0b794e1c2c7eb628a78c2d0426120510c74f284ded7894"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-036": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "84f8733304c785ad982a02ba78b907ff4d330cc9b9056c7bb2f20c35e72248b2"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-037": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "4a103089a93143d7a66759c15c230a1dd3b2cee7c9401366850bbea0ac5c7098"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-038": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "3b4310550613acde39de84a974d0ffe7464f259f236b60a16a7ce8d160b8a63c"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-039": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "44d3d57aaa84917fd050b8136644f21ef6685a2a619f13646fa71edd12053de9"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-040": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "3ecea7e9a41dc1074b368a983597494b95d783c110c8f3f5f4ec92280aa2ebca"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-041": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "146a62aa0806c46ad08f63c87b176b5094f7868b632c0a53f6f4c2efb0ffcfe2"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-042": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "dc5b8f639c33d401fa02f26120a811733e1484ea8f7876a8c85e879acec16ec7"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-043": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "f8de6aef98c93432840e3b32a5f468556b44de880a379d3026e4e62da2255594"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-044": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "b7d1ae593ed14057aa3a8b25014592bddde7a8b3f784aec54a86546dcac32e47"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-045": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "a1a3238ae5155198d9d34940adb33486769b0a937b1cbc039ea2e44492170fcf"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-046": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "9770d3df958617a4aa90670fa0a1f1ccca2c95d6e92547cc399a31ddb6e6aa63"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-047": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "68dc495b2688dfe3a041d0214bede3bc7c4af3763209c9da59b81e5b65e202c4"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-048": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "9fe1cc145c1d17fe1cc08f595d7f8dbde22d32f3f7eca9e33fe9bfed6680ab95"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-049": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "784b2d486f419e71de5a619a909fa7435cdaad6c46c5586fbbd63edc2d29702c"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-050": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "37d266410bf1b0ed779a0a34b7851a9604bf9763af3b36176ba381daf18319f8"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-051": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "d7a25968e6d2801b9176f2cec87dc8a96431a74ae6f3dfc65c4dd5e16b07bbd5"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-052": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "b4afb4b828b3feb579f59e3d13212121dc184b718b39c728a93c7f7412eefd4c"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-053": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "653b2446ef2a044a64bc13b1352ec67370022c59e5aa7756e78b0680b2808590"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-054": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "ee3075021471d9002cd0d0fd80b0ae221eb448787e6a1ab2e82e8466248d36ed"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-055": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "16387a98a2ccd86a312b684e55cbd76f35d3d283ca96dcbab7a15f3bd1a288b5"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-056": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "ccaa5f58e16282b5356c15f371691decdc04dbf1e62f50660b0fb31d72ff439f"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-057": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "95984caa1c21e3c8544d94f4aa99a4bd579f6e5d11f9fd74b630c97874d1916d"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-058": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "ad3d01f8177611431145d2136ccdbd6b5ed6ed9a51b9009ca462dc78fc77aad4"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-059": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "8d3da68a17b9a94dc86b90edd497809d7512cef32fac8b6edb170ba3de58a1e6"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-060": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "7f303b44bef4fe67c2b3babd048303c138b17e3905cec1aba08ed8a23eab17b6"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-061": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "9cfca475cd42f734c190b5a8524d25d4aaba04de018853a30877116454fec0d3"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-062": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "ead886a5ac5bdf94815a2cc0238aaf5a0826e0fc7e7a12eed27924f8e0fa9dc1"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-063": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "cd15dcf37534df9af876b37356b5efd90829f4747458b4e2e9f480b42e90d568"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-064": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "49a7eeb001174108b5e974e9f42c1636c21180d788e7f711d3195a3b6e4914e0"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-065": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "ebd9396799f89d362e37956e6a76f76615e2636f5f57061b8234cf5105082b0f"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-066": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "90ac76739cb87a6e5cd1e8c92519eed75d2597e8b20c8616326ab84a7a4a8803"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-067": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "c527f5f8fa1aeb00c51b50894f851ffbe474235389dc49f97d39a899dedd5713"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-068": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "5557ac925c9210be5b34c8eb56b55cbd8fe0a9318c8cea80d3f15c866d1d1f55"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-069": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "7ceb3a54fd6c64cd9057b700b9bb6d6ad5461f04eee1efffd25393d6ae221dba"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-070": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "d74a56c77dff439834fc17be9e6cd16e73ec41b2680a8e05376fc3ff888d7737"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-071": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "428699e73457814e7657d4207486977d252d26275a0d006a0288eef9f1527e8e"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-072": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "a3fff6a14f726e2fbd44dca833429d7c07b25fca4fdcfac83a009057e98d883f"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-073": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "e222a3ef8bed0aabf268c2356c0b2c811038f33a610be73f45c0d677228ea163"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-074": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "7e4f808713eb995f2624b677537684c5762b772138d7d438562d024934a996df"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-075": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "3ffb229c6a3b27019eff43baa1ac6df41a38adfef098902a000a0bac1c36dc62"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-076": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "c894812de9f63f82cfdd3db5f90d0e9335c17b1ab5a2a7850adb30a68fef7f61"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-077": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "59a57e44de00a60509e8cd5269fa5eb81c00106bce8758432d52399adb3514d0"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-078": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "59f88086495278f626319f98648393d7f2df37481aad41c8c3543ecf6e5ce37c"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-079": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "21a4a28ce6142dc8226fff66797872cc1eaf0fec2e32dec007da14f8f49500eb"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-080": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "cd617ffa6c0c1b9ed35ef2b6bc7e8ca645fc78b42c2e4598829f86d8c61c7f06"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-081": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "12987620681110183709a8d83062cff610da6f48af90c5ab298497caeb49abb7"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-082": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "695e5cb2dd545646e750dfc2ffcaa5ad94feb9b9148af6457968eadf7efac094"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-083": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "4d7fd4838c928fe9b06f8f7122b418042701e8901485dbf24a0cd0ecacc9a488"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-084": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "f1ade05217df108ef12e628983b85d836702c584038c0102a4affe47fe29e334"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-085": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "df0ad409a69c768764b29703292a4fbc084583b9484394b447d80b7b3d021357"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-086": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "cedfb580c0f33d8a0c5a59469e03dc1b4c6b3b4019d4734fc66550cf636bf99b"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-087": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "63ea48def3ad7b18e07813a07b6c8b7b582f2adb4fee8ec43867c0b5227b8aac"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-088": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "0a9467b4d1e4f13abd96962b6b06cec94fbdd13a879f4938ab8a55a0fb39375f"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-089": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "ae3d602d1fe6053e5b4b4021d530ca751c490adb8ba300e29e38a0e11b0490df"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-090": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "f05ba1d77820aa36f441f3dd53595c6c6c4f054d2853501e9970880070ccfdda"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-091": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "05e8c843e6ae914da2628e025c02350c004599fca55d2c2931591095231df564"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-092": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "782c2a0f1a9c3e932c2fe09ef03fb1b6921095479955cdb40262563c581ef0b9"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-093": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "acecd9fb557eb205830e5bec30f266d0230fb43163bd1b84ae57cbeaeafa34ad"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-094": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "8fec98c68d6d0010f6cdb67294d5cc06037e687a90616f98ea559d5072cf17bb"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-095": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "b87f930abf43a1a83675a15ee56eb30a384ae632a42b1e2fca28e2e2f1d29ac9"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-096": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "a833bf0b1162ebef31ff7678eaab6551a2411f8dff7688601c0bfdc862d5a368"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-097": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "fa8200d39c562a738e22219bc7513bef2cd11ca85dba810f6d7da407120aeac6"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-098": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "940cee1a7f83b03ed2bf056a61bf9a8bfef6c636a8f7e30d5ead073a62e8b038"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-099": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "6f27280ee81cb507eb917c1393afabde1617bae131b3d8a371e2fdc93e645129"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  },
+  "erpbench-100": {
+   "native_state": {
+    "erpbench": {
+     "service": "erpbench",
+     "queries": [
+      "baseline",
+      "snapshot",
+      "trace",
+      "model"
+     ]
+    }
+   },
+   "files": {
+    "task.json": "1bc04cde1469d6a9c9fef57b211a6fad49a53f920daafa37ee3a8c5786b9046f"
+   },
+   "inputs": [
+    "/tests/task.json"
+   ],
+   "trees": []
+  }
+ }
+}

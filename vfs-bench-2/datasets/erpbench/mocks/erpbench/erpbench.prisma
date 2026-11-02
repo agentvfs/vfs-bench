@@ -1,0 +1,23 @@
+// ERPBench-100's world (blobfishai/erp-agent-simulation): one SQLite file per
+// run. The fixture names the task (`seed.task`); the run's file gets
+// upstream's tables and rows from the world upstream seeds for that task
+// (state/erpbench/kit/<task>.json's `sql`, outside the workspace), plus
+// `_trace`, upstream's call trace (mocks/erpbench/fake.ts). Every tool is SQL
+// on that file, as upstream's are.
+
+datasource db {
+  provider = "sqlite"
+  url      = env("INTEG_DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "client"
+}
+
+model Seed {
+  id   Int    @id @default(1)
+  task String
+
+  @@map("_seed")
+}
