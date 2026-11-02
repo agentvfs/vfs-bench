@@ -126,7 +126,7 @@ live account and every run starts from the same seeded state.
 
 - [VFS-Bench 1.0](vfs-bench-1/README.md)
 - [VFS-Bench 2.0](vfs-bench-2/README.md)
-- [UI](ui/README.md)
+- [UI](ui/README.md) (Beta)
 
 ## Contributing
 
