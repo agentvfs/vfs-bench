@@ -68,15 +68,15 @@ export async function dataSpaceWorkspace(request: DataSpaceRequest): Promise<Wor
   )
   return workspace
 }
-export async function verifyDataSpace(request: DataSpaceRequest) {
+export async function verifyDataSpace(request: DataSpaceRequest, signal?: AbortSignal) {
   const started = performance.now(),
     definition = manifest.tasks[request.task]
   const workspace = await dataSpaceWorkspace(request)
   try {
-    const result = await workspace.shell('python -c ' + quote(program))
+    const result = await workspace.shell('python -c ' + quote(program), { signal })
     if (result.exitCode !== 0)
       throw new Error(`Monty grader failed (${result.exitCode}): ${result.stderrText}`)
-    const reward = await workspace.shell('cat /.verifier-output/evaluation.json')
+    const reward = await workspace.shell('cat /.verifier-output/evaluation.json', { signal })
     if (reward.exitCode !== 0) throw new Error('DataSpace did not write its evaluation')
     const evaluation = JSON.parse(reward.stdoutText)
     if (![0, 1].includes(evaluation.score) || evaluation.task_id !== definition.task_id)

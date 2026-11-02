@@ -27,7 +27,7 @@ export interface ComplexRequest {
 }
 const path = (name: string) => new PathSpec({ virtual: '/' + name, directory: '/', vfsPath: name })
 
-export async function verifyComplex(request: ComplexRequest) {
+export async function verifyComplex(request: ComplexRequest, signal?: AbortSignal) {
   if (!Object.hasOwn(manifest.tasks, request.task)) throw new Error('Unregistered ComplexMCP task')
   if (!Number.isFinite(request.timeoutSeconds) || request.timeoutSeconds <= 0)
     throw new Error('Invalid verifier timeout')
@@ -51,10 +51,10 @@ export async function verifyComplex(request: ComplexRequest) {
     }
   )
   try {
-    const result = await workspace.shell('python -c ' + quote(program))
+    const result = await workspace.shell('python -c ' + quote(program), { signal })
     if (result.exitCode !== 0)
       throw new Error(`Monty grader failed (${result.exitCode}): ${result.stderrText}`)
-    const reward = await workspace.shell('cat /output/reward.json')
+    const reward = await workspace.shell('cat /output/reward.json', { signal })
     if (reward.exitCode !== 0) throw new Error('Monty grader did not write its reward')
     const rewards = JSON.parse(reward.stdoutText)
     if (

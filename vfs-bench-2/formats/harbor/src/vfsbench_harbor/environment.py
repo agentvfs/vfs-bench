@@ -110,17 +110,21 @@ async def _job_daemon(node: str, workers: int, dataset: Path,
     (preload.ts)."""
     key = (node, workers, dataset)
     task = _job_daemons.get(key)
-    if task is None or (task.done() and task.exception() is not None):
+    # A daemon that failed to boot, or exited since, starts again.
+    if task is None or (task.done() and
+                        (task.cancelled() or task.exception() is not None
+                         or task.result()[1].poll() is not None)):
         files = sorted(str(p) for p in dataset.glob("*/workspace/tools.json"))
         task = asyncio.ensure_future(
             _boot_job_daemon(node, workers,
                              os.pathsep.join(files) or None, job_dir))
         _job_daemons[key] = task
-    return await asyncio.shield(task)
+    url, _ = await asyncio.shield(task)
+    return url
 
 
 async def _boot_job_daemon(node: str, workers: int, tools: str | None,
-                           job_dir: Path) -> str:
+                           job_dir: Path) -> tuple[str, subprocess.Popen]:
     port = _free_port()
     home = job_dir / f"mirage-daemon-{port}"
     home.mkdir(parents=True, exist_ok=True)
@@ -163,7 +167,7 @@ async def _boot_job_daemon(node: str, workers: int, tools: str | None,
                     f"\n{(home / 'daemon.log').read_text()[-4000:]}")
             try:
                 if (await client.get(f"{url}/v1/ready")).status_code == 200:
-                    return url
+                    return url, process
             except httpx.TransportError:
                 pass
             await asyncio.sleep(0.1)
@@ -182,9 +186,7 @@ class _Planner:
         self._lock = asyncio.Lock()
 
     async def plan(self, workspace: Path, run: Path, fakes: dict) -> dict:
-        # A trial canceled while its run is laid out still reads its reply,
-        # so the next trial's is its own.
-        line, process = await asyncio.shield(self._ask(workspace, run, fakes))
+        line, process = await self._ask(workspace, run, fakes)
         if line.startswith("PLAN="):
             return json.loads(
                 Path(line.removeprefix("PLAN=").strip()).read_text())
@@ -330,8 +332,10 @@ class MirageEnvironment(BaseEnvironment):
         # caller canceled mid-copy (an exec's timeout, an agent's end)
         # leaves it held until the copy is done.
         self._refreshing = threading.Lock()
-        # Each state file's stamp when it was last copied (_stamp).
-        self._stamps: dict[Path, tuple | None] = {}
+        # Each state file's stamp and its copy's when it was last copied
+        # (_stamp).
+        self._stamps: dict[Path, tuple] = {}
+        self._layout: asyncio.Future | None = None
         self._workdir = "/"
         super().__init__(*args, **kwargs)
         self._run_dir = (self.trial_paths.trial_dir / "mirage").resolve()
@@ -453,8 +457,20 @@ class MirageEnvironment(BaseEnvironment):
 
         # Each fake its own process, so the trial's runs open side by side.
         blocks = spec.get("fakes") or {}
-        opened = await asyncio.gather(*(open_run(service, block)
-                                        for service, block in blocks.items()))
+        opens = [
+            asyncio.ensure_future(open_run(service, block))
+            for service, block in blocks.items()
+        ]
+        try:
+            opened = await asyncio.gather(*opens)
+        except BaseException:
+            # The others stop before the error goes on, each dropping its
+            # run as it does, so none is added after stop() drops the rest.
+            for open_ in opens:
+                open_.cancel()
+            if opens:
+                await asyncio.wait(opens)
+            raise
         return dict(zip(blocks, opened))
 
     async def _plan(self, runs: dict[str, dict]) -> dict:
@@ -468,10 +484,13 @@ class MirageEnvironment(BaseEnvironment):
                         self._node,
                         self.trial_paths.trial_dir.parent / f"mirage-{i}.log"))
         planner = await planners.get()
-        try:
-            return await planner.plan(self.workspace_dir, self._run_dir, runs)
-        finally:
-            planners.put_nowait(planner)
+        # A trial canceled while its run is laid out still reads its reply,
+        # so the next trial's is its own, and its stop() waits for the
+        # layout before it deletes the files.
+        self._layout = asyncio.ensure_future(
+            planner.plan(self.workspace_dir, self._run_dir, runs))
+        self._layout.add_done_callback(lambda _: planners.put_nowait(planner))
+        return await asyncio.shield(self._layout)
 
     async def _start_daemon(self, routes: dict[str, str], allow: list[str],
                             tools: dict | None) -> str:
@@ -641,6 +660,8 @@ class MirageEnvironment(BaseEnvironment):
                     pass
             self._runs = []
         if delete:
+            if self._layout is not None:
+                await asyncio.wait([self._layout])
             await asyncio.to_thread(self._delete_files)
 
     def _fresh_run_dir(self) -> None:
@@ -717,11 +738,14 @@ class MirageEnvironment(BaseEnvironment):
                     with live.open("rb") as source:
                         if source.read(len(SQLITE)) == SQLITE:
                             continue
+                # The copy's stamp too: an agent can write the copy (one
+                # under /tmp), which is copied again before it is graded.
                 stamp = _stamp(live)
-                if stamp is not None and self._stamps.get(view) == stamp:
+                if stamp is not None and self._stamps.get(view) == (
+                        stamp, _stamp(view)):
                     continue
                 _snapshot(view, live)
-                self._stamps[view] = stamp
+                self._stamps[view] = (stamp, _stamp(view))
             # Host agents write ATIF outside Mirage's /logs mount. Both
             # verifiers refresh before reading it; keep an oracle's own
             # in-workspace trajectory when there is no host trajectory.

@@ -76,12 +76,13 @@ export async function verifierWorkspace(
   )
   return { workspace, result: () => grade, artifacts: () => artifacts }
 }
-export async function verify(request: VerifyRequest) {
+export async function verify(request: VerifyRequest, signal?: AbortSignal) {
   const started = performance.now()
   const { workspace, result, artifacts } = await verifierWorkspace(request)
   try {
     const io = await workspace.shell(
-      'grade > /.verifier-output/reward.txt && cat /.verifier-output/reward.txt'
+      'grade > /.verifier-output/reward.txt && cat /.verifier-output/reward.txt',
+      { signal }
     )
     if (io.exitCode !== 0)
       throw new GradeError(new Error(`Grader failed (${io.exitCode}): ${io.stderrText}`), artifacts())

@@ -36,7 +36,7 @@ export interface Gaia2Request {
 }
 
 /** The host only transports messages. All checker decisions stay in Monty. */
-export function judgeTransport(env: Record<string, string>, replay: JudgeCall[] | undefined, timeout: number) {
+export function judgeTransport(env: Record<string, string>, replay: JudgeCall[] | undefined, timeout: number, signal?: AbortSignal) {
   const calls: JudgeCall[] = []
   const deadline = Date.now() + timeout * 1000
   const extra = JSON.parse(env.JUDGE_EXTRA_BODY || '{}')
@@ -64,13 +64,14 @@ export function judgeTransport(env: Record<string, string>, replay: JudgeCall[] 
       const body = JSON.stringify({ model: env.JUDGE_MODEL || 'gpt-oss-120b', messages, temperature: 0, ...extra })
       let error = ''
       for (let attempt = 0; attempt < 6; attempt++) {
+        signal?.throwIfAborted()
         const remaining = deadline - Date.now()
         if (remaining <= 0) throw new Error('GAIA2 judge deadline exceeded')
         try {
           const response = await fetch(url, {
             method: 'POST', redirect: 'error',
             headers: { 'content-type': 'application/json', authorization: `Bearer ${env.OPENAI_API_KEY}` },
-            body, signal: AbortSignal.timeout(Math.max(1, Math.min(300_000, remaining))),
+            body, signal: AbortSignal.any([AbortSignal.timeout(Math.max(1, Math.min(300_000, remaining))), ...(signal ? [signal] : [])]),
           })
           if (!response.ok) throw new Error(`Judge HTTP ${response.status}`)
           const data = await response.json() as { choices: { message: { content?: string | null } }[] }
@@ -79,6 +80,7 @@ export function judgeTransport(env: Record<string, string>, replay: JudgeCall[] 
           calls.push({ messages, reply })
           return reply
         } catch (exc) {
+          if (signal?.aborted) throw exc
           error = String(exc)
           if (attempt < 5) await new Promise(resolve => setTimeout(resolve, Math.min(2 ** attempt * 1000, 30_000, Math.max(0, deadline - Date.now()))))
         }
@@ -89,7 +91,7 @@ export function judgeTransport(env: Record<string, string>, replay: JudgeCall[] 
   }
 }
 
-export async function gaia2Workspace(request: Gaia2Request) {
+export async function gaia2Workspace(request: Gaia2Request, signal?: AbortSignal) {
   if (!Object.hasOwn(manifest.tasks, request.task)) throw new Error('Unregistered GAIA2 task')
   if (!Number.isFinite(request.timeoutSeconds) || request.timeoutSeconds <= 0) throw new Error('Invalid verifier timeout')
   const allowed = ['/input/state.json', '/input/scenario.json']
@@ -101,7 +103,7 @@ export async function gaia2Workspace(request: Gaia2Request) {
   const input = new RAMVFS(), output = new RAMVFS()
   for (const [name, data] of Object.entries(request.files))
     await input.write(path(name.slice('/input'.length)), Buffer.from(data, 'base64'))
-  const transport = judgeTransport(request.env ?? {}, request.judgeReplay, request.timeoutSeconds)
+  const transport = judgeTransport(request.env ?? {}, request.judgeReplay, request.timeoutSeconds, signal)
   const runtime = new MontyRuntime({ config: { maxMemory: 512 * 1024 * 1024 } })
   runtime.shared = false
   runtime.externalLookup = { judge_completion: (messages: Message[]) => transport.complete(messages) }
@@ -115,18 +117,18 @@ export async function gaia2Workspace(request: Gaia2Request) {
   return { workspace, transport }
 }
 
-export async function verifyGaia2(request: Gaia2Request) {
+export async function verifyGaia2(request: Gaia2Request, signal?: AbortSignal) {
   const started = performance.now()
-  const { workspace, transport } = await gaia2Workspace(request)
+  const { workspace, transport } = await gaia2Workspace(request, signal)
   try {
-    const run = await workspace.shell('python -c ' + quote(program))
+    const run = await workspace.shell('python -c ' + quote(program), { signal })
     if (run.exitCode !== 0) throw new Error(`GAIA2 Monty grader failed: ${run.stderrText}`)
     transport.finish()
-    const result = await workspace.shell('cat /output/reward_details.json')
+    const result = await workspace.shell('cat /output/reward_details.json', { signal })
     if (result.exitCode !== 0) throw new Error('GAIA2 did not write a reward')
     const details = JSON.parse(result.stdoutText)
     if (![0, 1].includes(details.reward)) throw new Error('Invalid GAIA2 reward')
-    const judgments = await workspace.shell('cat /output/judgments.jsonl')
+    const judgments = await workspace.shell('cat /output/judgments.jsonl', { signal })
     details.judgments = judgments.exitCode === 0
       ? judgments.stdoutText.trim().split('\n').filter(Boolean).map(line => JSON.parse(line)) : []
     details.judge_calls = transport.calls
