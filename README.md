@@ -32,7 +32,8 @@ through [AgentVFS](https://agentvfs.org), a virtual filesystem with
 services with shell commands. Each task keeps its original instruction, data
 and evaluator, so the two runs differ only in the interface, and the
 benchmark measures how often the agent succeeds and how many tokens each
-interface costs.
+interface costs. VFS-Bench 2.0, in progress, runs recent, hard agent
+benchmarks through AgentVFS alone.
 
 VFS-Bench 1.0 has **200 tasks**, 100 from
 [MCP-Atlas](https://arxiv.org/abs/2602.00933) and 100 from
@@ -40,6 +41,14 @@ VFS-Bench 1.0 has **200 tasks**, 100 from
 such as email, Canvas, Google Drive and Sheets, GitHub, Notion and Slack.
 With a virtual filesystem, agents use **52% fewer tokens** on average than
 with MCP tool calling, and pass@1 rises from **77.6% to 81.6%**.
+
+| | [VFS-Bench 1.0](vfs-bench-1/README.md) | [VFS-Bench 2.0](vfs-bench-2/README.md) (in progress) |
+|---|---|---|
+| Interfaces | MCP and AgentVFS, side by side | AgentVFS only |
+| Tasks | 200, from MCP-Atlas and Toolathlon | Recent, hard benchmarks: Gaia2, Claw-Eval, AutomationBench and more |
+| Services | Local fakes in Docker | Local mock servers, a run of each per trial |
+| Runs on | Its own harness (`agent/run_agent.py`) | [Harbor](https://pypi.org/project/harbor/), on Mirage |
+| Folder | [`vfs-bench-1/`](vfs-bench-1/) | [`vfs-bench-2/`](vfs-bench-2/) |
 
 <p align="center">
   <picture>
@@ -111,7 +120,7 @@ AgentVFS has four parts, and VFS-Bench measures them together against MCP:
 
 ## Results
 
-pass@1 and mean total tokens per task (input plus output, over every
+VFS-Bench 1.0: pass@1 and mean total tokens per task (input plus output, over every
 request) of each model's first trial, MCP against VFS. The advanced tier runs
 at medium reasoning effort and the efficient tier at maximum. The full
 leaderboard, every task and every trajectory are on
@@ -131,6 +140,8 @@ leaderboard, every task and every trajectory are on
 | Toolathlon | Gemini 3.8 Flash | 50% | **52%** | 6,719,002 | **5,070,925** | **25%** |
 
 ## Datasets
+
+### VFS-Bench 1.0
 
 Tasks are selected from benchmarks of realistic, multi-step tasks over real
 MCP servers, preferring tasks that read or change data in several external
@@ -161,136 +172,40 @@ Workspace, Notion, GitHub, Slack, Airtable, mail, Canvas, WooCommerce,
 Kubernetes, BigQuery and Cloud Storage, Snowflake, W&B), so a run needs no
 live account and every run starts from the same seeded state.
 
-## Installation
+### VFS-Bench 2.0
 
-- **Python** ≥ 3.12 with [uv](https://docs.astral.sh/uv/)
-- **Node.js** `^22.20 || ^24.12 || >=25`, with pnpm
-- **Go**, **Rust** (cargo) and **Docker**
+| Dataset | Tasks | Dataset | Tasks |
+|---|--:|---|--:|
+| [Gaia2](vfs-bench-2/datasets/gaia2/README.md) | 460 | [ComplexMCP](vfs-bench-2/datasets/complexmcp/README.md) | 47 |
+| [AutomationBench](vfs-bench-2/datasets/automationbench/README.md) | 600 | [DataSpace](vfs-bench-2/datasets/dataspace/README.md) | 46 |
+| [Claw-Eval](vfs-bench-2/datasets/claweval/README.md) | 126 | [EnterpriseOps-Gym](vfs-bench-2/datasets/enterpriseops/README.md) | 103 |
+| [LiveClawBench](vfs-bench-2/datasets/liveclawbench/README.md) | 70 | | |
 
-```bash
-git clone --recurse-submodules https://github.com/agentvfs/vfs-bench.git
-cd vfs-bench/vfs-bench-1 && uv sync
-cp .env.example .env.development   # fill in your model provider's key
-uv run python setup/setup.py       # --list to see the steps, --from N to resume
-```
+## Get Started
 
-Setup is safe to re-run: every step checks whether it already ran. Some
-servers are installed only for the tasks that need them: MCP-Atlas's server
-image, Canvas and WooCommerce, Kubernetes and Helm, the browser, papers and
-Forms, Hugging Face, and maps, rail and video.
+- **VFS-Bench 1.0**: install, run one task through both arms, and how it
+  works: [vfs-bench-1/README.md](vfs-bench-1/README.md).
+- **VFS-Bench 2.0**: set up Mirage and Harbor, download a dataset, and run
+  its tasks: [vfs-bench-2/README.md](vfs-bench-2/README.md).
+- **The UI**: a page to start VFS-Bench 2.0's Harbor runs and watch them:
+  [ui/README.md](ui/README.md).
 
-```bash
-for s in mcpatlas commerce_canvas kubernetes helm browser huggingface papers_forms travel_video; do
-  uv run python -m server.mcp.setup_$s
-done
-```
-
-Toolathlon's native Linux tools run under checksum-pinned Sandlock, which
-needs Linux 6.12+ with Landlock and seccomp user notification; macOS uses
-`sandbox-exec`. `uv run python tests/linux_execution.py` verifies the
-boundary on Linux.
-
-## Quickstart
-
-Run one task through both arms, one after the other, since they share the
-same live services. Every command runs from `vfs-bench-1/`:
+For example, VFS-Bench 2.0's Gaia2, every task at once on one Mirage
+daemon, from `vfs-bench-2/`:
 
 ```bash
-uv run python agent/run_agent.py toolathlon/nhl-b2b-analysis --tools vfs   # AgentVFS
-uv run python agent/run_agent.py toolathlon/nhl-b2b-analysis --tools mcp   # MCP
-uv run python agent/run_agent.py mcpatlas/fantasy-sports-average --tools vfs
+uv run --project formats/harbor harbor run -y -c datasets/gaia2/harbor/job.yaml \
+  -a oracle -n 256 --ek workers=8
 ```
 
-Each run brings the fake services up, empties them, reseeds the task's
-fixtures, runs the arm, writes a dump to `dumps/` and grades itself with the
-original evaluator:
+## Repository
 
 ```
-mcp servers=3 tools=50 {'google_sheet': 20, 'filesystem': 14, 'terminal': 2, 'local': 14}
---- usage: requests=12 in=331372 out=1841 ---
-dump written to dumps/<timestamp>_mcp_<model>_<effort>_toolathlon_nhl-b2b-analysis.json
-All data match!
-eval_exit=0
+vfs-bench-1/   VFS-Bench 1.0: MCP against AgentVFS, its harness and fakes
+vfs-bench-2/   VFS-Bench 2.0: AgentVFS on Harbor and Mirage
+ui/            a page to run VFS-Bench 2.0 and watch it
+assets/        this page's images
 ```
-
-`--tools` picks the surface: `vfs` is AgentVFS on
-[Mirage](https://github.com/strukto-ai/mirage), `mcp` the original MCP
-servers, and `gym` Toolathlon-GYM's PostgreSQL-backed Sheets fork. There is
-no switch for skipping the seed or the grade, because a run that skipped
-either would be graded on whatever the previous run left behind.
-
-To run your own model, see
-[`vfs-bench-1/CUSTOM_MODEL.md`](vfs-bench-1/CUSTOM_MODEL.md).
-
-`bin/start.sh` drives the fake services without a run:
-
-| command | what it does |
-|---|---|
-| `bin/start.sh up` | build the images, start the fakes, wait for health |
-| `bin/start.sh task <task>` | the above, emptied and seeded for one task |
-| `bin/start.sh reset` | empty every fake, seed nothing |
-| `bin/start.sh status` | health, one line per service |
-| `bin/start.sh env` | the exports a shell needs |
-| `bin/start.sh down` | stop everything, keep the images |
-
-## How It Works
-
-```mermaid
-flowchart TB
-    subgraph taskdir["task/&lt;dataset&gt;/&lt;task&gt;/"]
-        direction LR
-        PROMPT["shared/task.md<br/>byte-identical to both arms"]
-        SEEDER["shared/<br/>fixtures and their builders"]
-        VFSDIR["vfs/<br/>workspace.yaml · VFS.md · SKILL.md"]
-    end
-
-    subgraph host["agent/run_agent.py -- one task, one surface, one dump"]
-        direction LR
-        MIRAGE["vfs<br/>one shell tool over a virtual filesystem<br/>+ the task's virtual CLIs"]
-        MCP["mcp<br/>the original MCP servers<br/>+ the harness's local tools"]
-    end
-
-    subgraph fakes["docker/compose.yml -- the same fixtures for both arms"]
-        direction LR
-        F["Google Workspace · Notion · GitHub · mail<br/>Postgres · BigQuery · Cloud Storage · ..."]
-    end
-
-    SEEDER -->|"reset and reseed before every run"| fakes
-    PROMPT --> host
-    VFSDIR -->|"system prompt + mounts + CLIs"| MIRAGE
-    MIRAGE -->|"shell commands"| fakes
-    MCP -->|"MCP tool calls"| fakes
-    fakes -->|"what the arm left behind"| EVAL{"original evaluator<br/>pass / fail"}
-```
-
-Three invariants are enforced in code: fixtures are reseeded before each arm,
-so the second never inherits the first's answer; tool results are capped at
-the dataset's own limit on both sides, with the overflow paged through a
-file; and both arms run against the same wall clock. Every divergence from an
-upstream MCP server is declared in `server/mcp/mcp_servers.py`, and every
-committed fixture traces back to its source through a `dvc.yaml` stage
-(`uv run dvc status` names what has drifted).
-
-The benchmark lives in `vfs-bench-1/`, so a later version can sit beside it;
-the repository root holds this page, its images, and [`ui/`](ui/README.md), a
-page to start and watch `vfs-bench-2/`'s Harbor runs.
-
-```
-vfs-bench-1/
-  agent/        the loop and both arms -- nothing here names a dataset
-  task/         one directory per dataset, each with its own seam (__init__.py)
-    mcpatlas/     100 MCP-Atlas tasks
-    toolathlon/   100 Toolathlon tasks
-  cli/  vfs/    the virtual CLIs and mounts the VFS arm adds to Mirage
-  server/       the fake services, their seeders and the MCP arm's launcher
-  redirect/     what points upstream's processes at the fakes
-  setup/        every install a fresh checkout needs, in order
-  submodule/    Toolathlon, toolathlon_gym, mcp-atlas and Mirage, pinned
-  dumps/        each run's transcript, gitignored
-```
-
-[`vfs-bench-1/task/README.md`](vfs-bench-1/task/README.md) describes what one task directory holds,
-and [`vfs-bench-1/vfs/README.md`](vfs-bench-1/vfs/README.md) which layer owns which responsibility.
 
 ## Contributing
 

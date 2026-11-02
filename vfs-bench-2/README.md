@@ -15,46 +15,9 @@ workspace:
   in a Mirage workspace of their own, and ask an LLM judge only where
   upstream's grader does.
 
-Harbor runs the tasks; it is only a wrapper. The plan and its status are
-tracked in the roadmap issue,
+[Harbor](https://pypi.org/project/harbor/) runs the tasks; it is only a
+wrapper. The plan and its status are tracked in the roadmap issue,
 [agentvfs/vfs-bench#6](https://github.com/agentvfs/vfs-bench/issues/6).
-
-## Layout
-
-```
-vfs-bench-2/
-  workspace/
-  formats/
-    harbor/
-  datasets/
-    <dataset>/
-      download.py
-      convert.py
-      mocks/
-      graders/
-      harbor/
-      tests/
-      <task>/
-        workspace/
-        harbor/
-        grader.ts
-```
-
-- `workspace/`: the Mirage side every task shares: the daemon, the
-  workspace a task's `workspace.yaml` builds, the mock launcher, the CLI
-  generator and the grader runner.
-- `formats/harbor/`: the Harbor wrapper, `vfsbench_harbor`:
-  `MirageEnvironment`, `MirageVerifier`, and the Codex and Claude Code
-  agents.
-- `datasets/<dataset>/`: one benchmark, its mocks and graders, and its
-  tasks. A task's own grader is its `grader.ts`, where it has one;
-  `graders/` holds what the dataset's graders share and the entry that
-  runs them. Neither is ever mounted in the agent's workspace.
-  `download.py` downloads upstream at a pinned commit into `state/`,
-  `convert.py` writes the tasks from it (`--check` compares them), and
-  `harbor/` holds the dataset's Harbor job configs (`job.yaml` for every
-  task, `oracle.yaml` where only some have a solution).
-  `datasets/layout.py` says what goes where in a task.
 
 ## Datasets
 
@@ -99,28 +62,121 @@ and those files are gitignored.
 
 ## Run
 
-To start runs and watch them from a page instead, see [../ui](../ui/README.md).
+From `vfs-bench-2/`. To start runs and watch them from a page instead, see
+[../ui](../ui/README.md).
 
 ```sh
-# Every task's solution, then doing nothing.
-uv run --project formats/harbor harbor run -c datasets/<dataset>/harbor/job.yaml -a oracle -n 32
-uv run --project formats/harbor harbor run -c datasets/<dataset>/harbor/job.yaml -a nop -n 32
-# One task.
-uv run --project formats/harbor harbor run -p datasets/<dataset>/<task>/harbor \
+# One task, its solution (solve.sh), one trial.
+uv run --project formats/harbor harbor run -y -p datasets/gaia2/ambiguity-0132/harbor \
   --env vfsbench_harbor:MirageEnvironment --verifier vfsbench_harbor:MirageVerifier -a oracle
-# Codex or Claude Code on the host, their tools in the trial's workspace.
-OPENAI_API_KEY=... uv run --project formats/harbor harbor run -c datasets/<dataset>/harbor/job.yaml \
-  -a vfsbench_harbor:Codex -m openai/gpt-5.6-luna -n 28
+
+# Every task, 256 at once, on one Mirage daemon with 8 workers.
+uv run --project formats/harbor harbor run -y -c datasets/gaia2/harbor/job.yaml \
+  -a oracle -n 256 --ek workers=8
+
+# Codex on the host, its tools in each trial's workspace. Gaia2's judge
+# reads OPENAI_API_KEY.
+OPENAI_API_KEY=... uv run --project formats/harbor harbor run -y -c datasets/gaia2/harbor/job.yaml \
+  -a vfsbench_harbor:Codex -m openai/gpt-5.6-luna -n 64 --ek workers=8
 ```
 
+- `-n`: how many trials run at once.
+- `-l 16`: the first 16 tasks only. `-i <task>`: one task by name.
+- `-a nop`: an agent that does nothing, which every task should fail.
+- `--ek workers=<n>`: every trial on one daemon for the job, with `n`
+  worker processes. Without it, each trial starts a daemon of its own.
+- `-a vfsbench_harbor:ClaudeCode`: Claude Code instead, with Mirage's MCP
+  tools alone.
+
 Where only some tasks have a solution, `harbor/oracle.yaml` lists them.
+
+## One trial
+
+```
+harbor run
+└── trial
+    ├── environment.start()                      MirageEnvironment
+    │   ├── open this trial's runs on the job's mock servers
+    │   ├── mirage.ts lays out the workspace (files, plan.json)
+    │   ├── the job's Mirage daemon (the first trial starts it)
+    │   └── create the workspace
+    │         system_time   the task's epoch
+    │         network       this trial's runs alone
+    │         clis          the task's tools
+    ├── agent.run()
+    │   ├── oracle: solve.sh, through the workspace's shell
+    │   └── Codex: codex exec, through the workspace's codex-exec
+    ├── verifier.verify()                         MirageVerifier
+    │   ├── freeze the services' state and the trajectory
+    │   ├── create a grade workspace, the frozen inputs read-only
+    │   ├── run grade: the dataset's grader, in the daemon
+    │   └── write the reward
+    └── environment.stop()
+          close the workspace, drop this trial's runs
+```
+
+Each trial's workspace keeps its own clock, network, files and tool log,
+even when the whole job shares one daemon.
 [formats/harbor/README.md](formats/harbor/README.md) describes the
-environment, the verifier and the agents.
+environment, the verifier and the agents in full.
+
+A job is written to `jobs/<job>/`, one directory per trial:
+
+```
+jobs/<job>/
+  <trial>/
+    result.json      reward, error, the time of each phase
+    agent/           trajectory.json (ATIF) and the agent's logs
+    verifier/        reward.txt, checks.json, timings.json
+    mirage/          plan.json, workspace.yaml, the tool calls
+  fake-<service>.log the mock servers'
+  mirage-*.log       the daemon's and mirage.ts's
+```
+
+## Layout
+
+```
+vfs-bench-2/
+  workspace/
+  formats/
+    harbor/
+  datasets/
+    <dataset>/
+      download.py
+      convert.py
+      mocks/
+      graders/
+      harbor/
+      tests/
+      <task>/
+        workspace/
+        harbor/
+        grader.ts
+```
+
+- `workspace/`: the Mirage side every task shares: the daemon's preload,
+  the workspace a task's `workspace.yaml` builds, the mock launcher, the CLI
+  generator and the `grade` CLI.
+- `formats/harbor/`: the Harbor wrapper, `vfsbench_harbor`:
+  `MirageEnvironment`, `MirageVerifier`, and the Codex and Claude Code
+  agents.
+- `datasets/<dataset>/`: one benchmark, its mocks and graders, and its
+  tasks. A task's own grader is its `grader.ts`, where it has one;
+  `graders/` holds what the dataset's graders share and the entry that
+  runs them. Neither is ever mounted in the agent's workspace.
+  `download.py` downloads upstream at a pinned commit into `state/`,
+  `convert.py` writes the tasks from it (`--check` compares them), and
+  `harbor/` holds the dataset's Harbor job configs (`job.yaml` for every
+  task, `oracle.yaml` where only some have a solution).
+  `datasets/layout.py` says what goes where in a task.
+
+## Tests
 
 ```sh
 pnpm typecheck
 pnpm test
 uv run --project formats/harbor python -I formats/harbor/test_environment.py
+uv run --project formats/harbor python -I formats/harbor/test_mirage_verifier.py
 uv run --project datasets/<dataset> python -I datasets/<dataset>/convert.py --check
 ```
 
