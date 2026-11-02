@@ -290,13 +290,18 @@ def _ports(fake: Fake) -> None:
         opened = json.loads(line.removeprefix("RUN="))
         with fake.lock:
             future = fake.ports.pop(opened["run"], None)
-        if future is not None:
+        # An open that was canceled (its trial stopped, or timed out) has
+        # no one to take the port, so it is closed.
+        if future is not None and future.set_running_or_notify_cancel():
             future.set_result(opened["url"])
+        else:
+            _send(fake, {"close": opened["run"]})
     with fake.lock:
         pending, fake.ports = fake.ports, {}
     for future in pending.values():
-        future.set_exception(
-            RuntimeError(f"the {fake.service} fake's launcher exited"))
+        if future.set_running_or_notify_cancel():
+            future.set_exception(
+                RuntimeError(f"the {fake.service} fake's launcher exited"))
 
 
 _pool: SharedFakes | None = None
