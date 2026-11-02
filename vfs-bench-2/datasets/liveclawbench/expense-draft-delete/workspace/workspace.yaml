@@ -11,7 +11,7 @@
 fakes:
   expense:
     # Upstream's expense seed and the task's seed.json, as its image
-    # loads it (generate.py writes it).
+    # loads it (convert.py writes it).
     fixture: fixtures/expense.json
     epoch: '2026-04-03T09:00:00Z'
     ports: [5005]

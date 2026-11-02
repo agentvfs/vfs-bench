@@ -1,8 +1,8 @@
 # task_322 (lof-weekly-benchmark), on vfsbench_harbor's mirage environment
-# (datasets/dataspace/generate.py writes it).
+# (datasets/dataspace/convert.py writes it).
 #
 # No services. The task's context is upstream's (files/context/, which
-# fetch.py writes), mounted read-only at /workspace in place of the
+# download.py writes), mounted read-only at /workspace in place of the
 # trial's own; the answer goes to /output/prediction.csv, as upstream's
 # harness lays them out.
 fakes: {}

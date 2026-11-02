@@ -1,4 +1,4 @@
-# erpbench-013, on vfsbench_harbor's mirage environment (datasets/erpbench/generate.py writes it).
+# erpbench-013, on vfsbench_harbor's mirage environment (datasets/erpbench/convert.py writes it).
 #
 # The task's world is the erpbench kit fake (mocks/erpbench), seeded with
 # the world upstream builds for the task (state/erpbench/kit/, outside the

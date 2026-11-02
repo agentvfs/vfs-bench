@@ -12,14 +12,14 @@
 # upstream's ports 5001 and 5174. One fake of each serves the whole job.
 fakes:
   finance:
-    # Upstream's finance seed (generate.py writes it).
+    # Upstream's finance seed (convert.py writes it).
     fixture: fixtures/finance.json
     epoch: '2026-04-03T09:00:00Z'
     ports: [1235]
     # Where upstream's image keeps it, which verify.py reads.
     state: /opt/mock/data/finance_app.sqlite
   gws:
-    # Upstream's email seed for the task, as Gmail messages (generate.py
+    # Upstream's email seed for the task, as Gmail messages (convert.py
     # writes it).
     fixture: fixtures/gws.json
     epoch: '2026-04-03T09:00:00Z'

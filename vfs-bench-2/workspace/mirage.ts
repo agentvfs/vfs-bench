@@ -9,6 +9,12 @@
  * host directory, the fakes' state files, the routes from upstream's ports
  * to the fakes and the `run` lines. It prints `PLAN=<path>` once done.
  *
+ *     node workspace/mirage.ts --serve
+ *
+ * lays out one trial per line of its stdin instead, for the whole job:
+ * `{"workspace": ..., "run": ..., "fakes": {...}}` in, `PLAN=<path>` or
+ * `ERROR=<message, as JSON>` out, a line each, in order.
+ *
  *     fakes:                     # kit fakes, shared by every trial of a job
  *       chat:
  *         fixture: fixtures/chat.json   # the run's seed, in workspace/
@@ -35,7 +41,7 @@
  *                                # where the verifier reads their calls
  *
  * The fakes' epoch (one for all) is the run's, which the workspace's clock
- * starts at too (clock.ts).
+ * starts at too (the environment sends it as `system_time`).
  *
  * The environment starts the fakes and resets this trial's run on each
  * before this runs, and hands their run URLs and files in (`--fakes`).
@@ -44,15 +50,17 @@
  * its files (`/home/node: {vfs: disk, config: {root: '${RUN_DIR}/home'}}`),
  * and `${WORKSPACE}` the task's `workspace/` (DataSpace mounts its context
  * from `${WORKSPACE}/files/context`).
- * `${STATE}` is vfs-bench-2's `state/`, where fetch.py downloads upstream.
+ * `${STATE}` is vfs-bench-2's `state/`, where download.py downloads upstream.
  */
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, dirname, join, relative, resolve } from 'node:path'
+import { createInterface } from 'node:readline'
 import { fileURLToPath } from 'node:url'
 import { parseArgs } from 'node:util'
 
 import { parse, stringify } from 'yaml'
 
+import { specName } from './cli.ts'
 import { type Copy, copyInto, copyTarget } from './copies.ts'
 import { STATE } from './paths.ts'
 
@@ -82,7 +90,7 @@ export interface Plan {
    * path the verifier reads their dispatch log at.
    */
   tools?: { file: string; dispatches: string }
-  /** The run's epoch, which the workspace's clock starts at (clock.ts). */
+  /** The run's epoch, which the workspace's clock starts at (`system_time`). */
   epoch?: string
 }
 
@@ -235,21 +243,38 @@ function hostPath(mounts: Record<string, MountBlock>, path: string): string | un
   return prefix === undefined ? undefined : join(mount!.config.root, relative(prefix, path))
 }
 
+/** Lay out one trial's run and write its plan; the plan's path. */
+function layout(workspace: string, run: string, external: Record<string, External>): string {
+  const runDir = resolve(run)
+  mkdirSync(runDir, { recursive: true })
+  return prepare(plan(resolve(workspace), runDir, external), runDir, external)
+}
+
 async function main(): Promise<void> {
   // Every run is in UTC; the fakes inherit it.
   process.env.TZ = 'UTC'
-  const { values } = parseArgs({ options: { workspace: { type: 'string' }, run: { type: 'string' }, fakes: { type: 'string' } } })
-  if (values.workspace === undefined || values.run === undefined) {
-    throw new Error('usage: mirage.ts --workspace <task>/workspace --run <dir> [--fakes <json>]')
+  const { values } = parseArgs({
+    options: { workspace: { type: 'string' }, run: { type: 'string' }, fakes: { type: 'string' }, serve: { type: 'boolean' } },
+  })
+  if (values.serve === true) {
+    for await (const line of createInterface({ input: process.stdin })) {
+      try {
+        const { workspace, run, fakes } = JSON.parse(line) as { workspace: string; run: string; fakes?: Record<string, External> }
+        console.log(`PLAN=${layout(workspace, run, fakes ?? {})}`)
+      } catch (error) {
+        console.log(`ERROR=${JSON.stringify((error as Error).stack ?? String(error))}`)
+      }
+    }
+    return
   }
-  const runDir = resolve(values.run)
-  mkdirSync(runDir, { recursive: true })
-  const external = JSON.parse(values.fakes ?? '{}') as Record<string, External>
-  prepare(plan(resolve(values.workspace), runDir, external), runDir, external)
+  if (values.workspace === undefined || values.run === undefined) {
+    throw new Error('usage: mirage.ts --workspace <task>/workspace --run <dir> [--fakes <json>] | --serve')
+  }
+  console.log(`PLAN=${layout(values.workspace, values.run, JSON.parse(values.fakes ?? '{}') as Record<string, External>)}`)
 }
 
-/** Lay out the run's directories and write the plan. */
-function prepare(plan: Plan, runDir: string, external: Record<string, External>): void {
+/** Lay out the run's directories and write the plan; the plan's path. */
+function prepare(plan: Plan, runDir: string, external: Record<string, External>): string {
   const config = interpolateBase(parse(readFileSync(join(HERE, 'workspace.yaml'), 'utf8')) as Record<string, unknown>, {
     RUN_DIR: runDir,
     PYTHON_PACKAGES: join(STATE, 'python'),
@@ -277,6 +302,14 @@ function prepare(plan: Plan, runDir: string, external: Record<string, External>)
   if (plan.tools !== undefined) {
     writeFileSync(dispatches, '')
     plan.state[plan.tools.dispatches] = dispatches
+    // Each tool CLI is the task's own (its spec name, cli.ts), and logs to
+    // this trial's file, as a daemon of the job's serves many trials'
+    // workspaces.
+    const specs = new Map((JSON.parse(readFileSync(plan.tools.file, 'utf8')) as { name: string }[]).map((c) => [c.name, specName(c)]))
+    for (const cli of Object.values((config.clis ?? {}) as Record<string, { cli: string; config?: object }>)) {
+      const spec = specs.get(cli.cli)
+      if (spec !== undefined) Object.assign(cli, { cli: spec, config: { ...cli.config, dispatches } })
+    }
   }
   // Files a shared fake keeps beside its run (mocks/upstream), read as a
   // service's state file is.
@@ -319,7 +352,7 @@ function prepare(plan: Plan, runDir: string, external: Record<string, External>)
       1,
     ),
   )
-  console.log(`PLAN=${out}`)
+  return out
 }
 
 if (import.meta.main) {

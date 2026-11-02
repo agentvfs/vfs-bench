@@ -1,0 +1,55 @@
+# All 47 ComplexMCP tasks.
+# From vfs-bench-2/, after datasets/complexmcp/download.py:
+#   uv run --project formats/harbor harbor run -c datasets/complexmcp/harbor/job.yaml -a oracle -n 32
+environment:
+  import_path: vfsbench_harbor:MirageEnvironment
+verifier:
+  import_path: vfsbench_harbor:MirageVerifier
+tasks:
+  - path: datasets/complexmcp/mark-sean-baker-read/harbor
+  - path: datasets/complexmcp/good-morning-paisley/harbor
+  - path: datasets/complexmcp/family-group-airpods/harbor
+  - path: datasets/complexmcp/mila-garza-unread/harbor
+  - path: datasets/complexmcp/like-jeremy-latest-moment/harbor
+  - path: datasets/complexmcp/neighbors-group-silas-owner/harbor
+  - path: datasets/complexmcp/share-dennis-contact-jonah/harbor
+  - path: datasets/complexmcp/delete-deborah-chat/harbor
+  - path: datasets/complexmcp/remove-silent-classmates/harbor
+  - path: datasets/complexmcp/unblock-relatives/harbor
+  - path: datasets/complexmcp/new-york-ip-hello-moment/harbor
+  - path: datasets/complexmcp/like-dennis-singapore-posts/harbor
+  - path: datasets/complexmcp/family-and-classmate-groups/harbor
+  - path: datasets/complexmcp/gcd-to-hayden-parker/harbor
+  - path: datasets/complexmcp/inches-to-cm-to-self/harbor
+  - path: datasets/complexmcp/ten-kg-seedless-grapes/harbor
+  - path: datasets/complexmcp/max-seedless-grapes-star/harbor
+  - path: datasets/complexmcp/max-grapes-star-seedless-shop/harbor
+  - path: datasets/complexmcp/apple-watch-delete-history/harbor
+  - path: datasets/complexmcp/hello-contacts-with-x/harbor
+  - path: datasets/complexmcp/sha256-uid-moment/harbor
+  - path: datasets/complexmcp/business-flight-sf-ny/harbor
+  - path: datasets/complexmcp/banana-peppers-per-neighbor/harbor
+  - path: datasets/complexmcp/larsson-book-per-teammate/harbor
+  - path: datasets/complexmcp/cheapest-black-apples/harbor
+  - path: datasets/complexmcp/sony-headphones-star/harbor
+  - path: datasets/complexmcp/date-depot-dates/harbor
+  - path: datasets/complexmcp/cheapest-90kg-limes/harbor
+  - path: datasets/complexmcp/cheapest-mini-steamer/harbor
+  - path: datasets/complexmcp/mint-100g/harbor
+  - path: datasets/complexmcp/gala-apples-per-relative/harbor
+  - path: datasets/complexmcp/priciest-pineapple-per-classmate/harbor
+  - path: datasets/complexmcp/fashion-brand-days-chickpeas/harbor
+  - path: datasets/complexmcp/replace-broken-mouse/harbor
+  - path: datasets/complexmcp/cheapest-4-person-tent/harbor
+  - path: datasets/complexmcp/mangosteen-and-mango/harbor
+  - path: datasets/complexmcp/ipad-m-series/harbor
+  - path: datasets/complexmcp/homecoming-play-endive/harbor
+  - path: datasets/complexmcp/macbook-air-if-affordable/harbor
+  - path: datasets/complexmcp/nikon-camera/harbor
+  - path: datasets/complexmcp/cheapest-arugula/harbor
+  - path: datasets/complexmcp/new-york-sun-rate/harbor
+  - path: datasets/complexmcp/singapore-flight-by-weather/harbor
+  - path: datasets/complexmcp/nike-to-20-shares/harbor
+  - path: datasets/complexmcp/tech-stocks-flight-bitter-gourd/harbor
+  - path: datasets/complexmcp/liquidate-short-news-flight/harbor
+  - path: datasets/complexmcp/butternut-new-year-messages/harbor

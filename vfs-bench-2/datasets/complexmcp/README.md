@@ -10,15 +10,15 @@ upstream's 15 MCP servers as kit fakes. Upstream's judge runs on Monty
 From `vfs-bench-2/`:
 
 ```sh
-uv run --project datasets/complexmcp python -I datasets/complexmcp/fetch.py
-uv run --project datasets/complexmcp python -I datasets/complexmcp/generate.py --check
-uv run --project formats/harbor harbor run -c datasets/complexmcp/jobs/harbor.yaml -a nop -n 32
-uv run --project formats/harbor harbor run -c datasets/complexmcp/jobs/harbor.yaml -a oracle -n 32
+uv run --project datasets/complexmcp python -I datasets/complexmcp/download.py
+uv run --project datasets/complexmcp python -I datasets/complexmcp/convert.py --check
+uv run --project formats/harbor harbor run -c datasets/complexmcp/harbor/job.yaml -a nop -n 32
+uv run --project formats/harbor harbor run -c datasets/complexmcp/harbor/job.yaml -a oracle -n 32
 ```
 
 The exporter and the comparison run in `complexmcp/`'s uv project, which
 has upstream's fastmcp: the CLIs' schemas are what upstream's MCP servers
-list. `jobs/harbor.yaml` uses `MirageVerifier`: Harbor freezes each app's
+list. `harbor/job.yaml` uses `MirageVerifier`: Harbor freezes each app's
 read-only login/logout replies and the pinned gold row, then launches a
 separate Mirage VFS workspace. Monty 1.4.0 executes the original judge body
 with a pure-Python Levenshtein implementation and writes rewards to RAM.

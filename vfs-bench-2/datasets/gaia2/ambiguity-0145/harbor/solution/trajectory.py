@@ -3,7 +3,7 @@
     python3 /solution/trajectory.py '<answer>' [/logs/agent/trajectory.json]
 
 Each solved Gaia2 task's ``solution/trajectory.py`` is this file (written by
-``generate.py``). Upstream's agent hands in its answer by replying, and
+``convert.py``). Upstream's agent hands in its answer by replying, and
 its adapter logs the reply as the turn's ``send_message_to_user``;
 the native grader reads that reply from the trajectory's last agent
 message. A solution runs the apps' commands itself, then this, with the

@@ -14,7 +14,7 @@ import threading
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import PropertyMock, patch
 
 from harbor.models.trial.paths import TrialPaths
 from vfsbench_harbor import environment
@@ -35,6 +35,7 @@ class CanceledRefresh(unittest.TestCase):
         self.env = object.__new__(MirageEnvironment)
         self.env._state = [("view", "live")]
         self.env._refreshing = threading.Lock()
+        self.env._stamps = {}
         self.root = tempfile.TemporaryDirectory()
         self.env.trial_paths = TrialPaths(Path(self.root.name))
 
@@ -87,6 +88,7 @@ class AgentTrajectory(unittest.TestCase):
         }
         self.env._state = []
         self.env._refreshing = threading.Lock()
+        self.env._stamps = {}
         self.source = self.env.trial_paths.agent_dir / "trajectory.json"
         self.source.parent.mkdir(parents=True)
         self.target = self.env.host_path("/logs/agent/trajectory.json")
@@ -112,6 +114,43 @@ class AgentTrajectory(unittest.TestCase):
             asyncio.run(self.env.refresh_verifier_files())
         snapshot.assert_called_once_with(root / "view.json", output)
 
+    def test_refresh_copies_a_state_file_only_once_it_changes(self) -> None:
+        root = Path(self.root.name)
+        live = root / "live.json"
+        live.write_text('{"done": false}')
+        self.env._state = [(root / "view.json", live)]
+        with patch.object(environment, "_snapshot") as snapshot:
+            asyncio.run(self.env.refresh_state())
+            asyncio.run(self.env.refresh_state())
+            self.assertEqual(snapshot.call_count, 1)
+            live.write_text('{"done": true}')
+            asyncio.run(self.env.refresh_state())
+            self.assertEqual(snapshot.call_count, 2)
+
+    def test_refresh_restores_a_copy_the_agent_wrote(self) -> None:
+        root = Path(self.root.name)
+        live, view = root / "live.json", root / "view.json"
+        live.write_text('{"orders": []}')
+        self.env._state = [(view, live)]
+        asyncio.run(self.env.refresh_state())
+        view.write_text('{"orders": [{"status": "completed"}]}')
+        asyncio.run(self.env.refresh_state())
+        self.assertEqual(view.read_text(), '{"orders": []}')
+
+    def test_grading_copies_a_copy_whose_stamp_the_agent_wrote(self) -> None:
+        root = Path(self.root.name)
+        live, view = root / "live.json", root / "view.json"
+        live.write_text('{"orders": []}')
+        self.env._state = [(view, live)]
+        asyncio.run(self.env.refresh_state())
+        # Written between a refresh's copy and its stamp of the copy, so
+        # the stamp it keeps is the agent's.
+        view.write_text('{"orders": [{"status": "completed"}]}')
+        self.env._stamps[view] = (environment._stamp(live),
+                                  environment._stamp(view))
+        asyncio.run(self.env.refresh_verifier_files())
+        self.assertEqual(view.read_text(), '{"orders": []}')
+
     def test_exec_refreshes_trajectory_before_running_a_command(self) -> None:
         self.source.write_text('{"steps": []}')
 
@@ -120,25 +159,19 @@ class AgentTrajectory(unittest.TestCase):
                              self.source.read_bytes())
             return environment.httpx.Response(
                 200,
-                json={"job_id": "verify"},
-                request=environment.httpx.Request("POST",
-                                                  "http://mirage/shell"))
-
-        async def wait(*args):
-            return {
-                "status": "done",
-                "result": {
+                json={
+                    "kind": "io",
                     "stdout": "",
                     "stderr": "",
                     "exit_code": 0
-                }
-            }
+                },
+                request=environment.httpx.Request("POST",
+                                                  "http://mirage/shell"))
 
         self.env._client = SimpleNamespace(post=post)
         self.env._workspace_id = "trial"
         self.env._workdir = "/workspace"
         self.env._merge_env = lambda env: env
-        self.env._wait = wait
         asyncio.run(self.env.exec("bash /tests/test.sh"))
 
     def test_no_host_trajectory_preserves_oracle_file(self) -> None:
@@ -148,6 +181,117 @@ class AgentTrajectory(unittest.TestCase):
         before = self.target.read_bytes()
         asyncio.run(self.env.refresh_state())
         self.assertEqual(self.target.read_bytes(), before)
+
+
+class JobDaemon(unittest.TestCase):
+
+    def test_a_daemon_that_exited_starts_again(self) -> None:
+        processes: list[SimpleNamespace] = []
+
+        async def boot(*args) -> tuple[str, SimpleNamespace]:
+            process = SimpleNamespace(code=None)
+            process.poll = lambda: process.code
+            processes.append(process)
+            return f"http://daemon-{len(processes)}", process
+
+        async def scenario() -> list[str]:
+            urls = []
+            for _ in range(2):
+                urls.append(await
+                            environment._job_daemon("node", 2, Path("dataset"),
+                                                    Path("job")))
+            processes[0].code = 1
+            urls.append(await environment._job_daemon("node", 2,
+                                                      Path("dataset"),
+                                                      Path("job")))
+            return urls
+
+        with patch.dict(environment._job_daemons, clear=True), \
+                patch.object(environment, "_boot_job_daemon", boot):
+            urls = asyncio.run(scenario())
+        self.assertEqual(
+            urls, ["http://daemon-1", "http://daemon-1", "http://daemon-2"])
+
+    def test_a_daemon_registers_each_task_s_own_tools_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            for task, spec in (("a", "tools: {file: task-tools.json}\n"),
+                               ("b", "fakes: {}\n")):
+                workspace = Path(tmp, task, "workspace")
+                workspace.mkdir(parents=True)
+                (workspace / "workspace.yaml").write_text(spec)
+            self.assertEqual(
+                environment._tools_files(Path(tmp)),
+                [str(Path(tmp, "a", "workspace", "task-tools.json"))])
+
+
+class FailedSetup(unittest.TestCase):
+
+    def test_a_failed_open_adds_no_run_after_it(self) -> None:
+
+        class Pool:
+
+            def register(self, service, task, source):
+                return service
+
+            def fake(self, service, *args):
+                return service
+
+            async def open(self, fake, *args):
+                if fake == "chat":
+                    await asyncio.sleep(0.05)
+                    raise RuntimeError("chat failed")
+                await asyncio.sleep(0.2)
+                return SimpleNamespace(address="", db="weather.db")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp, "dataset", "task", "workspace")
+            workspace.mkdir(parents=True)
+            (workspace / "workspace.yaml").write_text(
+                "fakes: {chat: {fixture: a}, weather: {fixture: b}}\n")
+            env = object.__new__(MirageEnvironment)
+            env._runs = []
+            env.session_id = "trial"
+            env._node = "node"
+            env._fake_logs = Path(tmp)
+            env._run_dir = Path(tmp, "run")
+
+            async def scenario() -> None:
+                with self.assertRaisesRegex(RuntimeError, "chat failed"):
+                    await env._open_runs()
+                # As stop() would, then a while for a late open to land.
+                env._runs = []
+                await asyncio.sleep(0.4)
+
+            with patch.object(environment.fakes, "pool", Pool), \
+                    patch.object(MirageEnvironment, "workspace_dir",
+                                 new_callable=PropertyMock,
+                                 return_value=workspace):
+                asyncio.run(scenario())
+            self.assertEqual(env._runs, [])
+
+
+class CanceledLayout(unittest.TestCase):
+
+    def test_stop_deletes_the_files_once_the_layout_is_done(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            env = object.__new__(MirageEnvironment)
+            env._client = None
+            env._processes = []
+            env._runs = []
+            env._run_dir = Path(tmp, "run")
+            env._run_dir.mkdir()
+
+            async def layout() -> None:
+                await asyncio.sleep(0.2)
+                (env._run_dir / "drive").mkdir()
+
+            async def scenario() -> None:
+                env._layout = asyncio.ensure_future(layout())
+                await env.stop(delete=True)
+                await env._layout
+
+            asyncio.run(scenario())
+            self.assertEqual(list(env._run_dir.iterdir()), [])
 
 
 if __name__ == "__main__":

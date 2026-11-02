@@ -11,6 +11,6 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["workspace", "datasets/*/graders", "datasets/*/tests"],
+  "include": ["workspace", "datasets/*/graders", "datasets/*/*/grader.ts", "datasets/*/tests"],
   "exclude": ["node_modules", "submodule", "state", "fakes"]
 }

@@ -204,7 +204,7 @@ test('pyLoads reads json.dumps output, NaN and Infinity included', () => {
 
 test(
   'the native ERPBench-100 grader scores as upstream does',
-  { skip: !existsSync(TESTS) && 'run datasets/erpbench/fetch.py first' },
+  { skip: !existsSync(TESTS) && 'run datasets/erpbench/download.py first' },
   () => {
     const bases: Base[] = python('base', TASKS)
     assert.equal(new Set(bases.map((b) => b.task.metadata.category)).size, 10, 'one task per workflow family')

@@ -139,8 +139,10 @@ class GradeFailed(RuntimeError):
 class MirageVerifier(Verifier):
     """Run a registered grader in a fresh, verifier-only Mirage workspace.
 
-    Each grade runs in a disposable Node process. This is trusted host
-    code, not an isolation boundary for arbitrary scripts.
+    Each grade runs in a disposable Node process, or, on a daemon of the
+    job's (``--ek workers``), as a workspace there that runs the ``grade``
+    CLI. This is trusted host code, not an isolation boundary for
+    arbitrary scripts.
     LiveClawBench, EnterpriseOps-Gym, Claw-Eval and ERPBench-100 use the
     workspace runtime; ComplexMCP, DataSpace, AutomationBench and GAIA2 use
     Monty.
@@ -446,6 +448,8 @@ class MirageVerifier(Verifier):
                     temporary.unlink(missing_ok=True)
 
     async def _run(self, node: str, request: Path) -> dict:
+        if self.environment.grades:
+            return await self._grade(request)
         payload = await self._background(self._request_bytes, request)
         runtime = json.loads(payload).get("runtime", "typescript")
         own = DATASETS / self.dataset / "graders" / "verify.ts"
@@ -493,6 +497,51 @@ class MirageVerifier(Verifier):
                 raise RuntimeError(message) from None
             raise GradeFailed(message, artifacts)
         return json.loads(stdout)
+
+    async def _grade(self, request: Path) -> dict:
+        """The grade as a workspace on the job's daemon (``grade``): the
+        staging directory its read-only ``/``, and ``/request.json`` the
+        request with each frozen state and file by its path there, which
+        ``grade`` reads as they are."""
+
+        def stage(budget):
+            budget.check()
+            value = json.loads(request.read_text())
+            if "databases" in value:
+                raise ValueError(
+                    "Native grading takes JSON state, not databases")
+            root = request.parent
+
+            def at(host: str) -> str:
+                path = Path(host)
+                if path.parent != root:
+                    raise ValueError(f"{host} is not staged")
+                return f"/{path.name}"
+
+            value["paths"] = {
+                "states": {
+                    alias: at(host)
+                    for alias, host in value.pop("states").items()
+                },
+                "files": {
+                    path: at(host)
+                    for path, host in value.pop("files", {}).items()
+                },
+            }
+            request.write_text(json.dumps(value))
+
+        await self._background(stage)
+        done = await self.environment.grade(
+            request.parent, self.task.config.verifier.timeout_sec)
+        if done.return_code:
+            message = (f"Mirage grader exited {done.return_code}: "
+                       f"{(done.stderr or '')[-4000:]}")
+            try:
+                artifacts = json.loads(done.stdout)["artifacts"]
+            except (ValueError, TypeError, KeyError):
+                raise RuntimeError(message) from None
+            raise GradeFailed(message, artifacts)
+        return json.loads(done.stdout)
 
     @staticmethod
     def _request_bytes(request, budget):

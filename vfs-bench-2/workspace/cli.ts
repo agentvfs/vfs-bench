@@ -27,6 +27,7 @@ import {
   z,
 } from '@struktoai/mirage-node'
 import type { NOOPAccessor } from '@struktoai/mirage-core/accessor/base'
+import { createHash } from 'node:crypto'
 
 export interface JsonSchema {
   type?: string | string[]
@@ -55,7 +56,12 @@ export interface Tool {
 
 // `headers` go with every call: what the service needs to know of the session
 // besides its URL (ComplexMCP's apps are told their LightSystem run this way).
-const ConfigSchema = z.strictObject({ url: z.string(), headers: z.record(z.string(), z.string()).optional() })
+const ConfigSchema = z.strictObject({
+  url: z.string(),
+  headers: z.record(z.string(), z.string()).optional(),
+  /** The workspace's dispatch log (tools.ts), where it keeps one. */
+  dispatches: z.string().optional(),
+})
 export type Config = z.infer<typeof ConfigSchema>
 
 const encoder = new TextEncoder()
@@ -245,6 +251,16 @@ function handler(tool: Tool, params: Param[], send: Send): CLIHandler {
 interface Node {
   children: Map<string, Node>
   tool?: { spec: CommandSpec; path: string }
+}
+
+/**
+ * The name a task's CLI is registered under: its name and a digest of it,
+ * as `tools.json` gives it (`crm-1f2e3d4c5b6a`). A daemon of the job's
+ * registers every task's, and a workspace installs its own under its
+ * name (`crm`), which is all the agent sees.
+ */
+export function specName(cli: { name: string }): string {
+  return `${cli.name}-${createHash('sha256').update(JSON.stringify(cli)).digest('hex').slice(0, 12)}`
 }
 
 /**

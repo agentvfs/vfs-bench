@@ -1,5 +1,5 @@
 # ipad-m-series, ComplexMCP's row 36, on vfsbench_harbor's mirage environment
-# (datasets/complexmcp/generate.py writes it).
+# (datasets/complexmcp/convert.py writes it).
 #
 # Each of upstream's servers is its kit fake at upstream's port, its tools a
 # CLI (workspace/tools.ts) whose calls reach this trial's run of it. A Light app

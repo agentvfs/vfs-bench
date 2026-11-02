@@ -10,7 +10,7 @@
 # each.
 fakes:
   workspace:
-    # Upstream's workspace seed (generate.py writes it).
+    # Upstream's workspace seed (convert.py writes it).
     # Upstream's mock keeps it in memory; the run's SQLite is at a
     # path of the fake's own, which only workspace_api.py reads.
     fixture: fixtures/workspace.json

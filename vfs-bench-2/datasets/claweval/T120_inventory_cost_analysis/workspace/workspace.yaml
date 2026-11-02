@@ -1,4 +1,4 @@
-# T120_inventory_cost_analysis, on vfsbench_harbor's mirage environment (datasets/claweval/generate.py writes it).
+# T120_inventory_cost_analysis, on vfsbench_harbor's mirage environment (datasets/claweval/convert.py writes it).
 #
 # Each service is its kit fake at upstream's port, and its tools CLIs
 # (workspace/tools.ts).

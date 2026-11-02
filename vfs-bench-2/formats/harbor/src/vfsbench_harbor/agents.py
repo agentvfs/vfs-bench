@@ -12,10 +12,10 @@ put every tool call of the agent into the trial's workspace:
 
 - Codex runs ``codex exec -C /`` with a Codex environment that is the
   trial's workspace (``$CODEX_HOME/environments.toml``, ``include_local =
-  false``): its shell commands, file reads and patches go over SSH to the
-  trial's daemon (``-s codex-exec``), the workspace as the user, the job's
-  key as the login (environment.py). Its features that reach past the
-  workspace (``CODEX_OFF``) and web search are off.
+  false``): its shell commands, file reads and patches go to the
+  workspace's codex-exec endpoint on its daemon, a WebSocket
+  (environment.py). Its features that reach past the workspace
+  (``CODEX_OFF``) and web search are off.
 - Claude Code gets Mirage's tools alone: the workspace's MCP server on the
   trial's daemon (shell, read, write, edit, ls, grep, glob), with every
   built-in tool turned off (``--tools ""``), so nothing it does reaches the
@@ -308,10 +308,6 @@ class Codex(HarborCodex):
     async def run(self, instruction: str, environment: BaseEnvironment,
                   context: AgentContext) -> None:
         mirage = _mirage(environment)
-        ssh = mirage.ssh
-        if ssh is None:
-            raise RuntimeError("the workspace has no SSH: codex needs the "
-                               "trial's own daemon, not --ek daemon_url")
         root = self.logs_dir.parent / "agent-host"
         gateway, proxied = await _gateway(
             CODEX_HOSTS | _hosts(self._resolved_base_url()), mirage, root,
@@ -319,17 +315,10 @@ class Codex(HarborCodex):
         host = _Host(root, self.logs_dir, proxied)
         codex_home = Path(host.host(self._REMOTE_CODEX_HOME.as_posix()))
         codex_home.mkdir(parents=True, exist_ok=True)
-        args = [
-            "-T", "-p",
-            str(ssh["port"]), "-i", ssh["key"], "-o", "IdentitiesOnly=yes",
-            "-o", "StrictHostKeyChecking=no", "-o",
-            "UserKnownHostsFile=/dev/null", "-o", "LogLevel=ERROR",
-            f"{ssh['user']}@{ssh['host']}", "-s", "codex-exec"
-        ]
         (codex_home / "environments.toml").write_text(
             'default = "mirage"\ninclude_local = false\n\n'
-            '[[environments]]\nid = "mirage"\nprogram = "ssh"\n'
-            f"args = {json.dumps(args)}\n")
+            '[[environments]]\nid = "mirage"\n'
+            f"url = {json.dumps(mirage.codex_exec_url)}\n")
         try:
             async with _fresh_state(mirage):
                 await super().run(instruction, host, context)

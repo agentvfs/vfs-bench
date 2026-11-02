@@ -1,4 +1,4 @@
-# Made from upstream's data, which fetch.py writes again from the pinned
+# Made from upstream's data, which download.py writes again from the pinned
 # package: each world's fixture (32 MB for all 600 tasks) and what the
 # rubric reads besides the world.
 */workspace/fixtures/

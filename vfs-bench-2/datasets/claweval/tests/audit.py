@@ -19,7 +19,7 @@ The scripted judge's replies are test fixtures, not model judgments.
 ``--job`` checks a Harbor job's trials instead: each trial's saved inputs
 and judge replies, graded on both sides, against the reward it got.
 
-From vfs-bench-2/, after datasets/claweval/fetch.py.
+From vfs-bench-2/, after datasets/claweval/download.py.
 """
 import argparse
 import ast
@@ -55,7 +55,7 @@ def grader_sources(task):
     out, pending = [], [task]
     while pending:
         name = pending.pop()
-        source = (REFERENCE / "tasks" / name / "grader.py").read_text()
+        source = (DATASET / name / "grader.py").read_text()
         out.append(source)
         for node in ast.walk(ast.parse(source)):
             if isinstance(node, ast.Call) and getattr(

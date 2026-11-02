@@ -1,5 +1,5 @@
 # Made from Gaia2's data (CC BY 4.0, with the Llama terms), which is fetched
-# at setup and never committed: fetch.py writes these from it.
+# at setup and never committed: download.py writes these from it.
 */harbor/instruction.md
 */workspace/fixtures/
 */workspace/files/drive/

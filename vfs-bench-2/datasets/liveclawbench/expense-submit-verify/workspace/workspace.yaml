@@ -10,7 +10,7 @@
 # each.
 fakes:
   expense:
-    # Upstream's expense seed (generate.py writes it). Its C2
+    # Upstream's expense seed (convert.py writes it). Its C2
     # fault (c2-skip-submit) is upstream's own, keyed by the fixture's
     # TASK_NAME: the first submit answers as submitted and changes
     # nothing, once per run.

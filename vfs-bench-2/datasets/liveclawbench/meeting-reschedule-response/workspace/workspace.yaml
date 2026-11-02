@@ -13,7 +13,7 @@ fakes:
   gws:
     # Upstream's email and calendar seeds for the task, as Gmail messages
     # and Peter's calendar, with the old Project Sync its startup script
-    # adds (generate.py writes it).
+    # adds (convert.py writes it).
     fixture: fixtures/gws.json
     epoch: '2026-04-03T09:00:00Z'
     # The run's SQLite, which the ported verify.py reads.

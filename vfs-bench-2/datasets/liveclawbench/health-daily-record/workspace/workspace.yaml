@@ -10,7 +10,7 @@
 # each.
 fakes:
   health:
-    # Upstream's health seed (generate.py writes it). Its own
+    # Upstream's health seed (convert.py writes it). Its own
     # clock reads 2026-05-13 (system_config), which the epoch matches.
     fixture: fixtures/health.json
     epoch: '2026-05-13T09:00:00Z'

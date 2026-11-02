@@ -1,4 +1,4 @@
-# T107zh_ticket_routing, on vfsbench_harbor's mirage environment (datasets/claweval/generate.py writes it).
+# T107zh_ticket_routing, on vfsbench_harbor's mirage environment (datasets/claweval/convert.py writes it).
 #
 # Each service is its kit fake at upstream's port, and its tools CLIs
 # (workspace/tools.ts).

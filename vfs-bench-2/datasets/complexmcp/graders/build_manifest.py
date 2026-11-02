@@ -1,6 +1,6 @@
 """Pin the ComplexMCP rows and original graders; --check detects drift.
 
-Run after datasets/complexmcp/fetch.py. Reference files are deliberately
+Run after datasets/complexmcp/download.py. Reference files are deliberately
 untouched.
 """
 import argparse
@@ -24,7 +24,7 @@ def row_digest(row):
 
 def expected():
     rows = json.loads((ROOT / 'state/complexmcp/tasks.json').read_text())
-    slugs = runpy.run_path(str(DATASET / 'generate.py'))['TASKS']
+    slugs = runpy.run_path(str(DATASET / 'convert.py'))['TASKS']
     tasks = {}
     for slug, index in slugs.items():
         tasks[slug] = {

@@ -1,7 +1,7 @@
 /**
  * ERPBench-100's world as a kit fake. A run is one task's world: the
  * fixture names the task (`_seed.task`), and `afterSeed` makes the run's
- * file from the world upstream seeds for it (generate.py's
+ * file from the world upstream seeds for it (convert.py's
  * `state/erpbench/kit/<task>.json`, never in the workspace), plus `_trace`.
  *
  *     POST /<tool>   a tool by its full name (`oracle_fusion.sales_orders.create`),
@@ -28,7 +28,7 @@ import { ErpClient, config } from './config.ts'
 import { type Dict, caught, deepcopy, dumps, isDict, put } from './py.ts'
 import { type Kit, SERVER_BY_PREFIX, World, snapshot } from './world.ts'
 
-/** Upstream's checkout and generate.py's per-task kits. */
+/** Upstream's checkout and convert.py's per-task kits. */
 export const STATE = process.env.ERPBENCH_STATE ?? join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..', 'state', 'erpbench')
 
 const kits = new Map<string, Kit>()

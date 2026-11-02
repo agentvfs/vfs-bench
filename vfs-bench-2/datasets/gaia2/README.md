@@ -4,7 +4,7 @@ Gaia2 (Meta's [ARE](https://github.com/facebookresearch/meta-agents-research-env
 @ `a9fd2ed`, MIT; data CC BY 4.0 with the Llama terms): 460 scenarios of
 its search, execution and ambiguity splits, each app a kit fake
 (`mocks/gaia2_<app>/`), its commands a CLI. Upstream's judge runs on Monty
-(`graders/`). The data is never committed: `fetch.py` writes each task's
+(`graders/`). The data is never committed: `download.py` writes each task's
 instruction, fixtures and drive from it.
 
 ## Fetch and run
@@ -12,10 +12,10 @@ instruction, fixtures and drive from it.
 From `vfs-bench-2/`:
 
 ```sh
-uv run --project datasets/gaia2 python -I datasets/gaia2/fetch.py
-uv run --project datasets/gaia2 python -I datasets/gaia2/generate.py --check
-uv run --project formats/harbor harbor run -c datasets/gaia2/jobs/harbor.yaml -a nop -n 32
-uv run --project formats/harbor harbor run -c datasets/gaia2/jobs/harbor.yaml -a oracle -n 32
+uv run --project datasets/gaia2 python -I datasets/gaia2/download.py
+uv run --project datasets/gaia2 python -I datasets/gaia2/convert.py --check
+uv run --project formats/harbor harbor run -c datasets/gaia2/harbor/job.yaml -a nop -n 32
+uv run --project formats/harbor harbor run -c datasets/gaia2/harbor/job.yaml -a oracle -n 32
 ```
 
 `<split>-<NNNN>/`: 460 Gaia2 scenarios, all 160 of the search
@@ -61,12 +61,12 @@ processes alive at once; oracle and verifier phases overlapped, including
 19 oracles and 86 verifiers at one instant. Phase timings include staging and
 waits; separate process samples observed up to 76 verifier processes.
 
-Gaia2's data is never committed. `generate.py` writes the files made from it
+Gaia2's data is never committed. `convert.py` writes the files made from it
 into each task, and `.gitignore` (which it writes too) keeps them
 out of git: `harbor/instruction.md`, `workspace/fixtures/` (the fixtures),
 `workspace/files/drive/` and the replayed `harbor/solution/solve.sh`. The scenario
 itself goes to `state/gaia2/harbor/<task>/`, which only the verifier
-gets. A fresh checkout runs these tasks once setup and `generate.py` have run.
+gets. A fresh checkout runs these tasks once setup and `convert.py` have run.
 
 | Upstream (gaia2-cli in its container) | Here |
 |---|---|
@@ -74,7 +74,7 @@ gets. A fresh checkout runs these tasks once setup and `generate.py` have run.
 | A command, one process: load the state, work on it, save, `log_action` a line to `events.jsonl`, print `json.dumps(..., indent=2)` or an error on stderr | `POST /<cli>/<command>` on the trial's run, the handler upstream's command statement for statement; the line an `event` row; the reply the text upstream prints |
 | The apps' binaries on `PATH` | One CLI per app (`workspace/tools.ts`), each command and option from upstream's click program (`workspace/tools.json`); an option is its first spelling (`--folder-name`, not `--folder`) |
 | The Files app, `cloud-drive` | A disk mount, `/cloud-drive`: the scenario's tree as `gaia2-init` lays it out, a copy of its own each trial (`copy`, an APFS clone); emails and messaging read and write attachments there (`extras`) |
-| libfaketime frozen at the scenario's start (the runner's `FAKETIME`) | Each run's clock is the scenario's start, frozen (`epoch`); the workspace's clock and the model's date start there (clock.ts, gateway.py) |
+| libfaketime frozen at the scenario's start (the runner's `FAKETIME`) | Each run's clock is the scenario's start, frozen (`epoch`); the workspace's clock (its `system_time`) and the model's date start there (gateway.py) |
 | `uuid.uuid4()` | A counter of the run's, hashed: the same ids every time |
 | `AGENTS_TEMPLATE.md` rendered for the scenario, then the scenario's message | `harbor/instruction.md`: the same render with four edits (`EDITS`: `/workspace` for `/home/agent`, the drive a mount, not a CLI), the notifications section cut (nothing delivers them; these splits have no ENV events), then `## Task` and the message, verbatim |
 | The agent's reply, logged as `send_message_to_user` by its adapter | The last message of the agent's Harbor trajectory |
@@ -133,7 +133,7 @@ the workspace sees it.
 - **19 scenarios whose oracle calls the Files app** (`mv`, `mkdir`, `rm`):
   14 of execution and 5 of ambiguity (0177, 0200, 0213, 0553, 0562). The
   drive is a mount, whose operations log no event, so the judge would find
-  the agent's moves missing (`generate.py`'s `SKIPPED`, with each reason).
+  the agent's moves missing (`convert.py`'s `SKIPPED`, with each reason).
 - **ambiguity 0198**, the one scenario of these splits in which the user
   writes to the agent twice: its second message needs a turn after the
   first, which nothing here delivers.

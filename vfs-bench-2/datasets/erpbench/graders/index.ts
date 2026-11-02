@@ -502,7 +502,7 @@ const erpbench: Grader = (c: Context): Grade => {
   return scoreEpisode(task, state(c, 3), state(c, 0), state(c, 1), state(c, 2))
 }
 
-/** The ERPBench-100 tasks: generate.py's manifest. */
+/** The ERPBench-100 tasks: convert.py's manifest. */
 export const GRADERS: Readonly<Record<string, Grader>> = Object.freeze(
   Object.fromEntries(Object.keys(MANIFEST.tasks).map((task) => [task, erpbench]))
 )

@@ -63,14 +63,14 @@ export async function automationWorkspace(request: AutomationRequest): Promise<W
   )
 }
 
-export async function verifyAutomation(request: AutomationRequest) {
+export async function verifyAutomation(request: AutomationRequest, signal?: AbortSignal) {
   const started = performance.now(),
     workspace = await automationWorkspace(request)
   try {
-    const result = await workspace.shell('python /grader/grader.py')
+    const result = await workspace.shell('python /grader/grader.py', { signal })
     if (result.exitCode !== 0)
       throw new Error(`Monty grader failed (${result.exitCode}): ${result.stderrText}`)
-    const output = await workspace.shell('cat /output/reward_details.json')
+    const output = await workspace.shell('cat /output/reward_details.json', { signal })
     if (output.exitCode !== 0) throw new Error('AutomationBench did not write its reward')
     const details = JSON.parse(output.stdoutText),
       score = details.partial_credit
@@ -97,6 +97,9 @@ export async function verifyAutomation(request: AutomationRequest) {
     await workspace.close()
   }
 }
+
+/** The grade, as the `grade` CLI runs it (workspace/grade.ts). */
+export const verify = verifyAutomation
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   let input = ''

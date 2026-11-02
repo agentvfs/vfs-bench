@@ -15,7 +15,7 @@
 fakes:
   social:
     # Upstream's social seed and the task's seed.json, as its image loads
-    # it (generate.py writes it).
+    # it (convert.py writes it).
     fixture: fixtures/social.json
     epoch: '2026-04-03T09:00:00Z'
     ports: [5008]
@@ -23,7 +23,7 @@ fakes:
     state: /var/lib/mock-data/social/social.db
   gws:
     # Upstream's email and calendar seeds for the task, as Gmail messages
-    # and Peter's calendar (generate.py writes it).
+    # and Peter's calendar (convert.py writes it).
     fixture: fixtures/gws.json
     epoch: '2026-04-03T09:00:00Z'
     # The run's SQLite, which the ported verify.py reads.

@@ -12,7 +12,7 @@
 fakes:
   smarthome:
     # Upstream's smarthome seed for the task, the seed.sql below
-    # (generate.py writes it).
+    # (convert.py writes it).
     fixture: fixtures/smarthome.json
     epoch: '2026-05-12T08:00:00Z'
     ports: [5004]
@@ -20,7 +20,7 @@ fakes:
     # there).
     state: /tmp/mosi_smart_home.sqlite
   shop:
-    # Upstream's shop seed for the task (generate.py writes it):
+    # Upstream's shop seed for the task (convert.py writes it):
     # the products.json below, and the orders startup.sh writes.
     fixture: fixtures/shop.json
     epoch: '2026-05-12T08:00:00Z'

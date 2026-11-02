@@ -11,7 +11,7 @@
 # fake serves the whole job.
 fakes:
   gws:
-    # Upstream's email seed for the task, as Gmail messages (generate.py
+    # Upstream's email seed for the task, as Gmail messages (convert.py
     # writes it).
     fixture: fixtures/gws.json
     epoch: '2026-04-03T09:00:00Z'

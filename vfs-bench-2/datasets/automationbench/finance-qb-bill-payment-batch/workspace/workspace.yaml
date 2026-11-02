@@ -1,4 +1,4 @@
-# finance.qb_bill_payment_batch, on vfsbench_harbor's mirage environment (datasets/automationbench/generate.py writes it).
+# finance.qb_bill_payment_batch, on vfsbench_harbor's mirage environment (datasets/automationbench/convert.py writes it).
 #
 # The task's world is the automationbench kit fake (mocks/automationbench),
 # seeded with the world upstream builds for the task (kit/, written from

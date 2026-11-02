@@ -1,4 +1,4 @@
-"""ERPBench-100's native grading definitions (generate.py writes them): each
+"""ERPBench-100's native grading definitions (convert.py writes them): each
 task's state-view queries, which its fake answers, its input and the hash of
 the file it reads from the task's verifier/."""
 import json

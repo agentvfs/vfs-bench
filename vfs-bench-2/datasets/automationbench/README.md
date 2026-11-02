@@ -11,16 +11,16 @@ on Monty (`graders/`).
 From `vfs-bench-2/`:
 
 ```sh
-uv run --project datasets/automationbench python -I datasets/automationbench/fetch.py
-uv run --project datasets/automationbench python -I datasets/automationbench/generate.py --check
-uv run --project formats/harbor harbor run -c datasets/automationbench/jobs/harbor.yaml -a nop -n 32
-uv run --project formats/harbor harbor run -c datasets/automationbench/jobs/oracle.yaml -a oracle -n 32
+uv run --project datasets/automationbench python -I datasets/automationbench/download.py
+uv run --project datasets/automationbench python -I datasets/automationbench/convert.py --check
+uv run --project formats/harbor harbor run -c datasets/automationbench/harbor/job.yaml -a nop -n 32
+uv run --project formats/harbor harbor run -c datasets/automationbench/harbor/oracle.yaml -a oracle -n 32
 ```
 
 | Upstream | Here |
 |---|---|
 | `WorldState`, in the environment's process | The `automationbench` kit fake (`mocks/automationbench/`): a run per trial, its world the `world` doc of the run's SQLite, `model_dump(mode="json")` of `meta` and the services the task is subscribed to |
-| `setup_state`: the world from `initial_state`, gated by `compute_allowed_services` | `generate.py` builds it with upstream's code and writes it as the fixture (`workspace/fixtures/automationbench.json`), with the clock and id generators it goes on with |
+| `setup_state`: the world from `initial_state`, gated by `compute_allowed_services` | `convert.py` builds it with upstream's code and writes it as the fixture (`workspace/fixtures/automationbench.json`), with the clock and id generators it goes on with |
 | `api_search`, `api_fetch`, `base64_encode` (`toolset="api"`, the default) | The `api` CLI (`workspace/tools.ts`): `api search`, `api fetch`, `api base64-encode`, each flag a parameter, posted to the fake's `/<tool>`; the reply is the tool's text, an escaping exception's `f"{e}"` as verifiers formats it |
 | `update_tool_args`: `{}` arguments dropped, the world passed | The same, in the fake (`fake.ts`) |
 | The routers and handlers of `tools/api/`, the `tools/zapier` functions they call, the schemas' methods, defaults and validators | One port per service (`app_<service>.ts`), statement for statement; records built and validated by `models.ts` from every model's fields, types and default factories (`data/models.json`, written from the models), as Pydantic's lax mode does, with its 422s |

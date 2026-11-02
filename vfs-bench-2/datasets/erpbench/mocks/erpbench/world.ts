@@ -21,7 +21,7 @@ export const SERVER_BY_PREFIX: Record<string, string> = {
   slack: 'slack',
 }
 
-/** What generate.py's `kit` writes for a task: the fields upstream's tools read. */
+/** What convert.py's `kit` writes for a task: the fields upstream's tools read. */
 export interface Kit {
   task: Dict
   model: Dict

@@ -2,7 +2,7 @@
 port is built from (build.py checks them before vendoring), the files and
 audits its inputs are, and whether it uses gws.
 
-Run after datasets/claweval/fetch.py. --check detects drift without
+Run after datasets/claweval/download.py. --check detects drift without
 updating pins.
 """
 import argparse
@@ -35,7 +35,7 @@ def build():
                      "officeqa_reward", "pinbench_common")
     ]
     tasks = {}
-    config = yaml.safe_load((DATASET / "jobs" / "harbor.yaml").read_text())
+    config = yaml.safe_load((DATASET / "harbor" / "job.yaml").read_text())
     for item in config["tasks"]:
         task = Path(item["path"]).parent.name
         sources = {name: digest(UPSTREAM / name) for name in shared}

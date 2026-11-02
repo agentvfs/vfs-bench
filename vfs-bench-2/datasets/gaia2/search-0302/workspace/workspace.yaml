@@ -1,4 +1,4 @@
-# search-0302, on vfsbench_harbor's mirage environment (datasets/gaia2/generate.py writes it).
+# search-0302, on vfsbench_harbor's mirage environment (datasets/gaia2/convert.py writes it).
 #
 # Each Gaia2 app is its kit fake (mocks/gaia2_<app>), seeded from the
 # scenario's state for it (kit/, written from the scenario, not committed),
