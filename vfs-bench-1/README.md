@@ -3,9 +3,9 @@
 **One task, two interfaces**: 200 tasks, 100 from
 [MCP-Atlas](https://arxiv.org/abs/2602.00933) and 100 from
 [Toolathlon](https://arxiv.org/abs/2510.25726), each run once through the
-task's MCP servers and once through AgentVFS. The results and the
-leaderboard are on the [repository's page](../README.md#results) and
-[agentvfs.org](https://agentvfs.org/benchmark/vfs-bench-1/leaderboard).
+task's MCP servers and once through AgentVFS. Its tasks, results and
+leaderboard are at
+[agentvfs.org/benchmark/vfs-bench-1](https://agentvfs.org/benchmark/vfs-bench-1).
 
 ## Installation
 
