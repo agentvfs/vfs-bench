@@ -60,6 +60,7 @@ import { parseArgs } from 'node:util'
 
 import { parse, stringify } from 'yaml'
 
+import { specName } from './cli.ts'
 import { type Copy, copyInto, copyTarget } from './copies.ts'
 import { STATE } from './paths.ts'
 
@@ -301,11 +302,13 @@ function prepare(plan: Plan, runDir: string, external: Record<string, External>)
   if (plan.tools !== undefined) {
     writeFileSync(dispatches, '')
     plan.state[plan.tools.dispatches] = dispatches
-    // Each tool CLI logs to this trial's file, as a daemon of the job's
-    // serves many trials' workspaces.
-    const names = new Set((JSON.parse(readFileSync(plan.tools.file, 'utf8')) as { name: string }[]).map((c) => c.name))
+    // Each tool CLI is the task's own (its spec name, cli.ts), and logs to
+    // this trial's file, as a daemon of the job's serves many trials'
+    // workspaces.
+    const specs = new Map((JSON.parse(readFileSync(plan.tools.file, 'utf8')) as { name: string }[]).map((c) => [c.name, specName(c)]))
     for (const cli of Object.values((config.clis ?? {}) as Record<string, { cli: string; config?: object }>)) {
-      if (names.has(cli.cli)) cli.config = { ...cli.config, dispatches }
+      const spec = specs.get(cli.cli)
+      if (spec !== undefined) Object.assign(cli, { cli: spec, config: { ...cli.config, dispatches } })
     }
   }
   // Files a shared fake keeps beside its run (mocks/upstream), read as a

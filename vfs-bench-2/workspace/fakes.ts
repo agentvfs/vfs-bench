@@ -13,11 +13,24 @@
  * `FAKE={"url": ..., "state": ...}`, and it stops the fake on SIGTERM or
  * when its stdin closes (its parent is gone), writing the fake's output to
  * `--log`.
+ *
+ * Each run gets a port of its own, on a line of stdin:
+ *
+ *     {"open": "<run>"}    prints RUN={"run": "<run>", "url": "http://127.0.0.1:<port>"}
+ *     {"close": "<run>"}   closes it
+ *
+ * Every request to that port goes to the run, as `/_run/<run>/<path>` on
+ * the fake, so a workspace allowed the port reaches its run alone. The
+ * kit's own endpoints (`/reset`, `/_kit/...`), the verifier's state view
+ * and another run's path answer 404 there.
  */
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, readlinkSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { Agent, createServer, request, type Server } from 'node:http'
+import type { AddressInfo } from 'node:net'
 import { dirname, join, relative, resolve } from 'node:path'
+import { createInterface } from 'node:readline'
 import { parseArgs } from 'node:util'
 
 import { type Fake, kit, start } from './kit.ts'
@@ -106,6 +119,42 @@ function generate(dir: string, text: string, client: string): void {
   }
 }
 
+/** What a run's port never forwards: the kit's, the verifier's and other runs' paths. */
+const PRIVATE = /^\/(reset|_kit|_run|_verifier)(\/|\?|$)/
+
+/** Open `run`'s own port on the fake at `url`; its URL. */
+function openPort(url: string, run: string, agent: Agent): Promise<{ url: string; server: Server }> {
+  const target = new URL(url)
+  const own = `/_run/${run}`
+  const server = createServer((req, res) => {
+    let path = req.url ?? '/'
+    // A URL the fake built for this run (a page's next link) has its prefix.
+    if (path === own || path.startsWith(`${own}/`) || path.startsWith(`${own}?`)) path = path.slice(own.length) || '/'
+    if (PRIVATE.test(path)) {
+      res.writeHead(404, { 'content-type': 'text/plain; charset=UTF-8' }).end('404 Not Found')
+      return
+    }
+    const upstream = request(
+      { host: target.hostname, port: target.port, method: req.method, path: `${own}${path}`, headers: req.headers, agent },
+      (reply) => {
+        res.writeHead(reply.statusCode ?? 502, reply.headers)
+        reply.pipe(res)
+      },
+    )
+    upstream.on('error', () => {
+      if (!res.headersSent) res.writeHead(502)
+      res.end()
+    })
+    req.pipe(upstream)
+  })
+  return new Promise((resolve, reject) => {
+    server.once('error', reject)
+    server.listen(0, '127.0.0.1', () => {
+      resolve({ url: `http://127.0.0.1:${(server.address() as AddressInfo).port}`, server })
+    })
+  })
+}
+
 async function main(): Promise<void> {
   // Every run is in UTC; the fake inherits it.
   process.env.TZ = 'UTC'
@@ -144,7 +193,6 @@ async function main(): Promise<void> {
     })())
   for (const signal of ['SIGTERM', 'SIGINT'] as const) process.on(signal, () => void stop().finally(() => process.exit(0)))
   process.stdin.on('close', () => void stop().finally(() => process.exit(0)))
-  process.stdin.resume()
   try {
     fake = await start(spec, run)
   } catch (error) {
@@ -152,6 +200,22 @@ async function main(): Promise<void> {
     throw error
   }
   console.log(`FAKE=${JSON.stringify({ url: fake.url, state: fake.stateDir })}`)
+  const url = fake.url
+  const agent = new Agent({ keepAlive: true })
+  const ports = new Map<string, Server>()
+  for await (const line of createInterface({ input: process.stdin })) {
+    const { open, close } = JSON.parse(line) as { open?: string; close?: string }
+    if (open !== undefined) {
+      const port = await openPort(url, open, agent)
+      ports.get(open)?.close()
+      ports.set(open, port.server)
+      console.log(`RUN=${JSON.stringify({ run: open, url: port.url })}`)
+    }
+    if (close !== undefined) {
+      ports.get(close)?.close()
+      ports.delete(close)
+    }
+  }
 }
 
 main().catch((error: unknown) => {

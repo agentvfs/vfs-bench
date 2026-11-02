@@ -25,7 +25,7 @@ uv run --project formats/harbor harbor run -c datasets/<dataset>/harbor/job.yaml
 uv run --project formats/harbor harbor run -p datasets/<dataset>/<task>/harbor \
   --env vfsbench_harbor:MirageEnvironment --verifier vfsbench_harbor:MirageVerifier -a oracle -k 2 -n 2
 # Trials side by side cannot reach each other.
-uv run --project formats/harbor python -I formats/harbor/isolation.py [--out <dir>]
+uv run --project formats/harbor python -I formats/harbor/isolation.py [--out <dir>] [--workers <n>]
 uv run --project formats/harbor python -I formats/harbor/test_environment.py
 uv run --project formats/harbor python -I formats/harbor/test_mirage_verifier.py
 # A stand-in judge for a grader that asks one (it scores everything the same).
@@ -65,17 +65,26 @@ is copied only when the mock changed it since its last copy.
 
 ## One daemon for the job
 
-With `--ek workers=<n>`, the first trial starts one daemon for the job
-with `n` worker processes, and every trial's workspace is created on it.
-Each workspace still has its own:
+With `--ek workers=<n>`, the first trial of each dataset starts one daemon
+for the job with `n` worker processes, and every trial's workspace is
+created on it. Each workspace still has its own:
 
 - clock: Mirage's `system_time`, the task's epoch when the trial started
-- network: `network.allowed_domains`, its own runs of the fakes alone
+- network: `network.allowed_domains`, its own runs' ports alone, and
+  `network.routes`, each upstream port on localhost (`ports:` in its
+  `workspace.yaml`) to its run's port
 - tools: the task's CLIs, each logging its calls to the trial's own file
 - grade: a workspace of its own on the same daemon (below)
 
-A task that routes an upstream port (`ports:` in its `workspace.yaml`) is
-refused for now: the daemon's routing is one for all its workspaces.
+The daemon registers every task's CLIs of the dataset, each under a name of
+its own (`crm-1f2e3d4c5b6a`), and a workspace installs its task's under
+their own names (`crm`), which is all the agent sees.
+
+Each run of a shared fake has a port of its own, which the fake's launcher
+opens (`workspace/fakes.ts`). It forwards to that run alone, and answers 404
+to the kit's endpoints (`/reset`, `/_kit/...`), the verifier's state view
+and another run's path. A workspace allowed its runs' ports reaches nothing
+else; `isolation.py --workers <n>` checks it.
 
 ## The verifier
 
@@ -240,21 +249,22 @@ task's fixture with the pool, named by task and content, then calls
 `POST /reset {"run": <trial>, "fixture": <name>, "epoch": <epoch>}`. The
 kit seeds a SQLite file for the run; gws copies it from a template once a
 run has used that seed. A task's `faults` are then armed on the run (`POST
-/_run/<run>/_kit/faults`). Its stop calls `DELETE /_kit/runs/<run>`.
+/_run/<run>/_kit/faults`), and the fake's launcher opens the run a port
+of its own (`{"open": <run>}` on its stdin). Its stop closes the port and
+calls `DELETE /_kit/runs/<run>`.
 
 The trial reaches its runs as follows:
-- `localhost:<upstream port>` goes to `<fake>/_run/<run>/<path>`, so
-  upstream's `curl http://localhost:5003/api/stickers` is unchanged.
-- A mount or CLI gets the run's base URL in the workspace config
-  (`${GWS_URL}` in `workspace.yaml`), as the kit is designed for. Requests
-  under it go as they are.
-- Everything else is refused: another run's path on the real port, the
-  real port outside the trial's runs, and the internet. Under a run, the
-  kit's own endpoints (`/reset`, `/_kit/...`) answer 404, as upstream's
-  services do.
+- `localhost:<upstream port>` goes to its run's port, so upstream's
+  `curl http://localhost:5003/api/stickers` is unchanged.
+- A mount or CLI gets the run's port in the workspace config (`${GWS_URL}`
+  in `workspace.yaml`). Requests to it go to `<fake>/_run/<run>/<path>`.
+- Everything else is refused: another run's port, the fake's real port,
+  and the internet. At its own port, the kit's endpoints (`/reset`,
+  `/_kit/...`) and another run's path answer 404, as upstream's services
+  do.
 
-Each trial keeps a Mirage daemon of its own: curl's routing is
-process-global. A run's SQLite is the state file the verifier reads. The
+On a trial's own daemon, its preload routes the process (`preload.ts`); on
+the job's, each workspace's `network` does. A run's SQLite is the state file the verifier reads. The
 kit keeps it in the rollback journal, not WAL, and the environment copies
 it into the trial's read-only mount before each `exec`.
 
@@ -268,7 +278,7 @@ A job's trials share its mocks, each with runs of its own.
 | Workspace | Its own workspace on its own daemon | Its own workspace, on one of the daemon's workers |
 | Files | Its mounts are its own run dir; no other host path is visible | The same |
 | Services | Its own runs on the shared fakes, each its own SQLite file, clock and ids | The same |
-| Network | Its own routes: its upstream ports and its mounts reach its own runs; every other path and port, another trial's or its own, and the internet are refused | Its mounts and CLIs reach its own runs alone (`network.allowed_domains`); no upstream port is routed |
+| Network | Its own routes: its upstream ports and its mounts reach its own runs; every other path and port, another trial's or its own, and the internet are refused | The same, through the workspace's own `network.allowed_domains` (its runs' ports) and `network.routes` (its upstream ports) |
 | CPU | Its own Node process and event loop, Pyodide included; nothing is capped | Its worker's process and event loop, shared with that worker's other trials |
 | Crash | A daemon that dies ends only its trial. A shared fake that dies fails the trials using it | A worker that dies ends the trials on it |
 | Verifier | A Mirage workspace of its own, which holds only the run's frozen state and the grader's inputs | A workspace of its own on the job's daemon, which holds only the grader's request |
@@ -281,9 +291,9 @@ plan armed), and finance-anomaly-detect twice (H and I, on one finance
 fake). It checks from inside the workspaces that a trial sees only its own
 state: on its data mount, through its API, its `/gmail` and `/calendar`
 mounts and the `gws` CLI, mail and calendar events alike. It checks that a
-trial cannot reach another's run by path through its own URL
-(`localhost:5003/_run/b/...` is a 404 in its own run), by the shared fake's
-real port, or outside its runs, and cannot reset its run. H and I each log
+trial cannot reach another's run at that run's port, by path through its
+own (`localhost:5003/_run/b/...` is a 404), by the shared fake's real port,
+or outside its runs, and cannot reset its run. H and I each log
 in with a cookie jar; each refuses the other's session cookie (`Invalid or
 expired token`) and takes its own. It also checks one trial's commands
 against each other: six at once each see its state, and a command canceled

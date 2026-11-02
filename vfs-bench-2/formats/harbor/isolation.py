@@ -1,27 +1,29 @@
 """Check that trials run side by side cannot reach each other.
 
     uv run --project harbor python -I harbor/isolation.py [--out <dir>]
+        [--workers <n>]
 
 Starts nine trials at once from the committed tasks, each with its own
-daemon, on kit fakes they share: chat-sticker-engagement twice (A and B,
-both reaching the one chat fake at localhost:5003, each its own run),
-weather-aqi-report (C), candidate-interview-slot-confirm twice (D and E,
-both on the one gws fake through /gmail, /calendar and the gws CLI),
-email-sending-verify twice (F and G, on that gws fake too, each with the
-task's fault plan armed on its run), and finance-anomaly-detect twice (H
-and I, both on the one finance fake at localhost:1235, each logged in with
-a cookie of its own run's). Then checks, from inside the workspaces, that
-each trial reaches only its own runs and files: not another's state, mail
-or calendar events, not another's run by path through its own URL, not the
-shared fakes' real ports, and not another run's session; and that each
-run's fault fires once, for that run alone. A trial's own commands keep
-apart too: several at once each see its state, and one canceled stops.
+daemon (or all on one daemon of the job's, with ``--workers``), on kit
+fakes they share, each trial's run at a port of its own:
+chat-sticker-engagement twice (A and B, both reaching the one chat fake at
+localhost:5003, each its own run), weather-aqi-report (C),
+candidate-interview-slot-confirm twice (D and E, both on the one gws fake
+through /gmail, /calendar and the gws CLI), email-sending-verify twice (F
+and G, on that gws fake too, each with the task's fault plan armed on its
+run), and finance-anomaly-detect twice (H and I, both on the one finance
+fake at localhost:1235, each logged in with a cookie of its own run's).
+Then checks, from inside the workspaces, that each trial reaches only its
+own runs and files: not another's state, mail or calendar events, not
+another's run at its port or by path through its own, not the shared
+fakes' real ports, and not another run's session; and that each run's
+fault fires once, for that run alone. A trial's own commands keep apart
+too: several at once each see its state, and one canceled stops.
 
 Exits 1 if any check fails.
 """
 import argparse
 import asyncio
-import json
 import shlex
 import sys
 from pathlib import Path
@@ -29,7 +31,7 @@ from urllib.parse import urlsplit
 
 from harbor.models.task.task import Task
 from harbor.models.trial.paths import TrialPaths
-from vfsbench_harbor import MirageEnvironment
+from vfsbench_harbor import MirageEnvironment, fakes
 
 ROOT = Path(__file__).resolve().parents[2]
 TASKS = ROOT / "datasets/liveclawbench"
@@ -104,7 +106,8 @@ def probe(name: str,
     return f"python3 -c {shlex.quote(PROBE)} {args}"
 
 
-def trial(out: Path, task: str, name: str) -> MirageEnvironment:
+def trial(out: Path, task: str, name: str,
+          workers: int | None) -> MirageEnvironment:
     t = Task(TASKS / task / "harbor")
     paths = TrialPaths(out / name)
     paths.mkdir()
@@ -114,7 +117,14 @@ def trial(out: Path, task: str, name: str) -> MirageEnvironment:
         session_id=name,
         trial_paths=paths,
         task_env_config=t.config.environment,
+        workers=workers,
     )
+
+
+def run(t: MirageEnvironment, service: str) -> fakes.Run:
+    """A trial's run of a shared fake: ``url`` on the fake, ``address`` its
+    own port."""
+    return next(r for r in t._runs if r.service == service)
 
 
 def origin(url: str) -> str:
@@ -125,14 +135,16 @@ def origin(url: str) -> str:
 async def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--out", type=Path, default=OUT)
+    parser.add_argument("--workers", type=int)
     args = parser.parse_args()
     out = args.out.resolve()
-    a, b = (trial(out, "chat-sticker-engagement", n) for n in ("a", "b"))
-    c = trial(out, "weather-aqi-report", "c")
-    d, e = (trial(out, "candidate-interview-slot-confirm", n)
+    w = args.workers
+    a, b = (trial(out, "chat-sticker-engagement", n, w) for n in ("a", "b"))
+    c = trial(out, "weather-aqi-report", "c", w)
+    d, e = (trial(out, "candidate-interview-slot-confirm", n, w)
             for n in ("d", "e"))
-    f, g = (trial(out, "email-sending-verify", n) for n in ("f", "g"))
-    h, i = (trial(out, "finance-anomaly-detect", n) for n in ("h", "i"))
+    f, g = (trial(out, "email-sending-verify", n, w) for n in ("f", "g"))
+    h, i = (trial(out, "finance-anomaly-detect", n, w) for n in ("h", "i"))
     trials = (a, b, c, d, e, f, g, h, i)
     await asyncio.gather(*(t.start(force_build=False) for t in trials))
     failed = 0
@@ -150,26 +162,23 @@ async def main() -> int:
                f"$ {line}\n    {out.strip()[:200]}")
 
     try:
-        plans = {
-            t.session_id: json.loads((t._run_dir / "plan.json").read_text())
-            for t in trials
-        }
-        # Each trial's run of a shared fake, and that fake's real origin.
-        real = {n: p["routes"] for n, p in plans.items()}
-        runs = {n: p["allow"] for n, p in plans.items()}
-        chat = origin(real["a"]["5003"])
-        gws = origin(runs["d"][0])
+        # Each trial's run of a shared fake: the fake's real origin, the
+        # run's path on it, and the run's own port.
+        chat = origin(run(a, "chat").url)
+        gws = origin(run(d, "gws").url)
         refused = lambda code, out: code == 7  # noqa: E731
         not_found = lambda code, out: out == "404 Not Found"  # noqa: E731
 
         report(
-            origin(real["b"]["5003"]) == chat and real["a"] != real["b"],
-            "a,b", "share one chat fake, each with a run of its own",
-            f"{real['a']['5003']}  {real['b']['5003']}")
+            origin(run(b, "chat").url) == chat
+            and run(a, "chat").address != run(b, "chat").address, "a,b",
+            "share one chat fake, each with a run and a port of its own",
+            f"{run(a, 'chat').address}  {run(b, 'chat').address}")
         report(
-            origin(runs["e"][0]) == gws and runs["d"] != runs["e"], "d,e",
-            "share one gws fake, each with a run of its own",
-            f"{runs['d'][0]}  {runs['e'][0]}")
+            origin(run(e, "gws").url) == gws
+            and run(d, "gws").address != run(e, "gws").address, "d,e",
+            "share one gws fake, each with a run and a port of its own",
+            f"{run(d, 'gws').address}  {run(e, 'gws').address}")
 
         # The chat pair, as before the fakes were shared.
         await check(
@@ -201,18 +210,18 @@ async def main() -> int:
         await check(b, "does not see A's pack on its mock",
                     "curl -sf http://localhost:5003/api/stickers",
                     lambda code, out: code == 0 and '"pack_id":1' not in out)
-        await check(a, "cannot reach B's mock by its real port",
-                    f"curl -sS {real['b']['5003']}/health", refused)
-        await check(a, "cannot reach B's mock with -k",
-                    f"curl -k -sS {real['b']['5003']}/health", refused)
-        await check(b, "cannot reach A's mock by its real port",
-                    f"curl -sS {real['a']['5003']}/health", refused)
+        await check(a, "cannot reach B's run at its port",
+                    f"curl -sS {run(b, 'chat').address}/health", refused)
+        await check(a, "cannot reach B's run with -k",
+                    f"curl -k -sS {run(b, 'chat').address}/health", refused)
+        await check(b, "cannot reach A's run at its port",
+                    f"curl -sS {run(a, 'chat').address}/health", refused)
         await check(c, "cannot reach a chat mock at localhost:5003",
                     "curl -sS http://localhost:5003/health", refused)
-        await check(c, "cannot reach A's mock by its real port",
-                    f"curl -sS {real['a']['5003']}/health", refused)
-        await check(a, "cannot reach C's mock by its real port",
-                    f"curl -sS {real['c']['3000']}/health", refused)
+        await check(c, "cannot reach A's run at its port",
+                    f"curl -sS {run(a, 'chat').address}/health", refused)
+        await check(a, "cannot reach C's run at its port",
+                    f"curl -sS {run(c, 'weather').address}/health", refused)
         await check(a, "cannot reach the internet",
                     "curl -sS http://example.com/", refused)
         await check(a, "has no network from python3", URLOPEN,
@@ -223,7 +232,7 @@ async def main() -> int:
                     lambda code, out: code != 0)
 
         # The shared chat fake: one run cannot reach another's.
-        b_run = urlsplit(real["b"]["5003"]).path
+        b_run = urlsplit(run(b, "chat").url).path
         await check(a, "cannot reach B's run by path through its own URL",
                     f"curl -s http://localhost:5003{b_run}/api/stickers",
                     not_found)
@@ -257,7 +266,7 @@ async def main() -> int:
         await check(e, "does not see D's mail through the gws CLI",
                     f"gws gmail triage --query 'subject:{SUBJECT} in:sent'",
                     lambda code, out: code == 0 and SUBJECT not in out)
-        d_run = urlsplit(runs["d"][0]).path
+        d_run = urlsplit(run(d, "gws").url).path
         await check(
             e, "cannot reach D's run on the shared fake's real port",
             f"curl -sS {TOKEN} {gws}{d_run}/gmail/v1/users/me/messages",
@@ -310,11 +319,13 @@ async def main() -> int:
             f"{gws}{d_run}/calendar/v3/calendars/primary/events", refused)
 
         # The shared finance fake, whose session is a cookie of the run's.
-        finance = origin(real["h"]["1235"])
+        finance = origin(run(h, "finance").url)
         report(
-            origin(real["i"]["1235"]) == finance and real["h"] != real["i"],
-            "h,i", "share one finance fake, each with a run of its own",
-            f"{real['h']['1235']}  {real['i']['1235']}")
+            origin(run(i, "finance").url) == finance
+            and run(h, "finance").address != run(i, "finance").address, "h,i",
+            "share one finance fake, each with a run and a port of "
+            "its own", f"{run(h, 'finance').address}  "
+            f"{run(i, 'finance').address}")
         sessions = {}
         for t in (h, i):
             await check(t, "logs in with a cookie jar", LOGIN,
@@ -349,7 +360,7 @@ async def main() -> int:
             f"curl -s -H 'Cookie: token={sessions['h']}' "
             f"{FINANCE}/api/transactions/8",
             lambda code, out: '"flagged"' in out)
-        h_run = urlsplit(real["h"]["1235"]).path
+        h_run = urlsplit(run(h, "finance").url).path
         await check(i, "cannot reach H's run by path through its own URL",
                     f"curl -s -b {JAR} {FINANCE}{h_run}/api/transactions",
                     not_found)
