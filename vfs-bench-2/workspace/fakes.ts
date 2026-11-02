@@ -27,14 +27,14 @@
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, readlinkSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
-import { Agent, createServer, request, type Server } from 'node:http'
-import type { AddressInfo } from 'node:net'
+import { Agent, type Server } from 'node:http'
 import { dirname, join, relative, resolve } from 'node:path'
 import { createInterface } from 'node:readline'
 import { parseArgs } from 'node:util'
 
 import { type Fake, kit, start } from './kit.ts'
 import { INTEG, ROOT } from './paths.ts'
+import { openPort } from './ports.ts'
 import { Run } from './runs.ts'
 
 /** Every dataset's kit fakes, one directory each: `datasets/<dataset>/mocks/<service>/`. */
@@ -117,42 +117,6 @@ function generate(dir: string, text: string, client: string): void {
     rmSync(source, { recursive: true, force: true })
     rmSync(staged, { recursive: true, force: true })
   }
-}
-
-/** What a run's port never forwards: the kit's, the verifier's and other runs' paths. */
-const PRIVATE = /^\/(reset|_kit|_run|_verifier)(\/|\?|$)/
-
-/** Open `run`'s own port on the fake at `url`; its URL. */
-function openPort(url: string, run: string, agent: Agent): Promise<{ url: string; server: Server }> {
-  const target = new URL(url)
-  const own = `/_run/${run}`
-  const server = createServer((req, res) => {
-    let path = req.url ?? '/'
-    // A URL the fake built for this run (a page's next link) has its prefix.
-    if (path === own || path.startsWith(`${own}/`) || path.startsWith(`${own}?`)) path = path.slice(own.length) || '/'
-    if (PRIVATE.test(path)) {
-      res.writeHead(404, { 'content-type': 'text/plain; charset=UTF-8' }).end('404 Not Found')
-      return
-    }
-    const upstream = request(
-      { host: target.hostname, port: target.port, method: req.method, path: `${own}${path}`, headers: req.headers, agent },
-      (reply) => {
-        res.writeHead(reply.statusCode ?? 502, reply.headers)
-        reply.pipe(res)
-      },
-    )
-    upstream.on('error', () => {
-      if (!res.headersSent) res.writeHead(502)
-      res.end()
-    })
-    req.pipe(upstream)
-  })
-  return new Promise((resolve, reject) => {
-    server.once('error', reject)
-    server.listen(0, '127.0.0.1', () => {
-      resolve({ url: `http://127.0.0.1:${(server.address() as AddressInfo).port}`, server })
-    })
-  })
 }
 
 async function main(): Promise<void> {
