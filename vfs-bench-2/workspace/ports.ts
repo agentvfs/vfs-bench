@@ -10,8 +10,14 @@ import type { AddressInfo } from 'node:net'
 /** What a run's port never forwards: the kit's, the verifier's and other runs' paths. */
 const PRIVATE = /^\/(reset|_kit|_run|_verifier)(\/|\?|$)/
 
-/** Open `run`'s own port on the fake at `url`; its URL. */
-export function openPort(url: string, run: string, agent: Agent): Promise<{ url: string; server: Server }> {
+/** Open `run`'s own port on the fake at `url`; its URL. A request whose
+ * fake sends nothing for `idle` ms gets a 502. */
+export function openPort(
+  url: string,
+  run: string,
+  agent: Agent,
+  idle = 120_000,
+): Promise<{ url: string; server: Server }> {
   const target = new URL(url)
   const own = `/_run/${run}`
   const server = createServer((req, res) => {
@@ -36,6 +42,13 @@ export function openPort(url: string, run: string, agent: Agent): Promise<{ url:
     upstream.on('error', () => {
       if (!res.headersSent) res.writeHead(502)
       res.end()
+    })
+    // A client gone before its reply (its command canceled) or a fake that
+    // does not answer ends the request, so neither holds a socket open
+    // into later trials.
+    upstream.setTimeout(idle, () => upstream.destroy(new Error('the fake did not answer')))
+    res.on('close', () => {
+      if (!res.writableFinished) upstream.destroy()
     })
     req.pipe(upstream)
   })

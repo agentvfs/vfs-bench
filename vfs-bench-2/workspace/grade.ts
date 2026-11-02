@@ -47,7 +47,7 @@ async function runner(request: Request): Promise<Runner> {
   return own.verify
 }
 
-const GRADE = new CLI({
+export const GRADE = new CLI({
   spec: new CommandSpec({ name: 'grade', description: "Grade a trial's frozen inputs (/request.json)." }),
   handlers: {
     '': new CLIHandler({

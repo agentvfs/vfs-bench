@@ -114,17 +114,27 @@ async def _job_daemon(node: str, workers: int, dataset: Path,
     if task is None or (task.done() and
                         (task.cancelled() or task.exception() is not None
                          or task.result()[1].poll() is not None)):
-        files = sorted(str(p) for p in dataset.glob("*/workspace/tools.json"))
         task = asyncio.ensure_future(
-            _boot_job_daemon(node, workers,
-                             os.pathsep.join(files) or None, job_dir))
+            _boot_job_daemon(node, workers, dataset, job_dir))
         _job_daemons[key] = task
     url, _ = await asyncio.shield(task)
     return url
 
 
-async def _boot_job_daemon(node: str, workers: int, tools: str | None,
+def _tools_files(dataset: Path) -> list[str]:
+    """Each task's tools file, as its workspace.yaml names it."""
+    files = []
+    for spec in sorted(dataset.glob("*/workspace/workspace.yaml")):
+        tools = (yaml.safe_load(spec.read_text()) or {}).get("tools")
+        if tools:
+            files.append(str(spec.parent / tools["file"]))
+    return files
+
+
+async def _boot_job_daemon(node: str, workers: int, dataset: Path,
                            job_dir: Path) -> tuple[str, subprocess.Popen]:
+    tools = os.pathsep.join(await asyncio.to_thread(_tools_files,
+                                                    dataset)) or None
     port = _free_port()
     home = job_dir / f"mirage-daemon-{port}"
     home.mkdir(parents=True, exist_ok=True)
@@ -729,9 +739,13 @@ class MirageEnvironment(BaseEnvironment):
                           stderr=result["stderr"],
                           return_code=result["exit_code"])
 
-    def _refresh_state(self, *, files_only: bool = False) -> None:
+    def _refresh_state(self,
+                       *,
+                       files_only: bool = False,
+                       fresh: bool = False) -> None:
         """Bring each mock's state file in the workspace up to date, where
-        it changed since its last copy; one refresh at a time."""
+        it changed since its last copy, or every one (``fresh``); one
+        refresh at a time."""
         with self._refreshing:
             for view, live in self._state:
                 if files_only and live.is_file():
@@ -739,10 +753,10 @@ class MirageEnvironment(BaseEnvironment):
                         if source.read(len(SQLITE)) == SQLITE:
                             continue
                 # The copy's stamp too: an agent can write the copy (one
-                # under /tmp), which is copied again before it is graded.
+                # under /tmp), which the next refresh copies again.
                 stamp = _stamp(live)
-                if stamp is not None and self._stamps.get(view) == (
-                        stamp, _stamp(view)):
+                if not fresh and stamp is not None and self._stamps.get(
+                        view) == (stamp, _stamp(view)):
                     continue
                 _snapshot(view, live)
                 self._stamps[view] = (stamp, _stamp(view))
@@ -762,8 +776,12 @@ class MirageEnvironment(BaseEnvironment):
         await asyncio.to_thread(self._refresh_state)
 
     async def refresh_verifier_files(self) -> None:
-        """Refresh files/trajectory; native grading never copies a database."""
-        await asyncio.to_thread(self._refresh_state, files_only=True)
+        """Refresh files/trajectory; native grading never copies a database.
+        Each file is copied again: the agent may have written its copy since
+        the last one, a stamp read from that copy included."""
+        await asyncio.to_thread(self._refresh_state,
+                                files_only=True,
+                                fresh=True)
 
     # What a verifier run outside the workspace reads (microsandbox.py):
     # the trial's files, its routes and the container's environment.
