@@ -37,14 +37,6 @@ Toolathlon; its tasks, results and trajectories are at
 VFS-Bench 2.0, in progress, runs recent, hard agent benchmarks through
 AgentVFS alone.
 
-| | [VFS-Bench 1.0](vfs-bench-1/README.md) | [VFS-Bench 2.0](vfs-bench-2/README.md) (in progress) |
-|---|---|---|
-| Interfaces | MCP and AgentVFS, side by side | AgentVFS only |
-| Tasks | 200, from MCP-Atlas and Toolathlon | Recent, hard benchmarks: Gaia2, Claw-Eval, AutomationBench and more |
-| Services | Local fakes in Docker | Local mock servers, a run of each per trial |
-| Runs on | Its own harness (`agent/run_agent.py`) | [Harbor](https://pypi.org/project/harbor/), on Mirage |
-| Folder | [`vfs-bench-1/`](vfs-bench-1/) | [`vfs-bench-2/`](vfs-bench-2/) |
-
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/agentvfs-overview-dark.png">
@@ -132,13 +124,9 @@ live account and every run starts from the same seeded state.
 
 ## Repository
 
-| Folder | What it holds |
-|---|---|
-| [`vfs-bench-1/`](vfs-bench-1/README.md) | VFS-Bench 1.0: MCP against AgentVFS, its harness and fakes |
-| [`vfs-bench-2/`](vfs-bench-2/README.md) | VFS-Bench 2.0: AgentVFS on Harbor and Mirage |
-| [`ui/`](ui/README.md) | A page to run VFS-Bench 2.0 and watch it |
-
-Each folder's README says how to set it up and run it.
+- [VFS-Bench 1.0](vfs-bench-1/README.md)
+- [VFS-Bench 2.0](vfs-bench-2/README.md)
+- [UI](ui/README.md)
 
 ## Contributing
 
