@@ -33,7 +33,7 @@ interface Request {
   files?: Record<string, string>
 }
 
-type Runner = (request: Request) => Promise<unknown>
+type Runner = (request: Request, signal?: AbortSignal) => Promise<unknown>
 
 /** The runner a request's runtime names. */
 async function runner(request: Request): Promise<Runner> {
@@ -61,7 +61,9 @@ const GRADE = new CLI({
             request.states = Object.fromEntries(await Promise.all(states))
             request.files = Object.fromEntries(await Promise.all(files))
           }
-          const grade = await (await runner(request))(request)
+          // A grade canceled (its verifier gone, the workspace closed) stops
+          // the grader's own workspace and its judge's requests with it.
+          const grade = await (await runner(request))(request, ctx.signal)
           return [encoder.encode(`${JSON.stringify(grade)}\n`), new IOResult()]
         } catch (error) {
           const stderr = encoder.encode(`${error instanceof Error ? (error.stack ?? error.message) : String(error)}\n`)

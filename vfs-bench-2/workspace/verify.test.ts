@@ -9,6 +9,12 @@ import { test } from 'node:test'
 import { CHAT_DB } from '../datasets/liveclawbench/graders/chat.ts'
 import { sqliteTables } from './sqlite-tables.ts'
 import { verify, verifierWorkspace } from './verify.ts'
+import { CLI, CLIHandler } from '@struktoai/mirage-core/commands/cli/types'
+import { CommandSpec } from '@struktoai/mirage-core/commands/spec/types'
+import { IOResult } from '@struktoai/mirage-core/io/types'
+import { MountMode } from '@struktoai/mirage-core/types'
+import { RAMVFS } from '@struktoai/mirage-core/vfs/ram/ram'
+import { Workspace } from '@struktoai/mirage-core/workspace/workspace/workspace'
 
 const HERE = import.meta.dirname
 const SCHEMA = `
@@ -118,5 +124,35 @@ test('native grading has no host filesystem, database, or subprocess imports', (
       /node:(?:fs|sqlite|child_process)|bun:sqlite|SELECT\s+.+?FROM|DatabaseSync/,
       path
     )
+  }
+})
+
+test("a grader's shell, canceled by its signal, cancels the command it runs", async () => {
+  // As grade.ts hands a grade's signal to a grader's own workspace, and
+  // Claw-Eval's judge takes its command's.
+  const workspace = new Workspace({ '/': [new RAMVFS(), MountMode.READ] }, { runtimes: ['workspace'] })
+  let stopped = false
+  workspace.registerCli(
+    'judge',
+    new CLI({
+      spec: new CommandSpec({ name: 'judge', description: 'Wait to be canceled.' }),
+      handlers: {
+        '': new CLIHandler({
+          fn: async (_accessor, _paths, _texts, command) => {
+            await new Promise((resolve) => command.signal!.addEventListener('abort', resolve))
+            stopped = true
+            return [null, new IOResult()]
+          },
+        }),
+      },
+    })
+  )
+  try {
+    const controller = new AbortController()
+    setTimeout(() => controller.abort(), 100)
+    await workspace.shell('judge', { signal: controller.signal }).catch(() => undefined)
+    assert.ok(stopped)
+  } finally {
+    await workspace.close()
   }
 })
