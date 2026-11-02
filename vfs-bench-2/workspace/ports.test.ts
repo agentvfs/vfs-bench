@@ -50,3 +50,34 @@ test("a run's port resolves dot segments before it forwards", async () => {
     agent.destroy()
   }
 })
+
+test("a run's port ends a request its client left, or its fake did not answer", async () => {
+  // The fake: answers nothing, and counts the requests still open on it.
+  let open = 0
+  const fake = createServer((req) => {
+    open++
+    req.socket.on('close', () => open--)
+  })
+  await new Promise<void>((resolve) => fake.listen(0, '127.0.0.1', resolve))
+  const agent = new Agent()
+  const port = await openPort(`http://127.0.0.1:${(fake.address() as AddressInfo).port}`, 'a', agent, 300)
+  const until = async (done: () => boolean, ms = 1000) => {
+    for (let i = 0; i < ms / 10 && !done(); i++) await new Promise((resolve) => setTimeout(resolve, 10))
+    assert.ok(done())
+  }
+  try {
+    const { hostname, port: number } = new URL(port.url)
+    const left = request({ host: hostname, port: number, path: '/api/x' }).on('error', () => undefined)
+    left.end()
+    await until(() => open === 1)
+    left.destroy()
+    // Before the fake's 300 ms are up: the client leaving ended it.
+    await until(() => open === 0, 150)
+    assert.deepEqual(await get(port.url, '/api/x'), { status: 502, body: '' })
+    await until(() => open === 0)
+  } finally {
+    port.server.close()
+    fake.close()
+    agent.destroy()
+  }
+})

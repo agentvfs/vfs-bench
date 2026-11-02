@@ -137,6 +137,20 @@ class AgentTrajectory(unittest.TestCase):
         asyncio.run(self.env.refresh_state())
         self.assertEqual(view.read_text(), '{"orders": []}')
 
+    def test_grading_copies_a_copy_whose_stamp_the_agent_wrote(self) -> None:
+        root = Path(self.root.name)
+        live, view = root / "live.json", root / "view.json"
+        live.write_text('{"orders": []}')
+        self.env._state = [(view, live)]
+        asyncio.run(self.env.refresh_state())
+        # Written between a refresh's copy and its stamp of the copy, so
+        # the stamp it keeps is the agent's.
+        view.write_text('{"orders": [{"status": "completed"}]}')
+        self.env._stamps[view] = (environment._stamp(live),
+                                  environment._stamp(view))
+        asyncio.run(self.env.refresh_verifier_files())
+        self.assertEqual(view.read_text(), '{"orders": []}')
+
     def test_exec_refreshes_trajectory_before_running_a_command(self) -> None:
         self.source.write_text('{"steps": []}')
 
@@ -197,6 +211,17 @@ class JobDaemon(unittest.TestCase):
             urls = asyncio.run(scenario())
         self.assertEqual(
             urls, ["http://daemon-1", "http://daemon-1", "http://daemon-2"])
+
+    def test_a_daemon_registers_each_task_s_own_tools_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            for task, spec in (("a", "tools: {file: task-tools.json}\n"),
+                               ("b", "fakes: {}\n")):
+                workspace = Path(tmp, task, "workspace")
+                workspace.mkdir(parents=True)
+                (workspace / "workspace.yaml").write_text(spec)
+            self.assertEqual(
+                environment._tools_files(Path(tmp)),
+                [str(Path(tmp, "a", "workspace", "task-tools.json"))])
 
 
 class FailedSetup(unittest.TestCase):
