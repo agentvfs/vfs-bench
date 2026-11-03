@@ -17,8 +17,10 @@ terminal stops or retries its trial. Runs are read from disk, so leaving a page 
 The UI has no run format of its own. A job is the directory Harbor
 writes under `<runs folder>/<jobs dir>/<job>/`. Run starts
 `harbor run -c <runs folder>/console/jobs-console/<job>.json -y`, where that config is
-`datasets/<dataset>/harbor/job.yaml` with the form's agent, model, concurrency and
-attempts written over it. The job lands in `<runs folder>/jobs-console/`.
+`datasets/<dataset>/harbor/job.yaml` with the form's agent, model, concurrency,
+attempts, effort (the agent's `reasoning_effort`, as `--ak` sets it) and workers
+(the job's Mirage daemon workers, as `--ek workers=<n>` sets them; 0 gives each
+trial a daemon of its own) written over it. The job lands in `<runs folder>/jobs-console/`.
 
 - **Stop** (a run) sends the job Ctrl-C, SIGINT to its process group; a
   second Stop sends SIGTERM. Trials in progress are cancelled, which counts
@@ -73,12 +75,15 @@ from `vfs-bench-2/.env`, passed to Harbor as `--env-file`.
 
 ## Terminals
 
-A terminal shows Mirage's own record of the commands its workspace ran, the
-workspace's `/.bash_history`. Every session writes to it, an agent working
-over SSH included. The UI reads it from the trial's daemon while the
-trial runs, and keeps a copy under `<runs folder>/console/observed/`, since
-the daemon goes when the trial ends. It finds the daemon's port from
-`HARBOR_SERVER=` in `mirage/daemon.log` (Claw-Eval's daemon), or from the pid
+A terminal shows the workspace's last lines and what each wrote (stdout,
+stderr, a nonzero exit), from Mirage's own history of them,
+`GET /v1/workspaces/<id>/history`. Every session writes to it, an agent
+working over SSH included. The UI reads it from the trial's daemon while
+the trial runs, and keeps a copy under `<runs folder>/console/observed/`;
+once the trial ends, it reads `mirage/history.json`, which the environment
+saves as it closes the workspace. It finds the daemon's port from
+`HARBOR_SERVER=` in `mirage/daemon.log` (Claw-Eval's daemon), from the job's
+`mirage-daemon-<port>` (the job's daemon, `--ek workers=<n>`), or from the pid
 in `mirage/mirage-home/daemon.pid` and the port that pid listens on (Mirage's
 own).
 

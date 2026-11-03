@@ -248,7 +248,9 @@ def has_draft(task: dict) -> bool:
 def tools(task: dict) -> list[dict]:
     """The task's tools, by the CLI of the service whose endpoint each
     posts to, as workspace/tools.ts reads them: all but gmail's and calendar's,
-    which are the gws mounts and CLI, and for gmail's drafts."""
+    which are the gws mounts and CLI, and for gmail's drafts. None is
+    strict: upstream's dispatcher posts a model's input unchecked, and the
+    service's 422 is a dispatch that robustness counts."""
     endpoints = {e["tool_name"]: e for e in task["tool_endpoints"]}
     clis: dict[str, list] = {}
     for tool in task["tools"]:
@@ -270,6 +272,8 @@ def tools(task: dict) -> list[dict]:
                 "url": endpoint["url"],
                 "method": endpoint.get("method", "POST")
             },
+            "strict":
+            False,
         })
     return [{
         "name": service.replace("_", "-"),

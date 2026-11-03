@@ -12,15 +12,15 @@
  */
 import { route } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
 import type { Ctx, KitRoute, Reply } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
-import { REQUIRED, append, calls, isReply, load, logCall, model, ok, opt, pyNow, save } from '../claweval/store.ts'
+import { req, append, calls, isReply, load, logCall, model, ok, opt, pyNow, save } from '../claweval/store.ts'
 import type { Dict, Json } from '../claweval/store.ts'
 import type { C } from './config.ts'
 
-const LIST = { status: opt('all'), priority: opt(null) }
-const UPDATE = { task_id: REQUIRED, title: opt(null), priority: opt(null), status: opt(null), tags: opt(null), description: opt(null) }
-const CREATE = { title: REQUIRED, description: opt(null), priority: opt('medium'), due_date: opt(null), tags: opt([]) }
-const DELETE = { task_id: REQUIRED }
-const GET = { task_id: REQUIRED }
+const LIST = { status: opt('str', 'all'), priority: opt('str | None', null) }
+const UPDATE = { task_id: req('str'), title: opt('str | None', null), priority: opt('str | None', null), status: opt('str | None', null), tags: opt('list[str] | None', null), description: opt('str | None', null) }
+const CREATE = { title: req('str'), description: opt('str | None', null), priority: opt('str', 'medium'), due_date: opt('str | None', null), tags: opt('list[str]', []) }
+const DELETE = { task_id: req('str') }
+const GET = { task_id: req('str') }
 
 const copy = (t: Dict): Dict => structuredClone(t)
 

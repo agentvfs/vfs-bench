@@ -182,9 +182,6 @@ export function validate(tool: string, spec: ParamSpec[], args: Record<string, u
   for (const [name, param, ...dflt] of spec) {
     if (!(name in args)) {
       if (dflt.length > 0) out[name] = dflt[0]
-      // A CLI's repeatable flag given no value: a list of scalars cannot
-      // be sent empty any other way (complexmcp.py's `parameters`).
-      else if (param === 'list[str]' || param === 'list[float]') out[name] = []
       else problems.push({ loc: name, msg: 'Missing required argument', type: 'missing_argument', input: { ...args, ...extra } })
       continue
     }

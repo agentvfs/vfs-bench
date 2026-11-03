@@ -11,11 +11,13 @@
     "build": "vite build",
     "start": "vite build && node server/main.ts",
     "typecheck": "tsc --noEmit",
-    "test": "node --test server/*.test.ts"
+    "test": "node --test server/*.test.ts src/*.test.ts"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "5.3.0",
     "@fontsource/jetbrains-mono": "5.3.0",
+    "@xterm/addon-fit": "0.11.0",
+    "@xterm/xterm": "6.0.0",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "yaml": "2.9.1"

@@ -2,23 +2,13 @@
 import json
 from pathlib import Path
 
-
-def rounded(value):
-    if isinstance(value, float):
-        return round(value, 6)
-    if isinstance(value, list):
-        return [rounded(item) for item in value]
-    if isinstance(value, dict):
-        return {key: rounded(item) for key, item in value.items()}
-    return value
-
-
+# As upstream's run_benchmark.py calls it: the login, logout and expected
+# environments as they are.
 state = json.loads(Path('/input/state.json').read_text())
-exclude_keys.add('trid')  # noqa: F821 - defined by the preceding pinned judge
-result = judge_env(  # noqa: F821
-    rounded(state['initial']),
-    rounded(state['final']),
-    rounded(state['expected']),
+result = judge_env(  # noqa: F821 - defined by the preceding pinned judge
+    state['initial'],
+    state['final'],
+    state['expected'],
     verbose=True)
 passed = result['recall'] == result['total'] and result['misbehave'] == 0
 Path('/output/reward.json').write_text(

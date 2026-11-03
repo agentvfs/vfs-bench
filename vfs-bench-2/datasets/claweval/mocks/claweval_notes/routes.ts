@@ -9,13 +9,13 @@
  */
 import { route } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
 import type { Ctx, KitRoute, Reply } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
-import { REQUIRED, append, calls, isReply, load, logCall, model, ok, opt, pyNow } from '../claweval/store.ts'
+import { req, append, calls, isReply, load, logCall, model, ok, opt, pyNow } from '../claweval/store.ts'
 import type { Dict, Json } from '../claweval/store.ts'
 import type { C } from './config.ts'
 
-const LIST = { max_results: opt(10), tag: opt(null), days_back: opt(null), date_from: opt(null), date_to: opt(null) }
-const GET = { note_id: REQUIRED }
-const SHARE = { note_id: REQUIRED, recipients: REQUIRED }
+const LIST = { max_results: opt('int', 10), tag: opt('str | None', null), days_back: opt('int | None', null), date_from: opt('str | None', null), date_to: opt('str | None', null) }
+const GET = { note_id: req('str') }
+const SHARE = { note_id: req('str'), recipients: req('list[str]') }
 
 const DAY_MS = 86_400_000
 

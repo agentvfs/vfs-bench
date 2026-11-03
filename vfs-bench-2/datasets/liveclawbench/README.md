@@ -34,7 +34,7 @@ unaccounted for.
 
 `workspace.yaml` names the task's fakes, each with its fixture, the epoch its
 runs' clock is frozen at, the upstream ports that reach it, where its
-SQLite is read and the kit fault plans armed on each run (`faults`). It also gives the Dockerfile's `ENV`, `COPY` and `RUN`
+SQLite is read. It also gives the Dockerfile's `ENV`, `COPY` and `RUN`
 (`env`, `copy`, `run`) and the mounts and CLIs the task adds to the
 workspace (`workspace`). `copy` takes `COPY . <dir>` as the entries of
 `environment/` it copies, and `COPY <src> <dest>` as its source, relative
@@ -126,18 +126,15 @@ social-cross-publish's and social-pinned-post-update's calendar seeds
 theirs, each with its note as its description.
 
 Upstream's C-axis tasks change the mock's behaviour for one request
-(mock-lib's `fault-injection.ts`, keyed by `TASK_NAME`). Mirage's kit has
-fault plans of its own (`POST /_kit/faults`,
-integ/server/kit/typescript/fault.ts): each answers the next request to a
-route with a set status and body, in place of the fake, and writes nothing. A task's `faults` in `workspace.yaml`
-are armed on each trial's run once it is reset (`fakes.py`), and the trial
-cannot reach `/_kit/` to read or disarm them:
+(mock-lib's `fault-injection.ts`, keyed by `TASK_NAME`). The three on mail
+and calendar are left out, since Gmail and Calendar never behave so; each
+task keeps its instruction to check the result:
 
-| Task | Upstream's fault | Here |
+| Task | Upstream's fault | Gmail and Calendar |
 |---|---|---|
-| email-sending-verify | C2: a draft's first send answers as sent and stays a draft | the first `messages.send` answers as sent, with the id the next message takes, and stores nothing |
-| interview-slot-verify | C2: the first create stores the event an hour late and answers with the times asked for | the first `events.insert` answers with the event at the email's slot, under the id the next event takes, and stores nothing |
-| meeting-slot-race | C1: the first create writes a Team Standup into the slot asked for, then refuses it as an overlap (409) | the first `events.insert` is refused with upstream's 409 and `time_overlap`, in Google's error envelope, and no Team Standup is written |
+| email-sending-verify | C2: a draft's first send answers as sent and stays a draft | a send is sent, or answers an error |
+| interview-slot-verify | C2: the first create stores the event an hour late and answers with the times asked for | an insert answers with the event as stored |
+| meeting-slot-race | C1: the first create writes a Team Standup into the slot asked for, then refuses it as an overlap (409) | an overlapping event is stored; 409 is a duplicate event id |
 
 **Rule B: Mirage lacks the service, so it is a new kit fake that keeps
 upstream's API.** Chat has stickers, which Mirage's Slack and Discord fakes
@@ -163,10 +160,10 @@ write times (below).
 | vendor-requirement-followup | A | gws, Mirage's | 1.0 | 0.4 |
 | candidate-interview-slot-confirm | A | gws, Mirage's: Gmail and Calendar | 1.0 | 0.0 |
 | email-reply | A | gws, Mirage's | 1.0 | 0.0 |
-| email-sending-verify | A | gws, Mirage's, with a fault | 1.0 | 0.0 |
+| email-sending-verify | A | gws, Mirage's | 1.0 | 0.0 |
 | email-writing | A | gws, Mirage's | 1.0 | 0.0 |
-| interview-slot-verify | A | gws, Mirage's: Gmail and Calendar, with a fault | 1.0 | 0.0 |
-| meeting-slot-race | A | gws, Mirage's: Gmail and Calendar, with a fault | 1.0 | 0.0 |
+| interview-slot-verify | A | gws, Mirage's: Gmail and Calendar | 0.3 | 0.0 |
+| meeting-slot-race | A | gws, Mirage's: Gmail and Calendar | 1.0 | 0.0 |
 | finance-anomaly-detect | B | finance (mocks/finance) | 1.0 | 0.0 |
 | finance-dashboard-repair | B | finance (mocks/finance) | 1.0 | 0.0 |
 | finance-depreciation-audit | B | finance (mocks/finance) | 1.0 | 0.0 |
@@ -451,8 +448,9 @@ Skipped, each for a reason a run here cannot meet:
   app, its REST API (5001) or its frontend (5174). The verifiers keep each
   check, exact address matches included; a sent message's recipients are
   its `To` addresses, as upstream's one `recipient_email` was. Mirage's
-  gws fake has no drafts, threads or `messages.modify` (its own README
-  lists what it lacks), which these tasks' checks do not need. A finance
+  gws fake has drafts but no threads or `messages.modify`
+  (integ/server/gws/fake.ts lists what it lacks), which these tasks'
+  checks do not need. A finance
   instruction's section on the email mock's REST API is gone, its heading
   left naming the mount and the CLI. finance-tax-prepare's solution
   answers the tax authority with `gws gmail reply`, whose subject is the
@@ -473,21 +471,15 @@ Skipped, each for a reason a run here cannot meet:
   keeps every time; Mirage's own default is Asia/Hong_Kong. The `/calendar` mount's
   default listing reaches 90 days past `today`, set to the epoch's date,
   not the host's. Upstream's second user, Lois, is not carried over.
-- **Faults.** A kit fault answers in place of the fake and writes nothing,
-  so two of upstream's three faults are approximated (the table above):
-  interview-slot-verify's first event is not stored, where upstream's is
-  stored an hour late, so an agent that never checks ends with no event
-  rather than a wrong one (0.0, where upstream's gives a titled one 0.3);
-  meeting-slot-race's slot is refused with no Team Standup in it, so the
-  slot is free when the agent looks, and its verifier's exclusion of a
-  Team Standup is moot. email-sending-verify's fault fires on the first
-  send of any kind, since Gmail here has no drafts, where upstream's fires
-  only on a draft's send (its frontend's Send on a new email posts with
-  `send_now` and is never faulted).
+- **Faults.** Upstream's three mail and calendar faults are left out (the
+  table above), so the first send or create succeeds: an agent that stops
+  there scores what one that checks does, and meeting-slot-race's
+  exclusion of a Team Standup is moot.
 - **Upstream's slips.** interview-slot-verify's verifier compares each
   event's stored times to `YYYY-MM-DD HH:MM:SS` as strings, a form its mock
   never stores (`toISOString()`), so upstream's 1.0 is unreachable; the
-  port compares the times, in UTC, in that form. meeting-slot-race's
+  port compares the strings too, and Calendar's RFC 3339 is never that form
+  either, so its oracle scores upstream's 0.3. meeting-slot-race's
   email seed is the baseline, with no rescheduled meeting in it, so its
   solution schedules the one meeting email there is (the Quarterly Review,
   March 20). email-reply's and email-writing's `test.sh` copy logs of
@@ -495,11 +487,11 @@ Skipped, each for a reason a run here cannot meet:
   is written, as it would in an image without them.
 - **Skipped: email-reply-context-shift.** Its C1 fault fires on the inbox's
   listing once a draft exists, and writes an "URGENT: Meeting cancelled"
-  email into it. Mirage's gws fake has no drafts (integ/server/gws/fake.ts,
-  "no threads or drafts resources at all"), and a kit fault writes nothing,
-  so neither the trigger nor the email can be made, and its verifier's
-  offline score (`llm_judge.py`'s heuristic, with no `JUDGE_BASE_URL`)
-  needs a reply that mentions the cancellation only that email announces.
+  email into it: an email that arrives because the agent listed its inbox,
+  which Gmail never does, so it is left out as the other mail and
+  calendar faults are. Its verifier's offline score (`llm_judge.py`'s
+  heuristic, with no `JUDGE_BASE_URL`) needs a reply that mentions the
+  cancellation only that email announces, so without it no reply passes.
   Its verifier also writes string fields to `reward.json`, which Harbor
   refuses (`VerifierOutputParseError`).
 - **The social fake's store and clock.** It has one table upstream's has

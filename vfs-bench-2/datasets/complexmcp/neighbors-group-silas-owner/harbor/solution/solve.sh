@@ -5,9 +5,9 @@
 # server (an unknown tool, a malformed call) are left out.
 light-talk list-all-tags
 light-talk get-contacts-by-tag --tag neighbors
-light-talk create-group-chat --uids user_zf2pKfw988ZHciDeHVur7S --uids user_CxH8SjKcXPaGi2vYjkgN5f --uids user_dDhWFf2km8SCxX4GrUogzb --uids user_9Fhi5RYRDRubhrmP2NkrxR --uids user_aJ9hhwWW64SLG7xqaxzgH4 --uids user_ougBTMbeSGrDPVFaazJyfH --uids user_FMTR7SfPAv5q77kpZbaL8N --uids user_fksjycNaEfE8rNmaprypce --uids user_MjppFADcmfCnWmmTvaedsd
+light-talk create-group-chat --uids '["user_zf2pKfw988ZHciDeHVur7S", "user_CxH8SjKcXPaGi2vYjkgN5f", "user_dDhWFf2km8SCxX4GrUogzb", "user_9Fhi5RYRDRubhrmP2NkrxR", "user_aJ9hhwWW64SLG7xqaxzgH4", "user_ougBTMbeSGrDPVFaazJyfH", "user_FMTR7SfPAv5q77kpZbaL8N", "user_fksjycNaEfE8rNmaprypce", "user_MjppFADcmfCnWmmTvaedsd"]'
 light-talk ask-for-privilege
-light-talk create-group-chat --uids user_zf2pKfw988ZHciDeHVur7S --uids user_CxH8SjKcXPaGi2vYjkgN5f --uids user_dDhWFf2km8SCxX4GrUogzb --uids user_9Fhi5RYRDRubhrmP2NkrxR --uids user_aJ9hhwWW64SLG7xqaxzgH4 --uids user_ougBTMbeSGrDPVFaazJyfH --uids user_FMTR7SfPAv5q77kpZbaL8N --uids user_fksjycNaEfE8rNmaprypce --uids user_MjppFADcmfCnWmmTvaedsd
+light-talk create-group-chat --uids '["user_zf2pKfw988ZHciDeHVur7S", "user_CxH8SjKcXPaGi2vYjkgN5f", "user_dDhWFf2km8SCxX4GrUogzb", "user_9Fhi5RYRDRubhrmP2NkrxR", "user_aJ9hhwWW64SLG7xqaxzgH4", "user_ougBTMbeSGrDPVFaazJyfH", "user_FMTR7SfPAv5q77kpZbaL8N", "user_fksjycNaEfE8rNmaprypce", "user_MjppFADcmfCnWmmTvaedsd"]'
 light-talk acc-network
-light-talk create-group-chat --uids user_zf2pKfw988ZHciDeHVur7S --uids user_CxH8SjKcXPaGi2vYjkgN5f --uids user_dDhWFf2km8SCxX4GrUogzb --uids user_9Fhi5RYRDRubhrmP2NkrxR --uids user_aJ9hhwWW64SLG7xqaxzgH4 --uids user_ougBTMbeSGrDPVFaazJyfH --uids user_FMTR7SfPAv5q77kpZbaL8N --uids user_fksjycNaEfE8rNmaprypce --uids user_MjppFADcmfCnWmmTvaedsd
+light-talk create-group-chat --uids '["user_zf2pKfw988ZHciDeHVur7S", "user_CxH8SjKcXPaGi2vYjkgN5f", "user_dDhWFf2km8SCxX4GrUogzb", "user_9Fhi5RYRDRubhrmP2NkrxR", "user_aJ9hhwWW64SLG7xqaxzgH4", "user_ougBTMbeSGrDPVFaazJyfH", "user_FMTR7SfPAv5q77kpZbaL8N", "user_fksjycNaEfE8rNmaprypce", "user_MjppFADcmfCnWmmTvaedsd"]'
 light-talk change-owner-of-group --gid group_AhKSLq5DRpeGcR8CFqUZSe --uid user_MjppFADcmfCnWmmTvaedsd

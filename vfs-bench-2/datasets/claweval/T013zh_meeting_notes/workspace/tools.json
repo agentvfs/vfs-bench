@@ -21,7 +21,8 @@
     "endpoint": {
      "url": "http://localhost:9105/notes/list",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get",
@@ -42,7 +43,8 @@
     "endpoint": {
      "url": "http://localhost:9105/notes/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "share",
@@ -71,7 +73,8 @@
     "endpoint": {
      "url": "http://localhost:9105/notes/share",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }

@@ -13,13 +13,14 @@ const run = (state: unknown) =>
     },
   })
 
-test('ComplexMCP preserves counts, excluded IDs, additions, removals and rounded floats', async () => {
+test('ComplexMCP counts additions and removals, and compares floats and trid exactly, as upstream', async () => {
+  // Upstream's judge_env on these gives {total: 4, recall: 2, misbehave: 2}.
   const result = await run({
     initial: { changed: 1, removed: [1, 2], stable: false, balance: 0.1234561, trid: 1 },
     final: { changed: 2, removed: [1], stable: true, balance: 0.1234562, trid: 999, extra: 7 },
     expected: { changed: 2, removed: [1], stable: false, balance: 0.1234563, trid: 8 },
   })
-  assert.deepEqual(result.rewards, { reward: 0, total: 2, recall: 2, misbehave: 2 })
+  assert.deepEqual(result.rewards, { reward: 0, total: 4, recall: 2, misbehave: 2 })
 })
 
 test('ComplexMCP fuzzy matching uses Unicode edit distance and strict threshold', async () => {

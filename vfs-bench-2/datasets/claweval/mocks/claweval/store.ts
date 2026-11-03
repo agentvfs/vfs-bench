@@ -83,19 +83,93 @@ export async function calls(db: Db): Promise<Dict[]> {
   }))
 }
 
-/** A pydantic field: required, or its default. */
-export type Field = { required: true } | { default: Json }
-export const REQUIRED: Field = { required: true }
-export const opt = (value: Json): Field => ({ default: value })
+/** A field's annotation in upstream's request model. */
+export type PyType =
+  | 'str'
+  | 'int'
+  | 'float'
+  | 'bool'
+  | 'list[str]'
+  | 'str | None'
+  | 'int | None'
+  | 'bool | None'
+  | 'list[str] | None'
+
+/** A pydantic field: its annotation, and required or its default. */
+export type Field = { type: PyType; required: true } | { type: PyType; default: Json }
+export const req = (type: PyType): Field => ({ type, required: true })
+export const opt = (type: PyType, value: Json): Field => ({ type, default: value })
+
+const I64 = 2 ** 63
+
+/** One value as pydantic's lax mode validates it against `type` (FastAPI's, over a JSON body), or its errors. */
+function validate(type: PyType, v: Json, loc: (string | number)[]): { value: Json } | { errors: Dict[] } {
+  const bad = (kind: string, msg: string, input: Json = v) => ({ errors: [{ type: kind, loc, msg, input }] })
+  if (type.endsWith(' | None')) return v === null ? { value: null } : validate(type.slice(0, -7) as PyType, v, loc)
+  const number = typeof v === 'number'
+  switch (type) {
+    case 'str':
+      return typeof v === 'string' ? { value: v } : bad('string_type', 'Input should be a valid string')
+    case 'int':
+      if (typeof v === 'boolean') return { value: v ? 1 : 0 }
+      if (number) {
+        if (!Number.isInteger(v)) return bad('int_from_float', 'Input should be a valid integer, got a number with a fractional part')
+        if (Math.abs(v) >= I64) return bad('int_parsing_size', 'Unable to parse input string as an integer, exceeded maximum size')
+        return { value: v }
+      }
+      if (typeof v === 'string') {
+        const m = /^[+-]?\d+(?:_\d+)*(?:\.0+)?$/.exec(v.trim())
+        return m ? { value: Number.parseInt(v.trim().replace(/_/g, ''), 10) } : bad('int_parsing', 'Input should be a valid integer, unable to parse string as an integer')
+      }
+      return bad('int_type', 'Input should be a valid integer')
+    case 'float':
+      if (typeof v === 'boolean') return { value: v ? 1 : 0 }
+      if (number) return { value: v }
+      if (typeof v === 'string') {
+        const t = v.trim()
+        const digits = '\\d+(?:_\\d+)*'
+        const decimal = new RegExp(`^[+-]?(?:${digits}(?:\\.(?:${digits})?)?|\\.${digits})(?:[eE][+-]?${digits})?$`)
+        if (decimal.test(t)) return { value: Number(t.replace(/_/g, '')) }
+        if (/^[+-]?(?:inf|infinity|nan)$/i.test(t)) return { value: t.toLowerCase().includes('nan') ? NaN : t.startsWith('-') ? -Infinity : Infinity }
+        return bad('float_parsing', 'Input should be a valid number, unable to parse string as a number')
+      }
+      return bad('float_type', 'Input should be a valid number')
+    case 'bool':
+      if (typeof v === 'boolean') return { value: v }
+      if (number) {
+        if (v === 0 || v === 1) return { value: v === 1 }
+        return Number.isInteger(v) && Math.abs(v) < I64
+          ? bad('bool_parsing', 'Input should be a valid boolean, unable to interpret input')
+          : bad('bool_type', 'Input should be a valid boolean')
+      }
+      if (typeof v === 'string') {
+        const t = v.toLowerCase()
+        if (['1', 'on', 't', 'true', 'y', 'yes'].includes(t)) return { value: true }
+        if (['0', 'off', 'f', 'false', 'n', 'no'].includes(t)) return { value: false }
+        return bad('bool_parsing', 'Input should be a valid boolean, unable to interpret input')
+      }
+      return bad('bool_type', 'Input should be a valid boolean')
+    case 'list[str]': {
+      if (!Array.isArray(v)) return bad('list_type', 'Input should be a valid list')
+      const errors = v.flatMap((item, i) => {
+        const c = validate('str', item, [...loc, i])
+        return 'errors' in c ? c.errors : []
+      })
+      return errors.length > 0 ? { errors } : { value: v }
+    }
+  }
+  throw new Error(`no validator for ${type}`)
+}
 
 /**
  * A request body as upstream's pydantic model reads it: each field in the
  * model's order, `model_dump()`'s, with its default where the body leaves it
  * out, and fields the model lacks dropped. A body that is not an object,
- * or lacks a required field, is FastAPI's 422. `optional` is a model
- * declared `Model | None = None`, which an empty body or `null` leaves at
- * its defaults. Values are taken as sent: the CLIs send each flag typed by the
- * tool's schema, so pydantic's coercions do not come up.
+ * lacks a required field, or holds a value its annotation refuses is
+ * FastAPI's 422, each field's errors in the model's order; a value its
+ * annotation takes is coerced as pydantic's lax mode coerces it (`"5"` for
+ * an `int` is 5). `optional` is a model declared `Model | None = None`,
+ * which an empty body or `null` leaves at its defaults.
  */
 export function model(ctx: Ctx<unknown>, fields: Record<string, Field>, optional = false): Dict | Reply {
   let body: unknown
@@ -116,13 +190,16 @@ export function model(ctx: Ctx<unknown>, fields: Record<string, Field>, optional
   }
   const given = body as Dict
   const out: Dict = {}
-  const missing: Dict[] = []
+  const errors: Dict[] = []
   for (const [name, field] of Object.entries(fields)) {
-    if (name in given) out[name] = given[name]!
-    else if ('default' in field) out[name] = field.default
-    else missing.push({ type: 'missing', loc: ['body', name], msg: 'Field required', input: given })
+    if (name in given) {
+      const c = validate(field.type, given[name]!, ['body', name])
+      if ('errors' in c) errors.push(...c.errors)
+      else out[name] = c.value
+    } else if ('default' in field) out[name] = field.default
+    else errors.push({ type: 'missing', loc: ['body', name], msg: 'Field required', input: given })
   }
-  return missing.length > 0 ? unprocessable(missing) : out
+  return errors.length > 0 ? unprocessable(errors) : out
 }
 
 /** FastAPI's validation error. */

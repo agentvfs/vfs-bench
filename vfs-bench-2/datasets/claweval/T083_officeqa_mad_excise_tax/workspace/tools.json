@@ -22,7 +22,8 @@
     "endpoint": {
      "url": "http://localhost:9127/ocr/extract",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }

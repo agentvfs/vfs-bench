@@ -236,9 +236,7 @@ def registry() -> dict[str, tuple[str, str]]:
 
 def parameters(server: str, tool: str) -> dict:
     """A tool's parameters as its MCP server types them, less the session,
-    with a Light app's descriptions from its desc.json. A list of scalars
-    the CLI is given no value for is an empty one, since a repeatable flag
-    cannot say []: it is not required, and the fakes take it as []."""
+    with a Light app's descriptions from its desc.json."""
     schema = next(t for t in mcp_tools(server)
                   if t["name"] == tool)["parameters"]
     props = {
@@ -252,12 +250,6 @@ def parameters(server: str, tool: str) -> dict:
         for name, spec in desc.get("arguments", {}).items():
             if name in props and spec.get("description"):
                 props[name]["description"] = spec["description"]
-    for name, spec in props.items():
-        scalar = (spec.get("items")
-                  or {}).get("type") in ("string", "number", "integer")
-        if spec.get("type") == "array" and scalar and name in required:
-            required.remove(name)
-            spec["default"] = []
     out = {"type": "object", "properties": props}
     if required:
         out["required"] = required
@@ -294,11 +286,7 @@ def flag(param: str, schema: dict, required: bool) -> str:
             s.get("type") for s in schema["anyOf"] if s.get("type") != "null"
         ]
         kind = kinds[0] if len(kinds) == 1 else "object"
-    if kind == "array" and (schema.get("items")
-                            or {}).get("type") not in ("string", "integer",
-                                                       "number", None):
-        kind = "object"
-    value = {"array": "<value> ...", "object": "<JSON>"}.get(kind, f"<{kind}>")
+    value = "<JSON>" if kind in ("array", "object") else f"<{kind}>"
     text = f"--{param.replace('_', '-')} {value}"
     return text if required else f"[{text}]"
 
@@ -309,8 +297,9 @@ def instruction(row: dict) -> str:
     lines = [
         row["query"].rstrip("\n"), "", "## Tools", "",
         "Each tool is a shell command, `<server> <tool> [--flag value ...]`, "
-        "whose output is the tool's reply; `<server> <tool> --help` says "
-        "more.", ""
+        "whose output is the tool's reply; a list or an object is one JSON "
+        "value (`--img-urls '[]'`), and `<server> <tool> --help` says more.",
+        ""
     ]
     for entry in tools_json():
         lines += [f"### {entry['name']}", ""]
@@ -468,20 +457,16 @@ def calls(row: dict) -> list[tuple[str, str, dict]]:
 
 
 def command(server: str, tool: str, args: dict) -> str:
-    """One call as a CLI line: each list item a flag of its own, an object
-    or a union as JSON."""
+    """One call as a CLI line: a scalar as it is, a list, an object or a
+    union as JSON."""
     schema = parameters(server, tool)["properties"]
     parts = [cli(server), tool.replace("_", "-")]
     for name, value in args.items():
         spec = schema.get(name, {})
         f = f"--{name.replace('_', '-')}"
-        if spec.get("type") == "array" and isinstance(value, list) and all(
-                isinstance(v, (str, int, float)) for v in value):
-            for v in value:
-                parts += [f, shlex.quote(str(v))]
-        elif spec.get("type") in ("string", "integer", "number",
-                                  "boolean") or ("anyOf" in spec
-                                                 and value is None):
+        if spec.get("type") in ("string", "integer", "number",
+                                "boolean") or ("anyOf" in spec
+                                               and value is None):
             if value is None:
                 continue
             text = json.dumps(value) if isinstance(value, bool) else str(value)

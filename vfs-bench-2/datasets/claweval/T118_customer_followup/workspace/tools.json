@@ -24,7 +24,8 @@
     "endpoint": {
      "url": "http://localhost:9110/crm/customers",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_customer",
@@ -45,7 +46,8 @@
     "endpoint": {
      "url": "http://localhost:9110/crm/customers/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -82,7 +84,8 @@
     "endpoint": {
      "url": "http://localhost:9100/gmail/drafts/save",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }

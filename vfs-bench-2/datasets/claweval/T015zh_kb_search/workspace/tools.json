@@ -31,7 +31,8 @@
     "endpoint": {
      "url": "http://localhost:9106/kb/search",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_article",
@@ -52,7 +53,8 @@
     "endpoint": {
      "url": "http://localhost:9106/kb/articles/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "update_article",
@@ -78,7 +80,8 @@
     "endpoint": {
      "url": "http://localhost:9106/kb/articles/update",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }

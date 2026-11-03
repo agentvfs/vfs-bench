@@ -10,10 +10,10 @@
  */
 import { route } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
 import type { Ctx, KitRoute, Reply } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
-import { REQUIRED, append, calls, isReply, load, logCall, model, ok, opt, pyNow } from '../claweval/store.ts'
+import { req, append, calls, isReply, load, logCall, model, ok, opt, pyNow } from '../claweval/store.ts'
 import type { C } from './config.ts'
 
-const SAVE_DRAFT = { to: REQUIRED, subject: REQUIRED, body: REQUIRED, reply_to_message_id: opt(null) }
+const SAVE_DRAFT = { to: req('str'), subject: req('str'), body: req('str'), reply_to_message_id: opt('str | None', null) }
 
 async function saveDraft(ctx: Ctx<C>): Promise<Reply> {
   const req = model(ctx, SAVE_DRAFT)

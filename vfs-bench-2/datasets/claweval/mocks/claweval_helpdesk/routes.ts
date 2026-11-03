@@ -5,20 +5,20 @@
  */
 import { route } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
 import type { Ctx, KitRoute, Reply } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
-import { REQUIRED, append, calls, isReply, load, logCall, model, ok, opt, save } from '../claweval/store.ts'
+import { req, append, calls, isReply, load, logCall, model, ok, opt, save } from '../claweval/store.ts'
 import type { Dict } from '../claweval/store.ts'
 import type { C } from './config.ts'
 
 const LIST = {
-  status: opt('open'),
-  priority: opt(null),
-  category: opt(null),
-  date_from: opt(null),
-  date_to: opt(null),
+  status: opt('str', 'open'),
+  priority: opt('str | None', null),
+  category: opt('str | None', null),
+  date_from: opt('str | None', null),
+  date_to: opt('str | None', null),
 }
-const GET = { ticket_id: REQUIRED }
-const UPDATE = { ticket_id: REQUIRED, priority: opt(null), tags: opt(null), category: opt(null), assigned_to: opt(null) }
-const CLOSE = { ticket_id: REQUIRED, resolution: REQUIRED }
+const GET = { ticket_id: req('str') }
+const UPDATE = { ticket_id: req('str'), priority: opt('str | None', null), tags: opt('list[str] | None', null), category: opt('str | None', null), assigned_to: opt('str | None', null) }
+const CLOSE = { ticket_id: req('str'), resolution: req('str') }
 
 const copy = (t: Dict): Dict => structuredClone(t)
 

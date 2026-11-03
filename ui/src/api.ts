@@ -1,6 +1,6 @@
-import type { Config, JobBrief, JobDetail, RunRequest, TaskBrief } from '../server/harbor.ts'
+import type { Config, JobBrief, JobDetail, Line, RunRequest, TaskBrief } from '../server/harbor.ts'
 
-export type { Cell, Config, JobBrief, JobDetail, RunRequest, TaskBrief } from '../server/harbor.ts'
+export type { Cell, Config, JobBrief, JobDetail, Line, RunRequest, TaskBrief } from '../server/harbor.ts'
 
 async function call<T>(path: string, body?: unknown): Promise<T> {
   const res = await fetch(path, body === undefined ? undefined : {
@@ -30,6 +30,7 @@ export const jobs = () => call<JobBrief[]>('/api/jobs')
 export const job = (id: string) => call<JobDetail>(`/api/job?id=${encodeURIComponent(id)}`)
 export const tasks = (dataset: string) => call<TaskBrief[]>(`/api/tasks?dataset=${encodeURIComponent(dataset)}`)
 export const run = (request: RunRequest) => call<{ id: string }>('/api/run', request)
+export const lines = (trial: string) => call<Line[]>(`/api/lines?trial=${encodeURIComponent(trial)}`)
 export const stop = (id: string) => call<null>('/api/stop', { id })
 export const stopTrial = (trial: string) => call<null>('/api/stop-trial', { trial })
 export const resume = (id: string) => call<null>('/api/resume', { id })

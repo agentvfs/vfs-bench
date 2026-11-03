@@ -20,7 +20,8 @@
     "endpoint": {
      "url": "http://localhost:9111/config/integrations",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_integration",
@@ -41,7 +42,8 @@
     "endpoint": {
      "url": "http://localhost:9111/config/integrations/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "update_integration",
@@ -70,7 +72,8 @@
     "endpoint": {
      "url": "http://localhost:9111/config/integrations/update",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "send_notification",
@@ -101,7 +104,8 @@
     "endpoint": {
      "url": "http://localhost:9111/config/notify",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }

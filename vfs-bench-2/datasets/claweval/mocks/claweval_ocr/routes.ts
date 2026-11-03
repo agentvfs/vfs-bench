@@ -10,7 +10,7 @@ import type { Ctx, KitRoute, Reply } from '../../../../submodule/mirage/integ/se
 import { append, isReply, load, model, ok, opt, pyNow } from '../claweval/store.ts'
 import type { C } from './config.ts'
 
-const EXTRACT = { image_path: opt('') }
+const EXTRACT = { image_path: opt('str', '') }
 
 async function ocrExtract(ctx: Ctx<C>): Promise<Reply> {
   const req = model(ctx, EXTRACT)

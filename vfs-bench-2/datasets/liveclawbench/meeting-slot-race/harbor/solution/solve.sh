@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 # Ours, on Mirage's gws fake (vfs-bench-2, rule A): upstream's solution runs
 # `openclaw agent`, a model, so there is no script of upstream's to port.
-# This reads the meeting from the email at /gmail and creates it with the
-# gws CLI. Refused, it asks free/busy whether the slot is still free and,
-# if it is taken, moves to the first free slot that day; then it checks the
-# event is on /calendar.
+# This reads the meeting from the email at /gmail, creates it with the gws
+# CLI and checks the event is on /calendar.
 set -euo pipefail
 
 # The meeting: start, end and title, one per line, the times in UTC (the
@@ -51,27 +49,7 @@ event() {
     "$TITLE" "$1" "$2"
 }
 
-if ! gws calendar events insert --params '{"calendarId": "primary"}' --json "$(event "$START" "$END")" > /dev/null; then
-  echo "Oracle: $START-$END was refused; looking for a free slot"
-  BUSY=$(gws calendar freebusy query --json "{\"timeMin\": \"${DAY}T00:00:00Z\", \"timeMax\": \"${DAY}T23:59:59Z\", \"items\": [{\"id\": \"primary\"}]}")
-  SLOT=$(python3 - "$START" "$END" "$BUSY" <<'PY'
-import json
-import sys
-from datetime import datetime, timedelta
-
-parse = lambda t: datetime.fromisoformat(t.replace("Z", "+00:00"))
-start, end = parse(sys.argv[1]), parse(sys.argv[2])
-busy = [(parse(b["start"]), parse(b["end"])) for b in json.loads(sys.argv[3])["calendars"]["primary"]["busy"]]
-# The slot as asked if it is free now, else the first free one later that day.
-while any(s < end and start < e for s, e in busy):
-    start, end = start + timedelta(minutes=30), end + timedelta(minutes=30)
-print(start.strftime("%Y-%m-%dT%H:%M:%SZ"), end.strftime("%Y-%m-%dT%H:%M:%SZ"))
-PY
-)
-  START=${SLOT% *}
-  END=${SLOT#* }
-  gws calendar events insert --params '{"calendarId": "primary"}' --json "$(event "$START" "$END")" > /dev/null
-fi
+gws calendar events insert --params '{"calendarId": "primary"}' --json "$(event "$START" "$END")" > /dev/null
 
 # The event is on the calendar, under its day.
 ls "/calendar/primary/$DAY/" | grep -F "$(echo "$TITLE" | tr ' ' _)" > /dev/null

@@ -36,7 +36,8 @@
     "endpoint": {
      "url": "http://localhost:9100/gmail/drafts/save",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -65,7 +66,8 @@
     "endpoint": {
      "url": "http://localhost:9102/todo/tasks",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "create_task",
@@ -105,7 +107,8 @@
     "endpoint": {
      "url": "http://localhost:9102/todo/tasks/create",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "update_task",
@@ -142,7 +145,8 @@
     "endpoint": {
      "url": "http://localhost:9102/todo/tasks/update",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -173,7 +177,8 @@
     "endpoint": {
      "url": "http://localhost:9103/contacts/search",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get",
@@ -194,7 +199,8 @@
     "endpoint": {
      "url": "http://localhost:9103/contacts/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -230,7 +236,8 @@
     "endpoint": {
      "url": "http://localhost:9106/kb/search",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_article",
@@ -251,7 +258,8 @@
     "endpoint": {
      "url": "http://localhost:9106/kb/articles/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -280,7 +288,8 @@
     "endpoint": {
      "url": "http://localhost:9108/inventory/products",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_product",
@@ -301,7 +310,8 @@
     "endpoint": {
      "url": "http://localhost:9108/inventory/products/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }

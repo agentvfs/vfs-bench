@@ -24,7 +24,8 @@
     "endpoint": {
      "url": "http://localhost:9112/scheduler/jobs",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_job",
@@ -45,7 +46,8 @@
     "endpoint": {
      "url": "http://localhost:9112/scheduler/jobs/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -70,7 +72,8 @@
     "endpoint": {
      "url": "http://localhost:9111/config/integrations",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_integration",
@@ -91,7 +94,8 @@
     "endpoint": {
      "url": "http://localhost:9111/config/integrations/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -116,7 +120,8 @@
     "endpoint": {
      "url": "http://localhost:9108/inventory/products",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_product",
@@ -137,7 +142,8 @@
     "endpoint": {
      "url": "http://localhost:9108/inventory/products/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -163,7 +169,8 @@
     "endpoint": {
      "url": "http://localhost:9107/helpdesk/tickets",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_ticket",
@@ -184,7 +191,8 @@
     "endpoint": {
      "url": "http://localhost:9107/helpdesk/tickets/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "update_ticket",
@@ -220,7 +228,8 @@
     "endpoint": {
      "url": "http://localhost:9107/helpdesk/tickets/update",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "close_ticket",
@@ -246,7 +255,8 @@
     "endpoint": {
      "url": "http://localhost:9107/helpdesk/tickets/close",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -282,7 +292,8 @@
     "endpoint": {
      "url": "http://localhost:9106/kb/search",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_article",
@@ -303,7 +314,8 @@
     "endpoint": {
      "url": "http://localhost:9106/kb/articles/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }

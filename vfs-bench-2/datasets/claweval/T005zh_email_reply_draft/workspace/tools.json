@@ -36,7 +36,8 @@
     "endpoint": {
      "url": "http://localhost:9100/gmail/drafts/save",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }

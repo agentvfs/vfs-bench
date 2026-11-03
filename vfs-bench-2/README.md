@@ -9,6 +9,8 @@ workspace:
 - **Each benchmark's tools are CLIs that mirror them.** Tool
   `<server>__<tool>` becomes `<server> <tool> --param value`, generated from
   upstream's own tool schemas.
+- **The workspace describes itself.** Mirage's `/VFS.md` lists its mounts
+  and `/SKILL.md` each CLI's help.
 - **Services are local mock servers.** Each is seeded per run and acts as
   the signed-in user.
 - **Graders are native Mirage graders.** They grade the services' end state
@@ -104,6 +106,7 @@ harbor run
     │         system_time   the task's epoch
     │         network       this trial's runs alone
     │         clis          the task's tools
+    │         /VFS.md, /SKILL.md
     ├── agent.run()
     │   ├── oracle: solve.sh, through the workspace's shell
     │   └── Codex: codex exec, through the workspace's codex-exec

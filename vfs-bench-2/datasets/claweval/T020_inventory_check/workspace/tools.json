@@ -20,7 +20,8 @@
     "endpoint": {
      "url": "http://localhost:9108/inventory/products",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_product",
@@ -41,7 +42,8 @@
     "endpoint": {
      "url": "http://localhost:9108/inventory/products/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "create_order",
@@ -71,7 +73,8 @@
     "endpoint": {
      "url": "http://localhost:9108/inventory/orders/create",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }

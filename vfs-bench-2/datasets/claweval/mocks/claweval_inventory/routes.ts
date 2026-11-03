@@ -5,13 +5,13 @@
  */
 import { route } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
 import type { Ctx, KitRoute, Reply } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
-import { REQUIRED, append, calls, isReply, load, logCall, model, ok, opt, pyNow } from '../claweval/store.ts'
+import { req, append, calls, isReply, load, logCall, model, ok, opt, pyNow } from '../claweval/store.ts'
 import type { Dict } from '../claweval/store.ts'
 import type { C } from './config.ts'
 
-const LIST = { category: opt(null), status: opt(null) }
-const GET = { product_id: REQUIRED }
-const ORDER = { product_id: REQUIRED, quantity: REQUIRED, supplier: opt(null) }
+const LIST = { category: opt('str | None', null), status: opt('str | None', null) }
+const GET = { product_id: req('str') }
+const ORDER = { product_id: req('str'), quantity: req('int'), supplier: opt('str | None', null) }
 
 const copy = (p: Dict): Dict => structuredClone(p)
 

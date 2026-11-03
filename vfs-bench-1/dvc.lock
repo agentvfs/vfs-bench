@@ -1269,7 +1269,7 @@ stages:
     - path: agent/workspace.py
       hash: md5
       md5: cd805bb2550e3b18dbd35ce1c821da76
-      size: 29209
+      size: 29214
     - path: cli/processes.mjs
       hash: md5
       md5: 3bbbbda0ec019955edfc55d4a8b2b118
@@ -1277,7 +1277,7 @@ stages:
     - path: pyproject.toml
       hash: md5
       md5: d57ba617edc55509062197e23d824784
-      size: 3396
+      size: 3436
     - path: server/execution.py
       hash: md5
       md5: acac9458112ffda9eff5345d39ed40fc
@@ -1301,7 +1301,7 @@ stages:
     - path: server/seed/papers.py
       hash: md5
       md5: efa8f354ab5f782c9d3d25b105be88c5
-      size: 7987
+      size: 8054
     - path: submodule/Toolathlon/configs/mcp_servers/wandb.yaml
       hash: md5
       md5: 0ce63b8702a14db1c426b7dc403a2330
@@ -1338,25 +1338,25 @@ stages:
     - path: submodule/mirage/python/mirage/policy/builtin/output_cap.py
       hash: md5
       md5: 2604fa301605ea96330bbaf40910d7f4
-      size: 5519
+      size: 4808
     - path: submodule/mirage/typescript/packages/core/src/core/wandb
       hash: md5
-      md5: 4ad91f014871ca565062ee79c106040f.dir
-      size: 36321
+      md5: c51d115f4afd49c3eed10ed7f74c0d5e.dir
+      size: 34521
       nfiles: 15
     - path: submodule/mirage/typescript/packages/core/src/vfs/wandb
       hash: md5
       md5: eae294faf9c633e73572b408d25595b8.dir
-      size: 4846
+      size: 4907
       nfiles: 3
     - path: submodule/mirage/typescript/pnpm-lock.yaml
       hash: md5
-      md5: 96f74486957757fcfdfa219e03190bd0
-      size: 470197
+      md5: 1b616448e623cc5b264236cbd1235fb4
+      size: 485151
     - path: task/toolathlon/__init__.py
       hash: md5
       md5: 81423f5f5a5d4a5034be6f490d0fc60f
-      size: 50231
+      size: 50584
     - path: task/toolathlon/script/capture_wandb.py
       hash: md5
       md5: 641f4b7966414307204a83e877bd76a1
@@ -1372,21 +1372,21 @@ stages:
     - path: task/toolathlon/wandb-best-score
       hash: md5
       md5: c898b47152b28ddc48c061755817f3d9.dir
-      size: 62053
+      size: 58939
       nfiles: 8
     - path: task/toolathlon/wandb-shortest-length
       hash: md5
       md5: ac35ebd711e035cf703d4fc2e069a76c.dir
-      size: 65070
+      size: 63747
       nfiles: 8
     - path: tests/lineage.py
       hash: md5
       md5: 5a93c3f737565b0755cdca7a53e769f1
-      size: 7069
+      size: 7894
     - path: uv.lock
       hash: md5
-      md5: 3fd4bf64726dfcb123c4e820fe4b995d
-      size: 746859
+      md5: f6ab3065bdb51ae35817b3b055a118e8
+      size: 770519
     - path: vendor/wandb-mcp/pyproject.toml
       hash: md5
       md5: 417d5137be5ef207eff30b046b04002a
@@ -2094,8 +2094,8 @@ stages:
       size: 1888
     - path: server/seed/business_sheets.py
       hash: md5
-      md5: e67cbe8074c6593e063ca668e72616e2
-      size: 19522
+      md5: af33ca51f872ab54c32b21cf39a86c86
+      size: 20114
     - path: server/seed/canvas_fixture.py
       hash: md5
       md5: def7971c3d68a32ee350637092e758a6
@@ -4961,8 +4961,8 @@ stages:
       size: 2820
     - path: server/seed/business_sheets.py
       hash: md5
-      md5: e67cbe8074c6593e063ca668e72616e2
-      size: 19522
+      md5: af33ca51f872ab54c32b21cf39a86c86
+      size: 20114
     - path: server/seed/papers.py
       hash: md5
       md5: efa8f354ab5f782c9d3d25b105be88c5
@@ -5269,8 +5269,8 @@ stages:
       size: 12666
     - path: server/seed/business_sheets.py
       hash: md5
-      md5: e67cbe8074c6593e063ca668e72616e2
-      size: 19522
+      md5: af33ca51f872ab54c32b21cf39a86c86
+      size: 20114
     - path: server/seed/papers.py
       hash: md5
       md5: efa8f354ab5f782c9d3d25b105be88c5
@@ -7467,8 +7467,8 @@ stages:
       size: 29912
     - path: setup/setup.py
       hash: md5
-      md5: faaf0019f8e15cbc3ac8d72566c159cc
-      size: 7923
+      md5: 95304ba19fa7c3633f4a7597f91dd4e6
+      size: 8536
     - path: submodule/Toolathlon/configs/mcp_servers/excel.yaml
       hash: md5
       md5: 6a4a7c33b256e25933a2531e1af07e66

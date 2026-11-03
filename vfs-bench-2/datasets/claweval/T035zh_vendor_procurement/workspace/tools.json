@@ -20,7 +20,8 @@
     "endpoint": {
      "url": "http://localhost:9108/inventory/products",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_product",
@@ -41,7 +42,8 @@
     "endpoint": {
      "url": "http://localhost:9108/inventory/products/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -75,7 +77,8 @@
     "endpoint": {
      "url": "http://localhost:9109/rss/articles",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_article",
@@ -96,7 +99,8 @@
     "endpoint": {
      "url": "http://localhost:9109/rss/articles/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -129,7 +133,8 @@
     "endpoint": {
      "url": "http://localhost:9110/crm/customers",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_customer",
@@ -150,7 +155,8 @@
     "endpoint": {
      "url": "http://localhost:9110/crm/customers/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -186,7 +192,8 @@
     "endpoint": {
      "url": "http://localhost:9106/kb/search",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_article",
@@ -207,7 +214,8 @@
     "endpoint": {
      "url": "http://localhost:9106/kb/articles/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -236,7 +244,8 @@
     "endpoint": {
      "url": "http://localhost:9104/finance/transactions",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_transaction",
@@ -257,7 +266,8 @@
     "endpoint": {
      "url": "http://localhost:9104/finance/transactions/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "report_submit",
@@ -291,7 +301,8 @@
     "endpoint": {
      "url": "http://localhost:9104/finance/report/submit",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }
