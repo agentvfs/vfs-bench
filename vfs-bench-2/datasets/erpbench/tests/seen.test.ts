@@ -101,6 +101,23 @@ test('the step is the latest at or before the read, whatever the array order', (
   assert.deepEqual(kept([step(1000, 'x'), step(1100, WITNESS), step(3000, 'x')], exact), [1, 2, 3, 4, 5])
 })
 
+test('a Codex trajectory as Harbor saved it credits the reads its step printed', () => {
+  // Steps 4-6 of gpt-5.6-luna on erpbench-010: step 5 cats three mails and two Drive files in one code-mode exec.
+  const codex = JSON.parse(readFileSync(new URL('codex-trajectory.json', import.meta.url), 'utf8'))
+  const [before, issuing] = codex.steps.map((s: { timestamp: string }) => Date.parse(s.timestamp))
+  const witnesses = [
+    '"body_text":"**Northbridge Fastener Works · Toledo pl',
+    'The Q2 batch is FILE-NBR-PRICE-BATCH-Q2. Policy: k',
+    '"body_text":"From: marcus.lee@northbridge-sim.example',
+    'PRICE-BATCH-NBR-2026Q2,1,FST-M8-40,0.89,2026-03-01',
+    'FST-M8-40,M8 x 40 hex bolt, zinc,0.84,Active,2026-',
+  ]
+  const trace = witnesses.map((_, i) => entry(i + 1, 'google_drive.files.download', { fileId: `F${i}` }))
+  const at = (ms: number): Seen[] => witnesses.map((w, i) => ({ idx: i + 1, at_ms: ms, witness: { all: [w] } }))
+  assert.deepEqual(seenTrace(trace, at(issuing! + 100), codex, 0).map((e) => e.index), [1, 2, 3, 4, 5])
+  assert.deepEqual(seenTrace(trace, at(before! + 100), codex, 0), [])
+})
+
 test('an oracle trajectory on the trial clock is moved to host time; a host agent is not', () => {
   const shift = 6 * 3600_000
   const steps = [step(1000 + shift, WITNESS), step(2000 + shift, 'x'), step(3000 + shift, 'x')]

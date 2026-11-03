@@ -388,6 +388,28 @@ test('a sheet renders whatever ranges were written', { skip }, async () => {
   }
 })
 
+test('a later sheet write wins where it overlaps an earlier one, and a far-off cell stays small', { skip }, async () => {
+  const r = await open()
+  try {
+    const update = (range: string, values: string[][]) =>
+      r.post('google_sheets.spreadsheets.values.update', { task_id: TASK, spreadsheetId: 'SHEET-NBR-OPS', range, valueInputOption: 'RAW', values })
+    // The correction's key sorts before the row's, so only write order can put it on top.
+    await update('Register!A21:H21', [['first 4471', 'b', 'c', 'd', 'e', 'f', 'g', 'h']])
+    await update('Register!A21', [['corrected 4471']])
+    await update('Register!A1000000000', [['far 4471']])
+    const started = Date.now()
+    const sheet = await r.line('cat /sheets/owned/*__SHEET-NBR-OPS.gsheet.json')
+    assert.equal(sheet.exit, 0, sheet.stderr)
+    assert.ok(Date.now() - started < 5000)
+    assert.ok(sheet.stdout.includes('corrected 4471') && !sheet.stdout.includes('first 4471'), sheet.stdout)
+    assert.ok(sheet.stdout.includes('far 4471'))
+    const correction = of(sheet.entries, 'google_sheets.spreadsheets.values.get').find((e) => e.arguments.range === 'Register!A21')!
+    assert.ok(shows(sheet.stdout, witnessOf(sheet, correction)))
+  } finally {
+    await r.close()
+  }
+})
+
 test('sizes a listing gives agree with the bytes a read returns', { skip }, async () => {
   const r = await open()
   try {

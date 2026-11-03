@@ -251,12 +251,17 @@ const driveRoutes = (): KitRoute<ErpClient>[] => [
 
 const column = (letters: string) => [...letters].reduce((n, c) => n * 26 + c.charCodeAt(0) - 64, 0) - 1
 
-/** A range key's tab and top-left cell: no row for a bare tab, whole columns or a key that does not parse. */
+/** Where a range may sit, far past any task's register, so one far-off cell cannot make the grid huge. */
+const GRID = { rows: 10_000, cols: 1_000 }
+
+/** A range key's tab and top-left cell: no row for a bare tab, whole columns, a cell off the grid or a key that does not parse. */
 function anchor(key: string): { tab: string; row: number | null; col: number } {
   const m = /^(?:'((?:[^']|'')+)'|([^!]+))(?:!([A-Z]+)(\d+)?(?::[A-Z]+\d*)?)?$/.exec(key)
   if (m === null) return { tab: key, row: null, col: 0 }
   const tab = m[1] !== undefined ? m[1].replaceAll("''", "'") : m[2]!
-  return { tab, row: m[4] === undefined ? null : Number(m[4]) - 1, col: m[3] === undefined ? 0 : column(m[3]) }
+  const row = m[4] === undefined ? null : Number(m[4]) - 1
+  const col = m[3] === undefined ? 0 : column(m[3])
+  return row !== null && row < GRID.rows && col < GRID.cols ? { tab, row, col } : { tab, row: null, col: 0 }
 }
 
 /** A cell's value: a `PyFloat` as its number. */
@@ -274,10 +279,14 @@ function cell(raw: unknown): Dict {
   return { userEnteredValue: { stringValue: s }, effectiveValue: { stringValue: s }, formattedValue: s }
 }
 
-/** Every range key on its tab's grid at its A1 cell, in sorted order; a key without a row goes below the tab's rows. */
-function grid(ranges: Dict): Map<string, unknown[][]> {
+/**
+ * Every range key on its tab's grid at its A1 cell: the seeded keys sorted, then the written ones in the order of
+ * their last write, so a later write wins where ranges overlap; a key without a row goes below the tab's rows.
+ */
+function grid(ranges: Dict, written: string[]): Map<string, unknown[][]> {
   const tabs = new Map<string, unknown[][]>()
-  for (const key of Object.keys(ranges).sort()) {
+  const seeded = Object.keys(ranges).filter((key) => !written.includes(key)).sort()
+  for (const key of [...seeded, ...written]) {
     const values = ranges[key]
     if (!Array.isArray(values)) continue
     const { tab, row, col } = anchor(key)
@@ -312,7 +321,12 @@ const sheetRoutes = (): KitRoute<ErpClient>[] => [
         const ranges = loads<Dict>(sheet.ranges_json as string)
         for (const key of Object.keys(ranges).sort())
           recorded(run, 'google_sheets.spreadsheets.values.get', { spreadsheetId: id, range: key }, rangeWitness(ranges[key]))
-        const sheets = [...grid(ranges)].map(([title, cells], index) => ({
+        const written = rows(
+          run,
+          'SELECT cell_range FROM sheet_changes WHERE tenant_code = ? AND spreadsheet_id = ? GROUP BY cell_range ORDER BY MAX(rowid)',
+          [id]
+        ).map((r) => r.cell_range as string)
+        const sheets = [...grid(ranges, written)].map(([title, cells], index) => ({
           properties: { sheetId: index, title, index },
           data: [{ rowData: Array.from(cells, (line) => ({ values: Array.from(line ?? [], cell) })) }],
         }))
