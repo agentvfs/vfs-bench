@@ -17,15 +17,8 @@ fakes:
     epoch: '2026-04-03T09:00:00Z'
     # The run's SQLite, which the ported verify.py reads.
     state: /var/lib/mock-data/gws/gws.db
-    # Upstream's C2 fault (c2-skip-persist, on the email mock's send): the
-    # first send answers as sent, with the id the next message takes, and
-    # stores nothing; a retry is sent. A kit fault plan, armed on this
-    # trial's run.
-    faults:
-      - method: POST
-        route: /gmail/v1/users/me/messages/send
-        status: 200
-        body: {id: msg0011, threadId: msg0011, labelIds: [SENT]}
+    # Upstream's C2 fault (c2-skip-persist) is left out: Gmail never
+    # answers a send as done and leaves it unsent.
 env:
   TASK_NAME: email-sending-verify
 copy:

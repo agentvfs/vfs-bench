@@ -58,7 +58,8 @@ interface CalendarEvent {
   source_ref: string | null
 }
 
-const LABELS = ['INBOX', 'SENT', 'UNREAD', 'TRASH'].map((id) => ({ id, name: id, type: 'system' }))
+// Mirage's integ fixture's system labels (integ/fixtures/gws/v1.json).
+const LABELS = ['INBOX', 'SENT', 'DRAFT', 'UNREAD', 'TRASH'].map((id) => ({ id, name: id, type: 'system' }))
 
 /** The primary calendar's id, which `primary` names (integ/server/gws/store/state.ts). */
 const PRIMARY_CALENDAR = 'integ@example.com'

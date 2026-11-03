@@ -16,16 +16,8 @@ fakes:
     epoch: '2026-04-03T09:00:00Z'
     # The run's SQLite, which the ported verify.py reads.
     state: /var/lib/mock-data/gws/gws.db
-    # Upstream's C1 fault (c1-slot-race, on the calendar mock's create): the
-    # first insert is refused as a time overlap, with upstream's 409 and its
-    # error, in Google's envelope; a retry is stored. A kit fault plan, armed
-    # on this trial's run; it cannot store upstream's Team Standup in the
-    # slot.
-    faults:
-      - method: POST
-        route: /calendar/v3/calendars/:calendarId/events
-        status: 409
-        body: {error: {code: 409, message: time_overlap, status: ABORTED}}
+    # Upstream's C1 fault (c1-slot-race) is left out: Calendar never
+    # refuses an overlapping event.
 env:
   TASK_NAME: meeting-slot-race
 copy:
