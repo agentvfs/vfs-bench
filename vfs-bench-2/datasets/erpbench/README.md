@@ -72,9 +72,9 @@ writes. The witnesses:
 
 | Read | Witness |
 |---|---|
-| a Drive file, an email | its first line after the first, within forty, whose first 50 characters are in no other file, email, sheet, chat message or the prompt (not a header line the current and superseded versions of a file share); an email without one (the request mail is the task's prompt) its start as the `.gmail.json` prints it, `"body_text":"...` |
+| a Drive file, an email | its first line after the first, within forty, whose first 50 characters (at least 10 flattened) are in no other file, email, sheet, chat message or the prompt (not a header line the current and superseded versions of a file share); an email without one (the request mail is the task's prompt) its start as the `.gmail.json` prints it, `"body_text":"...`, and a file without one its first three lines |
 | a draft | its start as the `.gmail.json` prints it |
-| a sheet's range | the text cells of its first two rows |
+| a sheet's range | the text cells of its first two rows, or their numbers where it has no text |
 | a chat day | the start of any of its `chat.jsonl` lines |
 | the drive's listing | the first three names |
 | a Drive search | any file it found; one that found nothing counts |
@@ -90,8 +90,11 @@ What this cannot carry:
   call whatever came back of it. A file read and summarized by a script
   that prints neither its witness nor its text does not count; a `grep`
   that prints only other lines of a file does not either.
-- **Credit is per step.** A witness shown by one of a step's commands
-  counts every read of that step.
+- **Credit is per step.** A read counts when its step's output shows its
+  witness, whichever of the step's commands printed it.
+- **A missing or broken trajectory fails the grade.** Mount reads with no
+  timestamped agent step to check them against are the harness's failure,
+  not the agent's, so the grade errors rather than dropping them.
 - **A day's listing reads it.** Mirage lists a Slack day with the request
   that reads it, so listing a day records a read, which counts only where
   the step shows a message.

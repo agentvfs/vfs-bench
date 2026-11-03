@@ -25,33 +25,13 @@ import { type Ctx, type KitRoute, type Reply, rangeReply, route } from '../../..
 import { fmtGmailMessage } from '../../../../submodule/mirage/integ/server/gws/gmail/message.ts'
 import { channelJson, messageJson } from '../../../../submodule/mirage/integ/server/slack/wire.ts'
 import { loads } from '../../../enterpriseops/mocks/enterpriseops/py.ts'
-import { Conn } from '../../../enterpriseops/mocks/enterpriseops/sqlite.ts'
 import type { Witness } from '../../graders/seen.ts'
 import type { ErpClient } from './config.ts'
 import { type Dict, deepcopy } from './py.ts'
-import { kitOfRun, record, remember } from './run.ts'
-import { AS_OF, type Kit, World } from './world.ts'
+import { type Run, onRun, record, remember } from './run.ts'
+import { AS_OF, World } from './world.ts'
 
 const SHEET_MIME = 'application/vnd.google-apps.spreadsheet'
-
-interface Run {
-  conn: Conn
-  kit: Kit
-  code: string
-}
-
-/** A request's work on its run's file, committed at the end. */
-function onRun(ctx: Ctx<ErpClient>, work: (run: Run) => Reply): Reply {
-  const conn = new Conn(ctx.db.file, () => ctx.clock.nowMs())
-  try {
-    const kit = kitOfRun(conn)
-    const reply = work({ conn, kit, code: kit.task.tenant_code as string })
-    conn.commit()
-    return reply
-  } finally {
-    conn.close()
-  }
-}
 
 const json = (status: number, value: unknown): Reply => ({
   status,
@@ -67,7 +47,14 @@ function recorded(run: Run, tool: string, args: Dict, witness: Witness, result?:
 }
 
 const rows = (run: Run, sql: string, params: unknown[] = []) => run.conn.execute(sql, [run.code, ...params]).fetchall() as Dict[]
-const witnessOf = (run: Run, id: string): Witness | undefined => (run.kit.witnesses ?? {})[id]
+const SHEETS = 'SELECT spreadsheet_id, title, ranges_json FROM spreadsheets WHERE tenant_code = ?'
+const sheetById = (run: Run, id: string): Dict | undefined => rows(run, `${SHEETS} AND spreadsheet_id = ?`, [id])[0]
+/** A seeded file's or message's witness, which convert.py writes for every one. */
+function witnessOf(run: Run, id: string): Witness {
+  const witness = run.kit.witnesses[id]
+  if (witness === undefined) throw new Error(`no witness for ${id} in the kit`)
+  return witness
+}
 
 // ---- Gmail ----
 
@@ -145,7 +132,7 @@ const gmailRoutes = (): KitRoute<ErpClient>[] => [
         const mail = mails(run).find((m) => m.id === ctx.params.id)
         if (mail === undefined) return googleNotFound(`message ${ctx.params.id}`)
         // A draft's body is the agent's own text, which its command shows: only the rendered file proves the read.
-        const witness = (mail.label === 'INBOX' && witnessOf(run, mail.id)) || { all: [rendered(mail.body)] }
+        const witness = mail.label === 'INBOX' ? witnessOf(run, mail.id) : { all: [rendered(mail.body)] }
         recorded(run, mail.label === 'DRAFT' ? 'gmail.drafts.get' : 'gmail.messages.get', { id: mail.id }, witness)
         return json(
           200,
@@ -206,8 +193,6 @@ const listed = (r: Dict) => ({
   modifiedTime: r.modified_time,
 })
 
-const codepoints = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0)
-
 const driveRoutes = (): KitRoute<ErpClient>[] => [
   route<ErpClient>('GET', '/drive/v3/drives', () => json(200, { drives: [] })),
   route<ErpClient>(
@@ -219,7 +204,7 @@ const driveRoutes = (): KitRoute<ErpClient>[] => [
         const text = literal(q, 'fullText')
         // A spreadsheet-typed query is the Sheets mount's, never a Drive read.
         if (q.includes(`mimeType='${SHEET_MIME}'`)) {
-          const sheets = rows(run, 'SELECT spreadsheet_id, title, ranges_json FROM spreadsheets WHERE tenant_code = ? ORDER BY spreadsheet_id')
+          const sheets = rows(run, `${SHEETS} ORDER BY spreadsheet_id`)
           const needle = text?.toLowerCase()
           const found = needle === undefined ? sheets : sheets.filter((r) => `${r.title}\n${r.ranges_json}`.toLowerCase().includes(needle))
           return json(200, { files: found.map(sheetFile), incompleteSearch: false })
@@ -234,7 +219,7 @@ const driveRoutes = (): KitRoute<ErpClient>[] => [
           return json(200, { files: found.map(driveFile), incompleteSearch: false })
         }
         if (q.includes(' in parents')) {
-          const names = files.map((r) => r.name as string).sort(codepoints)
+          const names = files.map((r) => r.name as string).sort()
           recorded(run, 'google_drive.files.list', {}, { all: names.slice(0, 3) }, { files: files.map(listed) })
           return json(200, { files: files.map(driveFile) })
         }
@@ -251,11 +236,11 @@ const driveRoutes = (): KitRoute<ErpClient>[] => [
         const file = rows(run, 'SELECT * FROM drive_files WHERE tenant_code = ? AND file_id = ?', [id])[0]
         if (ctx.query.get('alt') === 'media') {
           if (file === undefined) return googleNotFound(`file ${id}`)
-          recorded(run, 'google_drive.files.download', { fileId: id }, witnessOf(run, id) ?? {})
+          recorded(run, 'google_drive.files.download', { fileId: id }, witnessOf(run, id))
           return rangeReply(ctx.headers, Buffer.from(file.content as string, 'utf8'), file.mime_type as string)
         }
         if (file !== undefined) return json(200, driveFile(file))
-        const sheet = rows(run, 'SELECT spreadsheet_id, title FROM spreadsheets WHERE tenant_code = ? AND spreadsheet_id = ?', [id])[0]
+        const sheet = sheetById(run, id)
         return sheet === undefined ? googleNotFound(`file ${id}`) : json(200, sheetFile(sheet))
       }),
     { write: true }
@@ -322,7 +307,7 @@ const sheetRoutes = (): KitRoute<ErpClient>[] => [
     (ctx) =>
       onRun(ctx, (run) => {
         const id = ctx.params.id!
-        const sheet = rows(run, 'SELECT spreadsheet_id, title, ranges_json FROM spreadsheets WHERE tenant_code = ? AND spreadsheet_id = ?', [id])[0]
+        const sheet = sheetById(run, id)
         if (sheet === undefined) return googleNotFound(`spreadsheet ${id}`)
         const ranges = loads<Dict>(sheet.ranges_json as string)
         for (const key of Object.keys(ranges).sort())
@@ -363,11 +348,13 @@ function channels(run: Run): Map<string, Message[]> {
     at: Date.parse(AS_OF),
   }))
   const out = new Map<string, Message[]>()
+  const ties = new Map<string, number>()
   for (const m of [...seeded, ...posts]) {
     const list = out.get(m.channel) ?? []
     out.set(m.channel, list)
     const second = Math.floor(m.at / 1000)
-    const tie = list.filter((x) => x.ts.startsWith(`${second}.`)).length
+    const tie = ties.get(`${m.channel}\0${second}`) ?? 0
+    ties.set(`${m.channel}\0${second}`, tie + 1)
     list.push({ ts: `${second}.${String(tie).padStart(6, '0')}`, user: m.user, text: m.text })
   }
   return out
@@ -406,9 +393,9 @@ const slackRoutes = (): KitRoute<ErpClient>[] => [
         }
         if (method === 'users.list') return slack({ members: [], ...empty })
         if (method === 'conversations.history') {
-          const name = [...all.keys()].find((n) => channelId(n) === ctx.query.get('channel'))
-          if (name === undefined) return json(200, { ok: false, error: 'channel_not_found' })
-          const messages = all.get(name)!
+          const hit = [...all].find(([n]) => channelId(n) === ctx.query.get('channel'))
+          if (hit === undefined) return json(200, { ok: false, error: 'channel_not_found' })
+          const [name, messages] = hit
           const oldest = ctx.query.get('oldest')
           // Without `oldest`, the listing's probe for the channel's latest day.
           if (oldest === null) return slack({ messages: messages.slice(-1).map(line), has_more: false })

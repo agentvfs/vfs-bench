@@ -8,7 +8,7 @@
  * datasets/erpbench/download.py.
  */
 import assert from 'node:assert/strict'
-import { type ChildProcess, spawn } from 'node:child_process'
+import { type ChildProcess, spawn, spawnSync } from 'node:child_process'
 import { randomBytes } from 'node:crypto'
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -19,7 +19,7 @@ import { after, before, test } from 'node:test'
 import { Workspace, configToWorkspaceArgs, loadWorkspaceConfig } from '@struktoai/mirage-node'
 import { parse } from 'yaml'
 
-import { flat } from '../graders/seen.ts'
+import { type Seen, type Witness, flat, shows as seenShows } from '../graders/seen.ts'
 
 const ROOT = new URL('../../../', import.meta.url).pathname
 const TASK = 'erpbench-001'
@@ -30,8 +30,6 @@ const TOKEN = randomBytes(16).toString('hex')
 const skip = !existsSync(KIT) && 'run datasets/erpbench/download.py first'
 
 type Entry = { index: number; tool: string; arguments: Record<string, unknown>; success: boolean }
-type Witness = { all?: string[]; any?: string[] }
-type SeenRow = { idx: number; at_ms: number; witness: Witness }
 
 let fake: { url: string; proc: ChildProcess; root: string }
 let runs = 0
@@ -90,7 +88,7 @@ class Run {
     this.mounts = mounts
   }
 
-  async view(): Promise<{ trace: Entry[]; seen: SeenRow[] }> {
+  async view(): Promise<{ trace: Entry[]; seen: Seen[] }> {
     const reply = await fetch(`${fake.url}/_run/${this.run}/_verifier/state?query=trace&query=seen`, {
       headers: { 'x-vfsbench-state-token': TOKEN },
     })
@@ -106,7 +104,7 @@ class Run {
     const ended = Date.now()
     const now = await this.view()
     const entries = now.trace.slice(before.trace.length)
-    const seen = new Map(now.seen.filter((s) => entries.some((e) => e.index === s.idx)).map((s) => [s.idx, s]))
+    const seen = new Map(now.seen.map((s) => [s.idx, s]))
     return { stdout: io.stdoutText, stderr: io.stderrText, exit: io.exitCode, entries, seen, started, ended }
   }
 
@@ -128,8 +126,7 @@ const canonical = (v: unknown): string =>
 const has = (entries: Entry[], tool: string, args: object) =>
   entries.some((e) => e.tool === tool && e.success && canonical(e.arguments) === canonical(args))
 const of = (entries: Entry[], tool: string) => entries.filter((e) => e.tool === tool)
-const shows = (out: string, w: Witness) =>
-  (w.all ?? []).every((f) => flat(out).includes(flat(f))) && (w.any === undefined || w.any.some((f) => flat(out).includes(flat(f))))
+const shows = (out: string, w: Witness) => seenShows(flat(out), w)
 const witnessOf = (r: Line, e: Entry) => r.seen.get(e.index)!.witness
 /** The sheet's seeded range keys, from the kit's SQL. */
 function seededKeys(): string[] {
@@ -295,6 +292,39 @@ test('a post and a draft read back through the mounts', { skip }, async () => {
     const w = witnessOf(draft, draft.entries.findLast((e) => e.tool === 'gmail.drafts.get')!)
     assert.ok((w.all ?? []).length > 0 && w.all!.every((f) => f.startsWith('"body_text":"')))
     assert.ok(shows(draft.stdout, w))
+  } finally {
+    await r.close()
+  }
+})
+
+test('a kit written before the mounts is refused, not read without witnesses', { skip }, () => {
+  const state = mkdtempSync(join(tmpdir(), 'erpbench-old-kit-'))
+  try {
+    mkdirSync(join(state, 'kit'))
+    const kit = JSON.parse(readFileSync(KIT, 'utf8'))
+    delete kit.witnesses
+    writeFileSync(join(state, 'kit', `${TASK}.json`), JSON.stringify(kit))
+    const run = spawnSync(process.execPath, ['--input-type=module', '-e', `import { kitOf } from './datasets/erpbench/mocks/erpbench/run.ts'; kitOf('${TASK}')`], {
+      cwd: ROOT,
+      env: { ...process.env, ERPBENCH_STATE: state },
+      encoding: 'utf8',
+    })
+    assert.notEqual(run.status, 0)
+    assert.match(run.stderr, /has no witnesses: run datasets\/erpbench\/download.py again/)
+  } finally {
+    rmSync(state, { recursive: true, force: true })
+  }
+})
+
+test('the inbox and the drafts are separate labels', { skip }, async () => {
+  const r = await open()
+  try {
+    const names = async (path: string) => (await r.line(`ls ${path}`)).stdout.split('\n').filter(Boolean)
+    assert.equal((await names('/gmail/INBOX/2026-02-09')).length, 5)
+    assert.deepEqual(await names('/gmail/DRAFT'), [])
+    await r.post('gmail.drafts.create', { task_id: TASK, to: 'a@b.example', subject: 'Re: x', body: 'Draft body 4471' })
+    assert.ok(!(await names('/gmail/INBOX/2026-02-09')).some((n) => n.includes('DRAFT-')))
+    assert.equal((await names('/gmail/DRAFT/*')).length, 1)
   } finally {
     await r.close()
   }

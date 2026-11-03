@@ -6,7 +6,8 @@
 # system (tools.json, workspace/tools.ts); the mail, files, sheet and chat
 # are also Mirage's own mounts on the same fake, which answers their APIs
 # (the tokens are unchecked). Mirage's cache and listing index are off, so
-# every read reaches the fake, which records it (graders/seen.ts).
+# every read the agent makes reaches the fake, which records the ones that
+# stand for upstream read tools (routes.ts, graders/seen.ts).
 # MirageVerifier grades it natively, from the fake's private state view.
 fakes:
   erpbench:

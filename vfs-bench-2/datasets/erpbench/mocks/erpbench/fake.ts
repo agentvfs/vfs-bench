@@ -2,7 +2,8 @@
  * ERPBench-100's world as a kit fake. A run is one task's world: the
  * fixture names the task (`_seed.task`), and `afterSeed` makes the run's
  * file from the world upstream seeds for it (convert.py's
- * `state/erpbench/kit/<task>.json`, never in the workspace), plus `_trace`.
+ * `state/erpbench/kit/<task>.json`, never in the workspace), plus `_trace`
+ * and `_seen` (run.ts).
  *
  *     POST /<tool>   a tool by its full name (`oracle_fusion.sales_orders.create`),
  *                    its arguments the JSON body. Upstream's `ErpWorld.call_tool`:
@@ -28,7 +29,7 @@ import { Prisma } from './client/index.js'
 import { ErpClient, config } from './config.ts'
 import { type Dict, caught, deepcopy, dumps, isDict, put } from './py.ts'
 import { restRoutes } from './routes.ts'
-import { kitOf, kitOfRun, record } from './run.ts'
+import { kitOf, kitOfRun, onRun, record } from './run.ts'
 import { World, snapshot } from './world.ts'
 
 /** A value the schema types `number` as a float; objects and arrays by their properties and items. */
@@ -49,9 +50,7 @@ function reply(status: number, value: unknown): Reply {
 /** `ErpWorld.call_tool`, then `_record` into `_trace`. */
 function call(ctx: Ctx<ErpClient>): Reply {
   const tool = ctx.params.tool!
-  const conn = new Conn(ctx.db.file, () => ctx.clock.nowMs())
-  try {
-    const kit = kitOfRun(conn)
+  return onRun(ctx, ({ conn, kit }) => {
     const body = ctx.body.length === 0 ? {} : loads<unknown>(ctx.body.toString('utf8'))
     const definition = kit.tools.find((t) => t.name === tool)
     const args = (isDict(body) ? coerce(body, definition?.inputSchema) : {}) as Dict
@@ -69,20 +68,17 @@ function call(ctx: Ctx<ErpClient>): Reply {
       }
     }
     record(conn, tool, args, success, result)
-    conn.commit()
     return reply(success ? 200 : 400, result)
-  } finally {
-    conn.close()
-  }
+  })
 }
 
 /**
  * The state view's queries (workspace/fake-state.ts): what upstream's grader
  * reads. `baseline` is the world as seeded (`ErpWorld.create`, replayed in
  * memory), `snapshot` the run's world now, `trace` its calls, `model` the
- * task's world model, `seen` the mount reads' arrival times and witnesses.
- * Each is one row whose `json` is the value as `json.dumps` writes it, so
- * floats stay floats.
+ * task's world model, each one row whose `json` is the value as
+ * `json.dumps` writes it, so floats stay floats; and `seen`, the mount
+ * reads' arrival times and witnesses, as JSON.
  */
 function verifierQuery(db: ErpClient, query: string, nowMs: number): ReturnType<VerifierQuery<ErpClient>> {
   const answer = (json: string) => ({ rows: [{ json }] })

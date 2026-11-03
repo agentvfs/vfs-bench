@@ -63,13 +63,16 @@ function steps(trajectory: unknown, shiftMs: number): { at: number; shown: strin
   })
 }
 
-function shows(shown: string, witness: Witness): boolean {
+/** Whether flattened output shows a witness. */
+export function shows(shown: string, witness: Witness): boolean {
   const all = (witness.all ?? []).every((f) => shown.includes(flat(f)))
   return all && (witness.any === undefined || witness.any.some((f) => shown.includes(flat(f))))
 }
 
 /**
- * The trace without the mount reads the agent did not see.
+ * The trace without the mount reads the agent did not see. Mount reads with
+ * no timestamped agent step to check them against fail the grade: a missing
+ * or broken trajectory is the harness's failure, not the agent's.
  *
  * Args:
  *   trace (Entry[]): the fake's trace, upstream's entries.
@@ -79,6 +82,7 @@ function shows(shown: string, witness: Witness): boolean {
  */
 export function seenTrace(trace: Entry[], seen: Seen[], trajectory: unknown, shiftMs: number): Entry[] {
   const timeline = steps(trajectory, shiftMs)
+  if (seen.length && !timeline.length) throw new Error(`${seen.length} mount reads were recorded, but the trajectory has no timestamped agent step`)
   const byIndex = new Map(seen.map((s) => [s.idx, s]))
   return trace.filter((entry) => {
     const read = byIndex.get(Number(entry.index))

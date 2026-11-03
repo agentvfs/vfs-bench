@@ -13,12 +13,10 @@ each. Needs datasets/erpbench/download.py.
 """
 import json
 import shlex
-import sqlite3
 import subprocess
 import sys
 import tempfile
 import unittest
-from contextlib import closing
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -35,19 +33,9 @@ class WitnessTests(unittest.TestCase):
         for src in TASKS:
             task = json.loads((src / "tests" / "task.json").read_text())
             kit = convert.kit(task, [])
-            code = task["tenant_code"]
-            with closing(sqlite3.connect(":memory:")) as conn:
-                conn.executescript(kit["sql"])
-                texts = {
-                    **dict(
-                        conn.execute(
-                            "SELECT file_id, content FROM drive_files"
-                            " WHERE tenant_code = ?", (code, ))),
-                    **dict(
-                        conn.execute(
-                            "SELECT message_id, body FROM mail_messages"
-                            " WHERE tenant_code = ?", (code, ))),
-                }
+            with convert.loaded(kit["sql"]) as conn:
+                files, mails = convert.resources(conn, task["tenant_code"])
+            texts = {**files, **mails}
             self.assertEqual(set(kit["witnesses"]), set(texts), src.name)
             prompt = convert.flat(task["prompt"])
             # Alternatives of one investigation may share text: seeing
@@ -115,13 +103,14 @@ class OracleTests(unittest.TestCase):
         src = convert.UPSTREAM / "erpbench-028"
         task = json.loads((src / "tests" / "task.json").read_text())
         tools = convert.tool_definitions(task["answer_schema"])
-        script = convert.solve_sh(task, tools, convert.drive_names(task))
+        names = convert.drive_names(task, convert.seeded(task))
+        script = convert.solve_sh(task, tools, names)
         name = "/drive/Agency portal-export-2026-02-02.json"
         self.assertIn(f"cat {shlex.quote(name)}", script)
         self.assertNotIn("/dev/null", script)
         body = script[script.index("step() {"):]
         body = body[:body.index("\n}\n")]
-        self.assertLess(body.index("sleep 1"), body.index("date +%s%3N"))
+        self.assertLess(body.index("sleep "), body.index("date +%s%3N"))
         self.assertLess(body.index("date +%s%3N"),
                         body.index('sh "$S/$n.cmd"'))
         self.assertEqual(script.count("step <<'STEP'"),

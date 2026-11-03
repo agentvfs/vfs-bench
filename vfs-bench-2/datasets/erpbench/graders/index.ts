@@ -6,10 +6,10 @@
  *
  * Upstream scores the world as seeded, the world at the end and the call
  * trace. The fake hands the grader all three through its private state view
- * (`baseline`, `snapshot`, `trace`, the task's world model, `model`, and
- * `seen`, the mount reads' times and witnesses: seen.ts keeps a mount read
- * in the trace only if the agent's trajectory shows it),
- * each as `json.dumps` text, so a float stays a `PyFloat` here (`NaN` too); the task
+ * (`baseline`, `snapshot`, `trace` and the task's world model, `model`,
+ * each as `json.dumps` text, and `seen`, the mount reads' times and
+ * witnesses, as JSON: seen.ts keeps a mount read in the trace only if the
+ * agent's trajectory shows it), so a float stays a `PyFloat` here (`NaN` too); the task
  * (expected answers, rubric) is its `tests/task.json`. Upstream's scoring
  * constants come from the generator (manifest.json).
  *
@@ -493,32 +493,52 @@ export function scoreEpisode(task: Row, model: Row, before: Snapshot, after: Sna
   return { score: earned / 100, checks: Object.fromEntries(rubric.map((c) => [c.id, results.get(c.id)!])) }
 }
 
-/** The fake's answer to one state-view query, parsed as Python's `json.loads`. */
-function state(c: Context, query: number): any {
+/** The fake's answer to one state-view query: its one row's `json` text. */
+function answer(c: Context, query: number): string {
   const rows = c.rows('erpbench', `query-${query}`)
   if (rows.length !== 1 || typeof rows[0]!.json !== 'string') throw new Error(`Invalid ERPBench state: ${JSON.stringify(rows[0])}`)
-  return pyLoads(rows[0]!.json)
+  return rows[0]!.json
+}
+
+/** The fake's answer to one state-view query, parsed as Python's `json.loads`. */
+const state = (c: Context, query: number): any => pyLoads(answer(c, query))
+
+/** The mount reads' arrival times and witnesses (`seen`, the fifth query). */
+function seenRows(c: Context): Seen[] {
+  const rows = JSON.parse(answer(c, 4))
+  if (!Array.isArray(rows)) throw new Error(`Invalid ERPBench seen: ${JSON.stringify(rows)}`)
+  return rows
 }
 
 const TRAJECTORY = '/logs/agent/trajectory.json'
 
-/** The agent's trajectory, or null where there is none (nop) or it is not JSON. */
-function trajectory(c: Context): unknown {
-  if (!c.exists(TRAJECTORY)) return null
-  try {
-    return JSON.parse(c.text(TRAJECTORY))
-  } catch {
+/** The agent's trajectory; none is null (nop). Mount reads with none to check them against fail the grade. */
+function trajectory(c: Context, reads: number): unknown {
+  if (!c.exists(TRAJECTORY)) {
+    if (reads) throw new Error(`${reads} mount reads were recorded, but there is no ${TRAJECTORY}`)
     return null
   }
+  try {
+    return JSON.parse(c.text(TRAJECTORY))
+  } catch (error) {
+    throw new Error(`${TRAJECTORY} is not JSON: ${(error as Error).message}`)
+  }
+}
+
+/** The trial clock minus host time, which an oracle's own trajectory is on; 0 where neither is given. */
+function shiftOf(c: Context): number {
+  const { epoch, host } = c.input
+  if (epoch === undefined && host === undefined) return 0
+  const shift = Date.parse(epoch ?? '') - Date.parse(host ?? '')
+  if (!Number.isFinite(shift)) throw new Error(`Invalid clock: epoch ${epoch}, host ${host}`)
+  return shift
 }
 
 const erpbench: Grader = (c: Context): Grade => {
   const task = pyLoads<Row>(c.text('/tests/task.json'))
-  const seen = JSON.parse(c.rows('erpbench', 'query-4')[0]!.json) as Seen[]
-  // The trial clock minus host time, which an oracle's own trajectory is on.
-  const { epoch, host } = c.input
-  const shift = epoch !== undefined && host !== undefined ? Date.parse(epoch) - Date.parse(host) : 0
-  return scoreEpisode(task, state(c, 3), state(c, 0), state(c, 1), seenTrace(state(c, 2), seen, trajectory(c), shift))
+  const seen = seenRows(c)
+  const trace = seenTrace(state(c, 2), seen, trajectory(c, seen.length), shiftOf(c))
+  return scoreEpisode(task, state(c, 3), state(c, 0), state(c, 1), trace)
 }
 
 /** The ERPBench-100 tasks: convert.py's manifest. */

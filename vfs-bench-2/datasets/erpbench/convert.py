@@ -214,7 +214,8 @@ def mirage_yaml(task_id: str) -> str:
 # system (tools.json, workspace/tools.ts); the mail, files, sheet and chat
 # are also Mirage's own mounts on the same fake, which answers their APIs
 # (the tokens are unchecked). Mirage's cache and listing index are off, so
-# every read reaches the fake, which records it (graders/seen.ts).
+# every read the agent makes reaches the fake, which records the ones that
+# stand for upstream read tools (routes.ts, graders/seen.ts).
 # MirageVerifier grades it natively, from the fake's private state view.
 fakes:
   erpbench:
@@ -259,7 +260,9 @@ SOLVE_HEAD = """#!/usr/bin/env bash
 # Each step waits a second, notes the workspace's time and keeps its command
 # and output; trajectory.py writes them as the agent's trajectory, whose
 # steps show the grader each mount read (graders/seen.ts). The wait keeps a
-# read in its own step: the workspace clock runs a little behind the host's.
+# read in its own step: the workspace clock starts when Mirage builds the
+# workspace, tens of ms after the time it was given, so it runs that much
+# behind the host's.
 set -euo pipefail
 S=/tmp/oracle
 mkdir -p "$S"
@@ -267,7 +270,7 @@ n=0
 step() {
   n=$((n + 1))
   cat > "$S/$n.cmd"
-  sleep 1
+  sleep 0.2
   date +%s%3N > "$S/$n.at"
   sh "$S/$n.cmd" > "$S/$n.out" 2>&1 || { cat "$S/$n.out"; exit 1; }
   cat "$S/$n.out"
@@ -330,14 +333,7 @@ def witnesses(conn: sqlite3.Connection, task: dict) -> dict[str, dict]:
     header the current and superseded versions of a file share. Without
     one, a message's rendered start, or a file's first three lines."""
     code = task["tenant_code"]
-    files = dict(
-        conn.execute(
-            "SELECT file_id, content FROM drive_files WHERE tenant_code = ?",
-            (code, )))
-    mails = dict(
-        conn.execute(
-            "SELECT message_id, body FROM mail_messages WHERE tenant_code = ?",
-            (code, )))
+    files, mails = resources(conn, code)
     rest = [
         row[0] for query in
         ("SELECT ranges_json FROM spreadsheets WHERE tenant_code = ?",
@@ -370,6 +366,27 @@ def witnesses(conn: sqlite3.Connection, task: dict) -> dict[str, dict]:
     return out
 
 
+def resources(conn: sqlite3.Connection,
+              code: str) -> tuple[dict[str, str], dict[str, str]]:
+    """A tenant's Drive files and Gmail messages: their text, by id."""
+    files = dict(
+        conn.execute(
+            "SELECT file_id, content FROM drive_files WHERE tenant_code = ?",
+            (code, )))
+    mails = dict(
+        conn.execute(
+            "SELECT message_id, body FROM mail_messages WHERE tenant_code = ?",
+            (code, )))
+    return files, mails
+
+
+def loaded(sql: str) -> closing[sqlite3.Connection]:
+    """A world's SQL in an in-memory database, closed on leaving."""
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(sql)
+    return closing(conn)
+
+
 def seeded(task: dict) -> str:
     """The world upstream seeds for the task, as SQL."""
     with tempfile.TemporaryDirectory() as tmp:
@@ -379,10 +396,9 @@ def seeded(task: dict) -> str:
     return sql
 
 
-def drive_names(task: dict, sql: str | None = None) -> dict[str, str]:
-    """Each Drive file's name in the task's world, by id."""
-    with closing(sqlite3.connect(":memory:")) as conn:
-        conn.executescript(sql if sql is not None else seeded(task))
+def drive_names(task: dict, sql: str) -> dict[str, str]:
+    """Each Drive file's name in the task's world (its SQL), by id."""
+    with loaded(sql) as conn:
         return dict(
             conn.execute(
                 "SELECT file_id, name FROM drive_files WHERE tenant_code = ?",
@@ -393,8 +409,7 @@ def kit(task: dict, tools: list[dict]) -> dict:
     """What the fake reads for the task, outside the workspace: the seeded
     world, and the witnesses of its files and messages."""
     sql = seeded(task)
-    with closing(sqlite3.connect(":memory:")) as conn:
-        conn.executescript(sql)
+    with loaded(sql) as conn:
         found = witnesses(conn, task)
     return {
         "task": {

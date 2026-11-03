@@ -12,6 +12,7 @@ import { test } from 'node:test'
 
 import { flat, seenTrace, type Seen } from '../graders/seen.ts'
 import { verify } from '../../../workspace/verify.ts'
+import MANIFEST from '../graders/manifest.json' with { type: 'json' }
 import { dumps } from '../mocks/erpbench/py.ts'
 
 const PYTHON = process.env.VFSBENCH_TEST_PYTHON ?? 'python3'
@@ -56,8 +57,14 @@ test('a mount read counts only where its own step shows its witness', () => {
     ],
     ['content as text parts', [step(1000, [{ type: 'text', text: `before ${WITNESS} after` }]), step(2000, 'x'), step(3000, 'x')], [1, 2, 4]],
     ['split across lines and spaces', [step(1000, 'Line 7,\n  CA-PO-77310,BRK-3   bracket,400'), step(2000, 'x'), step(3000, 'x')], [1, 2, 4]],
-    ['a malformed trajectory', 'not steps', [1, 4]],
     ['a step without a timestamp', [{ ...step(1000, WITNESS), timestamp: undefined }, step(2000, 'x'), step(3000, 'x')], [1, 4]],
+    [
+      'the witness in a step\'s second result',
+      [{ ...step(1000, 'x'), observation: { results: [{ content: 'x' }, { content: WITNESS }] } }, step(2000, 'x'), step(3000, 'x')],
+      [1, 2, 4],
+    ],
+    ['a step with no output between', [step(1000, WITNESS), { source: 'agent', timestamp: new Date(1500).toISOString(), message: 'thinking' }, step(3000, 'x')], [1, 2, 4]],
+    ['content that is no text', [step(1000, null), step(2000, [{ type: 'image' }, null]), step(3000, 'x')], [1, 4]],
     ['no agent step before the read', [step(5000, WITNESS)], [1, 4]],
   ]
   for (const [name, steps, want] of rows) assert.deepEqual(kept(steps), want, name)
@@ -93,8 +100,22 @@ test('an oracle trajectory on the trial clock is moved to host time; a host agen
   assert.deepEqual(kept(steps, seenRows(), shift, 'codex'), [1, 4])
 })
 
-test('no trajectory keeps the CLI calls and no mount read', () => {
-  assert.deepEqual(seenTrace(TRACE, seenRows(), null, 0).map((e) => e.index), [1, 4])
+test('a trajectory without an agent name is a host agent\'s', () => {
+  const steps = [step(1000, WITNESS), step(2000, 'x'), step(3000, 'x')]
+  assert.deepEqual(seenTrace(TRACE, seenRows(), { steps }, 6 * 3600_000).map((e) => e.index), [1, 2, 4])
+})
+
+test('mount reads with no usable trajectory fail; without mount reads none is needed', () => {
+  for (const trajectory of [null, { steps: 'not steps' }, { steps: [{ ...step(1000, WITNESS), timestamp: undefined }] }])
+    assert.throws(() => seenTrace(TRACE, seenRows(), trajectory, 0), /no timestamped agent step/)
+  assert.deepEqual(seenTrace(TRACE, [], null, 0).map((e) => e.index), [1, 2, 3, 4, 5])
+})
+
+test("the manifest asks the fake for the grader's queries, in its order, and stages the trajectory", () => {
+  for (const [task, spec] of Object.entries(MANIFEST.tasks)) {
+    assert.deepEqual(spec.native_state.erpbench.queries, ['baseline', 'snapshot', 'trace', 'model', 'seen'], task)
+    assert.ok(spec.inputs.includes('/logs/agent/trajectory.json'), task)
+  }
 })
 
 test("flat matches convert.py's", { skip: !DOWNLOADED && 'run datasets/erpbench/download.py first' }, () => {
@@ -132,8 +153,8 @@ print(json.dumps({"model": world_model(t["tenant_code"]), "before": run["before"
   const witness = '"body_text":"witness of the request mail'
   const json = (value: unknown) => [{ json: dumps(value) }]
   // An oracle's trajectory is on the trial clock, `epoch - host` ahead of the host's.
-  const grade = async (shown: string, name = 'codex', shift = 0) => {
-    const trajectory = { agent: { name }, steps: [step(1000 + shift, shown)] }
+  const grade = async (shown: string, name = 'codex', shift = 0, raw?: string | null, host = new Date(0).toISOString()) => {
+    const trajectory = raw !== undefined ? raw : JSON.stringify({ agent: { name }, steps: [step(1000 + shift, shown)] })
     const result = await verify({
       dataset: 'erpbench',
       task: 'erpbench-001',
@@ -148,10 +169,10 @@ print(json.dumps({"model": world_model(t["tenant_code"]), "before": run["before"
       },
       files: {
         '/tests/task.json': Buffer.from(readFileSync(`${TESTS}/task.json`)).toString('base64'),
-        '/logs/agent/trajectory.json': Buffer.from(JSON.stringify(trajectory)).toString('base64'),
+        ...(trajectory === null ? {} : { '/logs/agent/trajectory.json': Buffer.from(trajectory).toString('base64') }),
       },
       epoch: new Date(shift).toISOString(),
-      host: new Date(0).toISOString(),
+      host,
       timeoutSeconds: 120,
     })
     return result.checks['discovery:request_mail']
@@ -159,4 +180,8 @@ print(json.dumps({"model": world_model(t["tenant_code"]), "before": run["before"
   assert.equal(await grade(`shown: {${witness}}`), true)
   assert.equal(await grade('nothing shown'), false)
   assert.equal(await grade(`shown: {${witness}}`, 'oracle', 6 * 3600_000), true)
+  // A mount read with no trajectory, or a broken one, is the harness's failure: the grade errors.
+  await assert.rejects(grade('', 'codex', 0, null), /no \/logs\/agent\/trajectory.json/)
+  await assert.rejects(grade('', 'codex', 0, '{not json'), /is not JSON/)
+  await assert.rejects(grade(`shown: {${witness}}`, 'codex', 0, undefined, 'not a time'), /Invalid clock/)
 })
