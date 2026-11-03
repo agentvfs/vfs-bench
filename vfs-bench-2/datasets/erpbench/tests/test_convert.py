@@ -18,6 +18,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from contextlib import closing
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -34,29 +35,26 @@ class WitnessTests(unittest.TestCase):
         for src in TASKS:
             task = json.loads((src / "tests" / "task.json").read_text())
             kit = convert.kit(task, [])
-            conn = sqlite3.connect(":memory:")
-            conn.executescript(kit["sql"])
             code = task["tenant_code"]
-            texts = {
-                **{
-                    r[0]: r[1]
-                    for r in conn.execute(
-                        "SELECT file_id, content FROM drive_files"
-                        " WHERE tenant_code = ?", (code, ))
-                },
-                **{
-                    r[0]: r[1]
-                    for r in conn.execute(
-                        "SELECT message_id, body FROM mail_messages"
-                        " WHERE tenant_code = ?", (code, ))
-                },
-            }
+            with closing(sqlite3.connect(":memory:")) as conn:
+                conn.executescript(kit["sql"])
+                texts = {
+                    **dict(
+                        conn.execute(
+                            "SELECT file_id, content FROM drive_files"
+                            " WHERE tenant_code = ?", (code, ))),
+                    **dict(
+                        conn.execute(
+                            "SELECT message_id, body FROM mail_messages"
+                            " WHERE tenant_code = ?", (code, ))),
+                }
             self.assertEqual(set(kit["witnesses"]), set(texts), src.name)
             prompt = convert.flat(task["prompt"])
             # Alternatives of one investigation may share text: seeing
             # either passes the same check.
             together = [{
-                str(r.get("arguments", {}).get("fileId")
+                str(
+                    r.get("arguments", {}).get("fileId")
                     or r.get("arguments", {}).get("id"))
                 for r in inv["any_of"]
             } for inv in task["required_investigations"]]
@@ -83,8 +81,7 @@ class WitnessTests(unittest.TestCase):
                     '"body_text":"'), src.name)
 
     def test_flat_drops_escapes_space_and_case(self):
-        self.assertEqual(convert.flat('A "b"\\n\tC \\u00b7 D\r\n'),
-                         'a"b"c·d')
+        self.assertEqual(convert.flat('A "b"\\n\tC \\u00b7 D\r\n'), 'a"b"c·d')
         self.assertIn(convert.flat('x "y" ·'),
                       convert.flat(json.dumps(json.dumps('x "y" ·'))))
 

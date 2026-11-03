@@ -29,6 +29,8 @@ export interface Inputs {
   files?: Record<string, string>
   existingPaths?: string[]
   epoch?: string
+  /** The host's time when `epoch` was read, so a grader can relate the trial clock to host time. */
+  host?: string
   env?: Record<string, string>
   timeoutSeconds: number
 }

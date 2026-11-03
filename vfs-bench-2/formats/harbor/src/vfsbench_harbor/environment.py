@@ -938,11 +938,12 @@ class MirageEnvironment(BaseEnvironment):
         """The environment every command sees, as the container's ``ENV``."""
         return dict(self._env)
 
-    def now(self) -> datetime:
+    def now(self, host: float | None = None) -> datetime:
         """The trial's time, as its workspace and services read it: the
         run's epoch when the trial started, moving on since; the host's
-        where the task has no epoch."""
-        now = time.time() * 1000
+        where the task has no epoch. ``host`` is the host's ``time.time()``
+        to read it at, so a caller can pair the two."""
+        now = (time.time() if host is None else host) * 1000
         if self._epoch is not None:
             now += self._epoch - self._started
         return datetime.fromtimestamp(now / 1000, timezone.utc)

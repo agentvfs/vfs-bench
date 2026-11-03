@@ -80,11 +80,15 @@ async function open(): Promise<Run> {
 }
 
 class Run {
-  constructor(
-    readonly run: string,
-    readonly ws: Workspace,
-    readonly mounts: string[]
-  ) {}
+  readonly run: string
+  readonly ws: Workspace
+  readonly mounts: string[]
+
+  constructor(run: string, ws: Workspace, mounts: string[]) {
+    this.run = run
+    this.ws = ws
+    this.mounts = mounts
+  }
 
   async view(): Promise<{ trace: Entry[]; seen: SeenRow[] }> {
     const reply = await fetch(`${fake.url}/_run/${this.run}/_verifier/state?query=trace&query=seen`, {
@@ -204,7 +208,9 @@ test('a Drive search is recorded as its query and reads only what it matched', {
     const miss = await r.line('grep -rw zzqnomatch /drive')
     const none = miss.entries.find((e) => e.tool === 'google_drive.files.list' && String(e.arguments.q ?? '').includes('zzqnomatch'))!
     assert.deepEqual(witnessOf(miss, none), {})
-    assert.deepEqual(of(miss.entries, 'google_drive.files.download'), [])
+    // With no hit, gdrive's grep reads every file; it prints none of them, so none is seen.
+    assert.deepEqual(miss.stdout, '')
+    assert.ok(of(miss.entries, 'google_drive.files.download').every((e) => !shows(miss.stdout, witnessOf(miss, e))))
   } finally {
     await r.close()
   }
@@ -269,7 +275,8 @@ test('a post and a draft read back through the mounts', { skip }, async () => {
     const day = await r.line('cat /slack/channels/ops-nbr__*/2026-02-09/chat.jsonl')
     assert.ok(day.stdout.includes('readback marker 4471'), day.stderr)
     const history = of(day.entries, 'slack.conversations_history')
-    assert.ok(history.some((e) => (witnessOf(day, e).any ?? []).some((f) => f.includes('readback marker'))))
+    // A message's witness is its rendered chat.jsonl line's start.
+    assert.ok(history.some((e) => (witnessOf(day, e).any ?? []).some((f) => f.includes('"user":"analyst","text":"erpbench-001'))))
     const last = await r.line('tail -n 1 /slack/channels/ops-nbr__*/2026-02-09/chat.jsonl')
     assert.ok(of(last.entries, 'slack.conversations_history').some((e) => shows(last.stdout, witnessOf(last, e))))
     await r.post('slack.chat_postMessage', { task_id: TASK, channel: 'ops-nbr', text, review_status: 'draft_for_review' })

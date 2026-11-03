@@ -6,7 +6,9 @@
  *
  * Upstream scores the world as seeded, the world at the end and the call
  * trace. The fake hands the grader all three through its private state view
- * (`baseline`, `snapshot`, `trace`, and the task's world model, `model`),
+ * (`baseline`, `snapshot`, `trace`, the task's world model, `model`, and
+ * `seen`, the mount reads' times and witnesses: seen.ts keeps a mount read
+ * in the trace only if the agent's trajectory shows it),
  * each as `json.dumps` text, so a float stays a `PyFloat` here (`NaN` too); the task
  * (expected answers, rubric) is its `tests/task.json`. Upstream's scoring
  * constants come from the generator (manifest.json).
@@ -23,6 +25,7 @@ import { Context, type Grade, type Grader, type InputSpec, type Row } from '../.
 import { PyError } from '../../complexmcp/mocks/complexmcp/common.ts'
 import { asNum, at, dumps, get, isDict, pyInt, pyLoads, typeError } from '../mocks/erpbench/py.ts'
 import MANIFEST from './manifest.json' with { type: 'json' }
+import { type Seen, seenTrace } from './seen.ts'
 
 type Snapshot = Row
 type Entry = Row
@@ -497,9 +500,25 @@ function state(c: Context, query: number): any {
   return pyLoads(rows[0]!.json)
 }
 
+const TRAJECTORY = '/logs/agent/trajectory.json'
+
+/** The agent's trajectory, or null where there is none (nop) or it is not JSON. */
+function trajectory(c: Context): unknown {
+  if (!c.exists(TRAJECTORY)) return null
+  try {
+    return JSON.parse(c.text(TRAJECTORY))
+  } catch {
+    return null
+  }
+}
+
 const erpbench: Grader = (c: Context): Grade => {
   const task = pyLoads<Row>(c.text('/tests/task.json'))
-  return scoreEpisode(task, state(c, 3), state(c, 0), state(c, 1), state(c, 2))
+  const seen = JSON.parse(c.rows('erpbench', 'query-4')[0]!.json) as Seen[]
+  // The trial clock minus host time, which an oracle's own trajectory is on.
+  const { epoch, host } = c.input
+  const shift = epoch !== undefined && host !== undefined ? Date.parse(epoch) - Date.parse(host) : 0
+  return scoreEpisode(task, state(c, 3), state(c, 0), state(c, 1), seenTrace(state(c, 2), seen, trajectory(c), shift))
 }
 
 /** The ERPBench-100 tasks: convert.py's manifest. */

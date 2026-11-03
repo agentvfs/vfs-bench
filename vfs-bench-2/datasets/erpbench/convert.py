@@ -10,9 +10,12 @@ systems (``erpbench``, ``oracle_fusion``, ``gmail``, ``google_drive``,
 ``google_sheets``, ``slack``), 52 tools over one SQLite file, graded on the
 world's end state, the agent's answers and its call trace. Here the world
 is one kit fake, ``mocks/erpbench/``, a TypeScript port of upstream's tools
-over the same SQLite tables; each system is a CLI (``workspace/tools.ts``).
+over the same SQLite tables; each system is a CLI (``workspace/tools.ts``),
+and the mail, files, sheet and chat are also Mirage's own mounts on the
+fake, which serves their reads (the CLIs keep no tool in ``MOUNTED``).
 ``graders/index.ts`` grades natively (``MirageVerifier``): a port of
-upstream's grader.
+upstream's grader, which counts a mount read only where the agent's
+trajectory shows it (``graders/seen.ts``).
 
 Each task under ``datasets/erpbench/<task>/`` has:
 
@@ -23,7 +26,10 @@ Each task under ``datasets/erpbench/<task>/`` has:
   and ``tests/test.sh``, the stub (``formats/harbor/test.sh``).
 - ``tests/task.json``: upstream's task, which the native grader reads (its
   expected answers and rubric). Not committed (``.gitignore``).
-- ``solution/solve.sh``: upstream's oracle steps as CLI calls. Not committed.
+- ``solution/solve.sh``: upstream's oracle steps, the mail, files, sheet and
+  chat read through the mounts and every other tool through its CLI, each
+  step timed and kept, and ``solution/trajectory.py``, which writes them as
+  the agent's trajectory. Not committed.
 
 It also writes ``harbor/job.yaml`` and the native grader's manifest,
 ``graders/manifest.json``: upstream's scoring constants, and per task the
@@ -44,9 +50,12 @@ Harbor's layout (``environment/mirage.yaml``, ``tests/<file>``);
 import argparse
 import hashlib
 import json
+import re
 import shlex
+import sqlite3
 import sys
 import tempfile
+from contextlib import closing
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -85,6 +94,13 @@ from erpbench100.world import tool_definitions  # noqa: E402
 
 # Mirage registers a `slack` CLI of its own, and a name is registered once.
 CLI_NAMES = {"slack": "slack-tools"}
+# The reads a mount serves (mocks/erpbench/routes.ts); the CLIs keep the rest.
+MOUNTED = ("gmail.messages.get", "gmail.drafts.get",
+           "google_drive.files.download",
+           "google_sheets.spreadsheets.values.get",
+           "slack.conversations_history")
+# The oracle's trajectory writer, its solution/trajectory.py.
+TRAJECTORY = HERE / "trajectory.py"
 
 
 def cli(server: str) -> str:
@@ -108,7 +124,8 @@ def tools_json(tools: list[dict]) -> list[dict]:
         cli(server),
         "description":
         f"ERPBench's {server} tools.",
-        "tools": [{
+        "tools":
+        [{
             "name": t["name"].split(".", 1)[1],
             "call": t["name"],
             "description": t["description"],
@@ -117,24 +134,35 @@ def tools_json(tools: list[dict]) -> list[dict]:
                 "url": f"http://erpbench/{t['name']}",
                 "method": "POST"
             },
-        } for t in tools if t["name"].split(".", 1)[0] == server],
+        } for t in tools
+         if t["name"].split(".", 1)[0] == server and t["name"] not in MOUNTED],
     } for server in SERVERS]
 
 
 TOOLS_INTRO = (
     "## Tools\n"
     "\n"
+    "The mailbox is mounted at /gmail\n"
+    "(`/gmail/<label>/<day>/<subject>__<id>.gmail.json`, drafts under\n"
+    "`/gmail/DRAFT`), the shared drive at /drive (`/drive/<file name>`),\n"
+    "the operations spreadsheet at /sheets\n"
+    "(`/sheets/owned/<date>_<title>__<id>.gsheet.json`) and the chat at\n"
+    "/slack (`/slack/channels/<channel>__<id>/<day>/chat.jsonl`), all\n"
+    "read-only.\n"
+    "\n"
     "The connected systems are CLIs, one per system: `erpbench`,\n"
     "`oracle-fusion`, `gmail`, `google-drive`, `google-sheets` and\n"
     "`slack-tools` (`<cli> <command> --help` lists a command's\n"
-    "flags). Each command is one of the system's tools, and each\n"
-    "flag the tool's parameter of the same name; an object, or a\n"
-    "list of objects, takes a JSON string.\n")
+    "flags). They search and write; the mounts hold what they read.\n"
+    "Each command is one of the system's tools, and each flag the\n"
+    "tool's parameter of the same name; an object, or a list of\n"
+    "objects, takes a JSON string.\n")
 
 
 def instruction(upstream: str, tools: list[dict]) -> str:
     listed = "\n".join(f"- `{command(t['name'])}`: "
-                       f"{t['description'].splitlines()[0]}" for t in tools)
+                       f"{t['description'].splitlines()[0]}" for t in tools
+                       if t["name"] not in MOUNTED)
     return f"{upstream.rstrip()}\n\n{TOOLS_INTRO}\n{listed}\n"
 
 
@@ -157,15 +185,25 @@ build_timeout_sec = 300.0
 cpus = 1
 memory_mb = 2048
 storage_mb = 2048
-# The agent reaches the world through the systems' CLIs alone; curl and
-# wget are off (workspace/workspace.yaml).
+# The agent reaches the world through the systems' mounts and CLIs alone;
+# curl and wget are off (workspace/workspace.yaml).
 allow_internet = false
 """
+
+
+GOOGLE = "{accessToken: erpbench, apiBase: '${ERPBENCH_URL}'}"
+MOUNTS = (("/gmail", "gmail", GOOGLE), ("/drive", "gdrive", GOOGLE),
+          ("/sheets", "gsheets", GOOGLE),
+          ("/slack", "slack",
+           "{token: xoxb-erpbench, baseUrl: '${ERPBENCH_URL}/slack/api'}"))
 
 
 def mirage_yaml(task_id: str) -> str:
     clis = "\n".join(f"    {cli(s)}: {{cli: {cli(s)}, config: "
                      "{url: '${ERPBENCH_URL}'}}" for s in SERVERS)
+    mounts = "\n".join(f"    {path}: {{vfs: {vfs}, mode: read, index: "
+                       f"{{type: ram, ttl: 0}}, config: {config}}}"
+                       for path, vfs, config in MOUNTS)
     head = (f"# {task_id}, on vfsbench_harbor's mirage environment "
             "(datasets/erpbench/convert.py writes it).")
     return f"""{head}
@@ -173,8 +211,11 @@ def mirage_yaml(task_id: str) -> str:
 # The task's world is the erpbench kit fake (mocks/erpbench), seeded with
 # the world upstream builds for the task (state/erpbench/kit/, outside the
 # workspace), its clock at upstream's as-of time. Its tools are one CLI per
-# system (tools.json, workspace/tools.ts). MirageVerifier grades it
-# natively, from the fake's private state view.
+# system (tools.json, workspace/tools.ts); the mail, files, sheet and chat
+# are also Mirage's own mounts on the same fake, which answers their APIs
+# (the tokens are unchecked). Mirage's cache and listing index are off, so
+# every read reaches the fake, which records it (graders/seen.ts).
+# MirageVerifier grades it natively, from the fake's private state view.
 fakes:
   erpbench:
     fixture: kit/erpbench.json
@@ -188,7 +229,10 @@ workspace:
       commands:
         deny:
         - commands: [curl, wget]
-          reason: the systems are reached through their CLIs
+          reason: the systems are reached through their mounts and CLIs
+  mounts:
+{mounts}
+  cache: {{type: ram, limit: 0}}
   clis:
 {clis}
 """
@@ -209,29 +253,149 @@ def argument(name: str, value, schema: dict) -> list[str]:
     return [flag(name), str(value)]
 
 
-def solve_sh(task: dict, tools: list[dict]) -> str:
+SOLVE_HEAD = """#!/usr/bin/env bash
+# Upstream's oracle steps (tests/task.json oracle_steps): the mail, files,
+# sheet and chat read through the mounts, every other tool through its CLI.
+# Each step waits a second, notes the workspace's time and keeps its command
+# and output; trajectory.py writes them as the agent's trajectory, whose
+# steps show the grader each mount read (graders/seen.ts). The wait keeps a
+# read in its own step: the workspace clock runs a little behind the host's.
+set -euo pipefail
+S=/tmp/oracle
+mkdir -p "$S"
+n=0
+step() {
+  n=$((n + 1))
+  cat > "$S/$n.cmd"
+  sleep 1
+  date +%s%3N > "$S/$n.at"
+  sh "$S/$n.cmd" > "$S/$n.out" 2>&1 || { cat "$S/$n.out"; exit 1; }
+  cat "$S/$n.out"
+}
+"""
+
+
+def mounted(step: dict, names: dict[str, str]) -> str:
+    """A read the CLIs no longer have, through its mount."""
+    tool, args = step["tool"], step.get("arguments", {})
+    if tool == "gmail.messages.get":
+        return f"cat /gmail/INBOX/*/*__{args['id']}.gmail.json"
+    if tool == "gmail.drafts.get":
+        return f"cat /gmail/DRAFT/*/*__{args['id']}.gmail.json"
+    if tool == "google_drive.files.download":
+        return "cat " + shlex.quote(f"/drive/{names[args['fileId']]}")
+    if tool == "google_sheets.spreadsheets.values.get":
+        return f"cat /sheets/owned/*__{args['spreadsheetId']}.gsheet.json"
+    channel = args["channel"].lstrip("#")
+    return f"cat /slack/channels/{channel}__*/*/chat.jsonl"
+
+
+def solve_sh(task: dict, tools: list[dict], names: dict[str, str]) -> str:
     schemas = {t["name"]: t["inputSchema"]["properties"] for t in tools}
-    lines = [
-        "#!/usr/bin/env bash", "# Upstream's oracle steps (tests/task.json "
-        "oracle_steps) as CLI calls.", "set -euo pipefail"
-    ]
+    lines = [SOLVE_HEAD.rstrip("\n")]
     for step in task["oracle_steps"]:
-        props = schemas[step["tool"]]
-        args = [
-            part for name, value in step.get("arguments", {}).items()
-            for part in argument(name, value, props.get(name, {}))
-        ]
-        lines.append(" ".join([command(step["tool"])] +
-                              [shlex.quote(a) for a in args]))
+        if step["tool"] in MOUNTED:
+            line = mounted(step, names)
+        else:
+            props = schemas[step["tool"]]
+            args = [
+                part for name, value in step.get("arguments", {}).items()
+                for part in argument(name, value, props.get(name, {}))
+            ]
+            line = " ".join([command(step["tool"])] +
+                            [shlex.quote(a) for a in args])
+        lines += ["step <<'STEP'", line, "STEP"]
+    lines.append('python3 /solution/trajectory.py "$S" '
+                 "/logs/agent/trajectory.json")
     return "\n".join(lines) + "\n"
 
 
-def kit(task: dict, tools: list[dict]) -> dict:
-    """What the fake reads for the task, outside the workspace."""
+def flat(text: str) -> str:
+    """Text as an agent may print it, compared: graders/seen.ts's flat."""
+    text = re.sub(r"\\+u([0-9a-fA-F]{4})", lambda m: chr(int(m.group(1), 16)),
+                  text)
+    text = re.sub(r"\\+[nrt]", "", text).replace("\\", "")
+    return re.sub(r"\s+", "", text).lower()
+
+
+def rendered(body: str) -> str:
+    """A message body's start as Mirage's `.gmail.json` prints it."""
+    return '"body_text":"' + json.dumps(body[:40], ensure_ascii=False)[1:-1]
+
+
+def witnesses(conn: sqlite3.Connection, task: dict) -> dict[str, dict]:
+    """Each Drive file's and Gmail message's witness (graders/seen.ts): the
+    first line after the first, within forty, whose first 50 characters are
+    in no other resource of the world nor the prompt, so it never is a
+    header the current and superseded versions of a file share. Without
+    one, a message's rendered start, or a file's first three lines."""
+    code = task["tenant_code"]
+    files = dict(
+        conn.execute(
+            "SELECT file_id, content FROM drive_files WHERE tenant_code = ?",
+            (code, )))
+    mails = dict(
+        conn.execute(
+            "SELECT message_id, body FROM mail_messages WHERE tenant_code = ?",
+            (code, )))
+    rest = [
+        row[0] for query in
+        ("SELECT ranges_json FROM spreadsheets WHERE tenant_code = ?",
+         "SELECT text FROM chat_messages WHERE tenant_code = ?",
+         "SELECT name FROM drive_files WHERE tenant_code = ?",
+         "SELECT subject FROM mail_messages WHERE tenant_code = ?")
+        for row in conn.execute(query, (code, ))
+    ] + [task["prompt"]]
+    texts = {**files, **mails}
+    flats = {rid: flat(text) for rid, text in texts.items()}
+    rest = [flat(text) for text in rest]
+    out = {}
+    for rid, text in texts.items():
+        others = [f for other, f in flats.items() if other != rid] + rest
+        lines = text.splitlines()
+        found = next((line[:50] for line in (lines[1:40] or lines)
+                      if len(flat(line[:50])) >= 10 and not any(
+                          flat(line[:50]) in o for o in others)), None)
+        if found is not None:
+            out[rid] = {"all": [found]}
+        elif rid in mails:
+            out[rid] = {"all": [rendered(text)]}
+        else:
+            out[rid] = {
+                "all": [
+                    line[:50] for line in lines[:3]
+                    if len(flat(line[:50])) >= 10
+                ]
+            }
+    return out
+
+
+def seeded(task: dict) -> str:
+    """The world upstream seeds for the task, as SQL."""
     with tempfile.TemporaryDirectory() as tmp:
         world = ErpWorld.create(task, Path(tmp) / "world.sqlite")
         sql = "\n".join(world.connection.iterdump())
         world.close()
+    return sql
+
+
+def drive_names(task: dict, sql: str | None = None) -> dict[str, str]:
+    """Each Drive file's name in the task's world, by id."""
+    with closing(sqlite3.connect(":memory:")) as conn:
+        conn.executescript(sql if sql is not None else seeded(task))
+        return dict(
+            conn.execute(
+                "SELECT file_id, name FROM drive_files WHERE tenant_code = ?",
+                (task["tenant_code"], )))
+
+
+def kit(task: dict, tools: list[dict]) -> dict:
+    """What the fake reads for the task, outside the workspace: the seeded
+    world, and the witnesses of its files and messages."""
+    sql = seeded(task)
+    with closing(sqlite3.connect(":memory:")) as conn:
+        conn.executescript(sql)
+        found = witnesses(conn, task)
     return {
         "task": {
             k: task[k]
@@ -240,14 +404,16 @@ def kit(task: dict, tools: list[dict]) -> dict:
         "model": world_model(task["tenant_code"]),
         "tools": tools,
         "sql": sql,
+        "witnesses": found,
     }
 
 
-def task_files(src: Path) -> tuple[dict[str, bytes], dict[str, bytes]]:
+def task_files(src: Path) -> tuple[dict[str, bytes], dict[str, bytes], dict]:
     """A task's files by their place in Harbor's layout: those committed,
-    and those git ignores (upstream's data)."""
+    and those git ignores (upstream's data); and the fake's kit."""
     task = json.loads((src / "tests" / "task.json").read_text())
     tools = tool_definitions(task["answer_schema"])
+    the_kit = kit(task, tools)
     committed = {
         "instruction.md":
         instruction((src / "instruction.md").read_text(), tools).encode(),
@@ -267,10 +433,13 @@ def task_files(src: Path) -> tuple[dict[str, bytes], dict[str, bytes]]:
         TEST_SH.read_bytes(),
     }
     ignored = {
-        "solution/solve.sh": solve_sh(task, tools).encode(),
+        "solution/solve.sh":
+        solve_sh(task, tools, drive_names(task, the_kit["sql"])).encode(),
+        "solution/trajectory.py":
+        TRAJECTORY.read_bytes(),
         "tests/task.json": (src / "tests" / "task.json").read_bytes(),
     }
-    return committed, ignored
+    return committed, ignored, the_kit
 
 
 def job_yaml(tasks: list[str]) -> str:
@@ -312,14 +481,16 @@ def manifest(tasks: dict[str, bytes]) -> dict:
             name: {
                 "native_state": {
                     "erpbench": {
-                        "service": "erpbench",
-                        "queries": ["baseline", "snapshot", "trace", "model"],
+                        "service":
+                        "erpbench",
+                        "queries":
+                        ["baseline", "snapshot", "trace", "model", "seen"],
                     }
                 },
                 "files": {
                     "task.json": hashlib.sha256(task_json).hexdigest()
                 },
-                "inputs": ["/tests/task.json"],
+                "inputs": ["/tests/task.json", "/logs/agent/trajectory.json"],
                 "trees": [],
             }
             for name, task_json in sorted(tasks.items())
@@ -354,17 +525,15 @@ def main() -> int:
             print(f"FAIL {name}: not an upstream task")
             failed += 1
             continue
-        committed, ignored = task_files(src)
+        committed, ignored, the_kit = task_files(src)
         files = placed(committed | ignored, "erpbench", name)
         target = OUT / name
         problems = [
             p for rel, data in files.items() for p in put(target / rel, data)
         ]
-        task = json.loads((src / "tests" / "task.json").read_text())
-        problems += put(
-            KIT / f"{name}.json",
-            (json.dumps(kit(task, tool_definitions(task["answer_schema"])),
-                        ensure_ascii=False) + "\n").encode())
+        problems += put(KIT / f"{name}.json",
+                        (json.dumps(the_kit, ensure_ascii=False) +
+                         "\n").encode())
         for path in sorted(target.rglob("*")):
             rel = path.relative_to(target).as_posix()
             if path.is_file() and rel not in files:

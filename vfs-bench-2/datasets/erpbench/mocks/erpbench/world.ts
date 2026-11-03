@@ -27,6 +27,8 @@ export interface Kit {
   model: Dict
   tools: Dict[]
   sql: string
+  /** The seeded files' and messages' witnesses (convert.py, graders/seen.ts). */
+  witnesses?: Record<string, { all?: string[]; any?: string[] }>
 }
 
 const json = (v: unknown) => dumps(v, true)

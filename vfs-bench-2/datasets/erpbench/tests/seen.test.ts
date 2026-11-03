@@ -79,9 +79,11 @@ test('all needs every fragment, any one, and none is always seen', () => {
 })
 
 test('the step is the latest at or before the read, whatever the array order', () => {
+  // Only entry 2 is a mount read here; its step is the one at 2000.
   const one = [{ idx: 2, at_ms: 2500, witness: { all: [WITNESS] } }]
-  assert.deepEqual(kept([step(1000, 'x'), step(3000, 'x'), step(2000, WITNESS)], one), [1, 3, 4, 5])
-  assert.deepEqual(kept([step(1000, 'x'), step(1100, WITNESS), step(3000, 'x')], [{ idx: 2, at_ms: 1100, witness: { all: [WITNESS] } }]), [1, 3, 4, 5])
+  assert.deepEqual(kept([step(1000, 'x'), step(3000, 'x'), step(2000, WITNESS)], one), [1, 2, 3, 4, 5])
+  const exact = [{ idx: 2, at_ms: 1100, witness: { all: [WITNESS] } }]
+  assert.deepEqual(kept([step(1000, 'x'), step(1100, WITNESS), step(3000, 'x')], exact), [1, 2, 3, 4, 5])
 })
 
 test('an oracle trajectory on the trial clock is moved to host time; a host agent is not', () => {
