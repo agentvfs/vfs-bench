@@ -397,6 +397,11 @@ test('a later sheet write wins where it overlaps an earlier one, and a far-off c
     await update('Register!A21:H21', [['first 4471', 'b', 'c', 'd', 'e', 'f', 'g', 'h']])
     await update('Register!A21', [['corrected 4471']])
     await update('Register!A1000000000', [['far 4471']])
+    await update('Register!K:L', [['column K 4471']])
+    const api = await fetch(`${fake.url}/_run/${r.run}/v4/spreadsheets/SHEET-NBR-OPS?includeGridData=true`)
+    const tabs = ((await api.json()) as { sheets: { data: { rowData: { values: { formattedValue?: string }[] }[] }[] }[] }).sheets
+    const at = tabs.flatMap((t) => t.data[0]!.rowData).map((row) => row.values.findIndex((c) => c.formattedValue === 'column K 4471'))
+    assert.ok(at.includes(10), `a whole-column range keeps its column: ${at.filter((i) => i >= 0)}`)
     const started = Date.now()
     const sheet = await r.line('cat /sheets/owned/*__SHEET-NBR-OPS.gsheet.json')
     assert.equal(sheet.exit, 0, sheet.stderr)

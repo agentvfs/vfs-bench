@@ -261,7 +261,7 @@ function anchor(key: string): { tab: string; row: number | null; col: number } {
   const tab = m[1] !== undefined ? m[1].replaceAll("''", "'") : m[2]!
   const row = m[4] === undefined ? null : Number(m[4]) - 1
   const col = m[3] === undefined ? 0 : column(m[3])
-  return row !== null && row < GRID.rows && col < GRID.cols ? { tab, row, col } : { tab, row: null, col: 0 }
+  return (row === null || row < GRID.rows) && col < GRID.cols ? { tab, row, col } : { tab, row: null, col: 0 }
 }
 
 /** A cell's value: a `PyFloat` as its number. */
