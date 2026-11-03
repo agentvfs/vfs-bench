@@ -560,6 +560,18 @@ function Terminal({ cell, onStop, onRetry }: { cell: Cell; onStop: () => void; o
       xterm.current = null
     }
   }, [])
+  // Ends a replay: stops its clock, and drops its lines if they are still
+  // to come, as each replay has a turn of its own.
+  const turn = useRef(0)
+  const replayEnds = useRef<() => void>(() => {})
+  const endReplay = useCallback(() => {
+    turn.current += 1
+    replayEnds.current()
+  }, [])
+  useEffect(() => endReplay, [endReplay])
+  useEffect(() => {
+    if (!replaying) endReplay()
+  }, [replaying, endReplay])
   // Append what came since the last look.
   const live = useCallback(() => {
     const term = xterm.current
@@ -571,12 +583,6 @@ function Terminal({ cell, onStop, onRetry }: { cell: Cell; onStop: () => void; o
   useEffect(() => {
     if (ready && !replaying) live()
   }, [ready, replaying, live])
-  // Stops a replay's clock, when one runs.
-  const replayEnds = useRef<() => void>(() => {})
-  useEffect(() => () => replayEnds.current(), [])
-  useEffect(() => {
-    if (!replaying) replayEnds.current()
-  }, [replaying])
   const play = async () => {
     const term = xterm.current
     if (!term) return
@@ -587,11 +593,18 @@ function Terminal({ cell, onStop, onRetry }: { cell: Cell; onStop: () => void; o
       return
     }
     if (!cell.trial) return
-    const steps = beats(await api.lines(cell.trial))
+    const mine = ++turn.current
     setReplaying(true)
     term.reset()
     written.current = unwritten()
     term.write(PROMPT + '\x1b[?25h')
+    const lines = await api.lines(cell.trial).catch((error: unknown) => {
+      console.error('replay:', error)
+      return null
+    })
+    if (turn.current !== mine) return
+    if (lines === null) return setReplaying(false)
+    const steps = beats(lines)
     const started = performance.now()
     let at = 0
     let shown = 0
@@ -710,7 +723,8 @@ function RunView({ id, onChange, head }: { id: string; onChange: () => void; hea
       <div className="terms">
         {job.cells.map((c, i) => (
           <div key={`${c.task}-${i}`} className={c.task === focus ? 'focus' : undefined}>
-            <Terminal cell={c} onStop={() => act(() => api.stopTrial(c.trial!))} onRetry={() => act(() => api.retry(id, [{ task: c.task, slot: c.slot }]))} />
+            {/* A retry's trial is a terminal of its own, live from its start. */}
+            <Terminal key={c.trial ?? ''} cell={c} onStop={() => act(() => api.stopTrial(c.trial!))} onRetry={() => act(() => api.retry(id, [{ task: c.task, slot: c.slot }]))} />
           </div>
         ))}
       </div>

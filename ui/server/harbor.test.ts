@@ -170,6 +170,46 @@ test('stopping a trial leaves a daemon that is not serving it alone', async () =
   }
 })
 
+test("stopping a trial kills it on the job's daemon that holds it", async () => {
+  const kills: string[] = []
+  const daemon = (id: string) =>
+    createServer((req, res) => {
+      if (req.method === 'POST') kills.push(req.url ?? '')
+      res.setHeader('content-type', 'application/json')
+      res.end(req.url === '/v1/workspaces' ? JSON.stringify([{ id }]) : '{}')
+    })
+  const [other, mine] = [daemon('u__1__env'), daemon('t__1__env')]
+  for (const d of [other, mine]) await new Promise<void>((r) => d.listen(0, '127.0.0.1', r))
+  const port = (d: typeof other) => (d.address() as AddressInfo).port
+  const root = await mkdtemp(join(tmpdir(), 'ui-'))
+  await mkdir(join(root, 'state/harbor/jobs/j/t__1/mirage'), { recursive: true })
+  for (const d of [other, mine]) await mkdir(join(root, `state/harbor/jobs/j/mirage-daemon-${port(d)}`))
+  try {
+    await new Harbor(root).stopTrial('jobs/j/t__1')
+    assert.deepEqual(kills, ['/v1/workspaces/t__1__env/kill'])
+  } finally {
+    other.close()
+    mine.close()
+  }
+})
+
+test("the form's 0 workers gives each trial a daemon, over the config's", async () => {
+  const root = await mkdtemp(join(tmpdir(), 'ui-'))
+  await mkdir(join(root, 'datasets/demo/harbor'), { recursive: true })
+  await writeFile(
+    join(root, 'datasets/demo/harbor/job.yaml'),
+    'environment:\n  kwargs:\n    workers: 4\n    seed: 1\ntasks:\n  - path: datasets/demo/a/harbor\n',
+  )
+  const harbor = new Harbor(root)
+  const run = (workers: number) =>
+    harbor.run({ config: 'datasets/demo/harbor/job.yaml', agent: 'oracle', concurrency: 1, attempts: 1, workers })
+  const kwargs = async (id: string) => JSON.parse(await readFile(join(root, 'state/harbor/console', `${id}.json`), 'utf8')).environment.kwargs
+  assert.deepEqual(await kwargs(await run(0)), { seed: 1 })
+  assert.deepEqual(await kwargs(await run(2)), { seed: 1, workers: 2 })
+  // uv finds no harbor project here and exits; wait for it.
+  for (let i = 0; i < 100 && harbor.busy; i++) await new Promise((r) => setTimeout(r, 100))
+})
+
 test('only this machine by name may reach the server', () => {
   assert.ok(localHost('localhost:8787'))
   assert.ok(localHost('127.0.0.1:5174'))

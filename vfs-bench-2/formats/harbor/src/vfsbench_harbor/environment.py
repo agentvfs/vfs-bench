@@ -663,21 +663,26 @@ class MirageEnvironment(BaseEnvironment):
         try:
             if self._client is not None:
                 try:
-                    # The workspace's history (each line, its output and
-                    # when it ran) outlives it, in the trial's mirage/.
-                    history = await self._client.get(
-                        f"/v1/workspaces/{self._workspace_id}/history")
-                    if history.status_code == 200:
-                        (self._run_dir / "history.json").write_text(
-                            history.text)
-                    await self._client.post(
-                        f"/v1/workspaces/{self._workspace_id}/close")
-                    if self._daemon_url is None and self._workers is None:
-                        await self._client.post("/v1/shutdown")
+                    try:
+                        # The workspace's history (each line, its output and
+                        # when it ran) outlives it, in the trial's mirage/.
+                        history = await self._client.get(
+                            f"/v1/workspaces/{self._workspace_id}/history")
+                        if history.status_code == 200:
+                            (self._run_dir / "history.json").write_text(
+                                history.text)
+                    finally:
+                        # Closed whether or not its history was saved: a
+                        # shared daemon outlives the trial.
+                        await self._client.post(
+                            f"/v1/workspaces/{self._workspace_id}/close")
+                        if self._daemon_url is None and self._workers is None:
+                            await self._client.post("/v1/shutdown")
                 except httpx.TransportError:
                     pass
-                await self._client.aclose()
-                self._client = None
+                finally:
+                    await self._client.aclose()
+                    self._client = None
         finally:
             # The daemon, then the mocks: each stops on SIGTERM.
             for process in reversed(self._processes):

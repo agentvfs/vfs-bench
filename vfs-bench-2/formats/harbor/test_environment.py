@@ -16,6 +16,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import PropertyMock, patch
 
+import httpx
 from harbor.models.trial.paths import TrialPaths
 from vfsbench_harbor import environment
 from vfsbench_harbor.environment import MirageEnvironment
@@ -292,6 +293,50 @@ class CanceledLayout(unittest.TestCase):
 
             asyncio.run(scenario())
             self.assertEqual(list(env._run_dir.iterdir()), [])
+
+
+class UnsavedHistory(unittest.TestCase):
+
+    def stop(self, run_dir: Path, history) -> None:
+        self.posted: list[str] = []
+
+        def answer(request: httpx.Request) -> httpx.Response:
+            if request.method == "GET":
+                return history(request)
+            self.posted.append(request.url.path)
+            return httpx.Response(200, json={})
+
+        env = object.__new__(MirageEnvironment)
+        env._client = httpx.AsyncClient(base_url="http://daemon",
+                                        transport=httpx.MockTransport(answer))
+        env._workspace_id = "t__env"
+        env._daemon_url = "http://daemon"
+        env._workers = None
+        env._processes = []
+        env._runs = []
+        env._run_dir = run_dir
+        client = env._client
+        try:
+            asyncio.run(env.stop(delete=False))
+        finally:
+            self.assertTrue(client.is_closed)
+            self.assertIsNone(env._client)
+
+    def test_a_failed_read_still_closes_the_workspace(self) -> None:
+
+        def history(request: httpx.Request) -> httpx.Response:
+            raise httpx.ConnectError("gone", request=request)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            self.stop(Path(tmp), history)
+        self.assertEqual(self.posted, ["/v1/workspaces/t__env/close"])
+
+    def test_a_failed_write_still_closes_the_workspace(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaises(FileNotFoundError):
+                self.stop(Path(tmp, "gone"),
+                          lambda request: httpx.Response(200, json=[]))
+        self.assertEqual(self.posted, ["/v1/workspaces/t__env/close"])
 
 
 if __name__ == "__main__":

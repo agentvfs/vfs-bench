@@ -724,10 +724,12 @@ export class Harbor {
       }).catch(() => ({ stdout: '' }))
       ports = [...stdout.matchAll(/^n.*:(\d+)$/gm)].map((m) => Number(m[1]))
     }
+    // The one holding the trial's workspace: a job over two datasets has a
+    // daemon for each, and a pid's other port is its SSH.
     for (const port of ports) {
       const base = `http://127.0.0.1:${port}`
-      const ok = await fetch(`${base}/v1/health`, { signal: AbortSignal.timeout(500) }).then((r) => r.ok, () => false)
-      if (ok) {
+      const get = (path: string) => fetch(base + path, { signal: AbortSignal.timeout(500) }).then((r) => (r.ok ? r.json() : null), () => null)
+      if (await this.workspace(trial, base, get)) {
         this.daemons.set(trial, base)
         return base
       }
@@ -817,8 +819,15 @@ export class Harbor {
         ...(effort ? { kwargs: { reasoning_effort: effort } } : {}),
       },
     ]
-    const workers = Math.floor(request.workers ?? 0)
-    if (workers > 0) doc.environment = { ...doc.environment, kwargs: { ...doc.environment?.kwargs, workers } }
+    // The form's workers over the config's: 0 is a daemon per trial, which
+    // only a missing key gives.
+    if (request.workers !== undefined) {
+      const workers = Math.floor(request.workers)
+      const kwargs = { ...doc.environment?.kwargs }
+      delete kwargs.workers
+      if (workers > 0) kwargs.workers = workers
+      doc.environment = { ...doc.environment, kwargs }
+    }
     doc.n_concurrent_trials = Math.max(1, Math.floor(request.concurrency))
     doc.n_attempts = Math.max(1, Math.floor(request.attempts))
     const short = agent.split(':').pop()!.toLowerCase().replace(/[^\w.-]+/g, '-')

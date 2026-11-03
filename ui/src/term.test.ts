@@ -1,13 +1,13 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import type { Line } from './api.ts'
-import { beats, code, next, output, PROMPT, REPLAY, typed, unwritten } from './term.ts'
+import { beats, next, output, PROMPT, REPLAY, typed, unwritten } from './term.ts'
 
 const line = (over: Partial<Line> = {}): Line => ({ command: 'echo hi', stdout: '', stderr: '', exit: 0, at: 0, ms: 0, ...over })
 const plain = (text: string) => text.replace(/\x1b\[[0-9;]*m/g, '')
 
 test('a command as bash echoes it typed: its code, a row that goes on with it behind `> `', () => {
-  assert.equal(code('# header\n\nlight-talk get-myuid\n  # note'), 'light-talk get-myuid')
+  assert.equal(plain(typed('cat <<EOF\n# heading\n\nEOF').join('')), 'cat <<EOF\n> # heading\n> \n> EOF')
   assert.equal(plain(typed("cat <<A\nx\nA").join('')), 'cat <<A\n> x\n> A')
   assert.match(typed('light-talk x')[0], /^\x1b\[38;2;130;80;223ml\x1b\[0m$/)
   assert.equal(plain(PROMPT), '$ ')

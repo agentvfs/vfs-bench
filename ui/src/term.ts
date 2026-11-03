@@ -41,18 +41,14 @@ function paint(hex: string, text: string): string {
 export const PROMPT = paint('#047857', '$ ')
 const MORE = paint('#8e8d8a', '> ')
 
-/** What a terminal shows of a line's command: its code, less comments and blank lines. */
-export function code(command: string): string {
-  return command
-    .split('\n')
-    .filter((l) => l.trim() && !/^\s*#/.test(l))
-    .join('\n')
-}
-
-/** A command's code a character at a time, each in its colour, as a replay types it. */
+/**
+ * A command as it was read, a character at a time, each in its colour, as a
+ * replay types it. Mirage reads each comment as a line of its own, which the
+ * server leaves out, so what is left is code, a heredoc's body whole.
+ */
 export function typed(command: string): string[] {
   const out: string[] = []
-  for (const [kind, part] of tokens(code(command)))
+  for (const [kind, part] of tokens(command))
     for (const char of part) out.push(char === '\n' ? `\n${MORE}` : paint(COLOURS[kind], char))
   return out
 }
@@ -117,7 +113,7 @@ export function beats(lines: Line[]): Beat[] {
   let ended: number | null = null
   return lines.map((line) => {
     const start = t + (ended === null ? REPLAY.first : Math.min(Math.max(line.at - ended, 0), REPLAY.idle))
-    const done = start + Math.min(code(line.command).length * REPLAY.perChar, REPLAY.type)
+    const done = start + Math.min(line.command.length * REPLAY.perChar, REPLAY.type)
     t = done + Math.min(line.ms ?? 0, REPLAY.run)
     ended = line.at + (line.ms ?? 0)
     return { line, start, typed: done, done: t }
