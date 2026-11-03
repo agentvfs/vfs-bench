@@ -24,7 +24,8 @@
     "endpoint": {
      "url": "http://localhost:9104/finance/transactions",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_transaction",
@@ -45,7 +46,8 @@
     "endpoint": {
      "url": "http://localhost:9104/finance/transactions/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -74,7 +76,8 @@
     "endpoint": {
      "url": "http://localhost:9110/crm/customers",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_customer",
@@ -95,7 +98,8 @@
     "endpoint": {
      "url": "http://localhost:9110/crm/customers/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -115,7 +119,8 @@
     "endpoint": {
      "url": "http://localhost:9109/rss/feeds",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_feed",
@@ -136,7 +141,8 @@
     "endpoint": {
      "url": "http://localhost:9109/rss/feeds/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_article",
@@ -157,7 +163,8 @@
     "endpoint": {
      "url": "http://localhost:9109/rss/articles/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }

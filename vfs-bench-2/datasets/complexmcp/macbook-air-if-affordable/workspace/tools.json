@@ -706,10 +706,12 @@
        "items": {
         "type": "number"
        },
-       "type": "array",
-       "default": []
+       "type": "array"
       }
-     }
+     },
+     "required": [
+      "numbers"
+     ]
     },
     "endpoint": {
      "url": "http://localhost:8000/sum_of_list",
@@ -727,10 +729,12 @@
        "items": {
         "type": "number"
        },
-       "type": "array",
-       "default": []
+       "type": "array"
       }
-     }
+     },
+     "required": [
+      "numbers"
+     ]
     },
     "endpoint": {
      "url": "http://localhost:8000/product_of_list",
@@ -748,10 +752,12 @@
        "items": {
         "type": "number"
        },
-       "type": "array",
-       "default": []
+       "type": "array"
       }
-     }
+     },
+     "required": [
+      "numbers"
+     ]
     },
     "endpoint": {
      "url": "http://localhost:8000/mean",
@@ -769,10 +775,12 @@
        "items": {
         "type": "number"
        },
-       "type": "array",
-       "default": []
+       "type": "array"
       }
-     }
+     },
+     "required": [
+      "numbers"
+     ]
     },
     "endpoint": {
      "url": "http://localhost:8000/median",
@@ -790,10 +798,12 @@
        "items": {
         "type": "number"
        },
-       "type": "array",
-       "default": []
+       "type": "array"
       }
-     }
+     },
+     "required": [
+      "numbers"
+     ]
     },
     "endpoint": {
      "url": "http://localhost:8000/mode",
@@ -811,10 +821,12 @@
        "items": {
         "type": "number"
        },
-       "type": "array",
-       "default": []
+       "type": "array"
       }
-     }
+     },
+     "required": [
+      "numbers"
+     ]
     },
     "endpoint": {
      "url": "http://localhost:8000/variance",
@@ -832,10 +844,12 @@
        "items": {
         "type": "number"
        },
-       "type": "array",
-       "default": []
+       "type": "array"
       }
-     }
+     },
+     "required": [
+      "numbers"
+     ]
     },
     "endpoint": {
      "url": "http://localhost:8000/standard_deviation",
@@ -2262,10 +2276,12 @@
        "items": {
         "type": "string"
        },
-       "type": "array",
-       "default": []
+       "type": "array"
       }
-     }
+     },
+     "required": [
+      "tokens"
+     ]
     },
     "endpoint": {
      "url": "http://localhost:8004/detokenize",
@@ -4943,12 +4959,12 @@
         "type": "string"
        },
        "type": "array",
-       "description": "A list of image URLs to attach to the moment. Can be empty if no images.",
-       "default": []
+       "description": "A list of image URLs to attach to the moment. Can be empty if no images."
       }
      },
      "required": [
-      "content"
+      "content",
+      "img_urls"
      ]
     },
     "endpoint": {
@@ -5151,10 +5167,12 @@
         "type": "string"
        },
        "type": "array",
-       "description": "A list of UIDs to include as initial members of the group chat.",
-       "default": []
+       "description": "A list of UIDs to include as initial members of the group chat."
       }
-     }
+     },
+     "required": [
+      "uids"
+     ]
     },
     "endpoint": {
      "url": "http://localhost:9001/create_group_chat",
@@ -6405,10 +6423,12 @@
         "type": "string"
        },
        "type": "array",
-       "description": "An ordered list of city names representing the travel route.",
-       "default": []
+       "description": "An ordered list of city names representing the travel route."
       }
-     }
+     },
+     "required": [
+      "route"
+     ]
     },
     "endpoint": {
      "url": "http://localhost:9003/estimate_travel_weather",
@@ -6860,10 +6880,12 @@
         "type": "string"
        },
        "type": "array",
-       "description": "A list of booking IDs (BIDs) to cancel. All must be paid.",
-       "default": []
+       "description": "A list of booking IDs (BIDs) to cancel. All must be paid."
       }
-     }
+     },
+     "required": [
+      "bids"
+     ]
     },
     "endpoint": {
      "url": "http://localhost:9004/cancel_booking",

@@ -21,7 +21,8 @@
     "endpoint": {
      "url": "http://localhost:9102/todo/tasks",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "update_task",
@@ -61,7 +62,8 @@
     "endpoint": {
      "url": "http://localhost:9102/todo/tasks/update",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "create_task",
@@ -94,7 +96,8 @@
     "endpoint": {
      "url": "http://localhost:9102/todo/tasks/create",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "delete_task",
@@ -115,7 +118,8 @@
     "endpoint": {
      "url": "http://localhost:9102/todo/tasks/delete",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }

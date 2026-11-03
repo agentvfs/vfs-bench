@@ -12,7 +12,8 @@
  * - string, integer, number: a typed value, `choices` for an enum
  * - boolean: `--flag true|false`, or a bare `--flag` when the schema says
  *   `x-flag` (a CLI's own on/off switch)
- * - array of scalars: a repeatable flag
+ * - array of scalars: a repeatable flag, or one JSON array (`--ids '[]'`,
+ *   which repeating cannot say)
  * - anything else (objects, arrays of objects): one JSON value
  */
 import {
@@ -52,6 +53,14 @@ export interface Tool {
   parameters?: JsonSchema
   /** The name sent to the fake, when it differs from `name`. */
   call?: string
+  /**
+   * Whether the CLI holds a call to the schema, as OpenAI's `strict` holds
+   * a model's arguments to it; the default. With false, as a model's call
+   * reaches upstream's service unchecked, no flag is required, typed or
+   * held to its choices: a value goes as the schema's type where it reads
+   * as one and as it is where not, and the service refuses what it refuses.
+   */
+  strict?: boolean
 }
 
 // `headers` go with every call: what the service needs to know of the session
@@ -139,6 +148,7 @@ interface Param {
   name: string
   kind: Kind
   item: Kind
+  strict: boolean
 }
 
 /** Whether a schema admits null, which a flag expresses by being left out. */
@@ -151,29 +161,60 @@ function nullable(schema: JsonSchema): boolean {
   )
 }
 
-function argumentFor(name: string, raw: JsonSchema, listed: boolean): [Argument, Param] {
+function argumentFor(name: string, raw: JsonSchema, listed: boolean, strict: boolean): [Argument, Param] {
   const schema = concrete(raw)
   // Strict function schemas list every parameter as required, defaults and
   // nulls included; a flag is required only when it cannot be left out.
   const kind = kindOf(schema)
-  const required = kind !== 'flag' && listed && raw.default === undefined && !nullable(raw)
+  const needed = kind !== 'flag' && listed && raw.default === undefined && !nullable(raw)
   const item = kind === 'list' ? kindOf(concrete(schema.items ?? {})) : kind
   const help = [
     schema.description,
     kind === 'json' ? shape(schema) : '',
     schema.default !== undefined ? `default ${JSON.stringify(schema.default)}` : '',
+    // What a strict flag's own checks would say.
+    !strict && schema.enum !== undefined ? `one of ${schema.enum.map(String).join(', ')}` : '',
+    !strict && needed ? 'required' : '',
   ]
     .filter(Boolean)
     .join('; ')
-  const init: ConstructorParameters<typeof Argument>[1] = { required, help: help === '' ? null : help }
-  if (kind === 'int') init.type = 'int'
-  else if (kind === 'float') init.type = 'float'
-  else if (kind === 'bool') init.choices = ['true', 'false']
-  else if (kind === 'flag') init.action = 'store_true'
+  const init: ConstructorParameters<typeof Argument>[1] = { required: strict && needed, help: help === '' ? null : help }
+  if (kind === 'flag') init.action = 'store_true'
   else if (kind === 'list') init.action = 'append'
   else if (kind === 'json') init.metavar = 'JSON'
-  if (kind === 'str' && schema.enum !== undefined) init.choices = schema.enum.map(String)
-  return [new Argument(flagOf(name), init), { name, kind, item }]
+  if (strict) {
+    if (kind === 'int') init.type = 'int'
+    else if (kind === 'float') init.type = 'float'
+    else if (kind === 'bool') init.choices = ['true', 'false']
+    else if (kind === 'str' && schema.enum !== undefined) init.choices = schema.enum.map(String)
+  }
+  return [new Argument(flagOf(name), init), { name, kind, item, strict }]
+}
+
+/** A loose flag's value as the schema's type where it reads as one, else as it is. */
+function loose(text: string, kind: Kind): unknown {
+  if (kind === 'int') return /^[+-]?\d+$/.test(text.trim()) ? Number(text) : text
+  if (kind === 'float') return text.trim() !== '' && Number.isFinite(Number(text)) ? Number(text) : text
+  if (kind === 'bool') return text === 'true' ? true : text === 'false' ? false : text
+  if (kind === 'json') {
+    try {
+      return JSON.parse(text)
+    } catch {
+      return text
+    }
+  }
+  return text
+}
+
+/** A list flag's one value as the JSON array it spells, if it is one. */
+function jsonArray(text: string): unknown[] | undefined {
+  if (!text.trimStart().startsWith('[')) return undefined
+  try {
+    const value: unknown = JSON.parse(text)
+    return Array.isArray(value) ? value : undefined
+  } catch {
+    return undefined
+  }
 }
 
 /** The tool's arguments, typed back from its flags. */
@@ -183,14 +224,19 @@ function argumentsFrom(params: Param[], ctx: Context): Record<string, unknown> {
   for (const p of params) {
     const key = keyOf(p.name)
     if (!(key in (ctx.flags ?? {}))) continue
-    if (p.kind === 'int') out[p.name] = flags.asInt(key)
+    if (!p.strict && (p.kind === 'int' || p.kind === 'float' || p.kind === 'bool' || p.kind === 'json'))
+      out[p.name] = loose(flags.asStr(key) ?? '', p.kind)
+    else if (p.kind === 'int') out[p.name] = flags.asInt(key)
     else if (p.kind === 'float') out[p.name] = flags.asFloat(key)
     else if (p.kind === 'bool') out[p.name] = flags.asStr(key) === 'true'
     else if (p.kind === 'flag') {
       if (flags.asBool(key)) out[p.name] = true
     }    else if (p.kind === 'list') {
       const values = flags.asList(key)
-      out[p.name] = p.item === 'int' || p.item === 'float' ? values.map(Number) : values
+      const array = values.length === 1 ? jsonArray(values[0]!) : undefined
+      out[p.name] =
+        array ??
+        (!p.strict ? values.map((v) => loose(v, p.item)) : p.item === 'int' || p.item === 'float' ? values.map(Number) : values)
     } else if (p.kind === 'json') {
       const text = flags.asStr(key) ?? ''
       try {
@@ -279,7 +325,9 @@ export function toolsCli(name: string, tools: Tool[], description?: string, send
     const path = commandPath(tool.name)
     const props = tool.parameters?.properties ?? {}
     const required = new Set(tool.parameters?.required ?? [])
-    const pairs = Object.entries(props).map(([param, schema]) => argumentFor(param, schema, required.has(param)))
+    const pairs = Object.entries(props).map(([param, schema]) =>
+      argumentFor(param, schema, required.has(param), tool.strict ?? true)
+    )
     let node = root
     for (const part of path) {
       if (!node.children.has(part)) node.children.set(part, { children: new Map() })

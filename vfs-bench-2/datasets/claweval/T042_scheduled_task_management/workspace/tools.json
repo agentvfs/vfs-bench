@@ -28,7 +28,8 @@
     "endpoint": {
      "url": "http://localhost:9112/scheduler/jobs",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_job",
@@ -49,7 +50,8 @@
     "endpoint": {
      "url": "http://localhost:9112/scheduler/jobs/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "create_job",
@@ -92,7 +94,8 @@
     "endpoint": {
      "url": "http://localhost:9112/scheduler/jobs/create",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "update_job",
@@ -136,7 +139,8 @@
     "endpoint": {
      "url": "http://localhost:9112/scheduler/jobs/update",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "delete_job",
@@ -157,7 +161,8 @@
     "endpoint": {
      "url": "http://localhost:9112/scheduler/jobs/delete",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "job_history",
@@ -183,7 +188,8 @@
     "endpoint": {
      "url": "http://localhost:9112/scheduler/jobs/history",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -219,7 +225,8 @@
     "endpoint": {
      "url": "http://localhost:9106/kb/search",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_article",
@@ -240,7 +247,8 @@
     "endpoint": {
      "url": "http://localhost:9106/kb/articles/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -277,7 +285,8 @@
     "endpoint": {
      "url": "http://localhost:9100/gmail/drafts/save",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }

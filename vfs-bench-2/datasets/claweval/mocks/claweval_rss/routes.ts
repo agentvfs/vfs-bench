@@ -9,15 +9,15 @@
  */
 import { route } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
 import type { Ctx, KitRoute, Reply } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
-import { REQUIRED, append, calls, isReply, load, logCall, model, ok, opt, pyNow } from '../claweval/store.ts'
+import { req, append, calls, isReply, load, logCall, model, ok, opt, pyNow } from '../claweval/store.ts'
 import type { Dict, Json } from '../claweval/store.ts'
 import type { C } from './config.ts'
 
-const FEEDS = { category: opt(null) }
-const ARTICLES = { source: opt(null), feed_name: opt(null), category: opt(null), max_results: opt(20) }
-const GET = { article_id: REQUIRED }
-const PUBLISH = { title: REQUIRED, content: REQUIRED, recipients: opt([]) }
-const FEED = { feed_id: REQUIRED }
+const FEEDS = { category: opt('str | None', null) }
+const ARTICLES = { source: opt('str | None', null), feed_name: opt('str | None', null), category: opt('str | None', null), max_results: opt('int', 20) }
+const GET = { article_id: req('str') }
+const PUBLISH = { title: req('str'), content: req('str'), recipients: opt('list[str]', []) }
+const FEED = { feed_id: req('str') }
 
 const copy = (a: Dict): Dict => structuredClone(a)
 

@@ -30,7 +30,8 @@
     "endpoint": {
      "url": "http://localhost:9102/todo/tasks/create",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "list_tasks",
@@ -48,7 +49,8 @@
     "endpoint": {
      "url": "http://localhost:9102/todo/tasks",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }

@@ -6,30 +6,30 @@
  */
 import { route } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
 import type { Ctx, KitRoute, Reply } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
-import { REQUIRED, append, calls, isReply, load, logCall, model, ok, opt, pyNow, save } from '../claweval/store.ts'
+import { req, append, calls, isReply, load, logCall, model, ok, opt, pyNow, save } from '../claweval/store.ts'
 import type { Dict, Json } from '../claweval/store.ts'
 import type { C } from './config.ts'
 
-const LIST = { status: opt(null), enabled: opt(null), tag: opt(null) }
-const GET = { job_id: REQUIRED }
+const LIST = { status: opt('str | None', null), enabled: opt('bool | None', null), tag: opt('str | None', null) }
+const GET = { job_id: req('str') }
 const CREATE = {
-  name: REQUIRED,
-  cron_expression: REQUIRED,
-  action: REQUIRED,
-  enabled: opt(true),
-  tags: opt(null),
-  created_by: opt(null),
+  name: req('str'),
+  cron_expression: req('str'),
+  action: req('str'),
+  enabled: opt('bool', true),
+  tags: opt('list[str] | None', null),
+  created_by: opt('str | None', null),
 }
 const UPDATE = {
-  job_id: REQUIRED,
-  enabled: opt(null),
-  cron_expression: opt(null),
-  name: opt(null),
-  action: opt(null),
-  tags: opt(null),
+  job_id: req('str'),
+  enabled: opt('bool | None', null),
+  cron_expression: opt('str | None', null),
+  name: opt('str | None', null),
+  action: opt('str | None', null),
+  tags: opt('list[str] | None', null),
 }
-const DELETE = { job_id: REQUIRED }
-const HISTORY = { job_id: REQUIRED, limit: opt(10) }
+const DELETE = { job_id: req('str') }
+const HISTORY = { job_id: req('str'), limit: opt('int', 10) }
 
 const copy = (j: Dict): Dict => structuredClone(j)
 

@@ -9,13 +9,13 @@
  */
 import { route } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
 import type { Ctx, KitRoute, Reply } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
-import { REQUIRED, append, calls, isReply, load, logCall, model, ok, opt, pyNow } from '../claweval/store.ts'
+import { req, append, calls, isReply, load, logCall, model, ok, opt, pyNow } from '../claweval/store.ts'
 import type { Dict, Json } from '../claweval/store.ts'
 import type { C } from './config.ts'
 
-const SEARCH = { query: REQUIRED, max_results: opt(10) }
-const FETCH = { url: REQUIRED, timeout_seconds: opt(30) }
-const NOTIFY = { channel: REQUIRED, message: REQUIRED, recipients: opt([]) }
+const SEARCH = { query: req('str'), max_results: opt('int', 10) }
+const FETCH = { url: req('str'), timeout_seconds: opt('int', 30) }
+const NOTIFY = { channel: req('str'), message: req('str'), recipients: opt('list[str]', []) }
 
 /** The characters Python's `str.split()` splits on. */
 const SPACES = /[\t\n\v\f\r\x1c-\x1f \x85\xa0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]+/u

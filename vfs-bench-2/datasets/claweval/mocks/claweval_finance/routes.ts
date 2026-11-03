@@ -5,13 +5,13 @@
  */
 import { route } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
 import type { Ctx, KitRoute, Reply } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
-import { REQUIRED, append, calls, isReply, load, logCall, model, ok, opt, pyNow } from '../claweval/store.ts'
+import { req, append, calls, isReply, load, logCall, model, ok, opt, pyNow } from '../claweval/store.ts'
 import type { Dict } from '../claweval/store.ts'
 import type { C } from './config.ts'
 
-const LIST = { start_date: opt(null), end_date: opt(null) }
-const GET = { transaction_id: REQUIRED }
-const SUBMIT = { title: REQUIRED, transactions: opt([]), total_amount: opt(0.0), content: opt(null), report_type: opt(null) }
+const LIST = { start_date: opt('str | None', null), end_date: opt('str | None', null) }
+const GET = { transaction_id: req('str') }
+const SUBMIT = { title: req('str'), transactions: opt('list[str]', []), total_amount: opt('float', 0.0), content: opt('str | None', null), report_type: opt('str | None', null) }
 
 const copy = (t: Dict): Dict => structuredClone(t)
 

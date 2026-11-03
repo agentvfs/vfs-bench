@@ -3,7 +3,7 @@
 [ATH-MaaS/complex-mcp](https://github.com/ATH-MaaS/complex-mcp) @ `7c01f92`,
 MIT: all 47 rows of `benchmark/data/data.parquet`, each over 14 of
 upstream's 15 MCP servers as kit fakes. Upstream's judge runs on Monty
-(`graders/`).
+(`graders/`), called as `run_benchmark.py` calls it.
 
 ## Fetch and run
 
@@ -39,7 +39,7 @@ read-only mounts and timeout cleanup.
 | Upstream | Here |
 |---|---|
 | `docker/start_benchmark_sandbox.sh` starts the 15 servers on ports 8000 to 8007 and 9000 to 9006 | Each server is a kit fake, `mocks/complexmcp_<server>/`, the job's own, at upstream's port; a trial is a run of each |
-| The client's `Toolbox` lists every server's tools for the model (`list_all`) | Each server is a CLI, `<server> <tool> --flag value` (`light-shop add-to-cart --sid ... --tid ... --cnt 1`), from `tools.json` (`tools.ts`); `instruction.md` lists every tool, as upstream's system prompt does |
+| The client's `Toolbox` lists every server's tools for the model (`list_all`) | Each server is a CLI, `<server> <tool> --flag value` (`light-shop add-to-cart --sid ... --tid ... --cnt 1`), a list or an object one JSON value (`--img-urls '[]'`), from `tools.json` (`tools.ts`); `instruction.md` lists every tool, as upstream's system prompt does |
 | `AgentClient.__login` logs into LightSystem, then each of the row's apps, with its seed | Each Light app's fixture is the login (`kit/login.json`: the seed, the apps in order); its fake makes the session from it at reset |
 | A call to a Light app gets the session's `session_id` added | A run is the session; a Light app's CLI also names the trial's run of LightSystem (below) |
 | A tool's reply is fastmcp's text (`pydantic_core.to_json` of the result, a string as it is), or the client's `{'status': 'error', ...}` for an error | The same text, byte for byte |
@@ -95,11 +95,9 @@ the fake, which runs nothing.
 
 ## Divergences
 
-- **Lists.** A list of scalars the CLI gets no value for is `[]`
-  (`post_moment`'s `--img-urls`, `cancel_booking`'s `--bids`): a repeatable
-  flag cannot say `[]` otherwise. Upstream refuses a call that leaves one
-  out. A union, `send_message_to_group`'s `at` (`list[str] | 'all'`), is a
-  JSON flag, `--at '"all"'`.
+- **Missing arguments.** The CLI refuses a call that leaves out a required
+  flag (`error: option '--tid' is required`) before it reaches the fake;
+  upstream's server answers pydantic's `Missing required argument`.
 - **Schemas.** A Light tool's flags are its MCP signature's, with
   `desc.json`'s descriptions, which upstream shows the model; they differ
   once: `desc.json` leaves out `comment_comment`'s `cid`, which the

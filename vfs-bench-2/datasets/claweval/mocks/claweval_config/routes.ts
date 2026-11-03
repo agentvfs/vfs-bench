@@ -6,14 +6,14 @@
  */
 import { route } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
 import type { Ctx, KitRoute, Reply } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
-import { REQUIRED, append, calls, isReply, load, logCall, model, ok, opt, pyNow, save } from '../claweval/store.ts'
+import { req, append, calls, isReply, load, logCall, model, ok, opt, pyNow, save } from '../claweval/store.ts'
 import type { Dict } from '../claweval/store.ts'
 import type { C } from './config.ts'
 
-const LIST = { status: opt(null), type: opt(null) }
-const GET = { integration_id: REQUIRED }
-const UPDATE = { integration_id: REQUIRED, status: opt(null), notes: opt(null) }
-const NOTIFY = { to: REQUIRED, subject: REQUIRED, body: REQUIRED }
+const LIST = { status: opt('str | None', null), type: opt('str | None', null) }
+const GET = { integration_id: req('str') }
+const UPDATE = { integration_id: req('str'), status: opt('str | None', null), notes: opt('str | None', null) }
+const NOTIFY = { to: req('str'), subject: req('str'), body: req('str') }
 
 const copy = (d: Dict): Dict => structuredClone(d)
 

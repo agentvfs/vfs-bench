@@ -232,9 +232,13 @@ built call.
 
 - **The agent's tools are CLIs** (`tools.ts`), one per service, `helpdesk
   get-ticket --ticket-id TK-1201`, and gmail and calendar are mounts and
-  `gws` (above). A call the CLI rejects never reaches the service, so it is
-  not a dispatch; upstream sends any input and the service's 422 counts
-  against robustness.
+  `gws` (above). No tool is `strict`: as upstream's dispatcher posts a
+  model's input unchecked, the CLI sends every call, a missing flag left
+  out and a value that is not its schema's type as it is, and the service
+  answers FastAPI's 422 (`store.ts`'s request models, upstream's
+  annotations in pydantic's lax mode), a dispatch that robustness counts.
+  A flag no tool has is still refused by the CLI, where upstream's model
+  dumps drop an unknown key; gws's own CLI checks its arguments.
 - **No direct access.** `curl` and `wget` are off in the workspace, so the
   services are reached through their tools, as upstream's model reaches
   them; `allow_internet` is on only for the trial's routes, which the

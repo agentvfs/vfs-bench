@@ -4,7 +4,7 @@ Once you've completed the task—or if you believe it's unsolvable—output [END
 
 ## Tools
 
-Each tool is a shell command, `<server> <tool> [--flag value ...]`, whose output is the tool's reply; `<server> <tool> --help` says more.
+Each tool is a shell command, `<server> <tool> [--flag value ...]`, whose output is the tool's reply; a list or an object is one JSON value (`--img-urls '[]'`), and `<server> <tool> --help` says more.
 
 ### math-server
 
@@ -40,13 +40,13 @@ Each tool is a shell command, `<server> <tool> [--flag value ...]`, whose output
 - `math-server is-odd --a <integer>`: Checks if a number is odd.
 - `math-server is-prime --a <integer>`: Checks if a number is prime.
 - `math-server nth-fibonacci --n <integer>`: Calculates the nth Fibonacci number.
-- `math-server sum-of-list [--numbers <value> ...]`: Calculates the sum of a list of numbers.
-- `math-server product-of-list [--numbers <value> ...]`: Calculates the product of a list of numbers.
-- `math-server mean [--numbers <value> ...]`: Calculates the mean of a list of numbers.
-- `math-server median [--numbers <value> ...]`: Calculates the median of a list of numbers.
-- `math-server mode [--numbers <value> ...]`: Calculates the mode of a list of numbers.
-- `math-server variance [--numbers <value> ...]`: Calculates the variance of a list of numbers.
-- `math-server standard-deviation [--numbers <value> ...]`: Calculates the standard deviation of a list of numbers.
+- `math-server sum-of-list --numbers <JSON>`: Calculates the sum of a list of numbers.
+- `math-server product-of-list --numbers <JSON>`: Calculates the product of a list of numbers.
+- `math-server mean --numbers <JSON>`: Calculates the mean of a list of numbers.
+- `math-server median --numbers <JSON>`: Calculates the median of a list of numbers.
+- `math-server mode --numbers <JSON>`: Calculates the mode of a list of numbers.
+- `math-server variance --numbers <JSON>`: Calculates the variance of a list of numbers.
+- `math-server standard-deviation --numbers <JSON>`: Calculates the standard deviation of a list of numbers.
 - `math-server clamp --value <number> --min-val <number> --max-val <number>`: Clamps a value between min_val and max_val.
 - `math-server hypot --a <number> --b <number>`: Calculates the hypotenuse of a right triangle with sides a and b.
 - `math-server cbrt --a <number>`: Calculates the cube root of a.
@@ -91,7 +91,7 @@ Each tool is a shell command, `<server> <tool> [--flag value ...]`, whose output
 ### lang-server
 
 - `lang-server tokenize --text <string>`: Simple whitespace-and-punctuation tokenizer.
-- `lang-server detokenize [--tokens <value> ...]`: Join tokens with spaces, simple heuristic.
+- `lang-server detokenize --tokens <JSON>`: Join tokens with spaces, simple heuristic.
 - `lang-server normalize-whitespace --text <string>`: Collapse consecutive whitespace into a single space and trim ends. Returns a cleaned string with normalized spacing suitable for downstream NLP tasks.
 - `lang-server remove-punctuation --text <string>`: Remove punctuation characters from `text`, leaving words and whitespace. Useful for simple token-counting or normalization when punctuation is not needed.
 - `lang-server count-words --text <string>`: Return the number of word tokens in `text` using the server tokenizer.
@@ -149,7 +149,7 @@ Each tool is a shell command, `<server> <tool> [--flag value ...]`, whose output
 - `crypto-server hmac-sign-hex --key <string> --message <string>`: Return HMAC-SHA256 signature (hex) for `message` with `key`.
 - `crypto-server hmac-verify-hex --key <string> --message <string> --signature <string>`: Verify that `signature` matches HMAC-SHA256(message,key) in a timing-safe way.
 - `crypto-server checksum-sha256-hex --text <string>`: Alias for SHA-256 digest of `text` (hex string).
-- `crypto-server random-choice --seq <value> ...`: Return a cryptographically-secure random element from `seq`.
+- `crypto-server random-choice --seq <JSON>`: Return a cryptographically-secure random element from `seq`.
 - `crypto-server secure-token-urlsafe [--length <integer>]`: Return a URL-safe secure token with the specified `length` (approx bytes).
 - `crypto-server file-digest --path <string> [--algo <string>]`: Compute the digest of a file at `path` using hash `algo` and return hex digest.
 - `crypto-server xor-bytes-hex --a-hex <string> --b-hex <string>`: XOR two equal-length hex-encoded byte strings and return hex-encoded result.
@@ -162,14 +162,14 @@ Each tool is a shell command, `<server> <tool> [--flag value ...]`, whose output
 - `graph-server is-bipartite --adj <JSON>`: Return True if graph `adj` is bipartite (2-colorable), False otherwise.
 - `graph-server connected-components --adj <JSON>`: Return a list of connected components (each a list of nodes) in `adj`.
 - `graph-server topological-sort --adj <JSON>`: Return a topological ordering of `adj` if it is a DAG; raises on cycles.
-- `graph-server mst-kruskal --edges <value> ... --nodes <value> ...`: Compute a Minimum Spanning Tree using Kruskal's algorithm. `edges` is a list of `(weight, u, v)` triples and `nodes` lists all nodes. Returns a list of edges included in the MST.
+- `graph-server mst-kruskal --edges <JSON> --nodes <JSON>`: Compute a Minimum Spanning Tree using Kruskal's algorithm. `edges` is a list of `(weight, u, v)` triples and `nodes` lists all nodes. Returns a list of edges included in the MST.
 - `graph-server shortest-path-unweighted --adj <JSON> --source <None>`: Compute shortest path distances in an unweighted graph (BFS distances).
 - `graph-server path-exists --adj <JSON> --a <None> --b <None>`: Return True if there exists a path from node `a` to node `b` in `adj`.
-- `graph-server adjacency-matrix --adj <JSON> --nodes <value> ...`: Build an adjacency matrix for `nodes` from adjacency mapping `adj`. Returns a square matrix of 0/1 ints where entry [i][j] is 1 if there is an edge.
+- `graph-server adjacency-matrix --adj <JSON> --nodes <JSON>`: Build an adjacency matrix for `nodes` from adjacency mapping `adj`. Returns a square matrix of 0/1 ints where entry [i][j] is 1 if there is an edge.
 - `graph-server adjacency-list-to-matrix --adj <JSON>`: Convert adjacency list mapping to an adjacency matrix using the list of keys as nodes.
 - `graph-server degree-centrality --adj <JSON>`: Return the degree (number of neighbors) for each node in `adj`.
 - `graph-server is-connected --adj <JSON>`: Return True if the graph `adj` is connected (single component).
-- `graph-server graph-complement --adj <JSON> --nodes <value> ...`: Return the complement graph of `adj` over the provided `nodes`. Nodes not present in `adj` are treated as having no neighbors.
+- `graph-server graph-complement --adj <JSON> --nodes <JSON>`: Return the complement graph of `adj` over the provided `nodes`. Nodes not present in `adj` are treated as having no neighbors.
 - `graph-server random-erdos-renyi --n <integer> --p <number>`: Generate a random undirected Erdos-Renyi graph with `n` nodes and edge probability `p`. Returns an adjacency mapping node -> list of neighbors.
 
 ### chem-server
@@ -226,7 +226,7 @@ Each tool is a shell command, `<server> <tool> [--flag value ...]`, whose output
 - `light-talk mark-as-read --uid <string>`: Mark the chat with a specific contact as read in LightTalk, clearing any unread message indicators.
 - `light-talk mark-as-unread --uid <string>`: Mark the chat with a specific contact as unread in LightTalk, so it appears as having new messages.
 - `light-talk get-my-moments`: Retrieve all moments (posts) that you have published in LightTalk.
-- `light-talk post-moment --content <string> [--img-urls <value> ...]`: Publish a new moment (post) in LightTalk with optional images.
+- `light-talk post-moment --content <string> --img-urls <JSON>`: Publish a new moment (post) in LightTalk with optional images.
 - `light-talk delete-moment --moid <string>`: Delete one of your own moments (posts) in LightTalk by its unique ID.
 - `light-talk get-shared-url-of-moment --uid <string> --moid <string>`: Generate a shareable URL for a specific moment posted by a contact in LightTalk.
 - `light-talk get-shared-url-of-contact --uid <string>`: Generate a shareable profile URL for a contact in LightTalk.
@@ -236,7 +236,7 @@ Each tool is a shell command, `<server> <tool> [--flag value ...]`, whose output
 - `light-talk change-my-ip --where <string>`: Change the current session's IP/address to one of the available choices.
 - `light-talk edit-remark --uid <string> --remark <string>`: Edit the remark/note associated with a contact in LightTalk.
 - `light-talk delete-remark --uid <string>`: Remove the remark/note associated with a contact in LightTalk.
-- `light-talk create-group-chat [--uids <value> ...]`: Create a new group chat with a list of participants in LightTalk.
+- `light-talk create-group-chat --uids <JSON>`: Create a new group chat with a list of participants in LightTalk.
 - `light-talk send-message-to-group --gid <string> --content <string> [--at <JSON>]`: Send a text message to a group chat, optionally addressing specific members.
 - `light-talk get-group-chat-history --gid <string>`: Retrieve the chat history of a specific group in LightTalk.
 - `light-talk send-image --uid <string> --img-url <string>`: Send an image to a specific contact in LightTalk by URL.
@@ -300,7 +300,7 @@ Each tool is a shell command, `<server> <tool> [--flag value ...]`, whose output
 - `light-weather get-air-quality --location <string>`: Get the current air quality index (AQI) and category for a location.
 - `light-weather get-sun-times --location <string>`: Get sunrise and sunset times for a location on the current date.
 - `light-weather convert-temperature --value <number> --from-unit <string> --to-unit <string>`: Convert a temperature value between Celsius, Fahrenheit, and Kelvin.
-- `light-weather estimate-travel-weather [--route <value> ...]`: Estimate current weather conditions along a travel route consisting of multiple cities.
+- `light-weather estimate-travel-weather --route <JSON>`: Estimate current weather conditions along a travel route consisting of multiple cities.
 - `light-weather compare-climate --location1 <string> --location2 <string>`: Compare average climate conditions (e.g., temperature, rainfall) between two locations.
 - `light-weather get-precip-probability --location <string> --next-hours <integer>`: Get the probability of precipitation for each hour over the next N hours in a location.
 - `light-weather get-wind-forecast --location <string> --hours <integer>`: Get a wind speed and direction forecast for a location over the next N hours.
@@ -325,7 +325,7 @@ Each tool is a shell command, `<server> <tool> [--flag value ...]`, whose output
 - `light-flight checkout-bookings`: Complete payment for all unpaid bookings in your cart in LightFlight.
 - `light-flight check-balance`: Check your current account balance in LightFlight.
 - `light-flight get-booking-history`: Retrieve your historical flight booking records in LightFlight.
-- `light-flight cancel-booking [--bids <value> ...]`: Cancel one or more paid bookings and receive a 95% refund in LightFlight.
+- `light-flight cancel-booking --bids <JSON>`: Cancel one or more paid bookings and receive a 95% refund in LightFlight.
 - `light-flight search-airports --airport-name <string>`: Search for airports by name (partial match) in LightFlight.
 - `light-flight star-airport --aid <string>`: Mark an airport as starred (favorited) in LightFlight for quick access.
 - `light-flight unstar-airport --aid <string>`: Remove an airport from your starred list in LightFlight.

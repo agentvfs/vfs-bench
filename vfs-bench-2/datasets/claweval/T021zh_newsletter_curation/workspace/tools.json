@@ -20,7 +20,8 @@
     "endpoint": {
      "url": "http://localhost:9109/rss/feeds",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "list_articles",
@@ -48,7 +49,8 @@
     "endpoint": {
      "url": "http://localhost:9109/rss/articles",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_article",
@@ -69,7 +71,8 @@
     "endpoint": {
      "url": "http://localhost:9109/rss/articles/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "publish",
@@ -102,7 +105,8 @@
     "endpoint": {
      "url": "http://localhost:9109/rss/publish",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }

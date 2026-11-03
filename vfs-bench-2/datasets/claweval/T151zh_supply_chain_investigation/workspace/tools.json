@@ -21,7 +21,8 @@
     "endpoint": {
      "url": "http://localhost:9107/helpdesk/tickets",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_ticket",
@@ -42,7 +43,8 @@
     "endpoint": {
      "url": "http://localhost:9107/helpdesk/tickets/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "update_ticket",
@@ -78,7 +80,8 @@
     "endpoint": {
      "url": "http://localhost:9107/helpdesk/tickets/update",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "close_ticket",
@@ -104,7 +107,8 @@
     "endpoint": {
      "url": "http://localhost:9107/helpdesk/tickets/close",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -129,7 +133,8 @@
     "endpoint": {
      "url": "http://localhost:9108/inventory/products",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_item",
@@ -150,7 +155,8 @@
     "endpoint": {
      "url": "http://localhost:9108/inventory/products/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -179,7 +185,8 @@
     "endpoint": {
      "url": "http://localhost:9104/finance/transactions",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_transaction",
@@ -200,7 +207,8 @@
     "endpoint": {
      "url": "http://localhost:9104/finance/transactions/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -229,7 +237,8 @@
     "endpoint": {
      "url": "http://localhost:9110/crm/customers",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_customer",
@@ -250,7 +259,8 @@
     "endpoint": {
      "url": "http://localhost:9110/crm/customers/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }

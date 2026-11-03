@@ -5,8 +5,8 @@
 # server (an unknown tool, a malformed call) are left out.
 light-talk list-ip-choices
 light-talk change-my-ip --where 'New York'
-light-talk post-moment --content 'Hello, world.'
+light-talk post-moment --content 'Hello, world.' --img-urls '[]'
 light-talk ask-for-privilege
-light-talk post-moment --content 'Hello, world.'
+light-talk post-moment --content 'Hello, world.' --img-urls '[]'
 light-talk acc-network
-light-talk post-moment --content 'Hello, world.'
+light-talk post-moment --content 'Hello, world.' --img-urls '[]'

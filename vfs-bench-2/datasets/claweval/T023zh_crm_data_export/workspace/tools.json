@@ -28,7 +28,8 @@
     "endpoint": {
      "url": "http://localhost:9110/crm/customers",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_customer",
@@ -49,7 +50,8 @@
     "endpoint": {
      "url": "http://localhost:9110/crm/customers/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "export_report",
@@ -83,7 +85,8 @@
     "endpoint": {
      "url": "http://localhost:9110/crm/export",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }

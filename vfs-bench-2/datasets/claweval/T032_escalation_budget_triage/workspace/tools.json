@@ -36,7 +36,8 @@
     "endpoint": {
      "url": "http://localhost:9100/gmail/drafts/save",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -67,7 +68,8 @@
     "endpoint": {
      "url": "http://localhost:9103/contacts/search",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get",
@@ -88,7 +90,8 @@
     "endpoint": {
      "url": "http://localhost:9103/contacts/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -114,7 +117,8 @@
     "endpoint": {
      "url": "http://localhost:9107/helpdesk/tickets",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_ticket",
@@ -135,7 +139,8 @@
     "endpoint": {
      "url": "http://localhost:9107/helpdesk/tickets/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "update_ticket",
@@ -171,7 +176,8 @@
     "endpoint": {
      "url": "http://localhost:9107/helpdesk/tickets/update",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -204,7 +210,8 @@
     "endpoint": {
      "url": "http://localhost:9110/crm/customers",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_customer",
@@ -225,7 +232,8 @@
     "endpoint": {
      "url": "http://localhost:9110/crm/customers/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -254,7 +262,8 @@
     "endpoint": {
      "url": "http://localhost:9104/finance/transactions",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_transaction",
@@ -275,7 +284,8 @@
     "endpoint": {
      "url": "http://localhost:9104/finance/transactions/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }

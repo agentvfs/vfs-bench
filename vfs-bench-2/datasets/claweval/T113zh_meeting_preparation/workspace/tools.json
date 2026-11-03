@@ -26,7 +26,8 @@
     "endpoint": {
      "url": "http://localhost:9103/contacts/search",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get",
@@ -47,7 +48,8 @@
     "endpoint": {
      "url": "http://localhost:9103/contacts/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }

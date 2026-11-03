@@ -5,6 +5,6 @@
 # server (an unknown tool, a malformed call) are left out.
 light-talk get-myuid
 crypto-server sha256 --text user_VffA2PHphcZfATBu5p6hMR
-light-talk post-moment --content 52b9433ce4e5207b39ea434fcedbeb2435a9e7502db37940412d3ff9b169a159
+light-talk post-moment --content 52b9433ce4e5207b39ea434fcedbeb2435a9e7502db37940412d3ff9b169a159 --img-urls '[]'
 light-talk ask-for-privilege
-light-talk post-moment --content 52b9433ce4e5207b39ea434fcedbeb2435a9e7502db37940412d3ff9b169a159
+light-talk post-moment --content 52b9433ce4e5207b39ea434fcedbeb2435a9e7502db37940412d3ff9b169a159 --img-urls '[]'

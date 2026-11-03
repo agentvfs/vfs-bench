@@ -29,7 +29,8 @@
     "endpoint": {
      "url": "http://localhost:9109/rss/articles",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_article",
@@ -50,7 +51,8 @@
     "endpoint": {
      "url": "http://localhost:9109/rss/articles/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -87,7 +89,8 @@
     "endpoint": {
      "url": "http://localhost:9100/gmail/drafts/save",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }

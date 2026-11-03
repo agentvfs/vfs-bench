@@ -36,7 +36,8 @@
     "endpoint": {
      "url": "http://localhost:9100/gmail/drafts/save",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -61,7 +62,8 @@
     "endpoint": {
      "url": "http://localhost:9102/todo/tasks",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get_task",
@@ -82,7 +84,8 @@
     "endpoint": {
      "url": "http://localhost:9102/todo/tasks/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  },
@@ -108,7 +111,8 @@
     "endpoint": {
      "url": "http://localhost:9105/notes/list",
      "method": "POST"
-    }
+    },
+    "strict": false
    },
    {
     "name": "get",
@@ -129,7 +133,8 @@
     "endpoint": {
      "url": "http://localhost:9105/notes/get",
      "method": "POST"
-    }
+    },
+    "strict": false
    }
   ]
  }
