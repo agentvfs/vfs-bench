@@ -91,7 +91,9 @@ What this cannot carry:
   that prints neither its witness nor its text does not count; a `grep`
   that prints only other lines of a file does not either.
 - **Credit is per step.** A read counts when its step's output shows its
-  witness, whichever of the step's commands printed it.
+  witness, whichever of the step's commands printed it. Output that shows
+  only in a later step (a command left running and polled later) does not
+  count for the read.
 - **Mount reads without a usable trajectory fail the grade.** With mount
   reads recorded, a missing trajectory, one that is not JSON, or one with no
   timestamped agent step is the harness's failure, not the agent's, so the
@@ -102,10 +104,12 @@ What this cannot carry:
   that reads it, so listing a day records a read, which counts only where
   the step shows a message.
 - **What the mounts show.** An email's `task_id` field is not in its
-  `.gmail.json`; a sheet is its ranges merged onto tabs; a chat message's
-  `user` is the author's name. The Drive mount shows file names, not
-  upstream's `version` or `isCurrentAuthority`, which `google-drive files
-  list` and `get` still give.
+  `.gmail.json`; a sheet is its ranges merged onto tabs, each written range
+  over the ones before it, and one anchored past 10,000 rows or 1,000
+  columns below its tab's rows; a chat message's `user` is the author's
+  name. The Drive mount shows file names, not upstream's `version` or
+  `isCurrentAuthority`, which `google-drive files list` and `get` still
+  give.
 
 ## How the fake and grader are checked
 
