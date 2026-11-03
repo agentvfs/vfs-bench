@@ -178,9 +178,7 @@ table.kv { width: 100%; border-collapse: collapse; font-size: 12.5px; border: 1p
 .term header { display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 6px 0 10px; border-bottom: 1px solid var(--edge); font: 12px var(--mono); }
 .term header b { flex: 1; font-weight: 400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .term header .cell { width: 10px; height: 10px; flex: none; }
-.term .body { font-family: var(--font-code); height: 110px; padding: 8px 10px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; font-size: 11.5px; line-height: 1.5; }
-.term .cmd { white-space: pre; overflow: hidden; text-overflow: ellipsis; }
-.term .cmd::before { content: "$ "; color: var(--accent); }
+.term .screen { height: 180px; padding: 8px 10px; background: var(--surface); }
 
 .legend { display: flex; gap: 14px; flex-wrap: wrap; font: 12px var(--mono); color: var(--ink-muted); margin-top: 14px; }
 .legend .cell { display: inline-block; width: 10px; height: 10px; vertical-align: -1px; margin-right: 5px; }

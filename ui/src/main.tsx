@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import '@fontsource/jetbrains-mono/400.css'
 import '@fontsource/ibm-plex-mono/400.css'
 import '@fontsource/ibm-plex-mono/500.css'
+import '@xterm/xterm/css/xterm.css'
 import './styles.css'
 import { App } from './App.tsx'
 

@@ -44,8 +44,22 @@ export interface Cell {
   attempt: number
   /** Which of the job's attempts at this task the cell is, from 0 (`-k` gives several). */
   slot: number
-  /** The last commands its Mirage workspace ran, as Mirage's history records them. */
-  commands: string[]
+  /** The last lines its Mirage workspace ran, with their output, from Mirage's history. */
+  lines: Line[]
+}
+
+/** A line a trial's Mirage workspace ran, from Mirage's history of it. */
+export interface Line {
+  command: string
+  /** What it wrote, as Mirage keeps it, cut at `OUTPUT` characters; empty while it runs. */
+  stdout: string
+  stderr: string
+  /** Its exit status; null while it runs. */
+  exit: number | null
+  /** When it started, in the workspace's epoch milliseconds (its clock is the task's). */
+  at: number
+  /** How long it ran, in milliseconds; null while it runs. */
+  ms: number | null
 }
 
 export type JobStatus = 'running' | 'done' | 'stopped' | 'starting'
@@ -92,6 +106,10 @@ export interface RunRequest {
   model?: string
   concurrency: number
   attempts: number
+  /** The agent's `reasoning_effort` (`--ak`); empty keeps its default. */
+  effort?: string
+  /** The job's Mirage daemon workers (`--ek workers=<n>`); 0 gives each trial a daemon of its own. */
+  workers?: number
   /** Task-name globs, space-separated; empty runs every task. */
   filter?: string
 }
@@ -223,24 +241,47 @@ function rewardOf(result: any): number | null {
   return typeof value === 'number' ? value : null
 }
 
+/** How many lines a terminal shows, and how much of each line's output. */
+const LINES = 8
+const OUTPUT = 1000
+
 /**
- * What the agent ran, from a workspace's histfile. Left out: the histfile's
- * `#<epoch>` stamps; the task's setup (`setup`, the `run` of the trial's
- * plan.json); the environment Harbor exports ahead of each exec; Harbor's
- * own steps around the agent (making the oracle's script executable,
- * checking for artifacts); and everything from the verifier's first step
- * on, which is grading. The oracle's run of its script loses the redirect
- * Harbor wraps it in.
+ * What the agent ran, from a workspace's history (Mirage's
+ * `GET /v1/workspaces/<id>/history`): each `command` entry with the
+ * `result` entry naming it as its parent. Left out: the task's setup
+ * (`setup`, the `run` of the trial's plan.json); the environment Harbor
+ * exports ahead of each exec, in the same line; Harbor's own steps around
+ * the agent (making the oracle's script executable, checking for
+ * artifacts); and everything from the verifier's first step on, which is
+ * grading.
  */
-export function agentCommands(histfile: string, setup: string[] = []): string[] {
-  const out: string[] = []
-  for (const line of histfile.split('\n')) {
-    if (/^rm -f -- \/logs\/verifier\/|^chmod \+x \/tests\//.test(line)) break
-    if (!line.trim() || /^#\d+$/.test(line) || /^export \w+=/.test(line)) continue
-    if (/^chmod \+x \/solution\/|^test -d \/logs\//.test(line) || setup.includes(line.trim())) continue
-    out.push(line.replace(/^\((.+)\) > \/logs\/agent\/\S+ 2>&1$/, '$1').slice(0, 240))
+export function agentLines(history: any[], setup: string[] = [], last = LINES): Line[] {
+  const ends = new Map(history.filter((e) => e?.type === 'result').map((e) => [e.parent, e]))
+  const clip = (text: unknown) => (typeof text === 'string' ? text.slice(0, OUTPUT) : '')
+  const out: Line[] = []
+  for (const e of history) {
+    if (e?.type !== 'command' || typeof e.command !== 'string') continue
+    const command = e.command
+      .split('\n')
+      .filter((l: string) => !/^export \w+=/.test(l))
+      .join('\n')
+      .trim()
+    if (/^rm -f -- \/logs\/verifier\/|^chmod \+x \/tests\//.test(command)) break
+    if (!command || /^chmod \+x \/solution\/|^test -d \/logs\//.test(command) || setup.includes(command)) continue
+    // A line of comments only (a script's header, read as bash reads it)
+    // leaves a terminal nothing to show.
+    if (command.split('\n').every((l: string) => !l.trim() || /^\s*#/.test(l))) continue
+    const end = e.id === undefined ? undefined : ends.get(e.id)
+    out.push({
+      command,
+      stdout: clip(end?.stdout),
+      stderr: clip(end?.stderr),
+      exit: typeof end?.exit_code === 'number' ? end.exit_code : null,
+      at: typeof e.timestamp === 'number' ? e.timestamp : 0,
+      ms: typeof end?.duration_ms === 'number' ? end.duration_ms : null,
+    })
   }
-  return out.slice(-8)
+  return out.slice(-last)
 }
 
 /** Every dataset's job configs, `datasets/<dataset>/harbor/*.yaml`, by path from `root`. */
@@ -448,9 +489,9 @@ export class Harbor {
     return out.sort((a, b) => a.started - b.started)
   }
 
-  private async cell(task: string, slot: number, trial: string, attempt: number, commands = true): Promise<Cell> {
+  private async cell(task: string, slot: number, trial: string, attempt: number, lines = true): Promise<Cell> {
     const result = await json(join(this.jobsRoot, trial, 'result.json'))
-    const base = { task, slot, trial, attempt, reward: null, error: null, commands: commands ? await this.observed(trial, !result) : [] }
+    const base = { task, slot, trial, attempt, reward: null, error: null, lines: lines ? await this.observed(trial, !result) : [] }
     if (!result) return { ...base, state: 'in-progress' }
     const error = result.exception_info?.exception_type ?? null
     if (error === CANCELLED) return { ...base, state: 'not-started', error }
@@ -458,7 +499,7 @@ export class Harbor {
     return { ...base, state: reward !== null && reward >= 1 ? 'succeeded' : 'failed', reward, error }
   }
 
-  async detail(id: string, commands = true): Promise<JobDetail> {
+  async detail(id: string, lines = true): Promise<JobDetail> {
     const dir = this.dir(id)
     const brief = await this.brief(id)
     if (!brief) throw new Error(`No job ${id}`)
@@ -478,8 +519,8 @@ export class Harbor {
       const trial = started.get(task)?.[slot]
       cells.push(
         trial
-          ? await this.cell(task, slot, trial, 1, commands)
-          : { task, slot, trial: null, attempt: 1, state: 'not-started', reward: null, error: null, commands: [] }
+          ? await this.cell(task, slot, trial, 1, lines)
+          : { task, slot, trial: null, attempt: 1, state: 'not-started', reward: null, error: null, lines: [] }
       )
     }
     // A retry's trial stands in for the attempt it was asked to redo, the
@@ -494,14 +535,14 @@ export class Harbor {
         seen.set(t.task, k + 1)
         const slot = picks.filter((p) => p.task === t.task)[k]?.slot ?? 0
         const i = at(t.task, slot)
-        if (i >= 0) cells[i] = await this.cell(t.task, slot, t.trial, n + 2, commands)
+        if (i >= 0) cells[i] = await this.cell(t.task, slot, t.trial, n + 2, lines)
       }
       const launch = this.launches.get(retry)
       if (launch)
         for (const { task, slot } of launch.picks) {
           const i = at(task, slot)
           if (i >= 0 && cells[i].attempt < n + 2)
-            cells[i] = { task, slot, trial: null, attempt: n + 2, state: 'not-started', reward: null, error: null, commands: [] }
+            cells[i] = { task, slot, trial: null, attempt: n + 2, state: 'not-started', reward: null, error: null, lines: [] }
         }
     }
     const retrying = retries.some((r) => this.launches.has(r))
@@ -588,42 +629,38 @@ export class Harbor {
   }
 
   /**
-   * The commands a trial's workspace ran: Mirage's own record of them, its
-   * `/.bash_history`, which every session writes to (an agent over SSH
-   * too). Read from the trial's daemon while it runs; once it has ended, the
-   * copy a verifier saved, else the last one kept under
+   * The lines a trial's workspace ran, with their output: Mirage's history
+   * of it (`GET /v1/workspaces/<id>/history`), which every session writes
+   * to (an agent over SSH too). Read from the trial's daemon while it runs;
+   * once it has ended, the copy the environment saved as it closed the
+   * workspace (`mirage/history.json`), else the last one kept under
    * `<runs folder>/console/observed/`, since the daemon goes with the trial.
    */
-  private async observed(trial: string, live: boolean): Promise<string[]> {
-    const kept = join(this.configDir, 'observed', `${trial}.txt`)
-    let text: string | null = null
+  private async observed(trial: string, live: boolean, last = LINES): Promise<Line[]> {
+    const kept = join(this.configDir, 'observed', `${trial}.json`)
+    let history: unknown = null
     if (live) {
       const base = await this.daemon(trial)
       if (base) {
-        const get = (path: string, body?: unknown) =>
-          fetch(base + path, {
-            method: body ? 'POST' : 'GET',
-            headers: body ? { 'content-type': 'application/json' } : undefined,
-            body: body ? JSON.stringify(body) : undefined,
-            signal: AbortSignal.timeout(800),
-          }).then((r) => (r.ok ? r.json() : null), () => null)
-        const id = await this.workspace(trial, base, get)
-        const read = id ? await get(`/v1/workspaces/${id}/vfs/read`, { path: '/.bash_history' }) : null
-        if (typeof read === 'string') {
-          text = Buffer.from(read, 'base64').toString('utf8')
+        const get = (path: string) =>
+          fetch(base + path, { signal: AbortSignal.timeout(800) }).then((r) => (r.ok ? r.json() : null), () => null)
+        // Harbor names the workspace `<trial>__env`; a daemon without it is
+        // not this trial's (its port was reused after the trial ended).
+        const read = await get(`/v1/workspaces/${basename(trial)}__env/history${Number.isFinite(last) ? `?last=${last * 8}` : ''}`)
+        if (!Array.isArray(read) && this.daemons.get(trial) === base) this.daemons.delete(trial)
+        if (Array.isArray(read)) {
+          history = read
           await mkdir(dirname(kept), { recursive: true })
-          await writeFile(kept, text)
+          await writeFile(kept, JSON.stringify(read))
         }
       }
     }
-    // A verifier's copy is taken after the agent's last command; the kept
+    // The environment's copy is taken as the workspace closes; the kept
     // copy is only the last look before the daemon went.
-    text ??=
-      (await readFile(join(this.jobsRoot, trial, 'verifier', 'bash_history'), 'utf8').catch(() => null)) ??
-      (await readFile(kept, 'utf8').catch(() => ''))
+    history ??= (await json(join(this.jobsRoot, trial, 'mirage', 'history.json'))) ?? (await json(kept))
     const plan = await json(join(this.jobsRoot, trial, 'mirage', 'plan.json'))
     const setup = (Array.isArray(plan?.run) ? plan.run : []).map((r: any) => String(r?.line ?? r).trim())
-    return agentCommands(text, setup)
+    return agentLines(Array.isArray(history) ? history : [], setup, last)
   }
 
   /**
@@ -640,6 +677,13 @@ export class Harbor {
   }
 
   /** Stop one trial: kill its workspace, so the agent's next command fails and the trial ends. */
+  /** Every line the trial's agent ran, for a replay: a terminal shows only the last few. */
+  async lines(trial: string): Promise<Line[]> {
+    if (!/^[\w.-]+\/[\w.-]+\/[\w.-]+$/.test(trial) || trial.split('/').some((p) => /^\.+$/.test(p)))
+      throw new Error(`Not a trial: ${trial}`)
+    return this.observed(trial, !existsSync(join(this.jobsRoot, trial, 'result.json')), Infinity)
+  }
+
   async stopTrial(trial: string): Promise<void> {
     if (!/^[\w.-]+\/[\w.-]+\/[\w.-]+$/.test(trial) || trial.split('/').some((p) => /^\.+$/.test(p)))
       throw new Error(`Not a trial: ${trial}`)
@@ -663,6 +707,15 @@ export class Harbor {
     const dir = join(this.jobsRoot, trial, 'mirage')
     const logged = (await readFile(join(dir, 'daemon.log'), 'utf8').catch(() => '')).match(/HARBOR_SERVER=(\{.*\})/)
     let ports: number[] = logged ? [JSON.parse(logged[1]).port] : []
+    if (!ports.length) {
+      // The job's daemon (`--ek workers=<n>`), which its trials share: its
+      // home is the job's `mirage-daemon-<port>`.
+      const names = await readdir(dirname(join(this.jobsRoot, trial))).catch(() => [] as string[])
+      ports = names.flatMap((n) => {
+        const port = /^mirage-daemon-(\d+)$/.exec(n)?.[1]
+        return port ? [Number(port)] : []
+      })
+    }
     if (!ports.length) {
       const pid = (await readFile(join(dir, 'mirage-home', 'daemon.pid'), 'utf8').catch(() => '')).trim()
       if (!/^\d+$/.test(pid)) return null
@@ -756,12 +809,16 @@ export class Harbor {
     const agent = request.agent.trim()
     if (!agent) throw new Error('Name an agent')
     const model = request.model?.trim()
+    const effort = request.effort?.trim()
     doc.agents = [
       {
         ...(agent.includes(':') ? { import_path: agent } : { name: agent }),
         ...(model ? { model_name: model } : {}),
+        ...(effort ? { kwargs: { reasoning_effort: effort } } : {}),
       },
     ]
+    const workers = Math.floor(request.workers ?? 0)
+    if (workers > 0) doc.environment = { ...doc.environment, kwargs: { ...doc.environment?.kwargs, workers } }
     doc.n_concurrent_trials = Math.max(1, Math.floor(request.concurrency))
     doc.n_attempts = Math.max(1, Math.floor(request.attempts))
     const short = agent.split(':').pop()!.toLowerCase().replace(/[^\w.-]+/g, '-')

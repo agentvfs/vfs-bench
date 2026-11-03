@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
 import { localHost } from './api.ts'
-import { agentCommands, globs, Harbor, parseToml } from './harbor.ts'
+import { agentLines, globs, Harbor, parseToml } from './harbor.ts'
 
 async function put(path: string, value: unknown) {
   await mkdir(join(path, '..'), { recursive: true })
@@ -73,18 +73,31 @@ test('job ids cannot leave state/harbor', async () => {
   await assert.rejects(harbor.detail('jobs/../../x'), /Not a job/)
 })
 
-test('a box shows what the agent ran, not what Harbor ran around it', () => {
-  const histfile = [
-    '#1793405650', 'mkdir -p /workspace/output',
-    '#1793405650', 'chmod +x /solution/solve.sh',
-    '#1793405651', 'export DEBIAN_FRONTEND=noninteractive', '(/solution/solve.sh) > /logs/agent/oracle.txt 2>&1',
-    '#1793405651', 'test -d /logs/artifacts',
-    '#1793405651', 'rm -f -- /logs/verifier/reward.txt /logs/verifier/reward.json',
-    '#1793405651', 'chmod +x /tests/test.sh',
-    '#1793405651', '(/tests/test.sh) > /logs/verifier/test-stdout.txt 2>&1',
-  ].join('\n')
-  assert.deepEqual(agentCommands(histfile), ['mkdir -p /workspace/output', '/solution/solve.sh'])
-  assert.deepEqual(agentCommands(histfile, ['mkdir -p /workspace/output']), ['/solution/solve.sh'])
+test('a box shows what the agent ran, with its output, not what Harbor ran around it', () => {
+  // Mirage's history: a command entry per line, a result entry naming it.
+  const lines = [
+    'mkdir -p /workspace/output',
+    'chmod +x /solution/solve.sh',
+    'export DEBIAN_FRONTEND=noninteractive\nset -e\nlight-system now',
+    'test -d /logs/artifacts',
+    'light-talk get-myuid',
+    'rm -f -- /logs/verifier/reward.txt /logs/verifier/reward.json',
+    'chmod +x /tests/test.sh',
+  ]
+  const history = lines.flatMap((command, i) => [
+    { type: 'command', session: 'default', timestamp: 1000 + i, id: `l${i}`, command },
+    { type: 'result', session: 'default', timestamp: 1001 + i, parent: `l${i}`, exit_code: i === 4 ? 1 : 0, stdout: i === 4 ? 'user_1\n' : '', stderr: i === 4 ? 'slow\n' : '', duration_ms: 5 },
+  ])
+  history.push({ type: 'command', session: 'default', timestamp: 2000, id: 'l9', command: 'light-shop get-cart-summary' } as any)
+  const seen = agentLines(history.slice(0, 10).concat(history.slice(-1)))
+  assert.deepEqual(seen.map((l) => l.command), ['mkdir -p /workspace/output', 'set -e\nlight-system now', 'light-talk get-myuid', 'light-shop get-cart-summary'])
+  assert.deepEqual(seen[2], { command: 'light-talk get-myuid', stdout: 'user_1\n', stderr: 'slow\n', exit: 1, at: 1004, ms: 5 })
+  // Still running: no result yet.
+  assert.deepEqual([seen[3].exit, seen[3].ms, seen[3].stdout], [null, null, ''])
+  assert.deepEqual(agentLines(history, ['mkdir -p /workspace/output']).map((l) => l.command), ['set -e\nlight-system now', 'light-talk get-myuid'])
+  // A line of comments only shows nothing; a heredoc's `#` lines are its body.
+  const commented = ['#!/usr/bin/env bash', '# note\n\n# more', 'cat <<A\n# body\nA\n'].map((command, i) => ({ type: 'command', id: `c${i}`, command }))
+  assert.deepEqual(agentLines(commented).map((l) => l.command), ['cat <<A\n# body\nA'])
 })
 
 test('delete takes a run, its retries and nothing else', async () => {

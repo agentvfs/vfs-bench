@@ -1,6 +1,9 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import * as api from './api.ts'
-import type { Cell, Config, JobBrief, JobDetail, SettingsView, TaskBrief } from './api.ts'
+import type { Cell, Config, JobBrief, JobDetail, Line, SettingsView, TaskBrief } from './api.ts'
+import { FitAddon } from '@xterm/addon-fit'
+import { Terminal as XTerm } from '@xterm/xterm'
+import { beats, next, output, PROMPT, THEME, typed, unwritten, type Written } from './term.ts'
 import { Brand } from './Logo.tsx'
 import { Select } from './Select.tsx'
 
@@ -17,6 +20,9 @@ const MODELS: Record<string, string> = {
   'claude-code': 'anthropic/claude-sonnet-5-5',
   'dspy-rlm': 'openai/gpt-5.6-luna',
 }
+// Codex's and Claude Code's reasoning_effort; default leaves the agent's own.
+const EFFORTS = ['default', 'low', 'medium', 'high', 'xhigh']
+const EFFORT_AGENTS = new Set(['codex', 'claude-code'])
 const STATES: [Cell['state'], string][] = [
   ['not-started', 'not started'],
   ['in-progress', 'in progress'],
@@ -141,6 +147,8 @@ function NewRun({ config, onRun }: { config: Config; onRun: (id: string) => void
   const [model, setModel] = useState('')
   const [concurrency, setConcurrency] = useState(16)
   const [attempts, setAttempts] = useState(1)
+  const [effort, setEffort] = useState('default')
+  const [workers, setWorkers] = useState(0)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const needsModel = agent in MODELS
@@ -155,6 +163,8 @@ function NewRun({ config, onRun }: { config: Config; onRun: (id: string) => void
         model: needsModel ? model || MODELS[agent] : '',
         concurrency,
         attempts,
+        effort: EFFORT_AGENTS.has(agent) && effort !== 'default' ? effort : '',
+        workers,
       })
       onRun(id)
     } catch (e) {
@@ -177,6 +187,12 @@ function NewRun({ config, onRun }: { config: Config; onRun: (id: string) => void
             <input value={model} placeholder={MODELS[agent]} onChange={(e) => setModel(e.target.value)} />
           </label>
         )}
+        {EFFORT_AGENTS.has(agent) && (
+          <label>
+            <span className="label">Effort</span>
+            <Select label="Effort" value={effort} options={EFFORTS} onChange={setEffort} />
+          </label>
+        )}
         <label>
           <span className="label">Concurrency</span>
           <input type="number" min={1} max={512} step={1} value={concurrency} onChange={(e) => setConcurrency(Number(e.target.value) || 1)} />
@@ -184,6 +200,10 @@ function NewRun({ config, onRun }: { config: Config; onRun: (id: string) => void
         <label>
           <span className="label">Attempts</span>
           <input type="number" min={1} max={16} step={1} value={attempts} onChange={(e) => setAttempts(Number(e.target.value) || 1)} />
+        </label>
+        <label title="0: a Mirage daemon per trial">
+          <span className="label">Workers</span>
+          <input type="number" min={0} max={64} step={1} value={workers} onChange={(e) => setWorkers(Number(e.target.value) || 0)} />
         </label>
         <button className="primary" disabled={busy} onClick={submit}>
           {Icon.play} Run {config.tasks.length} tasks
@@ -492,7 +512,113 @@ function Legend() {
   )
 }
 
+/**
+ * A trial's terminal: xterm.js, written a history line at a time as bash
+ * echoes it and what it wrote (term.ts), so it wraps and scrolls as a
+ * terminal does and stays at its newest line. A live trial's lines are
+ * appended as they come; the prompt waits for the next one, with the cursor,
+ * while the trial runs. A replay types the trial's lines out again on their
+ * own clock.
+ */
 function Terminal({ cell, onStop, onRetry }: { cell: Cell; onStop: () => void; onRetry: () => void }) {
+  const host = useRef<HTMLDivElement>(null)
+  const xterm = useRef<XTerm | null>(null)
+  const written = useRef<Written>(unwritten())
+  const [ready, setReady] = useState(false)
+  const [replaying, setReplaying] = useState(false)
+  useEffect(() => {
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches
+    const term = new XTerm({
+      fontFamily: '"JetBrains Mono", ui-monospace, Menlo, monospace',
+      fontSize: 11.5,
+      lineHeight: 1.25,
+      theme: THEME,
+      convertEol: true,
+      disableStdin: true,
+      cursorBlink: !still,
+      cursorInactiveStyle: 'block',
+      scrollback: 5000,
+      smoothScrollDuration: still ? 0 : 160,
+    })
+    const fit = new FitAddon()
+    term.loadAddon(fit)
+    const resize = new ResizeObserver(() => fit.fit())
+    let gone = false
+    // Measured in the terminal's own font, once it has loaded.
+    document.fonts.load('11.5px "JetBrains Mono"').finally(() => {
+      if (gone || !host.current) return
+      term.open(host.current)
+      fit.fit()
+      resize.observe(host.current)
+      xterm.current = term
+      setReady(true)
+    })
+    return () => {
+      gone = true
+      resize.disconnect()
+      term.dispose()
+      xterm.current = null
+    }
+  }, [])
+  // Append what came since the last look.
+  const live = useCallback(() => {
+    const term = xterm.current
+    if (!term) return
+    term.write(next(cell.lines, written.current))
+    term.write(cell.state === 'in-progress' ? '\x1b[?25h' : '\x1b[?25l')
+    term.scrollToBottom()
+  }, [cell.lines, cell.state])
+  useEffect(() => {
+    if (ready && !replaying) live()
+  }, [ready, replaying, live])
+  // Stops a replay's clock, when one runs.
+  const replayEnds = useRef<() => void>(() => {})
+  useEffect(() => () => replayEnds.current(), [])
+  useEffect(() => {
+    if (!replaying) replayEnds.current()
+  }, [replaying])
+  const play = async () => {
+    const term = xterm.current
+    if (!term) return
+    if (replaying) {
+      setReplaying(false)
+      term.reset()
+      written.current = unwritten()
+      return
+    }
+    if (!cell.trial) return
+    const steps = beats(await api.lines(cell.trial))
+    setReplaying(true)
+    term.reset()
+    written.current = unwritten()
+    term.write(PROMPT + '\x1b[?25h')
+    const started = performance.now()
+    let at = 0
+    let shown = 0
+    const tick = setInterval(() => {
+      const now = performance.now() - started
+      while (at < steps.length) {
+        const step = steps[at]
+        if (now < step.start) break
+        const chars = typed(step.line.command)
+        const due = now >= step.typed ? chars.length : Math.ceil(((now - step.start) / (step.typed - step.start)) * chars.length)
+        if (due > shown) {
+          term.write(chars.slice(shown, due).join(''))
+          shown = due
+        }
+        if (shown < chars.length || now < step.done) break
+        term.write('\n' + output(step.line) + PROMPT)
+        at += 1
+        shown = 0
+      }
+      term.scrollToBottom()
+      if (at >= steps.length) {
+        clearInterval(tick)
+        term.write('\x1b[?25l')
+      }
+    }, 40)
+    replayEnds.current = () => clearInterval(tick)
+  }
   return (
     <div className="term" id={`term-${cell.task}`}>
       <header>
@@ -501,13 +627,21 @@ function Terminal({ cell, onStop, onRetry }: { cell: Cell; onStop: () => void; o
         {cell.state === 'in-progress' && cell.trial && (
           <button className="icon" title="Stop" aria-label={`Stop ${cell.task}`} onClick={onStop}>{Icon.stop}</button>
         )}
+        {finished(cell) && cell.lines.length > 0 && (
+          <button
+            className="icon"
+            title={replaying ? 'End the replay' : 'Replay'}
+            aria-label={`${replaying ? 'End the replay of' : 'Replay'} ${cell.task}`}
+            onClick={play}
+          >
+            {replaying ? Icon.close : Icon.play}
+          </button>
+        )}
         {finished(cell) && (
           <button className="icon" title="Retry" aria-label={`Retry ${cell.task}`} onClick={onRetry}>{Icon.retry}</button>
         )}
       </header>
-      <div className="body">
-        {cell.commands.map((c, i) => <div key={i} className="cmd">{c}</div>)}
-      </div>
+      <div className="screen" ref={host} />
     </div>
   )
 }

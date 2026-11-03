@@ -6,9 +6,10 @@
  *   GET  /api/jobs                 every job in the runs folder
  *   GET  /api/job?id=<dir>/<name>  one job's cells, live terminals and status
  *   GET  /api/tasks?dataset=        a dataset's tasks, as their directories describe them
+ *   GET  /api/lines?trial=<trial>  every line a trial's agent ran, with its output, for a replay
  *   GET  /api/settings             the folders in use, their defaults, and what is in them
  *   POST /api/settings {benchmark, runs}  change them ('' for the default)
- *   POST /api/run     {config, agent, model, concurrency, attempts, filter}
+ *   POST /api/run     {config, agent, model, concurrency, attempts, effort, workers, filter}
  *   POST /api/stop    {id}
  *   POST /api/stop-trial {trial}
  *   POST /api/resume  {id}
@@ -159,6 +160,7 @@ export function api() {
       if (route === 'GET /api/jobs') return send(res, 200, await h.jobs())
       if (route === 'GET /api/job') return send(res, 200, await h.detail(url.searchParams.get('id') ?? ''))
       if (route === 'GET /api/tasks') return send(res, 200, await h.tasks(url.searchParams.get('dataset') ?? ''))
+      if (route === 'GET /api/lines') return send(res, 200, await h.lines(url.searchParams.get('trial') ?? ''))
       if (route === 'POST /api/stop') return send(res, 200, await h.stop((await body(req)).id))
       if (route === 'POST /api/stop-trial') return send(res, 200, await h.stopTrial((await body(req)).trial))
       if (route === 'POST /api/delete') return send(res, 200, await h.remove((await body(req)).id))
