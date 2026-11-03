@@ -72,7 +72,7 @@ writes. The witnesses:
 
 | Read | Witness |
 |---|---|
-| a Drive file, an email | its first line after the first, within forty, whose first 50 characters (at least 10 flattened) are in no other file, email, sheet, chat message or the prompt (not a header line the current and superseded versions of a file share); an email without one (the request mail is the task's prompt) its start as the `.gmail.json` prints it, `"body_text":"...`, and a file without one its first three lines |
+| a Drive file, an email | its first line after the first, within forty, whose first 50 characters (at least 10 flattened) are in no other file, email, sheet, chat message or the prompt (not a header line the current and superseded versions of a file share); an email without one (the request mail is the task's prompt) its start as the `.gmail.json` prints it, `"body_text":"...`, and a file without one the first 50 characters of each of its first three lines that has at least 10 |
 | a draft | its start as the `.gmail.json` prints it |
 | a sheet's range | the text cells of its first two rows, or their numbers where it has no text |
 | a chat day | the start of any of its `chat.jsonl` lines |
@@ -92,9 +92,12 @@ What this cannot carry:
   that prints only other lines of a file does not either.
 - **Credit is per step.** A read counts when its step's output shows its
   witness, whichever of the step's commands printed it.
-- **A missing or broken trajectory fails the grade.** Mount reads with no
-  timestamped agent step to check them against are the harness's failure,
-  not the agent's, so the grade errors rather than dropping them.
+- **Mount reads without a usable trajectory fail the grade.** With mount
+  reads recorded, a missing trajectory, one that is not JSON, or one with no
+  timestamped agent step is the harness's failure, not the agent's, so the
+  grade errors rather than dropping them. Without mount reads (nop) the
+  trajectory is not read. An agent step without a timestamp counts with the
+  timestamped step before it, and a timestamp without a zone is UTC.
 - **A day's listing reads it.** Mirage lists a Slack day with the request
   that reads it, so listing a day records a read, which counts only where
   the step shows a message.

@@ -31,46 +31,55 @@ const skip = !existsSync(KIT) && 'run datasets/erpbench/download.py first'
 
 type Entry = { index: number; tool: string; arguments: Record<string, unknown>; success: boolean }
 
-let fake: { url: string; proc: ChildProcess; root: string }
+type Fake = { url: string; proc: ChildProcess; root: string }
+let fake: Fake
 let runs = 0
 
-before(async () => {
-  if (skip) return
+/** The fake as Harbor starts it, with `env` added. */
+async function startFake(env: Record<string, string> = {}): Promise<Fake> {
   const root = mkdtempSync(join(tmpdir(), 'erpbench-mounts-'))
   mkdirSync(join(root, 'fixtures', 'erpbench'), { recursive: true })
   writeFileSync(join(root, 'fixtures', 'erpbench', 'default.json'), '{"seed": []}\n')
   const proc = spawn(
     process.execPath,
     ['workspace/fakes.ts', '--service', 'erpbench', '--root', root, '--fixture', 'default', '--log', join(root, 'fake.log')],
-    { cwd: ROOT, env: { ...process.env, VFSBENCH_STATE_TOKEN: TOKEN }, stdio: ['pipe', 'pipe', 'inherit'] }
+    { cwd: ROOT, env: { ...process.env, ...env, VFSBENCH_STATE_TOKEN: TOKEN }, stdio: ['pipe', 'pipe', 'inherit'] }
   )
-  for await (const line of createInterface({ input: proc.stdout! })) {
-    if (line.startsWith('FAKE=')) {
-      fake = { url: JSON.parse(line.slice(5)).url, proc, root }
-      return
-    }
-  }
+  for await (const line of createInterface({ input: proc.stdout! })) if (line.startsWith('FAKE=')) return { url: JSON.parse(line.slice(5)).url, proc, root }
   throw new Error(`the fake did not start (see ${root})`)
-})
+}
 
-after(() => {
-  if (!fake) return
-  fake.proc.stdin!.end()
-  fake.proc.kill()
-  rmSync(fake.root, { recursive: true, force: true })
-})
+function stopFake(f: Fake): void {
+  f.proc.stdin!.end()
+  f.proc.kill()
+  rmSync(f.root, { recursive: true, force: true })
+}
 
-/** A fresh run of the task's world and a workspace with the task's four mounts on it. */
-async function open(): Promise<Run> {
+/** A fresh run of the task's world on `f`; its run id. */
+async function reset(f: Fake): Promise<string> {
   const run = `m${++runs}`
   const fixture = `t-${TASK}`
-  writeFileSync(join(fake.root, 'fixtures', 'erpbench', `${fixture}.json`), JSON.stringify({ seed: [{ id: 1, task: TASK }] }))
-  const reset = await fetch(`${fake.url}/reset`, {
+  writeFileSync(join(f.root, 'fixtures', 'erpbench', `${fixture}.json`), JSON.stringify({ seed: [{ id: 1, task: TASK }] }))
+  const reply = await fetch(`${f.url}/reset`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ run, fixture, epoch: AS_OF }),
   })
-  assert.equal(reset.status, 200, await reset.text())
+  assert.equal(reply.status, 200, await reply.text())
+  return run
+}
+
+before(async () => {
+  if (!skip) fake = await startFake()
+})
+
+after(() => {
+  if (fake) stopFake(fake)
+})
+
+/** A fresh run of the task's world and a workspace with the task's four mounts on it. */
+async function open(): Promise<Run> {
+  const run = await reset(fake)
   const block = parse(readFileSync(WORKSPACE_YAML, 'utf8')).workspace
   const config = JSON.parse(JSON.stringify({ mounts: block.mounts, cache: block.cache }).replaceAll('${ERPBENCH_URL}', `${fake.url}/_run/${run}`))
   const args = await configToWorkspaceArgs(loadWorkspaceConfig(config))
@@ -168,6 +177,9 @@ test('each mount read is recorded as upstream read tool, its witness in what the
 
     const day = await r.line('cat /slack/channels/ops-nbr__*/2026-02-09/chat.jsonl')
     assert.equal(day.exit, 0, day.stderr)
+    // The day's two messages at 09:00 keep one second, told apart by microseconds.
+    assert.deepEqual(day.stdout.split('\n').filter(Boolean).map((l) => JSON.parse(l).ts), ['1770627600.000000', '1770627600.000001'])
+    assert.match((await r.line('cat /slack/channels/customers-nbr__*/*/chat.jsonl')).stdout, /Oakline/)
     assert.ok(has(day.entries, 'slack.conversations_history', { channel: '#ops-nbr' }))
     assert.ok(of(day.entries, 'slack.conversations_history').every((e) => shows(day.stdout, witnessOf(day, e))))
 
@@ -312,6 +324,23 @@ test('a kit written before the mounts is refused, not read without witnesses', {
     assert.notEqual(run.status, 0)
     assert.match(run.stderr, /has no witnesses: run datasets\/erpbench\/download.py again/)
   } finally {
+    rmSync(state, { recursive: true, force: true })
+  }
+})
+
+test("a kit without a seeded file's witness fails the read, never counts it as seen", { skip }, async () => {
+  const state = mkdtempSync(join(tmpdir(), 'erpbench-no-witness-'))
+  mkdirSync(join(state, 'kit'))
+  writeFileSync(join(state, 'kit', `${TASK}.json`), JSON.stringify({ ...JSON.parse(readFileSync(KIT, 'utf8')), witnesses: {} }))
+  const other = await startFake({ ERPBENCH_STATE: state })
+  try {
+    const run = await reset(other)
+    const read = await fetch(`${other.url}/_run/${run}/drive/v3/files/FILE-NBR-ORDER-BATCH-0209?alt=media`)
+    assert.equal(read.status, 500, await read.text())
+    const view = await fetch(`${other.url}/_run/${run}/_verifier/state?query=seen`, { headers: { 'x-vfsbench-state-token': TOKEN } })
+    assert.deepEqual(JSON.parse(((await view.json()) as Record<string, { json: string }[]>)['query-0']![0]!.json), [])
+  } finally {
+    stopFake(other)
     rmSync(state, { recursive: true, force: true })
   }
 })

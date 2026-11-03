@@ -110,7 +110,9 @@ class OracleTests(unittest.TestCase):
         self.assertNotIn("/dev/null", script)
         body = script[script.index("step() {"):]
         body = body[:body.index("\n}\n")]
-        self.assertLess(body.index("sleep "), body.index("date +%s%3N"))
+        # The wait must outlast the workspace clock's lag behind the host's.
+        self.assertIn("\n  sleep 1\n", body)
+        self.assertLess(body.index("sleep 1"), body.index("date +%s%3N"))
         self.assertLess(body.index("date +%s%3N"),
                         body.index('sh "$S/$n.cmd"'))
         self.assertEqual(script.count("step <<'STEP'"),

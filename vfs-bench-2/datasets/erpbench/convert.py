@@ -261,8 +261,9 @@ SOLVE_HEAD = """#!/usr/bin/env bash
 # and output; trajectory.py writes them as the agent's trajectory, whose
 # steps show the grader each mount read (graders/seen.ts). The wait keeps a
 # read in its own step: the workspace clock starts when Mirage builds the
-# workspace, tens of ms after the time it was given, so it runs that much
-# behind the host's.
+# workspace, after the time it was given, so it runs behind the host's, by
+# tens of ms alone and by more on a daemon building many workspaces (0.2 s
+# was too little at --ek workers=8).
 set -euo pipefail
 S=/tmp/oracle
 mkdir -p "$S"
@@ -270,7 +271,7 @@ n=0
 step() {
   n=$((n + 1))
   cat > "$S/$n.cmd"
-  sleep 0.2
+  sleep 1
   date +%s%3N > "$S/$n.at"
   sh "$S/$n.cmd" > "$S/$n.out" 2>&1 || { cat "$S/$n.out"; exit 1; }
   cat "$S/$n.out"

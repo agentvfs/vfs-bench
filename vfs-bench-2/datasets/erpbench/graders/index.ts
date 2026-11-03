@@ -512,12 +512,14 @@ function seenRows(c: Context): Seen[] {
 
 const TRAJECTORY = '/logs/agent/trajectory.json'
 
-/** The agent's trajectory; none is null (nop). Mount reads with none to check them against fail the grade. */
+/**
+ * The agent's trajectory, read only where mount reads need checking against
+ * it (null without them, as for nop); with them, a missing or broken one
+ * fails the grade.
+ */
 function trajectory(c: Context, reads: number): unknown {
-  if (!c.exists(TRAJECTORY)) {
-    if (reads) throw new Error(`${reads} mount reads were recorded, but there is no ${TRAJECTORY}`)
-    return null
-  }
+  if (!reads) return null
+  if (!c.exists(TRAJECTORY)) throw new Error(`${reads} mount reads were recorded, but there is no ${TRAJECTORY}`)
   try {
     return JSON.parse(c.text(TRAJECTORY))
   } catch (error) {

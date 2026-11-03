@@ -65,6 +65,14 @@ test('a mount read counts only where its own step shows its witness', () => {
     ],
     ['a step with no output between', [step(1000, WITNESS), { source: 'agent', timestamp: new Date(1500).toISOString(), message: 'thinking' }, step(3000, 'x')], [1, 2, 4]],
     ['content that is no text', [step(1000, null), step(2000, [{ type: 'image' }, null]), step(3000, 'x')], [1, 4]],
+    [
+      'the witness in an untimestamped step after the read\'s',
+      [step(1000, 'x'), { source: 'agent', message: '', observation: { results: [{ content: WITNESS }] } }, step(3000, 'x')],
+      // Both reads before 3000 belong to the step at 1000, which the untimestamped step's output joins.
+      [1, 2, 3, 4],
+    ],
+    // On a host not on UTC, reading a zone-less time as local would move every step by hours.
+    ['timestamps without a zone', [step(1000, WITNESS), step(2000, 'x'), step(3000, 'x')].map((s) => ({ ...s, timestamp: s.timestamp.slice(0, -1) })), [1, 2, 4]],
     ['no agent step before the read', [step(5000, WITNESS)], [1, 4]],
   ]
   for (const [name, steps, want] of rows) assert.deepEqual(kept(steps), want, name)
@@ -153,7 +161,9 @@ print(json.dumps({"model": world_model(t["tenant_code"]), "before": run["before"
   const witness = '"body_text":"witness of the request mail'
   const json = (value: unknown) => [{ json: dumps(value) }]
   // An oracle's trajectory is on the trial clock, `epoch - host` ahead of the host's.
-  const grade = async (shown: string, name = 'codex', shift = 0, raw?: string | null, host = new Date(0).toISOString()) => {
+  const MOUNT_READ = JSON.stringify([{ idx: 0, at_ms: 1100, witness: { all: [witness] } }])
+  type Case = { name?: string; shift?: number; raw?: string | null; host?: string; epoch?: string; seen?: string }
+  const grade = async (shown: string, { name = 'codex', shift = 0, raw, host = new Date(0).toISOString(), epoch, seen = MOUNT_READ }: Case = {}) => {
     const trajectory = raw !== undefined ? raw : JSON.stringify({ agent: { name }, steps: [step(1000 + shift, shown)] })
     const result = await verify({
       dataset: 'erpbench',
@@ -164,14 +174,14 @@ print(json.dumps({"model": world_model(t["tenant_code"]), "before": run["before"
           'query-1': json(base.after),
           'query-2': json(trace),
           'query-3': json(base.model),
-          'query-4': [{ json: JSON.stringify([{ idx: 0, at_ms: 1100, witness: { all: [witness] } }]) }],
+          'query-4': [{ json: seen }],
         },
       },
       files: {
         '/tests/task.json': Buffer.from(readFileSync(`${TESTS}/task.json`)).toString('base64'),
         ...(trajectory === null ? {} : { '/logs/agent/trajectory.json': Buffer.from(trajectory).toString('base64') }),
       },
-      epoch: new Date(shift).toISOString(),
+      ...(epoch === '' ? {} : { epoch: epoch ?? new Date(shift).toISOString() }),
       host,
       timeoutSeconds: 120,
     })
@@ -179,9 +189,15 @@ print(json.dumps({"model": world_model(t["tenant_code"]), "before": run["before"
   }
   assert.equal(await grade(`shown: {${witness}}`), true)
   assert.equal(await grade('nothing shown'), false)
-  assert.equal(await grade(`shown: {${witness}}`, 'oracle', 6 * 3600_000), true)
+  assert.equal(await grade(`shown: {${witness}}`, { name: 'oracle', shift: 6 * 3600_000 }), true)
   // A mount read with no trajectory, or a broken one, is the harness's failure: the grade errors.
-  await assert.rejects(grade('', 'codex', 0, null), /no \/logs\/agent\/trajectory.json/)
-  await assert.rejects(grade('', 'codex', 0, '{not json'), /is not JSON/)
-  await assert.rejects(grade(`shown: {${witness}}`, 'codex', 0, undefined, 'not a time'), /Invalid clock/)
+  await assert.rejects(grade('', { raw: null }), /no \/logs\/agent\/trajectory.json/)
+  await assert.rejects(grade('', { raw: '{not json' }), /is not JSON/)
+  // Without mount reads (nop) the trajectory is not read: none, or a broken one, still grades (the
+  // stand-in read is then a CLI call, kept as upstream keeps it).
+  assert.equal(await grade('', { raw: null, seen: '[]' }), true)
+  assert.equal(await grade('', { raw: '{not json', seen: '[]' }), true)
+  await assert.rejects(grade('', { seen: '{}' }), /Invalid ERPBench seen/)
+  await assert.rejects(grade(`shown: {${witness}}`, { host: 'not a time' }), /Invalid clock/)
+  await assert.rejects(grade(`shown: {${witness}}`, { epoch: '' }), /Invalid clock/)
 })

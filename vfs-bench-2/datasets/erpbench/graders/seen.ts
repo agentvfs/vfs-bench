@@ -47,20 +47,33 @@ function textOf(content: unknown): string {
   return content.map((part) => (part && typeof part === 'object' && typeof part.text === 'string' ? part.text : '')).join('\n')
 }
 
-/** Each agent step with a timestamp: its time in host ms and its tool results, flattened. */
+/** An ATIF timestamp in ms; one without a zone is UTC, as Harbor writes them. */
+function msOf(timestamp: unknown): number {
+  if (typeof timestamp !== 'string') return NaN
+  return Date.parse(/(Z|[+-]\d\d:?\d\d)$/i.test(timestamp) ? timestamp : `${timestamp}Z`)
+}
+
+/**
+ * Each agent step with a timestamp: its time in host ms and its tool
+ * results, flattened. A step without one ran after the step before it, so
+ * its results count with that step's.
+ */
 function steps(trajectory: unknown, shiftMs: number): { at: number; shown: string }[] {
   if (!trajectory || typeof trajectory !== 'object') return []
   const { steps, agent } = trajectory as { steps?: unknown; agent?: { name?: unknown } }
   if (!Array.isArray(steps)) return []
   // An oracle writes its trajectory inside the workspace, on the trial's clock.
   const shift = agent?.name === 'oracle' ? shiftMs : 0
-  return steps.flatMap((step) => {
-    if (!step || typeof step !== 'object' || step.source !== 'agent') return []
-    const at = Date.parse(step.timestamp)
-    if (!Number.isFinite(at)) return []
+  const timeline: { at: number; shown: string }[] = []
+  for (const step of steps) {
+    if (!step || typeof step !== 'object' || step.source !== 'agent') continue
     const results: unknown[] = Array.isArray(step.observation?.results) ? step.observation.results : []
-    return [{ at: at - shift, shown: flat(results.map((r: any) => textOf(r?.content)).join('\n')) }]
-  })
+    const shown = flat(results.map((r: any) => textOf(r?.content)).join('\n'))
+    const at = msOf(step.timestamp)
+    if (Number.isFinite(at)) timeline.push({ at: at - shift, shown })
+    else if (timeline.length) timeline[timeline.length - 1]!.shown += shown
+  }
+  return timeline
 }
 
 /** Whether flattened output shows a witness. */
