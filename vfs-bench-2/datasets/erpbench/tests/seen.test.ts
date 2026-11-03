@@ -131,8 +131,9 @@ print(json.dumps({"model": world_model(t["tenant_code"]), "before": run["before"
   ]
   const witness = '"body_text":"witness of the request mail'
   const json = (value: unknown) => [{ json: dumps(value) }]
-  const grade = async (shown: string) => {
-    const trajectory = { agent: { name: 'codex' }, steps: [step(1000, shown)] }
+  // An oracle's trajectory is on the trial clock, `epoch - host` ahead of the host's.
+  const grade = async (shown: string, name = 'codex', shift = 0) => {
+    const trajectory = { agent: { name }, steps: [step(1000 + shift, shown)] }
     const result = await verify({
       dataset: 'erpbench',
       task: 'erpbench-001',
@@ -149,7 +150,7 @@ print(json.dumps({"model": world_model(t["tenant_code"]), "before": run["before"
         '/tests/task.json': Buffer.from(readFileSync(`${TESTS}/task.json`)).toString('base64'),
         '/logs/agent/trajectory.json': Buffer.from(JSON.stringify(trajectory)).toString('base64'),
       },
-      epoch: new Date(0).toISOString(),
+      epoch: new Date(shift).toISOString(),
       host: new Date(0).toISOString(),
       timeoutSeconds: 120,
     })
@@ -157,4 +158,5 @@ print(json.dumps({"model": world_model(t["tenant_code"]), "before": run["before"
   }
   assert.equal(await grade(`shown: {${witness}}`), true)
   assert.equal(await grade('nothing shown'), false)
+  assert.equal(await grade(`shown: {${witness}}`, 'oracle', 6 * 3600_000), true)
 })
