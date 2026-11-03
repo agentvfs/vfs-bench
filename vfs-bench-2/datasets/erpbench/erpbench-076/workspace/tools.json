@@ -1282,28 +1282,6 @@
     }
    },
    {
-    "name": "messages.get",
-    "call": "gmail.messages.get",
-    "description": "Read one mailbox message.",
-    "parameters": {
-     "type": "object",
-     "additionalProperties": false,
-     "properties": {
-      "id": {
-       "type": "string",
-       "description": "Message identifier"
-      }
-     },
-     "required": [
-      "id"
-     ]
-    },
-    "endpoint": {
-     "url": "http://erpbench/gmail.messages.get",
-     "method": "POST"
-    }
-   },
-   {
     "name": "drafts.create",
     "call": "gmail.drafts.create",
     "description": "Save a review-only email draft; drafts are never sent by the sandbox.",
@@ -1337,28 +1315,6 @@
     },
     "endpoint": {
      "url": "http://erpbench/gmail.drafts.create",
-     "method": "POST"
-    }
-   },
-   {
-    "name": "drafts.get",
-    "call": "gmail.drafts.get",
-    "description": "Read back one draft.",
-    "parameters": {
-     "type": "object",
-     "additionalProperties": false,
-     "properties": {
-      "id": {
-       "type": "string",
-       "description": "Draft identifier"
-      }
-     },
-     "required": [
-      "id"
-     ]
-    },
-    "endpoint": {
-     "url": "http://erpbench/gmail.drafts.get",
      "method": "POST"
     }
    }
@@ -1411,28 +1367,6 @@
      "url": "http://erpbench/google_drive.files.get",
      "method": "POST"
     }
-   },
-   {
-    "name": "files.download",
-    "call": "google_drive.files.download",
-    "description": "Download the content of one file.",
-    "parameters": {
-     "type": "object",
-     "additionalProperties": false,
-     "properties": {
-      "fileId": {
-       "type": "string",
-       "description": "File identifier"
-      }
-     },
-     "required": [
-      "fileId"
-     ]
-    },
-    "endpoint": {
-     "url": "http://erpbench/google_drive.files.download",
-     "method": "POST"
-    }
    }
   ]
  },
@@ -1440,33 +1374,6 @@
   "name": "google-sheets",
   "description": "ERPBench's google_sheets tools.",
   "tools": [
-   {
-    "name": "spreadsheets.values.get",
-    "call": "google_sheets.spreadsheets.values.get",
-    "description": "Read a range from the ops workbook.",
-    "parameters": {
-     "type": "object",
-     "additionalProperties": false,
-     "properties": {
-      "spreadsheetId": {
-       "type": "string",
-       "description": "Spreadsheet identifier"
-      },
-      "range": {
-       "type": "string",
-       "description": "A1 range"
-      }
-     },
-     "required": [
-      "spreadsheetId",
-      "range"
-     ]
-    },
-    "endpoint": {
-     "url": "http://erpbench/google_sheets.spreadsheets.values.get",
-     "method": "POST"
-    }
-   },
    {
     "name": "spreadsheets.values.update",
     "call": "google_sheets.spreadsheets.values.update",
@@ -1559,32 +1466,6 @@
   "name": "slack-tools",
   "description": "ERPBench's slack tools.",
   "tools": [
-   {
-    "name": "conversations_history",
-    "call": "slack.conversations_history",
-    "description": "Read a channel's messages, including task posts.",
-    "parameters": {
-     "type": "object",
-     "additionalProperties": false,
-     "properties": {
-      "channel": {
-       "type": "string",
-       "description": "Channel"
-      },
-      "task_id": {
-       "type": "string",
-       "description": "Filter to one task's posts"
-      }
-     },
-     "required": [
-      "channel"
-     ]
-    },
-    "endpoint": {
-     "url": "http://erpbench/slack.conversations_history",
-     "method": "POST"
-    }
-   },
    {
     "name": "search_messages",
     "call": "slack.search_messages",

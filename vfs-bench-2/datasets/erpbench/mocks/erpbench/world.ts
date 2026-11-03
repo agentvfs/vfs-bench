@@ -4,6 +4,7 @@
  * the run's SQLite file. Python ints are JS numbers (bigints past 2^53),
  * floats `PyFloat`s, as `Conn` reads them and `loads` parses them.
  */
+import type { Witness } from '../../graders/seen.ts'
 import { pyEq, pyLen, pyType, round, fsum, str, strip, toFloat, truthy, PyFloat } from '../../../../workspace/py.ts'
 import { loads } from '../../../enterpriseops/mocks/enterpriseops/py.ts'
 import type { Conn, Row } from '../../../enterpriseops/mocks/enterpriseops/sqlite.ts'
@@ -27,6 +28,8 @@ export interface Kit {
   model: Dict
   tools: Dict[]
   sql: string
+  /** The seeded files' and messages' witnesses (convert.py, graders/seen.ts). */
+  witnesses: Record<string, Witness>
 }
 
 const json = (v: unknown) => dumps(v, true)

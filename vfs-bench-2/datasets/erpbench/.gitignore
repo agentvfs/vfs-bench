@@ -1,5 +1,5 @@
 # Upstream's data, which download.py writes from the pinned checkout
 # (convert.py): each task's task.json, which the grader reads, and the
-# oracle's CLI calls.
+# oracle's steps and trajectory writer.
 /*/workspace/verifier/task.json
 /*/harbor/solution/

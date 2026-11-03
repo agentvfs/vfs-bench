@@ -169,8 +169,8 @@ class Fake:
 
     def view(self) -> dict:
         """The run's state as its verifier view serves MirageVerifier."""
-        queries = "&".join(f"query={q}"
-                           for q in ("baseline", "snapshot", "trace", "model"))
+        queries = "&".join(f"query={q}" for q in ("baseline", "snapshot",
+                                                  "trace", "model", "seen"))
         request = urllib.request.Request(
             f"{self.url}/_run/{self.run}/_verifier/state?{queries}",
             headers={"x-vfsbench-state-token": TOKEN})

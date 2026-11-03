@@ -3,8 +3,12 @@
 # The task's world is the erpbench kit fake (mocks/erpbench), seeded with
 # the world upstream builds for the task (state/erpbench/kit/, outside the
 # workspace), its clock at upstream's as-of time. Its tools are one CLI per
-# system (tools.json, workspace/tools.ts). MirageVerifier grades it
-# natively, from the fake's private state view.
+# system (tools.json, workspace/tools.ts); the mail, files, sheet and chat
+# are also Mirage's own mounts on the same fake, which answers their APIs
+# (the tokens are unchecked). Mirage's cache and listing index are off, so
+# every read the agent makes reaches the fake, which records the ones that
+# stand for upstream read tools (routes.ts, graders/seen.ts).
+# MirageVerifier grades it natively, from the fake's private state view.
 fakes:
   erpbench:
     fixture: fixtures/erpbench.json
@@ -18,7 +22,13 @@ workspace:
       commands:
         deny:
         - commands: [curl, wget]
-          reason: the systems are reached through their CLIs
+          reason: the systems are reached through their mounts and CLIs
+  mounts:
+    /gmail: {vfs: gmail, mode: read, index: {type: ram, ttl: 0}, config: {accessToken: erpbench, apiBase: '${ERPBENCH_URL}'}}
+    /drive: {vfs: gdrive, mode: read, index: {type: ram, ttl: 0}, config: {accessToken: erpbench, apiBase: '${ERPBENCH_URL}'}}
+    /sheets: {vfs: gsheets, mode: read, index: {type: ram, ttl: 0}, config: {accessToken: erpbench, apiBase: '${ERPBENCH_URL}'}}
+    /slack: {vfs: slack, mode: read, index: {type: ram, ttl: 0}, config: {token: xoxb-erpbench, baseUrl: '${ERPBENCH_URL}/slack/api'}}
+  cache: {type: ram, limit: 0}
   clis:
     erpbench: {cli: erpbench, config: {url: '${ERPBENCH_URL}'}}
     oracle-fusion: {cli: oracle-fusion, config: {url: '${ERPBENCH_URL}'}}

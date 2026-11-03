@@ -6,12 +6,21 @@ Use the evidence available in the connected systems. Leave unrelated records and
 
 ## Tools
 
+The mailbox is mounted at /gmail
+(`/gmail/<label>/<day>/<subject>__<id>.gmail.json`, drafts under
+`/gmail/DRAFT`), the shared drive at /drive (`/drive/<file name>`),
+the operations spreadsheet at /sheets
+(`/sheets/owned/<date>_<title>__<id>.gsheet.json`) and the chat at
+/slack (`/slack/channels/<channel>__<id>/<day>/chat.jsonl`), all
+read-only.
+
 The connected systems are CLIs, one per system: `erpbench`,
 `oracle-fusion`, `gmail`, `google-drive`, `google-sheets` and
 `slack-tools` (`<cli> <command> --help` lists a command's
-flags). Each command is one of the system's tools, and each
-flag the tool's parameter of the same name; an object, or a
-list of objects, takes a JSON string.
+flags). They search and write; the mounts hold what they read.
+Each command is one of the system's tools, and each flag the
+tool's parameter of the same name; an object, or a list of
+objects, takes a JSON string.
 
 - `erpbench get-task`: Read the task-scoped outcome contract without revealing the gold answer.
 - `erpbench get-decision`: Read back the durable decision record for a task.
@@ -53,15 +62,10 @@ list of objects, takes a JSON string.
 - `oracle-fusion absences list`: Get absence records.
 - `oracle-fusion absences create`: Record one absence for a worker.
 - `gmail messages list`: Search mailbox messages.
-- `gmail messages get`: Read one mailbox message.
 - `gmail drafts create`: Save a review-only email draft; drafts are never sent by the sandbox.
-- `gmail drafts get`: Read back one draft.
 - `google-drive files list`: List files; supports name contains 'text'.
 - `google-drive files get`: Read file metadata, version and current-authority flag.
-- `google-drive files download`: Download the content of one file.
-- `google-sheets spreadsheets values get`: Read a range from the ops workbook.
 - `google-sheets spreadsheets values update`: Write one controlled range; other cells are preserved.
 - `google-sheets spreadsheets values append`: Append rows to a tab.
-- `slack-tools conversations-history`: Read a channel's messages, including task posts.
 - `slack-tools search-messages`: Search messages across channels.
 - `slack-tools chat-postMessage`: Post the review handoff to a channel.

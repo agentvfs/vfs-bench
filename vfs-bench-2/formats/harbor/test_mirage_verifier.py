@@ -11,6 +11,7 @@ import tempfile
 import threading
 import time
 import unittest
+from datetime import datetime
 from pathlib import Path
 from unittest.mock import AsyncMock, Mock, patch
 
@@ -86,6 +87,25 @@ class MirageVerifierTests(unittest.IsolatedAsyncioTestCase):
         self.verifier = MirageVerifier(task=self.task,
                                        environment=self.env,
                                        trial_paths=self.paths)
+
+    async def test_request_carries_the_host_time_beside_the_trial_time(self):
+        # A grader relates the trial clock (date, file times in the
+        # workspace) to host time by epoch - host.
+        self.env._epoch = 1_770_627_600_000
+        self.env._started = int(time.time() * 1000) - 5_000
+        run = self.verifier._run
+        seen = {}
+
+        async def inspect(node, request):
+            seen.update(json.loads(request.read_text()))
+            return await run(node, request)
+
+        self.verifier._run = inspect
+        await self.verifier.verify()
+        shift = (datetime.fromisoformat(seen["epoch"]) -
+                 datetime.fromisoformat(seen["host"])).total_seconds() * 1000
+        self.assertLessEqual(
+            abs(shift - (self.env._epoch - self.env._started)), 1)
 
     async def test_rewards_use_fresh_state_and_ignore_agent_output(self):
         # An agent can forge its /logs, which is not the verifier's output.

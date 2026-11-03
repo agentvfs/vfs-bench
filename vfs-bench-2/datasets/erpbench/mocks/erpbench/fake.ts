@@ -2,21 +2,23 @@
  * ERPBench-100's world as a kit fake. A run is one task's world: the
  * fixture names the task (`_seed.task`), and `afterSeed` makes the run's
  * file from the world upstream seeds for it (convert.py's
- * `state/erpbench/kit/<task>.json`, never in the workspace), plus `_trace`.
+ * `state/erpbench/kit/<task>.json`, never in the workspace), plus `_trace`
+ * and `_seen` (run.ts).
  *
  *     POST /<tool>   a tool by its full name (`oracle_fusion.sales_orders.create`),
  *                    its arguments the JSON body. Upstream's `ErpWorld.call_tool`:
  *                    the result as `json.dumps(sort_keys=True)`, 200; an error
  *                    `{"error": ...}`, 400. Each call appends upstream's trace
  *                    entry (`_record`) to `_trace`, which its grader reads.
+ *     GET /gmail/v1/..., /drive/v3/..., /v4/spreadsheets/..., /slack/api/...
+ *                    the Gmail, Drive, Sheets and Slack APIs Mirage's mounts
+ *                    read, from the same world (routes.ts); a read stands for
+ *                    an upstream read tool and is recorded as one, with its
+ *                    witness in `_seen`.
  *
  * The CLI sends a whole float as an int, so before dispatch a value its
  * tool's schema types `number` becomes a float, as Python's `1250.0`.
  */
-import { readFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
-
 import { route } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
 import type { Ctx, Dmmf, Fake, Reply } from '../../../../submodule/mirage/integ/server/kit/typescript/index.ts'
 import { PyFloat } from '../../../../workspace/py.ts'
@@ -26,23 +28,9 @@ import { Conn, SqliteError } from '../../../enterpriseops/mocks/enterpriseops/sq
 import { Prisma } from './client/index.js'
 import { ErpClient, config } from './config.ts'
 import { type Dict, caught, deepcopy, dumps, isDict, put } from './py.ts'
-import { type Kit, SERVER_BY_PREFIX, World, snapshot } from './world.ts'
-
-/** Upstream's checkout and convert.py's per-task kits. */
-export const STATE = process.env.ERPBENCH_STATE ?? join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..', 'state', 'erpbench')
-
-const kits = new Map<string, Kit>()
-
-/** A task's kit, read once per process. */
-function kitOf(task: string): Kit {
-  let kit = kits.get(task)
-  if (kit === undefined) {
-    if (!/^erpbench-\d+$/.test(task)) throw new Error(`not an ERPBench task: ${task}`)
-    kit = loads<Kit>(readFileSync(join(STATE, 'kit', `${task}.json`), 'utf8'))
-    kits.set(task, kit)
-  }
-  return kit
-}
+import { restRoutes } from './routes.ts'
+import { kitOf, kitOfRun, onRun, record } from './run.ts'
+import { World, snapshot } from './world.ts'
 
 /** A value the schema types `number` as a float; objects and arrays by their properties and items. */
 function coerce(v: unknown, schema: unknown): unknown {
@@ -62,9 +50,7 @@ function reply(status: number, value: unknown): Reply {
 /** `ErpWorld.call_tool`, then `_record` into `_trace`. */
 function call(ctx: Ctx<ErpClient>): Reply {
   const tool = ctx.params.tool!
-  const conn = new Conn(ctx.db.file, () => ctx.clock.nowMs())
-  try {
-    const kit = kitOf(String(conn.execute('SELECT task FROM _seed').fetchone()?.task))
+  return onRun(ctx, ({ conn, kit }) => {
     const body = ctx.body.length === 0 ? {} : loads<unknown>(ctx.body.toString('utf8'))
     const definition = kit.tools.find((t) => t.name === tool)
     const args = (isDict(body) ? coerce(body, definition?.inputSchema) : {}) as Dict
@@ -81,22 +67,18 @@ function call(ctx: Ctx<ErpClient>): Reply {
         result = { error: error.message || (error as { kind?: string }).kind || error.constructor.name }
       }
     }
-    const index = (conn.execute('SELECT COUNT(*) AS n FROM _trace').fetchone()!.n as number) + 1
-    const entry = { index, server: SERVER_BY_PREFIX[tool.split('.')[0]!] ?? 'erpbench', tool, arguments: deepcopy(args), success, result: deepcopy(result) }
-    conn.execute('INSERT INTO _trace (idx, entry) VALUES (?, ?)', [index, dumps(entry)])
-    conn.commit()
+    record(conn, tool, args, success, result)
     return reply(success ? 200 : 400, result)
-  } finally {
-    conn.close()
-  }
+  })
 }
 
 /**
  * The state view's queries (workspace/fake-state.ts): what upstream's grader
  * reads. `baseline` is the world as seeded (`ErpWorld.create`, replayed in
  * memory), `snapshot` the run's world now, `trace` its calls, `model` the
- * task's world model. Each is one row whose `json` is the value as
- * `json.dumps` writes it, so floats stay floats.
+ * task's world model, each one row whose `json` is the value as
+ * `json.dumps` writes it, so floats stay floats; and `seen`, the mount
+ * reads' arrival times and witnesses, as JSON.
  */
 function verifierQuery(db: ErpClient, query: string, nowMs: number): ReturnType<VerifierQuery<ErpClient>> {
   const answer = (json: string) => ({ rows: [{ json }] })
@@ -104,8 +86,12 @@ function verifierQuery(db: ErpClient, query: string, nowMs: number): ReturnType<
   try {
     if (query === 'snapshot') return answer(dumps(snapshot(conn)))
     if (query === 'trace') return answer(`[${conn.execute('SELECT entry FROM _trace ORDER BY idx').fetchall().map((row) => row.entry).join(', ')}]`)
+    if (query === 'seen') {
+      const rows = conn.execute('SELECT idx, at_ms, witness FROM _seen ORDER BY idx').fetchall()
+      return answer(JSON.stringify(rows.map((row) => ({ idx: row.idx, at_ms: row.at_ms, witness: JSON.parse(row.witness as string) }))))
+    }
     if (query !== 'model' && query !== 'baseline') return { error: `unknown query: ${query}` }
-    const kit = kitOf(String(conn.execute('SELECT task FROM _seed').fetchone()?.task))
+    const kit = kitOfRun(conn)
     if (query === 'model') return answer(dumps(kit.model))
     const seeded = new Conn(':memory:', () => nowMs)
     try {
@@ -132,9 +118,10 @@ export const fake: Fake<ErpClient> & { verifierQuery: VerifierQuery<ErpClient> }
     try {
       conn.executescript(kitOf(row.task).sql)
       conn.executescript('CREATE TABLE _trace (idx INTEGER PRIMARY KEY, entry TEXT NOT NULL)')
+      conn.executescript('CREATE TABLE _seen (idx INTEGER PRIMARY KEY, at_ms INTEGER NOT NULL, witness TEXT NOT NULL)')
     } finally {
       conn.close()
     }
   },
-  routes: () => [route<ErpClient>('POST', '/:tool', call, { write: true })],
+  routes: () => [...restRoutes(), route<ErpClient>('POST', '/:tool', call, { write: true })],
 }

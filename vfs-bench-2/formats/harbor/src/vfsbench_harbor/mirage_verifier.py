@@ -17,6 +17,7 @@ import sys
 import tempfile
 import threading
 import time
+from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 
 from harbor.models.verifier.result import VerifierResult
@@ -308,13 +309,19 @@ class MirageVerifier(Verifier):
             stage = Path(temp)
             frozen = await self.freeze(definition, stage)
             request = stage / "request.json"
+            host = time.time()
             await self._background(lambda budget: budget.write_json(
-                request, {
+                request,
+                {
                     "dataset": self.dataset,
                     "task": task,
                     "runtime": definition.get("runtime", "typescript"),
                     **frozen,
-                    "epoch": env.now().isoformat(),
+                    "epoch": env.now(host).isoformat(),
+                    # The host's time at that instant: a grader relates the
+                    # trial clock, inside the workspace, to the host's.
+                    "host": datetime.fromtimestamp(host, timezone.utc).
+                    isoformat(),
                     "env": verifier_env,
                     "timeoutSeconds": self.task.config.verifier.timeout_sec,
                 }))
