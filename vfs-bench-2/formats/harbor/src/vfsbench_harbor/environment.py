@@ -80,6 +80,11 @@ def _boot_slot() -> asyncio.Semaphore:
     return _boots
 
 
+# Harbor's oracle runs a task's solution file as one line; the workspace's
+# shell runs the file's code instead, as typed (exec), so its history shows
+# the code itself and what it wrote.
+ORACLE = re.compile(r"\((/solution/[^\s()]+)\) > (/logs/agent/[\w.-]+) 2>&1")
+
 # The job's daemons (--ek workers=N), each started on the first trial that
 # needs it and serving every later one: a key is its Node, its workers and
 # the dataset whose tools it registers.
@@ -138,6 +143,11 @@ async def _boot_job_daemon(node: str, workers: int, dataset: Path,
     port = _free_port()
     home = job_dir / f"mirage-daemon-{port}"
     home.mkdir(parents=True, exist_ok=True)
+    # Every trial of the job, its grade and the console reading its history
+    # call from this host, one caller to the daemon's per-address limit, so
+    # its config raises it from the default 1000/minute.
+    (home /
+     "config.toml").write_text('[daemon]\nrate_limits = "ip=1000/second"\n')
     env = {
         **{
             k: v
@@ -631,6 +641,15 @@ class MirageEnvironment(BaseEnvironment):
         if reply.status_code >= 300:
             raise RuntimeError("creating the workspace failed "
                                f"({reply.status_code}): {reply.text}")
+        # Mirage's VFS.md (the mounts) and SKILL.md (the CLIs, each one's
+        # help) at the workspace's root, live and read-only.
+        for kind in ("vfs", "skill"):
+            reply = await self._client.put(
+                f"/v1/workspaces/{self._workspace_id}/{kind}-md",
+                json={"path": f"/{kind.upper()}.md"})
+            if reply.status_code >= 300:
+                raise RuntimeError(f"placing {kind.upper()}.md failed "
+                                   f"({reply.status_code}): {reply.text}")
         # mirage.yaml's `run` lines, as a build would run them.
         for step in plan["run"]:
             done = await self.exec(step["line"], cwd=step["cwd"])
@@ -644,6 +663,13 @@ class MirageEnvironment(BaseEnvironment):
         try:
             if self._client is not None:
                 try:
+                    # The workspace's history (each line, its output and
+                    # when it ran) outlives it, in the trial's mirage/.
+                    history = await self._client.get(
+                        f"/v1/workspaces/{self._workspace_id}/history")
+                    if history.status_code == 200:
+                        (self._run_dir / "history.json").write_text(
+                            history.text)
                     await self._client.post(
                         f"/v1/workspaces/{self._workspace_id}/close")
                     if self._daemon_url is None and self._workers is None:
@@ -711,6 +737,14 @@ class MirageEnvironment(BaseEnvironment):
         # line with a working directory runs in a session of its own, so
         # neither outlives it, as in `docker exec`.
         assert self._client is not None, "the environment is not started"
+        oracle = ORACLE.fullmatch(command)
+        if oracle:
+            done = await self.exec(
+                self._host(oracle[1]).read_text(), cwd, env, timeout_sec)
+            log = self._host(oracle[2], write=True)
+            log.parent.mkdir(parents=True, exist_ok=True)
+            log.write_text(done.stdout + done.stderr)
+            return done
         exports = "".join(
             f"export {name}={shlex.quote(value)}\n"
             for name, value in (self._merge_env(env) or {}).items()

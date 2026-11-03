@@ -35,7 +35,9 @@ uv run --project formats/harbor python -I formats/harbor/mock_judge.py --port 87
 `--ek workers=<n>` runs every trial on one daemon for the job, with `n`
 worker processes (see below). `--ek node=<path>` names the Node binary if
 `node` on `PATH` is not 24.15 or later. Each trial's environment is under `<trial dir>/mirage/`: the
-generated `workspace.yaml` and `plan.json`, and the logs of the daemon. The
+generated `workspace.yaml` and `plan.json`, the logs of the daemon, and
+`history.json`, the workspace's history (each line, its output and when it
+ran) from Mirage's `GET /v1/workspaces/<id>/history`, saved as it closes. The
 shared fakes log into the job's directory, as `fake-<service>.log`.
 
 ## The environment
@@ -53,6 +55,7 @@ and creates the workspace on it.
 | The services' data at `/var/lib/mock-data/...`, `/opt/mock/data/...` | The same paths, mounted read-only, holding a copy of each state file taken before every `exec` |
 | `ENV`, `COPY`, `RUN`, `WORKDIR` | `env`, `copy` (from `workspace/files/`), `run` and `workdir` in `workspace.yaml` |
 | `exec` | `POST /v1/workspaces/:id/shell`; a timeout drops the request, which cancels the line |
+| The oracle runs `/solution/solve.sh` | The workspace's shell runs the script's code, as typed, so its history holds the code and what it wrote; `/logs/agent/oracle.txt` gets the output |
 | `/workspace`, `/logs`, `/tests`, `/solution`, `/tmp` | Disk mounts on directories under the trial's run dir |
 | `upload_*`, `download_*` | Copies into and out of those directories |
 | `python3` | Pyodide, from `workspace/python.py`'s bundle |
