@@ -393,6 +393,16 @@ def task_toml(task: dict) -> str:
     tags = ", ".join(toml_string(t) for t in task.get("tags") or [])
     timeout = float((task.get("environment")
                      or {}).get("timeout_seconds", 600))
+    if task["services"]:
+        network = """\
+# The trial's routes to its services, which the verifier fetches each
+# service's audit log over; the agent's curl and wget are off
+# (environment/mirage.yaml), so it reaches them through their tools alone.
+allow_internet = true"""
+    else:
+        network = """\
+# No service: nothing to route.
+allow_internet = false"""
     return f"""version = "1.0"
 
 [metadata]
@@ -418,10 +428,7 @@ build_timeout_sec = 300.0
 cpus = 1
 memory_mb = 2048
 storage_mb = 4096
-# The trial's routes to its services, which the verifier fetches each
-# service's audit log over; the agent's curl and wget are off
-# (environment/mirage.yaml), so it reaches them through their tools alone.
-allow_internet = true
+{network}
 """
 
 

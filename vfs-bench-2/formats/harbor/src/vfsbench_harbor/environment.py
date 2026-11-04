@@ -814,9 +814,13 @@ class MirageEnvironment(BaseEnvironment):
         the artifacts) and the workspace's own ``run`` lines. The commands
         run in such a block are the agent's (``agent_history``): a host
         agent's run (agents.py) and an oracle's solution (``exec``) are
-        blocks. A solution runs as typed, each of its lines a command,
-        after the exports ``exec`` puts ahead of it, which are the block's
-        first command."""
+        blocks; an agent that runs its commands through ``exec`` itself
+        (Harbor's Terminus) marks none, so none of its commands count. A
+        solution runs as typed, each of its lines a command, after the
+        exports ``exec`` puts ahead of it, which are the block's first
+        command. A block is a span of the host's clock, matched against the
+        history's stamps, the daemon's: one clock on one host, and a
+        ``daemon_url`` daemon's must agree with the host's."""
         span: list[float | None] = [time.time() * 1000, None]
         self._agent_spans.append(span)
         try:

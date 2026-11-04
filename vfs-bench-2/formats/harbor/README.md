@@ -39,6 +39,12 @@ generated `workspace.yaml` and `plan.json`, the logs of the daemon, and
 `history.json`, the workspace's history (each line, its output and when it
 ran) from Mirage's `GET /v1/workspaces/<id>/history`, saved as it closes. The
 shared fakes log into the job's directory, as `fake-<service>.log`.
+The history holds Harbor's own commands too (`chmod` of the solution,
+`test -d` of the artifacts) and the workspace's `run` lines, so the
+environment marks when an agent runs (`agent_run`: a host agent's run,
+an oracle's solution) and `agent_history` gives the commands run then,
+with their results, for a grader that counts the agent's shell commands
+(Claw-Eval's T070zh).
 
 ## The environment
 

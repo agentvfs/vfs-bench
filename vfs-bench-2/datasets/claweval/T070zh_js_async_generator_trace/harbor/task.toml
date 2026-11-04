@@ -26,7 +26,5 @@ build_timeout_sec = 300.0
 cpus = 1
 memory_mb = 2048
 storage_mb = 4096
-# The trial's routes to its services, which the verifier fetches each
-# service's audit log over; the agent's curl and wget are off
-# (environment/mirage.yaml), so it reaches them through their tools alone.
-allow_internet = true
+# No service: nothing to route.
+allow_internet = false

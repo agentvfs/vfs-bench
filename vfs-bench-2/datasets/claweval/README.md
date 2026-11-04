@@ -280,7 +280,9 @@ built call.
   lines. A line of several commands is several dispatches, as bash reads
   it, where upstream's one call was one; an oracle's solution runs as
   typed, each line a command, after the exports Harbor's `exec` puts
-  ahead of it. The other sandbox tools' calls
+  ahead of it. An agent that runs its commands through Harbor's `exec`
+  itself (Terminus) marks no block, so none of its commands count: the
+  host agents of agents.py and the oracle do. The other sandbox tools' calls
   are not built: no other task in scope lists one, and no grader counts
   them.
 
