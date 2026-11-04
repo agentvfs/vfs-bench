@@ -1,4 +1,4 @@
-# All 70 LiveClawBench tasks.
+# All 75 LiveClawBench tasks.
 # From vfs-bench-2/, after datasets/liveclawbench/download.py:
 #   uv run --project formats/harbor harbor run -c datasets/liveclawbench/harbor/job.yaml -a oracle -n 32
 environment:
@@ -76,3 +76,8 @@ tasks:
   - path: datasets/liveclawbench/flight-cancel-claim/harbor
   - path: datasets/liveclawbench/flight-info-change-notice/harbor
   - path: datasets/liveclawbench/flight-calendar-overshare/harbor
+  - path: datasets/liveclawbench/corpus-file-injection/harbor
+  - path: datasets/liveclawbench/noise-filtering/harbor
+  - path: datasets/liveclawbench/incremental-update-ctp/harbor
+  - path: datasets/liveclawbench/vendor-due-diligence-brief/harbor
+  - path: datasets/liveclawbench/pre-meeting-research-brief/harbor

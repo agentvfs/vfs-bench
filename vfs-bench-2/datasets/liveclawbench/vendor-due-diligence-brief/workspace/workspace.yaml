@@ -1,0 +1,47 @@
+# vendor-due-diligence-brief, on vfsbench_harbor's mirage environment.
+#
+# In place of upstream's environment/Dockerfile: the mocks of its base
+# image are the fakes below, and its COPY, RUN, ENV and WORKDIR lines are
+# `copy`, `run`, `env` and `workdir`.
+#
+# Rule A: Mirage fakes Gmail, so the email mock becomes Mirage's own gws
+# fake. The mailbox is the /gmail mount and the gws CLI, both at this
+# trial's run of it; nothing listens on upstream's ports 5001 and 5174. One
+# fake serves the whole job. Its LLM judge is called from the verifier
+# (grader.ts).
+fakes:
+  gws:
+    # Upstream's email seed for the task, as Gmail messages (convert.py
+    # writes it).
+    fixture: fixtures/gws.json
+    epoch: '2026-04-03T09:00:00Z'
+    # The run's SQLite, where the ported llm_judge.py finds the vendor's email.
+    state: /var/lib/mock-data/gws/gws.db
+env:
+  TASK_NAME: vendor-due-diligence-brief
+  HOME: /home/node
+  OPENCLAW_ARK_BASE_URL: https://ark.cn-beijing.volces.com/api/coding/v3
+  OPENCLAW_ARK_MODEL: kimi-k2.5
+workdir: /home/node/.openclaw
+run:
+  - mkdir -p /home/node/.openclaw/output /home/node/.openclaw/workspace/memory && chown -R node:node /home/node
+copy:
+  /home/node/.openclaw/corpus: corpus/
+# gws-integ-token is the gws fake's own fixed credential; ${GWS_URL} is this
+# trial's run.
+workspace:
+  mounts:
+    /gmail:
+      vfs: gmail
+      mode: read
+      config: {accessToken: gws-integ-token, apiBase: '${GWS_URL}'}
+    # The home the agent works in, which its grader reads.
+    /home/node:
+      vfs: disk
+      mode: exec
+      read: fresh
+      config: {root: '${RUN_DIR}/home/node'}
+  clis:
+    gws:
+      cli: gws
+      config: {accessToken: gws-integ-token, apiBase: '${GWS_URL}'}
