@@ -272,13 +272,43 @@ built call.
 
 ## Left out
 
-- The 25 general-split tasks that browse the live web (`web_real*`).
-- T097 and T098, whose PDFs are not in upstream's repo, and T091 and T096,
-  whose attached files under `fixtures/docs/` are not either.
-- T100 to T104, the terminal tasks: their graders read
-  `env_snapshot_commands`, verify scripts upstream runs in the container
-  after the agent, which nothing here runs.
+The 25 general-split tasks that browse the live web (`web_real*`), and
+nine others, each in `convert.py`'s `SKIPPED` with its reason:
 
-Each is in `convert.py`'s `SKIPPED`, with its reason.
+**Attached files upstream does not ship.** Upstream's `.gitignore` keeps
+`docs/` out of its repo, so nothing under `fixtures/docs/` is there.
+- T091_pinbench_humanize_blog: rewrites `ai_blog.txt`.
+- T096_pinbench_business_metrics_summary: sums `quarterly_sales.csv` and
+  `company_expenses_extracted.txt`; its grader looks for the totals.
+- T097_pinbench_eli5_model_summary: summarizes `GPT4.pdf`.
+- T098_pinbench_openclaw_facts: reads PDFs under `fixtures/docs/`.
+
+**Graded by commands run after the agent.** Upstream's container runner
+injects each of these tasks' `sandbox_grader_files` once the agent is
+done (so it cannot read them), runs its `env_snapshot_commands` in the
+container, and hands the grader what they printed as `env_snapshot`
+(`_collect_env_snapshot` in `cli.py`); the grader reads nothing else.
+`MirageVerifier` runs nothing after the agent: it freezes the trial's
+files and the fakes' tables and grades those copies in a node process on
+the host, and by design loads no agent-supplied code
+(`formats/harbor/src/vfsbench_harbor/mirage_verifier.py`).
+- T100_reverse_decoder: `verify_encoder.py` decodes the agent's
+  `encoded.dat` with the task's `decoder.py` and checks its size.
+- T101_wal_recovery: `verify_recovery.py` and a `sqlite3` count read the
+  repaired WAL and the agent's `recovered.json`.
+- T102_xss_filter: `verify_filter.py` runs the agent's `filter.py` on the
+  37 samples: the agent's code.
+- T103_schema_migration: `verify_migration.py` runs the agent's
+  `migrate_data.py` and reads the migrated database: the agent's code.
+- T104_packet_decoder: `verify_decode.py` checks the agent's
+  `decoded.jsonl`, and the agent's `decode.py` is run: the agent's code.
+
+Porting these five takes a step the verifier does not have: after the
+agent, put the grader files in the workspace, run each command there (on
+the trial's daemon, as the oracle's `solve.sh` runs) and pass what they
+print to the grader as `env_snapshot`, which `build.py` already keeps in
+each grader's signature. Three of the five run the agent's own script,
+inside the workspace's Pyodide; whether its `sqlite3` reads a WAL and
+`subprocess` runs a script there is to be checked first.
 - **Scores here are not judgments.** No judge key was available; the
   results above used `mock_judge.py`, which scores every call the same.

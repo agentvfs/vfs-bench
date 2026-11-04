@@ -68,23 +68,49 @@ COMMIT = "5680b8b"
 # upstream's services read the wall clock, and only stamp their audit logs.
 EPOCH = "2026-04-03T09:00:00Z"
 
-# The general split's tasks left out of those in scope, and why.
-SNAPSHOT = ("its grader reads env_snapshot_commands, verify scripts upstream "
-            "runs in the container after the agent, which nothing here runs")
+# The general split's tasks left out of those in scope, and why. Four
+# attach files under fixtures/docs/, which upstream's .gitignore (`docs/`)
+# keeps out of its repo. Five are graded from `env_snapshot_commands`:
+# after the agent, upstream injects `sandbox_grader_files` into the
+# container and runs each command there, and the grader reads what they
+# print (`_collect_env_snapshot` in cli.py). MirageVerifier runs nothing
+# after the agent: it freezes the trial's files and the fakes' tables and
+# grades those on the host, and loads no agent-supplied code
+# (formats/harbor/src/vfsbench_harbor/mirage_verifier.py), which three of
+# the five would have it do.
 SKIPPED = {
     "T091_pinbench_humanize_blog":
-    "its sandbox file, fixtures/docs/ai_blog.txt, is not in upstream's repo",
+    "its attached file, fixtures/docs/ai_blog.txt, is not in upstream's repo",
     "T096_pinbench_business_metrics_summary":
-    "its sandbox files, under fixtures/docs/, are not in upstream's repo",
+    "its attached files, fixtures/docs/quarterly_sales.csv and "
+    "company_expenses_extracted.txt, are not in upstream's repo",
     "T097_pinbench_eli5_model_summary":
     "its sandbox file, fixtures/docs/GPT4.pdf, is not in upstream's repo",
     "T098_pinbench_openclaw_facts":
     "its sandbox files, PDFs under fixtures/docs/, are not in upstream's repo",
-    "T100_reverse_decoder": SNAPSHOT,
-    "T101_wal_recovery": SNAPSHOT,
-    "T102_xss_filter": SNAPSHOT,
-    "T103_schema_migration": SNAPSHOT,
-    "T104_packet_decoder": SNAPSHOT,
+    "T100_reverse_decoder":
+    "graded from env_snapshot_commands: verify_encoder.py decodes the "
+    "agent's /workspace/encoded.dat with decoder.py and sizes it, after "
+    "the agent, in the container; nothing here runs commands after the "
+    "agent",
+    "T101_wal_recovery":
+    "graded from env_snapshot_commands: verify_recovery.py and a sqlite3 "
+    "count read the repaired WAL and /workspace/recovered.json after the "
+    "agent, in the container; nothing here runs commands after the agent",
+    "T102_xss_filter":
+    "graded from env_snapshot_commands: verify_filter.py runs the agent's "
+    "/workspace/filter.py on the 37 samples after the agent, in the "
+    "container; nothing here runs commands after the agent, nor the "
+    "agent's code",
+    "T103_schema_migration":
+    "graded from env_snapshot_commands: verify_migration.py runs the "
+    "agent's /workspace/migrate_data.py and reads the migrated SQLite "
+    "after the agent, in the container; nothing here runs commands after "
+    "the agent, nor the agent's code",
+    "T104_packet_decoder":
+    "graded from env_snapshot_commands: verify_decode.py and the agent's "
+    "/workspace/decode.py are run after the agent, in the container; "
+    "nothing here runs commands after the agent, nor the agent's code",
 }
 
 
