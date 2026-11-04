@@ -22,6 +22,7 @@ through the daemon's codex-exec or MCP endpoint (agents.py).
 """
 import asyncio
 import atexit
+import contextlib
 import json
 import os
 import re
@@ -78,6 +79,29 @@ def _boot_slot() -> asyncio.Semaphore:
     if _boots is None:
         _boots = asyncio.Semaphore(BOOTS)
     return _boots
+
+
+def agent_commands(events: list[dict], spans: list) -> list[dict]:
+    """The ``command`` entries of a workspace's history whose time is in
+    one of ``spans`` (each a start and an end in milliseconds, the end
+    None while the block runs), and the ``result`` entries that answer
+    them, in the history's order."""
+    now = time.time() * 1000
+
+    def within(at: float) -> bool:
+        return any(start <= at <= (now if end is None else end)
+                   for start, end in spans)
+
+    kept = {
+        e.get("id")
+        for e in events
+        if e.get("type") == "command" and within(e.get("timestamp", 0))
+    }
+    return [
+        e for e in events
+        if (e.get("type") == "command" and e.get("id") in kept) or (
+            e.get("type") == "result" and e.get("parent") in kept)
+    ]
 
 
 # Harbor's oracle runs a task's solution file as one line; the workspace's
@@ -342,6 +366,8 @@ class MirageEnvironment(BaseEnvironment):
         self._routes: dict[str, str] = {}
         self._env: dict[str, str] = {}
         self._runs: list[fakes.Run] = []
+        # When an agent ran (`agent_run`), in the daemon's milliseconds.
+        self._agent_spans: list[list[float | None]] = []
         self._url = ""
         # The run's epoch and when the trial started, in ms, which together
         # are its clock: None where the task has no fakes, and the host's.
@@ -744,8 +770,9 @@ class MirageEnvironment(BaseEnvironment):
         assert self._client is not None, "the environment is not started"
         oracle = ORACLE.fullmatch(command)
         if oracle:
-            done = await self.exec(
-                self._host(oracle[1]).read_text(), cwd, env, timeout_sec)
+            async with self.agent_run():
+                done = await self.exec(
+                    self._host(oracle[1]).read_text(), cwd, env, timeout_sec)
             log = self._host(oracle[2], write=True)
             log.parent.mkdir(parents=True, exist_ok=True)
             log.write_text(done.stdout + done.stderr)
@@ -777,6 +804,41 @@ class MirageEnvironment(BaseEnvironment):
         return ExecResult(stdout=result["stdout"],
                           stderr=result["stderr"],
                           return_code=result["exit_code"])
+
+    @contextlib.asynccontextmanager
+    async def agent_run(self):
+        """The block an agent runs in. The workspace's history records
+        every command run in it, whoever ran it: the agent's (a host
+        agent's shell tool, an oracle's solution) and the commands Harbor
+        runs around the agent (``chmod`` of the solution, ``test -d`` of
+        the artifacts) and the workspace's own ``run`` lines. The commands
+        run in such a block are the agent's (``agent_history``): a host
+        agent's run (agents.py) and an oracle's solution (``exec``) are
+        blocks; an agent that runs its commands through ``exec`` itself
+        (Harbor's Terminus) marks none, so none of its commands count. A
+        solution runs as typed, each of its lines a command, after the
+        exports ``exec`` puts ahead of it, which are the block's first
+        command. A block is a span of the host's clock, matched against the
+        history's stamps, the daemon's: one clock on one host, and a
+        ``daemon_url`` daemon's must agree with the host's."""
+        span: list[float | None] = [time.time() * 1000, None]
+        self._agent_spans.append(span)
+        try:
+            yield
+        finally:
+            span[1] = time.time() * 1000
+
+    async def agent_history(self) -> list[dict]:
+        """The commands an agent ran, from the workspace's history
+        (``GET /history``: every session's, each line a ``command`` entry
+        with its ``id`` and a ``result`` entry naming it as ``parent``,
+        with its exit code, stdout and stderr): those run in an
+        ``agent_run`` block, with their results, in the history's order."""
+        assert self._client is not None, "the environment is not started"
+        reply = await self._client.get(
+            f"/v1/workspaces/{self._workspace_id}/history")
+        reply.raise_for_status()
+        return agent_commands(reply.json(), self._agent_spans)
 
     def _refresh_state(self,
                        *,

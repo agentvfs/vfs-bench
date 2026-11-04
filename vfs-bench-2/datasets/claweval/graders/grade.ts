@@ -18,7 +18,7 @@ import { JudgeRequest, ReplayMismatch, session, type Recording } from './judge-c
 import { LLMJudge } from './port/claw_eval/graders/llm_judge.ts'
 import { compute_task_score, is_pass } from './port/claw_eval/models/scoring.ts'
 import { GRADERS, MEDIA, TASKS, load } from './port/registry.ts'
-import { dispatches, gwsTrace, messages, type Run } from './trace.ts'
+import { dispatches, gwsTrace, messages, shellTrace, type Run } from './trace.ts'
 
 export const JUDGE_MODEL = 'google/gemini-3-flash-preview'
 /** The most judge calls one grade may make; upstream retries 30 times. */
@@ -87,7 +87,7 @@ export function gradeOnce(
     (m) => new TraceMessage({ ...trace, message: m })
   )
   const built = gwsTrace(inputs.run, task, audit)
-  const traceDispatches = [...dispatches(inputs.run), ...built].map(
+  const traceDispatches = [...dispatches(inputs.run), ...shellTrace(inputs.run, task), ...built].map(
     (d) => new ToolDispatch({ ...trace, ...Object.fromEntries(d.entries()) })
   )
   let scores: DimensionScores

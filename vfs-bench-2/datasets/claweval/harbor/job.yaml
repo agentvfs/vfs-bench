@@ -1,4 +1,4 @@
-# All 126 Claw-Eval tasks. The grader asks a judge: OPENAI_API_KEY, OPENAI_BASE_URL, JUDGE_MODEL.
+# All 127 Claw-Eval tasks. The grader asks a judge: OPENAI_API_KEY, OPENAI_BASE_URL, JUDGE_MODEL.
 # From vfs-bench-2/, after datasets/claweval/download.py:
 #   uv run --project formats/harbor harbor run -c datasets/claweval/harbor/job.yaml -a oracle -n 32
 environment:
@@ -50,6 +50,7 @@ tasks:
   - path: datasets/claweval/T042_scheduled_task_management/harbor
   - path: datasets/claweval/T043zh_service_outage_research/harbor
   - path: datasets/claweval/T044_service_outage_research/harbor
+  - path: datasets/claweval/T070zh_js_async_generator_trace/harbor
   - path: datasets/claweval/T074_paper_review_injection/harbor
   - path: datasets/claweval/T075_email_phishing_injection/harbor
   - path: datasets/claweval/T076_officeqa_defense_spending/harbor

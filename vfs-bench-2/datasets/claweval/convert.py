@@ -19,7 +19,8 @@ for the solutions of ``SOLVED``, which are ours:
   (``mocks/claweval_<service>``) at upstream's port; gmail and calendar as
   Mirage's gws fake, the ``/gmail`` and ``/calendar`` mounts and the gws
   CLI, but for gmail's drafts, a fake of their own; the task's
-  ``sandbox_files`` copied into ``/workspace``; and the tools as CLIs.
+  ``sandbox_files`` copied into ``/workspace``; and the tools as CLIs. A
+  task with no service (T070zh) has the terminal alone.
 - ``environment/kit/<fake>.json``: each fake's fixture, the task's fixtures
   as the service loads them; ``gws.json``, gmail's and calendar's as Gmail
   messages and Calendar events under upstream's ids.
@@ -67,23 +68,61 @@ COMMIT = "5680b8b"
 # upstream's services read the wall clock, and only stamp their audit logs.
 EPOCH = "2026-04-03T09:00:00Z"
 
-# The general split's tasks left out of those that use services, and why.
+# The general split's tasks left out of those in scope, and why. Four
+# attach files under fixtures/docs/, which upstream's .gitignore (`docs/`)
+# keeps out of its repo. Five are graded from `env_snapshot_commands`:
+# after the agent, upstream injects `sandbox_grader_files` into the
+# container and runs each command there, and the grader reads what they
+# print (`_collect_env_snapshot` in cli.py). MirageVerifier runs nothing
+# after the agent: it freezes the trial's files and the fakes' tables and
+# grades those on the host, and loads no agent-supplied code
+# (formats/harbor/src/vfsbench_harbor/mirage_verifier.py), which three of
+# the five would have it do.
 SKIPPED = {
+    "T091_pinbench_humanize_blog":
+    "its attached file, fixtures/docs/ai_blog.txt, is not in upstream's repo",
+    "T096_pinbench_business_metrics_summary":
+    "its attached files, fixtures/docs/quarterly_sales.csv and "
+    "company_expenses_extracted.txt, are not in upstream's repo",
     "T097_pinbench_eli5_model_summary":
     "its sandbox file, fixtures/docs/GPT4.pdf, is not in upstream's repo",
     "T098_pinbench_openclaw_facts":
     "its sandbox files, PDFs under fixtures/docs/, are not in upstream's repo",
+    "T100_reverse_decoder":
+    "graded from env_snapshot_commands: verify_encoder.py decodes the "
+    "agent's /workspace/encoded.dat with decoder.py and sizes it, after "
+    "the agent, in the container; nothing here runs commands after the "
+    "agent",
+    "T101_wal_recovery":
+    "graded from env_snapshot_commands: verify_recovery.py and a sqlite3 "
+    "count read the repaired WAL and /workspace/recovered.json after the "
+    "agent, in the container; nothing here runs commands after the agent",
+    "T102_xss_filter":
+    "graded from env_snapshot_commands: verify_filter.py runs the agent's "
+    "/workspace/filter.py on the 37 samples after the agent, in the "
+    "container; nothing here runs commands after the agent, nor the "
+    "agent's code",
+    "T103_schema_migration":
+    "graded from env_snapshot_commands: verify_migration.py runs the "
+    "agent's /workspace/migrate_data.py and reads the migrated SQLite "
+    "after the agent, in the container; nothing here runs commands after "
+    "the agent, nor the agent's code",
+    "T104_packet_decoder":
+    "graded from env_snapshot_commands: verify_decode.py and the agent's "
+    "/workspace/decode.py are run after the agent, in the container; "
+    "nothing here runs commands after the agent, nor the agent's code",
 }
 
 
 def in_scope() -> list[str]:
     """The general split's tasks whose agent works through mock services,
-    but those that browse the live web (`web_real*`) and `SKIPPED`."""
+    or with none in the terminal alone, but those that browse the live web
+    (`web_real*`) and `SKIPPED`."""
     out = []
     for path in sorted((UPSTREAM / "tasks").glob("T*/task.yaml")):
         task = yaml.safe_load(path.read_text())
         names = [s["name"] for s in task.get("services") or []]
-        if not names or any(n.startswith("web_real") for n in names):
+        if any(n.startswith("web_real") for n in names):
             continue
         if task["task_id"] not in SKIPPED:
             out.append(task["task_id"])
@@ -226,6 +265,10 @@ GWS_TOKEN = "gws-integ-token"
 PRIMARY = "integ@example.com"
 GWS_STATE = "/var/lib/mock-data/gws/gws.db"
 DISPATCHES = "/var/lib/mock-data/claweval/dispatches.jsonl"
+# Upstream's shell tool (runner/sandbox_tools.py), which a task may list
+# among its own: this terminal, not a CLI. Its calls are the agent's shell
+# calls (graders/trace.ts).
+SHELL = "Bash"
 
 
 def service_of(task: dict, tool: str) -> dict:
@@ -245,6 +288,10 @@ def has_draft(task: dict) -> bool:
     return any(t["name"] == DRAFT for t in task["tools"])
 
 
+def has_shell(task: dict) -> bool:
+    return any(t["name"] == SHELL for t in task["tools"])
+
+
 def tools(task: dict) -> list[dict]:
     """The task's tools, by the CLI of the service whose endpoint each
     posts to, as workspace/tools.ts reads them: all but gmail's and calendar's,
@@ -254,6 +301,8 @@ def tools(task: dict) -> list[dict]:
     endpoints = {e["tool_name"]: e for e in task["tool_endpoints"]}
     clis: dict[str, list] = {}
     for tool in task["tools"]:
+        if tool["name"] == SHELL:
+            continue
         service = service_of(task, tool["name"])["name"]
         if service in GWS and tool["name"] != DRAFT:
             continue
@@ -318,6 +367,8 @@ def instruction(task: dict) -> str:
         lines += [f"Current date: {today}", ""]
     lines += [task["prompt"]["text"].rstrip("\n"), "", "## Tools", ""]
     lines += gws_note(task)
+    if has_shell(task):
+        lines += ["This terminal is the task's `Bash` tool.", ""]
     clis = tools(task)
     if clis:
         lines += [
@@ -342,6 +393,16 @@ def task_toml(task: dict) -> str:
     tags = ", ".join(toml_string(t) for t in task.get("tags") or [])
     timeout = float((task.get("environment")
                      or {}).get("timeout_seconds", 600))
+    if task["services"]:
+        network = """\
+# The trial's routes to its services, which the verifier fetches each
+# service's audit log over; the agent's curl and wget are off
+# (environment/mirage.yaml), so it reaches them through their tools alone.
+allow_internet = true"""
+    else:
+        network = """\
+# No service: nothing to route.
+allow_internet = false"""
     return f"""version = "1.0"
 
 [metadata]
@@ -367,10 +428,7 @@ build_timeout_sec = 300.0
 cpus = 1
 memory_mb = 2048
 storage_mb = 4096
-# The trial's routes to its services, which the verifier fetches each
-# service's audit log over; the agent's curl and wget are off
-# (environment/mirage.yaml), so it reaches them through their tools alone.
-allow_internet = true
+{network}
 """
 
 
@@ -583,6 +641,17 @@ def kit_fakes(task: dict) -> list[tuple[str, dict]]:
 
 def mirage_yaml(task: dict) -> str:
     at = epoch(task)
+    head = [
+        f"# {task['task_id']}, on vfsbench_harbor's mirage environment "
+        "(datasets/claweval/convert.py writes it).", "#"
+    ]
+    if task["services"]:
+        head += [
+            "# Each service is its kit fake at upstream's port, and its "
+            "tools CLIs", "# (workspace/tools.ts)."
+        ]
+    else:
+        head += ["# No service: the agent works in the terminal alone."]
     spec: dict = {"fakes": {}}
     for name, service in kit_fakes(task):
         spec["fakes"][name] = {
@@ -602,6 +671,9 @@ def mirage_yaml(task: dict) -> str:
     clis = tools(task)
     if clis:
         spec["tools"] = {"file": "tools.json", "dispatches": DISPATCHES}
+    if not task["services"]:
+        return "\n".join(head) + "\n" + yaml.safe_dump(
+            spec, sort_keys=False, allow_unicode=True)
     # Upstream's model reaches the services through their tools alone.
     workspace: dict = {
         "profiles": {
@@ -647,12 +719,6 @@ def mirage_yaml(task: dict) -> str:
     if not workspace["clis"]:
         del workspace["clis"]
     spec["workspace"] = workspace
-    head = [
-        f"# {task['task_id']}, on vfsbench_harbor's mirage environment "
-        "(datasets/claweval/convert.py writes it).", "#",
-        "# Each service is its kit fake at upstream's port, and its tools "
-        "CLIs", "# (workspace/tools.ts)."
-    ]
     if used:
         head += [
             "#", "# Gmail and calendar are Mirage's gws fake: the /gmail and "

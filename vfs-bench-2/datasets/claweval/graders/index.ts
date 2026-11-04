@@ -6,7 +6,9 @@
  *   tables and the run's clock;
  * - `/input/trajectory.json`, `/input/dispatches.jsonl`: the agent's
  *   trajectory and its tool CLIs' calls, when it made them;
- * - `/input/gws_seed.json`: a gws task's gmail and calendar fixtures.
+ * - `/input/gws_seed.json`: a gws task's gmail and calendar fixtures;
+ * - `/input/history.json`: the shell commands the agent ran, with their
+ *   results, for a task that lists upstream's shell tool.
  */
 import type { Context as CommandContext } from '@struktoai/mirage-core/commands/config'
 import { Context, GradeError, type Grade, type InputSpec } from '../../../workspace/grader.ts'
@@ -16,7 +18,7 @@ import type { Recording } from './judge-client.ts'
 import { TASKS } from './port/registry.ts'
 import * as $ from './py.ts'
 
-/** The tasks graded here: all 126. */
+/** The tasks graded here: all 127. */
 export const GRADERS: Readonly<Record<string, unknown>> = Object.freeze({ ...TASKS })
 
 export async function evaluate(input: InputSpec, command: CommandContext): Promise<Grade> {
@@ -46,6 +48,7 @@ export async function evaluate(input: InputSpec, command: CommandContext): Promi
           trajectory: file('/input/trajectory.json'),
           dispatches: file('/input/dispatches.jsonl'),
           seed: file('/input/gws_seed.json'),
+          history: file('/input/history.json'),
           gws: $.gi(state, 'gws'),
           epoch: $.gi(state, 'epoch'),
         },
