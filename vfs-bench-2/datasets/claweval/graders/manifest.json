@@ -1460,6 +1460,34 @@
         "tasks/T044_service_outage_research/task.yaml": "dc8f0b61bfad608d808fc9fe05e28be436aa6e1b683800c542d3a6a0ced5b8a8"
       }
     },
+    "T070zh_js_async_generator_trace": {
+      "audits": {},
+      "files": {},
+      "gws": [],
+      "inputs": [
+        "/logs/agent/trajectory.json",
+        "/var/lib/mock-data/claweval/dispatches.jsonl"
+      ],
+      "runtime": "typescript",
+      "sources": {
+        "src/claw_eval/__init__.py": "01119a500fd0845fde7276ef4dd4cd290f383b5fcd7d41a57348ade7b5a5fc8b",
+        "src/claw_eval/graders/__init__.py": "89d667f8aee4c93f92aa3b741d3f8bf430011cc277a29a30b21cb3ee3c2004b9",
+        "src/claw_eval/graders/base.py": "beabf04839817ea08e144fa199f0da7c0bf940341a04905c013a0c845c32ee56",
+        "src/claw_eval/graders/llm_judge.py": "3e9535be288163954cc7d16d290f0a00da9ec455d8c65bb180a8b5c11684fd36",
+        "src/claw_eval/graders/officeqa_reward.py": "a74bc16f1f85696903ab91006ddb5f91e7156b2f8663e0557a989e2c77c87234",
+        "src/claw_eval/graders/pinbench_common.py": "5a06506a88084acd52836316574ddfd9f8b4bd13d64d85fd760b58715f444b6d",
+        "src/claw_eval/graders/registry.py": "110a06bb0a14214edef7b960d36da979a722e274cd85aae7860be9776b02aa2a",
+        "src/claw_eval/models/__init__.py": "e0334c9745c78392431ae4e64923c4392b1798f258140ae9aecc06a595b78ae1",
+        "src/claw_eval/models/content.py": "e3b4e558c4c4585af6d013dd6769d672aab5b8b27a1401f30fbde4da0b2d95ce",
+        "src/claw_eval/models/message.py": "772b760e097532d78a8196cec75929f1b5e762f2eef7dbc7118a14170002a0b3",
+        "src/claw_eval/models/scoring.py": "b22ba9b92fec05b003c17669ab0b5f1be80f6d416c4547a3d7461c163e9a125a",
+        "src/claw_eval/models/task.py": "f0f21183997f3bc303a61de7ef33772a0ea5cc097e0a03caa8f11c592210e6c1",
+        "src/claw_eval/models/tool.py": "a5aab49c8a96803abc6d4b50503806b0baefabaa1d16c9b073893b2bb164bf80",
+        "src/claw_eval/models/trace.py": "b18264883ab3283dba772f989da17b16e8278fdef2f0815e68aa6c41cd2b1a61",
+        "tasks/T070zh_js_async_generator_trace/grader.py": "22d9e3470d60f498bf500b690940d1c6e408c9265acf5e5a78fe71e0c82a1692",
+        "tasks/T070zh_js_async_generator_trace/task.yaml": "3b206fc6bb0ba8f1a958c2d3640ab8406e44e47574a5daad7b9de81c44a0eda1"
+      }
+    },
     "T074_paper_review_injection": {
       "audits": {
         "ocr_paper": "http://localhost:9117/ocr/audit"

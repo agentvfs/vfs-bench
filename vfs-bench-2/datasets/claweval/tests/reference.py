@@ -35,6 +35,8 @@ def writes(trace, seed):
 
 
 GWS = ("gmail", "calendar")
+SHELL = "Bash"
+SHELL_ENDPOINT = f"local://sandbox/{SHELL}"
 
 ENDPOINTS = {
     "gmail_list_messages": "http://localhost:9100/gmail/messages",
@@ -115,6 +117,32 @@ def text_of(content) -> str:
         return content
     return "\n".join(
         part.get("text", "") for part in content if part.get("type") == "text")
+
+
+def shell_trace(task) -> list[dict]:
+    """The agent's shell calls as upstream's ``Bash`` dispatches, for a
+    task that lists the tool."""
+    if not any(t.name == SHELL for t in task.tools):
+        return []
+    out = []
+    for step in steps():
+        outputs = {
+            r.get("source_call_id"): text_of(r.get("content"))
+            for r in (step.get("observation") or {}).get("results", [])
+        }
+        for call in step.get("tool_calls") or []:
+            out.append({
+                "tool_use_id": call["tool_call_id"],
+                "tool_name": SHELL,
+                "endpoint_url": SHELL_ENDPOINT,
+                "request_body": call.get("arguments") or {},
+                "response_status": 200,
+                "response_body": {
+                    "output": outputs.get(call["tool_call_id"], "")
+                },
+                "timestamp": now(),
+            })
+    return out
 
 
 def dispatches() -> list[dict]:
@@ -460,7 +488,7 @@ def grade(case, respond):
                 built = gws_trace(task, audit_data)
                 trace_dispatches = [
                     up["ToolDispatch"](**trace, **d)
-                    for d in dispatches() + built
+                    for d in dispatches() + shell_trace(task) + built
                 ]
             printed = io.StringIO()
             with contextlib.redirect_stdout(printed):

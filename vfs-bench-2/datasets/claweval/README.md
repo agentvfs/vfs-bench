@@ -1,8 +1,10 @@
 # Claw-Eval
 
 [claw-eval/claw-eval](https://github.com/claw-eval/claw-eval) @ `5680b8b`,
-MIT: 126 tasks of its general split, those whose agent works through mock
-services, less the 25 that browse the live web. Each task's own
+MIT: 127 tasks of its general split: the 126 whose agent works through
+mock services, less the 25 that browse the live web, and one with no
+service, whose agent works in the terminal alone (T070zh; the others
+without one are left out, below). Each task's own
 `grader.py` scores it, ported to TypeScript (below), and asks an LLM judge
 for part of the score (`OPENAI_API_KEY`, `OPENAI_BASE_URL`, `JUDGE_MODEL`,
 default `google/gemini-3-flash-preview`).
@@ -19,8 +21,8 @@ uv run --project formats/harbor harbor run -c datasets/claweval/harbor/oracle.ya
 ```
 
 `harbor/oracle.yaml` selects all 13 tasks with packaged solutions. The full
-`harbor/job.yaml` contains 126 tasks and can run agents or no-op trials in
-parallel, but the other 113 tasks have no packaged oracle solution.
+`harbor/job.yaml` contains 127 tasks and can run agents or no-op trials in
+parallel, but the other 114 tasks have no packaged oracle solution.
 
 ## The graders
 
@@ -69,7 +71,7 @@ the grader does not expect. Its cases cover 90% of the graders' lines (at
 `--cases 40`); the lines missed are mostly `except Exception` handlers
 around judge calls, which no reply reaches, since a judge that gives up
 stops the grade. `--job` grades a Harbor job's trials again from what they
-saved.
+saved. T070zh, added after, matches on all 42 of its cases at `--cases 40`.
 
 At the switch, the oracle and no-op jobs were run with a stand-in judge
 (`formats/harbor/mock_judge.py --score 0.7`) on both the Pyodide verifier
@@ -80,9 +82,9 @@ and all 293 judge requests were the same.
 
 | File | What it is | Written by |
 |---|---|---|
-| `harbor/instruction.md` | Upstream's prompt, verbatim, after `Current date: <mock_today>` where the task sets one (upstream's system prompt gives it), then `## Tools`: where the mailbox and calendar are mounted and what `gws` does, and each tool as the command that carries it, `helpdesk get-ticket --ticket-id <string>: <upstream's description>` | `convert.py` |
+| `harbor/instruction.md` | Upstream's prompt, verbatim, after `Current date: <mock_today>` where the task sets one (upstream's system prompt gives it), then `## Tools`: where the mailbox and calendar are mounted and what `gws` does, that this terminal is the task's `Bash` tool where it lists one, and each tool as the command that carries it, `helpdesk get-ticket --ticket-id <string>: <upstream's description>` | `convert.py` |
 | `harbor/task.toml` | Upstream's metadata, its time limit, the judge's variables for the verifier | `convert.py` |
-| `workspace/workspace.yaml` | Each service's kit fake at upstream's port, gws for gmail and calendar, the tools as CLIs, `/workspace` | `convert.py` |
+| `workspace/workspace.yaml` | Each service's kit fake at upstream's port, gws for gmail and calendar, the tools as CLIs, `/workspace`; `fakes: {}` and nothing else for a task with no service | `convert.py` |
 | `workspace/fixtures/<fake>.json` | Each fake's fixture: the lists upstream's service loads for the task | `convert.py`, from upstream's fixtures |
 | `workspace/tools.json` | The tools by CLI, each with its upstream endpoint (`tools.ts`) | `convert.py` |
 | `workspace/files/workspace/` | The task's `sandbox_files`; its PDFs (250 MB, ten OfficeQA tasks) are written but not committed (`.gitignore`) | `convert.py`, from upstream |
@@ -258,5 +260,25 @@ built call.
   function calls; here they are the agent's own (a shell call, Claude
   Code's `mcp__mirage__shell`), with their output as the result. A judge
   reading the conversation sees the same text.
+- **The shell.** Upstream's container runner gives every task its sandbox
+  tools (`Bash`, `Read`, `Write`, ...), and its dispatcher logs each call
+  as a dispatch of that tool, status 200 (a failed command is a 200 with
+  its exit code in the body). T070zh lists `Bash` among its own tools and
+  its grader counts `Bash` dispatches, so for a task that lists the tool,
+  `graders/trace.ts` builds one `Bash` dispatch per tool call of the
+  trajectory, at upstream's local endpoint (`local://sandbox/Bash`), the
+  call's arguments its request and its output the response. No other task
+  in scope lists a sandbox tool, and no other grader counts them.
+
+## Left out
+
+- The 25 general-split tasks that browse the live web (`web_real*`).
+- T097 and T098, whose PDFs are not in upstream's repo, and T091 and T096,
+  whose attached files under `fixtures/docs/` are not either.
+- T100 to T104, the terminal tasks: their graders read
+  `env_snapshot_commands`, verify scripts upstream runs in the container
+  after the agent, which nothing here runs.
+
+Each is in `convert.py`'s `SKIPPED`, with its reason.
 - **Scores here are not judgments.** No judge key was available; the
   results above used `mock_judge.py`, which scores every call the same.

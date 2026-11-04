@@ -19,7 +19,8 @@ for the solutions of ``SOLVED``, which are ours:
   (``mocks/claweval_<service>``) at upstream's port; gmail and calendar as
   Mirage's gws fake, the ``/gmail`` and ``/calendar`` mounts and the gws
   CLI, but for gmail's drafts, a fake of their own; the task's
-  ``sandbox_files`` copied into ``/workspace``; and the tools as CLIs.
+  ``sandbox_files`` copied into ``/workspace``; and the tools as CLIs. A
+  task with no service (T070zh) has the terminal alone.
 - ``environment/kit/<fake>.json``: each fake's fixture, the task's fixtures
   as the service loads them; ``gws.json``, gmail's and calendar's as Gmail
   messages and Calendar events under upstream's ids.
@@ -67,23 +68,35 @@ COMMIT = "5680b8b"
 # upstream's services read the wall clock, and only stamp their audit logs.
 EPOCH = "2026-04-03T09:00:00Z"
 
-# The general split's tasks left out of those that use services, and why.
+# The general split's tasks left out of those in scope, and why.
+SNAPSHOT = ("its grader reads env_snapshot_commands, verify scripts upstream "
+            "runs in the container after the agent, which nothing here runs")
 SKIPPED = {
+    "T091_pinbench_humanize_blog":
+    "its sandbox file, fixtures/docs/ai_blog.txt, is not in upstream's repo",
+    "T096_pinbench_business_metrics_summary":
+    "its sandbox files, under fixtures/docs/, are not in upstream's repo",
     "T097_pinbench_eli5_model_summary":
     "its sandbox file, fixtures/docs/GPT4.pdf, is not in upstream's repo",
     "T098_pinbench_openclaw_facts":
     "its sandbox files, PDFs under fixtures/docs/, are not in upstream's repo",
+    "T100_reverse_decoder": SNAPSHOT,
+    "T101_wal_recovery": SNAPSHOT,
+    "T102_xss_filter": SNAPSHOT,
+    "T103_schema_migration": SNAPSHOT,
+    "T104_packet_decoder": SNAPSHOT,
 }
 
 
 def in_scope() -> list[str]:
     """The general split's tasks whose agent works through mock services,
-    but those that browse the live web (`web_real*`) and `SKIPPED`."""
+    or with none in the terminal alone, but those that browse the live web
+    (`web_real*`) and `SKIPPED`."""
     out = []
     for path in sorted((UPSTREAM / "tasks").glob("T*/task.yaml")):
         task = yaml.safe_load(path.read_text())
         names = [s["name"] for s in task.get("services") or []]
-        if not names or any(n.startswith("web_real") for n in names):
+        if any(n.startswith("web_real") for n in names):
             continue
         if task["task_id"] not in SKIPPED:
             out.append(task["task_id"])
@@ -226,6 +239,10 @@ GWS_TOKEN = "gws-integ-token"
 PRIMARY = "integ@example.com"
 GWS_STATE = "/var/lib/mock-data/gws/gws.db"
 DISPATCHES = "/var/lib/mock-data/claweval/dispatches.jsonl"
+# Upstream's shell tool (runner/sandbox_tools.py), which a task may list
+# among its own: this terminal, not a CLI. Its calls are the agent's shell
+# calls (graders/trace.ts).
+SHELL = "Bash"
 
 
 def service_of(task: dict, tool: str) -> dict:
@@ -245,6 +262,10 @@ def has_draft(task: dict) -> bool:
     return any(t["name"] == DRAFT for t in task["tools"])
 
 
+def has_shell(task: dict) -> bool:
+    return any(t["name"] == SHELL for t in task["tools"])
+
+
 def tools(task: dict) -> list[dict]:
     """The task's tools, by the CLI of the service whose endpoint each
     posts to, as workspace/tools.ts reads them: all but gmail's and calendar's,
@@ -254,6 +275,8 @@ def tools(task: dict) -> list[dict]:
     endpoints = {e["tool_name"]: e for e in task["tool_endpoints"]}
     clis: dict[str, list] = {}
     for tool in task["tools"]:
+        if tool["name"] == SHELL:
+            continue
         service = service_of(task, tool["name"])["name"]
         if service in GWS and tool["name"] != DRAFT:
             continue
@@ -318,6 +341,8 @@ def instruction(task: dict) -> str:
         lines += [f"Current date: {today}", ""]
     lines += [task["prompt"]["text"].rstrip("\n"), "", "## Tools", ""]
     lines += gws_note(task)
+    if has_shell(task):
+        lines += ["This terminal is the task's `Bash` tool.", ""]
     clis = tools(task)
     if clis:
         lines += [
@@ -583,6 +608,17 @@ def kit_fakes(task: dict) -> list[tuple[str, dict]]:
 
 def mirage_yaml(task: dict) -> str:
     at = epoch(task)
+    head = [
+        f"# {task['task_id']}, on vfsbench_harbor's mirage environment "
+        "(datasets/claweval/convert.py writes it).", "#"
+    ]
+    if task["services"]:
+        head += [
+            "# Each service is its kit fake at upstream's port, and its "
+            "tools CLIs", "# (workspace/tools.ts)."
+        ]
+    else:
+        head += ["# No service: the agent works in the terminal alone."]
     spec: dict = {"fakes": {}}
     for name, service in kit_fakes(task):
         spec["fakes"][name] = {
@@ -602,6 +638,9 @@ def mirage_yaml(task: dict) -> str:
     clis = tools(task)
     if clis:
         spec["tools"] = {"file": "tools.json", "dispatches": DISPATCHES}
+    if not task["services"]:
+        return "\n".join(head) + "\n" + yaml.safe_dump(
+            spec, sort_keys=False, allow_unicode=True)
     # Upstream's model reaches the services through their tools alone.
     workspace: dict = {
         "profiles": {
@@ -647,12 +686,6 @@ def mirage_yaml(task: dict) -> str:
     if not workspace["clis"]:
         del workspace["clis"]
     spec["workspace"] = workspace
-    head = [
-        f"# {task['task_id']}, on vfsbench_harbor's mirage environment "
-        "(datasets/claweval/convert.py writes it).", "#",
-        "# Each service is its kit fake at upstream's port, and its tools "
-        "CLIs", "# (workspace/tools.ts)."
-    ]
     if used:
         head += [
             "#", "# Gmail and calendar are Mirage's gws fake: the /gmail and "

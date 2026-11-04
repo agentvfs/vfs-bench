@@ -16,7 +16,7 @@ import type { Recording } from './judge-client.ts'
 import { TASKS } from './port/registry.ts'
 import * as $ from './py.ts'
 
-/** The tasks graded here: all 126. */
+/** The tasks graded here: all 127. */
 export const GRADERS: Readonly<Record<string, unknown>> = Object.freeze({ ...TASKS })
 
 export async function evaluate(input: InputSpec, command: CommandContext): Promise<Grade> {

@@ -29,12 +29,23 @@
  * Each answers as upstream's service would, status 200, and is logged in
  * the service's audit with upstream's endpoint. Values are Python's
  * (`py.ts`), as the graders read them.
+ *
+ * A task that lists upstream's shell tool, `Bash` (T070zh), has its calls
+ * built too (`shellTrace`): the agent's every tool call is a shell call in
+ * this terminal, and upstream's sandbox dispatcher logs each `Bash` call
+ * with status 200, a failed command included (its exit code is in the
+ * body), so each is one `Bash` dispatch at upstream's local endpoint with
+ * its output as the response.
  */
 import * as $ from './py.ts'
 import type { TaskDefinition } from './models.ts'
 
 type Dict = $.PyDict
 const GWS = ['gmail', 'calendar']
+/** Upstream's shell tool (runner/sandbox_tools.py), and where its local
+ * dispatcher logs a call to it. */
+const SHELL = 'Bash'
+const SHELL_ENDPOINT = `local://sandbox/${SHELL}`
 // Upstream's endpoints for a gmail or calendar tool the task does not list.
 const ENDPOINTS: Record<string, string> = {
   gmail_list_messages: 'http://localhost:9100/gmail/messages',
@@ -122,6 +133,31 @@ export function messages(run: Run, prompt: string): Dict[] {
 /** What each of the agent's tool calls returned, in order. */
 function results(run: Run): string[] {
   return steps(run).flatMap((step) => observations(step).map((r) => textOf(get(r, 'content'))))
+}
+/** The agent's shell calls as upstream's `Bash` dispatches, for a task
+ * that lists the tool: one per tool call, status 200, its result the
+ * output. */
+export function shellTrace(run: Run, task: TaskDefinition): Dict[] {
+  if (!task.tools.some((t) => t.name === SHELL)) return []
+  const out: Dict[] = []
+  for (const step of steps(run)) {
+    const outputs = new Map(observations(step).map((r) => [get(r, 'source_call_id'), textOf(get(r, 'content'))]))
+    for (const call of $.iter($.or(get(step, 'tool_calls'), () => []))) {
+      const id = $.gi(call, 'tool_call_id')
+      out.push(
+        dict([
+          ['tool_use_id', id],
+          ['tool_name', SHELL],
+          ['endpoint_url', SHELL_ENDPOINT],
+          ['request_body', $.or(get(call, 'arguments'), () => new $.PyDict())],
+          ['response_status', 200],
+          ['response_body', dict([['output', outputs.get(id) ?? '']])],
+          ['timestamp', run.epoch],
+        ])
+      )
+    }
+  }
+  return out
 }
 /** The tool CLIs' calls, as the trial's daemon logged them. */
 export function dispatches(run: Run): Dict[] {
