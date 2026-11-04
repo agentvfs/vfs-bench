@@ -262,13 +262,27 @@ built call.
   reading the conversation sees the same text.
 - **The shell.** Upstream's container runner gives every task its sandbox
   tools (`Bash`, `Read`, `Write`, ...), and its dispatcher logs each call
-  as a dispatch of that tool, status 200 (a failed command is a 200 with
-  its exit code in the body). T070zh lists `Bash` among its own tools and
-  its grader counts `Bash` dispatches, so for a task that lists the tool,
-  `graders/trace.ts` builds one `Bash` dispatch per tool call of the
-  trajectory, at upstream's local endpoint (`local://sandbox/Bash`), the
-  call's arguments its request and its output the response. No other task
-  in scope lists a sandbox tool, and no other grader counts them.
+  as a dispatch of that tool, status 200, with the command's exit code,
+  stdout and stderr as the response (a failed command is a 200). T070zh
+  lists `Bash` among its own tools and its grader counts `Bash`
+  dispatches, so for a task that lists the tool, the verifier stages the
+  shell commands the agent ran (`/input/history.json`) and
+  `graders/trace.ts` builds one `Bash` dispatch per command, at upstream's
+  local endpoint (`local://sandbox/Bash`), the command its request and
+  its result the response. The commands come from the workspace's
+  history, which records every line run through its shell, whichever
+  tool ran it (Claude Code's MCP `shell`, codex-exec, an oracle's
+  solution), and not a read, an edit or a listing made with another tool
+  (`mcp__mirage__read`), so only a command run earns the credit;
+  `MirageEnvironment.agent_history` keeps the commands run while the
+  agent ran, leaving out those Harbor runs around it (`chmod` of the
+  solution, `test -d` of the artifacts) and the workspace's own `run`
+  lines. A line of several commands is several dispatches, as bash reads
+  it, where upstream's one call was one; an oracle's solution runs as
+  typed, each line a command, after the exports Harbor's `exec` puts
+  ahead of it. The other sandbox tools' calls
+  are not built: no other task in scope lists one, and no grader counts
+  them.
 
 ## Left out
 

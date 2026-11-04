@@ -1,6 +1,7 @@
 """Pin each Claw-Eval task's grader definition: the upstream sources its
 port is built from (build.py checks them before vendoring), the files and
-audits its inputs are, and whether it uses gws.
+audits its inputs are, whether it uses gws, and whether it lists upstream's
+shell tool (the agent's shell commands are then an input, `shell`).
 
 Run after datasets/claweval/download.py. --check detects drift without
 updating pins.
@@ -59,6 +60,7 @@ def build():
         ]
         drafts = any(t["name"] == "gmail_save_draft"
                      for t in definition.get("tools", []))
+        shell = any(t["name"] == "Bash" for t in definition.get("tools", []))
         audits = {
             s["name"]: s["reset_endpoint"].removesuffix("/reset") + "/audit"
             for s in definition["services"]
@@ -78,6 +80,8 @@ def build():
             audits,
             "gws":
             gws,
+            "shell":
+            shell,
             "inputs": [
                 "/logs/agent/trajectory.json",
                 "/var/lib/mock-data/claweval/dispatches.jsonl"

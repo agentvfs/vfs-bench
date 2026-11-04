@@ -31,11 +31,16 @@
  * (`py.ts`), as the graders read them.
  *
  * A task that lists upstream's shell tool, `Bash` (T070zh), has its calls
- * built too (`shellTrace`): the agent's every tool call is a shell call in
- * this terminal, and upstream's sandbox dispatcher logs each `Bash` call
- * with status 200, a failed command included (its exit code is in the
- * body), so each is one `Bash` dispatch at upstream's local endpoint with
- * its output as the response.
+ * built too (`shellTrace`), from the shell commands the agent ran: the
+ * workspace's history, which records every line run through its shell (a
+ * host agent's shell tool, codex-exec, an oracle's solution) and not a
+ * read, an edit or a listing made with another tool; the verifier stages
+ * the agent's own (`agent_history` in environment.py). Upstream's sandbox
+ * dispatcher logs each `Bash` call with status 200, a failed command
+ * included, and answers its exit code, stdout and stderr, so each command
+ * is one `Bash` dispatch at upstream's local endpoint with its result as
+ * the response. A line of several commands is several entries, as bash
+ * reads it, where upstream's one call was one dispatch.
  */
 import * as $ from './py.ts'
 import type { TaskDefinition } from './models.ts'
@@ -72,6 +77,8 @@ export interface Run {
   trajectory: string | null
   dispatches: string | null
   seed: string | null
+  /** The agent's shell commands and their results, `/input/history.json`. */
+  history: string | null
   /** The gws fake's tables at the end of the run, `{}` without gws. */
   gws: Dict
   epoch: string
@@ -134,30 +141,36 @@ export function messages(run: Run, prompt: string): Dict[] {
 function results(run: Run): string[] {
   return steps(run).flatMap((step) => observations(step).map((r) => textOf(get(r, 'content'))))
 }
-/** The agent's shell calls as upstream's `Bash` dispatches, for a task
- * that lists the tool: one per tool call, status 200, its result the
- * output. */
+/** The agent's shell commands as upstream's `Bash` dispatches, for a task
+ * that lists the tool: each `command` entry of the staged history, its
+ * `result`'s exit code and output the response (exit code -1 and nothing
+ * written for a command with no result: cut off, as upstream's timeout
+ * answers). */
 export function shellTrace(run: Run, task: TaskDefinition): Dict[] {
-  if (!task.tools.some((t) => t.name === SHELL)) return []
-  const out: Dict[] = []
-  for (const step of steps(run)) {
-    const outputs = new Map(observations(step).map((r) => [get(r, 'source_call_id'), textOf(get(r, 'content'))]))
-    for (const call of $.iter($.or(get(step, 'tool_calls'), () => []))) {
-      const id = $.gi(call, 'tool_call_id')
-      out.push(
-        dict([
-          ['tool_use_id', id],
-          ['tool_name', SHELL],
-          ['endpoint_url', SHELL_ENDPOINT],
-          ['request_body', $.or(get(call, 'arguments'), () => new $.PyDict())],
-          ['response_status', 200],
-          ['response_body', dict([['output', outputs.get(id) ?? '']])],
-          ['timestamp', run.epoch],
-        ])
-      )
-    }
-  }
-  return out
+  if (run.history === null || !task.tools.some((t) => t.name === SHELL)) return []
+  const events: Dict[] = $.list($.json.loads(run.history))
+  const results = new Map(events.filter((e) => get(e, 'type') === 'result').map((e) => [get(e, 'parent'), e]))
+  return events
+    .filter((e) => get(e, 'type') === 'command')
+    .map((e) => {
+      const result = results.get(get(e, 'id'))
+      return dict([
+        ['tool_use_id', get(e, 'id', '')],
+        ['tool_name', SHELL],
+        ['endpoint_url', SHELL_ENDPOINT],
+        ['request_body', dict([['command', get(e, 'command', '')]])],
+        ['response_status', 200],
+        [
+          'response_body',
+          dict([
+            ['exit_code', result === undefined ? -1 : get(result, 'exit_code', -1)],
+            ['stdout', result === undefined ? '' : get(result, 'stdout', '')],
+            ['stderr', result === undefined ? '' : get(result, 'stderr', '')],
+          ]),
+        ],
+        ['timestamp', run.epoch],
+      ])
+    })
 }
 /** The tool CLIs' calls, as the trial's daemon logged them. */
 export function dispatches(run: Run): Dict[] {

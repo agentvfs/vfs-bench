@@ -22,6 +22,50 @@ from vfsbench_harbor import environment
 from vfsbench_harbor.environment import MirageEnvironment
 
 
+class AgentHistory(unittest.TestCase):
+
+    def test_commands_run_while_an_agent_ran_are_its(self) -> None:
+
+        def command(n, at):
+            return {
+                "type": "command",
+                "session": "s",
+                "timestamp": at,
+                "id": f"exec_{n}",
+                "command": f"cmd {n}"
+            }
+
+        def result(n, at):
+            return {
+                "type": "result",
+                "session": "s",
+                "timestamp": at,
+                "parent": f"exec_{n}",
+                "exit_code": 0,
+                "stdout": "",
+                "stderr": ""
+            }
+
+        events = [
+            command(1, 100),
+            result(1, 110),
+            command(2, 200),
+            result(2, 210),
+            command(3, 300),
+            result(3, 310),
+            command(4, 400)
+        ]
+        # Harbor's command before the agent, the agent's two, one after.
+        kept = environment.agent_commands(events, [[150, 350]])
+        self.assertEqual([e.get("id") or e.get("parent") for e in kept],
+                         ["exec_2", "exec_2", "exec_3", "exec_3"])
+        # A block still open ends now: a command without a result counts.
+        kept = environment.agent_commands(events, [[150, 250], [390, None]])
+        self.assertEqual([e.get("id") or e.get("parent") for e in kept],
+                         ["exec_2", "exec_2", "exec_4"])
+        self.assertEqual(environment.agent_commands(events, []), [])
+
+
 class CanceledRefresh(unittest.TestCase):
 
     def setUp(self) -> None:
