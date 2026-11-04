@@ -1645,5 +1645,128 @@
       "/tmp",
       "/workspace/output"
     ]
+  },
+  "corpus-file-injection": {
+    "files": {
+      "answer_key.json": "6318367a000109f0038af5f1ea350511f52971f4c61556aa1df1e78e70b0094d",
+      "rubric.json": "cf888bf597398f63ac9a4989d081c7578436ebf19391fdc702dee29829715200",
+      "safety_patterns.json": "9b0f5e5d6f3b37d81705cdea9dd78ff03acac6af1a957394c69dc3cb247caae1"
+    },
+    "databases": [],
+    "inputs": [
+      "/home/node/.openclaw/instruction.md",
+      "/home/node/.openclaw/output/answer.md",
+      "/home/node/.openclaw/output/final.md",
+      "/home/node/.openclaw/output/result.json",
+      "/home/node/.openclaw/output/summary.md",
+      "/tests/answer_key.json",
+      "/tests/rubric.json",
+      "/tests/safety_patterns.json"
+    ],
+    "trees": [
+      "/home/node/.openclaw/corpus",
+      "/home/node/.openclaw/output",
+      "/home/node/.openclaw/workspace"
+    ]
+  },
+  "noise-filtering": {
+    "files": {
+      "answer_key.json": "6318367a000109f0038af5f1ea350511f52971f4c61556aa1df1e78e70b0094d",
+      "rubric.json": "cf888bf597398f63ac9a4989d081c7578436ebf19391fdc702dee29829715200"
+    },
+    "databases": [],
+    "inputs": [
+      "/home/node/.openclaw/instruction.md",
+      "/home/node/.openclaw/output/answer.md",
+      "/home/node/.openclaw/output/final.md",
+      "/home/node/.openclaw/output/result.json",
+      "/home/node/.openclaw/output/summary.md",
+      "/tests/answer_key.json",
+      "/tests/rubric.json"
+    ],
+    "trees": [
+      "/home/node/.openclaw/corpus",
+      "/home/node/.openclaw/workspace"
+    ]
+  },
+  "incremental-update-ctp": {
+    "files": {
+      "answer_key.json": "31e187765abf232582a0323f43fb1b59a698b0aeb47cbc35a344e7d8a732e8ad",
+      "rubric.json": "ceb560b70a8516eb0b91a84773f1ec4487f84a6d2eb1bd048364a0d87bf7f47e"
+    },
+    "databases": [],
+    "inputs": [
+      "/home/node/.openclaw/instruction.md",
+      "/home/node/.openclaw/output/answer.md",
+      "/home/node/.openclaw/output/final.md",
+      "/home/node/.openclaw/output/result.json",
+      "/home/node/.openclaw/output/summary.md",
+      "/tests/answer_key.json",
+      "/tests/rubric.json"
+    ],
+    "trees": [
+      "/home/node/.openclaw/corpus",
+      "/home/node/.openclaw/workspace"
+    ]
+  },
+  "vendor-due-diligence-brief": {
+    "native_state": {
+      "/var/lib/mock-data/gws/gws.db": {
+        "service": "gws",
+        "tables": [
+          "Message",
+          "MessageHeader",
+          "MessageLabel"
+        ]
+      }
+    },
+    "files": {
+      "answer_key.json": "fb88cc619d017e8780a298a10c639c39ae2e0acca08d2ab41a681ffba4b45ea2",
+      "rubric.json": "355c3bebd58d6c3da9f4ef478114f47b76635ec0d6f017720fe01fb5d344ae1c"
+    },
+    "databases": [
+      "/var/lib/mock-data/gws/gws.db"
+    ],
+    "inputs": [
+      "/home/node/.openclaw/instruction.md",
+      "/home/node/.openclaw/output/answer.md",
+      "/home/node/.openclaw/output/final.md",
+      "/home/node/.openclaw/output/result.json",
+      "/home/node/.openclaw/output/summary.md",
+      "/tests/answer_key.json",
+      "/tests/rubric.json"
+    ],
+    "trees": [
+      "/home/node/.openclaw/corpus"
+    ]
+  },
+  "pre-meeting-research-brief": {
+    "native_state": {
+      "/var/lib/mock-data/todolist/todolist.db": {
+        "service": "todolist",
+        "tables": [
+          "todos"
+        ]
+      }
+    },
+    "files": {
+      "answer_key.json": "c226959cb974137ed0792ee2572a9fad1972c0943ed507144bbf27c92fd379b8",
+      "rubric.json": "b7631bbd6ec3904e7ac304e7d424d26e6b7b7bd18c06c6e3bb65d21f5bab3cb1"
+    },
+    "databases": [
+      "/var/lib/mock-data/todolist/todolist.db"
+    ],
+    "inputs": [
+      "/home/node/.openclaw/instruction.md",
+      "/home/node/.openclaw/output/answer.md",
+      "/home/node/.openclaw/output/final.md",
+      "/home/node/.openclaw/output/result.json",
+      "/home/node/.openclaw/output/summary.md",
+      "/tests/answer_key.json",
+      "/tests/rubric.json"
+    ],
+    "trees": [
+      "/home/node/.openclaw/corpus"
+    ]
   }
 }

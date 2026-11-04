@@ -25,7 +25,7 @@ wrapper. The plan and its status are tracked in the roadmap issue,
 
 | Dataset | Upstream | Tasks | Graders |
 |---|---|---:|---|
-| [LiveClawBench](datasets/liveclawbench/README.md) | Mosi-AI/LiveClawBench | 70 | TypeScript |
+| [LiveClawBench](datasets/liveclawbench/README.md) | Mosi-AI/LiveClawBench | 75 | TypeScript |
 | [AutomationBench](datasets/automationbench/README.md) | zapier/AutomationBench v1.0.6 | 600 | Monty |
 | [Claw-Eval](datasets/claweval/README.md) | claw-eval/claw-eval | 126 | TypeScript, built from upstream's |
 | [ComplexMCP](datasets/complexmcp/README.md) | ATH-MaaS/complex-mcp | 47 | Monty |

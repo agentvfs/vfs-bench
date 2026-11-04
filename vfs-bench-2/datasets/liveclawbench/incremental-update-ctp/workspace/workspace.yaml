@@ -1,0 +1,26 @@
+# incremental-update-ctp, on vfsbench_harbor's mirage environment.
+#
+# In place of upstream's environment/Dockerfile: its COPY, RUN, ENV and
+# WORKDIR lines are `copy`, `run`, `env` and `workdir`. Its image runs no
+# mock; its LLM judge is called from the verifier (grader.ts).
+fakes: {}
+env:
+  TASK_NAME: incremental-update-ctp
+  HOME: /home/node
+  OPENCLAW_ARK_BASE_URL: https://ark.cn-beijing.volces.com/api/coding/v3
+  OPENCLAW_ARK_MODEL: kimi-k2.5
+workdir: /home/node/.openclaw
+run:
+  - mkdir -p /home/node/.openclaw/output /home/node/.openclaw/workspace/memory && chown -R node:node /home/node
+  - ln -sfn ../corpus /home/node/.openclaw/workspace/corpus
+copy:
+  /home/node/.openclaw/corpus: corpus/
+  /home/node/.openclaw/workspace: workspace_seed/
+# The home the agent works in, which its grader reads.
+workspace:
+  mounts:
+    /home/node:
+      vfs: disk
+      mode: exec
+      read: fresh
+      config: {root: '${RUN_DIR}/home/node'}

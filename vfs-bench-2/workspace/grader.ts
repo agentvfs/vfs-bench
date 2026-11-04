@@ -46,15 +46,23 @@ export class Context {
   readonly input: InputSpec
   private states: Record<string, Tables>
   private files: Map<string, string>
-  private constructor(input: InputSpec, states: Record<string, Tables>, files: Map<string, string>) {
+  private raw: Map<string, Uint8Array>
+  private constructor(
+    input: InputSpec,
+    states: Record<string, Tables>,
+    files: Map<string, string>,
+    raw: Map<string, Uint8Array> = new Map()
+  ) {
     this.input = input
     this.states = states
     this.files = files
+    this.raw = raw
   }
   static async open(input: InputSpec, command: CommandContext): Promise<Context> {
     if (!command.vfs || !command.shell) throw new Error('Grading requires Mirage VFS and shell access')
     const states: Record<string, Tables> = {}
     const files = new Map<string, string>()
+    const raw = new Map<string, Uint8Array>()
     for (const [name, path] of Object.entries(input.states)) {
       const output = '/.verifier-output/state.json'
       const out = await command.shell('jq -c . ' + quote(path) + ' > ' + quote(output))
@@ -71,10 +79,12 @@ export class Context {
     }
     await Promise.all(
       input.files.map(async (path) => {
-        files.set(path, utf8.decode(await command.vfs!.read(path, { raw: true })))
+        const bytes = await command.vfs!.read(path, { raw: true })
+        raw.set(path, bytes)
+        files.set(path, utf8.decode(bytes))
       })
     )
-    return new Context(input, states, files)
+    return new Context(input, states, files, raw)
   }
   async withCompletionOutput(text: string, command: CommandContext): Promise<Context> {
     const output = '/.verifier-output/completion.txt'
@@ -84,7 +94,7 @@ export class Context {
     // Store the derived file in the writable output VFS, then expose its
     // reference name to the audit without changing frozen agent inputs.
     files.set('/tmp/verify_output.txt', utf8.decode(await command.vfs!.read(output)))
-    return new Context({ ...this.input, files: [...files.keys()] }, this.states, files)
+    return new Context({ ...this.input, files: [...files.keys()] }, this.states, files, this.raw)
   }
   exists(path: string) {
     return (
@@ -92,6 +102,12 @@ export class Context {
       Object.hasOwn(this.states, path) ||
       Boolean(this.input.existingPaths?.includes(path))
     )
+  }
+  /** A file's bytes, as the agent left them: a SQLite database, say. */
+  bytes(path: string): Uint8Array {
+    const bytes = this.raw.get(path)
+    if (bytes === undefined) throw new Error(`Missing VFS input: ${path}`)
+    return bytes
   }
   text(path: string, fallback?: string): string {
     const text = this.files.get(path)

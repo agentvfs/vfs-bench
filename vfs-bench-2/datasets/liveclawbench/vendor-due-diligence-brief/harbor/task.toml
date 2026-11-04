@@ -1,0 +1,40 @@
+version = "1.0"
+
+[task]
+name = "vfs-bench-2/liveclawbench.vendor-due-diligence-brief"
+
+[metadata]
+difficulty = "easy"
+category = "open-world"
+tags = ["deep_research_report", "communication_email"]
+
+domain = "Deep Research & Report"
+domains_multi = ["Deep Research & Report", "Communication & Email"]
+
+# Triple-Axis Complexity Factors (0 = absent, 1 = present)
+factor_a1 = 0
+factor_a2 = 0   # Contaminated Initial State
+factor_b1 = 1   # Implicit Goal Resolution
+factor_b2 = 0   # Knowledge System Maintenance
+factor_c1 = 0
+factor_c2 = 0
+
+case_id = 49
+
+[verifier]
+timeout_sec = 240.0
+
+[verifier.env]
+JUDGE_API_KEY = "${OPENAI_API_KEY:-}"
+JUDGE_BASE_URL = "${OPENAI_BASE_URL:-https://api.openai.com/v1}"
+JUDGE_MODEL_ID = "${JUDGE_MODEL:-deepseek-v3.2}"
+
+[agent]
+timeout_sec = 900.0
+
+[environment]
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240
+allow_internet = true
