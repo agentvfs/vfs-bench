@@ -4,9 +4,9 @@
 
 | New employee | Department / role | Department manager | Equipment | Workstation | Account / access | Notification | Follow-up todo |
 |---|---|---|---|---|---|---|---|
-| Xiaoming Wang | Engineering / Frontend Developer | Zhang Wei (Engineering, zhangwei_eng@company.com) | MacBook Pro 14-inch, in stock (8) | Assigned | GitLab account | Sent | None |
-| Xiaoting Liu | Marketing / Marketing Specialist | Zhang Wei (Marketing, zhangwei_mkt@company.com) | MacBook Air **out of stock**, expected to arrive March 10; temporary loaner on day one | Assigned | Marketing tools account | Sent | Follow up the arrival |
-| Haoran Chen | Data / Data Engineer | **No department manager** (Yang Liu, senior analyst, covers day to day) | High-performance workstation, in stock (3) | Assigned | Database access, needs **security clearance** first | Saved as a draft only, for HR | Follow up the clearance and the draft |
+| Xiaoming Wang | Engineering / Frontend Developer | Zhang Wei (Engineering, zhangwei_eng@company.com) | MacBook Pro 14-inch, in stock (8), request not yet submitted | To be assigned | GitLab account to be created | Sent | Submit the equipment request, workstation and account |
+| Xiaoting Liu | Marketing / Marketing Specialist | Zhang Wei (Marketing, zhangwei_mkt@company.com) | MacBook Air **out of stock**, expected to arrive March 10; waitlist and temporary loaner requests not yet submitted | To be assigned | Marketing tools account to be created | Sent | Same; follow up the arrival |
+| Haoran Chen | Data / Data Engineer | **No department manager** (Yang Liu, senior analyst, covers day to day) | High-performance workstation, in stock (3), request not yet submitted (additional approval) | To be assigned | Database access, needs **security clearance** first; clearance request not yet submitted | Saved as a draft only, for HR | Same; follow up the clearance and the draft |
 
 ## 2. What the arrangements are based on
 
@@ -22,19 +22,21 @@
 
 1. **Training time and the calendar conflict.** The 10:00-12:00 training HR suggested conflicts with the Engineering manager Zhang Wei's Tech Review Meeting at 10:30-11:30; 14:00 is the department introduction, and the Marketing manager Zhang Wei has the Marketing Strategy Discussion at 14:00-15:00. The training was therefore **rescheduled to 15:00-17:00**: the event "New employee onboarding training" is created for March 9, 15:00-17:00 in the Main Conference Room, with Fang Wang and both Zhang Weis invited, and nothing overlaps it.
 2. **Department manager notifications (2 sent).**
-   - To Zhang Wei, Engineering (zhangwei_eng@company.com): "New Employee Onboarding Notification - Xiaoming Wang", with the equipment, workstation, GitLab account and the day's schedule, explaining why the training moved to the afternoon.
-   - To Zhang Wei, Marketing (zhangwei_mkt@company.com): "New Employee Onboarding Notification - Xiaoting Liu", with the MacBook Air shortage and loaner arrangement, the marketing tools account and the day's schedule.
+   - To Zhang Wei, Engineering (zhangwei_eng@company.com): "New Employee Onboarding Notification - Xiaoming Wang", listing the equipment, workstation and GitLab account as pending, asking him to approve the OA system equipment request by March 6, and explaining why the training moved to the afternoon.
+   - To Zhang Wei, Marketing (zhangwei_mkt@company.com): "New Employee Onboarding Notification - Xiaoting Liu", with the MacBook Air shortage, the waitlist and loaner requests awaiting his approval, the marketing tools account and the day's schedule.
    - Each email covers only that department's new hire; neither mentions the third department.
 3. **No manager in the Data department, so a draft only (not sent).** "New Employee Onboarding Notification - Haoran Chen (Data department, draft for HR)" is saved as a draft addressed to Fang Wang in HR, who coordinates the department introduction with Yang Liu.
-4. **Follow-up todos (3 created).**
+4. **Follow-up todos (4 created).**
+   - Submit equipment requests, workstations and accounts for the three new hires (high, due 2026-03-06, the 3 days before the start date KB-701 requires)
    - Follow up MacBook Air arrival - Xiaoting Liu (high, due 2026-03-10)
    - Follow up security clearance - Haoran Chen (high, due 2026-03-10)
    - Follow up Data department onboarding draft - Haoran Chen (medium, due 2026-03-06)
 
 ## 4. Risks to watch
 
-- **Equipment gap.** Xiaoting Liu's MacBook Air is out of stock and arrives March 10, one day after she starts. She is on the waitlist per KB-702 with priority on arrival, a temporary loaner is requested for day one, and the Marketing manager's notification says so.
-- **Security clearance blocker.** Haoran Chen's database access permissions require security clearance from the Security department (Qiang Zhao) first, which typically takes 1-2 business days. Today is Thursday, March 5, so the clearance request should go in today; otherwise he will have no database access on March 9 and can only complete equipment, workstation and training that day.
+- **None of the pre-arrival preparation is done yet.** The equipment requests (OA system, department manager approval), the workstation assignments and the account creation were not carried out here; the notices and the todo list them as pending for HR and IT. KB-701 wants equipment requested 3 days before the start date, which is tomorrow, March 6.
+- **Equipment gap.** Xiaoting Liu's MacBook Air is out of stock and arrives March 10, one day after she starts. Per KB-702 she should go on the waitlist with priority on arrival and get a temporary loaner for day one; both requests are still to be submitted, and the Marketing manager's notification says so.
+- **Security clearance blocker.** Haoran Chen's database access permissions require security clearance from the Security department (Qiang Zhao) first, which typically takes 1-2 business days, and the clearance request has not been submitted. Today is Thursday, March 5, so it should go in today; otherwise he will have no database access on March 9 and can only complete equipment, workstation and training that day.
 - **No manager in the Data department.** The notification stops at a draft; the department introduction and day-to-day contact need HR to confirm with Yang Liu.
 
 ## 5. Schedule for March 9
@@ -43,6 +45,6 @@
 |---|---|
 | 9:00 | HR reception (Fang Wang) |
 | 9:00-9:30 | All-Hands Weekly Meeting (new hires can sit in) |
-| Morning | IT equipment pickup: MacBook Pro for Xiaoming Wang, high-performance workstation for Haoran Chen, temporary loaner for Xiaoting Liu |
+| Morning | IT equipment pickup: MacBook Pro for Xiaoming Wang, high-performance workstation for Haoran Chen, temporary loaner for Xiaoting Liu (provided the equipment requests are submitted and approved by March 6) |
 | 14:00 | Department introductions: Zhang Wei for Engineering, Zhang Wei for Marketing (he has the Marketing Strategy Discussion at 14:00-15:00, so start earlier or delegate), HR with Yang Liu for Data |
 | 15:00-17:00 | New employee onboarding training (Main Conference Room) |

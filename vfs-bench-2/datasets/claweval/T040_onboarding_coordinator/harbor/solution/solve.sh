@@ -6,8 +6,9 @@
 # training event at 15:00, after the conflict and the 14:00 department
 # introductions; the notices to the two managers with `gws gmail send`
 # (upstream's gmail_send_message), neither naming the Data department;
-# the Data department's notice as a draft to HR; and three follow-up
-# todos.
+# the Data department's notice as a draft to HR; and four follow-up
+# todos, the first for the equipment requests, workstations and accounts
+# nothing here can arrange, so the notices call them pending.
 # Mail and events are read through the /gmail mount and the gws CLI, as
 # the instruction gives them; drafts are upstream's tool (gmail save-draft).
 # Each step's command and output go to the trajectory (trajectory.py),
@@ -57,9 +58,9 @@ gws gmail send --to zhangwei_eng@company.com --subject 'New Employee Onboarding 
 
 Xiaoming Wang (Frontend Developer) joins Engineering next Monday, March 9. Please be ready to welcome him:
 
-- Equipment: MacBook Pro 14-inch, in stock, requested per KB-702, for pickup on day one
-- Workstation: assigned
-- Account: GitLab account is being created
+- Equipment: MacBook Pro 14-inch, in stock (8). Per KB-702 the request goes through the OA system and needs approval from the department manager; it has not been submitted yet, please approve it by March 6 (3 days before the start date)
+- Workstation: to be assigned, HR has been asked to arrange it
+- Account: GitLab account to be created by IT, HR has been asked to follow up
 - Schedule: 9:00 HR reception; 15:00-17:00 new employee onboarding training (moved from the suggested 10:00-12:00 because of your Tech Review Meeting at 10:30-11:30); 14:00 department introduction, please arrange it
 
 Reply to me or to Fang Wang in HR if you need anything else.
@@ -71,9 +72,9 @@ gws gmail send --to zhangwei_mkt@company.com --subject 'New Employee Onboarding 
 
 Xiaoting Liu (Marketing Specialist) joins Marketing next Monday, March 9. Please be ready to welcome her:
 
-- Equipment: MacBook Air is out of stock until March 10; she is on the waitlist with priority on arrival, and a temporary loaner is arranged for day one
-- Workstation: assigned
-- Account: marketing tools account is being created
+- Equipment: MacBook Air is out of stock until March 10. Per KB-702 she needs to go on the waitlist with priority on arrival, and a temporary loaner needs requesting for day one; neither request has been submitted yet, please approve them by March 6
+- Workstation: to be assigned, HR has been asked to arrange it
+- Account: marketing tools account to be created by IT, HR has been asked to follow up
 - Schedule: 9:00 HR reception; 15:00-17:00 new employee onboarding training (kept clear of the morning meeting conflict and your Marketing Strategy Discussion at 14:00-15:00); 14:00 department introduction, please arrange it
 
 Reply to me or to Fang Wang in HR if you need anything else.
@@ -86,16 +87,17 @@ gmail save-draft --to wangfang@company.com --subject 'New Employee Onboarding No
 The Data department has no department manager at the moment (Yang Liu, a senior analyst, handles day-to-day operations), so per the policy this onboarding notification for Haoran Chen is saved as a draft, not sent, for HR to coordinate directly:
 
 - Haoran Chen, Data department, Data Engineer, starting March 9
-- Equipment: high-performance workstation, in stock, requested (data roles need additional approval)
-- Workstation: assigned
-- Access: database access permissions require security clearance from the Security department (Qiang Zhao) first, typically 1-2 business days, so they will not be active on day one
+- Equipment: high-performance workstation, in stock (3); data roles need additional approval, and the request has not been submitted yet, please coordinate it
+- Workstation: to be assigned
+- Access: database access permissions require security clearance from the Security department (Qiang Zhao) first, typically 1-2 business days; the clearance request has not been submitted yet, so they will not be active on day one
 - Schedule: 9:00 HR reception; 15:00-17:00 new employee onboarding training; 14:00 department introduction (please coordinate with Yang Liu)
 
 Thanks!'
 STEP
 step <<'STEP'
+todo create-task --title 'Submit equipment requests, workstations and accounts for the three new hires' --description 'Per KB-701/702, by March 6 (3 days before the start date): submit the OA system equipment requests for Xiaoming Wang (MacBook Pro), Xiaoting Liu (temporary loaner, MacBook Air on the waitlist) and Haoran Chen (high-performance workstation, additional approval) and get the department managers approval; ask HR to assign the three workstations; ask IT to create the GitLab and marketing tools accounts.' --priority high --due-date 2026-03-06 --tags onboarding
 todo create-task --title 'Follow up MacBook Air arrival - Xiaoting Liu' --description 'EQ-002 MacBook Air is out of stock; 15 units expected March 10. Allocate one to Xiaoting Liu (Marketing) on arrival; provide a temporary loaner on day one.' --priority high --due-date 2026-03-10 --tags onboarding
-todo create-task --title 'Follow up security clearance - Haoran Chen' --description 'Haoran Chen (Data, Data Engineer) needs security clearance from Qiang Zhao in Security before database access can be granted; clearance takes 1-2 business days, submit before the start date.' --priority high --due-date 2026-03-10 --tags onboarding
+todo create-task --title 'Follow up security clearance - Haoran Chen' --description 'Haoran Chen (Data, Data Engineer) needs security clearance from Qiang Zhao in Security before database access can be granted; clearance takes 1-2 business days and the request has not been submitted yet, submit it today.' --priority high --due-date 2026-03-10 --tags onboarding
 todo create-task --title 'Follow up Data department onboarding draft - Haoran Chen' --description 'The Data department has no manager; the onboarding notification for Haoran Chen is saved as a draft to Fang Wang in HR, who coordinates the department introduction with Yang Liu.' --priority medium --due-date 2026-03-06 --tags onboarding
 STEP
 step <<'STEP'
