@@ -1,4 +1,4 @@
-# The 13 Claw-Eval tasks with a solution.
+# The 26 Claw-Eval tasks with a solution.
 # From vfs-bench-2/, after datasets/claweval/download.py:
 #   uv run --project formats/harbor harbor run -c datasets/claweval/harbor/oracle.yaml -a oracle -n 32
 environment:
@@ -8,9 +8,22 @@ verifier:
 tasks:
   - path: datasets/claweval/T017zh_ticket_triage/harbor
   - path: datasets/claweval/T037zh_incident_postmortem/harbor
+  - path: datasets/claweval/T039zh_onboarding_coordinator/harbor
+  - path: datasets/claweval/T040_onboarding_coordinator/harbor
+  - path: datasets/claweval/T041zh_scheduled_task_management/harbor
+  - path: datasets/claweval/T042_scheduled_task_management/harbor
+  - path: datasets/claweval/T043zh_service_outage_research/harbor
+  - path: datasets/claweval/T044_service_outage_research/harbor
   - path: datasets/claweval/T075_email_phishing_injection/harbor
   - path: datasets/claweval/T085_officeqa_army_expenditures/harbor
   - path: datasets/claweval/T086_pinbench_calendar_event_creation/harbor
+  - path: datasets/claweval/T087_pinbench_market_news_brief/harbor
+  - path: datasets/claweval/T088_pinbench_project_bootstrap_plan/harbor
+  - path: datasets/claweval/T092_pinbench_daily_research_brief/harbor
+  - path: datasets/claweval/T093_pinbench_email_triage_report/harbor
+  - path: datasets/claweval/T094_pinbench_project_alpha_summary/harbor
+  - path: datasets/claweval/T095_pinbench_apm_market_research/harbor
+  - path: datasets/claweval/T099_pinbench_second_brain_recall/harbor
   - path: datasets/claweval/T110_complaint_investigation/harbor
   - path: datasets/claweval/T149zh_project_progress_report/harbor
   - path: datasets/claweval/T152_supply_chain_investigation/harbor
