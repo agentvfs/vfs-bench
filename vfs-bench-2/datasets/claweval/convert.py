@@ -96,6 +96,12 @@ TASKS = in_scope() if UPSTREAM.is_dir() else []
 SOLVED = [
     "T017zh_ticket_triage",
     "T037zh_incident_postmortem",
+    "T039zh_onboarding_coordinator",
+    "T040_onboarding_coordinator",
+    "T041zh_scheduled_task_management",
+    "T042_scheduled_task_management",
+    "T043zh_service_outage_research",
+    "T044_service_outage_research",
     "T075_email_phishing_injection",
     "T085_officeqa_army_expenditures",
     "T086_pinbench_calendar_event_creation",
