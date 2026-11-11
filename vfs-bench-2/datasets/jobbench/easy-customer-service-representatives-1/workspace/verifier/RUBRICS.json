@@ -1,0 +1,76 @@
+{
+  "rubrics": [
+    {
+      "rubric": "Does the internal case review make the correct overall determination that the complaint is partially supported rather than fully supported or fully unsupported?",
+      "weight": 10,
+      "criterion": [
+        "It labels the complaint as partially supported.",
+        "It states that the January 2025 bundled Schedule DR rate application appears correct.",
+        "It states that colder-than-normal weather likely contributed to higher usage and therefore to the higher bill."
+      ]
+    },
+    {
+      "rubric": "Does the response keep the investigation correctly scoped to the bundled Schedule DR electric energy charge for this bundled residential customer?",
+      "weight": 6,
+      "criterion": [
+        "It treats the review as a bundled Schedule DR residential electric charge review.",
+        "It does not recast the account as CARE, FERA, Community Choice Aggregation, or Direct Access service.",
+        "It does not invent move-in, reconnect, deposit, or late-payment charges as part of the disputed January 2025 amount."
+      ]
+    },
+    {
+      "rubric": "Does the response correctly set the winter tier breakpoint and allocate the 590 kWh usage between Tier 1 and Tier 2?",
+      "weight": 10,
+      "criterion": [
+        "It uses the monthly baseline allowance of 280 kWh.",
+        "It calculates the Tier 1 threshold as 130% of baseline, or 364 kWh.",
+        "It allocates 364 kWh to Tier 1 and 226 kWh to Tier 2."
+      ]
+    },
+    {
+      "rubric": "Does the response use the correct January 2025 bundled winter Schedule DR energy rates?",
+      "weight": 10,
+      "criterion": [
+        "It uses the winter Tier 1 total electric rate of $0.40685 per kWh.",
+        "It uses the winter Tier 2 total electric rate of $0.51228 per kWh.",
+        "It does not substitute summer rates or unbundled-customer rates."
+      ]
+    },
+    {
+      "rubric": "Does the response correctly compute the estimated bundled energy charge and reconcile it to the disputed amount?",
+      "weight": 10,
+      "criterion": [
+        "It calculates the Tier 1 charge at about $148.09.",
+        "It calculates the Tier 2 charge at about $115.78.",
+        "It gives a total estimated bundled energy charge of about $263.87 to $263.90 and treats that as consistent with the disputed amount."
+      ]
+    },
+    {
+      "rubric": "Does the response compare January usage to the customer's recent mild-weather usage with the correct magnitude?",
+      "weight": 6,
+      "criterion": [
+        "It notes that January usage was 590 kWh versus about 420 kWh in recent mild-weather months.",
+        "It identifies the increase as 170 kWh.",
+        "It recognizes that the usage increase is roughly 40% above the recent mild-weather level."
+      ]
+    },
+    {
+      "rubric": "Does the weather analysis conclude that January 2025 was colder than normal in San Diego and that this likely increased usage?",
+      "weight": 9,
+      "criterion": [
+        "It compares January 2025 San Diego airport observations with the long-run January normals.",
+        "It concludes that January 2025 was colder than normal rather than warmer than normal.",
+        "It connects the colder conditions to a plausible increase in household electricity usage."
+      ]
+    },
+    {
+      "rubric": "Does the response correctly account for the customer's proposed $140 payment when discussing next steps?",
+      "weight": 6,
+      "criterion": [
+        "It acknowledges that the customer can pay $140 now.",
+        "It identifies the remaining balance as about $123.87 to $123.90.",
+        "It recommends arranging payment for the remaining balance rather than ignoring the partial payment detail."
+      ]
+    }
+  ]
+}
