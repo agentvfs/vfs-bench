@@ -37,7 +37,7 @@ worker processes (see below). `--ek node=<path>` names the Node binary if
 `node` on `PATH` is not 24.15 or later. Each trial's environment is under `<trial dir>/mirage/`: the
 generated `workspace.yaml` and `plan.json`, the logs of the daemon, and
 `history.json`, the workspace's history (each line, its output and when it
-ran) from Mirage's `GET /v1/workspaces/<id>/history`, saved as it closes. The
+ran) from Mirage's `GET /v1/workspaces/<id>/logs?format=jsonl`, saved as it closes. The
 shared fakes log into the job's directory, as `fake-<service>.log`.
 
 ## The environment
@@ -59,6 +59,7 @@ and creates the workspace on it.
 | `/workspace`, `/logs`, `/tests`, `/solution`, `/tmp` | Disk mounts on directories under the trial's run dir |
 | `upload_*`, `download_*` | Copies into and out of those directories |
 | `python3` | Pyodide, from `workspace/python.py`'s bundle |
+| The image itself, where a task needs its programs | `machines` in `workspace.yaml`: a microsandbox snapshot each trial restores as a sandbox of its own (no network, the task's CPUs and memory), which Mirage runs the programs `workspace.yaml`'s runtimes capture in, over its ssh mount; removed when the trial stops |
 | The container's users | None. `user` changes nothing |
 
 Mirage revalidates each mount's listings against its folder (`read: fresh`),

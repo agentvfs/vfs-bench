@@ -126,6 +126,8 @@ interface MirageYaml {
   workdir?: string
   workspace?: Record<string, unknown>
   tools?: { file: string; dispatches: string }
+  /** Restored by the environment, one sandbox per trial, not here (environment.py). */
+  machines?: Record<string, { snapshot: string }>
 }
 
 /**
@@ -134,7 +136,7 @@ interface MirageYaml {
  */
 type CopyValue = string[] | string | { src: string; entries?: string[] }[]
 
-const KEYS = new Set(['fakes', 'env', 'copy', 'run', 'workdir', 'workspace', 'tools'])
+const KEYS = new Set(['fakes', 'env', 'copy', 'run', 'workdir', 'workspace', 'tools', 'machines'])
 
 /** Each `${NAME}` in the value's strings, from `vars`; a name unset is an error. */
 function interpolate<T>(value: T, vars: Record<string, string>, where: string): T {
