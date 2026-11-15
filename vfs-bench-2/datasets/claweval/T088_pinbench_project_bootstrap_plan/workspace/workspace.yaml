@@ -25,5 +25,6 @@ workspace:
   clis:
     todo:
       cli: todo
+      machine: in_process
       config:
         url: ${CLAWEVAL_TODO_URL}

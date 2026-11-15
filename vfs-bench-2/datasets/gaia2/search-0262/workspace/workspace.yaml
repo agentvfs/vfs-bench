@@ -59,12 +59,12 @@ workspace:
       read: fresh
       config: {root: '${RUN_DIR}/cloud-drive'}
   clis:
-    calendar: {cli: calendar, config: {url: '${GAIA2_CALENDAR_URL}'}}
-    contacts: {cli: contacts, config: {url: '${GAIA2_CONTACTS_URL}'}}
-    emails: {cli: emails, config: {url: '${GAIA2_EMAILS_URL}'}}
-    messages: {cli: messages, config: {url: '${GAIA2_MESSAGES_URL}'}}
-    chats: {cli: chats, config: {url: '${GAIA2_CHATS_URL}'}}
-    rent-a-flat: {cli: rent-a-flat, config: {url: '${GAIA2_RENT_A_FLAT_URL}'}}
-    shopping: {cli: shopping, config: {url: '${GAIA2_SHOPPING_URL}'}}
-    cabs: {cli: cabs, config: {url: '${GAIA2_CABS_URL}'}}
-    city: {cli: city, config: {url: '${GAIA2_CITY_URL}'}}
+    calendar: {cli: calendar, machine: in_process, config: {url: '${GAIA2_CALENDAR_URL}'}}
+    contacts: {cli: contacts, machine: in_process, config: {url: '${GAIA2_CONTACTS_URL}'}}
+    emails: {cli: emails, machine: in_process, config: {url: '${GAIA2_EMAILS_URL}'}}
+    messages: {cli: messages, machine: in_process, config: {url: '${GAIA2_MESSAGES_URL}'}}
+    chats: {cli: chats, machine: in_process, config: {url: '${GAIA2_CHATS_URL}'}}
+    rent-a-flat: {cli: rent-a-flat, machine: in_process, config: {url: '${GAIA2_RENT_A_FLAT_URL}'}}
+    shopping: {cli: shopping, machine: in_process, config: {url: '${GAIA2_SHOPPING_URL}'}}
+    cabs: {cli: cabs, machine: in_process, config: {url: '${GAIA2_CABS_URL}'}}
+    city: {cli: city, machine: in_process, config: {url: '${GAIA2_CITY_URL}'}}

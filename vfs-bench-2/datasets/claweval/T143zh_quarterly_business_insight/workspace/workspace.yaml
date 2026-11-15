@@ -33,13 +33,16 @@ workspace:
   clis:
     finance:
       cli: finance
+      machine: in_process
       config:
         url: ${CLAWEVAL_FINANCE_URL}
     crm:
       cli: crm
+      machine: in_process
       config:
         url: ${CLAWEVAL_CRM_URL}
     rss:
       cli: rss
+      machine: in_process
       config:
         url: ${CLAWEVAL_RSS_URL}

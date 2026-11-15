@@ -33,13 +33,16 @@ workspace:
   clis:
     crm:
       cli: crm
+      machine: in_process
       config:
         url: ${CLAWEVAL_CRM_URL}
     inventory:
       cli: inventory
+      machine: in_process
       config:
         url: ${CLAWEVAL_INVENTORY_URL}
     finance:
       cli: finance
+      machine: in_process
       config:
         url: ${CLAWEVAL_FINANCE_URL}

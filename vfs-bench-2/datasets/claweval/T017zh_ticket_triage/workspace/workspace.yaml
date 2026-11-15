@@ -25,5 +25,6 @@ workspace:
   clis:
     helpdesk:
       cli: helpdesk
+      machine: in_process
       config:
         url: ${CLAWEVAL_HELPDESK_URL}

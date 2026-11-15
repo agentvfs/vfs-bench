@@ -25,5 +25,6 @@ workspace:
   clis:
     web:
       cli: web
+      machine: in_process
       config:
         url: ${CLAWEVAL_WEB_URL}

@@ -279,40 +279,45 @@ class Machines(unittest.TestCase):
         async def msb(*argv, check=False):
             calls.append(argv)
 
-        with tempfile.TemporaryDirectory() as tmp:
-            workspace = Path(tmp, "dataset", "task", "workspace")
-            workspace.mkdir(parents=True)
-            (workspace / "workspace.yaml").write_text(
-                "fakes: {}\nmachines: {box: {snapshot: 'img:v1', "
-                "env: {MPLBACKEND: Agg}}}\n")
-            env = object.__new__(MirageEnvironment)
-            env._sandboxes = []
-            env._workspace_id = "t__env"
-            env.task_env_config = SimpleNamespace(cpus=2, memory_mb=4096)
-            env._client = None
-            env._processes = []
-            env._runs = []
+        env = object.__new__(MirageEnvironment)
+        env._sandboxes = []
+        env._workspace_id = "t__env"
+        env.task_env_config = SimpleNamespace(cpus=2, memory_mb=4096)
+        env._client = None
+        env._processes = []
+        env._runs = []
+        captures = ["@python", "@external"]
 
-            async def scenario() -> dict:
-                machines = await env._open_machines()
-                await env.stop(delete=False)
-                return machines
+        async def scenario() -> dict:
+            machines = await env._open_machines({
+                "box": {
+                    "provider": "microsandbox",
+                    "snapshot": "img:v1",
+                    "mount_type": "ssh",
+                    "captures": captures,
+                },
+                "py": {
+                    "provider": "in_process",
+                    "runtime": "monty"
+                },
+            })
+            await env.stop(delete=False)
+            return machines
 
-            with patch.object(environment, "_msb", msb), \
-                    patch.object(MirageEnvironment, "workspace_dir",
-                                 new_callable=PropertyMock,
-                                 return_value=workspace):
-                machines = asyncio.run(scenario())
+        with patch.object(environment, "_msb", msb):
+            machines = asyncio.run(scenario())
         self.assertEqual(
             machines, {
                 "box": {
                     "provider": "microsandbox",
                     "sandbox": "t__env-box",
                     "mount_type": "ssh",
-                    "env": {
-                        "MPLBACKEND": "Agg"
-                    }
-                }
+                    "captures": captures,
+                },
+                "py": {
+                    "provider": "in_process",
+                    "runtime": "monty"
+                },
             })
         self.assertEqual(calls, [
             ("restore", "--no-net", "--name", "t__env-box", "--cpus", "2",

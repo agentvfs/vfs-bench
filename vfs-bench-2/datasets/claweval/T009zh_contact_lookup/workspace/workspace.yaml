@@ -25,5 +25,6 @@ workspace:
   clis:
     contacts:
       cli: contacts
+      machine: in_process
       config:
         url: ${CLAWEVAL_CONTACTS_URL}

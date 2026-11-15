@@ -358,7 +358,7 @@ class MirageEnvironment(BaseEnvironment):
         self._env: dict[str, str] = {}
         self._runs: list[fakes.Run] = []
         # The trial's microsandbox sandboxes, restored from the snapshots
-        # its workspace.yaml's `machines` name (_open_machines).
+        # its config's `machines` name (_open_machines).
         self._sandboxes: list[str] = []
         self._url = ""
         # The run's epoch and when the trial started, in ms, which together
@@ -511,35 +511,34 @@ class MirageEnvironment(BaseEnvironment):
             raise
         return dict(zip(blocks, opened))
 
-    async def _open_machines(self) -> dict[str, dict]:
-        """Restore each microsandbox snapshot the task's workspace.yaml
-        names under ``machines``, as a sandbox of this trial's alone.
+    async def _open_machines(self, machines: dict[str, dict]) -> dict:
+        """The config's ``machines``, each microsandbox entry that names a
+        ``snapshot`` given a sandbox restored from it, this trial's alone.
 
         Mirage runs programs in a sandbox it is given and leaves creating
         one to the caller, and a sandbox shows one workspace's mounts, so
         each trial gets its own, with no network and the task's CPUs and
-        memory, and Mirage's config names it with the ssh mount.
+        memory.
         """
-        spec = yaml.safe_load(self._mirage_yaml.read_text()) or {}
-        machines = {}
-        for name, block in (spec.get("machines") or {}).items():
-            sandbox = f"{self._workspace_id}-{name}"[-128:]
-            argv = ["restore", "--no-net", "--name", sandbox]
-            if self.task_env_config.cpus:
-                argv += ["--cpus", str(self.task_env_config.cpus)]
-            if self.task_env_config.memory_mb:
-                argv += ["--memory", f"{self.task_env_config.memory_mb}M"]
-            await _msb(*argv, block["snapshot"], check=True)
-            self._sandboxes.append(sandbox)
-            machines[name] = {
-                "provider": "microsandbox",
-                "sandbox": sandbox,
-                "mount_type": "ssh",
-                **({
-                    "env": block["env"]
-                } if block.get("env") else {}),
-            }
-        return machines
+        opened = {}
+        for name, entry in machines.items():
+            entry = dict(entry)
+            snapshot = entry.pop("snapshot", None)
+            if snapshot is not None:
+                if entry.get("provider") != "microsandbox":
+                    raise ValueError(f"machine {name!r}: a snapshot is a "
+                                     "microsandbox entry's")
+                sandbox = f"{self._workspace_id}-{name}"[-128:]
+                argv = ["restore", "--no-net", "--name", sandbox]
+                if self.task_env_config.cpus:
+                    argv += ["--cpus", str(self.task_env_config.cpus)]
+                if self.task_env_config.memory_mb:
+                    argv += ["--memory", f"{self.task_env_config.memory_mb}M"]
+                await _msb(*argv, snapshot, check=True)
+                self._sandboxes.append(sandbox)
+                entry["sandbox"] = sandbox
+            opened[name] = entry
+        return opened
 
     async def _plan(self, runs: dict[str, dict]) -> dict:
         """Lay out the workspace and read the plan ``mirage.ts`` writes."""
@@ -666,9 +665,8 @@ class MirageEnvironment(BaseEnvironment):
         # The workspace's clock starts at the trial's time (Mirage's
         # system_time): `date`, file times and the runtimes read it.
         config = dict(plan["config"])
-        machines = await self._open_machines()
-        if machines:
-            config["machines"] = machines
+        if config.get("machines"):
+            config["machines"] = await self._open_machines(config["machines"])
         if self._workers is not None:
             # The trial's runs alone, each at a port of its own, and each
             # upstream port on localhost routed to its run's.
@@ -913,7 +911,8 @@ class MirageEnvironment(BaseEnvironment):
             },
             "clis": {
                 "grade": {
-                    "cli": "grade"
+                    "cli": "grade",
+                    "machine": "in_process"
                 }
             },
             "max_memory": 2 * size + 32 * 1024 * 1024,

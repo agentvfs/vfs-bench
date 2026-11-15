@@ -77,16 +77,14 @@ WORKSPACE_YAML = '''# {name}, on vfsbench_harbor's mirage environment
 # does not have in a sandbox of its own from it. No services.
 fakes: {{}}
 workdir: /workspace
-machines:
-  jobbench:
-    snapshot: jobbench:{commit}
-    env: {env}
 workspace:
-  runtimes:
-    - name: remote
-      machine: jobbench
+  machines:
+    jobbench:
+      provider: microsandbox
+      snapshot: jobbench:{commit}
+      mount_type: ssh
       captures: ["@python", "@external"]
-    - workspace
+      env: {env}
 run:
   - mkdir -p /workspace/task_folder /workspace/output
 copy:

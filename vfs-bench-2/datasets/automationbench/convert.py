@@ -630,7 +630,10 @@ workspace:
         - commands: [curl, wget]
           reason: the world is reached through the api CLI
   clis:
-    api: {{cli: api, config: {{url: '${{AUTOMATIONBENCH_URL}}'}}}}
+    api:
+      cli: api
+      machine: in_process
+      config: {{url: '${{AUTOMATIONBENCH_URL}}'}}
 """
 
 

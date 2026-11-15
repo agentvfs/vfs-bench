@@ -33,13 +33,16 @@ workspace:
   clis:
     scheduler:
       cli: scheduler
+      machine: in_process
       config:
         url: ${CLAWEVAL_SCHEDULER_URL}
     config:
       cli: config
+      machine: in_process
       config:
         url: ${CLAWEVAL_CONFIG_URL}
     inventory:
       cli: inventory
+      machine: in_process
       config:
         url: ${CLAWEVAL_INVENTORY_URL}

@@ -46,14 +46,17 @@ workspace:
   clis:
     rss:
       cli: rss
+      machine: in_process
       config:
         url: ${CLAWEVAL_RSS_URL}
     gmail:
       cli: gmail
+      machine: in_process
       config:
         url: ${CLAWEVAL_GMAIL_URL}
     gws:
       cli: gws
+      machine: in_process
       config:
         accessToken: gws-integ-token
         apiBase: ${GWS_URL}

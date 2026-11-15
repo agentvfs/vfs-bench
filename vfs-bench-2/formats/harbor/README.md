@@ -58,8 +58,8 @@ and creates the workspace on it.
 | The oracle runs `/solution/solve.sh` | The workspace's shell runs the script's code, as typed, so its history holds the code and what it wrote; `/logs/agent/oracle.txt` gets the output |
 | `/workspace`, `/logs`, `/tests`, `/solution`, `/tmp` | Disk mounts on directories under the trial's run dir |
 | `upload_*`, `download_*` | Copies into and out of those directories |
-| `python3` | Pyodide, from `workspace/python.py`'s bundle |
-| The image itself, where a task needs its programs | `machines` in `workspace.yaml`: a microsandbox snapshot each trial restores as a sandbox of its own (no network, the task's CPUs and memory), which Mirage runs the programs `workspace.yaml`'s runtimes capture in, over its ssh mount; removed when the trial stops |
+| `python3` | An `in_process` machine on Pyodide, from `workspace/python.py`'s bundle |
+| The image itself, where a task needs its programs | A microsandbox entry in the task's `machines` with a `snapshot`: each trial restores it as a sandbox of its own (no network, the task's CPUs and memory), which runs what the entry captures; removed when the trial stops |
 | The container's users | None. `user` changes nothing |
 
 Mirage revalidates each mount's listings against its folder (`read: fresh`),

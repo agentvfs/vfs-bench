@@ -139,7 +139,7 @@ test('A canceled grade stops its judge’s request', async () => {
   }
   // The `grade` CLI as a job's daemon runs it, over /request.json.
   const input = new RAMVFS()
-  const workspace = new Workspace({ '/': [input, MountMode.READ] }, { runtimes: ['workspace'] })
+  const workspace = new Workspace({ '/': [input, MountMode.READ] })
   workspace.registerCli('grade', GRADE)
   try {
     const { port } = server.address() as { port: number }

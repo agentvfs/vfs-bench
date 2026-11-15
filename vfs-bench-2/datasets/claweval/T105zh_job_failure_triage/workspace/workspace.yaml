@@ -28,9 +28,11 @@ workspace:
   clis:
     scheduler:
       cli: scheduler
+      machine: in_process
       config:
         url: ${CLAWEVAL_SCHEDULER_URL}
     helpdesk:
       cli: helpdesk
+      machine: in_process
       config:
         url: ${CLAWEVAL_HELPDESK_URL}

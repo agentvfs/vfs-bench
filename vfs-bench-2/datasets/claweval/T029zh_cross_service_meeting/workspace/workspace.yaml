@@ -55,14 +55,17 @@ workspace:
   clis:
     gmail:
       cli: gmail
+      machine: in_process
       config:
         url: ${CLAWEVAL_GMAIL_URL}
     contacts:
       cli: contacts
+      machine: in_process
       config:
         url: ${CLAWEVAL_CONTACTS_URL}
     gws:
       cli: gws
+      machine: in_process
       config:
         accessToken: gws-integ-token
         apiBase: ${GWS_URL}

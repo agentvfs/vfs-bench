@@ -13,4 +13,4 @@ tools:
   dispatches: /var/lib/mock-data/enterpriseops/dispatches.jsonl
 workspace:
   clis:
-    sn-csm-server: {cli: sn-csm-server, config: {url: '${ENTERPRISEOPS_CSM_URL}', headers: {x-user-email: "thomas.green@servicenow.com"}}}
+    sn-csm-server: {cli: sn-csm-server, machine: in_process, config: {url: '${ENTERPRISEOPS_CSM_URL}', headers: {x-user-email: "thomas.green@servicenow.com"}}}
