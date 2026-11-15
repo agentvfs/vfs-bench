@@ -1,0 +1,25 @@
+# The 16 JobBench tasks ported here.
+# From vfs-bench-2/, after datasets/jobbench/download.py:
+#   uv run --project formats/harbor harbor run \
+#     -c datasets/jobbench/harbor/job.yaml -a nop
+environment:
+  import_path: vfsbench_harbor:MirageEnvironment
+verifier:
+  import_path: vfsbench_harbor:MirageVerifier
+tasks:
+  - path: datasets/jobbench/main-technical-writers-1/harbor
+  - path: datasets/jobbench/main-technical-writers-2/harbor
+  - path: datasets/jobbench/main-technical-writers-3/harbor
+  - path: datasets/jobbench/main-web-administrators-1/harbor
+  - path: datasets/jobbench/easy-bookkeeping-accounting-and-auditing-clerks-1/harbor
+  - path: datasets/jobbench/easy-computer-user-support-specialists-1/harbor
+  - path: datasets/jobbench/easy-customer-service-representatives-1/harbor
+  - path: datasets/jobbench/easy-data-entry-keyers-1/harbor
+  - path: datasets/jobbench/easy-data-entry-keyers-2/harbor
+  - path: datasets/jobbench/easy-personal-financial-advisors-1/harbor
+  - path: datasets/jobbench/easy-personal-financial-advisors-2/harbor
+  - path: datasets/jobbench/easy-police-fire-and-ambulance-dispatchers-3/harbor
+  - path: datasets/jobbench/easy-reporters-and-correspondents-3/harbor
+  - path: datasets/jobbench/easy-social-science-research-assistants-1/harbor
+  - path: datasets/jobbench/easy-sociology-teachers-postsecondary-1/harbor
+  - path: datasets/jobbench/easy-statisticians-2/harbor

@@ -30,7 +30,7 @@ export class Run {
     const run = new Run(id, dir)
     run.env.RUN_DIR = dir
     run.env.ANSWER_PATH = run.answerPath
-    // setup/python.py's bundle, which pyodide runtimes load packages from.
+    // setup/python.py's bundle, which the pyodide machine loads packages from.
     run.env.PYTHON_PACKAGES = join(STATE, 'python')
     return run
   }

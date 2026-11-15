@@ -1,0 +1,18 @@
+[project]
+name = "vfs-bench-2-jobbench"
+version = "0.1.0"
+description = "JobBench's tasks, and its judge for the parity test"
+requires-python = ">=3.11"
+# Upstream's harbor/templates/verifier-requirements.txt.
+dependencies = [
+    "mammoth==1.12.1",
+    "openai==2.54.0",
+    "openpyxl==3.1.5",
+    "pandas==3.0.5",
+    "pdfplumber==0.11.10",
+    "python-pptx==1.0.2",
+    "xlrd==2.0.2",
+]
+
+[tool.uv]
+package = false

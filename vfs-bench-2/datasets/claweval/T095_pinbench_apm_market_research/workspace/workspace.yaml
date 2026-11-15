@@ -25,5 +25,6 @@ workspace:
   clis:
     kb:
       cli: kb
+      machine: in_process
       config:
         url: ${CLAWEVAL_KB_URL}

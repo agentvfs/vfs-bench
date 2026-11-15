@@ -1,0 +1,110 @@
+{
+  "rubrics": [
+    {
+      "rubric": "Does `vt_digital_access_analytic.csv` contain only occupied Vermont housing-unit records?",
+      "weight": 10,
+      "criterion": [
+        "All group quarters records (`TYPEHUGQ` = 2 or 3; 482 source records) are excluded.",
+        "All vacant housing units (`NP` = 0; 612 source records) are excluded.",
+        "The analytic file contains 2,756 rows, matching the occupied Vermont housing-unit sample."
+      ]
+    },
+    {
+      "rubric": "Does the analytic CSV preserve a unique household identifier and one record per household?",
+      "weight": 7,
+      "criterion": [
+        "A household identifier derived from `SERIALNO` is present.",
+        "Each analytic row represents one household rather than a person-level record or an aggregated summary.",
+        "Household identifiers are unique within the analytic file."
+      ]
+    },
+    {
+      "rubric": "Does the analytic CSV include the minimum variables needed to support the briefing task?",
+      "weight": 8,
+      "criterion": [
+        "The file includes a no-internet-access flag.",
+        "The file includes a no-paid-high-speed-service flag.",
+        "The file includes tenure, household income, household language, presence of children, household size, and the housing weight.",
+        "Any additional columns are limited to fields needed for validation, recoding, analysis, or reporting."
+      ]
+    },
+    {
+      "rubric": "Are the internet-access recodes defined correctly from the ACS PUMS housing variables?",
+      "weight": 10,
+      "criterion": [
+        "The no-internet flag equals 1 only when `ACCESSINET = 3`.",
+        "Households with `ACCESSINET = 2` are treated as having internet access without paying for it, not as having no internet.",
+        "The no-paid-high-speed flag equals 1 when `ACCESSINET = 2` or `3`, or when `ACCESSINET = 1` and `HISPEED = 2`.",
+        "Inapplicable blank or `b` values for `HISPEED` are not treated as substantive occupied-household values."
+      ]
+    },
+    {
+      "rubric": "Does `vt_digital_access_brief.txt` correctly explain the sample construction and cleaning decisions?",
+      "weight": 9,
+      "criterion": [
+        "It states that the source housing file contains 3,850 records.",
+        "It identifies 482 group quarters records and 612 vacant housing units as excluded from the briefing sample.",
+        "It states or clearly implies that 2,756 occupied housing-unit records remain in the analytic sample.",
+        "It explains why vacant units and group quarters are out of scope for a Vermont household digital-access briefing."
+      ]
+    },
+    {
+      "rubric": "Does the brief use the Census documentation correctly to justify weighting and record handling?",
+      "weight": 8,
+      "criterion": [
+        "It uses the readme to identify `WGTP` as the correct housing weight for household estimates.",
+        "It uses the data dictionary to validate the meanings of `ACCESSINET`, `HISPEED`, `TEN`, `HHL`, and `HUPAC` or equivalent retained fields.",
+        "It notes that group quarters placeholder records have `WGTP = 0` and are not household estimates."
+      ]
+    },
+    {
+      "rubric": "Does the brief report correct weighted statewide Vermont results on internet access and paid high-speed service?",
+      "weight": 10,
+      "criterion": [
+        "The occupied-household denominator is the weighted total of about 270,164 Vermont households.",
+        "The brief reports that about 6.9% of occupied Vermont households have no internet access, or the equivalent about 93.1% have some internet access.",
+        "The brief reports that about 24.1% lack paid high-speed service, or the equivalent about 75.9% have paid high-speed service.",
+        "The reported statewide percentages are explicitly weighted household estimates rather than raw record shares."
+      ]
+    },
+    {
+      "rubric": "Does the brief give a substantively correct weighted tenure comparison for Vermont households?",
+      "weight": 9,
+      "criterion": [
+        "It reports that households owned with a mortgage have the lowest lack-paid-high-speed rate, about 19.1%.",
+        "It reports that renters have a materially higher lack-paid-high-speed rate, about 28.1%.",
+        "It reports that owners free and clear are also elevated, about 27.7%, rather than collapsing all owners into one undifferentiated category.",
+        "If occupied-without-rent households are discussed, the brief notes both their high lack-paid-high-speed rate (about 32.5%) and their very small subgroup size."
+      ]
+    },
+    {
+      "rubric": "Does the brief provide a substantively correct and cautious household-language comparison for Vermont?",
+      "weight": 8,
+      "criterion": [
+        "It reports a weighted household-language comparison rather than omitting language entirely.",
+        "It identifies English-only households as the dominant Vermont group at about 91.6% of occupied households.",
+        "It avoids equating `HHL` household-language categories with the report's limited-English-speaking household definition.",
+        "It notes that Vermont's non-English household-language subgroups are small and should be interpreted cautiously."
+      ]
+    },
+    {
+      "rubric": "Does the brief address the major data and modeling limitations that matter for this assignment?",
+      "weight": 8,
+      "criterion": [
+        "It notes that the analysis uses cross-sectional 2021 ACS household microdata and is not causal evidence.",
+        "It notes that the housing file does not directly measure limited English proficiency, so household language is only a proxy for that concept.",
+        "It notes that some Vermont language subgroups are small and estimates for them are unstable or imprecise.",
+        "It notes that the assignment uses the housing file, so person-level characteristics are not directly modeled."
+      ]
+    },
+    {
+      "rubric": "Does the brief explicitly acknowledge the definition mismatch between Vermont 'lacks paid high-speed service' and the national report's broadband concepts?",
+      "weight": 7,
+      "criterion": [
+        "It notes that the Vermont constructed outcome combines households with no paid internet and households with paid but non-high-speed internet.",
+        "It does not claim that the constructed Vermont outcome is identical to every broadband measure in the national report.",
+        "If the brief invokes smartphone-only households from the report, it labels that as a related but not identical concept."
+      ]
+    }
+  ]
+}

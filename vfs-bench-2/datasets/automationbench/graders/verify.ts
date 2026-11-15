@@ -57,7 +57,7 @@ export async function automationWorkspace(request: AutomationRequest): Promise<W
     },
     {
       maxMemory: 512 * 1024 * 1024,
-      runtimes: [runtime, 'workspace'],
+      machines: [runtime],
       commandLimits: { '@line': new Limit({ timeoutSeconds: request.timeoutSeconds }) },
     }
   )

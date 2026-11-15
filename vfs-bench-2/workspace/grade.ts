@@ -3,8 +3,8 @@
  * grade is a workspace there, its frozen inputs on a read-only mount, and
  * `grade` runs the task's grader in the daemon's own process.
  *
- *     clis: {grade: {cli: grade}}      # in the grade workspace's config
- *     grade                            # reads /request.json, prints the grade
+ *     clis: {grade: {cli: grade, machine: in_process}}  # in the grade workspace's config
+ *     grade                                             # reads /request.json, prints the grade
  *
  * `/request.json` is the request a grader's runner takes on its stdin
  * (verify.ts, or the dataset's `graders/verify.ts` for a `<dataset>-monty`

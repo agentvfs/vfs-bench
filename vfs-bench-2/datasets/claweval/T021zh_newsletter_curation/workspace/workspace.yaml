@@ -25,5 +25,6 @@ workspace:
   clis:
     rss:
       cli: rss
+      machine: in_process
       config:
         url: ${CLAWEVAL_RSS_URL}

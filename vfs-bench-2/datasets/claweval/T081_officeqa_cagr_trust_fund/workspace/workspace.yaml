@@ -25,5 +25,6 @@ workspace:
   clis:
     ocr-t55:
       cli: ocr-t55
+      machine: in_process
       config:
         url: ${CLAWEVAL_OCR_URL}

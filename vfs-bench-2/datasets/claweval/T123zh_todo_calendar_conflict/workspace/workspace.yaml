@@ -40,10 +40,12 @@ workspace:
   clis:
     todo:
       cli: todo
+      machine: in_process
       config:
         url: ${CLAWEVAL_TODO_URL}
     gws:
       cli: gws
+      machine: in_process
       config:
         accessToken: gws-integ-token
         apiBase: ${GWS_URL}

@@ -25,5 +25,6 @@ workspace:
   clis:
     inventory:
       cli: inventory
+      machine: in_process
       config:
         url: ${CLAWEVAL_INVENTORY_URL}

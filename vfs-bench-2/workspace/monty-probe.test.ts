@@ -27,14 +27,14 @@ async function workspace(value: number): Promise<Workspace> {
       '/output': [new RAMVFS(), MountMode.WRITE],
     },
     {
-      runtimes: [new MontyRuntime({ config: { maxMemory: 64 * 1024 * 1024 } }), 'workspace'],
+      machines: [new MontyRuntime({ config: { maxMemory: 64 * 1024 * 1024 } })],
       commandLimits: { '@line': new Limit({ timeoutSeconds: 10 }) },
     }
   )
 }
 
-test('Monty 1.4.0 reads frozen Mirage state and writes rewards in isolated VFS workspaces', async () => {
-  assert.equal(JSON.parse(readFileSync(new URL('../package.json', montyUrl), 'utf8')).version, '1.4.0')
+test('Monty 1.6.0 reads frozen Mirage state and writes rewards in isolated VFS workspaces', async () => {
+  assert.equal(JSON.parse(readFileSync(new URL('../package.json', montyUrl), 'utf8')).version, '1.6.0')
   const run = async (value: number) => {
     const ws = await workspace(value)
     try {

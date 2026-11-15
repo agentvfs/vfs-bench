@@ -51,18 +51,22 @@ workspace:
   clis:
     gmail:
       cli: gmail
+      machine: in_process
       config:
         url: ${CLAWEVAL_GMAIL_URL}
     todo:
       cli: todo
+      machine: in_process
       config:
         url: ${CLAWEVAL_TODO_URL}
     notes:
       cli: notes
+      machine: in_process
       config:
         url: ${CLAWEVAL_NOTES_URL}
     gws:
       cli: gws
+      machine: in_process
       config:
         accessToken: gws-integ-token
         apiBase: ${GWS_URL}

@@ -1,0 +1,96 @@
+{
+  "rubrics": [
+    {
+      "rubric": "Does the dispatch review table include exactly one row for each of the 18 incidents in the extract?",
+      "weight": 10,
+      "criterion": [
+        "The table contains 18 incident rows, excluding any header row.",
+        "Each row corresponds to one unique starfire incident ID with no duplicate incident IDs.",
+        "The incident set includes both the earliest call 1800134200140000 and the latest call 1800115500140050."
+      ]
+    },
+    {
+      "rubric": "Does every table row include the full required field set?",
+      "weight": 8,
+      "criterion": [
+        "Each row includes incident ID, incident time, reported location, ZIP code, and incident classification.",
+        "Each row includes a priority tier and a current assignment assessment.",
+        "Each row includes a closest practical Brooklyn firehouse and a brief note."
+      ]
+    },
+    {
+      "rubric": "Are the core incident facts reproduced accurately for representative incidents across the borough?",
+      "weight": 8,
+      "criterion": [
+        "Incident 1800134200140000 is identified as 00:02:40 at STILLWELL AVE & 79 ST, ZIP 11223, classified as Odor - Other Than Smoke.",
+        "Incident 1800137760240000 is identified as 00:03:53 at CHURCH AVE & STORY ST, ZIP 11218, classified as Demolition Debris or Rubbish Fire.",
+        "Incident 1800103860140040 is identified as 00:24:33 at FLUSHING AVE & ADELPHI ST, ZIP 11205, classified as Odor - Other Than Smoke.",
+        "Incident 1800103560140050 is identified as 00:26:18 at PARK AVE & MARCUS GARVEY BLVD/SUMNER AVE, ZIP 11206, classified as Multiple Dwelling 'A' - Food on the stove fire."
+      ]
+    },
+    {
+      "rubric": "Is incident 1800103560140050 treated as Tier 1 and not downgraded?",
+      "weight": 10,
+      "criterion": [
+        "Incident 1800103560140050 is labeled Tier 1.",
+        "The explanation treats the call as an active fire condition rather than a routine service run.",
+        "The assignment assessment does not recommend downgrading that incident."
+      ]
+    },
+    {
+      "rubric": "Is incident 1800103860140040 treated as a monitor-for-downgrade case rather than an escalation case?",
+      "weight": 8,
+      "criterion": [
+        "Incident 1800103860140040 is assessed as monitored for possible downgrade, or equivalent wording.",
+        "The explanation notes that the incident remained a First Alarm.",
+        "The explanation notes the large assigned package of 7 engines, 4 ladders, and 2 other units."
+      ]
+    },
+    {
+      "rubric": "Does the assignment assessment avoid unnecessary escalation on the routine first-alarm medical and service calls?",
+      "weight": 7,
+      "criterion": [
+        "Incident 1800102440140000 is not assessed as should be increased.",
+        "Incident 1800126680240010 is not assessed as should be increased.",
+        "Incident 1800142940140030 is not assessed as should be increased.",
+        "Incident 1800115500140050 is not assessed as should be increased."
+      ]
+    },
+    {
+      "rubric": "Does the response treat the first-alarm structural-fire and smoke-investigation assignments as at least adequate while conditions remain unresolved?",
+      "weight": 8,
+      "criterion": [
+        "Incident 1800103560140050 is assessed as adequate or equivalent hold-the-assignment language.",
+        "Incident 1800106510140010 is not assessed as monitored for downgrade.",
+        "Incident 1800103870140020 is not assessed as monitored for downgrade."
+      ]
+    },
+    {
+      "rubric": "Does the coverage note identify the north-central Brooklyn cluster that could strain coverage?",
+      "weight": 8,
+      "criterion": [
+        "The note identifies the concentration of 11205 incidents around DEKALB AVE & TAAFFE PL, CARLTON AVENUE N/S OF PARK AVE, and FLUSHING AVE & ADELPHI ST.",
+        "The note connects that cluster to the short time window from 00:13:18 through 00:24:33.",
+        "The note explains that nearby north-central houses such as Engine 210, Ladder 102, or Engine 230 would need close backfill watch."
+      ]
+    },
+    {
+      "rubric": "Does the coverage note identify the south-Brooklyn overlap that could strain coastal coverage?",
+      "weight": 8,
+      "criterion": [
+        "The note identifies the Stillwell Avenue and Brighton Beach sequence involving incidents 1800134200140000, 1800136100140010, 1800136050240010, and 1800134320140020, or describes the same overlap by location.",
+        "The note explains that those calls compress resources across the 11223 and 11235 corridor.",
+        "The note names a sensible south-Brooklyn backfill concern such as the Coney Island, Sheepshead Bay, Homecrest, or Bensonhurst corridor."
+      ]
+    },
+    {
+      "rubric": "Does the coverage note keep the right incidents at the front of the queue if new calls arrive before units clear?",
+      "weight": 10,
+      "criterion": [
+        "The note keeps incident 1800103560140050, the structural fire in 11206, at the front of the queue.",
+        "The note keeps unresolved fire-condition or smoke-investigation calls ahead of routine service incidents.",
+        "The note places lower-risk calls such as the defective alarm, utility water jobs, or non-medical assist below the active-fire and smoke-investigation incidents."
+      ]
+    }
+  ]
+}

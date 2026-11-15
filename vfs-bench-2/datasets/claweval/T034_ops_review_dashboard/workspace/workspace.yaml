@@ -50,25 +50,31 @@ workspace:
   clis:
     config:
       cli: config
+      machine: in_process
       config:
         url: ${CLAWEVAL_CONFIG_URL}
     helpdesk:
       cli: helpdesk
+      machine: in_process
       config:
         url: ${CLAWEVAL_HELPDESK_URL}
     inventory:
       cli: inventory
+      machine: in_process
       config:
         url: ${CLAWEVAL_INVENTORY_URL}
     crm:
       cli: crm
+      machine: in_process
       config:
         url: ${CLAWEVAL_CRM_URL}
     kb:
       cli: kb
+      machine: in_process
       config:
         url: ${CLAWEVAL_KB_URL}
     scheduler:
       cli: scheduler
+      machine: in_process
       config:
         url: ${CLAWEVAL_SCHEDULER_URL}
