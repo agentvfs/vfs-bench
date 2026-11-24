@@ -66,6 +66,9 @@ MODEL_ENV = re.compile(r".*_API_KEY|OPENAI_BASE_URL|OPENAI_API_BASE")
 SQLITE = b"SQLite format 3\x00"
 # The task's test, a line in its grade workspace (computer-exec/v1 run):
 # grade writes the grade, and its score the reward file.
+# The datasets whose graders this format freezes for: the ones it has
+# run end to end. Others' graders take helpers it doesn't give yet.
+GRADED = ("complexmcp", )
 REWARD = "logs/verifier/reward.txt"
 GRADE_JSON = "logs/verifier/grade.json"
 GRADE = f"grade > {GRADE_JSON} && jq -r .score {GRADE_JSON} > {REWARD}"
@@ -156,6 +159,9 @@ class Workspace:
 
     def __init__(self, task: str):
         self.dataset, self.name = task.split("/")
+        if self.dataset not in GRADED:
+            raise ValueError(f"{self.dataset} isn't graded here yet; "
+                             f"this format grades {', '.join(GRADED)}")
         self.dir = DATASETS / self.dataset / self.name / "workspace"
         if not (self.dir / "workspace.yaml").is_file():
             raise ValueError(f"no task {task} under {DATASETS}")
@@ -336,8 +342,18 @@ class Workspace:
         self.run.mkdir(parents=True)
         spec = yaml.safe_load((self.dir / "workspace.yaml").read_text()) or {}
         blocks = spec.get("fakes") or {}
-        opened = await asyncio.gather(*(self._open_fake(s, b)
-                                        for s, b in blocks.items()))
+        starts = [
+            asyncio.ensure_future(self._open_fake(s, b))
+            for s, b in blocks.items()
+        ]
+        try:
+            opened = await asyncio.gather(*starts)
+        except BaseException:
+            # The other starts end before close(), so none escapes it.
+            for start in starts:
+                start.cancel()
+            await asyncio.gather(*starts, return_exceptions=True)
+            raise
         plan = await self._plan(dict(zip(blocks, opened)))
         if plan.get("epoch"):
             self.epoch = int(

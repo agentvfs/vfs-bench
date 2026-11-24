@@ -121,10 +121,12 @@ async def main() -> int:
 
     scores = dict(await asyncio.gather(*(one(t) for t in tasks)))
     passed = sum(1 for s in scores.values() if s == 1)
-    print(
-        f"{passed}/{len(scores)} scored 1 in {time.monotonic() - started:.0f}s"
-    )
-    return 0
+    failed = sum(1 for s in scores.values() if isinstance(s, str))
+    print(f"{passed}/{len(scores)} scored 1 in "
+          f"{time.monotonic() - started:.0f}s" +
+          (f"; {failed} raised" if failed else ""))
+    # A score of 0 is a grade; a task that raised is a broken run.
+    return 1 if failed else 0
 
 
 if __name__ == "__main__":

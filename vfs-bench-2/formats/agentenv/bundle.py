@@ -25,7 +25,7 @@ import json
 import sys
 from pathlib import Path
 
-from vfsbench_agentenv.server import GRADE, GRADE_JSON, REWARD
+from vfsbench_agentenv.server import GRADE, GRADE_JSON, GRADED, REWARD
 
 ROOT = Path(__file__).resolve().parents[2]
 DATASETS = ROOT / "datasets"
@@ -85,7 +85,11 @@ def task_json(task: str, instruction: str) -> str:
 
 
 def bundle(dataset: str) -> dict[str, str]:
-    """Each file of the bundle, by its path in it."""
+    """Each file of the bundle, by its path in it; ValueError for a dataset
+    this format doesn't grade, or one with no tasks."""
+    if dataset not in GRADED:
+        raise ValueError(f"{dataset} isn't graded here yet; this format "
+                         f"grades {', '.join(GRADED)}")
     files = {"bundle.toml": 'requires = ["vfsbench-agentenv"]\n'}
     tasks = []
     workspaces = (DATASETS / dataset).glob("*/workspace/workspace.yaml")
@@ -97,6 +101,8 @@ def bundle(dataset: str) -> dict[str, str]:
         files[f"envs/{task}/env.toml"] = ENV_TOML
         files[f"tasks/{task}.json"] = task_json(task, instruction)
         tasks.append(task)
+    if not tasks:
+        raise ValueError(f"{dataset} has no tasks under {DATASETS}")
     files["evals/agent.toml"] = "tasks = [\n" + "".join(
         f'  "{task}",\n' for task in tasks) + "]\n"
     return files
@@ -108,7 +114,11 @@ def main() -> int:
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
     out = DATASETS / args.dataset / "agentenv"
-    files = bundle(args.dataset)
+    try:
+        files = bundle(args.dataset)
+    except ValueError as error:
+        print(error, file=sys.stderr)
+        return 1
     present = {
         str(p.relative_to(out)): p.read_text()
         for p in out.rglob("*") if p.is_file()

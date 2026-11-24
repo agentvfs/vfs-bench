@@ -3,11 +3,13 @@ writes.
 
 oracle.py runs the tasks themselves.
 """
+import asyncio
 import base64
 import importlib.util
 import io
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tarfile
@@ -26,7 +28,8 @@ from agentenv_protocol.computer.card import COMPUTER_EXEC
 from agentenv_protocol.types import FileWithBytes, FileWithUri
 from vfsbench_agentenv import sandbox
 from vfsbench_agentenv.sandbox import MirageSandboxProvider, task_of
-from vfsbench_agentenv.server import GRADE, REWARD, _free_port, _task
+from vfsbench_agentenv.server import (GRADE, REWARD, Workspace, _free_port,
+                                      _task)
 
 HERE = Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location("bundle", HERE / "bundle.py")
@@ -113,6 +116,29 @@ class ServerTest(unittest.TestCase):
         finally:
             server.kill()
 
+    def test_a_failed_start_ends_the_others_first(self):
+        ended = []
+
+        async def start(self, service, block):
+            if not ended:
+                ended.append(None)
+                raise ValueError("no fixture")
+            try:
+                await asyncio.sleep(30)
+            except asyncio.CancelledError:
+                ended.append(service)
+                raise
+
+        workspace = Workspace("complexmcp/mint-100g")
+        try:
+            with mock.patch.object(Workspace, "_open_fake", start):
+                with self.assertRaisesRegex(ValueError, "no fixture"):
+                    asyncio.run(asyncio.wait_for(workspace.open(), 5))
+            # Every other start ended before open() raised.
+            self.assertEqual(len(ended), 15)
+        finally:
+            shutil.rmtree(workspace.run, ignore_errors=True)
+
     def test_data_add_names_the_task(self):
         task = {"task": "complexmcp/mint-100g"}
         raw = json.dumps(task).encode()
@@ -160,6 +186,13 @@ class BundleTest(unittest.TestCase):
         self.assertEqual(steps[3]["command"], GRADE)
         self.assertEqual(steps[3]["reward_path"], REWARD)
         self.assertIn("server", files["envs/mint-100g/env.toml"])
+
+    def test_refuses_datasets_it_does_not_grade(self):
+        for dataset in ("complexmcp-typo", "dataspace"):
+            with self.assertRaisesRegex(ValueError, "isn't graded here"):
+                bundle.bundle(dataset)
+        with self.assertRaisesRegex(ValueError, "isn't graded here"):
+            Workspace("dataspace/some-task")
 
     def test_eval_lists_every_task(self):
         files = bundle.bundle("complexmcp")
