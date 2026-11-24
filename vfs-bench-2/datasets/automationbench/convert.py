@@ -606,6 +606,8 @@ allow_internet = false
 
 
 def mirage_yaml(name: str, epoch: str) -> str:
+    deny = ("{decision: deny, reason: the world is reached through the "
+            "api CLI}")
     head = (f"# {name}, on vfsbench_harbor's mirage environment "
             "(datasets/automationbench/convert.py writes it).")
     return f"""{head}
@@ -626,9 +628,8 @@ workspace:
   profiles:
     default:
       commands:
-        deny:
-        - commands: [curl, wget]
-          reason: the world is reached through the api CLI
+        curl: {deny}
+        wget: {deny}
   clis:
     api:
       cli: api

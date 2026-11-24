@@ -607,11 +607,12 @@ def mirage_yaml(task: dict) -> str:
         "profiles": {
             "default": {
                 "commands": {
-                    "deny": [{
-                        "commands": ["curl", "wget"],
+                    command: {
+                        "decision": "deny",
                         "reason":
                         "the services are reached through their tools",
-                    }]
+                    }
+                    for command in ("curl", "wget")
                 }
             }
         }

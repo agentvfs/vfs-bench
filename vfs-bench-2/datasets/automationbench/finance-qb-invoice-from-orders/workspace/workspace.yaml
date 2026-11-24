@@ -16,9 +16,8 @@ workspace:
   profiles:
     default:
       commands:
-        deny:
-        - commands: [curl, wget]
-          reason: the world is reached through the api CLI
+        curl: {decision: deny, reason: the world is reached through the api CLI}
+        wget: {decision: deny, reason: the world is reached through the api CLI}
   clis:
     api:
       cli: api
