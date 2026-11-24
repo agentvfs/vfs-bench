@@ -1,29 +1,32 @@
 # agent-env
 
 A task's `workspace/` as an [agent-env](https://github.com/scaleapi/agentenv-framework)
-(`agentenv-framework` 0.9.1634) environment, beside [Harbor](../harbor/README.md).
+(`agentenv-framework` 0.9.1634) environment, beside [Harbor](../harbor/README.md),
+on Mirage in place of Docker.
 
-- `server.py`, an `AgentEnvEnvironment` named `mirage`. `data/add` takes
-  the task and opens its workspace on a Mirage daemon, with its fakes;
-  its one tool is `shell`; `data/get` freezes what the grader reads;
-  `data/reset` closes the workspace.
-- `topology.py`, env provider type `mirage`: the server as a process on
-  this machine, loaded with the task's environment artifact. No image is
-  built or run.
-- `grade.py`, the `env_outcome_verifier` script: the dataset's grader on
-  `data/get`, its reward the row's score.
+- `sandbox.py`, sandbox provider `mirage`: each sandbox is a task's Mirage
+  workspace. An env's image is its Dockerfile, which names the task's
+  `workspace.yaml`; `prepare_image` reads it and `create_sandbox` opens that
+  workspace. No image is built or run.
+- `server.py`, the env's `AgentEnvEnvironment`, named `mirage`. The agent's
+  one tool is `shell`, on the task's workspace. `computer-exec/v1` `run` runs a
+  line in the task's grade workspace (`workspace/grade.ts`, as Harbor's
+  verifier opens it), and `data/get` reads its files back by path.
 
 A dataset's bundle is `datasets/<dataset>/agentenv/`, written by
 `bundle.py`:
 
 ```
-envs/mirage/              env.toml, and the Dockerfile an env folder takes
-artifacts/<task>/         task.json, the task's environment artifact
-artifacts/grade/          verify.py
-tasks/<task>.json         deploy_env, deploy_agent, prompt_agent,
-                          env_outcome_verifier, reset_env
+envs/<task>/Dockerfile    LABEL workspace=<the task's workspace.yaml>
+envs/<task>/env.toml      environment mirage, server topology
+tasks/<task>.json         deploy_env (sandbox_type mirage), deploy_agent,
+                          prompt_agent, run_container_unit_tests_verifier
 evals/agent.toml
 ```
+
+The verifier runs the task's test in the env, as agent-env runs a container's:
+`grade` writes the grade to `logs/verifier/grade.json`, and its score is the
+reward in `logs/verifier/reward.txt`.
 
 Only ComplexMCP has one so far.
 
@@ -37,16 +40,13 @@ uv sync --project formats/agentenv
 # in Docker and need its [model] endpoint. Ten tasks a run.
 uv run --project formats/agentenv agent-env run datasets/complexmcp/agentenv \
   --task apple-watch-delete-history --task banana-peppers-per-neighbor
-# Each task's solution/solve.sh as one shell call, then the grade.
+# Each task's solution/solve.sh as one shell call, then its test.
 uv run --project formats/agentenv python -I formats/agentenv/oracle.py complexmcp [-n 4]
 uv run --project formats/agentenv python -I formats/agentenv/bundle.py complexmcp [--check]
 uv run --project formats/agentenv python -I formats/agentenv/test_agentenv.py
 ```
 
 `VFSBENCH_NODE` names the Node binary if `node` on `PATH` is not 24.15 or
-later. A task's files are under `state/agentenv/<task>-<id>/`.
-
-A workspace is about 3.5 GB (its daemon and one process per fake), and
-agent-env runs four tasks at a time. A server outside agent-env's sandboxes
-is not torn down by it: `reset_env` closes the workspace once it's graded,
-and the server exits with the run.
+later. A task's files are under `state/agentenv/<task>-<id>/`. A workspace is
+about 3.5 GB (its daemon and one process per fake), and agent-env runs four
+tasks at a time.

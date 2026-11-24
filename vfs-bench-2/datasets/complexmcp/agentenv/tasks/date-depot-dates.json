@@ -2,14 +2,14 @@
   {
     "id": "env",
     "type": "deploy_env",
-    "env_id": "mirage",
-    "artifact_id": "date-depot-dates"
+    "env_id": "date-depot-dates",
+    "sandbox_type": "mirage"
   },
   {
     "id": "agent",
     "type": "deploy_agent",
     "env_ids": [
-      "mirage"
+      "date-depot-dates"
     ],
     "builtin_tools": {
       "disable": "*"
@@ -29,20 +29,17 @@
   },
   {
     "id": "grade",
-    "type": "env_outcome_verifier",
-    "env_id": "mirage",
-    "file_artifact_id": "grade",
+    "type": "run_container_unit_tests_verifier",
+    "env_id": "date-depot-dates",
     "verifier_id": "reward",
+    "command": "grade > logs/verifier/grade.json && jq -r .score logs/verifier/grade.json > logs/verifier/reward.txt",
+    "reward_path": "logs/verifier/reward.txt",
+    "result_paths": [
+      "logs/verifier/grade.json"
+    ],
+    "timeout_sec": 600,
     "depends_on": [
       "solve"
-    ]
-  },
-  {
-    "id": "close",
-    "type": "reset_env",
-    "env_id": "mirage",
-    "depends_on": [
-      "grade"
     ]
   }
 ]

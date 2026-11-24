@@ -13,8 +13,12 @@ artifact holds, ``{"task": "<dataset>/<task>"}``) and opens its workspace:
   ``/SKILL.md``, and ``workspace.yaml``'s ``run`` lines run.
 
 The agent's one tool is ``shell``: a bash line in that workspace.
-``data/get`` freezes what the task's grader reads, as the request the
-dataset's grader runner takes; ``data/reset`` closes everything.
+``computer-exec/v1`` ``run`` runs a line in the task's grade workspace on
+the same daemon, opened at its first call over the frozen state
+(``workspace/grade.ts``): the request the grader takes read-only at ``/``,
+and ``logs/`` writable, which ``data/get`` reads back by path. Without
+paths, ``data/get`` answers that request; ``data/reset`` closes
+everything.
 
 It exits when its stdin closes (its parent is gone), and its processes
 with it.
@@ -45,9 +49,11 @@ from urllib.parse import quote, unquote, urlparse
 
 import httpx
 import yaml
-from agentenv_protocol import (AgentEnvEnvironment, DataPart, FilePart,
-                               add_data, environment_card, get_data,
-                               reset_data, tool)
+from agentenv_protocol import (DATA_OBJECTS_EXTENSION_URI, AgentEnvEnvironment,
+                               DataPart, FilePart, add_data, environment_card,
+                               extension, get_data, reset_data, tool)
+from agentenv_protocol.computer.card import COMPUTER_EXEC, MAX_EXEC_TIMEOUT_S
+from agentenv_protocol.types import FileWithBytes
 from mcp.types import CallToolResult, TextContent
 
 ROOT = Path(__file__).resolve().parents[4]
@@ -58,6 +64,11 @@ DAEMON = ROOT / "submodule/mirage/typescript/packages/server/src/bin/daemon.ts"
 NODE = os.environ.get("VFSBENCH_NODE", "node")
 MODEL_ENV = re.compile(r".*_API_KEY|OPENAI_BASE_URL|OPENAI_API_BASE")
 SQLITE = b"SQLite format 3\x00"
+# The task's test, a line in its grade workspace (computer-exec/v1 run):
+# grade writes the grade, and its score the reward file.
+REWARD = "logs/verifier/reward.txt"
+GRADE_JSON = "logs/verifier/grade.json"
+GRADE = f"grade > {GRADE_JSON} && jq -r .score {GRADE_JSON} > {REWARD}"
 URI_SAFE = "/:@!$&'()*+,;=-._~"
 
 
@@ -157,6 +168,8 @@ class Workspace:
         self.workdir = "/"
         self.epoch: int | None = None
         self.started = 0
+        self.grade: str | None = None
+        self.logs = self.run / "verifier" / "logs"
 
     async def _spawn(self,
                      name: str,
@@ -284,6 +297,8 @@ class Workspace:
                 json.dumps(plan["routes"]),
                 "VFSBENCH_ALLOW":
                 json.dumps(plan.get("allow", [])),
+                "VFSBENCH_GRADE":
+                "1",
                 **({} if tools is None else {
                        "VFSBENCH_TOOLS": tools["file"],
                        "VFSBENCH_DISPATCHES": tools["dispatches"],
@@ -450,7 +465,97 @@ class Workspace:
                 600,
             }
 
+    async def grade_shell(self, command: str, cwd: str | None,
+                          timeout: float) -> dict:
+        """``command`` in the task's grade workspace, from ``cwd`` (``/``)."""
+        if self.grade is None:
+            await self._open_grade()
+        reply = await asyncio.wait_for(
+            self.client.post(f"/v1/workspaces/{self.grade}/shell",
+                             json={
+                                 "command": command,
+                                 "cwd": cwd or "/"
+                             }), timeout)
+        if reply.status_code >= 300:
+            raise RuntimeError(f"the grade workspace's shell failed "
+                               f"({reply.status_code}): {reply.text}")
+        return reply.json()
+
+    async def _open_grade(self) -> None:
+        """The grade workspace, as Harbor's verifier opens one: the frozen
+        request staged read-only at ``/``, each state and file by its path
+        there, and ``/logs`` the run's ``verifier/logs``."""
+        request = await self.freeze()
+        stage = self.run / "verifier" / "inputs"
+        shutil.rmtree(stage, ignore_errors=True)
+        stage.mkdir(parents=True)
+        (self.logs / "verifier").mkdir(parents=True, exist_ok=True)
+        states, files = {}, {}
+        for i, (alias, value) in enumerate(request.pop("states").items()):
+            (stage / f"state-{i}.json").write_text(json.dumps(value))
+            states[alias] = f"/state-{i}.json"
+        for i, (path, data) in enumerate(request.pop("files").items()):
+            (stage / f"file-{i}").write_bytes(base64.b64decode(data))
+            files[path] = f"/file-{i}"
+        request["paths"] = {"states": states, "files": files}
+        (stage / "request.json").write_text(json.dumps(request))
+        size = sum(p.stat().st_size for p in stage.iterdir())
+        grade = f"{self.id}-grade"
+        reply = await self.client.post(
+            "/v1/workspaces",
+            json={
+                "id": grade,
+                "config": {
+                    "mounts": {
+                        "/": {
+                            "vfs": "disk",
+                            "mode": "read",
+                            "config": {
+                                "root": str(stage)
+                            }
+                        },
+                        "/logs": {
+                            "vfs": "disk",
+                            "mode": "write",
+                            "config": {
+                                "root": str(self.logs)
+                            }
+                        },
+                    },
+                    "clis": {
+                        "grade": {
+                            "cli": "grade",
+                            "machine": "in_process"
+                        }
+                    },
+                    # Room for the inputs as grade reads them, past
+                    # Mirage's 32 MiB a workspace.
+                    "max_memory": 2 * size + 32 * 1024 * 1024,
+                }
+            })
+        if reply.status_code >= 300:
+            raise RuntimeError("creating the grade workspace failed "
+                               f"({reply.status_code}): {reply.text}")
+        self.grade = grade
+
+    def read(self, path: str) -> bytes | None:
+        """A file of the grade workspace by its path from ``/``: under
+        ``logs/``, what its lines wrote; else its staged inputs."""
+        parts = Path(path).parts
+        if not parts or Path(path).is_absolute() or ".." in parts:
+            return None
+        root, rest = ((self.logs, parts[1:]) if parts[0] == "logs" else
+                      (self.run / "verifier" / "inputs", parts))
+        target = root.joinpath(*rest)
+        return target.read_bytes() if target.is_file() else None
+
     async def close(self) -> None:
+        if self.client is not None and self.grade is not None:
+            try:
+                await self.client.delete(f"/v1/workspaces/{self.grade}")
+            except httpx.TransportError:
+                pass
+            self.grade = None
         if self.client is not None:
             try:
                 history = await self.client.get(
@@ -496,9 +601,11 @@ class VfsBench(AgentEnvEnvironment):
 
     def __init__(self) -> None:
         self.workspace: Workspace | None = None
+        self.runs: dict[str, dict] = {}
 
     @reset_data
     async def _reset(self) -> None:
+        self.runs = {}
         if self.workspace is not None:
             workspace, self.workspace = self.workspace, None
             await workspace.close()
@@ -515,16 +622,73 @@ class VfsBench(AgentEnvEnvironment):
         self.workspace = workspace
 
     @get_data
-    async def _state(self) -> list:
+    async def _state(self, paths: list | None = None) -> list:
         if self.workspace is None:
             raise RuntimeError("no task is loaded")
-        return [
-            DataPart(
-                data={
-                    "request": await self.workspace.freeze(),
-                    "run": str(self.workspace.run)
-                })
-        ]
+        if paths is None:
+            return [
+                DataPart(
+                    data={
+                        "request": await self.workspace.freeze(),
+                        "run": str(self.workspace.run)
+                    })
+            ]
+        parts = []
+        for path in paths:
+            data = self.workspace.read(path)
+            if data is not None:
+                parts.append(
+                    FilePart(
+                        file=FileWithBytes(
+                            bytes=base64.b64encode(data).decode()),
+                        metadata={DATA_OBJECTS_EXTENSION_URI: {
+                            "path": path
+                        }}))
+        return parts
+
+    @extension(COMPUTER_EXEC,
+               op="run",
+               description="Run a command line in the task's grade "
+               "workspace: its frozen state read-only at /, logs/ writable.")
+    async def _run(self,
+                   argv: list,
+                   request_id: str,
+                   cwd: str | None = None,
+                   env: dict | None = None,
+                   timeout_s: float | None = None) -> dict:
+        if self.workspace is None:
+            raise RuntimeError("no task is loaded")
+        if request_id in self.runs:
+            return self.runs[request_id]
+        line = (argv[2] if len(argv) == 3 and argv[:2] == ["bash", "-c"] else
+                shlex.join(argv))
+        exports = "".join(f"export {k}={shlex.quote(v)}; "
+                          for k, v in (env or {}).items())
+        try:
+            done = await self.workspace.grade_shell(exports + line, cwd,
+                                                    timeout_s or 600)
+            answer = {
+                "exit_code": done["exit_code"],
+                "stdout": done["stdout"],
+                "stderr": done["stderr"],
+                "truncated": False,
+                "timed_out": False
+            }
+        except TimeoutError:
+            answer = {
+                "exit_code": 124,
+                "stdout": "",
+                "stderr": "timed out",
+                "truncated": False,
+                "timed_out": True
+            }
+        self.runs[request_id] = answer
+        return answer
+
+    def extension_params(self, uri: str) -> dict:
+        return {
+            "max_timeout_s": MAX_EXEC_TIMEOUT_S
+        } if uri == COMPUTER_EXEC else {}
 
     @tool()
     async def shell(self, command: str) -> CallToolResult:

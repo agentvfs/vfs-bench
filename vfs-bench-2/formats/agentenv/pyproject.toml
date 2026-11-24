@@ -5,8 +5,8 @@ description = "A vfs-bench-2 task's Mirage workspace as an agent-env environment
 requires-python = ">=3.12"
 dependencies = ["agentenv-framework==0.9.1634", "httpx", "pyyaml"]
 
-[project.entry-points."agent_env.env_providers"]
-mirage = "vfsbench_agentenv.topology:MirageTopology"
+[project.entry-points."agent_env.sandbox_providers"]
+mirage = "vfsbench_agentenv.sandbox:MirageSandboxProvider"
 
 [build-system]
 requires = ["hatchling"]

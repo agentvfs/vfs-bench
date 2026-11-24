@@ -5,22 +5,49 @@
 
 For each task: the env's server, ``data/add`` naming the task, its
 ``harbor/solution/solve.sh`` as one ``shell`` call over MCP (none with
-``--nop``), then the bundle's verifier (``vfsbench_agentenv.grade``).
+``--nop``), then the task's test as its verifier runs it: ``GRADE`` through
+``computer-exec/v1`` ``run``, and the reward file read with ``data/get``.
 agent-env has no oracle agent, so this drives the env as an agent would.
 """
 import argparse
 import asyncio
+import base64
 import os
 import sys
 import time
+import uuid
 
 import httpx
 from agentenv_protocol import DataPart
 from agentenv_protocol import client as protocol
+from agentenv_protocol.computer.card import COMPUTER_EXEC
 from mcp import ClientSession
 from mcp.client.streamable_http import streamablehttp_client
-from vfsbench_agentenv.grade import verify
-from vfsbench_agentenv.server import DATASETS, RUNS, _free_port
+from vfsbench_agentenv.server import DATASETS, GRADE, REWARD, RUNS, _free_port
+
+CARD = "/.well-known/agent-env.json"
+
+
+async def test(url: str, card: dict) -> float:
+    """The reward of the task's test, as run_container_unit_tests_verifier
+    runs it in the env."""
+    extension = next(e for e in card["capabilities"]["extensions"]
+                     if e["uri"] == COMPUTER_EXEC)
+    endpoint = extension["params"]["methods"]["run"]["endpoint"]
+    async with httpx.AsyncClient(timeout=660) as client:
+        reply = await client.post(f"{url}{endpoint}",
+                                  json={
+                                      "argv": ["bash", "-c", GRADE],
+                                      "request_id": uuid.uuid4().hex,
+                                      "timeout_s": 600
+                                  })
+    reply.raise_for_status()
+    done = reply.json()
+    if done.get("exit_code"):
+        raise RuntimeError(f"the test exited {done['exit_code']}: "
+                           f"{done.get('stderr', '')[-2000:]}")
+    answer = await protocol.get_data(url, timeout=60, paths=[REWARD])
+    return float(base64.b64decode(answer.parts[0].file.bytes))
 
 
 async def run(dataset: str, task: str, nop: bool) -> float:
@@ -44,9 +71,9 @@ async def run(dataset: str, task: str, nop: bool) -> float:
         async with httpx.AsyncClient() as client:
             for _ in range(300):
                 try:
-                    reply = await client.get(
-                        f"{url}/.well-known/agent-env.json")
+                    reply = await client.get(f"{url}{CARD}")
                     if reply.status_code == 200:
+                        card = reply.json()
                         break
                 except httpx.TransportError:
                     await asyncio.sleep(0.1)
@@ -60,7 +87,7 @@ async def run(dataset: str, task: str, nop: bool) -> float:
                 async with ClientSession(read, write) as session:
                     await session.initialize()
                     await session.call_tool("shell", {"command": script})
-        return (await verify(f"{url}/mcp", url))[0]["score"]
+        return await test(url, card)
     finally:
         try:
             await protocol.reset_data(url, timeout=60)
