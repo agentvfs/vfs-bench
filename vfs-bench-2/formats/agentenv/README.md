@@ -95,4 +95,30 @@ A task's files are under `state/agentenv/<task>-<id>/`:
 - `history.jsonl`
 - the daemon's and the fakes' logs
 
-A workspace takes about 3.5 GB, and agent-env runs four tasks at a time.
+## Memory
+
+One ComplexMCP task (`unblock-relatives`), private memory by macOS `footprint`:
+
+| Part | Memory |
+|---|---|
+| 15 fakes, each four processes: the fake (81 MB), its launcher (45 MB), tsx (32 MB), esbuild (13 MB) | 2.5 GB |
+| Mirage TS daemon, idle | 0.33 GB |
+| The daemon's first workspace, once: its wasm modules load, then V8 optimizes them at the first `VFS.md` | 0.1 GB |
+| The task workspace | 3 MB |
+| The grade workspace | 7 MB |
+| `server.py` | 0.1 GB |
+| **One task** | **3 GB** |
+
+agent-env runs four tasks at a time, about 12 GB.
+
+Mirage's two daemons on the same pin, each workspace a RAM mount that runs a line:
+
+| Daemon | Idle | First workspace | Each after |
+|---|---|---|---|
+| TS, from source (as here) | 334 MB | +27 MB | +3 MB |
+| TS, built `dist/` | 291 MB | +27 MB | +2 MB |
+| Python | 120 MB | +1 MB | +0.2 MB |
+
+The TS daemon loads all of Mirage at startup (2,476 modules). The Python one
+imports what it uses (1,170 of its 2,407 modules). These tasks need the TS
+daemon, since `workspace/` (the CLIs, `preload.ts`, `grade.ts`) is TypeScript.
