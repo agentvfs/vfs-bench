@@ -2,14 +2,18 @@
   {
     "id": "env",
     "type": "deploy_env",
-    "env_id": "good-morning-paisley"
+    "env_id": "mirage",
+    "artifact_id": "good-morning-paisley"
   },
   {
     "id": "agent",
     "type": "deploy_agent",
     "env_ids": [
-      "good-morning-paisley"
+      "mirage"
     ],
+    "builtin_tools": {
+      "disable": "*"
+    },
     "depends_on": [
       "env"
     ]
@@ -25,11 +29,20 @@
   },
   {
     "id": "grade",
-    "type": "mirage_grade",
-    "env_id": "good-morning-paisley",
+    "type": "env_outcome_verifier",
+    "env_id": "mirage",
+    "file_artifact_id": "grade",
     "verifier_id": "reward",
     "depends_on": [
       "solve"
+    ]
+  },
+  {
+    "id": "close",
+    "type": "reset_env",
+    "env_id": "mirage",
+    "depends_on": [
+      "grade"
     ]
   }
 ]

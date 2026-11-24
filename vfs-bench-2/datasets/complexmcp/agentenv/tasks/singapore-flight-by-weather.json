@@ -2,14 +2,18 @@
   {
     "id": "env",
     "type": "deploy_env",
-    "env_id": "singapore-flight-by-weather"
+    "env_id": "mirage",
+    "artifact_id": "singapore-flight-by-weather"
   },
   {
     "id": "agent",
     "type": "deploy_agent",
     "env_ids": [
-      "singapore-flight-by-weather"
+      "mirage"
     ],
+    "builtin_tools": {
+      "disable": "*"
+    },
     "depends_on": [
       "env"
     ]
@@ -25,11 +29,20 @@
   },
   {
     "id": "grade",
-    "type": "mirage_grade",
-    "env_id": "singapore-flight-by-weather",
+    "type": "env_outcome_verifier",
+    "env_id": "mirage",
+    "file_artifact_id": "grade",
     "verifier_id": "reward",
     "depends_on": [
       "solve"
+    ]
+  },
+  {
+    "id": "close",
+    "type": "reset_env",
+    "env_id": "mirage",
+    "depends_on": [
+      "grade"
     ]
   }
 ]

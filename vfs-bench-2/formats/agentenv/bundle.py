@@ -1,15 +1,18 @@
-"""Write a dataset's agent-env bundle from its Harbor tasks.
+"""Write a dataset's agent-env bundle from its tasks.
 
     uv run --project formats/agentenv \
       python -I formats/agentenv/bundle.py <dataset> [--check]
 
-``datasets/<dataset>/agentenv/`` holds, for each task:
+``datasets/<dataset>/agentenv/``:
 
-    envs/<task>/env.toml       type = "mirage", the task's workspace
-    tasks/<task>.json          deploy it, an agent solves it, grade
-    tasks/<task>-oracle.json   deploy it, solve.sh solves it, grade
+    envs/mirage/              the env: vfsbench_agentenv.server, deployed by
+                              the mirage topology on this machine
+    artifacts/<task>/         the task, the environment artifact data/add loads
+    artifacts/grade/          verify.py, the env_outcome_verifier's script
+    tasks/<task>.json         deploy_env, deploy_agent, prompt_agent,
+                              env_outcome_verifier, reset_env
+    evals/agent.toml          every task
 
-and ``evals/agent.toml`` and ``evals/oracle.toml``, which list them.
 ``--check`` compares the bundle with what it would write.
 """
 import argparse
@@ -20,74 +23,86 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 DATASETS = ROOT / "datasets"
 
-
-def env_toml(dataset: str, task: str) -> str:
-    return f'type = "mirage"\ntask = "{dataset}/{task}"\n'
-
-
-def steps(task: str, solve: list[dict]) -> str:
-    grade = {
-        "id": "grade",
-        "type": "mirage_grade",
-        "env_id": task,
-        "verifier_id": "reward",
-        "depends_on": [solve[-1]["id"]],
-    }
-    return json.dumps([{
-        "id": "env",
-        "type": "deploy_env",
-        "env_id": task
-    }, *solve, grade],
-                      indent=2) + "\n"
+ENV_TOML = 'environment_name = "mirage"\nenv_provider_type = "mirage"\n'
+DOCKERFILE = """\
+# agent-env's env folder takes a Dockerfile. The mirage topology
+# (vfsbench_agentenv.topology) runs this env's server on this machine
+# instead, so no image is built or run.
+FROM scratch
+"""
+ARTIFACT_TOML = 'type = "environment"\nenvironment_name = "mirage"\n'
+VERIFY = '''\
+"""The task's grade, by its dataset's own grader (vfsbench_agentenv.grade)."""
+from vfsbench_agentenv.grade import verify  # noqa: F401
+'''
 
 
-def agent_task(task: str, instruction: str) -> str:
-    # deploy_agent naming no agent deploys agent-env's default, Claude
-    # Code; `agent-env run --agent <name>` runs another.
-    return steps(task, [{
-        "id": "agent",
-        "type": "deploy_agent",
-        "env_ids": [task],
-        "depends_on": ["env"],
-    }, {
-        "id": "solve",
-        "type": "prompt_agent",
-        "prompt_id": "solve",
-        "prompt": instruction,
-        "depends_on": ["agent"],
-    }])
-
-
-def oracle_task(task: str) -> str:
-    return steps(task, [{
-        "id": "solve",
-        "type": "mirage_oracle",
-        "env_id": task,
-        "depends_on": ["env"],
-    }])
-
-
-def eval_toml(names: list[str]) -> str:
-    lines = "".join(f'  "{name}",\n' for name in names)
-    return f"tasks = [\n{lines}]\n"
+def task_json(task: str, instruction: str) -> str:
+    steps = [
+        {
+            "id": "env",
+            "type": "deploy_env",
+            "env_id": "mirage",
+            "artifact_id": task
+        },
+        {
+            # agent-env's default agent (Claude Code), or --agent <name>,
+            # its own tools off: the env's shell is its one tool.
+            "id": "agent",
+            "type": "deploy_agent",
+            "env_ids": ["mirage"],
+            "builtin_tools": {
+                "disable": "*"
+            },
+            "depends_on": ["env"]
+        },
+        {
+            "id": "solve",
+            "type": "prompt_agent",
+            "prompt_id": "solve",
+            "prompt": instruction,
+            "depends_on": ["agent"]
+        },
+        {
+            "id": "grade",
+            "type": "env_outcome_verifier",
+            "env_id": "mirage",
+            "file_artifact_id": "grade",
+            "verifier_id": "reward",
+            "depends_on": ["solve"]
+        },
+        {
+            # data/reset closes the workspace once it's graded; the env's
+            # server, outside agent-env's sandboxes, ends with the run.
+            "id": "close",
+            "type": "reset_env",
+            "env_id": "mirage",
+            "depends_on": ["grade"]
+        },
+    ]
+    return json.dumps(steps, indent=2) + "\n"
 
 
 def bundle(dataset: str) -> dict[str, str]:
     """Each file of the bundle, by its path in it."""
-    files = {"bundle.toml": 'requires = ["vfsbench-agentenv"]\n'}
-    agents, oracles = [], []
-    for harbor in sorted((DATASETS / dataset).glob("*/harbor")):
-        task = harbor.parent.name
-        instruction = (harbor / "instruction.md").read_text()
-        files[f"envs/{task}/env.toml"] = env_toml(dataset, task)
-        files[f"tasks/{task}.json"] = agent_task(task, instruction)
-        agents.append(task)
-        if (harbor / "solution" / "solve.sh").is_file():
-            files[f"tasks/{task}-oracle.json"] = oracle_task(task)
-            oracles.append(f"{task}-oracle")
-    files["evals/agent.toml"] = eval_toml(agents)
-    if oracles:
-        files["evals/oracle.toml"] = eval_toml(oracles)
+    files = {
+        "bundle.toml": 'requires = ["vfsbench-agentenv"]\n',
+        "envs/mirage/env.toml": ENV_TOML,
+        "envs/mirage/Dockerfile": DOCKERFILE,
+        "artifacts/grade/verify.py": VERIFY,
+    }
+    tasks = []
+    for workspace in sorted((DATASETS / dataset).glob("*/workspace")):
+        task = workspace.parent.name
+        instruction = (workspace.parent / "harbor" /
+                       "instruction.md").read_text()
+        files[f"artifacts/{task}/artifact.toml"] = ARTIFACT_TOML
+        files[f"artifacts/{task}/task.json"] = json.dumps(
+            {"task": f"{dataset}/{task}"}) + "\n"
+        files[f"tasks/{task}.json"] = task_json(task, instruction)
+        tasks.append(task)
+    files["evals/agent.toml"] = "tasks = [\n" + "".join(
+        f'  "{task}",\n' for task in tasks) + "]\n"
     return files
 
 
@@ -114,6 +129,9 @@ def main() -> int:
         target = out / path
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(text)
+    for folder in sorted(out.rglob("*"), reverse=True):
+        if folder.is_dir() and not any(folder.iterdir()):
+            folder.rmdir()
     print(f"{len(files)} files in {out}")
     return 0
 

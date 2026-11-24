@@ -2,14 +2,18 @@
   {
     "id": "env",
     "type": "deploy_env",
-    "env_id": "like-dennis-singapore-posts"
+    "env_id": "mirage",
+    "artifact_id": "like-dennis-singapore-posts"
   },
   {
     "id": "agent",
     "type": "deploy_agent",
     "env_ids": [
-      "like-dennis-singapore-posts"
+      "mirage"
     ],
+    "builtin_tools": {
+      "disable": "*"
+    },
     "depends_on": [
       "env"
     ]
@@ -25,11 +29,20 @@
   },
   {
     "id": "grade",
-    "type": "mirage_grade",
-    "env_id": "like-dennis-singapore-posts",
+    "type": "env_outcome_verifier",
+    "env_id": "mirage",
+    "file_artifact_id": "grade",
     "verifier_id": "reward",
     "depends_on": [
       "solve"
+    ]
+  },
+  {
+    "id": "close",
+    "type": "reset_env",
+    "env_id": "mirage",
+    "depends_on": [
+      "grade"
     ]
   }
 ]

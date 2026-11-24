@@ -1,21 +1,12 @@
 [project]
 name = "vfsbench-agentenv"
 version = "0.1.0"
-description = "An agent-env env type served from a Mirage workspace, and its grade step"
+description = "A vfs-bench-2 task's Mirage workspace as an agent-env environment"
 requires-python = ">=3.12"
-# The Mirage side is vfsbench_harbor's: the same environment, fakes and
-# graders, so a task runs the same under Harbor and under agent-env.
-dependencies = ["agentenv-framework==0.9.1634", "vfsbench-harbor"]
+dependencies = ["agentenv-framework==0.9.1634", "httpx", "pyyaml"]
 
-[tool.uv.sources]
-vfsbench-harbor = { path = "../harbor", editable = true }
-
-[project.entry-points."agent_env.envs"]
-mirage = "vfsbench_agentenv.env:MirageEnv"
-
-[project.entry-points."agent_env.task_steps"]
-mirage_oracle = "vfsbench_agentenv.steps:MirageOracleTaskStep"
-mirage_grade = "vfsbench_agentenv.steps:MirageGradeTaskStep"
+[project.entry-points."agent_env.env_providers"]
+mirage = "vfsbench_agentenv.topology:MirageTopology"
 
 [build-system]
 requires = ["hatchling"]

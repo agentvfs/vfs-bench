@@ -2,14 +2,18 @@
   {
     "id": "env",
     "type": "deploy_env",
-    "env_id": "inches-to-cm-to-self"
+    "env_id": "mirage",
+    "artifact_id": "inches-to-cm-to-self"
   },
   {
     "id": "agent",
     "type": "deploy_agent",
     "env_ids": [
-      "inches-to-cm-to-self"
+      "mirage"
     ],
+    "builtin_tools": {
+      "disable": "*"
+    },
     "depends_on": [
       "env"
     ]
@@ -25,11 +29,20 @@
   },
   {
     "id": "grade",
-    "type": "mirage_grade",
-    "env_id": "inches-to-cm-to-self",
+    "type": "env_outcome_verifier",
+    "env_id": "mirage",
+    "file_artifact_id": "grade",
     "verifier_id": "reward",
     "depends_on": [
       "solve"
+    ]
+  },
+  {
+    "id": "close",
+    "type": "reset_env",
+    "env_id": "mirage",
+    "depends_on": [
+      "grade"
     ]
   }
 ]

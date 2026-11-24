@@ -167,8 +167,8 @@ vfs-bench-2/
 - `formats/harbor/`: the Harbor wrapper, `vfsbench_harbor`:
   `MirageEnvironment`, `MirageVerifier`, and the Codex and Claude Code
   agents.
-- `formats/agentenv/`: the [agent-env](formats/agentenv/README.md) plugin,
-  `vfsbench_agentenv`, over Harbor's environment and verifier.
+- `formats/agentenv/`: the [agent-env](formats/agentenv/README.md)
+  environment, `vfsbench_agentenv`, over the same `workspace/`.
 - `datasets/<dataset>/`: one benchmark, its mocks and graders, and its
   tasks. A task's own grader is its `grader.ts`, where it has one;
   `graders/` holds what the dataset's graders share and the entry that

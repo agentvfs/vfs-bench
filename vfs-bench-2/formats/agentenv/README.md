@@ -1,27 +1,28 @@
 # agent-env
 
-`vfsbench_agentenv`, an [agent-env](https://github.com/scaleapi/agentenv-framework)
-(`agentenv-framework` 0.9.1634) plugin over a task's `workspace/`. The
-Mirage side is [Harbor](../harbor/README.md)'s, unchanged, so a task runs
-the same under both:
+A task's `workspace/` as an [agent-env](https://github.com/scaleapi/agentenv-framework)
+(`agentenv-framework` 0.9.1634) environment, beside [Harbor](../harbor/README.md).
 
-- `MirageEnv` (`env.py`), env type `mirage`: `deploy()` starts the task
-  through `vfsbench_harbor`'s `MirageEnvironment`, and the deployment is the
-  workspace's MCP endpoint on its daemon. No container or sandbox.
-- `mirage_oracle` (`steps.py`) runs the task's `solution/solve.sh` in the
-  workspace, as Harbor's oracle agent does.
-- `mirage_grade` (`steps.py`) grades with `MirageVerifier`, the dataset's
-  native grader. Its reward is the step's grade.
+- `server.py`, an `AgentEnvEnvironment` named `mirage`. `data/add` takes
+  the task and opens its workspace on a Mirage daemon, with its fakes;
+  its one tool is `shell`; `data/get` freezes what the grader reads;
+  `data/reset` closes the workspace.
+- `topology.py`, env provider type `mirage`: the server as a process on
+  this machine, loaded with the task's environment artifact. No image is
+  built or run.
+- `grade.py`, the `env_outcome_verifier` script: the dataset's grader on
+  `data/get`, its reward the row's score.
 
 A dataset's bundle is `datasets/<dataset>/agentenv/`, written by
-`bundle.py` from its Harbor tasks:
+`bundle.py`:
 
 ```
-envs/<task>/env.toml        type = "mirage", task = "<dataset>/<task>"
-tasks/<task>.json           deploy_env, deploy_agent, prompt_agent, mirage_grade
-tasks/<task>-oracle.json    deploy_env, mirage_oracle, mirage_grade
+envs/mirage/              env.toml, and the Dockerfile an env folder takes
+artifacts/<task>/         task.json, the task's environment artifact
+artifacts/grade/          verify.py
+tasks/<task>.json         deploy_env, deploy_agent, prompt_agent,
+                          env_outcome_verifier, reset_env
 evals/agent.toml
-evals/oracle.toml
 ```
 
 Only ComplexMCP has one so far.
@@ -32,19 +33,20 @@ From `vfs-bench-2/`:
 
 ```sh
 uv sync --project formats/agentenv
-uv run --project formats/agentenv agent-env run datasets/complexmcp/agentenv --eval oracle
+# agent-env's default agent (Claude Code), or --agent <name>. Its agents run
+# in Docker and need its [model] endpoint. Ten tasks a run.
 uv run --project formats/agentenv agent-env run datasets/complexmcp/agentenv \
-  --task apple-watch-delete-history-oracle
-# An agent, agent-env's default (Claude Code), or --agent <name>. agent-env's
-# agents run in Docker and need its [model] endpoint.
-uv run --project formats/agentenv agent-env run datasets/complexmcp/agentenv --eval agent
+  --task apple-watch-delete-history --task banana-peppers-per-neighbor
+# Each task's solution/solve.sh as one shell call, then the grade.
+uv run --project formats/agentenv python -I formats/agentenv/oracle.py complexmcp [-n 4]
 uv run --project formats/agentenv python -I formats/agentenv/bundle.py complexmcp [--check]
 uv run --project formats/agentenv python -I formats/agentenv/test_agentenv.py
 ```
 
 `VFSBENCH_NODE` names the Node binary if `node` on `PATH` is not 24.15 or
-later. Each deployment's files are under `state/agentenv/<task>-<id>/`, as a
-Harbor trial's: `mirage/`, `agent/` and `verifier/`.
+later. A task's files are under `state/agentenv/<task>-<id>/`.
 
-A deployment lives in the process that made it, so a mirage env's steps
-run in one `agent-env run`, not across processes.
+A workspace is about 3.5 GB (its daemon and one process per fake), and
+agent-env runs four tasks at a time. A server outside agent-env's sandboxes
+is not torn down by it: `reset_env` closes the workspace once it's graded,
+and the server exits with the run.
