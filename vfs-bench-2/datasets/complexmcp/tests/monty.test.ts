@@ -108,7 +108,7 @@ test('ported Levenshtein matches an independent Unicode dynamic program in Monty
   runtime.shared = false
   const workspace = new Workspace(
     { '/': [new RAMVFS(), MountMode.EXEC] },
-    { runtimes: [runtime, 'workspace'] }
+    { machines: [runtime] }
   )
   try {
     const code =

@@ -35,29 +35,35 @@ workspace:
   profiles:
     default:
       commands:
-        deny:
-        - commands:
-          - curl
-          - wget
+        curl:
+          decision: deny
+          reason: the services are reached through their tools
+        wget:
+          decision: deny
           reason: the services are reached through their tools
   clis:
     scheduler:
       cli: scheduler
+      machine: in_process
       config:
         url: ${CLAWEVAL_SCHEDULER_URL}
     config:
       cli: config
+      machine: in_process
       config:
         url: ${CLAWEVAL_CONFIG_URL}
     inventory:
       cli: inventory
+      machine: in_process
       config:
         url: ${CLAWEVAL_INVENTORY_URL}
     helpdesk:
       cli: helpdesk
+      machine: in_process
       config:
         url: ${CLAWEVAL_HELPDESK_URL}
     kb:
       cli: kb
+      machine: in_process
       config:
         url: ${CLAWEVAL_KB_URL}

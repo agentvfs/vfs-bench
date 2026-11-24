@@ -1,0 +1,104 @@
+{
+  "rubrics": [
+    {
+      "rubric": "Does the briefing memo correctly characterize the overall cross-jurisdiction pattern that higher diagnosed diabetes prevalence generally coincides with higher obesity and higher insufficient aerobic activity?",
+      "weight": 10,
+      "criterion": [
+        "States that diagnosed diabetes generally rises as obesity prevalence rises across the jurisdictions.",
+        "States that diagnosed diabetes generally rises as insufficient aerobic activity prevalence rises across the jurisdictions.",
+        "Supports the overall pattern with a quantitative summary close to correlations of about 0.71 for diabetes-obesity and 0.73 for diabetes-inactivity, or an equivalent numeric description.",
+        "Notes that the associations are informative for planning but not exact one-to-one mappings."
+      ]
+    },
+    {
+      "rubric": "Does the memo quantify the diabetes-versus-obesity relationship accurately enough for a public health planning audience?",
+      "weight": 8,
+      "criterion": [
+        "Describes the diabetes-obesity association as positive rather than weakly negative or absent.",
+        "Provides a quantitative summary close to r\u22480.71, a slope near 0.30 diabetes points per 1 obesity point, or an equivalent numeric description.",
+        "Uses at least one concrete state example to illustrate the obesity-diabetes trend.",
+        "Avoids implying that obesity alone fully explains cross-jurisdiction diabetes differences."
+      ]
+    },
+    {
+      "rubric": "Does the memo quantify the diabetes-versus-insufficient-aerobic-activity relationship accurately enough for a public health planning audience?",
+      "weight": 8,
+      "criterion": [
+        "Describes the diabetes-inactivity association as positive rather than weakly negative or absent.",
+        "Provides a quantitative summary close to r\u22480.73, a slope near 0.23 diabetes points per 1 inactivity point, or an equivalent numeric description.",
+        "Uses at least one concrete state example to illustrate the inactivity-diabetes trend.",
+        "Notes that inactivity explains substantial but not all cross-jurisdiction variation in diabetes burden."
+      ]
+    },
+    {
+      "rubric": "Does the memo accurately identify the lowest diagnosed-diabetes jurisdictions and describe their broader risk-indicator context?",
+      "weight": 6,
+      "criterion": [
+        "Identifies Montana and Colorado among the lowest diagnosed diabetes jurisdictions.",
+        "Includes at least two additional low-diabetes jurisdictions from Wyoming, Alaska, Vermont, Massachusetts, Wisconsin, or Oregon.",
+        "Uses diabetes values in the correct approximate range, with Montana at 6.4, Colorado at 6.6, Wyoming at 6.8, and Alaska at 7.1.",
+        "Notes that these lower-diabetes jurisdictions generally have lower obesity and/or inactivity than the highest-burden Southern cluster."
+      ]
+    },
+    {
+      "rubric": "Does the memo describe the main high-burden regional pattern in a way that is consistent with the data?",
+      "weight": 7,
+      "criterion": [
+        "Names the South or Southeast as the principal high-burden regional cluster.",
+        "Mentions at least four of Mississippi, West Virginia, Alabama, Arkansas, Tennessee, Kentucky, South Carolina, Louisiana, or Texas.",
+        "Explains that the same region is also generally elevated on obesity and insufficient aerobic activity.",
+        "Avoids claiming that every Southern jurisdiction is identical or that the regional pattern is perfectly uniform."
+      ]
+    },
+    {
+      "rubric": "Does the memo describe the main lower-burden regional counterpattern in a way that is consistent with the data?",
+      "weight": 5,
+      "criterion": [
+        "Names a lower-burden counterpattern in the Mountain West, Pacific West, New England, or a comparable region grouping.",
+        "Mentions at least three of Montana, Colorado, Wyoming, Alaska, Vermont, Massachusetts, Oregon, or Minnesota.",
+        "Explains that this lower-burden pattern is accompanied by generally lower obesity and/or inactivity levels.",
+        "Avoids claiming that every Western or Northeastern jurisdiction is uniformly low on all three measures."
+      ]
+    },
+    {
+      "rubric": "Does the memo correctly flag jurisdictions whose diabetes prevalence is unusually high relative to their obesity and activity levels?",
+      "weight": 8,
+      "criterion": [
+        "Flags at least three of District of Columbia, Hawaii, California, Florida, or New York as higher-diabetes-than-expected relative to their low obesity levels.",
+        "Provides at least one correct numeric pairing showing diabetes around 9.3 to 9.5 with obesity only about 24.4 to 26.8.",
+        "Makes clear that these jurisdictions are relative anomalies rather than the absolute highest-diabetes jurisdictions.",
+        "Uses the inactivity values or the second scatterplot to support or qualify the anomaly discussion instead of relying on obesity alone."
+      ]
+    },
+    {
+      "rubric": "Does the appendix include an interpretable chart of diagnosed diabetes versus obesity with clearly labeled flagged jurisdictions?",
+      "weight": 5,
+      "criterion": [
+        "Includes a chart plotting diagnosed diabetes against obesity for all jurisdictions in the files.",
+        "Labels at least some of the flagged jurisdictions discussed in the memo.",
+        "Makes low-obesity but relatively elevated-diabetes cases such as District of Columbia, Hawaii, California, or Florida visible as departures from the main trend.",
+        "Uses axis labels or captions that make clear the values are age-adjusted prevalence percentages."
+      ]
+    },
+    {
+      "rubric": "Does the appendix include an interpretable chart of diagnosed diabetes versus insufficient aerobic activity with clearly labeled flagged jurisdictions?",
+      "weight": 5,
+      "criterion": [
+        "Includes a chart plotting diagnosed diabetes against insufficient aerobic activity for all jurisdictions in the files.",
+        "Labels at least some of the flagged jurisdictions discussed in the memo.",
+        "Makes above-trend and below-trend cases such as West Virginia or Texas above trend, and North Dakota, Wisconsin, or Missouri below trend, visually interpretable.",
+        "Uses axis labels or captions that make clear the values are age-adjusted prevalence percentages."
+      ]
+    },
+    {
+      "rubric": "Does the memo close with professionally appropriate interpretation limits and planning guidance for the July 14, 2020 strategy session?",
+      "weight": 9,
+      "criterion": [
+        "States that the analysis is a single-year, cross-jurisdiction, ecological comparison rather than causal evidence.",
+        "Notes that the BRFSS measures are survey-based, self-reported prevalence estimates.",
+        "Explains that age adjustment improves comparability but does not eliminate all cross-jurisdiction differences or uncertainty.",
+        "Uses those limits to temper program targeting recommendations while still identifying a broad high-burden Southern cluster and separate anomaly states that merit follow-up."
+      ]
+    }
+  ]
+}

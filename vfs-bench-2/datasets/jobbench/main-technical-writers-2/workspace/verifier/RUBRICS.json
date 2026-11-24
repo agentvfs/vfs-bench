@@ -1,0 +1,84 @@
+{
+  "rubrics": [
+    {
+      "rubric": "Does the migration guide order breaking changes by customer impact, placing the orderId type fix (DELETE /store/order/{orderId}, 12.3% error rate, 22% migrated) and OAuth 2.0 flow change (POST /pet, 8.7% error rate, 34% migrated) before the PUT /pet 405-to-422 status code change (5.5% error rate, 71% migrated)?",
+      "weight": 6,
+      "criterion": [
+        "The migration guide uses quantitative data from api_usage_metrics.json (error rates, affected consumer counts, and migration completion percentages) to determine section ordering of the three breaking changes.",
+        "The orderId type fix (DELETE /store/order/{orderId}) appears before the PUT /pet status code change, justified by its 12.3% error rate (10.2 percentage point increase) and only 22% migration completion.",
+        "The OAuth 2.0 flow change (POST /pet) appears before the PUT /pet status code change, justified by its 8.7% error rate, 923 affected consumers, and only 34% migration completion.",
+        "The PUT /pet 405-to-422 status code change is placed last among the three breaking changes, reflecting its 71% migration completion and decreasing error trend at 5.5% error rate."
+      ]
+    },
+    {
+      "rubric": "Does the migration guide provide before/after code examples in both curl and Python for all 3 breaking changes: (1) OAuth 2.0 implicit-to-authorization-code flow for POST /pet, (2) orderId type change from string to integer (int64) for DELETE /store/order/{orderId}, and (3) status code change from 405 to 422 for PUT /pet validation failures?",
+      "weight": 10,
+      "criterion": [
+        "For the OAuth 2.0 change, the guide includes before/after code examples in both curl and Python, where old code shows implicit flow token usage and new code shows authorization code flow with the updated authorization URL /api/oauth/authorize.",
+        "For the orderId type change, the guide includes before/after code examples in both curl and Python, where old code passes a string value (e.g., '5A2') and new code passes an integer (int64).",
+        "For the PUT /pet status code change, the guide includes before/after code examples in both curl and Python, where old code shows error handling expecting HTTP 405 and new code handles HTTP 422 (Unprocessable Entity).",
+        "In the migration guide, all three breaking changes have complete code example pairs in both languages, totaling 6 before/after code example pairs (3 changes × 2 languages)."
+      ]
+    },
+    {
+      "rubric": "Does the migration guide include 'Common Migration Pitfalls' subsections drawing from actual support ticket data — specifically referencing SUP-4422 (Enterprise customer's OAuth implicit tokens rejected), SUP-4401 (orderId string '5A2' causing 500 error), and SUP-4438 (Enterprise customer's integration tests breaking due to 405-to-422 change)?",
+      "weight": 6,
+      "criterion": [
+        "For the OAuth 2.0 change, the migration guide includes a pitfall subsection referencing SUP-4422, describing how an Enterprise customer's implicit flow tokens were rejected after v3.1.0 with no migration notice.",
+        "For the orderId change, the migration guide includes a pitfall subsection referencing SUP-4401, describing how a customer passing '5A2' as orderId got a 500 error instead of 400.",
+        "For the PUT /pet change, the migration guide includes a pitfall subsection referencing SUP-4438, describing how an Enterprise customer's integration tests broke because they expected 405 but received 422.",
+        "All pitfall subsections in the migration guide are presented as concrete real-world scenarios with specific error details drawn from support ticket data, not abstract or generic warnings."
+      ]
+    },
+    {
+      "rubric": "Does the doc_impact_analysis.csv contain all 10 required columns (issue_source, issue_id, endpoint, description, related_tickets, affected_consumers, error_rate_pct, priority, priority_justification, terminology_violation) and correctly map documentation gaps to corresponding support tickets — including orderId type mismatch to SUP-4401, OAuth 2.0 flow change to SUP-4422, lastLoginDate field to SUP-4491, and quantity validation to SUP-4467?",
+      "weight": 6,
+      "criterion": [
+        "The doc_impact_analysis.csv contains all 10 required columns: issue_source, issue_id, endpoint, description, related_tickets, affected_consumers, error_rate_pct, priority, priority_justification, and terminology_violation.",
+        "The CSV correctly maps high-error-rate issues to support tickets: orderId type issue → SUP-4401 (affected_consumers=891, error_rate_pct=12.3), OAuth 2.0 flow change → SUP-4422 (affected_consumers=923, error_rate_pct=8.7), and PUT /pet status code change → SUP-4438 (affected_consumers=876, error_rate_pct=5.5).",
+        "The CSV correctly maps moderate-impact issues to support tickets: lastLoginDate field → SUP-4491 (affected_consumers=1089, error_rate_pct=3.9), findByTags deprecation → SUP-4472 (affected_consumers=634, error_rate_pct=0.9), and uploadImage format → SUP-4415 (affected_consumers=412, error_rate_pct=6.2).",
+        "The CSV correctly maps remaining issues to support tickets: quantity validation → SUP-4467 (affected_consumers=1203, error_rate_pct=4.1), reserved status → SUP-4430, X-Token-Type header → SUP-4451, and rate limit error messaging (R012) → SUP-4480."
+      ]
+    },
+    {
+      "rubric": "Does the doc_impact_analysis.csv assign priority scores (P0-P3) justified by quantitative data — with orderId type change (12.3% error rate, 22% migrated) and OAuth 2.0 flow change (8.7% error rate, 34% migrated) as P0, and lower-impact items like findByTags deprecation (0.9% error rate) as P2 or P3?",
+      "weight": 10,
+      "criterion": [
+        "P0 (critical) is assigned to orderId type fix (12.3% error rate, 10.2 percentage point increase, only 22% migrated, Enterprise customer affected per SUP-4401) and OAuth 2.0 flow change (8.7% error rate, 923 consumers, only 34% migrated).",
+        "P1 (high) is assigned to PUT /pet 405-to-422 (5.5% error rate, 71% migrated, decreasing trend), uploadImage format issue (6.2% error rate, 412 consumers), and POST /store/order quantity validation (4.1% error rate, 1203 consumers).",
+        "P2 (medium) is assigned to lastLoginDate field (3.9% error rate, 1089 consumers), reserved status, and X-Token-Type header; P3 (low) is assigned to findByTags deprecation (0.9% error rate, endpoint still functional).",
+        "Each priority_justification entry cites specific quantitative evidence (error rates, consumer counts, or migration percentages) from api_usage_metrics.json to justify the assigned priority score."
+      ]
+    },
+    {
+      "rubric": "Does the migration guide include a client SDK compatibility matrix covering all 3 breaking changes, specifying which SDK versions are affected and which minimum versions support the new behavior?",
+      "weight": 6,
+      "criterion": [
+        "The migration guide includes a compatibility matrix in table format covering all 3 breaking changes (OAuth 2.0 flow change, orderId type fix, PUT /pet status code change).",
+        "For each breaking change, the matrix indicates which SDK versions will break and which minimum versions support the new behavior.",
+        "The matrix includes workarounds for consumers who cannot immediately upgrade their SDK versions.",
+        "Since exact SDK version numbers are not provided in reference files, the matrix demonstrates professional judgment with a reasonable structure (e.g., organized by language/SDK with version ranges) rather than omitting this requirement."
+      ]
+    },
+    {
+      "rubric": "Does the revised API reference document the GET /user/login response headers — X-Rate-Limit (integer, int32), X-Expires-After (string, date-time), Set-Cookie, and the new X-Token-Type from v3.0.2 — with data types, descriptions, and example values (addressing R008)?",
+      "weight": 10,
+      "criterion": [
+        "The GET /user/login response headers X-Rate-Limit (integer, int32 — calls per hour allowed) and X-Expires-After (string, date-time — UTC date when token expires) are documented with data types, descriptions, and example values.",
+        "The Set-Cookie response header for GET /user/login is documented.",
+        "The new X-Token-Type response header from v3.0.2 is documented, indicating the token format (Bearer or API-Key), with reference to SUP-4451 where a customer's auth flow intermittently failed due to not handling this header.",
+        "All 4 response headers include data types, descriptions, and example values (e.g., X-Rate-Limit: 1000, X-Expires-After: '2025-12-15T12:00:00Z', X-Token-Type: 'Bearer')."
+      ]
+    },
+    {
+      "rubric": "Does the migration guide function as a standalone document — including an introduction with v3.1.0 release context, a summary of all 3 breaking changes, the current base URL (https://api.petstore.io/v3), and sufficient context for a developer to use it without the full API reference?",
+      "weight": 6,
+      "criterion": [
+        "The migration guide includes an introduction explaining the v3.1.0 release and why migration is urgent.",
+        "The guide includes a summary table or list of all 3 breaking changes at the top for quick scanning.",
+        "The guide includes the current base URL https://api.petstore.io/v3 (updated from http://petstore.swagger.io/v2 per the v3.0.0 changelog) and sufficient authentication context to understand the OAuth 2.0 flow change.",
+        "The guide contains complete before/after code examples and sufficient context that a developer can use it without needing the full API reference; it does not assume familiarity with the full API reference or omit context necessary to understand the breaking changes."
+      ]
+    }
+  ]
+}

@@ -74,18 +74,18 @@ tools:
   dispatches: /var/lib/mock-data/complexmcp/dispatches.jsonl
 workspace:
   clis:
-    math-server: {cli: math-server, config: {url: '${COMPLEXMCP_MATH_URL}'}}
-    unit-server: {cli: unit-server, config: {url: '${COMPLEXMCP_UNIT_URL}'}}
-    osint-server: {cli: osint-server, config: {url: '${COMPLEXMCP_OSINT_URL}'}}
-    time-server: {cli: time-server, config: {url: '${COMPLEXMCP_TIME_URL}'}}
-    lang-server: {cli: lang-server, config: {url: '${COMPLEXMCP_LANG_URL}'}}
-    crypto-server: {cli: crypto-server, config: {url: '${COMPLEXMCP_CRYPTO_URL}'}}
-    graph-server: {cli: graph-server, config: {url: '${COMPLEXMCP_GRAPH_URL}'}}
-    chem-server: {cli: chem-server, config: {url: '${COMPLEXMCP_CHEM_URL}'}}
-    light-system: {cli: light-system, config: {url: '${COMPLEXMCP_SYSTEM_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
-    light-talk: {cli: light-talk, config: {url: '${COMPLEXMCP_TALK_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
-    light-shop: {cli: light-shop, config: {url: '${COMPLEXMCP_SHOP_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
-    light-weather: {cli: light-weather, config: {url: '${COMPLEXMCP_WEATHER_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
-    light-flight: {cli: light-flight, config: {url: '${COMPLEXMCP_FLIGHT_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
-    light-stock: {cli: light-stock, config: {url: '${COMPLEXMCP_STOCK_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
-    light-news: {cli: light-news, config: {url: '${COMPLEXMCP_NEWS_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
+    math-server: {cli: math-server, machine: in_process, config: {url: '${COMPLEXMCP_MATH_URL}'}}
+    unit-server: {cli: unit-server, machine: in_process, config: {url: '${COMPLEXMCP_UNIT_URL}'}}
+    osint-server: {cli: osint-server, machine: in_process, config: {url: '${COMPLEXMCP_OSINT_URL}'}}
+    time-server: {cli: time-server, machine: in_process, config: {url: '${COMPLEXMCP_TIME_URL}'}}
+    lang-server: {cli: lang-server, machine: in_process, config: {url: '${COMPLEXMCP_LANG_URL}'}}
+    crypto-server: {cli: crypto-server, machine: in_process, config: {url: '${COMPLEXMCP_CRYPTO_URL}'}}
+    graph-server: {cli: graph-server, machine: in_process, config: {url: '${COMPLEXMCP_GRAPH_URL}'}}
+    chem-server: {cli: chem-server, machine: in_process, config: {url: '${COMPLEXMCP_CHEM_URL}'}}
+    light-system: {cli: light-system, machine: in_process, config: {url: '${COMPLEXMCP_SYSTEM_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
+    light-talk: {cli: light-talk, machine: in_process, config: {url: '${COMPLEXMCP_TALK_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
+    light-shop: {cli: light-shop, machine: in_process, config: {url: '${COMPLEXMCP_SHOP_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
+    light-weather: {cli: light-weather, machine: in_process, config: {url: '${COMPLEXMCP_WEATHER_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
+    light-flight: {cli: light-flight, machine: in_process, config: {url: '${COMPLEXMCP_FLIGHT_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
+    light-stock: {cli: light-stock, machine: in_process, config: {url: '${COMPLEXMCP_STOCK_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}
+    light-news: {cli: light-news, machine: in_process, config: {url: '${COMPLEXMCP_NEWS_URL}', headers: {x-light-system: '${COMPLEXMCP_SYSTEM_URL}'}}}

@@ -3,13 +3,13 @@
 # dir, so its uploads and downloads are copies. The sidecar adds the mocks'
 # data directories, read-only, at the paths upstream's image keeps them.
 mode: exec
-runtimes:
-  - name: pyodide
-    config:
-      lock_file_url: ${PYTHON_PACKAGES}/pyodide-lock.json
-      package_base_url: ${PYTHON_PACKAGES}/
-      max_memory: 2G
-  - workspace
+machines:
+  python:
+    provider: in_process
+    runtime: pyodide
+    lock_file_url: ${PYTHON_PACKAGES}/pyodide-lock.json
+    package_base_url: ${PYTHON_PACKAGES}/
+    max_memory: 2G
 command_limits:
   "@line": {timeout_seconds: 600}
 # Offline but for curl, which reaches only this trial's mocks: the sidecar
@@ -18,8 +18,7 @@ command_limits:
 profiles:
   default:
     commands:
-      deny:
-        - {commands: [wget], reason: the workspace is offline}
+      wget: {decision: deny, reason: the workspace is offline}
 # `read: fresh` revalidates a cached listing against its folder, since the
 # host writes these directories too.
 mounts:
