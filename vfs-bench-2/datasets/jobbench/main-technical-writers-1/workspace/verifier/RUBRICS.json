@@ -1,0 +1,104 @@
+{
+  "rubrics": [
+    {
+      "rubric": "Does the MIGRATION_GUIDE address the JWT migration path for enterprises with legacy API keys, explaining that both authentication methods work during the transition period (API keys deprecated in v2.1 but not removed until v3)?",
+      "weight": 6,
+      "criterion": [
+        "The migration guide explains that API keys were deprecated in v2.1 but still function during the transition period.",
+        "The migration guide states that both JWT and API keys can be used simultaneously during the transition.",
+        "The migration guide specifies that API keys will be fully removed in v3.",
+        "The migration guide provides a recommended migration strategy for enterprises with multiple services, addressing support ticket SUP-78234 from Acme Analytics."
+      ]
+    },
+    {
+      "rubric": "Does the documentation correctly state that 'dataset.deleted' is NOT a valid webhook event and that DELETE /datasets/{id} performs a soft delete that triggers 'dataset.updated' instead?",
+      "weight": 8,
+      "criterion": [
+        "The documentation lists the valid webhook events as: dataset.created, dataset.updated, sync.completed, and sync.failed.",
+        "The documentation clarifies that 'dataset.deleted' is NOT a valid webhook event.",
+        "The documentation explains that DELETE /datasets/{id} sets an archived flag (soft delete) and triggers 'dataset.updated' instead of a separate deletion event.",
+        "The documentation addresses support ticket SUP-78456 from DataPipe Solutions regarding this confusion."
+      ]
+    },
+    {
+      "rubric": "Does the documentation explain rate limit categories (standard, bulk, sync), with specific tier limits where documented, including Free tier bulk limit of 20 requests/minute?",
+      "weight": 8,
+      "criterion": [
+        "The documentation identifies three rate limit categories: standard, bulk, and sync.",
+        "The documentation specifies Free tier limits: 100 req/min standard, 20 req/min bulk, 10000/day.",
+        "The documentation specifies Pro tier limits: 1000 req/min standard, unlimited daily.",
+        "The documentation identifies which endpoints use bulk category (POST /datasets/{id}/records) and sync category (POST /datasets/{id}/sync).",
+        "The documentation addresses support ticket SUP-78512 regarding rate limiting confusion."
+      ]
+    },
+    {
+      "rubric": "Does the TROUBLESHOOTING_GUIDE explain 401 vs 403 authentication errors, with 401 indicating not authenticated and 403 indicating authenticated but not authorized?",
+      "weight": 8,
+      "criterion": [
+        "The troubleshooting guide explains that 401 means not authenticated (missing, invalid, or expired token).",
+        "The troubleshooting guide explains that 403 means authenticated but not authorized (valid token but insufficient permissions).",
+        "The troubleshooting guide provides diagnostic steps for each error scenario.",
+        "The troubleshooting guide does NOT expose internal bug references (JIRA-4521) or TODO notes."
+      ]
+    },
+    {
+      "rubric": "Does the documentation explain that POST /datasets/{id}/sync supports both 'full' and 'incremental' modes and returns a job_id for async tracking via GET /jobs/{job_id}?",
+      "weight": 6,
+      "criterion": [
+        "The documentation explains the sync endpoint accepts a mode parameter with values 'full' or 'incremental'.",
+        "The documentation notes that incremental sync was added in v2.1.0.",
+        "The documentation explains the endpoint returns 202 with a job_id for async tracking.",
+        "The documentation describes how to check job status via GET /jobs/{job_id} including status values (pending, running, completed, failed) and progress (0-100)."
+      ]
+    },
+    {
+      "rubric": "Does the RELEASE_NOTES_v2.2 follow the template structure with sections for Upgrade Steps, Breaking Changes, New Features, Bug Fixes, and Improvements?",
+      "weight": 6,
+      "criterion": [
+        "The release notes include required sections from release_notes_template.md: Upgrade Steps (with action items), Breaking Changes, New Features, Bug Fixes, and Improvements.",
+        "The New Features section covers webhooks.",
+        "The Bug Fixes section covers sync jobs stuck in 'running' state.",
+        "The Improvements section mentions bulk insert being 3x faster.",
+        "Content is synthesized from the changelog in developer_notes_raw.txt."
+      ]
+    },
+    {
+      "rubric": "Does the documentation specify the API base URLs (production: https://api.datasync.io/v2, sandbox: https://sandbox.api.datasync.io/v2) and Content-Type requirement of application/json?",
+      "weight": 6,
+      "criterion": [
+        "The documentation includes the production base URL: https://api.datasync.io/v2.",
+        "The documentation includes the sandbox base URL: https://sandbox.api.datasync.io/v2 with a note that it resets daily.",
+        "The documentation states that Content-Type must be application/json for all POST/PUT/PATCH requests."
+      ]
+    },
+    {
+      "rubric": "Does the TROUBLESHOOTING_GUIDE include a 'Common Migration Pitfalls' section identifying patterns from the support tickets?",
+      "weight": 6,
+      "criterion": [
+        "The troubleshooting guide includes a section identifying common migration pitfalls.",
+        "The pitfalls include: assuming API keys stop working immediately after deprecation.",
+        "The pitfalls include: expecting a 'dataset.deleted' webhook event for soft deletes.",
+        "The pitfalls include: assuming uniform rate limits across all endpoint types.",
+        "Each pitfall includes symptoms and resolution steps."
+      ]
+    },
+    {
+      "rubric": "Does the documentation correctly align endpoint versions with the changelog version history (v2.0.0, v2.1.0, v2.2.0)?",
+      "weight": 6,
+      "criterion": [
+        "Core dataset and records endpoints are documented as part of v2.0.0.",
+        "Auth endpoints, /me/usage, and incremental sync are documented as added in v2.1.0 (with API keys deprecated).",
+        "Webhook endpoints are documented as added in v2.2.0."
+      ]
+    },
+    {
+      "rubric": "Does the documentation specify validation constraints including dataset name length (3-100 characters), bulk record insert limit (max 1000 records), and list pagination limit (max 100)?",
+      "weight": 6,
+      "criterion": [
+        "The API reference documents that POST /datasets requires a name field with 3-100 character length.",
+        "The API reference documents that POST /datasets/{id}/records has a max of 1000 records per request.",
+        "The API reference documents that the GET /datasets list endpoint has a max limit of 100 for pagination."
+      ]
+    }
+  ]
+}

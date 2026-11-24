@@ -1,0 +1,98 @@
+{
+  "rubrics": [
+    {
+      "rubric": "Does the reporting memo correctly state the statewide FY24 and FY25 totals for approved grants and awarded dollars?",
+      "weight": 10,
+      "criterion": [
+        "The memo states that FY24 had 1,492 approved grants totaling $16,836,720.",
+        "The memo states that FY25 had 1,730 approved grants totaling $16,759,857."
+      ]
+    },
+    {
+      "rubric": "Does the memo correctly quantify the year-over-year statewide change in grant volume and dollars?",
+      "weight": 9,
+      "criterion": [
+        "The memo states that approved grant count increased by 238 from FY24 to FY25.",
+        "The memo states that total dollars decreased by $76,863, or about 0.46 percent."
+      ]
+    },
+    {
+      "rubric": "Does the memo correctly identify the three biggest regional gains in dollars and share?",
+      "weight": 8,
+      "criterion": [
+        "The memo identifies Gulf Coast as the largest regional gain, rising by $247,846 to $5,210,590 and by about 1.61 share points.",
+        "The memo identifies Hill Country as the second-largest regional gain, rising by $146,606 to $2,097,871 and by about 0.93 share points.",
+        "The memo identifies Piney Woods as the third-largest regional gain, rising by $102,066 to $600,807 and by about 0.62 share points."
+      ]
+    },
+    {
+      "rubric": "Does the memo correctly identify the three biggest regional declines in dollars and share?",
+      "weight": 8,
+      "criterion": [
+        "The memo identifies Prairies & Lakes as the largest regional decline, falling by $236,547 to $6,491,405 and by about 1.23 share points.",
+        "The memo identifies South Texas Plains as the second-largest regional decline, falling by $214,772 to $957,291 and by about 1.25 share points.",
+        "The memo identifies Panhandle Plains as the third-largest regional decline, falling by $101,605 to $942,561 and by about 0.58 share points."
+      ]
+    },
+    {
+      "rubric": "Does the memo correctly identify the most important city-level increases in grant dollars?",
+      "weight": 8,
+      "criterion": [
+        "The memo identifies Houston as the largest city-level gain, rising by $319,637 to $4,379,523 and from 24.11 percent to 26.13 percent of statewide dollars.",
+        "The memo identifies Abilene or Longview as a secondary gain with the correct FY24 amount, FY25 amount, and change."
+      ]
+    },
+    {
+      "rubric": "Does the memo correctly identify the biggest city-level declines in grant dollars?",
+      "weight": 8,
+      "criterion": [
+        "The memo identifies Flower Mound as the largest city-level decline, falling by $363,505 to $1,755,314 and from 12.58 percent to 10.47 percent of statewide dollars.",
+        "The memo identifies Lubbock as a major decline, falling by $224,408 to $336,992.",
+        "The memo identifies San Antonio as a major decline, falling by $201,602 to $822,114."
+      ]
+    },
+    {
+      "rubric": "Does the memo portray the major-metro story as mixed rather than claiming that every large metro gained concentration?",
+      "weight": 7,
+      "criterion": [
+        "The memo notes that Houston gained share while Dallas slipped slightly from 14.55 percent to 14.17 percent.",
+        "The memo notes that Austin was roughly flat to slightly up from 9.90 percent to 10.15 percent.",
+        "The memo notes that San Antonio lost share from 6.08 percent to 4.91 percent."
+      ]
+    },
+    {
+      "rubric": "Does the memo use breadth-of-distribution evidence when judging whether funding became more concentrated statewide?",
+      "weight": 9,
+      "criterion": [
+        "The memo notes that distinct recipients increased from 761 in FY24 to 927 in FY25.",
+        "The memo notes that distinct cities increased from 165 in FY24 to 213 in FY25.",
+        "The memo notes that 624 recipients appear in both years.",
+        "The memo notes that FY25 added 303 recipients and lost 137 relative to FY24, or states the same imbalance in equivalent terms."
+      ]
+    },
+    {
+      "rubric": "Does the memo use recipient-level concentration evidence rather than relying only on city or region totals?",
+      "weight": 8,
+      "criterion": [
+        "The memo notes that the top single recipient, Town of Flower Mound, fell from 12.58 percent of statewide dollars in FY24 to 10.46 percent in FY25.",
+        "The memo notes that the top 10 recipients' combined share fell from about 25.46 percent in FY24 to about 23.48 percent in FY25."
+      ]
+    },
+    {
+      "rubric": "Does the memo note that city-level concentration stayed high even as recipient-level concentration eased?",
+      "weight": 6,
+      "criterion": [
+        "The memo notes that the top five cities accounted for about 68.19 percent of statewide dollars in FY24 and about 68.09 percent in FY25.",
+        "The memo distinguishes persistent city concentration from the broader spread of awards across more recipients and cities."
+      ]
+    },
+    {
+      "rubric": "Does the memo surface program-level outliers that materially shape the concentration story?",
+      "weight": 7,
+      "criterion": [
+        "The memo notes that Flower Mound's outsized totals in both years are driven almost entirely by a single Commission Initiative grant.",
+        "The memo notes that several large recipient swings are tied to Cultural District Project awards, such as Contemporary Arts Museum Houston gaining a $200,000 Cultural District Project grant while Rothko Chapel and Esperanza Peace and Justice Center lost comparable FY24 cultural-district awards."
+      ]
+    }
+  ]
+}

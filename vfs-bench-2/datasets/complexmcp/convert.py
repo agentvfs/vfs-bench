@@ -412,7 +412,8 @@ def mirage_yaml(slug: str, index: int, row: dict) -> str:
             config += f", headers: {{x-light-system: '{system}'}}"
         config += "}"
         lines.append(
-            f"    {cli(server)}: {{cli: {cli(server)}, config: {config}}}")
+            f"    {cli(server)}: {{cli: {cli(server)}, machine: in_process, "
+            f"config: {config}}}")
     return "\n".join(lines) + "\n"
 
 

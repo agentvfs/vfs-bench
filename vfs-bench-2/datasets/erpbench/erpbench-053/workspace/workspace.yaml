@@ -20,9 +20,8 @@ workspace:
   profiles:
     default:
       commands:
-        deny:
-        - commands: [curl, wget]
-          reason: the systems are reached through their mounts and CLIs
+        curl: {decision: deny, reason: the systems are reached through their mounts and CLIs}
+        wget: {decision: deny, reason: the systems are reached through their mounts and CLIs}
   mounts:
     /gmail: {vfs: gmail, mode: read, index: {type: ram, ttl: 0}, config: {accessToken: erpbench, apiBase: '${ERPBENCH_URL}'}}
     /drive: {vfs: gdrive, mode: read, index: {type: ram, ttl: 0}, config: {accessToken: erpbench, apiBase: '${ERPBENCH_URL}'}}
@@ -30,9 +29,9 @@ workspace:
     /slack: {vfs: slack, mode: read, index: {type: ram, ttl: 0}, config: {token: xoxb-erpbench, baseUrl: '${ERPBENCH_URL}/slack/api'}}
   cache: {type: ram, limit: 0}
   clis:
-    erpbench: {cli: erpbench, config: {url: '${ERPBENCH_URL}'}}
-    oracle-fusion: {cli: oracle-fusion, config: {url: '${ERPBENCH_URL}'}}
-    gmail: {cli: gmail, config: {url: '${ERPBENCH_URL}'}}
-    google-drive: {cli: google-drive, config: {url: '${ERPBENCH_URL}'}}
-    google-sheets: {cli: google-sheets, config: {url: '${ERPBENCH_URL}'}}
-    slack-tools: {cli: slack-tools, config: {url: '${ERPBENCH_URL}'}}
+    erpbench: {cli: erpbench, machine: in_process, config: {url: '${ERPBENCH_URL}'}}
+    oracle-fusion: {cli: oracle-fusion, machine: in_process, config: {url: '${ERPBENCH_URL}'}}
+    gmail: {cli: gmail, machine: in_process, config: {url: '${ERPBENCH_URL}'}}
+    google-drive: {cli: google-drive, machine: in_process, config: {url: '${ERPBENCH_URL}'}}
+    google-sheets: {cli: google-sheets, machine: in_process, config: {url: '${ERPBENCH_URL}'}}
+    slack-tools: {cli: slack-tools, machine: in_process, config: {url: '${ERPBENCH_URL}'}}

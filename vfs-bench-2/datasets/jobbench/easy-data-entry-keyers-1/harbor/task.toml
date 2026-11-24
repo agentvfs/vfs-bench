@@ -1,0 +1,28 @@
+version = "1.0"
+
+[task]
+name = "vfs-bench-2/jobbench.easy-data-entry-keyers-1"
+
+[metadata]
+id = "data_entry_keyers__task1"
+split = "easy"
+occupation = "data_entry_keyers"
+task_number = "1"
+upstream = "JobBench/job-bench@d43a665, Job-Bench/job-bench-eval@660b33a86e"
+
+[verifier]
+timeout_sec = 3600.0
+
+[verifier.env]
+JUDGE_API_KEY = "${OPENAI_API_KEY:-}"
+JUDGE_API_BASE = "${OPENAI_BASE_URL:-https://api.x.ai/v1}"
+JUDGE_MODEL = "${JUDGE_MODEL:-grok-4.3}"
+
+[agent]
+timeout_sec = 7200.0
+
+[environment]
+build_timeout_sec = 1800.0
+cpus = 2
+memory_mb = 4096
+allow_internet = false

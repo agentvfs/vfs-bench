@@ -6,9 +6,9 @@
  *     VFSBENCH_ALLOW='["http://127.0.0.1:53211", "http://127.0.0.1:53300"]' \
  *       node --import ./workspace/preload.ts <daemon>
  *
- * Mirage's curl fetches through the global `fetch`, and through the fetch
- * `registerInsecureFetch` holds for -k, as do the mounts and CLIs that
- * call a service (`/gmail`, `gws`). Both are replaced here. A request to an
+ * Mirage's curl and wget fetch through the host fetch `registerHostFetch`
+ * holds, and the mounts and CLIs that call a service (`/gmail`, `gws`)
+ * through the global `fetch`. Both are replaced here. A request to an
  * upstream port on localhost goes to that port's mock: a fake the job
  * shares is reached at this trial's run's own port (fakes.ts). A request
  * to one of this trial's runs (an `ALLOW` base) goes as it is, which is how
@@ -43,11 +43,11 @@ import { MIRAGE } from './paths.ts'
 const mirage = (pkg: string, path: string): Promise<unknown> =>
   import(pathToFileURL(join(MIRAGE, 'typescript', 'packages', pkg, 'dist', `${path}.js`)).href)
 
-const { registerInsecureFetch } = (await mirage(
+const { registerHostFetch } = (await mirage(
   'core',
   'commands/builtin/utils/http',
 )) as typeof import('@struktoai/mirage-core/commands/builtin/utils/http')
-// Registers Node's fetch for -k when loaded, so it loads first and the
+// Registers Node's host fetch when loaded, so it loads first and the
 // registration below replaces it.
 await mirage('node', 'commands/builtin/utils/http')
 
@@ -108,7 +108,10 @@ const routed = ((input: RequestInfo | URL, init?: RequestInit): Promise<Response
 // own `network` holds it to its runs, so the process's fetch stays as it is.
 if (process.env.VFSBENCH_ALLOW !== undefined) {
   globalThis.fetch = routed
-  registerInsecureFetch(routed)
+  // Every run is plain http, so -k (verify false) changes nothing here. The
+  // request goes through fetch, which adds its own default headers to
+  // curl's and wget's.
+  registerHostFetch((url, init) => routed(url, init))
 }
 
 if (process.env.VFSBENCH_TOOLS !== undefined) await import('./tools.ts')

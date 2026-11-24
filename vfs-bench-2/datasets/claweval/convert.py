@@ -607,11 +607,12 @@ def mirage_yaml(task: dict) -> str:
         "profiles": {
             "default": {
                 "commands": {
-                    "deny": [{
-                        "commands": ["curl", "wget"],
+                    command: {
+                        "decision": "deny",
                         "reason":
                         "the services are reached through their tools",
-                    }]
+                    }
+                    for command in ("curl", "wget")
                 }
             }
         }
@@ -636,6 +637,7 @@ def mirage_yaml(task: dict) -> str:
     workspace["clis"] = {
         cli["name"]: {
             "cli": cli["name"],
+            "machine": "in_process",
             "config": {
                 "url": "${" + fake(cli["service"]).upper() + "_URL}"
             }
@@ -643,7 +645,11 @@ def mirage_yaml(task: dict) -> str:
         for cli in clis
     }
     if used:
-        workspace["clis"]["gws"] = {"cli": "gws", "config": dict(gws)}
+        workspace["clis"]["gws"] = {
+            "cli": "gws",
+            "machine": "in_process",
+            "config": dict(gws)
+        }
     if not workspace["clis"]:
         del workspace["clis"]
     spec["workspace"] = workspace

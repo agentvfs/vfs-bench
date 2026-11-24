@@ -1,0 +1,86 @@
+{
+  "rubrics": [
+    {
+      "rubric": "Does the findings_summary.csv reconstruct the full kill chain progression for 203.0.113.42 showing the correct sequence: initial probing (SQL injection at 08:13:01-05Z), credential access (brute force at 08:13:08-16Z), enumeration (IDOR user scraping at 08:16:00-09Z), exploitation (XSS at 08:19:00-08Z), data exfiltration (path traversal + config download at 08:21:00-04Z), and post-compromise actions (DELETE/PUT at 08:25:00-05Z)?",
+      "weight": 8,
+      "criterion": [
+        "In findings_summary.csv, the kill chain must show initial SQL injection probing at 08:13:01-05Z (reconnaissance/weaponization) followed by brute force authentication at 08:13:08-16Z (credential access), correctly sequenced and labeled.",
+        "In findings_summary.csv, IDOR enumeration of /api/users/1 through /api/users/10 at 08:16:00-09Z must be mapped to a discovery/enumeration phase.",
+        "In findings_summary.csv, XSS injection attempts at 08:19:00Z, 08:19:05Z, and 08:19:08Z using script tags, onerror handlers, and SVG onload, plus a stored XSS review submission at 08:19:02Z, must be mapped to an exploitation phase.",
+        "In findings_summary.csv, path traversal and successful config file download at 08:21:00-04Z, including the critical /api/download?file=/etc/nginx/nginx.conf returning 200 with 2840 bytes, must be mapped to an exfiltration phase.",
+        "In findings_summary.csv, destructive actions at 08:25:00-05Z including DELETE of products 1042-1044, PUT to /api/users/1-2, and PUT to /api/config/settings must be mapped to an impact/post-compromise phase."
+      ]
+    },
+    {
+      "rubric": "Does the cr_compliance_audit.csv include risk assessments that correctly connect non-compliance to specific observed attack outcomes — particularly that the missing dotfile blocking (1c) enabled .env and .git/config exposure, the missing debug endpoint removal (1f) enabled information leakage of 8921 bytes, and the missing admin IP restriction (1e) left the admin panel accessible to external attackers?",
+      "weight": 6,
+      "criterion": [
+        "Item 1c's risk description must reference that the Nikto scanner (198.51.100.77) successfully retrieved .env (487 bytes of configuration/credentials) and .git/config (312 bytes of repository metadata) due to missing dotfile blocking.",
+        "Item 1f's risk description must note that /api/v1/debug was accessed and returned 8921 bytes of debug information.",
+        "Item 1e's risk description must note that the /admin/ path was accessible to external IPs because Nginx had no source IP restriction, with the 403 coming only from the application itself.",
+        "In cr_compliance_audit.csv, firewall items (2a-2d) must connect non-compliance to the fact that internal services are directly reachable from the internet, violating the approved zone segmentation in network_topology.json."
+      ]
+    },
+    {
+      "rubric": "Does the hardened iptables configuration (iptables_hardened.rules) use zone-based source IP restrictions matching network_topology.json — specifically restricting port 3000 to 10.100.0.0/24 (DMZ), port 3001 to 10.200.0.0/24 (Management), ports 5432 and 6379 to 10.100.1.0/24 (Application zone), and SSH to 10.200.0.0/24?",
+      "weight": 6,
+      "criterion": [
+        "Port 3000 (Node.js) must only accept connections from DMZ zone 10.100.0.0/24, and port 3001 (admin panel) must only accept from Management zone 10.200.0.0/24.",
+        "Port 5432 (PostgreSQL) and port 6379 (Redis) must only accept connections from Application zone 10.100.1.0/24.",
+        "SSH must be restricted to Management zone 10.200.0.0/24 and include rate limiting (e.g., '-m recent' or '-m limit') enforcing a maximum of 3 new connections per minute as specified in CR item 2e.",
+        "The rules must NOT use 'ACCEPT' from anywhere for any of these ports, and must NOT rely solely on localhost/127.0.0.1 bindings."
+      ]
+    },
+    {
+      "rubric": "Does the TLS posture assessment correctly identify all four certificate issues: (1) shopvault.example.com and api.shopvault.example.com using TLSv1.0 minimum instead of TLSv1.2, (2) admin.shopvault-internal.com certificate expired on 2025-11-01, (3) staging.shopvault.example.com using a self-signed certificate with 1024-bit key on SSLv3, and (4) the nginx.conf having no TLS/SSL configuration at all (no port 443 listener)?",
+      "weight": 6,
+      "criterion": [
+        "The TLS assessment must identify that shopvault.example.com and api.shopvault.example.com both have protocol_min set to TLSv1.0, violating CR item 3c which requires minimum TLSv1.2.",
+        "The assessment must identify that admin.shopvault-internal.com certificate expired on 2025-11-01 (9 days before the incident on Nov 10), violating CR item 3a.",
+        "The assessment must identify that staging.shopvault.example.com has a self-signed certificate with only 1024-bit key size and SSLv3 protocol minimum, and should have been decommissioned per CR item 3b.",
+        "The assessment must note that nginx.conf only has a port 80 listener with no SSL/TLS server block, meaning HTTPS is not configured at the web server level regardless of certificate availability.",
+        "The assessment must note that payments.shopvault.example.com (4096-bit, TLSv1.2) is the only properly configured certificate."
+      ]
+    },
+    {
+      "rubric": "Does the incident report's executive summary explicitly explain how the unimplemented change request CR-2025-0347 directly enabled the observed attacks — specifically linking missing dotfile protection to .env/.git exposure, missing rate limiting to successful brute force, missing admin restrictions to admin panel accessibility, and missing firewall zone segmentation to direct service exposure?",
+      "weight": 6,
+      "criterion": [
+        "The executive summary must state that CR item 1c (dotfile blocking) was not implemented, directly allowing 198.51.100.77 to download .env (containing credentials/secrets) and .git/config (containing repository metadata).",
+        "The summary must state that the absence of rate limiting (CR item 2e and web-layer) allowed 203.0.113.42 to perform 18+ rapid brute force login attempts without throttling, ultimately succeeding.",
+        "The summary must state that CR item 1e (/admin/ IP restriction) was not implemented, leaving the admin panel accessible from any IP, and CR items 2a-2d (firewall port restrictions) were not implemented, meaning ports 3000, 3001, 5432, and 6379 are directly accessible from the internet.",
+        "The summary must explicitly state that the CR was marked 'Closed (Implemented)' without verification, and this process failure enabled the entire attack surface."
+      ]
+    },
+    {
+      "rubric": "Does the incident report contain a properly populated incident timeline table with the correct chronological sequence of events, covering all three malicious IPs (203.0.113.42, 198.51.100.77, 45.33.32.156) and their respective attack categories?",
+      "weight": 6,
+      "criterion": [
+        "The timeline must include 203.0.113.42's attack progression: SQL injection at 08:13:01Z, brute force starting at 08:13:08Z with success at 08:13:16Z, IDOR enumeration at 08:16:00Z, XSS attempts at 08:19:00Z, path traversal/config exfiltration at 08:21:00Z, second brute force wave at 08:23:00Z, and post-compromise destructive actions (DELETE, PUT) at 08:25:00Z.",
+        "The timeline must include 198.51.100.77's Nikto scanning starting at 08:14:00Z.",
+        "The timeline must include 45.33.32.156's Nmap scanning starting at 08:17:00Z and Shellshock attempts at 08:28:00Z.",
+        "All events must be in chronological order with correct timestamps, source IPs, and attack categories."
+      ]
+    },
+    {
+      "rubric": "Does the incident report's vulnerabilities section correctly classify exploited vulnerabilities using OWASP categories, distinguishing between successful exploitations (brute force login, IDOR user enumeration, .env/.git exposure, config file download, XSS reflected, post-auth destructive actions) and merely attempted attacks (SQL injection returning 500, Shellshock against non-existent CGI paths)?",
+      "weight": 6,
+      "criterion": [
+        "SQL Injection (A03:2021-Injection) must be classified as attempted but failed (500 status codes), and Shellshock (A03:2021-Injection) must be classified as attempted but failed (404, CGI paths don't exist).",
+        "Brute Force (A07:2021-Identification and Authentication Failures) must be classified as successful (attacker gained authenticated session), and IDOR/Broken Access Control (A01:2021-Broken Access Control) must be classified as successful (10 user records enumerated with 200 status).",
+        "XSS (A03:2021-Injection) must be classified as successful (requests returned 200 with 15230-byte response bodies), and Path Traversal (A01:2021-Broken Access Control) must be classified as partially successful (../../etc/passwd failed with 500, but /api/download?file=/etc/nginx/nginx.conf succeeded with 200/2840 bytes).",
+        "Sensitive File Exposure (A05:2021-Security Misconfiguration) must be classified as successful for .env and .git/config, and the distinction between attempted and successful exploitation must be clearly made for each vulnerability."
+      ]
+    },
+    {
+      "rubric": "Does the incident report include a comprehensive remediation actions table with prioritized items covering immediate containment (block attacker IPs, revoke compromised sessions), short-term fixes (deploy hardened configs, renew expired certs), and long-term improvements (WAF deployment, rate limiting, automated CR verification)?",
+      "weight": 6,
+      "criterion": [
+        "P1/Immediate actions must include: block malicious IPs (203.0.113.42, 198.51.100.77, 45.33.32.156) at the firewall, revoke all active sessions (especially the brute-forced session), reset compromised user credentials for at least users 1 and 2, and verify/restore deleted products (1042-1044) and revert the config settings change.",
+        "P2/Short-term actions must include: deploy the hardened nginx.conf and iptables.rules, renew the expired admin.shopvault-internal.com certificate, decommission staging.shopvault.example.com, and enforce TLS 1.2 minimum.",
+        "P3/Long-term actions must include: deploy a Web Application Firewall (WAF), implement rate limiting at application and infrastructure layers, establish automated post-implementation verification for change requests, and enhance logging and monitoring capabilities.",
+        "All remediation actions must be specific to the findings from this incident, not generic security recommendations."
+      ]
+    }
+  ]
+}

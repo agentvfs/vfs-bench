@@ -269,7 +269,8 @@ def mirage_yaml(row: dict) -> str:
         url = "${" + service(server).upper() + "_URL}"
         headers = ", ".join(f"{k}: {json.dumps(str(v))}"
                             for k, v in context_headers(cfg).items())
-        lines.append(f"    {server}: {{cli: {server}, config: {{url: '{url}', "
+        lines.append(f"    {server}: {{cli: {server}, machine: in_process, "
+                     f"config: {{url: '{url}', "
                      f"headers: {{{headers}}}}}}}")
     return "\n".join(lines) + "\n"
 

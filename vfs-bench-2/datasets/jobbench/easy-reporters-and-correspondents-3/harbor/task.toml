@@ -1,0 +1,28 @@
+version = "1.0"
+
+[task]
+name = "vfs-bench-2/jobbench.easy-reporters-and-correspondents-3"
+
+[metadata]
+id = "reporters_and_correspondents__task3"
+split = "easy"
+occupation = "reporters_and_correspondents"
+task_number = "3"
+upstream = "JobBench/job-bench@d43a665, Job-Bench/job-bench-eval@660b33a86e"
+
+[verifier]
+timeout_sec = 3600.0
+
+[verifier.env]
+JUDGE_API_KEY = "${OPENAI_API_KEY:-}"
+JUDGE_API_BASE = "${OPENAI_BASE_URL:-https://api.x.ai/v1}"
+JUDGE_MODEL = "${JUDGE_MODEL:-grok-4.3}"
+
+[agent]
+timeout_sec = 7200.0
+
+[environment]
+build_timeout_sec = 1800.0
+cpus = 2
+memory_mb = 4096
+allow_internet = false

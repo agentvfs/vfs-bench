@@ -48,10 +48,11 @@ workspace:
   profiles:
     default:
       commands:
-        deny:
-        - commands:
-          - curl
-          - wget
+        curl:
+          decision: deny
+          reason: the services are reached through their tools
+        wget:
+          decision: deny
           reason: the services are reached through their tools
   mounts:
     /gmail:
@@ -63,26 +64,32 @@ workspace:
   clis:
     gmail:
       cli: gmail
+      machine: in_process
       config:
         url: ${CLAWEVAL_GMAIL_URL}
     contacts:
       cli: contacts
+      machine: in_process
       config:
         url: ${CLAWEVAL_CONTACTS_URL}
     helpdesk:
       cli: helpdesk
+      machine: in_process
       config:
         url: ${CLAWEVAL_HELPDESK_URL}
     crm:
       cli: crm
+      machine: in_process
       config:
         url: ${CLAWEVAL_CRM_URL}
     finance:
       cli: finance
+      machine: in_process
       config:
         url: ${CLAWEVAL_FINANCE_URL}
     gws:
       cli: gws
+      machine: in_process
       config:
         accessToken: gws-integ-token
         apiBase: ${GWS_URL}

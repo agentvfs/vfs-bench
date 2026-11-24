@@ -247,7 +247,7 @@ const OUTPUT = 1000
 
 /**
  * What the agent ran, from a workspace's history (Mirage's
- * `GET /v1/workspaces/<id>/history`): each `command` entry with the
+ * `GET /v1/workspaces/<id>/logs?format=jsonl`): each `command` entry with the
  * `result` entry naming it as its parent. Left out: the task's setup
  * (`setup`, the `run` of the trial's plan.json); the environment Harbor
  * exports ahead of each exec, in the same line; Harbor's own steps around
@@ -630,7 +630,7 @@ export class Harbor {
 
   /**
    * The lines a trial's workspace ran, with their output: Mirage's history
-   * of it (`GET /v1/workspaces/<id>/history`), which every session writes
+   * of it (`GET /v1/workspaces/<id>/logs?format=jsonl`), which every session writes
    * to (an agent over SSH too). Read from the trial's daemon while it runs;
    * once it has ended, the copy the environment saved as it closed the
    * workspace (`mirage/history.json`), else the last one kept under
@@ -643,10 +643,13 @@ export class Harbor {
       const base = await this.daemon(trial)
       if (base) {
         const get = (path: string) =>
-          fetch(base + path, { signal: AbortSignal.timeout(800) }).then((r) => (r.ok ? r.json() : null), () => null)
+          fetch(base + path, { signal: AbortSignal.timeout(800) }).then(
+            async (r) => (r.ok ? (await r.text()).split('\n').filter(Boolean).map((l) => JSON.parse(l)) : null),
+            () => null,
+          )
         // Harbor names the workspace `<trial>__env`; a daemon without it is
         // not this trial's (its port was reused after the trial ended).
-        const read = await get(`/v1/workspaces/${basename(trial)}__env/history${Number.isFinite(last) ? `?last=${last * 8}` : ''}`)
+        const read = await get(`/v1/workspaces/${basename(trial)}__env/logs?format=jsonl`)
         if (!Array.isArray(read) && this.daemons.get(trial) === base) this.daemons.delete(trial)
         if (Array.isArray(read)) {
           history = read
