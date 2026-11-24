@@ -100,7 +100,7 @@ export async function briefGrade(
         dumps(result),
       ].join('\n')
     ) + '\n'
-  const [payload, debug] = await callJudge(system, prompt, c.input.env ?? {}, '')
+  const [payload, debug] = await callJudge(system, prompt, c.input.env ?? {}, '', c.signal)
   const score: Record<string, unknown> = {
     ...scores,
     ...Object.fromEntries(dimensions.map((d) => [d, verdict(payload, d)])),

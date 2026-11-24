@@ -207,6 +207,9 @@ def lay_out(rng: random.Random, task: str, home: Path) -> None:
                         root / "workspace",
                         dirs_exist_ok=True)
         (root / "workspace" / "corpus").symlink_to("../corpus")
+        # An agent may remove the link, which stops upstream's walk of it.
+        if task == "corpus-file-injection" and rng.random() < 0.2:
+            (root / "workspace" / "corpus").unlink()
     for name in rng.sample(NOTES, rng.randint(0, 5)):
         path = root / "workspace" / name
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -240,13 +243,24 @@ def database(rng: random.Random, path: Path) -> None:
     db = sqlite3.connect(path)
     if rng.random() < 0.8:
         with_id = rng.random() < 0.7
-        db.execute("CREATE TABLE sources (source_id TEXT, " +
-                   ("id TEXT, " if with_id else "") + "reliability)")
-        for sid in rng.sample(SOURCE_IDS[:11], 4):
+        # reliability added after two rows: those read its DEFAULT.
+        added = rng.random() < 0.3
+        db.execute("CREATE TABLE sources (source_id TEXT" +
+                   (", id TEXT" if with_id else "") +
+                   ("" if added else ", reliability") + ")")
+        for n, sid in enumerate(rng.sample(SOURCE_IDS[:11], 4)):
+            if added and n == 2:
+                db.execute("ALTER TABLE sources ADD COLUMN"
+                           " reliability INTEGER DEFAULT 5")
             rel = rng.choice([1, 2, 3, 4.5, "5", None])
-            row = (sid, sid, rel) if with_id else (sid, rel)
+            row = (sid, sid) if with_id else (sid, )
+            if not (added and n < 2):
+                row += (rel, )
             marks = ", ".join("?" * len(row))
-            db.execute(f"INSERT INTO sources VALUES ({marks})", row)
+            columns = ("source_id, id" if with_id else "source_id") + (
+                "" if added and n < 2 else ", reliability")
+            db.execute(f"INSERT INTO sources ({columns}) VALUES ({marks})",
+                       row)
     if rng.random() < 0.8:
         db.execute("CREATE TABLE facts (fact_key TEXT, source_ids)")
         for i in range(rng.randint(0, 4)):
@@ -440,7 +454,8 @@ def upstream(task: str, case: Path, stubs: Stubs, env: dict) -> dict:
 
 def staged(task: str, case: Path, manifest: dict) -> tuple[dict, list]:
     """What MirageVerifier stages from the case's home: the declared
-    inputs and trees' files, never a link, and the task's tests/."""
+    inputs and trees' files, never a link, the declared links that resolve
+    as existing paths, and the task's tests/."""
     home = case / "home"
     files, existing = {}, []
 
@@ -454,6 +469,12 @@ def staged(task: str, case: Path, manifest: dict) -> tuple[dict, list]:
         if h.is_file() and not h.is_symlink():
             files[path] = base64.b64encode(h.read_bytes()).decode()
             existing.append(path)
+    # A link the definition names exists while it resolves, as the
+    # verifier asks the workspace.
+    for link in manifest.get("links", []):
+        h = host(link)
+        if h.is_symlink() and h.exists():
+            existing.append(link)
     for tree in manifest["trees"]:
         h = host(tree)
         if not h.is_dir():

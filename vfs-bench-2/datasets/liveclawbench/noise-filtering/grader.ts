@@ -24,7 +24,7 @@ export async function grader(c: Context): Promise<Grade> {
     failed = 0,
     error = ''
   try {
-    ;[payload, debug] = (await callJudge(SYSTEM_PROMPT, prompt, c.input.env ?? {})) as [Dict, any]
+    ;[payload, debug] = (await callJudge(SYSTEM_PROMPT, prompt, c.input.env ?? {}, undefined, c.signal)) as [Dict, any]
   } catch (exc) {
     if (!(exc instanceof JudgeFailed)) throw exc
     error = Array.from(exc.message).slice(0, 500).join('')

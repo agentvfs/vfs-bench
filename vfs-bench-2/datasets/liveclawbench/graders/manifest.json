@@ -1667,6 +1667,9 @@
       "/home/node/.openclaw/corpus",
       "/home/node/.openclaw/output",
       "/home/node/.openclaw/workspace"
+    ],
+    "links": [
+      "/home/node/.openclaw/workspace/corpus"
     ]
   },
   "noise-filtering": {

@@ -331,18 +331,37 @@ class HTTPError extends Error {
   }
 }
 
+/** Wait `ms`, or until `signal` aborts, which ends the wait with its reason. */
+function pause(ms: number, signal?: AbortSignal): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (signal?.aborted) return reject(signal.reason)
+    const timer = setTimeout(() => {
+      signal?.removeEventListener('abort', stop)
+      resolve()
+    }, ms)
+    const stop = () => {
+      clearTimeout(timer)
+      reject(signal!.reason)
+    }
+    signal?.addEventListener('abort', stop, { once: true })
+  })
+}
+
 /** One judge request, as upstream's `post_json` sends it: three tries, none
- * again on a 4xx, 1 s and 2 s apart, 60 s each. */
-async function postJson(url: string, payload: unknown, apiKey: string): Promise<Json> {
+ * again on a 4xx, 1 s and 2 s apart, 60 s each. A canceled grade (`signal`)
+ * stops the request and makes no more. */
+async function postJson(url: string, payload: unknown, apiKey: string, signal?: AbortSignal): Promise<Json> {
   let last: unknown
   for (let attempt = 0; attempt < 3; attempt++) {
+    signal?.throwIfAborted()
     try {
+      const timeout = AbortSignal.timeout(60_000)
       const response = await fetch(url, {
         method: 'POST',
         redirect: 'error',
         headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(60_000),
+        signal: signal ? AbortSignal.any([timeout, signal]) : timeout,
       })
       const body = await response.text()
       if (!response.ok) {
@@ -350,10 +369,10 @@ async function postJson(url: string, payload: unknown, apiKey: string): Promise<
         last = new HTTPError(response.status, body)
       } else return loads(body)
     } catch (error) {
-      if (error instanceof HTTPError) throw error
+      if (error instanceof HTTPError || signal?.aborted) throw error
       last = error
     }
-    if (attempt < 2) await new Promise((r) => setTimeout(r, 2 ** attempt * 1000))
+    if (attempt < 2) await pause(2 ** attempt * 1000, signal)
   }
   throw last
 }
@@ -446,7 +465,8 @@ export async function callJudge(
   system: string,
   user: string,
   env: Record<string, string>,
-  unset = ' for LLM judging'
+  unset = ' for LLM judging',
+  signal?: AbortSignal
 ): Promise<[Dict, JudgeDebug]> {
   const base = env.JUDGE_BASE_URL || ''
   const model = env.JUDGE_MODEL_ID || DEFAULT_JUDGE_MODEL
@@ -488,11 +508,13 @@ export async function callJudge(
   const errors: string[] = []
   for (const [mode, url, payload, extract] of attempts) {
     try {
-      const raw = await postJson(url, payload, key)
+      const raw = await postJson(url, payload, key, signal)
       const parsed = parseJsonBlob(extract(raw))
       if (parsed.size) return [parsed, { mode, url, model, raw_response: raw }]
       errors.push(`${mode}: response did not contain valid JSON`)
     } catch (error) {
+      // A canceled grade ends here: no fallback request, no verdict.
+      if (signal?.aborted) throw error
       if (error instanceof HTTPError) errors.push(`${mode}: HTTP ${error.code} ${error.body}`)
       else errors.push(`${mode}: ${error instanceof Error ? error.message : String(error)}`)
     }
@@ -506,12 +528,15 @@ export class JudgeFailed extends Error {}
 /** A verdict's dimension, as `judge_payload.get(name)` gives it to `clamp_score`. */
 export const verdict = (payload: Dict, name: string) => clampScore(payload.get(name) ?? null)
 
-/** A value as JSON the verifier can save: dicts as objects, floats as numbers. */
+/** A value as JSON the verifier can save: dicts as objects, floats as
+ * numbers, through ordinary objects too (a judge debug's `raw_response`). */
 export function plain(v: unknown): unknown {
   if (v instanceof PyFloat) return Number.isFinite(v.v) ? v.v : null
   if (typeof v === 'bigint') return v.toString()
   if (v instanceof Map) return Object.fromEntries([...v.entries()].map(([k, x]) => [k, plain(x)]))
   if (Array.isArray(v)) return v.map(plain)
+  if (v !== null && typeof v === 'object' && Object.getPrototypeOf(v) === Object.prototype)
+    return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, plain(x)]))
   return v
 }
 

@@ -22,6 +22,8 @@ interface Column {
   nocase: boolean
   /** An INTEGER PRIMARY KEY: the rowid itself. */
   rowid: boolean
+  /** Its DEFAULT, which a row written before ALTER TABLE ADD COLUMN reads. */
+  fallback: Value
 }
 
 export interface Table {
@@ -47,6 +49,24 @@ const unquote = (name: string) => {
 }
 
 const CONSTRAINT = /^(CONSTRAINT|PRIMARY|NOT|NULL|UNIQUE|CHECK|DEFAULT|COLLATE|REFERENCES|GENERATED|AS)$/i
+
+/** A DEFAULT's constant, with the column's affinity, as SQLite reads it for a row stored before the column. */
+function fallback(word: string | undefined, kind: Column['affinity']): Value {
+  if (word === undefined) return null
+  let text = word.trim()
+  while (text.startsWith('(') && text.endsWith(')')) text = text.slice(1, -1).trim()
+  if (/^NULL$/i.test(text)) return null
+  if (/^TRUE$/i.test(text) || /^FALSE$/i.test(text)) return /^TRUE$/i.test(text) ? 1 : 0
+  const numeric = /^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$/.test(text)
+  if (text.startsWith("'")) {
+    const value = unquote(text)
+    const number = Number(value)
+    if (kind !== 'TEXT' && kind !== 'BLOB' && value.trim() !== '' && Number.isFinite(number)) return number
+    return value
+  }
+  if (numeric) return kind === 'TEXT' ? text.replace(/^\+/, '') : Number(text)
+  return null
+}
 
 /** A definition's tokens: names, quoted names and parenthesized groups whole. */
 function tokens(text: string): string[] {
@@ -112,11 +132,14 @@ function columnsOf(sql: string): Column[] | null {
     const constraint = words.findIndex((w, i) => i > 0 && CONSTRAINT.test(w))
     const type = words.slice(1, constraint < 0 ? undefined : constraint).join(' ')
     const rest = words.slice(constraint < 0 ? words.length : constraint).join(' ')
+    const kind = affinity(type.replace(/\(.*$/s, ''))
+    const declared = words.findIndex((w, i) => i > 0 && /^DEFAULT$/i.test(w))
     columns.push({
       name: unquote(words[0]!),
-      affinity: affinity(type.replace(/\(.*$/s, '')),
+      affinity: kind,
       nocase: /\bCOLLATE\s+NOCASE\b/i.test(rest),
       rowid: /^INTEGER$/i.test(type) && /\bPRIMARY\s+KEY\b(?!\s+DESC)/i.test(rest),
+      fallback: declared < 0 ? null : fallback(words[declared + 1], kind),
     })
   }
   const key = columns.find((c) => keyed !== null && c.name.toLowerCase() === keyed.toLowerCase())
@@ -177,6 +200,9 @@ class File {
       }
       const [size, a] = varint(this.bytes, cell)
       const [rowid, b] = varint(this.bytes, a)
+      // A payload lies within the file: a size past it is a malformed cell,
+      // not an allocation to make.
+      if (size > BigInt(this.bytes.length)) throw new DatabaseError('database disk image is malformed')
       yield [rowid, this.payload(b, Number(size))]
     }
     if (kind === 0x05) yield* this.cells(this.view.getUint32(head + 8), seen)
@@ -203,15 +229,23 @@ class File {
   }
   record(payload: Uint8Array): Value[] {
     const view = new DataView(payload.buffer, payload.byteOffset, payload.byteLength)
+    const malformed = () => new DatabaseError('database disk image is malformed')
     const [headerSize, first] = varint(payload, 0)
+    // The header and each value lie within the payload; read nothing past it.
+    if (headerSize < BigInt(first) || headerSize > BigInt(payload.length)) throw malformed()
+    const end = Number(headerSize)
     const types: number[] = []
-    for (let at = first; at < Number(headerSize); ) {
+    for (let at = first; at < end; ) {
       const [t, next] = varint(payload, at)
+      if (next > end) throw malformed()
       types.push(Number(t))
       at = next
     }
+    const sizes = [0, 1, 2, 3, 4, 6, 8, 8, 0, 0]
+    const length = (t: number) => (t < 10 ? sizes[t]! : t >= 12 ? Math.floor((t - 12) / 2) : 0)
+    if (types.reduce((sum, t) => sum + length(t), end) > payload.length) throw malformed()
     const values: Value[] = []
-    let at = Number(headerSize)
+    let at = end
     for (const t of types) {
       if (t === 0) values.push(null)
       else if (t >= 1 && t <= 6) {
@@ -248,9 +282,8 @@ export function table(bytes: Uint8Array, name: string): Table {
     const rows: Value[][] = []
     for (const [rowid, cell] of file.cells(root)) {
       const values = file.record(cell)
-      rows.push(
-        columns.map((c, i) => (c.rowid ? small(rowid) : values[i] ?? null))
-      )
+      // A row stored before ALTER TABLE ADD COLUMN reads that column's DEFAULT.
+      rows.push(columns.map((c, i) => (c.rowid ? small(rowid) : i < values.length ? values[i]! : c.fallback)))
     }
     return { columns, rows }
   }

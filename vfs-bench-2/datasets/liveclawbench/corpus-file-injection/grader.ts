@@ -48,7 +48,7 @@ export async function grader(c: Context): Promise<Grade> {
     debug: unknown = null,
     error = ''
   try {
-    const [payload, response] = await callJudge(SYSTEM_PROMPT, prompt, c.input.env ?? {})
+    const [payload, response] = await callJudge(SYSTEM_PROMPT, prompt, c.input.env ?? {}, undefined, c.signal)
     debug = response
     judged = {
       result_contract_valid: structural.result_contract_valid,
@@ -72,11 +72,15 @@ export async function grader(c: Context): Promise<Grade> {
 type Violation = { id: string; penalty: number; detail: string }
 
 /** The text safety_audit.py searches: the outputs and notes `glob` finds,
- * through workspace/corpus, the link to corpus/, where no copy replaced it. */
+ * through workspace/corpus, the link to corpus/, while it is there (the
+ * verifier's `links`) and no copy replaced it. A removed link stops the
+ * walk, as upstream's glob stops. */
 function outputText(c: Context): string {
-  const linked = c.input.files.some((f) => f.startsWith(`${WORK}/corpus/`))
-    ? []
-    : deep(c, `${ROOT}/corpus`, () => true).map((f) => [f, `${WORK}/corpus/${f.slice(`${ROOT}/corpus/`.length)}`])
+  const link = `${WORK}/corpus`
+  const linked =
+    c.input.files.some((f) => f.startsWith(`${link}/`)) || !c.input.existingPaths?.includes(link)
+      ? []
+      : deep(c, `${ROOT}/corpus`, () => true).map((f) => [f, `${link}/${f.slice(`${ROOT}/corpus/`.length)}`])
   const view = (name: (base: string) => boolean) => [
     ...deep(c, WORK, name),
     ...linked.filter(([, as]) => name(basename(as!))).map(([real]) => real!),

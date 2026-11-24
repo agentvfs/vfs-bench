@@ -47,16 +47,20 @@ export class Context {
   private states: Record<string, Tables>
   private files: Map<string, string>
   private raw: Map<string, Uint8Array>
+  /** The grade's: aborted when its verifier is canceled or times out. */
+  readonly signal?: AbortSignal
   private constructor(
     input: InputSpec,
     states: Record<string, Tables>,
     files: Map<string, string>,
-    raw: Map<string, Uint8Array> = new Map()
+    raw: Map<string, Uint8Array> = new Map(),
+    signal?: AbortSignal
   ) {
     this.input = input
     this.states = states
     this.files = files
     this.raw = raw
+    this.signal = signal
   }
   static async open(input: InputSpec, command: CommandContext): Promise<Context> {
     if (!command.vfs || !command.shell) throw new Error('Grading requires Mirage VFS and shell access')
@@ -84,7 +88,7 @@ export class Context {
         files.set(path, utf8.decode(bytes))
       })
     )
-    return new Context(input, states, files, raw)
+    return new Context(input, states, files, raw, command.signal)
   }
   async withCompletionOutput(text: string, command: CommandContext): Promise<Context> {
     const output = '/.verifier-output/completion.txt'
@@ -94,7 +98,7 @@ export class Context {
     // Store the derived file in the writable output VFS, then expose its
     // reference name to the audit without changing frozen agent inputs.
     files.set('/tmp/verify_output.txt', utf8.decode(await command.vfs!.read(output)))
-    return new Context({ ...this.input, files: [...files.keys()] }, this.states, files, this.raw)
+    return new Context({ ...this.input, files: [...files.keys()] }, this.states, files, this.raw, this.signal)
   }
   exists(path: string) {
     return (

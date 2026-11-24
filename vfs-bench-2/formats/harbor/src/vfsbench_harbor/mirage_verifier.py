@@ -12,6 +12,7 @@ import importlib.util
 import json
 import math
 import os
+import shlex
 import signal
 import sys
 import tempfile
@@ -358,6 +359,8 @@ class MirageVerifier(Verifier):
                                         definition,
                                         stage,
                                         budget=budget)
+        frozen["existingPaths"] = sorted(
+            {*frozen["existingPaths"], *await self._links(definition)})
         states = await self.environment.snapshot_verifier_states(
             definition.get("native_state", {}))
         history = None
@@ -382,6 +385,22 @@ class MirageVerifier(Verifier):
             return frozen
 
         return await self._background(store, budget=budget)
+
+    async def _links(self, definition: dict) -> list[str]:
+        """The links the definition names (``links``) that are in the
+        workspace and resolve. ``ln -s`` keeps a link in the workspace's
+        namespace, never on a disk mount, so only the workspace can say
+        whether one is there (corpus-file-injection's ``workspace/corpus``,
+        which the agent may remove)."""
+        links = definition.get("links", [])
+        if not links:
+            return []
+        probe = ("for p in " + shlex.join(links) +
+                 '; do if [ -L "$p" ] && [ -e "$p" ];'
+                 ' then printf \'%s\\n\' "$p"; fi; done')
+        done = await self.environment.exec(probe, timeout_sec=60)
+        found = set((done.stdout or "").splitlines())
+        return [path for path in links if path in found]
 
     def _freeze_files(self, definition, stage, budget):
         env = self.environment
