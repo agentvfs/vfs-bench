@@ -18,8 +18,7 @@ command_limits:
 profiles:
   default:
     commands:
-      deny:
-        - {commands: [wget], reason: the workspace is offline}
+      wget: {decision: deny, reason: the workspace is offline}
 # `read: fresh` revalidates a cached listing against its folder, since the
 # host writes these directories too.
 mounts:

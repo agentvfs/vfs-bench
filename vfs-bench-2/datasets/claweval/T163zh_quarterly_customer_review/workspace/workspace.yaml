@@ -39,10 +39,11 @@ workspace:
   profiles:
     default:
       commands:
-        deny:
-        - commands:
-          - curl
-          - wget
+        curl:
+          decision: deny
+          reason: the services are reached through their tools
+        wget:
+          decision: deny
           reason: the services are reached through their tools
   mounts:
     /gmail:

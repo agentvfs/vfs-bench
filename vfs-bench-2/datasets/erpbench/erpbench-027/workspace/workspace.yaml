@@ -20,9 +20,8 @@ workspace:
   profiles:
     default:
       commands:
-        deny:
-        - commands: [curl, wget]
-          reason: the systems are reached through their mounts and CLIs
+        curl: {decision: deny, reason: the systems are reached through their mounts and CLIs}
+        wget: {decision: deny, reason: the systems are reached through their mounts and CLIs}
   mounts:
     /gmail: {vfs: gmail, mode: read, index: {type: ram, ttl: 0}, config: {accessToken: erpbench, apiBase: '${ERPBENCH_URL}'}}
     /drive: {vfs: gdrive, mode: read, index: {type: ram, ttl: 0}, config: {accessToken: erpbench, apiBase: '${ERPBENCH_URL}'}}

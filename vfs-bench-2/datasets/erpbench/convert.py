@@ -205,6 +205,8 @@ def mirage_yaml(task_id: str) -> str:
     mounts = "\n".join(f"    {path}: {{vfs: {vfs}, mode: read, index: "
                        f"{{type: ram, ttl: 0}}, config: {config}}}"
                        for path, vfs, config in MOUNTS)
+    deny = ("{decision: deny, reason: the systems are reached through "
+            "their mounts and CLIs}")
     head = (f"# {task_id}, on vfsbench_harbor's mirage environment "
             "(datasets/erpbench/convert.py writes it).")
     return f"""{head}
@@ -229,9 +231,8 @@ workspace:
   profiles:
     default:
       commands:
-        deny:
-        - commands: [curl, wget]
-          reason: the systems are reached through their mounts and CLIs
+        curl: {deny}
+        wget: {deny}
   mounts:
 {mounts}
   cache: {{type: ram, limit: 0}}
