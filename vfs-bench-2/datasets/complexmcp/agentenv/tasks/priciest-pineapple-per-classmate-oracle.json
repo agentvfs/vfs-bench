@@ -1,0 +1,24 @@
+[
+  {
+    "id": "env",
+    "type": "deploy_env",
+    "env_id": "priciest-pineapple-per-classmate"
+  },
+  {
+    "id": "solve",
+    "type": "mirage_oracle",
+    "env_id": "priciest-pineapple-per-classmate",
+    "depends_on": [
+      "env"
+    ]
+  },
+  {
+    "id": "grade",
+    "type": "mirage_grade",
+    "env_id": "priciest-pineapple-per-classmate",
+    "verifier_id": "reward",
+    "depends_on": [
+      "solve"
+    ]
+  }
+]

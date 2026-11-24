@@ -1,0 +1,24 @@
+[
+  {
+    "id": "env",
+    "type": "deploy_env",
+    "env_id": "mark-sean-baker-read"
+  },
+  {
+    "id": "solve",
+    "type": "mirage_oracle",
+    "env_id": "mark-sean-baker-read",
+    "depends_on": [
+      "env"
+    ]
+  },
+  {
+    "id": "grade",
+    "type": "mirage_grade",
+    "env_id": "mark-sean-baker-read",
+    "verifier_id": "reward",
+    "depends_on": [
+      "solve"
+    ]
+  }
+]

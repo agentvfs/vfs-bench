@@ -1,0 +1,24 @@
+[
+  {
+    "id": "env",
+    "type": "deploy_env",
+    "env_id": "remove-silent-classmates"
+  },
+  {
+    "id": "solve",
+    "type": "mirage_oracle",
+    "env_id": "remove-silent-classmates",
+    "depends_on": [
+      "env"
+    ]
+  },
+  {
+    "id": "grade",
+    "type": "mirage_grade",
+    "env_id": "remove-silent-classmates",
+    "verifier_id": "reward",
+    "depends_on": [
+      "solve"
+    ]
+  }
+]

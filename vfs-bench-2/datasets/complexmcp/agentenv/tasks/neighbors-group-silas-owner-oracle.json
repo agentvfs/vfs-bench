@@ -1,0 +1,24 @@
+[
+  {
+    "id": "env",
+    "type": "deploy_env",
+    "env_id": "neighbors-group-silas-owner"
+  },
+  {
+    "id": "solve",
+    "type": "mirage_oracle",
+    "env_id": "neighbors-group-silas-owner",
+    "depends_on": [
+      "env"
+    ]
+  },
+  {
+    "id": "grade",
+    "type": "mirage_grade",
+    "env_id": "neighbors-group-silas-owner",
+    "verifier_id": "reward",
+    "depends_on": [
+      "solve"
+    ]
+  }
+]

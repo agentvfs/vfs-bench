@@ -1,0 +1,24 @@
+[
+  {
+    "id": "env",
+    "type": "deploy_env",
+    "env_id": "macbook-air-if-affordable"
+  },
+  {
+    "id": "solve",
+    "type": "mirage_oracle",
+    "env_id": "macbook-air-if-affordable",
+    "depends_on": [
+      "env"
+    ]
+  },
+  {
+    "id": "grade",
+    "type": "mirage_grade",
+    "env_id": "macbook-air-if-affordable",
+    "verifier_id": "reward",
+    "depends_on": [
+      "solve"
+    ]
+  }
+]
