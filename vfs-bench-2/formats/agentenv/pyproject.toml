@@ -3,10 +3,23 @@ name = "vfsbench-agentenv"
 version = "0.1.0"
 description = "A vfs-bench-2 task's Mirage workspace as an agent-env environment"
 requires-python = ">=3.12"
-dependencies = ["agentenv-framework==0.9.1634", "httpx", "pyyaml"]
+dependencies = [
+    "agentenv-framework==0.9.1634",
+    "httpx",
+    "mirage-ai[wasi]",
+    "pyyaml",
+]
 
 [project.entry-points."agent_env.sandbox_providers"]
 mirage = "vfsbench_agentenv.sandbox:MirageSandboxProvider"
+
+[tool.uv]
+# agent-env serves MCP on mcp 1; Mirage wants 2, but only for its own MCP
+# server and MCP CLIs, which a workspace here never imports.
+override-dependencies = ["mcp>=1.25,<2"]
+
+[tool.uv.sources]
+mirage-ai = { path = "../../submodule/mirage/python", editable = true }
 
 [build-system]
 requires = ["hatchling"]
