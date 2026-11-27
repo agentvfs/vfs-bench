@@ -1,0 +1,8 @@
+{
+  "name": "vfs-bench-calendar-mcp",
+  "private": true,
+  "description": "Pinned @gongrzhe/server-calendar-autoauth-mcp, vendored by server/mcp/setup_calendar.py",
+  "dependencies": {
+    "@gongrzhe/server-calendar-autoauth-mcp": "1.0.2"
+  }
+}

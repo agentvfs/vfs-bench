@@ -1,0 +1,11 @@
+{
+  "name": "vfs-bench-notion-mcp",
+  "private": true,
+  "description": "Toolathlon's pinned @notionhq/notion-mcp-server, spec overlaid",
+  "dependencies": {
+    "@notionhq/notion-mcp-server": "1.9.0",
+    "prisma": "6.19.3",
+    "@prisma/client": "6.19.3",
+    "tsx": "4.21.0"
+  }
+}

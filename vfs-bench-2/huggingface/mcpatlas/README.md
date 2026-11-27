@@ -2,6 +2,7 @@
 license: cc-by-4.0
 configs:
 - config_name: default
+  description: "MCP-Atlas evaluation catalog (SHA-256 9512332713244d5e111867eff3a19f3760aeef4f3d80cf03e0d566eafa79800b)"
   data_files:
   - split: test
     path: index.jsonl
