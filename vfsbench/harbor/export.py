@@ -24,6 +24,7 @@ def export(dataset: Dataset | str | Path,
            output: str | Path,
            config: str | Path | None = None,
            *,
+           workspace_yaml: str | Path | None = None,
            task_ids=None,
            local_files_only: bool = False,
            available: bool = False,
@@ -46,6 +47,9 @@ def export(dataset: Dataset | str | Path,
         config = Path(config).resolve(strict=True)
         runtime = TrialConfig.from_toml(config)
         options["trial_config"] = os.path.relpath(config, output)
+    if workspace_yaml is not None:
+        options["workspace_yaml"] = os.path.relpath(
+            Path(workspace_yaml).expanduser().resolve(strict=True), output)
     if dataset.repo_id:
         options.update(repo_id=dataset.repo_id, revision=dataset.revision)
     else:
@@ -148,6 +152,9 @@ def main(argv=None):
     tasks.add_argument("--available",
                        action="store_true",
                        help="select all tasks with configured suite adapters")
+    create.add_argument("--workspace-yaml",
+                        type=Path,
+                        help="Mirage workspace configuration file")
     create.add_argument("--config",
                         type=Path,
                         help="operator trial TOML (defaults to TrialConfig)")
@@ -167,6 +174,7 @@ def main(argv=None):
         job = export(args.release or args.dataset or args.repo_id,
                      args.output,
                      args.config,
+                     workspace_yaml=args.workspace_yaml,
                      task_ids=args.task,
                      revision=args.revision,
                      local_files_only=args.local_files_only,

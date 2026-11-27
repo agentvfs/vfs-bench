@@ -322,6 +322,12 @@ class Toolathlon(Dataset):
     suite = "toolathlon"
 
 
+class ComplexMCP(Dataset):
+    """The seeded ComplexMCP software-use benchmark."""
+
+    suite = "complexmcp"
+
+
 class MCPAtlas(Dataset):
     """The VFS-Bench MCP-Atlas suite."""
 
@@ -342,7 +348,11 @@ def load_dataset(release: str | Path | Dataset,
         if revision:
             raise ValueError("A revision applies only to a Hub dataset ID")
         return Dataset(release, local_files_only=local_files_only)
-    named = {"toolathlon": Toolathlon, "mcpatlas": MCPAtlas}
+    named = {
+        "toolathlon": Toolathlon,
+        "mcpatlas": MCPAtlas,
+        "complexmcp": ComplexMCP
+    }
     if release in named:
         if revision:
             raise ValueError("Supply a Hub dataset ID to select a revision")

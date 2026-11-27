@@ -56,7 +56,7 @@ async with Toolathlon()["wandb-best-score"].open() as trial:
     verdict = await trial.verify()
 ```
 
-The benchmark controller grades each attempt while its private services are running. The local release folders are ready for upload to Hugging Face. [Package guide](docs/vfsbench.md) · [Dataset format](docs/datasets.md) · [Toolathlon](datasets/toolathlon/) · [MCP-Atlas](datasets/mcpatlas/)
+The benchmark controller grades each attempt while its private services are running. The local release folders are ready for upload to Hugging Face. [Package guide](docs/vfsbench.md) · [Dataset format](docs/datasets.md) · [Toolathlon](datasets/toolathlon/) · [MCP-Atlas](datasets/mcpatlas/) · [ComplexMCP](datasets/complexmcp/)
 
 <p align="center">
   <picture>

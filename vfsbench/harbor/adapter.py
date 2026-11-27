@@ -30,6 +30,7 @@ class MirageEnvironment(BaseEnvironment):
     def __init__(self,
                  *args,
                  trial_config=None,
+                 workspace_yaml=None,
                  release_path=None,
                  repo_id=None,
                  revision=None,
@@ -42,6 +43,7 @@ class MirageEnvironment(BaseEnvironment):
                                                     or ""):
             raise ValueError("A Hub job requires the full dataset commit SHA")
         self.trial_config = Path(trial_config) if trial_config else None
+        self.workspace_yaml = Path(workspace_yaml) if workspace_yaml else None
         self.release_path = release_path
         self.repo_id = repo_id
         self.revision = revision
@@ -81,6 +83,8 @@ class MirageEnvironment(BaseEnvironment):
     def _open_trial(self):
         config = (TrialConfig.from_toml(self.trial_config)
                   if self.trial_config else TrialConfig())
+        if self.workspace_yaml is not None:
+            config = replace(config, workspace_yaml=self.workspace_yaml)
         cpus, memory = self._effective_cpus, self._effective_memory_mb
         if cpus is not None:
             config = replace(config, cpus=int(cpus))

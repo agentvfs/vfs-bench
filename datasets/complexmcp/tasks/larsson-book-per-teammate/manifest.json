@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "dataset": "complexmcp",
+  "id": "larsson-book-per-teammate",
+  "seed": 7,
+  "system_time": "2026-05-06T18:20:24Z",
+  "apps": [
+    "LightSystem",
+    "LightTalk",
+    "LightShop"
+  ],
+  "assets": [
+    {
+      "target": "workspace/tools.json",
+      "role": "tools",
+      "path": "assets/sha256/c45f4aee9fc0fea1160a1dbc30f1e3585328dd3f7a04c85e182640821cb2db97",
+      "sha256": "c45f4aee9fc0fea1160a1dbc30f1e3585328dd3f7a04c85e182640821cb2db97",
+      "size": 173777
+    },
+    {
+      "target": "workspace/instructions.md",
+      "role": "instructions",
+      "path": "assets/sha256/f8f1275669672c77aa3130b347f1c0c491d7f23d8f00e9bd855e55cfb4904d96",
+      "sha256": "f8f1275669672c77aa3130b347f1c0c491d7f23d8f00e9bd855e55cfb4904d96",
+      "size": 41356
+    },
+    {
+      "target": "verifier/expected.json",
+      "role": "expected",
+      "path": "assets/sha256/6c0f9b8a57d0ec1b7dfb419265f52503b883b04c27f2433ecc63cdb130941873",
+      "sha256": "6c0f9b8a57d0ec1b7dfb419265f52503b883b04c27f2433ecc63cdb130941873",
+      "size": 274327
+    },
+    {
+      "target": "software/LightShop/corpus/shop.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/3ba885f586414b7ca31c6d80bc4aa843781e3781ae52829777569fcf632d5b2d",
+      "sha256": "3ba885f586414b7ca31c6d80bc4aa843781e3781ae52829777569fcf632d5b2d",
+      "size": 69234
+    },
+    {
+      "target": "software/LightTalk/corpus/contact.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/099ea613408c2ac6ce9c75f9723812dab05356acaad8abe728a5ab00c0bd2863",
+      "sha256": "099ea613408c2ac6ce9c75f9723812dab05356acaad8abe728a5ab00c0bd2863",
+      "size": 6785
+    },
+    {
+      "target": "software/LightTalk/corpus/message.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/f5291cf497927d67e5e2721437c09b5711f0453bf09bc08736fa7e8bc13d0272",
+      "sha256": "f5291cf497927d67e5e2721437c09b5711f0453bf09bc08736fa7e8bc13d0272",
+      "size": 18514
+    },
+    {
+      "target": "software/LightTalk/corpus/moment.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/7e2fc988d4af1ef1a78844ef873cd6fcfdf7a28e29148145e7f16081ae2e517d",
+      "sha256": "7e2fc988d4af1ef1a78844ef873cd6fcfdf7a28e29148145e7f16081ae2e517d",
+      "size": 39181
+    }
+  ],
+  "upstream_revision": "7c01f92e38be6e0c193d5c6c9a55baa92fb628cb",
+  "row_sha256": "89896d0c087d110b59494a58411e9811babfa14ab4b636c6bae4e65682c2f6e5"
+}

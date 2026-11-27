@@ -10,6 +10,8 @@ def execution_status(task, config):
         _installed_environment(config.environment)
         return "custom environment", config.environment
     suite = task.manifest["dataset"]
+    if suite == "complexmcp":
+        return "available", ""
     if suite == "mcpatlas":
         from .mcpatlas import requirements
 

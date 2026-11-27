@@ -36,6 +36,7 @@ class TrialConfig:
     memory: str = "2G"
     timeout_sec: int = 120
     work_dir: Path | None = None
+    workspace_yaml: Path | None = None
     environment: str = "suite"
     suite_options: dict = field(default_factory=dict)
     verifier: VerifierConfig = field(default_factory=VerifierConfig)
@@ -63,7 +64,7 @@ class TrialConfig:
     @classmethod
     def from_toml(cls, path: str | Path) -> Self:
         """Read trial, suite_options and verifier settings. Resolve work_dir
-        relative to this file."""
+        and workspace_yaml relative to this file."""
         path = Path(path).expanduser().resolve()
         with path.open("rb") as source:
             values = tomllib.load(source)
@@ -71,9 +72,10 @@ class TrialConfig:
             raise ValueError(
                 f"Unknown trial configuration sections: {sorted(extra)}")
         trial = dict(values.get("trial", {}))
-        if "work_dir" in trial:
-            trial["work_dir"] = (
-                path.parent / Path(trial["work_dir"]).expanduser()).resolve()
+        for key in ("work_dir", "workspace_yaml"):
+            if key in trial:
+                trial[key] = (path.parent /
+                              Path(trial[key]).expanduser()).resolve()
         return cls(**trial,
                    suite_options=values.get("suite_options", {}),
                    verifier=VerifierConfig(**values.get("verifier", {})))
@@ -196,6 +198,8 @@ class VerifierGuest:
 def _prepare(suite: str):
     if suite == "mcpatlas":
         from .suites.mcpatlas import prepare
+    elif suite == "complexmcp":
+        from .suites.complexmcp import prepare
     elif suite == "toolathlon":
         from .suites.toolathlon import prepare
     else:
@@ -203,8 +207,10 @@ def _prepare(suite: str):
     return prepare
 
 
-def _workspace_config(prepared: TrialEnvironment, run_dir: Path,
-                      name: str) -> dict:
+def _workspace_config(prepared: TrialEnvironment,
+                      run_dir: Path,
+                      name: str,
+                      workspace_yaml: Path | None = None) -> dict:
     values = dict(prepared.workspace)
     mounts = dict(values.get("mounts", {}))
     if prepared.instructions:
@@ -231,14 +237,6 @@ def _workspace_config(prepared: TrialEnvironment, run_dir: Path,
                     "root": str(root)
                 },
             }
-    network = values.get("network", False)
-    if network is not False and (
-            not isinstance(network, dict) or "allowed_domains" not in network
-            or any(not re.fullmatch(r"(127\.0\.0\.1|localhost|\[::1\]):[0-9]+",
-                                    domain)
-                   for domain in network["allowed_domains"])):
-        raise ValueError(
-            "Trial networking must name individual local mock server ports")
     values.setdefault("mode", "exec")
     values.setdefault("profiles", {"default": {"cwd": "/workspace"}})
     machines = {
@@ -252,7 +250,46 @@ def _workspace_config(prepared: TrialEnvironment, run_dir: Path,
             }
         },
     } if prepared.python else {}
-    values.update(network=network, mounts=mounts, machines=machines)
+    values.update(mounts=mounts,
+                  machines={
+                      **(values.get("machines") or {}),
+                      **machines
+                  })
+    if workspace_yaml is not None:
+        from mirage.config import load_config
+
+        overlay = load_config(Path(workspace_yaml).expanduser()).model_dump(
+            exclude_unset=True, by_alias=True)
+        reserved = {
+            "mounts": set(prepared.workspace.get("mounts") or {}),
+            "machines": set(values["machines"]),
+            "clis": set(prepared.workspace.get("clis") or {}),
+        }
+        if prepared.instructions:
+            reserved["mounts"].add("/vfsbench")
+        for key, names in reserved.items():
+            if conflicts := names.intersection(overlay.get(key) or {}):
+                raise ValueError(
+                    f"Workspace YAML replaces trial {key}: {sorted(conflicts)}"
+                )
+        for key in (*reserved, "profiles", "env", "secrets", "command_limits"):
+            if additions := overlay.pop(key, None):
+                values[key] = {**(values.get(key) or {}), **additions}
+        values.update(overlay)
+    network = values.get("network", False)
+    if network is not False:
+        if not isinstance(network, dict) or "allowed_domains" not in network:
+            raise ValueError(
+                "Trial networking requires an allowed_domains list")
+        endpoints = [
+            *network["allowed_domains"], *network.get("routes", {}).values()
+        ]
+        if any(not re.fullmatch(r"(127\.0\.0\.1|localhost|\[::1\]):[0-9]+",
+                                endpoint) for endpoint in endpoints):
+            raise ValueError(
+                "Trial networking must name individual local mock server ports"
+            )
+    values["network"] = network
     return values
 
 
@@ -355,7 +392,9 @@ class Trial:
             return deepcopy(await self._prepared.state_readers[name]())
 
     async def start(self) -> Self:
-        from mirage.config import WorkspaceConfig
+        from mirage.concurrency.limiter import run_blocking
+        from mirage.config import (WorkspaceConfig, build_mcp_clis,
+                                   resolve_secrets)
         from mirage.workspace.workspace import Workspace
 
         async with self._lock:
@@ -395,14 +434,23 @@ class Trial:
                         "environment or operator")
                 name = f"vfsbench-{self.id}"
                 spec = WorkspaceConfig.model_validate(
-                    _workspace_config(prepared, run, name))
+                    _workspace_config(prepared, run, name,
+                                      self.config.workspace_yaml))
                 # Register cleanup before restore, which can allocate the VM
                 # and then fail.
                 if prepared.python:
                     stack.push_async_callback(_remove_guest, name)
                     await _restore_guest(self.config, name)
-                workspace = Workspace(**spec.to_workspace_kwargs())
+                spec = await resolve_secrets(spec)
+                workspace = Workspace(**spec.to_workspace_kwargs(
+                    mcp_clis=await build_mcp_clis(spec)))
                 stack.push_async_callback(workspace.close)
+                for prefix, (backend,
+                             mountpoint) in spec.kernel_mounts().items():
+                    await run_blocking(workspace.add_fuse_mount,
+                                       prefix,
+                                       mountpoint,
+                                       backend=backend)
                 if prepared.install is not None:
                     await prepared.install(workspace)
                 await workspace.vfs_md("/VFS.md")

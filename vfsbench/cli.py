@@ -20,6 +20,8 @@ def main(argv=None):
     launch = commands.add_parser(
         "run", help="open a trial, verify it, and return its report")
     launch.add_argument("--task", required=True, help="task ID")
+    launch.add_argument("--workspace-yaml",
+                        help="Mirage workspace configuration file")
     launch.add_argument("--command", help=argparse.SUPPRESS)
     launch.add_argument("--output", help="new directory for trial.json")
     inspect = commands.add_parser(

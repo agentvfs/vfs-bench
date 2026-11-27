@@ -37,8 +37,41 @@ Use `--output run1` before `shell` or `workspace` to save the controller's repor
 | --- | --- | --- |
 | Select a Hub revision | `--revision COMMIT` | `revision=commit` |
 | Apply lifecycle and verifier settings | `--config trial.toml` | `config="trial.toml"` |
+| Load Mirage workspace YAML | `--workspace-yaml workspace.yaml` | `workspace_yaml="workspace.yaml"` |
 | Save the report to a new directory | `--output run1` | `output="run1"` |
 | Inspect service requirements | `vfsbench status toolathlon --task wandb-best-score` | `status("toolathlon", task_ids=["wandb-best-score"])` |
+
+## Mirage workspace YAML
+
+Pass the same Mirage workspace file to a Python run, a CLI run or a Harbor job. For example, save this as `workspace.yaml` to give each trial a writable RAM mount.
+
+```yaml
+mounts:
+  /scratch:
+    vfs: ram
+    mode: write
+```
+
+```sh
+vfsbench run complexmcp --task good-morning-paisley --workspace-yaml workspace.yaml workspace vfs readdir /scratch
+vfsbench harbor export complexmcp --task good-morning-paisley --workspace-yaml workspace.yaml --output job
+```
+
+```python
+from vfsbench import run
+
+async def inspect(ws):
+    await ws.vfs.write("/scratch/note", b"one trial")
+    result = await ws.shell("light-system now")
+    print(await result.stdout_str())
+
+report = await run("complexmcp", task="good-morning-paisley",
+                   workspace_yaml="workspace.yaml", action=inspect)
+```
+
+For an open trial, pass `TrialConfig(workspace_yaml=Path("workspace.yaml"))` to `task.open(config=...)`. You can also set `workspace_yaml = "workspace.yaml"` under `[trial]` in TOML. Paths there resolve relative to the TOML file. An explicit run or export option takes precedence. Harbor reads the referenced file when it starts a trial.
+
+Mirage loads and validates the YAML. Use `mounts: {}` when configuring only profiles, limits or environment variables. Named entries are combined with the trial configuration. Suite mounts, suite-configured CLIs and the trial's managed Python machine reserve their names. The trial's network policy permits individual loopback mock ports.
 
 ## Application lifecycle
 
@@ -58,7 +91,7 @@ print(trial.report.to_dict())
 
 ## Datasets and first use
 
-Pass a checkout suite name (`toolathlon` or `mcpatlas`), a release directory, or a Hugging Face dataset ID to `load_dataset`, `run`, or the CLI. For a published release, loading initially reads the catalog. Accessing a task fetches its manifest, prompt or assets as needed, pinned to the catalog's Hub commit. `Toolathlon()` is the typed checkout reader. [Release format and upload](datasets.md)
+Pass a checkout suite name (`toolathlon`, `mcpatlas`, or `complexmcp`), a release directory, or a Hugging Face dataset ID to `load_dataset`, `run`, or the CLI. For a published release, loading initially reads the catalog. Accessing a task fetches its manifest, prompt or assets as needed, pinned to the catalog's Hub commit. `Toolathlon()` is the typed checkout reader. [Release format and upload](datasets.md)
 
 Tasks using a microVM require a working `msb` installation. On first use the runtime builds the default disk snapshot with CPython, SSHFS and the pinned analysis packages. Each agent guest and verifier guest restores a separate disk from that snapshot. The snapshot contains the runtime dependencies. Task fixtures and private grading inputs are staged per trial. Operators can prebuild the disk with `vfsbench snapshot build` or select their own installed snapshot in `trial.toml`. [Microsandbox](https://github.com/microsandbox/microsandbox)
 

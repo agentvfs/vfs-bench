@@ -1,6 +1,6 @@
 # Dataset storage and migration
 
-The repository root carries one Hugging Face release folder for each imported suite. Toolathlon contains the reviewed, fully local subset of the 100 v1 tasks. MCP-Atlas preserves its 100-row catalog. The Python package is named `vfsbench`. Its public API, install instructions and Harbor job example are in the [package guide](vfsbench.md).
+The repository root carries one Hugging Face release folder for each imported suite. Toolathlon contains the reviewed, fully local subset of the 100 v1 tasks. MCP-Atlas preserves its 100-row catalog. ComplexMCP includes all 47 seeded tasks. The Python package is named `vfsbench`. Its public API, install instructions and Harbor job example are in the [package guide](vfsbench.md).
 
 ## Release layout
 
@@ -12,7 +12,7 @@ datasets/<suite>/
     assets/sha256/<digest>
 ```
 
-Each folder is the root of a separate Hub dataset repository. The dataset card selects `index.jsonl` as the evaluation split. Listing a suite loads only this index. The manifest identifies the prompt, assets, upstream sources and grader for an individual task. Repeated assets share a digest. Sources that must be retrieved separately have pinned references. A Hub reader resolves a release revision to a commit and uses it for subsequent reads. [Toolathlon](../datasets/toolathlon/README.md) · [MCP-Atlas](../datasets/mcpatlas/README.md)
+Each folder is the root of a separate Hub dataset repository. The dataset card selects `index.jsonl` as the evaluation split. Listing a suite loads only this index. The manifest identifies the prompt, assets, upstream sources and grader for an individual task. Repeated assets share a digest. Sources that must be retrieved separately have pinned references. A Hub reader resolves a release revision to a commit and uses it for subsequent reads. [Toolathlon](../datasets/toolathlon/README.md) · [MCP-Atlas](../datasets/mcpatlas/README.md) · [ComplexMCP](../datasets/complexmcp/README.md)
 
 The exporter reconstructs the folders from v1 and the pinned task inventories. Run these commands from the repository root to generate both releases and check for drift.
 
@@ -20,6 +20,14 @@ The exporter reconstructs the folders from v1 and the pinned task inventories. R
 python3 -I scripts/datasets/export_v1.py
 python3 -I scripts/datasets/export_v1.py --check
 ```
+
+Rebuild ComplexMCP from a clone of the upstream repository with the pinned commit available locally. The exporter uses PyArrow and PyYAML.
+
+```sh
+python scripts/datasets/complexmcp/export.py --source /path/to/complex-mcp --check
+```
+
+The ComplexMCP wheel includes the existing service simulators and the upstream Python judge. To rebuild its Node bundle, install `esbuild@0.28.2` and `yaml@2.9.0`, then run `python scripts/datasets/complexmcp/bundle.py --esbuild /path/to/esbuild --yaml /path/to/node_modules/yaml`. Each trial launches the bundled service with the Node binary supplied by the Python dependency.
 
 To publish Toolathlon, upload the release folder contents to a Hugging Face dataset repository. Substitute your namespace for `YOUR_ORG`.
 

@@ -99,9 +99,12 @@ class HarborTests(unittest.IsolatedAsyncioTestCase):
             config.write_text('[trial]\nsnapshot="test"\nwork_dir="runs"\n')
             release = MCPAtlas(local_files_only=True)
             task_id = "fantasy-sports-average"
+            workspace_yaml = root / "workspace.yaml"
+            workspace_yaml.write_text("mounts: {/scratch: {vfs: ram}}\n")
             job = export(release,
                          root / "export",
                          config,
+                         workspace_yaml=workspace_yaml,
                          task_ids=[task_id],
                          local_files_only=True)
             with chdir(job.parent):
@@ -135,6 +138,8 @@ class HarborTests(unittest.IsolatedAsyncioTestCase):
                       patch("vfsbench.runtime._restore_guest"),
                       patch("vfsbench.runtime._remove_guest")):
                     await env.start()
+                    self.assertTrue(await
+                                    env.trial.workspace.vfs.is_dir("/scratch"))
                     private = env.trial.run_dir
                     try:
                         for path in ("/grading", "/tests", "/solution",

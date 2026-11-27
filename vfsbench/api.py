@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import json
 from collections.abc import Awaitable, Callable, Iterable
+from dataclasses import replace
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -45,6 +46,7 @@ async def run(release: str | Path | Dataset,
               command: str | None = None,
               revision: str | None = None,
               config: TrialConfig | str | Path | None = None,
+              workspace_yaml: str | Path | None = None,
               output: str | Path | None = None,
               local_files_only: bool = False) -> TrialReport:
     """Give an async action the native Mirage Workspace, then verify and close.
@@ -58,7 +60,10 @@ async def run(release: str | Path | Dataset,
                                       release,
                                       revision=revision,
                                       local_files_only=local_files_only)
-    trial = dataset[task].open(config=_config(config))
+    runtime = _config(config)
+    if workspace_yaml is not None:
+        runtime = replace(runtime, workspace_yaml=Path(workspace_yaml))
+    trial = dataset[task].open(config=runtime)
     directory = Path(output) if output is not None else None
     if directory is not None:
         directory.mkdir(parents=True, exist_ok=False)
