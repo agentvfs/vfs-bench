@@ -60,7 +60,7 @@
 # --check` holds them to it, and a formatter's rewrite fails it.
 # The v2 release assets and vendored service sources also preserve upstream bytes.
 exclude: |
-  (?x)^vfs-bench-2/huggingface/[^/]+/assets/sha256/.*$|^vfs-bench-2/src/vfsbench/suites/vendor/.*$|^vfs-bench-2/datasets/(dataspace|automationbench|gaia2)/graders/port\.py$|^vfs-bench-2/datasets/claweval/graders/port/.*$|^vfs-bench-2/datasets/claweval/[^/]+/grader\.(py|ts)$|^vfs-bench-2/datasets/[^/]+/[^/]+/(workspace|harbor)/.*$|^vfs-bench-2/datasets/[^/]+/graders/reference/.*$|^vfs-bench-1/(
+  (?x)^datasets/[^/]+/assets/sha256/.*$|^vfsbench/suites/vendor/.*$|^vfs-bench-2/datasets/(dataspace|automationbench|gaia2)/graders/port\.py$|^vfs-bench-2/datasets/claweval/graders/port/.*$|^vfs-bench-2/datasets/claweval/[^/]+/grader\.(py|ts)$|^vfs-bench-2/datasets/[^/]+/[^/]+/(workspace|harbor)/.*$|^vfs-bench-2/datasets/[^/]+/graders/reference/.*$|^vfs-bench-1/(
       task/[^/]+/.*/vfs/.*\.md|
       task/[^/]+/.*/shared/task\.md|
       task/[^/]+/.*/shared/system_prompt\.md|

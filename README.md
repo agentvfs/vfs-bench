@@ -37,6 +37,24 @@ Toolathlon; its tasks, results and trajectories are at
 VFS-Bench 2.0, in progress, runs recent, hard agent benchmarks through
 AgentVFS alone.
 
+## vfsbench
+
+Install the Python package from this repository root with `pip install .` (Python 3.12+).
+The CLI and application API open the same Mirage environment and call the same verifier.
+
+```sh
+vfsbench run toolathlon --task wandb-best-score --command 'ls /wandb/mluo/deepscaler-1.5b'
+```
+
+```python
+from vfsbench import run
+
+# Within an async application
+report = await run("toolathlon", task="wandb-best-score", command="ls /wandb/mluo/deepscaler-1.5b")
+```
+
+The benchmark controller grades each attempt while its private services are running. The local release folders are ready for upload to Hugging Face. [Package guide](docs/vfsbench.md) · [Dataset format](docs/datasets.md) · [Toolathlon](datasets/toolathlon/) · [MCP-Atlas](datasets/mcpatlas/)
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/agentvfs-overview-dark.png">

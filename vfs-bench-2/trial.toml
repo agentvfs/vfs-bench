@@ -1,9 +1,0 @@
-[trial]
-environment = "suite"
-snapshot = "vfsbench:python-0947f53ccc81"
-cpus = 1
-memory = "2G"
-timeout_sec = 120
-
-[verifier]
-name = "suite"

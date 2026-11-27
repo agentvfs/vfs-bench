@@ -35,45 +35,9 @@ wrapper. The plan and its status are tracked in the roadmap issue,
 | [Gaia2](datasets/gaia2/README.md) | Meta's ARE, gaia2-cli | 460 | Monty |
 | [JobBench](datasets/jobbench/README.md) | JobBench/job-bench | 16 | TypeScript |
 
-## V1 dataset releases
+## Python package and V1 datasets
 
-Each local folder is a Hugging Face dataset repository with a card, an evaluation index, one manifest per task and content-addressed assets. Toolathlon includes the verified tasks whose agent and grader run with local data and services. The separate MCP-Atlas development folder preserves its 100-row v1 catalog and includes tasks that need external providers.
-
-| Local folder | What it contains |
-| --- | --- |
-| [huggingface/mcpatlas](huggingface/mcpatlas/README.md) | Original prompts, ordered tool lists, grading claims, workspace definitions and parity cases. The shared Atlas environment is pinned by its image digest. |
-| [huggingface/toolathlon](huggingface/toolathlon/README.md) | VFS workspace data and checksum-verified references to the original prompts, source fixtures, upstream task workspaces and evaluation files. |
-
-Install the Python reader from `vfs-bench-2/` with `pip install .` (Python 3.12+). The distribution name and Python import are both `vfsbench`. From this checkout:
-
-```python
-from vfsbench.dataset import MCPAtlas, Toolathlon
-
-atlas = MCPAtlas()
-print(len(atlas), atlas["fantasy-sports-average"].instruction)
-nhl = Toolathlon()["nhl-b2b-analysis"]
-print(nhl.instruction)
-files = nhl.materialize()  # task-relative names mapped to verified local files
-```
-
-Pass a release folder explicitly when using the reader outside the checkout, e.g. `Toolathlon("/data/toolathlon")`. `materialize(include_sources=True)` also retrieves the task's individually referenced source files. Code and grading inputs in this mapping are for the benchmark controller. The package exposes `task.open()` for Mirage Python trials and `trial.verify()` for grading while each trial's services are live. Check execution coverage with `vfsbench status <release-folder>`. [Python package, verifier and Harbor examples](PACKAGE.md)
-
-With the Harbor extra installed, `vfsbench run toolathlon --task wandb-best-score --agent nop` runs a single baseline. The [Python and CLI walkthrough](PACKAGE.md#run-the-same-task-from-python-and-the-cli) also runs a scoring agent against the same mock.
-
-Rebuild or verify both upload folders from the pinned v1 Git revision with:
-
-```sh
-python3 -I datasets/export_v1.py
-python3 -I datasets/export_v1.py --check
-```
-
-To publish the mocked Toolathlon release, upload **the contents of its folder to the root of a Hugging Face dataset repository**. Replace `YOUR_ORG` with your namespace.
-
-```sh
-hf upload YOUR_ORG/vfsbench-toolathlon huggingface/toolathlon . --repo-type dataset
-```
-
-After upload, `Dataset.from_hub(repo_id, revision=commit_sha)` from `vfsbench.dataset` opens the catalog. It downloads manifests and assets on access. Hugging Face's standard `datasets.load_dataset(repo_id, split="test")` reads the catalog table.
+The repository root contains the `vfsbench` Python package and the Toolathlon and MCP-Atlas release folders. [Python, CLI and Harbor usage](../docs/vfsbench.md) · [Dataset storage and migration](../docs/datasets.md)
 
 ## Setup
 
@@ -182,21 +146,11 @@ jobs/<job>/
 
 ```
 vfs-bench-2/
-  pyproject.toml
-  src/vfsbench/
-    __init__.py
-    dataset.py
-  huggingface/
-    mcpatlas/
-    toolathlon/
   workspace/
   formats/
     harbor/
     agentenv/
   datasets/
-    export_v1.py
-    mcpatlas/export.py
-    toolathlon/export.py
     <dataset>/
       download.py
       convert.py
@@ -211,8 +165,6 @@ vfs-bench-2/
         grader.ts
 ```
 
-- [src/vfsbench/dataset.py](src/vfsbench/dataset.py) defines the public reader, its task handles and the two named datasets. The wheel contains the reader. Each suite's data ships from its own release folder.
-- [datasets/export_v1.py](datasets/export_v1.py) builds both upload folders from pinned sources using the suite-specific exporters.
 - `workspace/`: the Mirage side every task shares: the daemon's preload,
   the workspace a task's `workspace.yaml` builds, the mock launcher, the CLI
   generator and the `grade` CLI.
