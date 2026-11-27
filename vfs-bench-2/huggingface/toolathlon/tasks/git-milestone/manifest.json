@@ -1,0 +1,185 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/fb4f8984a7ab01b8c560913c4cafb748ef4415b9e750c3aec054bf52c3c6ade6",
+      "role": "parity_test",
+      "sha256": "fb4f8984a7ab01b8c560913c4cafb748ef4415b9e750c3aec054bf52c3c6ade6",
+      "size": 1535,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/978869b16488835e09242c175be5794203001c033c9b22d78743093b67ad47fd",
+      "role": "verifier_adapter",
+      "sha256": "978869b16488835e09242c175be5794203001c033c9b22d78743093b67ad47fd",
+      "size": 170,
+      "target": "toolathlon/eval_shim/sitecustomize.py"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/a58563277bdbb4a50492c17ad8fbdba0244ebacd35f41bd81d7cf4ab8ec49a3f",
+      "role": "workspace_config",
+      "sha256": "a58563277bdbb4a50492c17ad8fbdba0244ebacd35f41bd81d7cf4ab8ec49a3f",
+      "size": 881,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "git-milestone",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/git-milestone/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/git-milestone/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/git-milestone/docs/agent_system_prompt_cn.md",
+      "role": "upstream_source",
+      "sha256": "d8000ddbb74f198641012cd385487dc98d0e31f0bf36a5eecbc5a7aac920d492",
+      "size": 336,
+      "target": "upstream/docs/agent_system_prompt_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/git-milestone/docs/agent_system_prompt_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/git-milestone/shared/task.md",
+      "role": "instruction",
+      "sha256": "2069d78c7bd2307764f15e3b3af3ba5d7b199b285e8ee2002ebbbf981746edb1",
+      "size": 1135,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/git-milestone/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/git-milestone/docs/task_cn.md",
+      "role": "upstream_source",
+      "sha256": "1e27ea7d435f00c9adb2e7f2f4e91a10d43f42e053554019bb00a0fb9e99a948",
+      "size": 1020,
+      "target": "upstream/docs/task_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/git-milestone/docs/task_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/git-milestone/docs/user_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "f653505561d80a29fea19766759f9a8719dac246b97066605481eb8a3b1a76dd",
+      "size": 147,
+      "target": "upstream/docs/user_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/git-milestone/docs/user_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/git-milestone/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "a7d9a5e44cc58ff5ae068e07dee52a94745068bdfc3b50faa7c245e90b048ce7",
+      "size": 18014,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/git-milestone/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/git-milestone/groundtruth_workspace/after_task.json",
+      "role": "verifier_input",
+      "sha256": "fc27a053dde43e4193e6298d998bee39dc256432a87c4bb4fb4c7638669decfb",
+      "size": 971,
+      "target": "upstream/groundtruth_workspace/after_task.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/git-milestone/groundtruth_workspace/after_task.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/git-milestone/groundtruth_workspace/before_task.json",
+      "role": "verifier_input",
+      "sha256": "fc27a053dde43e4193e6298d998bee39dc256432a87c4bb4fb4c7638669decfb",
+      "size": 971,
+      "target": "upstream/groundtruth_workspace/before_task.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/git-milestone/groundtruth_workspace/before_task.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/git-milestone/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "8428e0863266619dcdfa833cb357cc7ea7b96bf2f53c4648b46e926205d67947",
+      "size": 2274,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/git-milestone/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/git-milestone/task_config.json",
+      "role": "upstream_config",
+      "sha256": "a52a08328473fc6746978b07279108b53e14f146aa20a245bded2ad5a4f59be9",
+      "size": 254,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/git-milestone/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/git-milestone/utils/__init__.py",
+      "role": "upstream_source",
+      "sha256": "559e7a9673bd0218e93ff9ba98d9c38c33dbb28c4bd580dcbf05372df228ea5b",
+      "size": 55,
+      "target": "upstream/utils/__init__.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/git-milestone/utils/__init__.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/git-milestone/utils/github_fetcher.py",
+      "role": "upstream_source",
+      "sha256": "7997248f5c7bad12e9480ce7126288c6f7bdbfccfb89efbd828966d6b26b51d4",
+      "size": 4993,
+      "target": "upstream/utils/github_fetcher.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/git-milestone/utils/github_fetcher.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/git-milestone/README.md",
+      "role": "documentation",
+      "sha256": "e86374e5cbe137f636b90120a5d1fd9d7099790cd48763a28e70166a52ebdb5f",
+      "size": 2376,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/git-milestone/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/git-milestone/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "b16a11611e599deec5ee836362b84dc775937d06c2bc6c888a08d060eecf2582",
+      "size": 2336,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/git-milestone/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/git-milestone",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/git-milestone",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "python_execute",
+      "web_search",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "filesystem",
+      "terminal",
+      "fetch"
+    ]
+  }
+}

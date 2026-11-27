@@ -1,0 +1,37 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "yahoo_finance_get_historical_stock_prices",
+      "why": "`get_historical_stock_prices` and `yahoo-finance get_historical_stock_prices` read the same fixture rows",
+      "mcp": {
+        "server": "yahoo-finance",
+        "tool": "get_historical_stock_prices",
+        "args": {
+          "ticker": "USDCNY=X",
+          "period": "1mo",
+          "interval": "1d"
+        }
+      },
+      "mirage": {
+        "command": "yahoo-finance get-historical-stock-prices '{\"ticker\":\"USDCNY=X\",\"period\":\"1mo\",\"interval\":\"1d\"}'"
+      }
+    },
+    {
+      "name": "yahoo_finance_get_historical_stock_prices_2",
+      "why": "the second ticker the task turns on reads the same",
+      "mcp": {
+        "server": "yahoo-finance",
+        "tool": "get_historical_stock_prices",
+        "args": {
+          "ticker": "EURCNY=X",
+          "period": "1mo",
+          "interval": "1d"
+        }
+      },
+      "mirage": {
+        "command": "yahoo-finance get-historical-stock-prices '{\"ticker\":\"EURCNY=X\",\"period\":\"1mo\",\"interval\":\"1d\"}'"
+      }
+    }
+  ]
+}

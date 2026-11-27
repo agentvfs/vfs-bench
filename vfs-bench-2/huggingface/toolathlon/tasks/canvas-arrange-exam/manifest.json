@@ -1,0 +1,313 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/fbf76bf4a0f2740d566c0cfe178a06bb8c41a65f46bec85c66ca0c93ee2e9f57",
+      "role": "seed_manifest",
+      "sha256": "fbf76bf4a0f2740d566c0cfe178a06bb8c41a65f46bec85c66ca0c93ee2e9f57",
+      "size": 63,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/87775184ae2c0035b2dd9ea743e3df09895fd59b25f6a1f6b5489a075685d3e2",
+      "role": "parity_test",
+      "sha256": "87775184ae2c0035b2dd9ea743e3df09895fd59b25f6a1f6b5489a075685d3e2",
+      "size": 3307,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2a60fbaab56820781841f06ac0ff494ef114824296a62a4c8665b34f93a90ff2",
+      "role": "workspace_documentation",
+      "sha256": "2a60fbaab56820781841f06ac0ff494ef114824296a62a4c8665b34f93a90ff2",
+      "size": 646,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/999d8087cebce39e977f38ee480e58cfaa16638d51031bd913ae6cf0bb8af664",
+      "role": "workspace_config",
+      "sha256": "999d8087cebce39e977f38ee480e58cfaa16638d51031bd913ae6cf0bb8af664",
+      "size": 1565,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "canvas-arrange-exam",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/README.md",
+      "role": "upstream_source",
+      "sha256": "7ecdff26f4d2e26440ebf50fe56d59105453715fb70a6929babfbf6a3ebd3f22",
+      "size": 99,
+      "target": "upstream/README.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/README.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/canvas-arrange-exam/shared/task.md",
+      "role": "instruction",
+      "sha256": "25297857b1489130aae452eefe913602511b59cb39a66d5eba137583416ab567",
+      "size": 864,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/emails_config.json",
+      "role": "upstream_source",
+      "sha256": "514b1d6a3399bdc317a5e5bf86bfed2bf9c15d42f7dd09a2c692f6291f0adcf2",
+      "size": 255,
+      "target": "upstream/emails_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/emails_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/evaluation/check_local.py",
+      "role": "verifier_source",
+      "sha256": "8f987cfbcb00e4b11da66c9d4132466c8e573d43568ca1d8d56e94e908d0648c",
+      "size": 9638,
+      "target": "upstream/evaluation/check_local.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/evaluation/check_local.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "7173c6a3e0833712f5616401214b9565f6e188e93c1a7c04f4d6c4f343628d77",
+      "size": 1220,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/files/canvas_users.json",
+      "role": "upstream_source",
+      "sha256": "4c6ebf58d4d769a9c1b5d75aab7010c4adb24eed0bf06683f23dc3199fbe40b2",
+      "size": 884,
+      "target": "upstream/files/canvas_users.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/files/canvas_users.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/files/course_config.json",
+      "role": "upstream_source",
+      "sha256": "0caea265fef0c9fc99a94e72e6ff19b768ff1191d745038b76586b6eacff4b23",
+      "size": 11316,
+      "target": "upstream/files/course_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/files/course_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/files/email_config.json",
+      "role": "upstream_source",
+      "sha256": "1095ba7b876bba716775bc5b0936516e8fb9c178bec522a46e7fe18c0aa109e9",
+      "size": 1073,
+      "target": "upstream/files/email_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/files/email_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/files/exam_notification_template.txt",
+      "role": "upstream_source",
+      "sha256": "4ab4303193ade491f666a6aca22b926ef7b3560978782bacf6f6a1f3a2273ef1",
+      "size": 686,
+      "target": "upstream/files/exam_notification_template.txt",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/files/exam_notification_template.txt"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/groundtruth_workspace/exam_schedule.xlsx",
+      "role": "verifier_input",
+      "sha256": "751d44fa0c423e8dc99ab3c1c7cdae1192c7676b19cc41f85b6f7262211db549",
+      "size": 5871,
+      "target": "upstream/groundtruth_workspace/exam_schedule.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/groundtruth_workspace/exam_schedule.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/initial_workspace/exam_schedule.xlsx",
+      "role": "initial_workspace",
+      "sha256": "598a6e8f29e022d344e7964d1131cf09334570af76abe2c843f47c4c21d5497d",
+      "size": 8765,
+      "target": "upstream/initial_workspace/exam_schedule.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/initial_workspace/exam_schedule.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/initial_workspace/memory/memory.json",
+      "role": "initial_workspace",
+      "sha256": "077aaf78b5f946f3763bd4a792df72ec574a476441b3f49074f21e0b6946830b",
+      "size": 699,
+      "target": "upstream/initial_workspace/memory/memory.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/initial_workspace/memory/memory.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/preprocess/inject_exam_emails.py",
+      "role": "preprocessor_source",
+      "sha256": "b88ee250d9d14eed21dc69d566a631cb55487b809eff1d0dbd9f8f74df2dc28a",
+      "size": 5941,
+      "target": "upstream/preprocess/inject_exam_emails.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/preprocess/inject_exam_emails.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "fe0c5b3f474d44781dbcea5726c13c15b63c8d104bdfb235be6350172260a8ce",
+      "size": 2768,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/preprocess/process_exam_data.py",
+      "role": "preprocessor_source",
+      "sha256": "4f23686d1d7112232d58ae75b330dfe5a3eaeb69f4225c97c02cac3d7fe3b26f",
+      "size": 5483,
+      "target": "upstream/preprocess/process_exam_data.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/preprocess/process_exam_data.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/preprocess/send_exam_notification_smtp.py",
+      "role": "preprocessor_source",
+      "sha256": "46a9cbf503f3761cf97e6a02be26eff68e51765769dbbf73da49cc526856503c",
+      "size": 63067,
+      "target": "upstream/preprocess/send_exam_notification_smtp.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/preprocess/send_exam_notification_smtp.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/preprocess/setup_courses_with_mcp.py",
+      "role": "preprocessor_source",
+      "sha256": "52e701ed25ab7cb467c6eaf929b23f13de2f140511173f72be88b8080cdaa7eb",
+      "size": 69629,
+      "target": "upstream/preprocess/setup_courses_with_mcp.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/preprocess/setup_courses_with_mcp.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/preprocess/test_config.py",
+      "role": "preprocessor_source",
+      "sha256": "e24df682bf09e50ca684ceccf9f6e174ba275351a5975bdc0e5764e4d0c1e7bb",
+      "size": 2268,
+      "target": "upstream/preprocess/test_config.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/preprocess/test_config.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/task_config.json",
+      "role": "upstream_config",
+      "sha256": "4de47aa639ad1e47d587d56fab81b3fdc041322ed6c24ffd0d5b22c5f480dcd9",
+      "size": 247,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-arrange-exam/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "97dba7f77a2d0d296c58deed796f6a597debd22adfc148856d50eb1caddd6c57",
+      "size": 355,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-arrange-exam/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/canvas-arrange-exam/README.md",
+      "role": "documentation",
+      "sha256": "7a18c960309005e34319a5fe78b1e4d7c0bb8f4fc3e957b737a182d290daaa96",
+      "size": 2163,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/canvas-arrange-exam/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/canvas-arrange-exam/shared/emails_config.json",
+      "role": "fixture_source",
+      "sha256": "514b1d6a3399bdc317a5e5bf86bfed2bf9c15d42f7dd09a2c692f6291f0adcf2",
+      "size": 255,
+      "target": "shared/emails_config.json",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/canvas-arrange-exam/shared/emails_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/canvas-arrange-exam/shared/fixtures/canvas/api.json.gz",
+      "role": "fixture_source",
+      "sha256": "19766c598b4c35818cc787d896871207013eab8e8471c3ab9d1005f63f07dd39",
+      "size": 10512,
+      "target": "shared/fixtures/canvas/api.json.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/canvas-arrange-exam/shared/fixtures/canvas/api.json.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/canvas-arrange-exam/shared/fixtures/canvas/database.dump",
+      "role": "fixture_source",
+      "sha256": "e2a034975ad36d4ecffcaff6b06cb7b3c66873b57a4b8ff616a92cb08f7c0b73",
+      "size": 1009876,
+      "target": "shared/fixtures/canvas/database.dump",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/canvas-arrange-exam/shared/fixtures/canvas/database.dump"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/canvas-arrange-exam/shared/fixtures/canvas/mail.json.gz",
+      "role": "fixture_source",
+      "sha256": "f93e1eb22a914f52d488492ad819263966852a054a6995f3af027bfa2bf33cdf",
+      "size": 10611,
+      "target": "shared/fixtures/canvas/mail.json.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/canvas-arrange-exam/shared/fixtures/canvas/mail.json.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/canvas-arrange-exam/shared/fixtures/canvas/private.tar.gz",
+      "role": "private_fixture",
+      "sha256": "9edf81e6817c66e1196a2bee758ef3f9ce10f4e43f53197de52d7867f8c76ab9",
+      "size": 2707,
+      "target": "shared/fixtures/canvas/private.tar.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/canvas-arrange-exam/shared/fixtures/canvas/private.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/canvas-arrange-exam/shared/fixtures/canvas/source.json",
+      "role": "fixture_source",
+      "sha256": "4eea01eb664a92b2ac432994e45a6ce9fa35f8905b9d45437ea0e22a2c0fa988",
+      "size": 25119,
+      "target": "shared/fixtures/canvas/source.json",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/canvas-arrange-exam/shared/fixtures/canvas/source.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/canvas-arrange-exam/shared/fixtures/canvas/workspace.tar.gz",
+      "role": "fixture_source",
+      "sha256": "f68389ea154e3bdc0c62efa1e724e0820258423ee7571d0762f853e88c3b12d0",
+      "size": 7100,
+      "target": "shared/fixtures/canvas/workspace.tar.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/canvas-arrange-exam/shared/fixtures/canvas/workspace.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/canvas-arrange-exam/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "818bd5e47ee777bbd74a5675a4f1fe3738b636727d3314461866948580d4842a",
+      "size": 30864,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/canvas-arrange-exam/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/canvas-arrange-exam",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/canvas-arrange-exam",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "python_execute",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "canvas",
+      "emails",
+      "memory",
+      "terminal"
+    ]
+  }
+}

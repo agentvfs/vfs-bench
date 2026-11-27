@@ -1,0 +1,169 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/4e7db8b80a5fe26904aa8dfb1e457a036e86bec7f55e941d3a0b96f4f5baa44d",
+      "role": "seed_manifest",
+      "sha256": "4e7db8b80a5fe26904aa8dfb1e457a036e86bec7f55e941d3a0b96f4f5baa44d",
+      "size": 62,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/ed7738f20a3386738f5a541d2ad57393fe2542a3c101174fe7ce517b6b2d1aa6",
+      "role": "parity_test",
+      "sha256": "ed7738f20a3386738f5a541d2ad57393fe2542a3c101174fe7ce517b6b2d1aa6",
+      "size": 2760,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/41d52f69f706ac4af8b6c3420414477c41e0ced3990291b0c0b594e8b95e7a48",
+      "role": "workspace_config",
+      "sha256": "41d52f69f706ac4af8b6c3420414477c41e0ced3990291b0c0b594e8b95e7a48",
+      "size": 762,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "identify-all-songs",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/identify-all-songs/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/identify-all-songs/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/identify-all-songs/docs/agent_system_prompt_cn.md",
+      "role": "upstream_source",
+      "sha256": "d04e8e0c05b205a0fbf8057e562b34e38d54f64089e40e57619a6aafdeb18dda",
+      "size": 338,
+      "target": "upstream/docs/agent_system_prompt_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/identify-all-songs/docs/agent_system_prompt_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/identify-all-songs/shared/task.md",
+      "role": "instruction",
+      "sha256": "3e70ea9bfe0e38d212468328a0bb7c01d65e4eb6400b91a0c97f9878ef017021",
+      "size": 312,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/identify-all-songs/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/identify-all-songs/docs/task_cn.md",
+      "role": "upstream_source",
+      "sha256": "a00965d4f3d84de3e07e7689fc3f12f7d700fc4ed071a469199307ab1cb5d54d",
+      "size": 283,
+      "target": "upstream/docs/task_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/identify-all-songs/docs/task_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/identify-all-songs/evaluation/check_content.py",
+      "role": "verifier_source",
+      "sha256": "0d94c82c530631ce2ac29f5dc66f611f6881ec5598e0dd8d3e8aa5f09156f3ee",
+      "size": 3045,
+      "target": "upstream/evaluation/check_content.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/identify-all-songs/evaluation/check_content.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/identify-all-songs/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "adef515343090b5288adbfe719a01ae56592b8e70cae73246f2b58f44e5ffdfc",
+      "size": 863,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/identify-all-songs/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/identify-all-songs/groundtruth_workspace/songs.md",
+      "role": "verifier_input",
+      "sha256": "7317f755e395706f91afe8017e5d09292e6e3088f3722504ccdc0f3cfbe9808a",
+      "size": 509,
+      "target": "upstream/groundtruth_workspace/songs.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/identify-all-songs/groundtruth_workspace/songs.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/identify-all-songs/initial_workspace/format.md",
+      "role": "initial_workspace",
+      "sha256": "4afa0e4112f016bcc3197b40fad1256cd8a6ca68c6815cebaca4e70b0cd939ae",
+      "size": 174,
+      "target": "upstream/initial_workspace/format.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/identify-all-songs/initial_workspace/format.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/identify-all-songs/readme.md",
+      "role": "upstream_source",
+      "sha256": "a1f616dfc7fc359673b46dcfed16a69a475f04ea118a5f0bc8b45a4542808a63",
+      "size": 1078,
+      "target": "upstream/readme.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/identify-all-songs/readme.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/identify-all-songs/task_config.json",
+      "role": "upstream_config",
+      "sha256": "2b48a4951094db86203dc2b8bb5d7db2a3dea75d84f3ce5052e4263431ad3a4c",
+      "size": 257,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/identify-all-songs/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/identify-all-songs/README.md",
+      "role": "documentation",
+      "sha256": "5565e32fb79f36a226117e6188bcf88bcc74e6f48403978a28b43feb59c24a71",
+      "size": 1030,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/identify-all-songs/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/identify-all-songs/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "b0873d8d3b36523dc1375a84e6f9ef307fb1ad034c4918d6090dbe547ac734de",
+      "size": 11012,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/identify-all-songs/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/identify-all-songs",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/identify-all-songs",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "web_search",
+      "claim_done",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "filesystem",
+      "youtube-transcript",
+      "playwright_with_chunk",
+      "fetch"
+    ]
+  }
+}

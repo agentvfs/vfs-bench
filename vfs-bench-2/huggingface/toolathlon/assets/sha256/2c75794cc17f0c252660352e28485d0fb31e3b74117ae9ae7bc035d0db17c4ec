@@ -1,0 +1,41 @@
+mode: EXEC
+runtimes:
+  - workspace
+clis:
+  web-search:
+    cli: ../../../../cli/toolathlon/research.mjs:SEARCH
+    config:
+      apiBase: ${SEARCH_CLI_URL}
+  fetch:
+    cli: ../../../../cli/toolathlon/research.mjs:WEB
+    config:
+      apiBase: ${FETCH_CLI_URL}
+      timeoutMs: 100000
+  youtube:
+    cli: ../../../../cli/toolathlon/travel-video.mjs:YOUTUBE
+    config:
+      apiBase: ${YOUTUBE_CLI_URL}
+      timeoutMs: 20000
+  youtube-transcript:
+    cli: ../../../../cli/toolathlon/travel-video.mjs:TRANSCRIPT
+    config:
+      apiBase: ${TRANSCRIPT_CLI_URL}
+      timeoutMs: 10000
+  gh:
+    cli: gh
+    config:
+      baseUrl: ${GITHUB_URL}/api/v3
+      token: fixture
+mounts:
+  /tmp:
+    vfs: ram
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace

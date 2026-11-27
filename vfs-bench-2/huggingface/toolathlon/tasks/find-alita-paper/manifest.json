@@ -1,0 +1,151 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/53368262b89864ab93d232b2ad7eeac957e39918d5370bed52adacfd807408e2",
+      "role": "seed_manifest",
+      "sha256": "53368262b89864ab93d232b2ad7eeac957e39918d5370bed52adacfd807408e2",
+      "size": 60,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/b2f235a505c95f5f6ecf9f1066fb6dfb78a930aa66f6baa0e49fd6d73910faec",
+      "role": "parity_test",
+      "sha256": "b2f235a505c95f5f6ecf9f1066fb6dfb78a930aa66f6baa0e49fd6d73910faec",
+      "size": 1114,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/e35c68b6787a6ae72a270e70bffbf8ea1e8c29361ac37616a44d4fd198f9708d",
+      "role": "workspace_config",
+      "sha256": "e35c68b6787a6ae72a270e70bffbf8ea1e8c29361ac37616a44d4fd198f9708d",
+      "size": 502,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "find-alita-paper",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/find-alita-paper/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/find-alita-paper/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/find-alita-paper/docs/agent_system_prompt_cn.md",
+      "role": "upstream_source",
+      "sha256": "41b87c72dacccc71e8ed04ee1fc32b79895730bcd8171d131ae6edf870c01816",
+      "size": 337,
+      "target": "upstream/docs/agent_system_prompt_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/find-alita-paper/docs/agent_system_prompt_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/find-alita-paper/shared/task.md",
+      "role": "instruction",
+      "sha256": "e5d93da5788494862d9a9b1a3c5ad1f9ac23e1f2eb75b0d87f822177b3f7d024",
+      "size": 502,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/find-alita-paper/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/find-alita-paper/docs/task_cn.md",
+      "role": "upstream_source",
+      "sha256": "d6241b2e05e821328e5611cd1b7c3a3569dde10cfd3172c34ff4182e5a2b082b",
+      "size": 486,
+      "target": "upstream/docs/task_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/find-alita-paper/docs/task_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/find-alita-paper/docs/user_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "f653505561d80a29fea19766759f9a8719dac246b97066605481eb8a3b1a76dd",
+      "size": 147,
+      "target": "upstream/docs/user_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/find-alita-paper/docs/user_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/find-alita-paper/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "58a8bf045a85500a11cb4e01702c97e0bf9580e24229128482299c26d4820d9d",
+      "size": 14892,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/find-alita-paper/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/find-alita-paper/groundtruth_workspace/gt_alita_2505.20286v1.pdf",
+      "role": "verifier_input",
+      "sha256": "44d8abc99ec95a804c7635fefcb8ca85da6b1ede3ad88640b8917722df18d7c7",
+      "size": 1113373,
+      "target": "upstream/groundtruth_workspace/gt_alita_2505.20286v1.pdf",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/find-alita-paper/groundtruth_workspace/gt_alita_2505.20286v1.pdf"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/find-alita-paper/task_config.json",
+      "role": "upstream_config",
+      "sha256": "a876b22144e437e44a5442d5fb7520ee48d4f20c24b2504c5ca511e4da8ecfdc",
+      "size": 221,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/find-alita-paper/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/find-alita-paper/README.md",
+      "role": "documentation",
+      "sha256": "042511cc4036712237f075c72cf86d007af39761befa331c1ee179cd73e6fb5e",
+      "size": 1283,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/find-alita-paper/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/find-alita-paper/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "c2c05f838370645b22e779c5c57fbfe865a90ffef2a31228eeadb4ac79f57ae7",
+      "size": 1951,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/find-alita-paper/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/find-alita-paper",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/find-alita-paper",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "arxiv_local",
+      "filesystem",
+      "scholarly"
+    ]
+  }
+}

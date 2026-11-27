@@ -1,0 +1,185 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/1bb59d02048e6ca740b75a23d39b6f94d025fc3e3c836523c038455961c3039e",
+      "role": "seed_manifest",
+      "sha256": "1bb59d02048e6ca740b75a23d39b6f94d025fc3e3c836523c038455961c3039e",
+      "size": 60,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/c2b511e15dde1d3fb27439f69da42892c6e3c1e0eef0acfb9edcec32466f7ab5",
+      "role": "parity_test",
+      "sha256": "c2b511e15dde1d3fb27439f69da42892c6e3c1e0eef0acfb9edcec32466f7ab5",
+      "size": 4743,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/129e35ef85ec1fb02c2338a4ca392b544e01f9704d84942f6cc388f762ddf536",
+      "role": "workspace_documentation",
+      "sha256": "129e35ef85ec1fb02c2338a4ca392b544e01f9704d84942f6cc388f762ddf536",
+      "size": 1861,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/45bef91d29ae89ed0c47b7429f19be96a51dc9d440c603ca4df50697c8121039",
+      "role": "workspace_config",
+      "sha256": "45bef91d29ae89ed0c47b7429f19be96a51dc9d440c603ca4df50697c8121039",
+      "size": 1282,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "gdp-cr5-analysis",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/gdp-cr5-analysis/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/gdp-cr5-analysis/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/gdp-cr5-analysis/shared/task.md",
+      "role": "instruction",
+      "sha256": "1929b6dd7c9a726f8db51d18503e54eaf1d3a135dbe1719b69d6322637f68429",
+      "size": 933,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/gdp-cr5-analysis/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/gdp-cr5-analysis/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "3f40e67b2d3fd0dfc5fae18a3defbb39c41be78610121c207f7bcb16b33317d0",
+      "size": 27430,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/gdp-cr5-analysis/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/gdp-cr5-analysis/files/folder_id.txt",
+      "role": "upstream_source",
+      "sha256": "cc4a6581b89c7c9b63f441a75e1bf02fcbfb13fad1a95b475d1b35ec9f440902",
+      "size": 33,
+      "target": "upstream/files/folder_id.txt",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/gdp-cr5-analysis/files/folder_id.txt"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/gdp-cr5-analysis/groundtruth_workspace/expected_analysis.json",
+      "role": "verifier_input",
+      "sha256": "1329d35cf632e6acb580942d8e3aa9daaf3ffa204987f1b22abcd36eb5329c1b",
+      "size": 918,
+      "target": "upstream/groundtruth_workspace/expected_analysis.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/gdp-cr5-analysis/groundtruth_workspace/expected_analysis.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/gdp-cr5-analysis/groundtruth_workspace/standard_answer.csv",
+      "role": "verifier_input",
+      "sha256": "5ea120f38fdbfd2bc6c7ee8b4cc66cff5e65d5a601ce67b97f49ec23852a9553",
+      "size": 708,
+      "target": "upstream/groundtruth_workspace/standard_answer.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/gdp-cr5-analysis/groundtruth_workspace/standard_answer.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/gdp-cr5-analysis/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "55376053decc480bc442f79125da445a87dec5aafaefc095168df7729060883e",
+      "size": 1508,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/gdp-cr5-analysis/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/gdp-cr5-analysis/task_config.json",
+      "role": "upstream_config",
+      "sha256": "b422b4ae243026c2fe40952d880ec38b5604003c3612829ab16ec56e8c39bbf8",
+      "size": 255,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/gdp-cr5-analysis/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/gdp-cr5-analysis/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "e10a1b691fc9a2fddb160d064a2e1359fbc3f325d131ea91fad466aab1a3d03e",
+      "size": 301,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/gdp-cr5-analysis/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/gdp-cr5-analysis/README.md",
+      "role": "documentation",
+      "sha256": "d5a97c12679a309391a0fd2ca1fc19358a895631a6dcafb62eaba74526360265",
+      "size": 3634,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/gdp-cr5-analysis/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/gdp-cr5-analysis/shared/fixtures/sheets/rendering.json",
+      "role": "fixture_source",
+      "sha256": "f6e9ac33c89a2131e91d5010034c5482204146cc5bc847c43e8696cdfc4368bd",
+      "size": 31318,
+      "target": "shared/fixtures/sheets/rendering.json",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/gdp-cr5-analysis/shared/fixtures/sheets/rendering.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/gdp-cr5-analysis/shared/fixtures/sheets/source.json",
+      "role": "fixture_source",
+      "sha256": "4c3fc26231ddcb3ddc03efdf211c1dfaafa6fe18f3fd821dfcd215abadff54c4",
+      "size": 534,
+      "target": "shared/fixtures/sheets/source.json",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/gdp-cr5-analysis/shared/fixtures/sheets/source.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/gdp-cr5-analysis/shared/fixtures/sheets/source.xlsx",
+      "role": "fixture_source",
+      "sha256": "13396a3e5a4063c7e9ec5c2accb16b53fb17b9bd772305b7d11a5c8407999f30",
+      "size": 16387,
+      "target": "shared/fixtures/sheets/source.xlsx",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/gdp-cr5-analysis/shared/fixtures/sheets/source.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/gdp-cr5-analysis/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "afc6c87eb62e421afc2560b0f1f5dfe65738b8be5b269f91abdb64c8bcb8f7c9",
+      "size": 22415,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/gdp-cr5-analysis/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/gdp-cr5-analysis",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/gdp-cr5-analysis",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "python_execute",
+      "web_search",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "google_sheet",
+      "playwright_with_chunk",
+      "fetch"
+    ]
+  }
+}

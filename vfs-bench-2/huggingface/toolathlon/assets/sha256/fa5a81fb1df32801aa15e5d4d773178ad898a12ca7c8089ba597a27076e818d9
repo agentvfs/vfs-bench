@@ -1,0 +1,65 @@
+mode: EXEC
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace
+runtimes:
+  - name: pyodide
+    config:
+      lockFileUrl: ${TOOLATHLON_PYTHON}/pyodide-lock.json
+      packageBaseUrl: ${TOOLATHLON_PYTHON}/
+      packages:
+        - openpyxl
+        - xlsxwriter
+        - pypdf2
+        - pymupdf
+        - pandas
+        - numpy
+        - pyarrow
+        - pillow
+        - lxml
+        - python-docx
+        - python-pptx
+        - pytesseract
+        - olefile
+  - workspace
+clis:
+  yahoo-finance:
+    cli: ../../../../cli/toolathlon/travel-video.mjs:YAHOO
+    config:
+      apiBase: ${YAHOO_CLI_URL}
+      timeoutMs: 60000
+  notion:
+    cli: ../../../../cli/toolathlon/travel-video.mjs:NOTION
+    config:
+      apiBase: ${NOTION_CLI_URL}
+      timeoutMs: 100000
+  google-sheet:
+    cli: ../../../../cli/toolathlon/google.mjs:SHEETS
+    config:
+      apiBase: ${SHEETS_CLI_URL}
+  git:
+    cli: git
+mounts:
+  /tmp:
+    vfs: ram
+  /notion:
+    vfs: notion
+    config:
+      apiKey: quantitative-financial-analysis
+      baseUrl: ${NOTION_URL}/v1
+  /gd:
+    vfs: gdrive
+    mode: READ
+    config:
+      client_id: fake
+      client_secret: fake
+      refresh_token: gws-integ-token
+      api_base: ${GWS_URL}
+      folderId: ${DRIVE_FOLDER_ID}
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}

@@ -1,0 +1,167 @@
+{
+  "note": "The snowflake MCP server answers in a YAML-ish block with a random `data_id`, where `sql` returns JSON, so the MCP side of each case is projected with `pipe`. Every snowflake projection ends in `grep .`, so an arm whose reply carries no such line fails the case instead of agreeing on nothing.",
+  "cases": [
+    {
+      "name": "read_query",
+      "why": "the same statement returns the same rows through either arm",
+      "mcp": {
+        "server": "snowflake",
+        "tool": "read_query",
+        "args": {
+          "query": "SELECT COUNT(*) AS N FROM LANDING_TASK_REMINDER.PUBLIC.EMPLOYEE"
+        },
+        "pipe": "sed -n 's/^- N: //p' | grep ."
+      },
+      "mirage": {
+        "command": "snowflake read-query '{\"query\":\"SELECT COUNT(*) AS N FROM LANDING_TASK_REMINDER.PUBLIC.EMPLOYEE\"}'",
+        "pipe": "sed -n 's/^- N: //p' | grep ."
+      }
+    },
+    {
+      "name": "read_query_rows",
+      "why": "a multi-row read agrees value for value, not just in count",
+      "mcp": {
+        "server": "snowflake",
+        "tool": "read_query",
+        "args": {
+          "query": "SELECT NAME FROM LANDING_TASK_REMINDER.PUBLIC.EMPLOYEE ORDER BY NAME LIMIT 5"
+        },
+        "pipe": "sed -n 's/^- NAME: //p' | grep ."
+      },
+      "mirage": {
+        "command": "snowflake read-query '{\"query\":\"SELECT NAME FROM LANDING_TASK_REMINDER.PUBLIC.EMPLOYEE ORDER BY NAME LIMIT 5\"}'",
+        "pipe": "sed -n 's/^- NAME: //p' | grep ."
+      }
+    },
+    {
+      "name": "describe_table",
+      "why": "the same column schema through either arm",
+      "mcp": {
+        "server": "snowflake",
+        "tool": "describe_table",
+        "args": {
+          "table_name": "LANDING_TASK_REMINDER.PUBLIC.EMPLOYEE"
+        },
+        "pipe": "sed -n 's/^- COLUMN_NAME: //p' | grep ."
+      },
+      "mirage": {
+        "command": "snowflake describe-table '{\"table_name\":\"LANDING_TASK_REMINDER.PUBLIC.EMPLOYEE\"}'",
+        "pipe": "sed -n 's/^- COLUMN_NAME: //p' | grep ."
+      }
+    },
+    {
+      "name": "list_databases",
+      "why": "both arms see exactly the one database this task is scoped to",
+      "mcp": {
+        "server": "snowflake",
+        "tool": "list_databases",
+        "args": {},
+        "pipe": "sed -n 's/^- DATABASE_NAME: //p' | sort | grep ."
+      },
+      "mirage": {
+        "command": "snowflake list-databases",
+        "pipe": "sed -n 's/^- DATABASE_NAME: //p' | sort | grep ."
+      }
+    },
+    {
+      "name": "write_query",
+      "why": "a task row inserted through either arm leaves the same tables behind",
+      "mutates": [
+        "snowflake"
+      ],
+      "mcp": {
+        "server": "snowflake",
+        "tool": "write_query",
+        "args": {
+          "query": "INSERT INTO LANDING_TASK_REMINDER.PUBLIC.PUBLIC_TASKS (TASK_NAME, EMPLOYEE_ID, CREATE_DATE, DDL, FINISHED_FLAG) VALUES ('Parity check', 9002, '2025-01-01', '2025-01-08', FALSE)"
+        },
+        "pipe": "grep -o 'Query executed successfully'"
+      },
+      "mirage": {
+        "command": "snowflake write-query '{\"query\":\"INSERT INTO LANDING_TASK_REMINDER.PUBLIC.PUBLIC_TASKS (TASK_NAME, EMPLOYEE_ID, CREATE_DATE, DDL, FINISHED_FLAG) VALUES ('\\''Parity check'\\'', 9002, '\\''2025-01-01'\\'', '\\''2025-01-08'\\'', FALSE)\"}'",
+        "pipe": "grep -o 'Query executed successfully'"
+      }
+    },
+    {
+      "name": "emails_get_folders",
+      "why": "both arms list the same IMAP folders",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_folders",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-folders"
+      }
+    },
+    {
+      "name": "emails_get_emails",
+      "why": "the same messages, in the same order, through either arm",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_emails",
+        "args": {
+          "folder": "INBOX"
+        }
+      },
+      "mirage": {
+        "command": "emails get-emails '{\"folder\":\"INBOX\"}'"
+      }
+    },
+    {
+      "name": "emails_get_unread_count",
+      "why": "the unread count agrees",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_unread_count",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-unread-count"
+      }
+    },
+    {
+      "name": "emails_get_mailbox_stats",
+      "why": "the mailbox statistics agree",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_mailbox_stats",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-mailbox-stats"
+      }
+    },
+    {
+      "name": "emails_search_emails",
+      "why": "a search returns the same hits",
+      "mcp": {
+        "server": "emails",
+        "tool": "search_emails",
+        "args": {
+          "query": "the",
+          "folder": "INBOX"
+        }
+      },
+      "mirage": {
+        "command": "emails search-emails '{\"query\":\"the\",\"folder\":\"INBOX\"}'"
+      }
+    },
+    {
+      "name": "read_pdf_pages",
+      "why": "The pinned upstream handler reads the same task fixture through MCP and the workspace CLI.",
+      "mcp": {
+        "server": "pdf-tools",
+        "tool": "read_pdf_pages",
+        "args": {
+          "pdf_file_path": "${AGENT_WORKSPACE}/landing_tips.pdf",
+          "start_page": 1,
+          "end_page": 1
+        }
+      },
+      "mirage": {
+        "command": "pdf-tools read-pdf-pages '{\"pdf_file_path\": \"/workspace/landing_tips.pdf\", \"start_page\": 1, \"end_page\": 1}'"
+      }
+    }
+  ]
+}

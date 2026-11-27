@@ -1,0 +1,9 @@
+{
+  "id": "toolathlon_apply-phd-email",
+  "fixtures": [
+    {
+      "id": "mail/maryc@mcp.com",
+      "kind": "mail"
+    }
+  ]
+}

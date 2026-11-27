@@ -1,0 +1,200 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/3584e5b9c3c40430de51993ade68a2472e02eb44cabca0b86a8864cb78e7c4eb",
+      "role": "seed_manifest",
+      "sha256": "3584e5b9c3c40430de51993ade68a2472e02eb44cabca0b86a8864cb78e7c4eb",
+      "size": 55,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/404157aed4cf0cafea64837d0151f91a96961e20a927fcd5f866fe16128358e1",
+      "role": "parity_test",
+      "sha256": "404157aed4cf0cafea64837d0151f91a96961e20a927fcd5f866fe16128358e1",
+      "size": 1870,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/6949f1e43a02858edeb1753b21900b04587a1bcd72c685b98b5fa6bba30d6770",
+      "role": "workspace_config",
+      "sha256": "6949f1e43a02858edeb1753b21900b04587a1bcd72c685b98b5fa6bba30d6770",
+      "size": 593,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "invoice-org",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/invoice-org/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/invoice-org/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/invoice-org/shared/task.md",
+      "role": "instruction",
+      "sha256": "65b9c24389d910c4b2a3500207597299facc19b184fed0cb0b8732c26f6c1500",
+      "size": 568,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/invoice-org/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/invoice-org/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "db67550defd8f394b3eb0706caf7ea10d222f1bffe348c9aaad5ece3c7c6eea6",
+      "size": 5807,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/invoice-org/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/invoice-org/groundtruth_workspace/total_invoice.json",
+      "role": "verifier_input",
+      "sha256": "456f91d18c380b64dd00ce0c420750798f2c4464b904d3059a87afe3691a05b2",
+      "size": 2203,
+      "target": "upstream/groundtruth_workspace/total_invoice.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/invoice-org/groundtruth_workspace/total_invoice.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/invoice-org/initial_workspace/Invoice-66F9945C-385121.pdf",
+      "role": "initial_workspace",
+      "sha256": "72c4006b5ea95377691c6c5aafa5dc06ab63da3a86950034e6f93338538097d0",
+      "size": 25474,
+      "target": "upstream/initial_workspace/Invoice-66F9945C-385121.pdf",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/invoice-org/initial_workspace/Invoice-66F9945C-385121.pdf"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/invoice-org/initial_workspace/flight_invoice.pdf",
+      "role": "initial_workspace",
+      "sha256": "723c52596b40cbf92472828c7ebdc08a35d0bccaf5ab5e64960e6cafe1a2310d",
+      "size": 48805,
+      "target": "upstream/initial_workspace/flight_invoice.pdf",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/invoice-org/initial_workspace/flight_invoice.pdf"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/invoice-org/initial_workspace/flight_invoice1.pdf",
+      "role": "initial_workspace",
+      "sha256": "f26b78d82855346c05f8efc72c27e5c0b149b2a19c1c7a672fbecd102ce1895e",
+      "size": 48879,
+      "target": "upstream/initial_workspace/flight_invoice1.pdf",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/invoice-org/initial_workspace/flight_invoice1.pdf"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/invoice-org/initial_workspace/flight_invoice3.pdf",
+      "role": "initial_workspace",
+      "sha256": "ee4123a0e96f02775471139b2a08871e7d7f985fd02c070712c33b77b96b2723",
+      "size": 49334,
+      "target": "upstream/initial_workspace/flight_invoice3.pdf",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/invoice-org/initial_workspace/flight_invoice3.pdf"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/invoice-org/initial_workspace/invoice_240913093236943397.pdf",
+      "role": "initial_workspace",
+      "sha256": "774eff558377f165a3afb3fddf1fb46c220dcf0573240eb83444363649f4139a",
+      "size": 38123,
+      "target": "upstream/initial_workspace/invoice_240913093236943397.pdf",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/invoice-org/initial_workspace/invoice_240913093236943397.pdf"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/invoice-org/initial_workspace/invoice_3478885.pdf",
+      "role": "initial_workspace",
+      "sha256": "a6f0501c874f8b97c0e3ca7774ba3250733acacbf7de7c5ae2f3f29b375c473d",
+      "size": 164153,
+      "target": "upstream/initial_workspace/invoice_3478885.pdf",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/invoice-org/initial_workspace/invoice_3478885.pdf"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/invoice-org/initial_workspace/invoice_summary.csv",
+      "role": "initial_workspace",
+      "sha256": "46fe4ccf6b375c3f1ebe128556d0b7374817a6619678a7f5d7a907f4f61950e4",
+      "size": 82,
+      "target": "upstream/initial_workspace/invoice_summary.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/invoice-org/initial_workspace/invoice_summary.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/invoice-org/initial_workspace/tmpojlmr2l4_receipt.pdf",
+      "role": "initial_workspace",
+      "sha256": "ae27bbab80100c9ae76eafa93d5c9f9fb4953a7d1e2240f5d849b8ba4e7d42c2",
+      "size": 31067,
+      "target": "upstream/initial_workspace/tmpojlmr2l4_receipt.pdf",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/invoice-org/initial_workspace/tmpojlmr2l4_receipt.pdf"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/invoice-org/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "ccd2d3741fb951c6e74f2c5b813f628f24d9858aa915c887e6346374c7d59fd2",
+      "size": 336,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/invoice-org/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/invoice-org/task_config.json",
+      "role": "upstream_config",
+      "sha256": "90644759cc8e9f4d4238d119e002e287239d1a08e25b8fc081a833d9b322f680",
+      "size": 269,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/invoice-org/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/invoice-org/README.md",
+      "role": "documentation",
+      "sha256": "f49bcc7f2683b46ad3a501a743e2f1e994c84e5df179c09b72efbd925aec47b3",
+      "size": 3846,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/invoice-org/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/invoice-org/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "4f392746b8412ae5f707e9b4a002c46a99ea062b0ddc7893bb12a18b4094827e",
+      "size": 14387,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/invoice-org/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/invoice-org",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/invoice-org",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "pdf-tools",
+      "filesystem",
+      "yahoo-finance",
+      "excel"
+    ]
+  }
+}

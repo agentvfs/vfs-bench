@@ -1,0 +1,150 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/ae3f241bfe79c811cbfed51ba28aef777b75eae4f13176c572263869ba91f822",
+      "role": "seed_manifest",
+      "sha256": "ae3f241bfe79c811cbfed51ba28aef777b75eae4f13176c572263869ba91f822",
+      "size": 59,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/058e2b802e66992f535ccc91e396ac9b1f02961e254d61960a92771d376d8418",
+      "role": "parity_test",
+      "sha256": "058e2b802e66992f535ccc91e396ac9b1f02961e254d61960a92771d376d8418",
+      "size": 914,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/0c3f6046ff3a60cf6ae4819182f8aacfe0a1583d3e5afc740610c2f5d9358700",
+      "role": "workspace_config",
+      "sha256": "0c3f6046ff3a60cf6ae4819182f8aacfe0a1583d3e5afc740610c2f5d9358700",
+      "size": 359,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "shopping-helper",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/shopping-helper/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/shopping-helper/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/shopping-helper/shared/task.md",
+      "role": "instruction",
+      "sha256": "9c22c5f6df6291686a55307c0c3f9cb7fe7856baf9b0ab483471c0caa3deafd5",
+      "size": 324,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/shopping-helper/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/shopping-helper/evaluation/check_local.py",
+      "role": "verifier_source",
+      "sha256": "285a31f45e878cb301d4b37f8df92f123252d77a874ce7bcb773268e8a74fd85",
+      "size": 41000,
+      "target": "upstream/evaluation/check_local.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/shopping-helper/evaluation/check_local.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/shopping-helper/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "749c2e276507e3800cdbe33bcbfbbb949e56b148863e16dc79d167ac5d135651",
+      "size": 1364,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/shopping-helper/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/shopping-helper/evaluation/test_check_local.py",
+      "role": "verifier_source",
+      "sha256": "2208aab6c333bdd55eb6f53165ba57d71d2a8b60b6691127b75c5e900077f6ee",
+      "size": 14764,
+      "target": "upstream/evaluation/test_check_local.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/shopping-helper/evaluation/test_check_local.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/shopping-helper/initial_workspace/example.json",
+      "role": "initial_workspace",
+      "sha256": "07f0311f310cdf988d40f9711361920d5e8cec28cb7092d8d99ad9c6d5d9b744",
+      "size": 849,
+      "target": "upstream/initial_workspace/example.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/shopping-helper/initial_workspace/example.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/shopping-helper/initial_workspace/recommend.json",
+      "role": "initial_workspace",
+      "sha256": "2a39a397e155cd192fd0fa876105b5bc279a480ee2b711c732f5a7b0f8a598bf",
+      "size": 485,
+      "target": "upstream/initial_workspace/recommend.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/shopping-helper/initial_workspace/recommend.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/shopping-helper/task_config.json",
+      "role": "upstream_config",
+      "sha256": "eb32d6cf0a2cc2d71b71563c18eae69e23020c7a518d8f4963bb8d005a74cf40",
+      "size": 214,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/shopping-helper/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/shopping-helper/README.md",
+      "role": "documentation",
+      "sha256": "66b80e04e7ef4becd99c788a83f2a8bf2cc1353bdfd4584b17016b031f4874ac",
+      "size": 2858,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/shopping-helper/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/shopping-helper/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "da4a5e8d937d3c556a4852c9f21cbb10b5e1e43b02057c44c2683f60669cd72e",
+      "size": 9175,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/shopping-helper/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/shopping-helper",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/shopping-helper",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "history",
+      "claim_done",
+      "handle_overlong_tool_outputs",
+      "manage_context"
+    ],
+    "needed_mcp_servers": [
+      "filesystem",
+      "playwright_with_chunk"
+    ]
+  }
+}

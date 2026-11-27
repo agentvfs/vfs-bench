@@ -1,0 +1,60 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "browser_navigate",
+      "why": "navigating to the same page yields the same snapshot",
+      "mcp": {
+        "server": "playwright_with_chunk",
+        "tool": "browser_navigate",
+        "args": {
+          "url": "https://example.com/"
+        }
+      },
+      "mirage": {
+        "command": "browser navigate '{\"url\":\"https://example.com/\"}'"
+      }
+    },
+    {
+      "name": "browser_tab_list",
+      "why": "the open tabs agree after the same navigation",
+      "mcp": {
+        "server": "playwright_with_chunk",
+        "tool": "browser_tab_list",
+        "args": {}
+      },
+      "mirage": {
+        "command": "browser tab-list"
+      }
+    },
+    {
+      "name": "scholarly_search_arxiv",
+      "why": "the same arXiv search",
+      "mcp": {
+        "server": "scholarly",
+        "tool": "search-arxiv",
+        "args": {
+          "keyword": "Alita"
+        }
+      },
+      "mirage": {
+        "command": "scholarly search-arxiv '{\"keyword\":\"Alita\"}'"
+      }
+    },
+    {
+      "name": "arxiv_local_search_papers",
+      "why": "the same search over the captured arXiv answer; the other three tools read or fill a per-arm store, and on an empty one upstream queries arXiv with no ids and gets an HTTP error, so they are not compared",
+      "mcp": {
+        "server": "arxiv_local",
+        "tool": "search_papers",
+        "args": {
+          "query": "Alita",
+          "max_results": 5
+        }
+      },
+      "mirage": {
+        "command": "arxiv-local search-papers '{\"query\":\"Alita\",\"max_results\":5}'"
+      }
+    }
+  ]
+}

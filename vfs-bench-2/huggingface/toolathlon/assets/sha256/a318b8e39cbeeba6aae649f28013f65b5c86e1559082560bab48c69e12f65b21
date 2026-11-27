@@ -1,0 +1,148 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "woocommerce_products_categories_list",
+      "why": "the same categories",
+      "mcp": {
+        "server": "woocommerce",
+        "tool": "woo_products_categories_list",
+        "args": {}
+      },
+      "mirage": {
+        "command": "woocommerce products-categories-list"
+      }
+    },
+    {
+      "name": "woocommerce_orders_list",
+      "why": "the same first page of orders",
+      "mcp": {
+        "server": "woocommerce",
+        "tool": "woo_orders_list",
+        "args": {
+          "perPage": 5
+        },
+        "jq": "[.[] | {id, status, total}]"
+      },
+      "mirage": {
+        "command": "woocommerce orders-list '{\"perPage\":5}' | jq -c '[.[] | {id, status, total}]'"
+      }
+    },
+    {
+      "name": "woocommerce_customers_list",
+      "why": "the same first page of customers",
+      "mcp": {
+        "server": "woocommerce",
+        "tool": "woo_customers_list",
+        "args": {
+          "perPage": 5
+        },
+        "jq": "[.[] | {id, email}]"
+      },
+      "mirage": {
+        "command": "woocommerce customers-list '{\"perPage\":5}' | jq -c '[.[] | {id, email}]'"
+      }
+    },
+    {
+      "name": "woocommerce_orders_get",
+      "why": "one order reads back the same",
+      "mcp": {
+        "server": "woocommerce",
+        "tool": "woo_orders_get",
+        "args": {
+          "orderId": 28
+        },
+        "jq": "{id, status, total, line_items: [.line_items[] | {product_id, quantity}]}"
+      },
+      "mirage": {
+        "command": "woocommerce orders-get '{\"orderId\":28}' | jq -c '{id, status, total, line_items: [.line_items[] | {product_id, quantity}]}'"
+      }
+    },
+    {
+      "name": "emails_get_folders",
+      "why": "both arms list the same IMAP folders",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_folders",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-folders"
+      }
+    },
+    {
+      "name": "emails_get_emails",
+      "why": "the same messages, in the same order, through either arm",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_emails",
+        "args": {
+          "folder": "INBOX"
+        }
+      },
+      "mirage": {
+        "command": "emails get-emails '{\"folder\":\"INBOX\"}'"
+      }
+    },
+    {
+      "name": "emails_get_unread_count",
+      "why": "the unread count agrees",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_unread_count",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-unread-count"
+      }
+    },
+    {
+      "name": "emails_get_mailbox_stats",
+      "why": "the mailbox statistics agree",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_mailbox_stats",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-mailbox-stats"
+      }
+    },
+    {
+      "name": "emails_search_emails",
+      "why": "a search returns the same hits",
+      "mcp": {
+        "server": "emails",
+        "tool": "search_emails",
+        "args": {
+          "query": "the",
+          "folder": "INBOX"
+        }
+      },
+      "mirage": {
+        "command": "emails search-emails '{\"query\":\"the\",\"folder\":\"INBOX\"}'"
+      }
+    },
+    {
+      "name": "google_forms_create_form",
+      "why": "a form created through either arm comes back in the same shape; ids are minted per create",
+      "mcp": {
+        "server": "google_forms",
+        "tool": "create_form",
+        "args": {
+          "title": "Parity Check"
+        }
+      },
+      "mirage": {
+        "command": "google-forms create-form '{\"title\":\"Parity Check\"}'"
+      },
+      "ignore": [
+        "formId",
+        "responderUri",
+        "revisionId",
+        "linkedSheetId",
+        "id"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "note": "The MCP arm has 88 GitHub tools; the mirage arm has `/template` for reads and `gh` for everything else, with `gh api` as the general form. These cases pair the operations this task's agent actually performs.",
+  "cases": [
+    {
+      "name": "file_contents",
+      "why": "the same file reads back byte for byte through either arm",
+      "note": "`get_file_contents` decodes; the contents endpoint returns base64, so the mirage side decodes with jq's @base64d",
+      "mcp": {
+        "server": "github",
+        "tool": "get_file_contents",
+        "args": {
+          "owner": "integ-user",
+          "repo": "My-Homepage",
+          "path": "README.md"
+        },
+        "jq": ".content",
+        "raw": true
+      },
+      "mirage": {
+        "command": "gh api repos/integ-user/My-Homepage/contents/README.md",
+        "jq": ".content | gsub(\"\\n\"; \"\") | @base64d",
+        "raw": true
+      }
+    },
+    {
+      "name": "list_branches",
+      "why": "both arms see the same branches",
+      "mcp": {
+        "server": "github",
+        "tool": "list_branches",
+        "args": {
+          "owner": "integ-user",
+          "repo": "My-Homepage"
+        },
+        "jq": "[.[].name] | sort | .[]",
+        "raw": true
+      },
+      "mirage": {
+        "command": "gh api repos/integ-user/My-Homepage/branches",
+        "jq": "[.[].name] | sort | .[]",
+        "raw": true
+      }
+    },
+    {
+      "name": "list_commits",
+      "why": "the same history, in the same order",
+      "mcp": {
+        "server": "github",
+        "tool": "list_commits",
+        "args": {
+          "owner": "integ-user",
+          "repo": "My-Homepage"
+        },
+        "jq": "[.[].sha] | .[]",
+        "raw": true
+      },
+      "mirage": {
+        "command": "gh api repos/integ-user/My-Homepage/commits",
+        "jq": "[.[].sha] | .[]",
+        "raw": true
+      }
+    },
+    {
+      "name": "owner_repos",
+      "why": "both arms enumerate the same repositories for the account, and they reach it two different ways: `search_repositories` goes through `/search/repositories` with a `user:` qualifier where `gh api users/<owner>/repos` is scoped by its path. This case was a declared divergence until strukto-ai/mirage#981 -- the fake dropped every qualifier, so `user:integ-user` and `user:Toolathlon-Archive` both answered with all ten repositories. It was the only divergence where the two arms saw different worlds, and it is kept as a case because one arm's route is still the only thing that reaches that endpoint",
+      "mcp": {
+        "server": "github",
+        "tool": "search_repositories",
+        "args": {
+          "query": "user:integ-user"
+        },
+        "jq": "[(.items // .)[].full_name] | sort | .[]",
+        "raw": true
+      },
+      "mirage": {
+        "command": "gh api users/integ-user/repos",
+        "jq": "[.[].full_name] | sort | .[]",
+        "raw": true
+      }
+    },
+    {
+      "name": "emails_get_folders",
+      "why": "both arms list the same IMAP folders",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_folders",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-folders"
+      }
+    },
+    {
+      "name": "emails_get_emails",
+      "why": "the same messages, in the same order, through either arm",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_emails",
+        "args": {
+          "folder": "INBOX"
+        }
+      },
+      "mirage": {
+        "command": "emails get-emails '{\"folder\":\"INBOX\"}'"
+      }
+    },
+    {
+      "name": "emails_get_unread_count",
+      "why": "the unread count agrees",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_unread_count",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-unread-count"
+      }
+    },
+    {
+      "name": "emails_get_mailbox_stats",
+      "why": "the mailbox statistics agree",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_mailbox_stats",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-mailbox-stats"
+      }
+    },
+    {
+      "name": "emails_search_emails",
+      "why": "a search returns the same hits",
+      "mcp": {
+        "server": "emails",
+        "tool": "search_emails",
+        "args": {
+          "query": "the",
+          "folder": "INBOX"
+        }
+      },
+      "mirage": {
+        "command": "emails search-emails '{\"query\":\"the\",\"folder\":\"INBOX\"}'"
+      }
+    },
+    {
+      "name": "create_file",
+      "why": "a commit through either arm leaves the same tree behind",
+      "mutates": [
+        "github"
+      ],
+      "mcp": {
+        "server": "github",
+        "tool": "create_or_update_file",
+        "args": {
+          "owner": "integ-user",
+          "repo": "My-Homepage",
+          "path": "parity.md",
+          "message": "parity check",
+          "branch": "master",
+          "content": "parity\n"
+        },
+        "jq": "{path: .content.path, name: .content.name}"
+      },
+      "mirage": {
+        "command": "gh api repos/integ-user/My-Homepage/contents/parity.md -X PUT -f message='parity check' -f branch=master -f content=cGFyaXR5Cg==",
+        "jq": "{path: .content.path, name: .content.name}"
+      }
+    },
+    {
+      "name": "create_repo_refused",
+      "why": "this task's token cannot create a repository from nothing on either arm, so neither arm has a path the other lacks",
+      "note": "the arms word the refusal differently -- the MCP server returns its wrapper's message, mirage surfaces the fake's 403 -- so the projection asserts the fact rather than the wording, and fails the case if a repository comes back. Nothing here is solved by creating one (all five repositories are seeded before the first turn, and a fresh one has no history in common with the archive, so the grader's compare 404s), which is why this case guards a constraint rather than closing an exploit",
+      "mcp": {
+        "server": "github",
+        "tool": "create_repository",
+        "args": {
+          "name": "parity-created-repo",
+          "description": "parity probe"
+        },
+        "pipe": "! grep -q full_name && echo refused"
+      },
+      "mirage": {
+        "command": "gh api user/repos -X POST -f name=parity-created-repo",
+        "pipe": "! grep -q full_name && echo refused"
+      }
+    }
+  ]
+}

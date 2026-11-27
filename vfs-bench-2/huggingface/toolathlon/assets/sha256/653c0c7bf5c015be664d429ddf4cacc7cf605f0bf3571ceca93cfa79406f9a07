@@ -1,0 +1,66 @@
+{
+  "cases": [
+    {
+      "name": "read_pdf_pages",
+      "why": "The original handler reads the same upstream file through both surfaces.",
+      "mcp": {
+        "server": "pdf-tools",
+        "tool": "read_pdf_pages",
+        "args": {
+          "pdf_file_path": "${AGENT_WORKSPACE}/cv-gboeing.pdf",
+          "start_page": 1,
+          "end_page": 3
+        }
+      },
+      "mirage": {
+        "command": "pdf-tools read-pdf-pages '{\"pdf_file_path\": \"/workspace/cv-gboeing.pdf\", \"start_page\": 1, \"end_page\": 3}'"
+      }
+    },
+    {
+      "name": "get_pdf_info",
+      "why": "The original handler reads the same upstream file through both surfaces.",
+      "mcp": {
+        "server": "pdf-tools",
+        "tool": "get_pdf_info",
+        "args": {
+          "pdf_file_path": "${AGENT_WORKSPACE}/cv-gboeing.pdf"
+        }
+      },
+      "mirage": {
+        "command": "pdf-tools get-pdf-info '{\"pdf_file_path\": \"/workspace/cv-gboeing.pdf\"}'"
+      }
+    },
+    {
+      "name": "get_workbook_metadata",
+      "why": "The original handler reads the same upstream file through both surfaces.",
+      "mcp": {
+        "server": "excel",
+        "tool": "get_workbook_metadata",
+        "args": {
+          "filepath": "${AGENT_WORKSPACE}/exam.xlsx",
+          "include_ranges": true
+        }
+      },
+      "mirage": {
+        "command": "excel get-workbook-metadata '{\"filepath\": \"/workspace/exam.xlsx\", \"include_ranges\": true}'"
+      }
+    },
+    {
+      "name": "read_data_from_excel",
+      "why": "The original handler reads the same upstream file through both surfaces.",
+      "mcp": {
+        "server": "excel",
+        "tool": "read_data_from_excel",
+        "args": {
+          "filepath": "${AGENT_WORKSPACE}/exam.xlsx",
+          "sheet_name": "Sheet1",
+          "start_cell": "A1",
+          "end_cell": "C5"
+        }
+      },
+      "mirage": {
+        "command": "excel read-data-from-excel '{\"filepath\": \"/workspace/exam.xlsx\", \"sheet_name\": \"Sheet1\", \"start_cell\": \"A1\", \"end_cell\": \"C5\"}'"
+      }
+    }
+  ]
+}

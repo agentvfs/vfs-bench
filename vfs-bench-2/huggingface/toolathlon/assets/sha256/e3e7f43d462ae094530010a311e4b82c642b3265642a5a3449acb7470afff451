@@ -1,0 +1,38 @@
+mode: EXEC
+runtimes:
+  - workspace
+clis:
+  canvas:
+    cli: ../../../../cli/toolathlon/canvas.mjs:CANVAS
+    config:
+      apiBase: ${CANVAS_CLI_URL}
+      timeoutMs: 10000
+      files:
+        apiBase: ${CANVAS_API_BASE}
+        token: ${CANVAS_API_TOKEN}
+        insecure: true
+  memory:
+    cli: ../../../../cli/toolathlon/travel-video.mjs:MEMORY
+    config:
+      apiBase: ${MEMORY_CLI_URL}
+      timeoutMs: 100000
+mounts:
+  /tmp:
+    vfs: ram
+  /canvas:
+    vfs: ../../../../vfs/canvas.mjs:CanvasVFS
+    mode: READ
+    config:
+      apiBase: ${CANVAS_API_BASE}
+      token: ${CANVAS_API_TOKEN}
+      insecure: true
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace

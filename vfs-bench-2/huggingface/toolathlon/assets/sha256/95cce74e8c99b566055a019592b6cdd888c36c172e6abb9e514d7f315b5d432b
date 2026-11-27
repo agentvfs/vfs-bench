@@ -1,0 +1,32 @@
+mode: EXEC
+runtimes:
+  - workspace
+clis:
+  browser:
+    cli: ../../../../cli/toolathlon/browser.mjs:BROWSER
+    config:
+      apiBase: ${BROWSER_URL}
+      timeoutMs: 120000
+  fetch:
+    cli: ../../../../cli/toolathlon/research.mjs:WEB
+    config:
+      apiBase: ${FETCH_CLI_URL}
+      timeoutMs: 100000
+  google-map:
+    cli: ../../../../cli/toolathlon/travel-video.mjs:MAPS
+    config:
+      apiBase: ${MAPS_CLI_URL}
+      timeoutMs: 10000
+mounts:
+  /tmp:
+    vfs: ram
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace

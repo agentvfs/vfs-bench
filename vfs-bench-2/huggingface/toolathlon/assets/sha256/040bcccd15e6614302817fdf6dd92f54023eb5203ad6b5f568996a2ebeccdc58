@@ -1,0 +1,173 @@
+{
+  "cases": [
+    {
+      "name": "top_level_pages",
+      "why": "both arms enumerate the same workspace-level pages",
+      "note": "by id, not title: the mount slugifies a title into its directory name (HR Record -> HR_Record) and the API does not",
+      "mcp": {
+        "server": "notion",
+        "tool": "API-post-search",
+        "args": {},
+        "jq": "[.results[] | select(.parent.type == \"workspace\") | .id] | sort | .[]",
+        "raw": true
+      },
+      "mirage": {
+        "command": "ls /notion/pages | sed 's/.*__//' | sort"
+      }
+    },
+    {
+      "name": "retrieve_page",
+      "why": "the same page reads back the same through the tool and the mount",
+      "mcp": {
+        "server": "notion",
+        "tool": "API-retrieve-a-page",
+        "args": {
+          "page_id": "27ad10a4-8436-8035-b3bc-e9de9db3dd82"
+        },
+        "jq": "{id, archived, parent_type: .parent.type}"
+      },
+      "mirage": {
+        "command": "cat '/notion/pages/HR_Record__27ad10a4-8436-8035-b3bc-e9de9db3dd82/page.json'",
+        "jq": "{id: .page_id, archived, parent_type}"
+      },
+      "note": "the mount flattens what the API nests -- `page_id` for `id`, `parent_type` for `parent.type` -- so each side is projected onto the same three facts"
+    },
+    {
+      "name": "database_rows",
+      "why": "a whole table reads the same row set through either arm",
+      "mcp": {
+        "server": "notion",
+        "tool": "API-post-database-query",
+        "args": {
+          "database_id": "27ad10a4-8436-811e-b9f1-000b78346645"
+        },
+        "jq": "[.results[].id] | sort | .[]",
+        "raw": true
+      },
+      "mirage": {
+        "command": "notion post-database-query '{\"database_id\":\"27ad10a4-8436-811e-b9f1-000b78346645\"}'",
+        "jq": "[.results[].id] | sort | .[]",
+        "raw": true
+      }
+    },
+    {
+      "name": "emails_get_folders",
+      "why": "both arms list the same IMAP folders",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_folders",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-folders"
+      }
+    },
+    {
+      "name": "emails_get_emails",
+      "why": "the same messages, in the same order, through either arm",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_emails",
+        "args": {
+          "folder": "INBOX"
+        }
+      },
+      "mirage": {
+        "command": "emails get-emails '{\"folder\":\"INBOX\"}'"
+      }
+    },
+    {
+      "name": "emails_get_unread_count",
+      "why": "the unread count agrees",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_unread_count",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-unread-count"
+      }
+    },
+    {
+      "name": "emails_get_mailbox_stats",
+      "why": "the mailbox statistics agree",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_mailbox_stats",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-mailbox-stats"
+      }
+    },
+    {
+      "name": "emails_search_emails",
+      "why": "a search returns the same hits",
+      "mcp": {
+        "server": "emails",
+        "tool": "search_emails",
+        "args": {
+          "query": "the",
+          "folder": "INBOX"
+        }
+      },
+      "mirage": {
+        "command": "emails search-emails '{\"query\":\"the\",\"folder\":\"INBOX\"}'"
+      }
+    },
+    {
+      "name": "create_page",
+      "why": "a row created through either arm leaves the same workspace behind",
+      "mutates": [
+        "notion"
+      ],
+      "mcp": {
+        "server": "notion",
+        "tool": "API-post-page",
+        "args": {
+          "parent": {
+            "data_source_id": "d5000000-8436-811e-b9f1-000b78346645"
+          },
+          "properties": {
+            "title": {
+              "title": [
+                {
+                  "text": {
+                    "content": "Parity Check"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "jq": "{object, archived, parent}"
+      },
+      "mirage": {
+        "command": "notion post-page '{\"parent\":{\"data_source_id\":\"d5000000-8436-811e-b9f1-000b78346645\"},\"properties\":{\"title\":{\"title\":[{\"text\":{\"content\":\"Parity Check\"}}]}}}'",
+        "jq": "{object, archived, parent}"
+      },
+      "ignore": [
+        "id",
+        "created_time",
+        "last_edited_time",
+        "url"
+      ]
+    },
+    {
+      "name": "read_pdf_pages",
+      "why": "The pinned upstream handler reads the same task fixture through MCP and the workspace CLI.",
+      "mcp": {
+        "server": "pdf-tools",
+        "tool": "read_pdf_pages",
+        "args": {
+          "pdf_file_path": "${AGENT_WORKSPACE}/cvs/michael_diaz_resume.pdf",
+          "start_page": 1,
+          "end_page": 1
+        }
+      },
+      "mirage": {
+        "command": "pdf-tools read-pdf-pages '{\"pdf_file_path\": \"/workspace/cvs/michael_diaz_resume.pdf\", \"start_page\": 1, \"end_page\": 1}'"
+      }
+    }
+  ]
+}

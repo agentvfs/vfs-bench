@@ -1,0 +1,129 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "google_map_maps_geocode",
+      "why": "the same address geocodes the same",
+      "mcp": {
+        "server": "google_map",
+        "tool": "maps_geocode",
+        "args": {
+          "address": "University of Pennsylvania, Philadelphia, PA"
+        }
+      },
+      "mirage": {
+        "command": "google-map geocode '{\"address\":\"University of Pennsylvania, Philadelphia, PA\"}'"
+      }
+    },
+    {
+      "name": "google_map_maps_reverse_geocode",
+      "why": "the same point reverse-geocodes the same",
+      "mcp": {
+        "server": "google_map",
+        "tool": "maps_reverse_geocode",
+        "args": {
+          "latitude": 39.9526,
+          "longitude": -75.1652
+        }
+      },
+      "mirage": {
+        "command": "google-map reverse-geocode '{\"latitude\":39.9526,\"longitude\":-75.1652}'"
+      }
+    },
+    {
+      "name": "google_map_maps_search_places",
+      "why": "the same place search",
+      "mcp": {
+        "server": "google_map",
+        "tool": "maps_search_places",
+        "args": {
+          "query": "coffee shop near University of Pennsylvania"
+        }
+      },
+      "mirage": {
+        "command": "google-map search-places '{\"query\":\"coffee shop near University of Pennsylvania\"}'"
+      }
+    },
+    {
+      "name": "google_map_maps_directions",
+      "why": "the same directions",
+      "mcp": {
+        "server": "google_map",
+        "tool": "maps_directions",
+        "args": {
+          "origin": "Philadelphia City Hall",
+          "destination": "University of Pennsylvania",
+          "mode": "transit"
+        }
+      },
+      "mirage": {
+        "command": "google-map directions '{\"origin\":\"Philadelphia City Hall\",\"destination\":\"University of Pennsylvania\",\"mode\":\"transit\"}'"
+      }
+    },
+    {
+      "name": "google_map_maps_distance_matrix",
+      "why": "the same distance matrix",
+      "mcp": {
+        "server": "google_map",
+        "tool": "maps_distance_matrix",
+        "args": {
+          "origins": [
+            "Philadelphia City Hall"
+          ],
+          "destinations": [
+            "University of Pennsylvania"
+          ],
+          "mode": "walking"
+        }
+      },
+      "mirage": {
+        "command": "google-map distance-matrix '{\"origins\":[\"Philadelphia City Hall\"],\"destinations\":[\"University of Pennsylvania\"],\"mode\":\"walking\"}'"
+      }
+    },
+    {
+      "name": "google_map_maps_elevation",
+      "why": "the same elevation",
+      "mcp": {
+        "server": "google_map",
+        "tool": "maps_elevation",
+        "args": {
+          "locations": [
+            {
+              "latitude": 39.9526,
+              "longitude": -75.1652
+            }
+          ]
+        }
+      },
+      "mirage": {
+        "command": "google-map elevation '{\"locations\":[{\"latitude\":39.9526,\"longitude\":-75.1652}]}'"
+      }
+    },
+    {
+      "name": "browser_navigate",
+      "why": "navigating to the same page yields the same snapshot",
+      "mcp": {
+        "server": "playwright_with_chunk",
+        "tool": "browser_navigate",
+        "args": {
+          "url": "https://example.com/"
+        }
+      },
+      "mirage": {
+        "command": "browser navigate '{\"url\":\"https://example.com/\"}'"
+      }
+    },
+    {
+      "name": "browser_tab_list",
+      "why": "the open tabs agree after the same navigation",
+      "mcp": {
+        "server": "playwright_with_chunk",
+        "tool": "browser_tab_list",
+        "args": {}
+      },
+      "mirage": {
+        "command": "browser tab-list"
+      }
+    }
+  ]
+}

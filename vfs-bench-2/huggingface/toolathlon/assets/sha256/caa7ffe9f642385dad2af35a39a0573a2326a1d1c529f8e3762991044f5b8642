@@ -1,0 +1,50 @@
+mode: EXEC
+runtimes:
+  - workspace
+clis:
+  kubectl:
+    cli: ../../../../cli/toolathlon/kubectl.mjs:KUBECTL
+    config:
+      binary: ${KUBECTL}
+      native: ${KUBECTL_NATIVE}
+      processDir: ${K8S_PROCESS_DIR}
+      kubeconfig: ${KUBECONFIG}
+      workdir: ${AGENT_WORKSPACE}
+  emails:
+    cli: ../../../../cli/toolathlon/emails.mjs:EMAILS
+    config:
+      apiBase: ${EMAILS_CLI_URL}
+      timeoutMs: 120000
+  pdf-tools:
+    cli: ../../../../cli/toolathlon/documents.mjs:PDF
+    config:
+      apiBase: ${PDF_TOOLS_CLI_URL}
+      timeoutMs: 120000
+mounts:
+  /tmp:
+    vfs: ram
+  /k8s:
+    vfs: ../../../../vfs/kubernetes.mjs:KubernetesVFS
+    mode: READ
+    config:
+      kubeconfig: ${KUBECONFIG}
+  /mail:
+    vfs: email
+    config:
+      imapHost: localhost
+      imapPort: 1143
+      smtpHost: localhost
+      smtpPort: 1587
+      username: mitchelle75@mcp.com
+      password: mitchell$e852
+      useSsl: false
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace

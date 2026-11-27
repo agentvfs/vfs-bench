@@ -1,0 +1,147 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/4b95ceff64b0d02b234ae9648e6200725434b2d3d2b74bda8189fc1f07f37e5d",
+      "role": "seed_manifest",
+      "sha256": "4b95ceff64b0d02b234ae9648e6200725434b2d3d2b74bda8189fc1f07f37e5d",
+      "size": 63,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/3bcbbf1aeef1c93f86ff61f113c6775cbdc88fdcbecfd1a79e93d2c792e1785d",
+      "role": "parity_test",
+      "sha256": "3bcbbf1aeef1c93f86ff61f113c6775cbdc88fdcbecfd1a79e93d2c792e1785d",
+      "size": 2894,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/5c7cf6d5b4b19f464901b3fcf80f0bac4cd79fe71cbdaafd9ea35ea78699b4ff",
+      "role": "workspace_config",
+      "sha256": "5c7cf6d5b4b19f464901b3fcf80f0bac4cd79fe71cbdaafd9ea35ea78699b4ff",
+      "size": 1421,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "academic-pdf-report",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/academic-pdf-report/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/academic-pdf-report/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/academic-pdf-report/shared/task.md",
+      "role": "instruction",
+      "sha256": "6b7b5ce3c885f933467469c63eade41d0ece78d94743461453129e157c763cb0",
+      "size": 470,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/academic-pdf-report/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/academic-pdf-report/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "8f3b78f9c0e1204d43b87ee9e8ff89df23f921d040cff4c520dc01919dc671ce",
+      "size": 8146,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/academic-pdf-report/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/academic-pdf-report/evaluation/task_utils.py",
+      "role": "verifier_source",
+      "sha256": "062b199cd76daeef8e5a4ee611f82f280fc7a68230f844f0d6d8219156590eea",
+      "size": 5504,
+      "target": "upstream/evaluation/task_utils.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/academic-pdf-report/evaluation/task_utils.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/academic-pdf-report/groundtruth_workspace/expected_top7.json",
+      "role": "verifier_input",
+      "sha256": "d8572b278b93c99715f8627d4504d65625643c9c682849fa34b5677578365e58",
+      "size": 3120,
+      "target": "upstream/groundtruth_workspace/expected_top7.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/academic-pdf-report/groundtruth_workspace/expected_top7.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/academic-pdf-report/initial_workspace/paper_initial.xlsx",
+      "role": "initial_workspace",
+      "sha256": "5494a43bc1a67dcd689b9882d3bf5b36b2f91f8c4e0ca30809b44e8468a47016",
+      "size": 9322,
+      "target": "upstream/initial_workspace/paper_initial.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/academic-pdf-report/initial_workspace/paper_initial.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/academic-pdf-report/task_config.json",
+      "role": "upstream_config",
+      "sha256": "ec7a478e00c64bd3559a08fa67b6e6721b6494ef925beb074bcda0c3b416f244",
+      "size": 292,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/academic-pdf-report/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/academic-pdf-report/README.md",
+      "role": "documentation",
+      "sha256": "91a77605836a6427b96aee7f9268dce9f30cc94111f37da85f0965e6c3b8e4f2",
+      "size": 1650,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/academic-pdf-report/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/academic-pdf-report/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "e27548670968110a9dc9f8e8be3875cae658cefc2bebc7a6e47d91c4e6991754",
+      "size": 19644,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/academic-pdf-report/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/academic-pdf-report",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/academic-pdf-report",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "web_search",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "playwright_with_chunk",
+      "excel",
+      "terminal",
+      "arxiv_local",
+      "pdf-tools",
+      "fetch"
+    ]
+  }
+}

@@ -1,0 +1,240 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/75f6cf742549525790086d6602ef90d4516b29232fbdb6d4ca6ccb5f1793a1cd",
+      "role": "seed_manifest",
+      "sha256": "75f6cf742549525790086d6602ef90d4516b29232fbdb6d4ca6ccb5f1793a1cd",
+      "size": 71,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/a318b8e39cbeeba6aae649f28013f65b5c86e1559082560bab48c69e12f65b21",
+      "role": "parity_test",
+      "sha256": "a318b8e39cbeeba6aae649f28013f65b5c86e1559082560bab48c69e12f65b21",
+      "size": 3965,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/01f3465c820f08a40abd2a093de55650e559dd1e6c28a97281a8970c111459db",
+      "role": "workspace_documentation",
+      "sha256": "01f3465c820f08a40abd2a093de55650e559dd1e6c28a97281a8970c111459db",
+      "size": 629,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/ad3a03b9416844829705d03f365ac9405d1aa423fe1595e4746148210f5c0bb1",
+      "role": "workspace_config",
+      "sha256": "ad3a03b9416844829705d03f365ac9405d1aa423fe1595e4746148210f5c0bb1",
+      "size": 1100,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "woocommerce-customer-survey",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-customer-survey/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-customer-survey/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-customer-survey/shared/task.md",
+      "role": "instruction",
+      "sha256": "174c47c60989047909ea114a7ede4001a3a6dbe7b2cf7297a6a300afff08b208",
+      "size": 452,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-customer-survey/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-customer-survey/docs/task_cn.md",
+      "role": "upstream_source",
+      "sha256": "fe0a5a3e1862b766e9c97e0797bc4ceff618e4f031da2956b217f5ac6b8179fa",
+      "size": 886,
+      "target": "upstream/docs/task_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-customer-survey/docs/task_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-customer-survey/email_config.json",
+      "role": "upstream_source",
+      "sha256": "3aba1239ef12835bb25cd9e69f6f77387e507032e6d61b1ab202514da6551ba7",
+      "size": 247,
+      "target": "upstream/email_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-customer-survey/email_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-customer-survey/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "51452df17f83e363dc697237d735ce3b067ec16b7e8388886ab089a84325cbf9",
+      "size": 42638,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-customer-survey/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-customer-survey/groundtruth_workspace/expected_orders.json",
+      "role": "verifier_input",
+      "sha256": "364e5b56d89769c816c2ac78f0c43dc68f64dc274bdbafcf9fb1eebbaba8dbcb",
+      "size": 5188,
+      "target": "upstream/groundtruth_workspace/expected_orders.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-customer-survey/groundtruth_workspace/expected_orders.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-customer-survey/initial_workspace/email_template.json",
+      "role": "initial_workspace",
+      "sha256": "6238f7d86219e8f3b04b09b85c982ce5d610d6e80c6232b047e2b0a6de9f83df",
+      "size": 1039,
+      "target": "upstream/initial_workspace/email_template.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-customer-survey/initial_workspace/email_template.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-customer-survey/initial_workspace/form_requirement.md",
+      "role": "initial_workspace",
+      "sha256": "97c5fc5afb2f625aab28cd9c28910c3f1b78fd04a2738e8d71c34227f20b54bb",
+      "size": 2108,
+      "target": "upstream/initial_workspace/form_requirement.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-customer-survey/initial_workspace/form_requirement.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-customer-survey/preprocess/completed_orders.json",
+      "role": "preprocessor_source",
+      "sha256": "4c2f3fefaf3206dcc1b30e86d53139dac2164d69fbe94a13b26b706135d89d4d",
+      "size": 7308,
+      "target": "upstream/preprocess/completed_orders.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-customer-survey/preprocess/completed_orders.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-customer-survey/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "dbfc00e540d8cca3abf26ccd013ee69675766287257afa2bf51f213f83495b02",
+      "size": 14796,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-customer-survey/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-customer-survey/task_config.json",
+      "role": "upstream_config",
+      "sha256": "6133dd16ab75b0fac8ca9e476abdda79d2e760f5966a111f28828e07e90b42e7",
+      "size": 238,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-customer-survey/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-customer-survey/test_integration.py",
+      "role": "verifier_source",
+      "sha256": "d37ec285c75eb5dbb1e77b00b89e52a98686995999c74e81298741ec7a1cee70",
+      "size": 6818,
+      "target": "upstream/test_integration.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-customer-survey/test_integration.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-customer-survey/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "250ae93f0ffbe0d4b7eccd28ee9b4a463d8fd59cfae8fa8fadfa1ee25016bf0d",
+      "size": 347,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-customer-survey/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-customer-survey/README.md",
+      "role": "documentation",
+      "sha256": "a9ca5fa32c97fb1611894de446c9606e13634300765c557ae39b2f3fa2d86554",
+      "size": 2217,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-customer-survey/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-customer-survey/shared/fixtures/woocommerce/api.json.gz",
+      "role": "fixture_source",
+      "sha256": "0097756f9bc3f28c6b9bdad0021b036d6732cdb66813c17590d24ffe59636b24",
+      "size": 4093,
+      "target": "shared/fixtures/woocommerce/api.json.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-customer-survey/shared/fixtures/woocommerce/api.json.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-customer-survey/shared/fixtures/woocommerce/database.sql.gz",
+      "role": "fixture_source",
+      "sha256": "43166bf8bf6388bd2bf33895358b4933df775208173fecdce83200e7df2c254e",
+      "size": 79668,
+      "target": "shared/fixtures/woocommerce/database.sql.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-customer-survey/shared/fixtures/woocommerce/database.sql.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-customer-survey/shared/fixtures/woocommerce/groundtruth.tar.gz",
+      "role": "verifier_input",
+      "sha256": "2fac07ead7f549668113c1e1116c03eda60b5be999653aff4b70f3bbe04fbe5c",
+      "size": 1240,
+      "target": "shared/fixtures/woocommerce/groundtruth.tar.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-customer-survey/shared/fixtures/woocommerce/groundtruth.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-customer-survey/shared/fixtures/woocommerce/source.json",
+      "role": "fixture_source",
+      "sha256": "dc1a8ca900a5132e8a4871cccf3af40acef2e434efdb68bc94dd55b7d5f01a69",
+      "size": 30821,
+      "target": "shared/fixtures/woocommerce/source.json",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-customer-survey/shared/fixtures/woocommerce/source.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-customer-survey/shared/fixtures/woocommerce/uploads.tar.gz",
+      "role": "fixture_source",
+      "sha256": "ecc5a70a59030411c6578eb3cc5128cebb4f334dd2387318f5d7b388a6784c6c",
+      "size": 18562,
+      "target": "shared/fixtures/woocommerce/uploads.tar.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-customer-survey/shared/fixtures/woocommerce/uploads.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-customer-survey/shared/fixtures/woocommerce/workspace.tar.gz",
+      "role": "fixture_source",
+      "sha256": "6a0f4ef09fa7ce05471989214693e846d1b7d22b4e032551d9333ce56f8c1733",
+      "size": 1437,
+      "target": "shared/fixtures/woocommerce/workspace.tar.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-customer-survey/shared/fixtures/woocommerce/workspace.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-customer-survey/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "fa81687e2e50027370147675945b06d989cfbb08168d0544b7083a54311d873c",
+      "size": 25650,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-customer-survey/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/woocommerce-customer-survey",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-customer-survey",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "woocommerce",
+      "emails",
+      "google_forms",
+      "filesystem"
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+mode: EXEC
+runtimes:
+  - name: pyodide
+    config:
+      lockFileUrl: ${TOOLATHLON_PYTHON}/pyodide-lock.json
+      packageBaseUrl: ${TOOLATHLON_PYTHON}/
+      packages:
+        - openpyxl
+        - xlsxwriter
+        - pypdf2
+        - pymupdf
+        - pandas
+        - numpy
+        - pyarrow
+        - pillow
+        - lxml
+        - python-docx
+        - python-pptx
+        - pytesseract
+        - olefile
+  - workspace
+clis:
+  git:
+    cli: git
+  emails:
+    cli: ../../../../cli/toolathlon/emails.mjs:EMAILS
+    config:
+      apiBase: ${EMAILS_CLI_URL}
+      timeoutMs: 120000
+mounts:
+  /tmp:
+    vfs: ram
+  /mail:
+    vfs: email
+    config:
+      imapHost: localhost
+      imapPort: 1143
+      smtpHost: localhost
+      smtpPort: 1587
+      username: micheller@mcp.com
+      password: michelle_60R
+      useSsl: false
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace

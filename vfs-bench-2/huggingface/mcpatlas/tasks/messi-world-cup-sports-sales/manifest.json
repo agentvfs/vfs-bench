@@ -1,0 +1,111 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/1e92c78f7095346c7899e63a130cbb2219ed449cfad1afbd3821b560f71a3972",
+      "role": "workspace",
+      "sha256": "1e92c78f7095346c7899e63a130cbb2219ed449cfad1afbd3821b560f71a3972",
+      "size": 2410,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/97dd6de7dec0bf4c912d6dd9435fbe50d5c402b6bf7cf63545275bb3d3242056",
+      "role": "workspace_config",
+      "sha256": "97dd6de7dec0bf4c912d6dd9435fbe50d5c402b6bf7cf63545275bb3d3242056",
+      "size": 4052,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/8e59c5539a6f058d26844ec33424583d5091a2d6d42a00dade5c1106c03d6bd0",
+      "role": "parity",
+      "sha256": "8e59c5539a6f058d26844ec33424583d5091a2d6d42a00dade5c1106c03d6bd0",
+      "size": 4985,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/0fb2df860b1d263400719ea4e7630923238151896b18846c8a9df27211acff33",
+      "role": "verifier",
+      "sha256": "0fb2df860b1d263400719ea4e7630923238151896b18846c8a9df27211acff33",
+      "size": 121,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "mongodb_list-collections",
+    "mongodb_list-databases",
+    "mongodb_collection-schema",
+    "mongodb_aggregate",
+    "airtable_list_bases",
+    "airtable_list_tables",
+    "airtable_list_records",
+    "airtable_search_records",
+    "airtable_get_record",
+    "exa_web_search_exa",
+    "github_search_repositories",
+    "github_search_code",
+    "github_search_users",
+    "github_get_issue",
+    "git_git_diff_unstaged"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "messi-world-cup-sports-sales",
+  "schema_version": 1,
+  "servers": [
+    "mongodb",
+    "airtable",
+    "exa",
+    "github",
+    "git"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/messi-world-cup-sports-sales/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "85c39d68bb816c6d0ee9a73af32be1f17252c2b87b0ccbed4a28ba7bb405a86e",
+      "size": 3129,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/messi-world-cup-sports-sales/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "68925f01db31fe35560e3e87",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/messi-world-cup-sports-sales",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

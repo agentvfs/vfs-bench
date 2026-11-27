@@ -1,0 +1,10 @@
+{
+  "id": "toolathlon_oil-price",
+  "fixtures": [
+    {
+      "id": "notion/oil-price",
+      "kind": "script",
+      "run": "shared/seed_notion.py"
+    }
+  ]
+}

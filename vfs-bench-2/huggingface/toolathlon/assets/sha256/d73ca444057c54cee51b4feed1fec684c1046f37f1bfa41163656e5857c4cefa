@@ -1,0 +1,14 @@
+{
+  "id": "toolathlon_notion-hr",
+  "fixtures": [
+    {
+      "id": "mail/jamess@mcp.com",
+      "kind": "mail"
+    },
+    {
+      "id": "notion/notion-hr",
+      "kind": "script",
+      "run": "shared/seed_notion.py"
+    }
+  ]
+}

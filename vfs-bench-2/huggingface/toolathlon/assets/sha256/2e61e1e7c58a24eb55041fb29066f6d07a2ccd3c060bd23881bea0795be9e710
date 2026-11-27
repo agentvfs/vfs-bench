@@ -1,0 +1,112 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact. Every snowflake projection ends in `grep .`, so an arm whose reply carries no such line fails the case instead of agreeing on nothing.",
+  "cases": [
+    {
+      "name": "emails_get_folders",
+      "why": "both arms list the same IMAP folders",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_folders",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-folders"
+      }
+    },
+    {
+      "name": "emails_get_emails",
+      "why": "the same messages, in the same order, through either arm",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_emails",
+        "args": {
+          "folder": "INBOX"
+        }
+      },
+      "mirage": {
+        "command": "emails get-emails '{\"folder\":\"INBOX\"}'"
+      }
+    },
+    {
+      "name": "emails_get_unread_count",
+      "why": "the unread count agrees",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_unread_count",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-unread-count"
+      }
+    },
+    {
+      "name": "emails_get_mailbox_stats",
+      "why": "the mailbox statistics agree",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_mailbox_stats",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-mailbox-stats"
+      }
+    },
+    {
+      "name": "emails_search_emails",
+      "why": "a search returns the same hits",
+      "mcp": {
+        "server": "emails",
+        "tool": "search_emails",
+        "args": {
+          "query": "the",
+          "folder": "INBOX"
+        }
+      },
+      "mirage": {
+        "command": "emails search-emails '{\"query\":\"the\",\"folder\":\"INBOX\"}'"
+      }
+    },
+    {
+      "name": "snowflake_read_query",
+      "why": "the same statement returns the same answer through either arm",
+      "mcp": {
+        "server": "snowflake",
+        "tool": "read_query",
+        "args": {
+          "query": "SELECT COUNT(*) AS N FROM SLA_MONITOR.PUBLIC.SUPPORT_TICKETS"
+        },
+        "pipe": "sed -n 's/^- N: //p' | grep ."
+      },
+      "mirage": {
+        "command": "snowflake read-query '{\"query\":\"SELECT COUNT(*) AS N FROM SLA_MONITOR.PUBLIC.SUPPORT_TICKETS\"}'",
+        "pipe": "sed -n 's/^- N: //p' | grep ."
+      }
+    },
+    {
+      "name": "write_query",
+      "why": "a ticket closed through either arm leaves the same tables behind",
+      "mutates": [
+        "snowflake"
+      ],
+      "mcp": {
+        "server": "snowflake",
+        "tool": "write_query",
+        "args": {
+          "query": "UPDATE SLA_MONITOR.PUBLIC.SUPPORT_TICKETS SET STATUS = 'closed' WHERE TICKET_NUMBER = 'TK-1000'"
+        },
+        "pipe": "grep -o 'Query executed successfully'"
+      },
+      "mirage": {
+        "command": "snowflake write-query '{\"query\":\"UPDATE SLA_MONITOR.PUBLIC.SUPPORT_TICKETS SET STATUS = '\\''closed'\\'' WHERE TICKET_NUMBER = '\\''TK-1000'\\''\"}'",
+        "pipe": "grep -o 'Query executed successfully'"
+      },
+      "ignore": [
+        "CREATED_AT",
+        "FIRST_RESPONSE_AT",
+        "RESOLVED_AT",
+        "UPDATED_AT"
+      ],
+      "note": "every timestamp is placed relative to the warehouse clock at seed time, and the two arms are seeded a minute apart"
+    }
+  ]
+}

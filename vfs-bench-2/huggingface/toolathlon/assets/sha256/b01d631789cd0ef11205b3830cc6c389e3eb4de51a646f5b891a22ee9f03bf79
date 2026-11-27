@@ -1,0 +1,10 @@
+{
+  "id": "toolathlon_huggingface-upload",
+  "fixtures": [
+    {
+      "id": "hf-hub/huggingface-upload",
+      "kind": "script",
+      "run": "shared/seed_hf.py"
+    }
+  ]
+}

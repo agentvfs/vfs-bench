@@ -1,0 +1,8 @@
+{
+  "project": "mcp-bench0606",
+  "buckets": [
+    {
+      "prefix": "promo-assets-for-b"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "cases": [
+    {
+      "name": "read_pdf_pages",
+      "why": "The pinned upstream handler reads the same task fixture through MCP and the workspace CLI.",
+      "mcp": {
+        "server": "pdf-tools",
+        "tool": "read_pdf_pages",
+        "args": {
+          "pdf_file_path": "${AGENT_WORKSPACE}/course.pdf",
+          "start_page": 1,
+          "end_page": 1
+        }
+      },
+      "mirage": {
+        "command": "pdf-tools read-pdf-pages '{\"pdf_file_path\": \"/workspace/course.pdf\", \"start_page\": 1, \"end_page\": 1}'"
+      }
+    },
+    {
+      "name": "get_workbook_metadata",
+      "why": "The pinned upstream handler reads the same task fixture through MCP and the workspace CLI.",
+      "mcp": {
+        "server": "excel",
+        "tool": "get_workbook_metadata",
+        "args": {
+          "filepath": "${AGENT_WORKSPACE}/exam.xlsx",
+          "include_ranges": true
+        }
+      },
+      "mirage": {
+        "command": "excel get-workbook-metadata '{\"filepath\": \"/workspace/exam.xlsx\", \"include_ranges\": true}'"
+      }
+    }
+  ]
+}

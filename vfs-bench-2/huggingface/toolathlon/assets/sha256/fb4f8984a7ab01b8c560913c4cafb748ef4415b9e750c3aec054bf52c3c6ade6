@@ -1,0 +1,60 @@
+{
+  "cases": [
+    {
+      "name": "fetch_json",
+      "why": "the same URL parses to the same document",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_json",
+        "args": {
+          "url": "https://api.github.com/repositories/1"
+        }
+      },
+      "mirage": {
+        "command": "fetch json '{\"url\":\"https://api.github.com/repositories/1\"}'"
+      }
+    },
+    {
+      "name": "fetch_html",
+      "why": "the raw body is byte-identical through either arm",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_html",
+        "args": {
+          "url": "https://api.github.com/repos/mojombo/grit"
+        }
+      },
+      "mirage": {
+        "command": "fetch html '{\"url\":\"https://api.github.com/repos/mojombo/grit\"}'"
+      }
+    },
+    {
+      "name": "fetch_txt",
+      "why": "markup stripping agrees",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_txt",
+        "args": {
+          "url": "https://api.github.com/repos/mojombo/grit"
+        }
+      },
+      "mirage": {
+        "command": "fetch txt '{\"url\":\"https://api.github.com/repos/mojombo/grit\"}'"
+      }
+    },
+    {
+      "name": "fetch_markdown",
+      "why": "markdown conversion agrees",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_markdown",
+        "args": {
+          "url": "https://api.github.com/repos/mojombo/grit"
+        }
+      },
+      "mirage": {
+        "command": "fetch markdown '{\"url\":\"https://api.github.com/repos/mojombo/grit\"}'"
+      }
+    }
+  ]
+}

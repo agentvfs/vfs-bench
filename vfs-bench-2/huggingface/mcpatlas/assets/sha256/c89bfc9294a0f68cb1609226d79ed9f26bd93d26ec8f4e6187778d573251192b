@@ -1,0 +1,115 @@
+{
+ "note": "Notion is the fake both arms read, seeded per run from Atlas's export. Slack is the fake both arms read, seeded per run from Atlas's export.",
+ "cases": [
+  {
+   "name": "may_requests",
+   "why": "the same service requests in May 2017",
+   "mcp": {
+    "server": "notion",
+    "tool": "API-post-database-query",
+    "args": {
+     "database_id": "21b97551-844e-808d-a0c5-ed2d08f39729",
+     "filter": {
+      "and": [
+       {
+        "property": "InteractionDate",
+        "date": {
+         "on_or_after": "2017-05-01"
+        }
+       },
+       {
+        "property": "InteractionDate",
+        "date": {
+         "before": "2017-06-01"
+        }
+       }
+      ]
+     },
+     "page_size": 20
+    },
+    "pipe": "jq -r '.results[].id'"
+   },
+   "mirage": {
+    "command": "notion post-database-query '{\"database_id\": \"21b97551-844e-808d-a0c5-ed2d08f39729\", \"filter\": {\"and\": [{\"property\": \"InteractionDate\", \"date\": {\"on_or_after\": \"2017-05-01\"}}, {\"property\": \"InteractionDate\", \"date\": {\"before\": \"2017-06-01\"}}]}, \"page_size\": 20}'",
+    "pipe": "jq -r '.results[].id'"
+   }
+  },
+  {
+   "name": "fetch",
+   "why": "the fetch CLI is the MCP arm's fetch server, reading the same page live",
+   "mcp": {
+    "server": "fetch",
+    "tool": "fetch",
+    "args": {
+     "url": "https://raw.githubusercontent.com/theonion/fartscroll.js/master/README.md",
+     "max_length": 400
+    }
+   },
+   "mirage": {
+    "command": "fetch fetch '{\"url\":\"https://raw.githubusercontent.com/theonion/fartscroll.js/master/README.md\",\"max_length\":400}'"
+   }
+  },
+  {
+   "name": "read_graph",
+   "why": "the memory CLI is the MCP arm's memory server over the same graph file",
+   "mcp": {
+    "server": "memory",
+    "tool": "read_graph",
+    "args": {},
+    "pipe": "jq -r '.entities[].name' | sort"
+   },
+   "mirage": {
+    "command": "memory read-graph '{}'",
+    "pipe": "jq -r '.entities[].name' | sort"
+   }
+  },
+  {
+   "name": "search_nodes",
+   "why": "the memory CLI is the MCP arm's memory server over the same graph file",
+   "mcp": {
+    "server": "memory",
+    "tool": "search_nodes",
+    "args": {
+     "query": "Alice"
+    }
+   },
+   "mirage": {
+    "command": "memory search-nodes '{\"query\":\"Alice\"}'"
+   }
+  },
+  {
+   "name": "channels_list",
+   "why": "both arms list the same six channels of the same workspace",
+   "mcp": {
+    "server": "slack",
+    "tool": "channels_list",
+    "args": {
+     "channel_types": "public_channel,private_channel"
+    },
+    "pipe": "sed 1d | cut -d, -f1 | sort"
+   },
+   "mirage": {
+    "command": "ls /slack/channels",
+    "pipe": "sed 's/.*__//' | sort"
+   }
+  },
+  {
+   "name": "conversations_history",
+   "why": "both arms read every message of #movie-suggestions, joins and leaves included, at the same timestamps",
+   "mcp": {
+    "server": "slack",
+    "tool": "conversations_history",
+    "args": {
+     "channel_id": "C093FF10B5J",
+     "limit": "100",
+     "include_activity_messages": true
+    },
+    "pipe": "grep -o '17[0-9]\\{8\\}\\.[0-9]\\{6\\}' | sort"
+   },
+   "mirage": {
+    "command": "cat /slack/channels/movie-suggestions__C093FF10B5J/*/chat.jsonl",
+    "pipe": "jq -r .ts | sort"
+   }
+  }
+ ]
+}

@@ -1,0 +1,236 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/7fb6d3553923ee89a4a7998dbeb41674fd92fd411737333ef2a74f83f52eba9d",
+      "role": "seed_manifest",
+      "sha256": "7fb6d3553923ee89a4a7998dbeb41674fd92fd411737333ef2a74f83f52eba9d",
+      "size": 57,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/e116e29239c8321c941d65631855dcb4f692394115599942787af8bcc4c95b3a",
+      "role": "parity_test",
+      "sha256": "e116e29239c8321c941d65631855dcb4f692394115599942787af8bcc4c95b3a",
+      "size": 3542,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/cf89e268515edaa714fc77f2cea96196e25781abaa063b089583d9f869681324",
+      "role": "workspace_config",
+      "sha256": "cf89e268515edaa714fc77f2cea96196e25781abaa063b089583d9f869681324",
+      "size": 1290,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "nvidia-market",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nvidia-market/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nvidia-market/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/nvidia-market/shared/task.md",
+      "role": "instruction",
+      "sha256": "b60afff453db2e39408f5e990bef077aba8972b5ee4ead807ac01bbf780bdaa9",
+      "size": 430,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nvidia-market/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nvidia-market/docs/user_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "8023b3ec2e49aa916dc2af32024c96e8ab4b2bb23d3708e44645e6ebc00366a5",
+      "size": 2038,
+      "target": "upstream/docs/user_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nvidia-market/docs/user_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nvidia-market/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "2f539dfade376a678c7daa04c6c9ed1fdf8683d9a0dfa8604871b4a723a1cdb8",
+      "size": 30088,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nvidia-market/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nvidia-market/groundtruth_workspace/13f_data/NVDA 2022Q4 13F Top Holders.csv",
+      "role": "verifier_input",
+      "sha256": "4fb8476235b614d115078e14a9d17654acb8d1be4914de1ccf6cde8482672612",
+      "size": 194964,
+      "target": "upstream/groundtruth_workspace/13f_data/NVDA 2022Q4 13F Top Holders.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nvidia-market/groundtruth_workspace/13f_data/NVDA%202022Q4%2013F%20Top%20Holders.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nvidia-market/groundtruth_workspace/13f_data/NVDA 2023Q1 13F Top Holders.csv",
+      "role": "verifier_input",
+      "sha256": "0e8c273edf85292f3b94c5a2486b5c5b40b410beed2ba814f348a209b512e588",
+      "size": 214222,
+      "target": "upstream/groundtruth_workspace/13f_data/NVDA 2023Q1 13F Top Holders.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nvidia-market/groundtruth_workspace/13f_data/NVDA%202023Q1%2013F%20Top%20Holders.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nvidia-market/groundtruth_workspace/13f_data/NVDA 2023Q2 13F Top Holders.csv",
+      "role": "verifier_input",
+      "sha256": "bf7720f9cc8e9a17fbc2603877357b7efcde64dfe37af32e541f3466a3e78d2f",
+      "size": 237274,
+      "target": "upstream/groundtruth_workspace/13f_data/NVDA 2023Q2 13F Top Holders.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nvidia-market/groundtruth_workspace/13f_data/NVDA%202023Q2%2013F%20Top%20Holders.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nvidia-market/groundtruth_workspace/13f_data/NVDA 2023Q3 13F Top Holders.csv",
+      "role": "verifier_input",
+      "sha256": "7ed65fc53c54fbc70914c63dc2dc4fe666814e0267411f5aead8356186feaef0",
+      "size": 245746,
+      "target": "upstream/groundtruth_workspace/13f_data/NVDA 2023Q3 13F Top Holders.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nvidia-market/groundtruth_workspace/13f_data/NVDA%202023Q3%2013F%20Top%20Holders.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nvidia-market/groundtruth_workspace/13f_data/NVDA 2023Q4 13F Top Holders.csv",
+      "role": "verifier_input",
+      "sha256": "8ff3f64b5e59acbae8a52202c69b7ae4a77a1b24e963fc3607574c8395d34f47",
+      "size": 271915,
+      "target": "upstream/groundtruth_workspace/13f_data/NVDA 2023Q4 13F Top Holders.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nvidia-market/groundtruth_workspace/13f_data/NVDA%202023Q4%2013F%20Top%20Holders.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nvidia-market/groundtruth_workspace/13f_data/NVDA 2024Q1 13F Top Holders.csv",
+      "role": "verifier_input",
+      "sha256": "c91fb7bba15e3add513472c3a60e64e0efb2e8c24cb9406f2ad5fdf37b8ff2c1",
+      "size": 288127,
+      "target": "upstream/groundtruth_workspace/13f_data/NVDA 2024Q1 13F Top Holders.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nvidia-market/groundtruth_workspace/13f_data/NVDA%202024Q1%2013F%20Top%20Holders.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nvidia-market/groundtruth_workspace/13f_data/NVDA 2024Q2 13F Top Holders.csv",
+      "role": "verifier_input",
+      "sha256": "41b6570140578dc70684f5efdc9671b3cfcfe94b292428e327eb8caacd084a6f",
+      "size": 312343,
+      "target": "upstream/groundtruth_workspace/13f_data/NVDA 2024Q2 13F Top Holders.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nvidia-market/groundtruth_workspace/13f_data/NVDA%202024Q2%2013F%20Top%20Holders.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nvidia-market/groundtruth_workspace/13f_data/NVDA 2024Q3 13F Top Holders.csv",
+      "role": "verifier_input",
+      "sha256": "6015a0b75d681d69fd106adc231fe56b3eb924b1d3b668bac5d062124e74656d",
+      "size": 316645,
+      "target": "upstream/groundtruth_workspace/13f_data/NVDA 2024Q3 13F Top Holders.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nvidia-market/groundtruth_workspace/13f_data/NVDA%202024Q3%2013F%20Top%20Holders.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nvidia-market/groundtruth_workspace/13f_data/NVDA 2024Q4 13F Top Holders.csv",
+      "role": "verifier_input",
+      "sha256": "3109648a2d4a1b586fc12ad823be94ad2d9aa4369cfad275de23842d15fac89a",
+      "size": 357883,
+      "target": "upstream/groundtruth_workspace/13f_data/NVDA 2024Q4 13F Top Holders.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nvidia-market/groundtruth_workspace/13f_data/NVDA%202024Q4%2013F%20Top%20Holders.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nvidia-market/groundtruth_workspace/README.md",
+      "role": "verifier_input",
+      "sha256": "01a70c7308de3bd38676c914011ad230b66c664dee1b53d54d84891e771e066f",
+      "size": 532,
+      "target": "upstream/groundtruth_workspace/README.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nvidia-market/groundtruth_workspace/README.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nvidia-market/groundtruth_workspace/nvda_yahoo_data.json",
+      "role": "verifier_input",
+      "sha256": "d435f775fa64433c9d25fe073b74e268066700d5aefe5eba0a29810f656c83fd",
+      "size": 8038,
+      "target": "upstream/groundtruth_workspace/nvda_yahoo_data.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nvidia-market/groundtruth_workspace/nvda_yahoo_data.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nvidia-market/groundtruth_workspace/results.xlsx",
+      "role": "verifier_input",
+      "sha256": "b81b81b791ec056fe3f34453f5bf5f9b408619f052b853f60a3f1d15648c9508",
+      "size": 74690,
+      "target": "upstream/groundtruth_workspace/results.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nvidia-market/groundtruth_workspace/results.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nvidia-market/initial_workspace/results_template.xlsx",
+      "role": "initial_workspace",
+      "sha256": "6ab3c128ed3aa3c980efce23a8ffc913a39aa78ce14431d8d919cee904afebe9",
+      "size": 29929,
+      "target": "upstream/initial_workspace/results_template.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nvidia-market/initial_workspace/results_template.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nvidia-market/task_config.json",
+      "role": "upstream_config",
+      "sha256": "28a4996776ed2f56c8ceca3b4dde12132230ae995d1c61fdfbbb8762030d04ce",
+      "size": 317,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nvidia-market/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/nvidia-market/README.md",
+      "role": "documentation",
+      "sha256": "afabf5c89695fd365be2128577001ff8eb3e27784f5487e8adb2dd68c54f2366",
+      "size": 1676,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/nvidia-market/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/nvidia-market/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "5023532c1d0f540d34806b1d940c37fe25a8b449a609adfd780c0695ada031a8",
+      "size": 20899,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/nvidia-market/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/nvidia-market",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/nvidia-market",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "python_execute",
+      "web_search",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "yahoo-finance",
+      "filesystem",
+      "terminal",
+      "playwright_with_chunk",
+      "excel",
+      "fetch"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "id": "toolathlon_payable-invoice-checker",
+  "fixtures": [
+    {
+      "id": "mail/walkera@mcp.com",
+      "kind": "mail"
+    },
+    {
+      "id": "pg/PURCHASE_INVOICE",
+      "kind": "script",
+      "run": "shared/seed_db.py"
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "note": "Both arms read one tree at one path -- the MCP arm's servers read the image's own /data in the run's container, and the mirage /data mount is a copy of it taken out of the same image. GitHub is mirage's GitHub fake on both arms, and it holds nothing. The calendar is the Google Workspace fake both arms read, seeded per run from Atlas's export.",
+  "cases": [
+    {
+      "name": "fetch",
+      "why": "the fetch CLI is the MCP arm's fetch server, reading the same page live",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch",
+        "args": {
+          "url": "https://raw.githubusercontent.com/theonion/fartscroll.js/master/README.md",
+          "max_length": 400
+        }
+      },
+      "mirage": {
+        "command": "fetch fetch '{\"url\":\"https://raw.githubusercontent.com/theonion/fartscroll.js/master/README.md\",\"max_length\":400}'"
+      }
+    },
+    {
+      "name": "get_commit",
+      "why": "neither arm finds the merge live GitHub holds: both read the one fake, which holds nothing",
+      "mcp": {
+        "server": "github",
+        "tool": "get_commit",
+        "args": {
+          "owner": "lgrammel",
+          "repo": "storyteller",
+          "sha": "0865ef487b8100848fcab25af80e60bffb4f42da"
+        },
+        "pipe": "sed 's/^Error: \\(.*\\) - https:.*$/\\1/'"
+      },
+      "mirage": {
+        "command": "gh api repos/lgrammel/storyteller/commits/0865ef487b8100848fcab25af80e60bffb4f42da 2>/dev/null | jq -r .message"
+      }
+    },
+    {
+      "name": "list_commits",
+      "why": "neither arm finds the repository live GitHub holds: both read the one fake, which holds nothing",
+      "mcp": {
+        "server": "github",
+        "tool": "list_commits",
+        "args": {
+          "owner": "Atamyrat2005",
+          "repo": "snake-game",
+          "per_page": 100
+        },
+        "pipe": "sed 's/^Error: \\(.*\\) - https:.*$/\\1/'"
+      },
+      "mirage": {
+        "command": "gh api repos/Atamyrat2005/snake-game/commits -X GET -f per_page=100 2>/dev/null | jq -r .message"
+      }
+    },
+    {
+      "name": "search_issues",
+      "why": "both arms are refused a search of a repository the fake does not hold, in GitHub's words",
+      "mcp": {
+        "server": "github",
+        "tool": "search_issues",
+        "args": {
+          "q": "repo:theonion/fartscroll.js created:2014-09-22"
+        },
+        "pipe": "sed 's/.*\"message\":\"\\([^\"]*\\)\".*/\\1/'"
+      },
+      "mirage": {
+        "command": "gh api search/issues -X GET -f 'q=repo:theonion/fartscroll.js created:2014-09-22' 2>/dev/null | jq -r '.errors[].message'"
+      }
+    },
+    {
+      "name": "list_events",
+      "why": "both arms find the same events on July 15, 2025, New York time",
+      "mcp": {
+        "server": "google-workspace",
+        "tool": "list_events",
+        "args": {
+          "timeMin": "2025-07-15T04:00:00Z",
+          "timeMax": "2025-07-16T04:00:00Z",
+          "maxResults": 50
+        },
+        "pipe": "jq -r '.[].id' | sort"
+      },
+      "mirage": {
+        "command": "ls /calendar/primary/2025-07-15",
+        "pipe": "sed 's/__.*//' | sort"
+      }
+    },
+    {
+      "name": "search_nodes",
+      "why": "the memory CLI is the MCP arm's memory server over the same graph file",
+      "mcp": {
+        "server": "memory",
+        "tool": "search_nodes",
+        "args": {
+          "query": "Alice"
+        }
+      },
+      "mirage": {
+        "command": "memory search-nodes '{\"query\":\"Alice\"}'"
+      }
+    }
+  ]
+}

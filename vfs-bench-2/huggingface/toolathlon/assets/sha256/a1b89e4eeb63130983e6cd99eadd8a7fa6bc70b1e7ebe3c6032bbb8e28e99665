@@ -1,0 +1,10 @@
+{
+  "id": "toolathlon_personal-website-construct",
+  "fixtures": [
+    {
+      "id": "github/personal-website-construct",
+      "kind": "script",
+      "run": "shared/seed_github.py"
+    }
+  ]
+}

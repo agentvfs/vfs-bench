@@ -1,0 +1,63 @@
+mode: EXEC
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace
+runtimes:
+  - name: pyodide
+    config:
+      lockFileUrl: ${TOOLATHLON_PYTHON}/pyodide-lock.json
+      packageBaseUrl: ${TOOLATHLON_PYTHON}/
+      packages:
+        - openpyxl
+        - xlsxwriter
+        - pypdf2
+        - pymupdf
+        - pandas
+        - numpy
+        - pyarrow
+        - pillow
+        - lxml
+        - python-docx
+        - python-pptx
+        - pytesseract
+        - olefile
+  - workspace
+clis:
+  web-search:
+    cli: ../../../../cli/toolathlon/research.mjs:SEARCH
+    config:
+      apiBase: ${SEARCH_CLI_URL}
+  browser:
+    cli: ../../../../cli/toolathlon/browser.mjs:BROWSER
+    config:
+      apiBase: ${BROWSER_URL}
+  fetch:
+    cli: ../../../../cli/toolathlon/research.mjs:WEB
+    config:
+      apiBase: ${FETCH_CLI_URL}
+      timeoutMs: 100000
+  google-sheet:
+    cli: ../../../../cli/toolathlon/google.mjs:SHEETS
+    config:
+      apiBase: ${SHEETS_CLI_URL}
+  git:
+    cli: git
+mounts:
+  /tmp:
+    vfs: ram
+  /gd:
+    vfs: gdrive
+    mode: READ
+    config:
+      client_id: fake
+      client_secret: fake
+      refresh_token: gws-integ-token
+      api_base: ${GWS_URL}
+      folderId: ${DRIVE_FOLDER_ID}
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}

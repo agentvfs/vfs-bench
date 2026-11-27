@@ -1,0 +1,137 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/896b0c42bd9dea0b1517a0fea7ec3fa08b69400f47641d731168d76e5eaa5a85",
+      "role": "seed_manifest",
+      "sha256": "896b0c42bd9dea0b1517a0fea7ec3fa08b69400f47641d731168d76e5eaa5a85",
+      "size": 59,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/9d76889d0e1c91595b087fcefc9bea06f2a75bd0f8598771b1afbcf90228837c",
+      "role": "parity_test",
+      "sha256": "9d76889d0e1c91595b087fcefc9bea06f2a75bd0f8598771b1afbcf90228837c",
+      "size": 5196,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/d12d04940b58774005c9ea5abff9c6834f64723ff2a869ba61445e378bdbf539",
+      "role": "workspace_config",
+      "sha256": "d12d04940b58774005c9ea5abff9c6834f64723ff2a869ba61445e378bdbf539",
+      "size": 742,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "subway-planning",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/subway-planning/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/subway-planning/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/subway-planning/shared/task.md",
+      "role": "instruction",
+      "sha256": "bbf33a2f03aeb8d200bee0ff3ced0b5d9391f950efc79c27224ed90c6e4caf65",
+      "size": 378,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/subway-planning/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/subway-planning/evaluation/check_local.py",
+      "role": "verifier_source",
+      "sha256": "ad33bcfad8045b4724b20238631febf5033782c60b4192c43f856dded6484f7b",
+      "size": 1844,
+      "target": "upstream/evaluation/check_local.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/subway-planning/evaluation/check_local.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/subway-planning/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "b9fef78717d390eb5b72b5b4c69230c4255933cda51fc3d1d49f2c83a32e14c8",
+      "size": 1150,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/subway-planning/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/subway-planning/groundtruth_workspace/routine.txt",
+      "role": "verifier_input",
+      "sha256": "bcd755813b61a920900733bcb7f3edf1bcf09b73b581093e81c738601b065a0f",
+      "size": 264,
+      "target": "upstream/groundtruth_workspace/routine.txt",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/subway-planning/groundtruth_workspace/routine.txt"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/subway-planning/task_config.json",
+      "role": "upstream_config",
+      "sha256": "cd2f21f16dc827c918e42ee9b0115564b06e89c75801333d56ae092ecc42d44a",
+      "size": 263,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/subway-planning/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/subway-planning/README.md",
+      "role": "documentation",
+      "sha256": "1ce75a8bb65f001b44dbb8632507a51d62bb43bebcd7b9dbc4fa2bb16539bad3",
+      "size": 1189,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/subway-planning/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/subway-planning/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "6d4ed0310a450967f78b3043d86690ba25aa29f5a43c764a58021c58b0979b0e",
+      "size": 12436,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/subway-planning/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/subway-planning",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/subway-planning",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "web_search",
+      "claim_done",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "google_map",
+      "filesystem",
+      "playwright_with_chunk",
+      "fetch"
+    ]
+  }
+}

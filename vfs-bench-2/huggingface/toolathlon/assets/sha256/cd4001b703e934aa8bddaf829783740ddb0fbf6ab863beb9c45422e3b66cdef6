@@ -1,0 +1,185 @@
+{
+  "note": "yahoo-finance is read-only, so every case is read-only. The two surfaces are one-to-one by verb and answer in the same shape, so no case needs a projection.",
+  "cases": [
+    {
+      "name": "stock_info",
+      "why": "`get_stock_info` and `yahoo-finance get_stock_info` read the same fixture row",
+      "mcp": {
+        "server": "yahoo-finance",
+        "tool": "get_stock_info",
+        "args": {
+          "ticker": "AAPL"
+        }
+      },
+      "mirage": {
+        "command": "yahoo-finance get-stock-info '{\"ticker\":\"AAPL\"}'"
+      }
+    },
+    {
+      "name": "historical_prices",
+      "why": "`get_historical_stock_prices` and `yahoo-finance get_historical_stock_prices` read the same fixture row",
+      "mcp": {
+        "server": "yahoo-finance",
+        "tool": "get_historical_stock_prices",
+        "args": {
+          "ticker": "AAPL",
+          "period": "1mo",
+          "interval": "1d"
+        }
+      },
+      "mirage": {
+        "command": "yahoo-finance get-historical-stock-prices '{\"ticker\":\"AAPL\",\"period\":\"1mo\",\"interval\":\"1d\"}'"
+      }
+    },
+    {
+      "name": "price_by_date",
+      "why": "`get_stock_price_by_date` and `yahoo-finance get_stock_price_by_date` read the same fixture row",
+      "mcp": {
+        "server": "yahoo-finance",
+        "tool": "get_stock_price_by_date",
+        "args": {
+          "ticker": "AAPL",
+          "date": "2025-09-15"
+        }
+      },
+      "mirage": {
+        "command": "yahoo-finance get-stock-price-by-date '{\"ticker\":\"AAPL\",\"date\":\"2025-09-15\"}'"
+      }
+    },
+    {
+      "name": "news",
+      "why": "`get_yahoo_finance_news` and `yahoo-finance get_yahoo_finance_news` read the same fixture row",
+      "mcp": {
+        "server": "yahoo-finance",
+        "tool": "get_yahoo_finance_news",
+        "args": {
+          "ticker": "AAPL"
+        }
+      },
+      "mirage": {
+        "command": "yahoo-finance get-yahoo-finance-news '{\"ticker\":\"AAPL\"}'"
+      }
+    },
+    {
+      "name": "actions",
+      "why": "`get_stock_actions` and `yahoo-finance get_stock_actions` read the same fixture row",
+      "mcp": {
+        "server": "yahoo-finance",
+        "tool": "get_stock_actions",
+        "args": {
+          "ticker": "AAPL"
+        }
+      },
+      "mirage": {
+        "command": "yahoo-finance get-stock-actions '{\"ticker\":\"AAPL\"}'"
+      }
+    },
+    {
+      "name": "financial_statement",
+      "why": "`get_financial_statement` and `yahoo-finance get_financial_statement` read the same fixture row",
+      "mcp": {
+        "server": "yahoo-finance",
+        "tool": "get_financial_statement",
+        "args": {
+          "ticker": "AAPL",
+          "financial_type": "income_stmt"
+        }
+      },
+      "mirage": {
+        "command": "yahoo-finance get-financial-statement '{\"ticker\":\"AAPL\",\"financial_type\":\"income_stmt\"}'"
+      }
+    },
+    {
+      "name": "holder_info",
+      "why": "`get_holder_info` and `yahoo-finance get_holder_info` read the same fixture row",
+      "mcp": {
+        "server": "yahoo-finance",
+        "tool": "get_holder_info",
+        "args": {
+          "ticker": "AAPL",
+          "holder_type": "major_holders"
+        }
+      },
+      "mirage": {
+        "command": "yahoo-finance get-holder-info '{\"ticker\":\"AAPL\",\"holder_type\":\"major_holders\"}'"
+      }
+    },
+    {
+      "name": "option_expiration_dates",
+      "why": "`get_option_expiration_dates` and `yahoo-finance get_option_expiration_dates` read the same fixture row",
+      "mcp": {
+        "server": "yahoo-finance",
+        "tool": "get_option_expiration_dates",
+        "args": {
+          "ticker": "AAPL"
+        }
+      },
+      "mirage": {
+        "command": "yahoo-finance get-option-expiration-dates '{\"ticker\":\"AAPL\"}'"
+      }
+    },
+    {
+      "name": "recommendations",
+      "why": "`get_recommendations` and `yahoo-finance get_recommendations` read the same fixture row",
+      "mcp": {
+        "server": "yahoo-finance",
+        "tool": "get_recommendations",
+        "args": {
+          "ticker": "AAPL",
+          "recommendation_type": "recommendations"
+        }
+      },
+      "mirage": {
+        "command": "yahoo-finance get-recommendations '{\"ticker\":\"AAPL\",\"recommendation_type\":\"recommendations\"}'"
+      }
+    },
+    {
+      "name": "drive_files_list",
+      "why": "The CLI invokes the original Sheets folder-listing tool.",
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "list_folders",
+        "args": {},
+        "jq": ".name"
+      },
+      "mirage": {
+        "command": "google-sheet list-folders '{}'",
+        "jq": ".name"
+      }
+    },
+    {
+      "name": "create_spreadsheet_via_sheets",
+      "why": "Both surfaces invoke the original spreadsheet creation handler.",
+      "mutates": [
+        "gws"
+      ],
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "create_spreadsheet",
+        "args": {
+          "title": "Parity Check"
+        },
+        "jq": "{title: .title}"
+      },
+      "mirage": {
+        "command": "google-sheet create-spreadsheet '{\"title\":\"Parity Check\"}'",
+        "jq": "{title: .title}"
+      }
+    },
+    {
+      "name": "get_workbook_metadata",
+      "why": "The pinned upstream handler reads the same task fixture through MCP and the workspace CLI.",
+      "mcp": {
+        "server": "excel",
+        "tool": "get_workbook_metadata",
+        "args": {
+          "filepath": "${AGENT_WORKSPACE}/results.xlsx",
+          "include_ranges": true
+        }
+      },
+      "mirage": {
+        "command": "excel get-workbook-metadata '{\"filepath\": \"/workspace/results.xlsx\", \"include_ranges\": true}'"
+      }
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "canvas_list_courses",
+      "why": "the same courses",
+      "mcp": {
+        "server": "canvas",
+        "tool": "canvas_list_courses",
+        "args": {}
+      },
+      "mirage": {
+        "command": "canvas list-courses"
+      }
+    },
+    {
+      "name": "canvas_get_user_profile",
+      "why": "the same identity",
+      "mcp": {
+        "server": "canvas",
+        "tool": "canvas_get_user_profile",
+        "args": {}
+      },
+      "mirage": {
+        "command": "canvas get-user-profile"
+      }
+    },
+    {
+      "name": "canvas_get_course",
+      "why": "one course reads back the same",
+      "mcp": {
+        "server": "canvas",
+        "tool": "canvas_get_course",
+        "args": {
+          "course_id": 11
+        }
+      },
+      "mirage": {
+        "command": "canvas get-course '{\"course_id\":11}'"
+      }
+    },
+    {
+      "name": "canvas_list_assignments",
+      "why": "the same assignments",
+      "mcp": {
+        "server": "canvas",
+        "tool": "canvas_list_assignments",
+        "args": {
+          "course_id": 11
+        }
+      },
+      "mirage": {
+        "command": "canvas list-assignments '{\"course_id\":11}'"
+      }
+    },
+    {
+      "name": "canvas_list_announcements",
+      "why": "the same announcements",
+      "mcp": {
+        "server": "canvas",
+        "tool": "canvas_list_announcements",
+        "args": {
+          "course_id": 11
+        }
+      },
+      "mirage": {
+        "command": "canvas list-announcements '{\"course_id\":11}'"
+      }
+    }
+  ]
+}

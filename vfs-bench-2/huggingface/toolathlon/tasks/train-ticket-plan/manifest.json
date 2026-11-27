@@ -1,0 +1,153 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/ececd1413ddd71baec0a74d60da3da2eda25fa53202d79b969d38f3b5147a549",
+      "role": "seed_manifest",
+      "sha256": "ececd1413ddd71baec0a74d60da3da2eda25fa53202d79b969d38f3b5147a549",
+      "size": 61,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/04240c5ff53dfc05a15b55c05496e08c1a2527137fb19bed3e3979b8f5cb40a1",
+      "role": "parity_test",
+      "sha256": "04240c5ff53dfc05a15b55c05496e08c1a2527137fb19bed3e3979b8f5cb40a1",
+      "size": 2712,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/864181d6202f962bc5e4dd544a617e38523420781690d9c362ce954f89c85cd0",
+      "role": "workspace_config",
+      "sha256": "864181d6202f962bc5e4dd544a617e38523420781690d9c362ce954f89c85cd0",
+      "size": 1019,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "train-ticket-plan",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/train-ticket-plan/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/train-ticket-plan/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/train-ticket-plan/docs/agent_system_prompt_cn.md",
+      "role": "upstream_source",
+      "sha256": "0a736c39eb66a2fb9d17219664d57da082ccf23069de8a73119fe10cfe6c8447",
+      "size": 656,
+      "target": "upstream/docs/agent_system_prompt_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/train-ticket-plan/docs/agent_system_prompt_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/train-ticket-plan/shared/task.md",
+      "role": "instruction",
+      "sha256": "a8c72adf510f044bafbf0f30bdffd81508cf15f0b1ba68d3477bda022118bb6d",
+      "size": 1409,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/train-ticket-plan/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/train-ticket-plan/docs/task_cn.md",
+      "role": "upstream_source",
+      "sha256": "0740da7ea59b086a979763834256a6318b95e6bcd39593762fab6a362d1decef",
+      "size": 971,
+      "target": "upstream/docs/task_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/train-ticket-plan/docs/task_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/train-ticket-plan/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "64851b4f5b6b12cc82d3a4b1ff22e1486929684dd44487b2bc4054d909f4f048",
+      "size": 30592,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/train-ticket-plan/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/train-ticket-plan/initial_workspace/format.json",
+      "role": "initial_workspace",
+      "sha256": "84835b4ce874449e196d1efff60e0ba9e56b56a6fa47a155ad9acfb14dcd0e1f",
+      "size": 918,
+      "target": "upstream/initial_workspace/format.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/train-ticket-plan/initial_workspace/format.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/train-ticket-plan/station_English_name.txt",
+      "role": "upstream_source",
+      "sha256": "581b71c00e8ec6dc444b4351266f1a099f6a71927747cfa259fab712f8229ebb",
+      "size": 130,
+      "target": "upstream/station_English_name.txt",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/train-ticket-plan/station_English_name.txt"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/train-ticket-plan/task_config.json",
+      "role": "upstream_config",
+      "sha256": "3182fa95e16d907e2e8e5d9691ab71c804c3936769de8501c0bffee0bd27d423",
+      "size": 250,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/train-ticket-plan/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/train-ticket-plan/README.md",
+      "role": "documentation",
+      "sha256": "70baeabf9f8dc638c7534305e1b87447bd138e24d72106220581ab2043093c0d",
+      "size": 1868,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/train-ticket-plan/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/train-ticket-plan/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "613e1c9413236e92014383a56d9b38b487eb4248c4a7ddf940f7825e57708e32",
+      "size": 8300,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/train-ticket-plan/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/train-ticket-plan",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/train-ticket-plan",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "web_search",
+      "claim_done",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "filesystem",
+      "rail_12306",
+      "terminal",
+      "fetch"
+    ]
+  }
+}

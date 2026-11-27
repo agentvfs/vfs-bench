@@ -1,0 +1,10 @@
+{
+  "id": "toolathlon_quantitative-financial-analysis",
+  "fixtures": [
+    {
+      "id": "drive+notion/quant-research",
+      "kind": "script",
+      "run": "shared/seed_db.py"
+    }
+  ]
+}

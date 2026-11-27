@@ -1,0 +1,110 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "role": "workspace",
+      "sha256": "e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "size": 482,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/5f2a56416788e97953f889b31edcbfeb1aad06cbe382ca20c1966d097a79c2dc",
+      "role": "workspace_config",
+      "sha256": "5f2a56416788e97953f889b31edcbfeb1aad06cbe382ca20c1966d097a79c2dc",
+      "size": 2363,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/7bc303d41bb7bf7d32b4d25751cd99a78180becbc21ce0c44544064893d06441",
+      "role": "parity",
+      "sha256": "7bc303d41bb7bf7d32b4d25751cd99a78180becbc21ce0c44544064893d06441",
+      "size": 2504,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/61c16efd5ee102741fad82f16de14b9e98c71074bd771ffc15aa15c6100f6517",
+      "role": "verifier",
+      "sha256": "61c16efd5ee102741fad82f16de14b9e98c71074bd771ffc15aa15c6100f6517",
+      "size": 368,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "oxylabs_universal_scraper",
+    "oxylabs_google_search_scraper",
+    "oxylabs_amazon_search_scraper",
+    "arxiv_search_papers",
+    "fetch_fetch",
+    "e2b-server_run_code",
+    "filesystem_read_file",
+    "filesystem_read_media_file",
+    "filesystem_read_text_file",
+    "filesystem_read_multiple_files",
+    "github_get_repository",
+    "github_get_commit",
+    "github_list_commits"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "mueller-star-phase-transition-paper",
+  "schema_version": 1,
+  "servers": [
+    "oxylabs",
+    "arxiv",
+    "fetch",
+    "e2b-server",
+    "filesystem",
+    "github"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/mueller-star-phase-transition-paper/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "e23358298d55f9fd2263c943df957e071c902f9067e7a09f32f83adaa6758f43",
+      "size": 3844,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/mueller-star-phase-transition-paper/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689a373e148a49f91233e029",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/mueller-star-phase-transition-paper",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

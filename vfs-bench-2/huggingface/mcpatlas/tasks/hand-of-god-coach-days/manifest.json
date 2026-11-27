@@ -1,0 +1,115 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "role": "workspace",
+      "sha256": "e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "size": 482,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/e0e0a859ddf63fddd9f997db832432c7b8bbb3f6085e2840c859176d24a8b4c4",
+      "role": "workspace_config",
+      "sha256": "e0e0a859ddf63fddd9f997db832432c7b8bbb3f6085e2840c859176d24a8b4c4",
+      "size": 3091,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/4f36177c673a70dee2e1748a2e05a3ab7fdfc29d9e8cbbcca0fe72d1eb1b0413",
+      "role": "parity",
+      "sha256": "4f36177c673a70dee2e1748a2e05a3ab7fdfc29d9e8cbbcca0fe72d1eb1b0413",
+      "size": 1942,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/84a3b52c16cd6943a48926cdb8eccf4605486ebc622a17f6c9e566d44bd875b2",
+      "role": "verifier",
+      "sha256": "84a3b52c16cd6943a48926cdb8eccf4605486ebc622a17f6c9e566d44bd875b2",
+      "size": 727,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "e2b-server_run_code",
+    "exa_web_search_exa",
+    "wikipedia_search_wikipedia",
+    "wikipedia_get_article",
+    "google-maps_maps_geocode",
+    "airtable_list_bases",
+    "airtable_list_tables",
+    "desktop-commander_read_file",
+    "github_search_repositories",
+    "github_search_code",
+    "national-parks_getParkDetails",
+    "national-parks_findParks",
+    "weather-data_weather_forecast",
+    "weather-data_weather_current",
+    "weather-data_weather_history"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "hand-of-god-coach-days",
+  "schema_version": 1,
+  "servers": [
+    "e2b-server",
+    "exa",
+    "wikipedia",
+    "google-maps",
+    "airtable",
+    "desktop-commander",
+    "github",
+    "national-parks",
+    "weather-data"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/hand-of-god-coach-days/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "e9a80de84d91b962448d2128e863d5deea947b28adf1e7e541ca0cb334dafc4e",
+      "size": 4671,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/hand-of-god-coach-days/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "6890e7fd2516f66b0a628e7c",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/hand-of-god-coach-days",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "kubectl_get_namespaces",
+      "why": "both arms list the same namespaces of the same cluster",
+      "mcp": {
+        "server": "k8s",
+        "tool": "kubectl_get",
+        "args": {
+          "resourceType": "namespaces",
+          "output": "json"
+        },
+        "jq": "[.items[].name] | sort | .[]",
+        "raw": true
+      },
+      "mirage": {
+        "command": "kubectl get namespaces -o json",
+        "jq": "[.items[].metadata.name] | sort | .[]",
+        "raw": true
+      }
+    },
+    {
+      "name": "kubectl_get_pods",
+      "why": "the same pods in every namespace",
+      "mcp": {
+        "server": "k8s",
+        "tool": "kubectl_get",
+        "args": {
+          "resourceType": "pods",
+          "allNamespaces": true,
+          "output": "json"
+        },
+        "jq": "[.items[] | .namespace + \"/\" + .name] | sort | .[]",
+        "raw": true
+      },
+      "mirage": {
+        "command": "kubectl get pods -A -o json",
+        "jq": "[.items[] | .metadata.namespace + \"/\" + .metadata.name] | sort | .[]",
+        "raw": true
+      }
+    },
+    {
+      "name": "google_sheet_list_folders",
+      "why": "both arms see the same Drive folders",
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "list_folders",
+        "args": {}
+      },
+      "mirage": {
+        "command": "google-sheet list-folders"
+      }
+    },
+    {
+      "name": "google_sheet_list_spreadsheets",
+      "why": "the same spreadsheets with the same ids",
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "list_spreadsheets",
+        "args": {}
+      },
+      "mirage": {
+        "command": "google-sheet list-spreadsheets"
+      }
+    }
+  ]
+}

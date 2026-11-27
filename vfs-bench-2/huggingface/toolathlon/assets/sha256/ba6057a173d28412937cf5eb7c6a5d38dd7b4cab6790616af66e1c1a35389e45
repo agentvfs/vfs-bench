@@ -1,0 +1,86 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "browser_navigate",
+      "why": "navigating to the same page yields the same snapshot",
+      "mcp": {
+        "server": "playwright_with_chunk",
+        "tool": "browser_navigate",
+        "args": {
+          "url": "https://example.com/"
+        }
+      },
+      "mirage": {
+        "command": "browser navigate '{\"url\":\"https://example.com/\"}'"
+      }
+    },
+    {
+      "name": "browser_tab_list",
+      "why": "the open tabs agree after the same navigation",
+      "mcp": {
+        "server": "playwright_with_chunk",
+        "tool": "browser_tab_list",
+        "args": {}
+      },
+      "mirage": {
+        "command": "browser tab-list"
+      }
+    },
+    {
+      "name": "memory_read_graph",
+      "why": "both arms read the same knowledge graph file",
+      "mcp": {
+        "server": "memory",
+        "tool": "read_graph",
+        "args": {}
+      },
+      "mirage": {
+        "command": "memory read-graph"
+      }
+    },
+    {
+      "name": "memory_search_nodes",
+      "why": "a search over the same graph agrees",
+      "mcp": {
+        "server": "memory",
+        "tool": "search_nodes",
+        "args": {
+          "query": "a"
+        }
+      },
+      "mirage": {
+        "command": "memory search-nodes '{\"query\":\"a\"}'"
+      }
+    },
+    {
+      "name": "memory_create_entities",
+      "why": "an entity created through either arm leaves the same memory file behind",
+      "mcp": {
+        "server": "memory",
+        "tool": "create_entities",
+        "args": {
+          "entities": [
+            {
+              "name": "Parity",
+              "entityType": "check",
+              "observations": [
+                "both arms"
+              ]
+            }
+          ]
+        }
+      },
+      "mirage": {
+        "command": "memory create-entities '{\"entities\":[{\"name\":\"Parity\",\"entityType\":\"check\",\"observations\":[\"both arms\"]}]}'"
+      },
+      "mutates": [
+        "workspace"
+      ],
+      "ignore": [
+        "form_link_for_public.txt"
+      ],
+      "note": "upstream's preprocessing creates a live Google Form on every seed and writes the new form's id into `form_link_for_public.txt`, and a mutating case re-seeds between the two arms, so that one file differs between two seeds without either arm having touched it: the memory graph this case measures is unaffected"
+    }
+  ]
+}

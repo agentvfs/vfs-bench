@@ -1,0 +1,110 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/34f31bd829e2bdbab09629e76a24272651a4b2c732413266dc8b4931736b4804",
+      "role": "workspace",
+      "sha256": "34f31bd829e2bdbab09629e76a24272651a4b2c732413266dc8b4931736b4804",
+      "size": 1279,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/d5c8b14ca0848cabf7dc6a5ff2e80b3cb73aa9e166cf42938dc20e952bc8b0f9",
+      "role": "workspace_config",
+      "sha256": "d5c8b14ca0848cabf7dc6a5ff2e80b3cb73aa9e166cf42938dc20e952bc8b0f9",
+      "size": 3460,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/d18fde26b5309bf1241648573956a3df3bc2d3f7ceda4e7ce646d2bafc23b21f",
+      "role": "parity",
+      "sha256": "d18fde26b5309bf1241648573956a3df3bc2d3f7ceda4e7ce646d2bafc23b21f",
+      "size": 3246,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/961327d79c36bf127ec29bc3cf99f4a88bf67db252fe6e0b5afc63d9a3430d8b",
+      "role": "verifier",
+      "sha256": "961327d79c36bf127ec29bc3cf99f4a88bf67db252fe6e0b5afc63d9a3430d8b",
+      "size": 158,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "wikipedia_get_article",
+    "wikipedia_get_summary",
+    "wikipedia_summarize_article_for_query",
+    "wikipedia_summarize_article_section",
+    "mongodb_list-collections",
+    "mongodb_list-databases",
+    "mongodb_collection-schema",
+    "mongodb_count",
+    "mongodb_db-stats",
+    "mongodb_aggregate",
+    "git_git_status",
+    "git_git_diff_unstaged",
+    "git_git_diff_staged",
+    "github_search_repositories",
+    "github_search_code"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "amlo-year-new-clients",
+  "schema_version": 1,
+  "servers": [
+    "wikipedia",
+    "mongodb",
+    "git",
+    "github"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/amlo-year-new-clients/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "9fc9a518467ff3b3d18349802da15b7401fa067c66f8fd29d9233e1918a320bc",
+      "size": 3131,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/amlo-year-new-clients/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "6890e7fd2516f66b0a628e5d",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/amlo-year-new-clients",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

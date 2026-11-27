@@ -1,0 +1,74 @@
+{
+  "note": "Requires both emulators for this task: uv run python server/fakes/gcp.py machine-operating, and STORAGE_EMULATOR_HOST pointing at the running fake-gcs, which the same command brings up. The google-cloud MCP server answers in prose; bq and gcs return JSON. Every google-cloud projection ends in `grep .`, so an arm whose reply carries no such line fails the case instead of agreeing on nothing.",
+  "cases": [
+    {
+      "name": "list_buckets",
+      "why": "both arms see the one bucket the seeder made",
+      "note": "the buckets agree where the datasets do not, because this task's google_cloud_allowed_buckets names the one bucket that exists -- the gap `list_datasets` records is about what each arm can enumerate beyond its scope, and here there is nothing beyond it",
+      "mcp": {
+        "server": "google-cloud",
+        "tool": "storage_list_buckets",
+        "args": {},
+        "pipe": "sed -n 's/^- \\([^:]*\\):.*/\\1/p' | sort | grep ."
+      },
+      "mirage": {
+        "command": "google-cloud storage-list-buckets",
+        "pipe": "sed -n 's/^- \\([^:]*\\):.*/\\1/p' | sort | grep ."
+      }
+    },
+    {
+      "name": "list_objects_empty",
+      "why": "an empty bucket reads as empty on both arms rather than erroring on one",
+      "mcp": {
+        "server": "google-cloud",
+        "tool": "storage_list_objects",
+        "args": {
+          "bucket_name": "iot_anomaly_reports-9a5d6e0336ce"
+        },
+        "pipe": "sed -n 's/^Found \\([0-9]*\\) objects in bucket.*/\\1/p; s/^- //p' | grep ."
+      },
+      "mirage": {
+        "command": "google-cloud storage-list-objects '{\"bucket_name\":\"iot_anomaly_reports-9a5d6e0336ce\"}'",
+        "pipe": "sed -n 's/^Found \\([0-9]*\\) objects in bucket.*/\\1/p; s/^- //p' | grep ."
+      },
+      "note": "the object count proves the reply is a listing rather than an error, and any names that follow are compared too"
+    },
+    {
+      "name": "upload_then_list",
+      "why": "an object written through either arm shows up the same way",
+      "mutates": [
+        "gcs"
+      ],
+      "mcp": {
+        "server": "google-cloud",
+        "tool": "storage_upload_file",
+        "args": {
+          "bucket_name": "iot_anomaly_reports-9a5d6e0336ce",
+          "source_file_path": "${PARITY_TESTS}/parity.txt",
+          "destination_blob_name": "parity.txt"
+        },
+        "pipe": "grep -o 'parity.txt' | head -1 | grep ."
+      },
+      "mirage": {
+        "command": "printf 'parity\\n' > /workspace/parity.txt && google-cloud storage-upload-file '{\"bucket_name\":\"iot_anomaly_reports-9a5d6e0336ce\",\"source_file_path\":\"/workspace/parity.txt\",\"destination_blob_name\":\"parity.txt\"}'",
+        "pipe": "grep -o 'parity.txt' | head -1 | grep ."
+      },
+      "note": "the two arms send the same bytes by the route each surface offers: the tool takes a host path, the CLI a path under /workspace that the transport maps to the host. `tests/parity.txt` is that file."
+    },
+    {
+      "name": "get_workbook_metadata",
+      "why": "The pinned upstream handler reads the same task fixture through MCP and the workspace CLI.",
+      "mcp": {
+        "server": "excel",
+        "tool": "get_workbook_metadata",
+        "args": {
+          "filepath": "${AGENT_WORKSPACE}/machine_operating_parameters.xlsx",
+          "include_ranges": true
+        }
+      },
+      "mirage": {
+        "command": "excel get-workbook-metadata '{\"filepath\": \"/workspace/machine_operating_parameters.xlsx\", \"include_ranges\": true}'"
+      }
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "toolathlon_dataset-license-issue",
+  "fixtures": [
+    {
+      "id": "github/dataset-license-issue",
+      "kind": "script",
+      "run": "shared/seed_github.py"
+    },
+    {
+      "id": "hf-hub/dataset-license-issue",
+      "kind": "script",
+      "run": "shared/seed_hf.py"
+    }
+  ]
+}

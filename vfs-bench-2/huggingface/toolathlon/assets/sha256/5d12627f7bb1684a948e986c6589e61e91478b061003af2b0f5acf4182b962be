@@ -1,0 +1,14 @@
+{
+  "id": "toolathlon_email-paper-homepage",
+  "fixtures": [
+    {
+      "id": "mail/timothyb@mcp.com",
+      "kind": "mail"
+    },
+    {
+      "id": "github/email-paper-homepage",
+      "kind": "script",
+      "run": "shared/seed_github.py"
+    }
+  ]
+}

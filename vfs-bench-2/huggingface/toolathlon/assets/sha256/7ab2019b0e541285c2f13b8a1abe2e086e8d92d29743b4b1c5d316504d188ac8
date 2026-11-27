@@ -1,0 +1,154 @@
+{
+  "cases": [
+    {
+      "name": "repo_is_findable",
+      "why": "the ask names \"my Annoy-DataSync project\" and no id, so finding it is the first thing either arm does. Worth a case of its own because a search that answers `total_count: 0` for a repository that exists does not look like a broken fixture -- it looks like an agent concluding there is nothing there, which is what one draw of the MCP arm did for 48 requests and 1.2M tokens before giving up.",
+      "mcp": {
+        "server": "github",
+        "tool": "search_repositories",
+        "args": {
+          "query": "Annoy-DataSync"
+        },
+        "jq": ".total_count",
+        "raw": true
+      },
+      "mirage": {
+        "command": "gh api 'search/repositories?q=Annoy-DataSync'",
+        "jq": ".total_count",
+        "raw": true
+      }
+    },
+    {
+      "name": "namespace_is_listable",
+      "why": "the ask names two datasets and no ids, so enumerating the account is the first thing an arm does -- and it is the operation that cost this task a draw. Both of the MCP arm's opening operations, `ls hf://datasets/<owner> --limit 100` and `search hf://datasets \"Annoy\" --limit 50`, were refused by the fake with a sentence telling it the URI was malformed, and it reported the repositories unavailable. strukto-ai/mirage#982 serves both. The mirage arm enumerates through its mount rather than its CLI because the `hf` it is given has no listing subcommand, so `/hub` is where its view of the namespace lives; that is the comparison, not a normalisation of one",
+      "mcp": {
+        "server": "huggingface",
+        "tool": "hf_fs",
+        "args": {
+          "operations": [
+            {
+              "cmd": "ls",
+              "args": [
+                "hf://datasets/dataset-license-issue"
+              ]
+            }
+          ]
+        },
+        "pipe": "grep -o 'dataset-license-issue/[A-Za-z0-9._-]*' | sort -u"
+      },
+      "mirage": {
+        "command": "ls /hub",
+        "pipe": "sed 's#^#dataset-license-issue/#' | sort -u"
+      }
+    },
+    {
+      "name": "issue_body",
+      "why": "the ask is a reply to this issue, so both arms have to see the same one",
+      "mcp": {
+        "server": "github",
+        "tool": "get_issue",
+        "args": {
+          "owner": "integ-user",
+          "repo": "Annoy-DataSync",
+          "issue_number": 1
+        },
+        "jq": "{title, state, body}",
+        "raw": true
+      },
+      "mirage": {
+        "command": "gh api repos/integ-user/Annoy-DataSync/issues/1",
+        "jq": "{title, state, body}",
+        "raw": true
+      }
+    },
+    {
+      "name": "raw_card_names_its_source",
+      "why": "the raw dataset's card is where the trail to HuggingFaceTB starts; if the two arms read a different card they are answering different questions",
+      "mcp": {
+        "server": "huggingface",
+        "tool": "hf_fs",
+        "args": {
+          "operations": [
+            {
+              "cmd": "cat",
+              "args": [
+                "hf://datasets/dataset-license-issue/Annoy-PyEdu-Rs-Raw/README.md"
+              ]
+            }
+          ]
+        },
+        "pipe": "grep -o 'HuggingFaceTB team' | head -1"
+      },
+      "mirage": {
+        "command": "cat /hub/Annoy-PyEdu-Rs-Raw/README.md",
+        "pipe": "grep -o 'HuggingFaceTB team' | head -1"
+      }
+    },
+    {
+      "name": "source_card_license",
+      "why": "the answer itself, read off a repository neither arm is pointed at -- `hf_fs` on one side, `hf download` on the other. This is the case that would fail if either arm could only see what it was mounted.",
+      "mcp": {
+        "server": "huggingface",
+        "tool": "hf_fs",
+        "args": {
+          "operations": [
+            {
+              "cmd": "cat",
+              "args": [
+                "hf://datasets/HuggingFaceTB/smollm-corpus/README.md",
+                "--max-bytes",
+                "200"
+              ]
+            }
+          ]
+        },
+        "pipe": "grep -o '^license: .*' | head -1"
+      },
+      "mirage": {
+        "command": "hf download HuggingFaceTB/smollm-corpus README.md --repo-type dataset --local-dir /tmp/src >/dev/null && head -c 200 /tmp/src/README.md",
+        "pipe": "grep -o '^license: .*' | head -1"
+      }
+    },
+    {
+      "name": "model_card_license",
+      "why": "the other source, and a model rather than a dataset -- the kind is a URI segment on one arm (`hf_fs` accepts hf://<kind>/<namespace>/<name> and nothing else) and a flag defaulting to `model` on the other, so getting it wrong reads as a missing repository rather than a wrong answer",
+      "mcp": {
+        "server": "huggingface",
+        "tool": "hf_fs",
+        "args": {
+          "operations": [
+            {
+              "cmd": "cat",
+              "args": [
+                "hf://models/deepseek-ai/DeepSeek-V2.5/README.md",
+                "--max-bytes",
+                "200"
+              ]
+            }
+          ]
+        },
+        "pipe": "grep -oE '^license(_name)?: .*' | head -2 | tr '\\n' ' '"
+      },
+      "mirage": {
+        "command": "hf download deepseek-ai/DeepSeek-V2.5 README.md --repo-type model --local-dir /tmp/mdl >/dev/null && head -c 200 /tmp/mdl/README.md",
+        "pipe": "grep -oE '^license(_name)?: .*' | head -2 | tr '\\n' ' '"
+      }
+    },
+    {
+      "name": "linked_model_license",
+      "why": "the model card declares `license: other` and points to this document, whose derivative-use conditions are needed to compare it with ODC-BY. The exact URL from the pinned card is served from one frozen capture to both arms.",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_txt",
+        "args": {
+          "url": "https://github.com/deepseek-ai/DeepSeek-V2/blob/main/LICENSE-MODEL"
+        },
+        "pipe": "grep -o 'downstream derivative versions of the model could be released under different licensing terms' | head -1"
+      },
+      "mirage": {
+        "command": "fetch txt '{\"url\":\"https://github.com/deepseek-ai/DeepSeek-V2/blob/main/LICENSE-MODEL\"}'",
+        "pipe": "grep -o 'downstream derivative versions of the model could be released under different licensing terms' | head -1"
+      }
+    }
+  ]
+}

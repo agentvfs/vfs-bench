@@ -1,0 +1,280 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/6e400598155c68a355222d3fb7bc7b7ea0b62788c4793d5c3998d59d8d9a8bac",
+      "role": "seed_manifest",
+      "sha256": "6e400598155c68a355222d3fb7bc7b7ea0b62788c4793d5c3998d59d8d9a8bac",
+      "size": 70,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/a4210ade3f0785d7ceb44acc8c97991cef5f5faa4645b6a1d5d7c51910cc117c",
+      "role": "parity_test",
+      "sha256": "a4210ade3f0785d7ceb44acc8c97991cef5f5faa4645b6a1d5d7c51910cc117c",
+      "size": 4900,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/01f3465c820f08a40abd2a093de55650e559dd1e6c28a97281a8970c111459db",
+      "role": "workspace_documentation",
+      "sha256": "01f3465c820f08a40abd2a093de55650e559dd1e6c28a97281a8970c111459db",
+      "size": 629,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/975ebcde94e9393d5c5cfa26ec12ca06e4258ae4640a34121ada04f85a76e7b8",
+      "role": "workspace_config",
+      "sha256": "975ebcde94e9393d5c5cfa26ec12ca06e4258ae4640a34121ada04f85a76e7b8",
+      "size": 1095,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "woocommerce-product-recall",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-product-recall/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-product-recall/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-product-recall/docs/agent_system_prompt_cn.md",
+      "role": "upstream_source",
+      "sha256": "26a9dbca989de053901f79806085ceb1adc18a681885a32a69daf6adbe349844",
+      "size": 526,
+      "target": "upstream/docs/agent_system_prompt_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-product-recall/docs/agent_system_prompt_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-product-recall/shared/task.md",
+      "role": "instruction",
+      "sha256": "4e4a48d87f1b924319a8fef925fc023661fac48418304cab66a2d8e9a581c6db",
+      "size": 783,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-product-recall/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-product-recall/docs/task_cn.md",
+      "role": "upstream_source",
+      "sha256": "d5d72f0694dc667f4c3dc7e50cd1b5bba7682d05c9d1bfe378d362fd57547843",
+      "size": 507,
+      "target": "upstream/docs/task_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-product-recall/docs/task_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-product-recall/email_config.json",
+      "role": "upstream_source",
+      "sha256": "8bb4123d68844fb0d10f6b40376d24523acc8664e6cac13ff5a604deb3531d16",
+      "size": 233,
+      "target": "upstream/email_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-product-recall/email_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-product-recall/evaluation/check_remote_recall.py",
+      "role": "verifier_source",
+      "sha256": "499af841045f29c1b0f039ed6284f3cff8197d1e6f617ec599e3e09e61b64d3a",
+      "size": 29897,
+      "target": "upstream/evaluation/check_remote_recall.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-product-recall/evaluation/check_remote_recall.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-product-recall/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "96378d5b1cbdca58e2e22b34d9b60d19a9a024afff476a6f1dddd3239c7700f4",
+      "size": 4380,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-product-recall/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-product-recall/initial_workspace/recall_email_template.md",
+      "role": "initial_workspace",
+      "sha256": "52e8ae0f4c0b809a8a388f1980cd79db16a2fdac90ae50ba47f900918d85dad2",
+      "size": 2077,
+      "target": "upstream/initial_workspace/recall_email_template.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-product-recall/initial_workspace/recall_email_template.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-product-recall/initial_workspace/recall_form_template.json",
+      "role": "initial_workspace",
+      "sha256": "1b667c89acdfa12092977f8dbfadfe0137e191e489edd279418863ee97e2dae1",
+      "size": 1352,
+      "target": "upstream/initial_workspace/recall_form_template.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-product-recall/initial_workspace/recall_form_template.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-product-recall/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "1c5c5c0cd80b18dc2fd714e3b8f0763dce68b72bb59a02c1da387952190f9feb",
+      "size": 8565,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-product-recall/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-product-recall/preprocess/setup_recall_data.py",
+      "role": "preprocessor_source",
+      "sha256": "3e1e5df19f0c60f31f434f7c74242613caa48bda6b3bad5ceba1b2432406f84e",
+      "size": 20957,
+      "target": "upstream/preprocess/setup_recall_data.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-product-recall/preprocess/setup_recall_data.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-product-recall/preprocess/verify_clean_state.py",
+      "role": "preprocessor_source",
+      "sha256": "5e0c5c3c26c4e71e8ec3d4a863c6780530c9e9dd89f1a9823749918957757693",
+      "size": 5589,
+      "target": "upstream/preprocess/verify_clean_state.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-product-recall/preprocess/verify_clean_state.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-product-recall/preprocess/woocommerce_client.py",
+      "role": "preprocessor_source",
+      "sha256": "5823460ec5ed5c15205918929f6c649ccd271116656be9dbb1f8daa53117a1ac",
+      "size": 25912,
+      "target": "upstream/preprocess/woocommerce_client.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-product-recall/preprocess/woocommerce_client.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-product-recall/recalled_products_info.json",
+      "role": "upstream_source",
+      "sha256": "1d7b80a29f6e1e97231408d078c98c86a90f8f9648bb51d096e7e9f046f7a84f",
+      "size": 391,
+      "target": "upstream/recalled_products_info.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-product-recall/recalled_products_info.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-product-recall/task_config.json",
+      "role": "upstream_config",
+      "sha256": "6133dd16ab75b0fac8ca9e476abdda79d2e760f5966a111f28828e07e90b42e7",
+      "size": 238,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-product-recall/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-product-recall/test_customers_info.json",
+      "role": "upstream_source",
+      "sha256": "ca8e3e56d4b6879d770704d6763b7fdfdf228c93fee81e10d9b8efaa38d7156f",
+      "size": 566,
+      "target": "upstream/test_customers_info.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-product-recall/test_customers_info.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-product-recall/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "63e42d6c972e6b1c53926490f2f54cf814d463f8813d012168ad2954569c2001",
+      "size": 358,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-product-recall/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-product-recall/woocommerce_config.json",
+      "role": "upstream_source",
+      "sha256": "8f9e9fb32ae5effb4e3185c5111f0779e400be4fa17b4b0ca2a08399f0369f35",
+      "size": 275,
+      "target": "upstream/woocommerce_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-product-recall/woocommerce_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-product-recall/README.md",
+      "role": "documentation",
+      "sha256": "5922b72d08b17742266cb671d87a79c5f2684a4625c1f708fe191e25720001b1",
+      "size": 2506,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-product-recall/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-product-recall/shared/fixtures/woocommerce/api.json.gz",
+      "role": "fixture_source",
+      "sha256": "e1ab7abdd2543dd08ad1abc7c03ac73a8a8f976ca24979d7421cbe9e086f2ff9",
+      "size": 4139,
+      "target": "shared/fixtures/woocommerce/api.json.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-product-recall/shared/fixtures/woocommerce/api.json.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-product-recall/shared/fixtures/woocommerce/database.sql.gz",
+      "role": "fixture_source",
+      "sha256": "53e9d569e4e6ecb1caf2cc53fd91c08600222b7c2aaba09f2f8e05b05e62d0d8",
+      "size": 80135,
+      "target": "shared/fixtures/woocommerce/database.sql.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-product-recall/shared/fixtures/woocommerce/database.sql.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-product-recall/shared/fixtures/woocommerce/groundtruth.tar.gz",
+      "role": "verifier_input",
+      "sha256": "d14dda4fc4018db98725b621a61d6af3cc9fc8a9e772cbbbd11f70f81b52e202",
+      "size": 520,
+      "target": "shared/fixtures/woocommerce/groundtruth.tar.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-product-recall/shared/fixtures/woocommerce/groundtruth.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-product-recall/shared/fixtures/woocommerce/source.json",
+      "role": "fixture_source",
+      "sha256": "4aa568e4844b3ebc69cca5bdb081fe4f5bb5d64ac5a9f214f9262d4bb93b34e4",
+      "size": 31560,
+      "target": "shared/fixtures/woocommerce/source.json",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-product-recall/shared/fixtures/woocommerce/source.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-product-recall/shared/fixtures/woocommerce/uploads.tar.gz",
+      "role": "fixture_source",
+      "sha256": "e39fcbe8728fb530153dc08ff978e59a22b153e1fa7c2d4f95fba0e0bedf8c12",
+      "size": 18558,
+      "target": "shared/fixtures/woocommerce/uploads.tar.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-product-recall/shared/fixtures/woocommerce/uploads.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-product-recall/shared/fixtures/woocommerce/workspace.tar.gz",
+      "role": "fixture_source",
+      "sha256": "f34e12148aa5cfb4e6e3d1edb77ce0f1d548d7a6e709872e0f7688de74bbc97a",
+      "size": 1503,
+      "target": "shared/fixtures/woocommerce/workspace.tar.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-product-recall/shared/fixtures/woocommerce/workspace.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-product-recall/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "fa81687e2e50027370147675945b06d989cfbb08168d0544b7083a54311d873c",
+      "size": 25650,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-product-recall/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/woocommerce-product-recall",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-product-recall",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "woocommerce",
+      "emails",
+      "google_forms",
+      "filesystem"
+    ]
+  }
+}

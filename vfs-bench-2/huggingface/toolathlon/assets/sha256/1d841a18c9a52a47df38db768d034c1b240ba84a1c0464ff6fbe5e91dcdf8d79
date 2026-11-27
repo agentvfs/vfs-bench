@@ -1,0 +1,109 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "kubectl_get_namespaces",
+      "why": "both arms list the same namespaces of the same cluster",
+      "mcp": {
+        "server": "k8s",
+        "tool": "kubectl_get",
+        "args": {
+          "resourceType": "namespaces",
+          "output": "json"
+        },
+        "jq": "[.items[].name] | sort | .[]",
+        "raw": true
+      },
+      "mirage": {
+        "command": "kubectl get namespaces -o json",
+        "jq": "[.items[].metadata.name] | sort | .[]",
+        "raw": true
+      }
+    },
+    {
+      "name": "kubectl_get_pods",
+      "why": "the same pods in every namespace",
+      "mcp": {
+        "server": "k8s",
+        "tool": "kubectl_get",
+        "args": {
+          "resourceType": "pods",
+          "allNamespaces": true,
+          "output": "json"
+        },
+        "jq": "[.items[] | .namespace + \"/\" + .name] | sort | .[]",
+        "raw": true
+      },
+      "mirage": {
+        "command": "kubectl get pods -A -o json",
+        "jq": "[.items[] | .metadata.namespace + \"/\" + .metadata.name] | sort | .[]",
+        "raw": true
+      }
+    },
+    {
+      "name": "emails_get_folders",
+      "why": "both arms list the same IMAP folders",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_folders",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-folders"
+      }
+    },
+    {
+      "name": "emails_get_emails",
+      "why": "the same messages, in the same order, through either arm",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_emails",
+        "args": {
+          "folder": "INBOX"
+        }
+      },
+      "mirage": {
+        "command": "emails get-emails '{\"folder\":\"INBOX\"}'"
+      }
+    },
+    {
+      "name": "emails_get_unread_count",
+      "why": "the unread count agrees",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_unread_count",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-unread-count"
+      }
+    },
+    {
+      "name": "emails_get_mailbox_stats",
+      "why": "the mailbox statistics agree",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_mailbox_stats",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-mailbox-stats"
+      }
+    },
+    {
+      "name": "emails_search_emails",
+      "why": "a search returns the same hits",
+      "mcp": {
+        "server": "emails",
+        "tool": "search_emails",
+        "args": {
+          "query": "the",
+          "folder": "INBOX"
+        }
+      },
+      "mirage": {
+        "command": "emails search-emails '{\"query\":\"the\",\"folder\":\"INBOX\"}'"
+      }
+    }
+  ]
+}

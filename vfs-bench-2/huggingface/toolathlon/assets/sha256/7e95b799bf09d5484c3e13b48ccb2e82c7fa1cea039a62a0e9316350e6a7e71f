@@ -1,0 +1,181 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "youtube_videos_searchVideos",
+      "why": "the same search, live on both arms; an etag moves between two reads seconds apart",
+      "mcp": {
+        "server": "youtube",
+        "tool": "videos_searchVideos",
+        "args": {
+          "query": "MrBeast",
+          "maxResults": 3
+        }
+      },
+      "mirage": {
+        "command": "youtube videos-searchVideos '{\"query\":\"MrBeast\",\"maxResults\":3}'"
+      },
+      "ignore": [
+        "etag",
+        "viewCount",
+        "likeCount",
+        "commentCount"
+      ]
+    },
+    {
+      "name": "youtube_channels_getChannel",
+      "why": "the same channel record",
+      "mcp": {
+        "server": "youtube",
+        "tool": "channels_getChannel",
+        "args": {
+          "channelId": "UCX6OQ3DkcsbYNE6H8uQQuVA"
+        }
+      },
+      "mirage": {
+        "command": "youtube channels-getChannel '{\"channelId\":\"UCX6OQ3DkcsbYNE6H8uQQuVA\"}'"
+      }
+    },
+    {
+      "name": "youtube_channels_listVideos",
+      "why": "the same channel videos, live on both arms; the server mints a pagination list id per process, and etags and counts move between two reads seconds apart",
+      "mcp": {
+        "server": "youtube",
+        "tool": "channels_listVideos",
+        "args": {
+          "channelId": "UCX6OQ3DkcsbYNE6H8uQQuVA",
+          "maxResults": 3
+        }
+      },
+      "mirage": {
+        "command": "youtube channels-listVideos '{\"channelId\":\"UCX6OQ3DkcsbYNE6H8uQQuVA\",\"maxResults\":3}'"
+      },
+      "ignore": [
+        "listId",
+        "etag",
+        "viewCount",
+        "likeCount",
+        "commentCount"
+      ]
+    },
+    {
+      "name": "youtube_videos_getVideo",
+      "why": "the same video record",
+      "mcp": {
+        "server": "youtube",
+        "tool": "videos_getVideo",
+        "args": {
+          "videoId": "dQw4w9WgXcQ"
+        }
+      },
+      "mirage": {
+        "command": "youtube videos-getVideo '{\"videoId\":\"dQw4w9WgXcQ\"}'"
+      }
+    },
+    {
+      "name": "youtube_transcript_get_transcript",
+      "why": "the same transcript",
+      "mcp": {
+        "server": "youtube-transcript",
+        "tool": "get_transcript",
+        "args": {
+          "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        }
+      },
+      "mirage": {
+        "command": "youtube-transcript get-transcript '{\"url\":\"https://www.youtube.com/watch?v=dQw4w9WgXcQ\"}'"
+      }
+    },
+    {
+      "name": "fetch_fetch_html",
+      "why": "the raw body is identical through either arm",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_html",
+        "args": {
+          "url": "https://example.com/"
+        }
+      },
+      "mirage": {
+        "command": "fetch html '{\"url\":\"https://example.com/\"}'"
+      }
+    },
+    {
+      "name": "fetch_fetch_txt",
+      "why": "markup stripping agrees",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_txt",
+        "args": {
+          "url": "https://example.com/"
+        }
+      },
+      "mirage": {
+        "command": "fetch txt '{\"url\":\"https://example.com/\"}'"
+      }
+    },
+    {
+      "name": "fetch_fetch_markdown",
+      "why": "markdown conversion agrees",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_markdown",
+        "args": {
+          "url": "https://example.com/"
+        }
+      },
+      "mirage": {
+        "command": "fetch markdown '{\"url\":\"https://example.com/\"}'"
+      }
+    },
+    {
+      "name": "fetch_fetch_json",
+      "why": "the same URL parses to the same document",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_json",
+        "args": {
+          "url": "https://api.github.com/repos/mojombo/grit"
+        }
+      },
+      "mirage": {
+        "command": "fetch json '{\"url\":\"https://api.github.com/repos/mojombo/grit\"}'"
+      }
+    },
+    {
+      "name": "gh_list_branches",
+      "why": "both arms see the same branches",
+      "mcp": {
+        "server": "github",
+        "tool": "list_branches",
+        "args": {
+          "owner": "octocat",
+          "repo": "Hello-World"
+        },
+        "jq": "[.[].name] | sort | .[]",
+        "raw": true
+      },
+      "mirage": {
+        "command": "gh api repos/octocat/Hello-World/branches",
+        "jq": "[.[].name] | sort | .[]",
+        "raw": true
+      }
+    },
+    {
+      "name": "gh_search_repositories",
+      "why": "a search finds the same repositories",
+      "mcp": {
+        "server": "github",
+        "tool": "search_repositories",
+        "args": {
+          "query": "Hello-World in:name user:octocat"
+        },
+        "jq": "{total_count, names: [.items[].full_name] | sort}"
+      },
+      "mirage": {
+        "command": "gh api 'search/repositories?q=Hello-World%20in%3Aname%20user%3Aoctocat'",
+        "jq": "{total_count, names: [.items[].full_name] | sort}"
+      }
+    }
+  ]
+}

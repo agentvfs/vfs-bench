@@ -1,0 +1,338 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/f5d549270697b226e048205ca0bb422022c0c3d7c35fda6f07d75e448697a240",
+      "role": "fixture_script",
+      "sha256": "f5d549270697b226e048205ca0bb422022c0c3d7c35fda6f07d75e448697a240",
+      "size": 1711,
+      "target": "shared/author_fixture.py"
+    },
+    {
+      "path": "assets/sha256/68fd8ce2d97e9f1c309f63e5d067e5c9a432b52b8d032c245ca259824e166a40",
+      "role": "service_config",
+      "sha256": "68fd8ce2d97e9f1c309f63e5d067e5c9a432b52b8d032c245ca259824e166a40",
+      "size": 113,
+      "target": "shared/notion.json"
+    },
+    {
+      "path": "assets/sha256/a4d634726dc3cd6f022345aad6533c02b2667342fbdd2ad63ff57b035dfaf4b6",
+      "role": "fixture_script",
+      "sha256": "a4d634726dc3cd6f022345aad6533c02b2667342fbdd2ad63ff57b035dfaf4b6",
+      "size": 4716,
+      "target": "shared/seed_notion.py"
+    },
+    {
+      "path": "assets/sha256/d73ca444057c54cee51b4feed1fec684c1046f37f1bfa41163656e5857c4cefa",
+      "role": "seed_manifest",
+      "sha256": "d73ca444057c54cee51b4feed1fec684c1046f37f1bfa41163656e5857c4cefa",
+      "size": 230,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/040bcccd15e6614302817fdf6dd92f54023eb5203ad6b5f568996a2ebeccdc58",
+      "role": "parity_test",
+      "sha256": "040bcccd15e6614302817fdf6dd92f54023eb5203ad6b5f568996a2ebeccdc58",
+      "size": 5019,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/e917fc2390927c5f8058db145556329c738bfe6380048e58a920f8b5e257a8fe",
+      "role": "verifier_adapter",
+      "sha256": "e917fc2390927c5f8058db145556329c738bfe6380048e58a920f8b5e257a8fe",
+      "size": 173,
+      "target": "toolathlon/eval_shim/sitecustomize.py"
+    },
+    {
+      "path": "assets/sha256/7b30f2f5e9a13b688b7caf7c6571cb3ba9325470db98691f349309e181c3c03b",
+      "role": "workspace_documentation",
+      "sha256": "7b30f2f5e9a13b688b7caf7c6571cb3ba9325470db98691f349309e181c3c03b",
+      "size": 1790,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/bf8adb05279d4cbb93a43163d16dd005fe1ea5b6224657ef177ed38bfab4e002",
+      "role": "workspace_config",
+      "sha256": "bf8adb05279d4cbb93a43163d16dd005fe1ea5b6224657ef177ed38bfab4e002",
+      "size": 918,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/d04f6d45c758746dc65bc1e28d9053dd7ac95d9e53dac273def5283dd39044b5",
+      "role": "fixture_script",
+      "sha256": "d04f6d45c758746dc65bc1e28d9053dd7ac95d9e53dac273def5283dd39044b5",
+      "size": 12714,
+      "target": "suite_shared/notion_template.py"
+    },
+    {
+      "path": "assets/sha256/f9a0fc1c4212fac1bacff05a1c605a6b44bc6a6842fabf2ae67a45591a9a8df0",
+      "role": "fixture_script",
+      "sha256": "f9a0fc1c4212fac1bacff05a1c605a6b44bc6a6842fabf2ae67a45591a9a8df0",
+      "size": 9268,
+      "target": "suite_shared/notion_rows.py"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "notion-hr",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/notion-hr/shared/task.md",
+      "role": "instruction",
+      "sha256": "f541ce59bef5799a73c9ec0baaca2728b37c14a62edb9c75991c3c12bde953aa",
+      "size": 1423,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/docs/task_cn.md",
+      "role": "upstream_source",
+      "sha256": "b7d928d6954889f6dc4d798a4705e6825af18be40a792750f264be48b947c993",
+      "size": 1221,
+      "target": "upstream/docs/task_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/docs/task_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/emails_config.json",
+      "role": "upstream_source",
+      "sha256": "87413b79daddc760d13fa8495ab82fc42e896b3dd3fa92de1107e72bc33d3104",
+      "size": 256,
+      "target": "upstream/emails_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/emails_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "ed7cccc96bfb6afe46653a57b25ea9720d63c20b39193c33423820307048d2fe",
+      "size": 15358,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/files/duplicated_page_id.txt",
+      "role": "upstream_source",
+      "sha256": "f26c1b451502f7b99506897cf45ff086f798ec41eb52182a8492826cd280d0ad",
+      "size": 36,
+      "target": "upstream/files/duplicated_page_id.txt",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/files/duplicated_page_id.txt"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/files/involved_emails.json",
+      "role": "upstream_source",
+      "sha256": "32a76a202ca82ad1e703dc602525203f4ae08badcf4e67aba52390517720ab1e",
+      "size": 2293,
+      "target": "upstream/files/involved_emails.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/files/involved_emails.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/files/reject_template.txt",
+      "role": "upstream_source",
+      "sha256": "092596db944b8305b82dcdaafc5840d6118bc5e0ddbfdb9d2548c670c578cef1",
+      "size": 810,
+      "target": "upstream/files/reject_template.txt",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/files/reject_template.txt"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/initial_workspace/cvs/alice_jackson_resume.pdf",
+      "role": "initial_workspace",
+      "sha256": "01c24fa725dbfd0e29d1b0cda4bb53043baa38c29f86b8b0f1887440c724e1ca",
+      "size": 406418,
+      "target": "upstream/initial_workspace/cvs/alice_jackson_resume.pdf",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/initial_workspace/cvs/alice_jackson_resume.pdf"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/initial_workspace/cvs/angela_moore_resume.pdf",
+      "role": "initial_workspace",
+      "sha256": "0eb5f30e01efcf213c19d16c587db085679f6cf49e250779f0e05dcb85a6afb3",
+      "size": 274465,
+      "target": "upstream/initial_workspace/cvs/angela_moore_resume.pdf",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/initial_workspace/cvs/angela_moore_resume.pdf"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/initial_workspace/cvs/charles_castillo_resume.pdf",
+      "role": "initial_workspace",
+      "sha256": "7862ea0d5f19233c220219bfd71dcc8273821b041344cd1aad8b0be6a359ca55",
+      "size": 157945,
+      "target": "upstream/initial_workspace/cvs/charles_castillo_resume.pdf",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/initial_workspace/cvs/charles_castillo_resume.pdf"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/initial_workspace/cvs/debra_smith_resume.pdf",
+      "role": "initial_workspace",
+      "sha256": "541d2f90f545b3e7d95911ac062c6102a3bc3170d639f1b68a63686fbe2db817",
+      "size": 355116,
+      "target": "upstream/initial_workspace/cvs/debra_smith_resume.pdf",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/initial_workspace/cvs/debra_smith_resume.pdf"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/initial_workspace/cvs/emily_james_resume.pdf",
+      "role": "initial_workspace",
+      "sha256": "0090bbf98660e1cdc5aa083f67facbf825b0f506c770d7e77a7fb4f02075b4ac",
+      "size": 148517,
+      "target": "upstream/initial_workspace/cvs/emily_james_resume.pdf",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/initial_workspace/cvs/emily_james_resume.pdf"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/initial_workspace/cvs/jeffrey_davis_resume.pdf",
+      "role": "initial_workspace",
+      "sha256": "0f21a741ad42847fcc6d701360313ee322cd9d47be64937f4e6b6dc1378c0eb8",
+      "size": 227707,
+      "target": "upstream/initial_workspace/cvs/jeffrey_davis_resume.pdf",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/initial_workspace/cvs/jeffrey_davis_resume.pdf"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/initial_workspace/cvs/lisa_davis_resume.pdf",
+      "role": "initial_workspace",
+      "sha256": "14f2d078d3253301b9cd08db344c21c63f8fa6da6266ea452f2afade6396342d",
+      "size": 254872,
+      "target": "upstream/initial_workspace/cvs/lisa_davis_resume.pdf",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/initial_workspace/cvs/lisa_davis_resume.pdf"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/initial_workspace/cvs/martha_morales_resume.pdf",
+      "role": "initial_workspace",
+      "sha256": "654620976f9e2c1ea559dab41016128193c447d42d392973491cbbfcf4a57993",
+      "size": 224437,
+      "target": "upstream/initial_workspace/cvs/martha_morales_resume.pdf",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/initial_workspace/cvs/martha_morales_resume.pdf"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/initial_workspace/cvs/michael_diaz_resume.pdf",
+      "role": "initial_workspace",
+      "sha256": "35d86d1362279dc5150b7c7f58fccf0b2460f5d4abc54e1a546d78494ab853f4",
+      "size": 114352,
+      "target": "upstream/initial_workspace/cvs/michael_diaz_resume.pdf",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/initial_workspace/cvs/michael_diaz_resume.pdf"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/initial_workspace/cvs/nancy_robinson_resume.pdf",
+      "role": "initial_workspace",
+      "sha256": "a9e149d767cc782fe86f76ca70e90a720f87ef47d4f920232ca0074ef56f54d8",
+      "size": 515109,
+      "target": "upstream/initial_workspace/cvs/nancy_robinson_resume.pdf",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/initial_workspace/cvs/nancy_robinson_resume.pdf"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "4e4d25e30a8bd2e0017e8c76dd615f1b7f1e7aa0863b7de16c776ad251da93d3",
+      "size": 2678,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/task_config.json",
+      "role": "upstream_config",
+      "sha256": "cdcb1efb16b54456678e6ca4724fe6c64c4472122ecbc894e05b32422753615f",
+      "size": 430,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/notion-hr/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "e418f9678b0380588eaf14b6ad77143f815ce810074b107454aacd6f11a717ed",
+      "size": 685,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/notion-hr/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/notion-hr/README.md",
+      "role": "documentation",
+      "sha256": "b90266c9f21c647acf0b8ea1a8b8ea5f06c20c2c1f5a6b79bff4dfcc8c9ea955",
+      "size": 5461,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/notion-hr/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/notion-hr/shared/emails_config.json",
+      "role": "fixture_source",
+      "sha256": "c4d97bc5f09e9a86d02e7dc22efa4f8624804a9c8b102fb77e7907653fa5a9af",
+      "size": 256,
+      "target": "shared/emails_config.json",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/notion-hr/shared/emails_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/notion-hr/shared/mailboxes.json",
+      "role": "fixture_source",
+      "sha256": "29d755bb99eb3288eb18200f036cee7e9a6cb8df86e01992ed3d5d1b165e0d53",
+      "size": 2354,
+      "target": "shared/mailboxes.json",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/notion-hr/shared/mailboxes.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/notion-hr/shared/notion_fixture.json",
+      "role": "fixture_source",
+      "sha256": "e5dc26dea81a547209c0fdb764a0d3f6895b57c409e0ce4f5a20d14d2dd5819c",
+      "size": 34616,
+      "target": "shared/notion_fixture.json",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/notion-hr/shared/notion_fixture.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/notion-hr/shared/notion_rows.json",
+      "role": "fixture_source",
+      "sha256": "e767e469a4b48a1e341a1f4582f0ae00db70a7c823e8f62d8302918492cadcf7",
+      "size": 50814,
+      "target": "shared/notion_rows.json",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/notion-hr/shared/notion_rows.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/notion-hr/shared/reject_template.txt",
+      "role": "fixture_source",
+      "sha256": "092596db944b8305b82dcdaafc5840d6118bc5e0ddbfdb9d2548c670c578cef1",
+      "size": 810,
+      "target": "shared/reject_template.txt",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/notion-hr/shared/reject_template.txt"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/notion-hr/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "26f3ee1dd64fa6459e50f200c6627728622f3ad56bf31dd5788f752de0bd0890",
+      "size": 20800,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/notion-hr/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/notion-hr",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/notion-hr",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "filesystem",
+      "emails",
+      "notion",
+      "pdf-tools"
+    ]
+  }
+}

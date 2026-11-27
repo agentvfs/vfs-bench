@@ -1,0 +1,13 @@
+{
+  "project": "mcp-bench0606",
+  "tables": [
+    {
+      "dataset": "all_transactions",
+      "table": "recordings",
+      "csv": "files/all_transactions.csv",
+      "types": {
+        "txn_time": "STRING"
+      }
+    }
+  ]
+}

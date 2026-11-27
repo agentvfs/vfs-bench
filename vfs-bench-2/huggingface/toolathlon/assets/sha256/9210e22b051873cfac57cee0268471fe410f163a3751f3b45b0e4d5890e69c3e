@@ -1,0 +1,9 @@
+{
+  "id": "toolathlon_game-statistics",
+  "fixtures": [
+    {
+      "id": "bq/game_analytics",
+      "kind": "bigquery"
+    }
+  ]
+}

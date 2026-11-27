@@ -1,0 +1,223 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/25567eb431fe45607be92958d379e21c7c8a2e04032d16fe1b854a74309bf540",
+      "role": "fixture_script",
+      "sha256": "25567eb431fe45607be92958d379e21c7c8a2e04032d16fe1b854a74309bf540",
+      "size": 1578,
+      "target": "shared/seed_db.py"
+    },
+    {
+      "path": "assets/sha256/55292593adabb7e45a10e701f8cdaabf44739a571a153d571ffd157129360e40",
+      "role": "seed_manifest",
+      "sha256": "55292593adabb7e45a10e701f8cdaabf44739a571a153d571ffd157129360e40",
+      "size": 193,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/cd4001b703e934aa8bddaf829783740ddb0fbf6ab863beb9c45422e3b66cdef6",
+      "role": "parity_test",
+      "sha256": "cd4001b703e934aa8bddaf829783740ddb0fbf6ab863beb9c45422e3b66cdef6",
+      "size": 5695,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/07353d53d45f83352598561fa715989589bc94d22fd7f51071b59f46095cc24f",
+      "role": "verifier_adapter",
+      "sha256": "07353d53d45f83352598561fa715989589bc94d22fd7f51071b59f46095cc24f",
+      "size": 170,
+      "target": "toolathlon/eval_shim/sitecustomize.py"
+    },
+    {
+      "path": "assets/sha256/129e35ef85ec1fb02c2338a4ca392b544e01f9704d84942f6cc388f762ddf536",
+      "role": "workspace_documentation",
+      "sha256": "129e35ef85ec1fb02c2338a4ca392b544e01f9704d84942f6cc388f762ddf536",
+      "size": 1861,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/86a254c1cc847107aadb3f92c50c5c171ba085aea561b084c0a66cd3e80e2bd2",
+      "role": "workspace_config",
+      "sha256": "86a254c1cc847107aadb3f92c50c5c171ba085aea561b084c0a66cd3e80e2bd2",
+      "size": 1145,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "investment-decision-analysis",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/investment-decision-analysis/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/investment-decision-analysis/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/investment-decision-analysis/docs/agent_system_prompt_cn.md",
+      "role": "upstream_source",
+      "sha256": "0a736c39eb66a2fb9d17219664d57da082ccf23069de8a73119fe10cfe6c8447",
+      "size": 656,
+      "target": "upstream/docs/agent_system_prompt_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/investment-decision-analysis/docs/agent_system_prompt_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/investment-decision-analysis/shared/task.md",
+      "role": "instruction",
+      "sha256": "8121b7ebcad07ac0a47ef3a62a4210d0b9c4a0b8d925f9fa5681d8bb7f07ba26",
+      "size": 644,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/investment-decision-analysis/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/investment-decision-analysis/docs/task_cn.md",
+      "role": "upstream_source",
+      "sha256": "e502e9ebf975653004e08665d238da264a4b4909ef1b1e455102c1c5f7634d38",
+      "size": 308,
+      "target": "upstream/docs/task_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/investment-decision-analysis/docs/task_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/investment-decision-analysis/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "445e6a10b497ba5d167ce19b60474d6b9e6f2de8d02776da6d708bbc3450b2f2",
+      "size": 13460,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/investment-decision-analysis/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/investment-decision-analysis/evaluation/realtime.py",
+      "role": "verifier_source",
+      "sha256": "d9958abed456c5002c010aa5c0c1abc568edfeebc455fbe69cf16ccab38ed9ee",
+      "size": 3460,
+      "target": "upstream/evaluation/realtime.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/investment-decision-analysis/evaluation/realtime.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/investment-decision-analysis/files/folder_id.txt",
+      "role": "upstream_source",
+      "sha256": "4ad210590dda75e19732a082e235f9d327d30617f3ef9d2d85044e8247e25c2b",
+      "size": 33,
+      "target": "upstream/files/folder_id.txt",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/investment-decision-analysis/files/folder_id.txt"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/investment-decision-analysis/groundtruth_workspace/investment_analysis_groundtruth.json",
+      "role": "verifier_input",
+      "sha256": "f90325fc94b303d3c2af7f0a3240c26c940ba0f963bfdbcba39210a26c34574c",
+      "size": 2247,
+      "target": "upstream/groundtruth_workspace/investment_analysis_groundtruth.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/investment-decision-analysis/groundtruth_workspace/investment_analysis_groundtruth.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/investment-decision-analysis/groundtruth_workspace/investment_analysis_groundtruth.xlsx",
+      "role": "verifier_input",
+      "sha256": "81baf1fcd514231f23119f088e4cac0ae80ab91c6b6f19b7263d83f88cc84ffe",
+      "size": 6772,
+      "target": "upstream/groundtruth_workspace/investment_analysis_groundtruth.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/investment-decision-analysis/groundtruth_workspace/investment_analysis_groundtruth.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/investment-decision-analysis/initial_workspace/results.xlsx",
+      "role": "initial_workspace",
+      "sha256": "579687333649b0dad8f22212d70fa6d22852a89689b8992afb965aa3dca2609e",
+      "size": 11725,
+      "target": "upstream/initial_workspace/results.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/investment-decision-analysis/initial_workspace/results.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/investment-decision-analysis/initial_workspace_cn/format.xlsx",
+      "role": "upstream_source",
+      "sha256": "89f2f6684b27ed8926872d2e7551346a067077c2ec8e41fcc3480069f0d05d61",
+      "size": 10583,
+      "target": "upstream/initial_workspace_cn/format.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/investment-decision-analysis/initial_workspace_cn/format.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/investment-decision-analysis/initial_workspace_cn/requirement.md",
+      "role": "upstream_source",
+      "sha256": "b67f59e2acf74c493610a221c8943878f27c2a100117195c0bc2f2331db70ec9",
+      "size": 1534,
+      "target": "upstream/initial_workspace_cn/requirement.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/investment-decision-analysis/initial_workspace_cn/requirement.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/investment-decision-analysis/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "55424626a271c07c6a0b6a75823d91a968dd340d84e09a0bef1117e3bfd2d4dd",
+      "size": 2169,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/investment-decision-analysis/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/investment-decision-analysis/task_config.json",
+      "role": "upstream_config",
+      "sha256": "ac9b3480bcd26f780a023365bfaad9be0a3fa20db6224a83dfa2eca6e1119ea9",
+      "size": 261,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/investment-decision-analysis/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/investment-decision-analysis/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "272f0bbdb532617dab57ee53eb827c9da0b4b7764bc34309da5296851a939eba",
+      "size": 363,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/investment-decision-analysis/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/investment-decision-analysis/README.md",
+      "role": "documentation",
+      "sha256": "9b130db018df66611c24ddd7a0036852ede7f875d29d954118610541f5713b97",
+      "size": 5727,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/investment-decision-analysis/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/investment-decision-analysis/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "a41a9132e57b95b445f3fb5297ce50d37d5f887ca11875ddc72b01210ee1be3f",
+      "size": 22578,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/investment-decision-analysis/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/investment-decision-analysis",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/investment-decision-analysis",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "python_execute",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "yahoo-finance",
+      "google_sheet",
+      "excel",
+      "filesystem"
+    ]
+  }
+}

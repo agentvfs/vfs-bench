@@ -1,0 +1,40 @@
+mode: EXEC
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace
+runtimes:
+  - workspace
+clis:
+  web-search:
+    cli: ../../../../cli/toolathlon/research.mjs:SEARCH
+    config:
+      apiBase: ${SEARCH_CLI_URL}
+  fetch:
+    cli: ../../../../cli/toolathlon/research.mjs:WEB
+    config:
+      apiBase: ${FETCH_CLI_URL}
+      timeoutMs: 100000
+  arxiv-local:
+    cli: ../../../../cli/toolathlon/papers.mjs:ARXIV
+    config:
+      apiBase: ${ARXIV_CLI_URL}
+      timeoutMs: 60000
+  scholarly:
+    cli: ../../../../cli/toolathlon/papers.mjs:SCHOLARLY
+    config:
+      apiBase: ${SCHOLARLY_CLI_URL}
+      timeoutMs: 30000
+  pdf-tools:
+    cli: ../../../../cli/toolathlon/documents.mjs:PDF
+    config:
+      apiBase: ${PDF_TOOLS_CLI_URL}
+mounts:
+  /tmp:
+    vfs: ram
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}

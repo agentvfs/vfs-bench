@@ -1,0 +1,93 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "yahoo_finance_get_historical_stock_prices",
+      "why": "`get_historical_stock_prices` and `yahoo-finance get_historical_stock_prices` read the same fixture rows",
+      "mcp": {
+        "server": "yahoo-finance",
+        "tool": "get_historical_stock_prices",
+        "args": {
+          "ticker": "AAPL",
+          "period": "1mo",
+          "interval": "1d"
+        }
+      },
+      "mirage": {
+        "command": "yahoo-finance get-historical-stock-prices '{\"ticker\":\"AAPL\",\"period\":\"1mo\",\"interval\":\"1d\"}'"
+      }
+    },
+    {
+      "name": "yahoo_finance_get_historical_stock_prices_2",
+      "why": "the second ticker the task turns on reads the same",
+      "mcp": {
+        "server": "yahoo-finance",
+        "tool": "get_historical_stock_prices",
+        "args": {
+          "ticker": "NVDA",
+          "period": "1mo",
+          "interval": "1d"
+        }
+      },
+      "mirage": {
+        "command": "yahoo-finance get-historical-stock-prices '{\"ticker\":\"NVDA\",\"period\":\"1mo\",\"interval\":\"1d\"}'"
+      }
+    },
+    {
+      "name": "google_sheet_list_folders",
+      "why": "both arms see the same Drive folders",
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "list_folders",
+        "args": {}
+      },
+      "mirage": {
+        "command": "google-sheet list-folders"
+      }
+    },
+    {
+      "name": "google_sheet_list_spreadsheets",
+      "why": "the same spreadsheets with the same ids",
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "list_spreadsheets",
+        "args": {}
+      },
+      "mirage": {
+        "command": "google-sheet list-spreadsheets"
+      }
+    },
+    {
+      "name": "notion_retrieve_page",
+      "why": "the same page reads back the same through either arm",
+      "mcp": {
+        "server": "notion",
+        "tool": "API-retrieve-a-page",
+        "args": {
+          "page_id": "27ad10a4-8436-80c8-8a51-f5a6be246e76"
+        },
+        "jq": "{id, object, archived, parent}"
+      },
+      "mirage": {
+        "command": "notion retrieve-a-page '{\"page_id\":\"27ad10a4-8436-80c8-8a51-f5a6be246e76\"}'",
+        "jq": "{id, object, archived, parent}"
+      }
+    },
+    {
+      "name": "notion_search",
+      "why": "both arms enumerate the same objects",
+      "mcp": {
+        "server": "notion",
+        "tool": "API-post-search",
+        "args": {},
+        "jq": "[.results[].id] | sort | .[]",
+        "raw": true
+      },
+      "mirage": {
+        "command": "notion post-search",
+        "jq": "[.results[].id] | sort | .[]",
+        "raw": true
+      }
+    }
+  ]
+}

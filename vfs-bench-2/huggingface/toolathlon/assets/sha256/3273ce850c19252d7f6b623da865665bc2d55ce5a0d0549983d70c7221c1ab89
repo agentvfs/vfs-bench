@@ -1,0 +1,105 @@
+{
+  "project": "mcp-bench0606",
+  "tables": [
+    {
+      "dataset": "ab_testing",
+      "table": "ab_Appliances",
+      "csv": "files/ab_Appliances.csv"
+    },
+    {
+      "dataset": "ab_testing",
+      "table": "ab_Automotive",
+      "csv": "files/ab_Automotive.csv"
+    },
+    {
+      "dataset": "ab_testing",
+      "table": "ab_Baby",
+      "csv": "files/ab_Baby.csv"
+    },
+    {
+      "dataset": "ab_testing",
+      "table": "ab_Beauty",
+      "csv": "files/ab_Beauty.csv"
+    },
+    {
+      "dataset": "ab_testing",
+      "table": "ab_Books",
+      "csv": "files/ab_Books.csv"
+    },
+    {
+      "dataset": "ab_testing",
+      "table": "ab_Clothing",
+      "csv": "files/ab_Clothing.csv"
+    },
+    {
+      "dataset": "ab_testing",
+      "table": "ab_Education",
+      "csv": "files/ab_Education.csv"
+    },
+    {
+      "dataset": "ab_testing",
+      "table": "ab_Electronics",
+      "csv": "files/ab_Electronics.csv"
+    },
+    {
+      "dataset": "ab_testing",
+      "table": "ab_Food",
+      "csv": "files/ab_Food.csv"
+    },
+    {
+      "dataset": "ab_testing",
+      "table": "ab_FreshFood",
+      "csv": "files/ab_FreshFood.csv"
+    },
+    {
+      "dataset": "ab_testing",
+      "table": "ab_Gaming",
+      "csv": "files/ab_Gaming.csv"
+    },
+    {
+      "dataset": "ab_testing",
+      "table": "ab_Health",
+      "csv": "files/ab_Health.csv"
+    },
+    {
+      "dataset": "ab_testing",
+      "table": "ab_Home",
+      "csv": "files/ab_Home.csv"
+    },
+    {
+      "dataset": "ab_testing",
+      "table": "ab_Hospitality",
+      "csv": "files/ab_Hospitality.csv"
+    },
+    {
+      "dataset": "ab_testing",
+      "table": "ab_Music",
+      "csv": "files/ab_Music.csv"
+    },
+    {
+      "dataset": "ab_testing",
+      "table": "ab_Office",
+      "csv": "files/ab_Office.csv"
+    },
+    {
+      "dataset": "ab_testing",
+      "table": "ab_Outdoor",
+      "csv": "files/ab_Outdoor.csv"
+    },
+    {
+      "dataset": "ab_testing",
+      "table": "ab_Pets",
+      "csv": "files/ab_Pets.csv"
+    },
+    {
+      "dataset": "ab_testing",
+      "table": "ab_Sports",
+      "csv": "files/ab_Sports.csv"
+    },
+    {
+      "dataset": "ab_testing",
+      "table": "ab_Travel",
+      "csv": "files/ab_Travel.csv"
+    }
+  ]
+}

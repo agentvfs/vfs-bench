@@ -1,0 +1,10 @@
+{
+  "id": "toolathlon_verl-dataset",
+  "fixtures": [
+    {
+      "id": "hf-hub/verl-dataset",
+      "kind": "script",
+      "run": "shared/seed_hf.py"
+    }
+  ]
+}

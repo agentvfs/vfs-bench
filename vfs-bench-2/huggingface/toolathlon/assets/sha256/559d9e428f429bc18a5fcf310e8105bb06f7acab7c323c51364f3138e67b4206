@@ -1,0 +1,150 @@
+{
+  "note": "Both arms search the same captured Hub candidates. VFS downloads a selected repository through hf; no answer-specific mount is provided.",
+  "cases": [
+    {
+      "name": "dataset_files",
+      "why": "both arms enumerate the one file the grader compares the answer against",
+      "mcp": {
+        "server": "huggingface",
+        "tool": "hf_fs",
+        "args": {
+          "operations": [
+            {
+              "cmd": "ls",
+              "args": [
+                "hf://datasets/agentica-org/DeepScaleR-Preview-Dataset"
+              ]
+            }
+          ]
+        },
+        "pipe": "grep -o 'deepscaler\\.json' | head -1"
+      },
+      "mirage": {
+        "command": "huggingface hf-fs \"{\\\"operations\\\": [{\\\"cmd\\\": \\\"ls\\\", \\\"args\\\": [\\\"hf://datasets/agentica-org/DeepScaleR-Preview-Dataset\\\"]}]}\"",
+        "pipe": "grep -o 'deepscaler\\.json' | head -1"
+      }
+    },
+    {
+      "name": "dataset_head",
+      "why": "a bounded read of the same file's first bytes, which is how either arm looks at 21MB without spending it: `head -c` on the mount, `--max-bytes` on the tool. The tool wraps its bytes in a header and, when it stopped early, a resume notice AFTER them, so the mcp side peels both off rather than taking the last line -- which was the notice, not the file.",
+      "mcp": {
+        "server": "huggingface",
+        "tool": "hf_fs",
+        "args": {
+          "operations": [
+            {
+              "cmd": "cat",
+              "args": [
+                "hf://datasets/agentica-org/DeepScaleR-Preview-Dataset/deepscaler.json",
+                "--max-bytes",
+                "200"
+              ]
+            }
+          ]
+        },
+        "pipe": "sed -e '1,/^Bytes: /d' -e '/^$/d' -e '/^Content truncated/d' | head -c 60"
+      },
+      "mirage": {
+        "command": "hf download agentica-org/DeepScaleR-Preview-Dataset deepscaler.json --repo-type dataset --local-dir /workspace > /tmp/download.log; head -c 200 /workspace/deepscaler.json",
+        "pipe": "head -c 60"
+      }
+    },
+    {
+      "name": "rank_candidates",
+      "why": "both arms must select among the same captured candidates",
+      "mcp": {
+        "server": "huggingface",
+        "tool": "hub_repo_search",
+        "args": {
+          "query": "DeepScaleR",
+          "repo_types": [
+            "dataset"
+          ],
+          "sort": "downloads",
+          "limit": 20
+        }
+      },
+      "mirage": {
+        "command": "huggingface hub-repo-search '{\"query\":\"DeepScaleR\",\"repo_types\":[\"dataset\"],\"sort\":\"downloads\",\"limit\":20}'"
+      }
+    },
+    {
+      "name": "dataset_structure",
+      "why": "the Dataset Viewer's structure of the source dataset, which the Hub fake refuses and the live server's captured answer supplies; both arms reach the same replay, the tool on one side and the `huggingface` CLI over the same endpoint on the other",
+      "mcp": {
+        "server": "huggingface",
+        "tool": "hub_repo_details",
+        "args": {
+          "repo_ids": [
+            "agentica-org/DeepScaleR-Preview-Dataset"
+          ],
+          "repo_type": "dataset",
+          "operations": [
+            "dataset_structure"
+          ]
+        },
+        "pipe": "grep -o 'Total rows: [0-9.KM]*'"
+      },
+      "mirage": {
+        "command": "huggingface hub-repo-details '{\"repo_ids\":[\"agentica-org/DeepScaleR-Preview-Dataset\"],\"repo_type\":\"dataset\",\"operations\":[\"dataset_structure\"]}'",
+        "pipe": "grep -o 'Total rows: [0-9.KM]*'"
+      }
+    },
+    {
+      "name": "fetch_fetch_html",
+      "why": "the raw body is identical through either arm",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_html",
+        "args": {
+          "url": "https://example.com/"
+        }
+      },
+      "mirage": {
+        "command": "fetch html '{\"url\":\"https://example.com/\"}'"
+      }
+    },
+    {
+      "name": "fetch_fetch_txt",
+      "why": "markup stripping agrees",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_txt",
+        "args": {
+          "url": "https://example.com/"
+        }
+      },
+      "mirage": {
+        "command": "fetch txt '{\"url\":\"https://example.com/\"}'"
+      }
+    },
+    {
+      "name": "fetch_fetch_markdown",
+      "why": "markdown conversion agrees",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_markdown",
+        "args": {
+          "url": "https://example.com/"
+        }
+      },
+      "mirage": {
+        "command": "fetch markdown '{\"url\":\"https://example.com/\"}'"
+      }
+    },
+    {
+      "name": "fetch_fetch_json",
+      "why": "the same URL parses to the same document",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_json",
+        "args": {
+          "url": "https://api.github.com/repos/mojombo/grit"
+        }
+      },
+      "mirage": {
+        "command": "fetch json '{\"url\":\"https://api.github.com/repos/mojombo/grit\"}'"
+      }
+    }
+  ]
+}

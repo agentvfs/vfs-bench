@@ -1,0 +1,160 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/81f5a3b2053d1d6ce615f3f736f07ede8d95ed16649103b0ffbf67d2748b4d02",
+      "role": "seed_manifest",
+      "sha256": "81f5a3b2053d1d6ce615f3f736f07ede8d95ed16649103b0ffbf67d2748b4d02",
+      "size": 60,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/985ddce25f8e539ac3b965ced9de37c1b4727b29b68a1c872f620f514621335b",
+      "role": "parity_test",
+      "sha256": "985ddce25f8e539ac3b965ced9de37c1b4727b29b68a1c872f620f514621335b",
+      "size": 614,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/eeed6bc60c7fa9cd151dec0df50bade248f3084af98a6dd279dc75574c9591c2",
+      "role": "workspace_config",
+      "sha256": "eeed6bc60c7fa9cd151dec0df50bade248f3084af98a6dd279dc75574c9591c2",
+      "size": 783,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "latex-prompt-box",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/latex-prompt-box/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/latex-prompt-box/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/latex-prompt-box/shared/task.md",
+      "role": "instruction",
+      "sha256": "799949c9700a27a2d83af8317524c617f468077f5a28a1c638dad4d46c4ae19b",
+      "size": 820,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/latex-prompt-box/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/latex-prompt-box/evaluation/complex_prompt.txt",
+      "role": "verifier_source",
+      "sha256": "36506df1d65ae55c5c23a802469974f211f698e4d21001f813903639c58c287b",
+      "size": 411,
+      "target": "upstream/evaluation/complex_prompt.txt",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/latex-prompt-box/evaluation/complex_prompt.txt"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/latex-prompt-box/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "b11785e3dd37f1e2b3a7abff1758e68281ba10e69ab30ad3399ef2e53a623e38",
+      "size": 8198,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/latex-prompt-box/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/latex-prompt-box/evaluation/simple_prompt.txt",
+      "role": "verifier_source",
+      "sha256": "ea072c62727149df08ca201908373d22136443aa11923251689adfe8726542c9",
+      "size": 251,
+      "target": "upstream/evaluation/simple_prompt.txt",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/latex-prompt-box/evaluation/simple_prompt.txt"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/latex-prompt-box/initial_workspace/codes.tar.gz",
+      "role": "initial_workspace",
+      "sha256": "71e304d82961620f7a976a30a96538abfc552f273710c6b0f787a67ec863903a",
+      "size": 12949022,
+      "target": "upstream/initial_workspace/codes.tar.gz",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/latex-prompt-box/initial_workspace/codes.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/latex-prompt-box/initial_workspace/files.tar.gz",
+      "role": "initial_workspace",
+      "sha256": "220d10c319adee38502b7e46509d52322c8cb3528119136d23cf765eebead0d2",
+      "size": 78876,
+      "target": "upstream/initial_workspace/files.tar.gz",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/latex-prompt-box/initial_workspace/files.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/latex-prompt-box/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "20fd2f8cbb260c059e313ac42904781ffbca18476e043b0d795c4a715d519980",
+      "size": 1617,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/latex-prompt-box/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/latex-prompt-box/task_config.json",
+      "role": "upstream_config",
+      "sha256": "84a8f84a670197b72610f13260d7870e6207e3db8330258a9411821680ad9976",
+      "size": 242,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/latex-prompt-box/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/latex-prompt-box/README.md",
+      "role": "documentation",
+      "sha256": "151d62abe91c328764ed2f4701353fb05f72afbf605e79817c6b4fd27320bf60",
+      "size": 2336,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/latex-prompt-box/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/latex-prompt-box/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "ddcdde2daa5516fb21caaf9fb1340c8d2dedc15d33d2671284ebb21cb651d8d6",
+      "size": 1346,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/latex-prompt-box/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/latex-prompt-box",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/latex-prompt-box",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "python_execute",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "filesystem",
+      "arxiv-latex",
+      "terminal"
+    ]
+  }
+}

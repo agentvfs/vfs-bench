@@ -1,0 +1,62 @@
+mode: EXEC
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace
+runtimes:
+  - name: pyodide
+    config:
+      lockFileUrl: ${TOOLATHLON_PYTHON}/pyodide-lock.json
+      packageBaseUrl: ${TOOLATHLON_PYTHON}/
+      packages:
+        - openpyxl
+        - xlsxwriter
+        - pypdf2
+        - pymupdf
+        - pandas
+        - numpy
+        - pyarrow
+        - pillow
+        - lxml
+        - python-docx
+        - python-pptx
+        - pytesseract
+        - olefile
+  - workspace
+clis:
+  woocommerce:
+    cli: ../../../../cli/toolathlon/woocommerce.mjs:WOO
+    config:
+      apiBase: ${WOOCOMMERCE_CLI_URL}
+      timeoutMs: 10000
+  emails:
+    cli: ../../../../cli/toolathlon/emails.mjs:EMAILS
+    config:
+      apiBase: ${EMAILS_CLI_URL}
+      timeoutMs: 120000
+mounts:
+  /tmp:
+    vfs: ram
+  /woo:
+    vfs: ../../../../vfs/woocommerce.mjs:WooCommerceVFS
+    mode: READ
+    config:
+      apiBase: ${WOOCOMMERCE_API_BASE}
+      key: ${WOOCOMMERCE_CONSUMER_KEY}
+      secret: ${WOOCOMMERCE_CONSUMER_SECRET}
+  /mail:
+    vfs: email
+    config:
+      imapHost: localhost
+      imapPort: ${BUSINESS_IMAP_PORT}
+      smtpHost: localhost
+      smtpPort: ${BUSINESS_SMTP_PORT}
+      username: samanthaw@mcp.com
+      password: walker@s147a
+      useSsl: false
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}

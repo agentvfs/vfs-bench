@@ -1,0 +1,111 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/ff9aaba884b02309fdceaf2a2071164fc285deca65f169d488684d0d5e7fc78a",
+      "role": "workspace",
+      "sha256": "ff9aaba884b02309fdceaf2a2071164fc285deca65f169d488684d0d5e7fc78a",
+      "size": 1273,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/9e6193a825d7738f5e1218d772b12eeea79acf0535a5270b76a1320522a76501",
+      "role": "workspace_config",
+      "sha256": "9e6193a825d7738f5e1218d772b12eeea79acf0535a5270b76a1320522a76501",
+      "size": 2641,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/a1d1d79ccddd2cef11993ec1c089a9756476d8cc94aca0856ba08dab1ca94d56",
+      "role": "parity",
+      "sha256": "a1d1d79ccddd2cef11993ec1c089a9756476d8cc94aca0856ba08dab1ca94d56",
+      "size": 3519,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/17e7f2e9d3599267884463867b93f41f160b7f7c275ab3487c83eb42759578d5",
+      "role": "verifier",
+      "sha256": "17e7f2e9d3599267884463867b93f41f160b7f7c275ab3487c83eb42759578d5",
+      "size": 287,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "cli-mcp-server_run_command",
+    "cli-mcp-server_show_security_rules",
+    "memory_search_nodes",
+    "memory_open_nodes",
+    "google-workspace_list_events",
+    "calculator_calculate",
+    "github_search_code",
+    "github_get_issue",
+    "github_search_issues",
+    "github_list_issues",
+    "github_get_issue_comments",
+    "github_get_commit",
+    "github_list_commits",
+    "mcp-code-executor_execute_code"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "florida-keys-meal-spending",
+  "schema_version": 1,
+  "servers": [
+    "cli-mcp-server",
+    "memory",
+    "google-workspace",
+    "calculator",
+    "github",
+    "mcp-code-executor"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/florida-keys-meal-spending/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "60bfb6226c622b47a391867a0030246b9c0f3e2735e3eb0a19fdf66a57962e78",
+      "size": 2209,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/florida-keys-meal-spending/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689bd255c0422b257e7dfcde",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/florida-keys-meal-spending",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

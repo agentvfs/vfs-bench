@@ -1,0 +1,13 @@
+{
+  "id": "toolathlon_academic-warning",
+  "fixtures": [
+    {
+      "id": "bq/academic_warning",
+      "kind": "bigquery"
+    },
+    {
+      "id": "logging/exam_log",
+      "kind": "logging"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+mode: EXEC
+
+# The character type upstream's servers run under: started with no locale,
+# their Python coerces it to C.UTF-8 (PEP 538) and what they run inherits
+# it, so grep, sed and expr match whole characters there as here.
+env:
+  LC_CTYPE: C.UTF-8
+
+# No Python. None of the fifteen tools Atlas enables runs code on this
+# machine, so an interpreter here would be a capability the other arm was
+# never given.
+runtimes:
+  - workspace
+
+clis:
+  # MongoDB and Calendar as the MCP arm has them: their own servers, on the
+  # database and the fake this run seeds from Atlas's exports, listing only
+  # the tools Atlas enables, `<server> <tool>` for its `<server>_<tool>`.
+  # timeoutMs is that arm's per-call bound, upstream's `toolCallTimeoutMs`.
+  mongodb:
+    cli: ../../../../cli/mcpatlas/tools.mjs:MONGODB
+    config:
+      apiBase: ${MONGODB_CLI_URL}
+      timeoutMs: 60000
+
+  google-workspace:
+    cli: ../../../../cli/mcpatlas/tools.mjs:GOOGLE_WORKSPACE
+    config:
+      apiBase: ${GOOGLE_WORKSPACE_CLI_URL}
+      timeoutMs: 60000
+
+  # GitHub, mirage's fake, on the one token both arms are given: the MCP
+  # arm's server is sent there by its hook and reads GITHUB_TOKEN, and `gh`
+  # is handed the same fake and token.
+  gh:
+    cli: gh
+    config:
+      token: ${GITHUB_TOKEN}
+      baseUrl: ${GITHUB_URL}
+
+  # The three servers no mount or native CLI can speak for. Each is the server
+  # the MCP arm runs, on the same workspace, listing only the tools Atlas
+  # enables. timeoutMs is that arm's per-call bound, which is upstream's: its
+  # harness gives each tool call `toolCallTimeoutMs`, 60 seconds by default.
+  memory:
+    cli: ../../../../cli/mcpatlas/tools.mjs:MEMORY
+    config:
+      apiBase: ${MEMORY_CLI_URL}
+      timeoutMs: 60000
+
+  weather:
+    cli: ../../../../cli/mcpatlas/tools.mjs:WEATHER
+    config:
+      apiBase: ${WEATHER_CLI_URL}
+      timeoutMs: 60000
+
+  open-library:
+    cli: ../../../../cli/mcpatlas/tools.mjs:OPEN_LIBRARY
+    config:
+      apiBase: ${OPEN_LIBRARY_CLI_URL}
+      timeoutMs: 60000
+
+mounts:
+  # A shell without scratch space is not a shell: agents write a heredoc to
+  # /tmp and read it back a line later.
+  /tmp:
+    vfs: ram
+
+  # The database and the calendar, read-only, as every MongoDB and Calendar
+  # tool Atlas enables here reads.
+  /mongodb:
+    vfs: mongodb
+    mode: READ
+    config:
+      uri: ${MONGODB_URL}
+
+  /calendar:
+    vfs: gcal
+    mode: READ
+    config:
+      accessToken: gws-integ-token
+      apiBase: ${CALENDAR_URL}
+
+# Every command runs under `whole_mount.py`, which refuses a walk of a
+# whole mount and a `cat` of a whole table, asked before the line runs, to
+# refuse it whole, and before each command.
+profiles:
+  default:
+    policy:
+      pre_execute:
+        - {script: ../../whole_mount.py, runtime: monty}
+      pre_command:
+        - {script: ../../whole_mount.py, runtime: monty}

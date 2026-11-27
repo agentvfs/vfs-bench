@@ -1,0 +1,202 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/fea5e25a5b13f0da4d1033cfa53b69c64074ad28186b22b468d0ecb5300ecaea",
+      "role": "seed_manifest",
+      "sha256": "fea5e25a5b13f0da4d1033cfa53b69c64074ad28186b22b468d0ecb5300ecaea",
+      "size": 65,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/bd810f00f703ba9e08fd5a14099b62871c5016f03456dd7832cc9f3a0e52a865",
+      "role": "parity_test",
+      "sha256": "bd810f00f703ba9e08fd5a14099b62871c5016f03456dd7832cc9f3a0e52a865",
+      "size": 5339,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/1bf4bd837682c23177a02bf33d5830eec113f6ef589e8a1cf5362c552d668da6",
+      "role": "workspace_documentation",
+      "sha256": "1bf4bd837682c23177a02bf33d5830eec113f6ef589e8a1cf5362c552d668da6",
+      "size": 545,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/fe86bb606a8c29f1676e92c6768fef3e79ed0dcfc699b44044e7edbb5a16d675",
+      "role": "workspace_config",
+      "sha256": "fe86bb606a8c29f1676e92c6768fef3e79ed0dcfc699b44044e7edbb5a16d675",
+      "size": 1303,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "vlm-history-completer",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/vlm-history-completer/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/vlm-history-completer/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/vlm-history-completer/shared/task.md",
+      "role": "instruction",
+      "sha256": "2382c4acad4f6bd31f72d28aa1f536b16b2f36bb706e92c347958475c7c3d61b",
+      "size": 726,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/vlm-history-completer/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/vlm-history-completer/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "a86f339b23f32945173f57798096085676df28a332955f620264727a3a873ea6",
+      "size": 14973,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/vlm-history-completer/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/vlm-history-completer/files/folder_id.txt",
+      "role": "upstream_source",
+      "sha256": "bff47dbbd6cf50d8249ec3291da02111cc08cb9183a9f7d21f5258737b734332",
+      "size": 33,
+      "target": "upstream/files/folder_id.txt",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/vlm-history-completer/files/folder_id.txt"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/vlm-history-completer/groundtruth_workspace/groundtruth.json",
+      "role": "verifier_input",
+      "sha256": "c0441f36dffaa4c6a791bcc09dd666c8f59aac0e0cd24ae716f7f44a98df5dbc",
+      "size": 4721,
+      "target": "upstream/groundtruth_workspace/groundtruth.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/vlm-history-completer/groundtruth_workspace/groundtruth.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/vlm-history-completer/initial_workspace/Architecture.txt",
+      "role": "initial_workspace",
+      "sha256": "9574ec4419e3b20ca4fccf9be1e62f21dcca74120002e2c065134380183d5bac",
+      "size": 178,
+      "target": "upstream/initial_workspace/Architecture.txt",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/vlm-history-completer/initial_workspace/Architecture.txt"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/vlm-history-completer/initial_workspace/Order.txt",
+      "role": "initial_workspace",
+      "sha256": "a69cb5dc566fb517992da77214c84484c704a610f1bb4338e4ed8287814da14e",
+      "size": 340,
+      "target": "upstream/initial_workspace/Order.txt",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/vlm-history-completer/initial_workspace/Order.txt"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/vlm-history-completer/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "a100f95cb16e5e10aaabf94ba56d7d9e3ba5c3e0ea58521f669a1095041314ab",
+      "size": 1512,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/vlm-history-completer/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/vlm-history-completer/task_config.json",
+      "role": "upstream_config",
+      "sha256": "e38214e369af94514d937deac535c0d23146eded3c92293e40d49b67ae1322dc",
+      "size": 271,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/vlm-history-completer/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/vlm-history-completer/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "e10a1b691fc9a2fddb160d064a2e1359fbc3f325d131ea91fad466aab1a3d03e",
+      "size": 301,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/vlm-history-completer/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/vlm-history-completer/README.md",
+      "role": "documentation",
+      "sha256": "ae3cd567297ffd7f93cd4cde258c7d9a5a7e069d7dfca0b0abf7cda37c89f1c2",
+      "size": 2189,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/vlm-history-completer/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/vlm-history-completer/shared/fixtures/sheets/rendering.json",
+      "role": "fixture_source",
+      "sha256": "234eebada067224a96c5a3cc96da341ed89986ea55548b4a095c4bd4091487cd",
+      "size": 105850,
+      "target": "shared/fixtures/sheets/rendering.json",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/vlm-history-completer/shared/fixtures/sheets/rendering.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/vlm-history-completer/shared/fixtures/sheets/source.html",
+      "role": "fixture_source",
+      "sha256": "e81b1206e28664c372350d132edd7169024029ec9badace0fff622e0283487c6",
+      "size": 376357,
+      "target": "shared/fixtures/sheets/source.html",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/vlm-history-completer/shared/fixtures/sheets/source.html"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/vlm-history-completer/shared/fixtures/sheets/source.json",
+      "role": "fixture_source",
+      "sha256": "4bc9c6ab874301c608aaa0aa081adc1e444ef2b46ced2594f25a16ddc242bd91",
+      "size": 859,
+      "target": "shared/fixtures/sheets/source.json",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/vlm-history-completer/shared/fixtures/sheets/source.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/vlm-history-completer/shared/fixtures/sheets/source.xlsx",
+      "role": "fixture_source",
+      "sha256": "8d91db4531018887370dff5ff822b1fe9f1c091df44824af1d893770412262cb",
+      "size": 269369,
+      "target": "shared/fixtures/sheets/source.xlsx",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/vlm-history-completer/shared/fixtures/sheets/source.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/vlm-history-completer/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "1650b156c2787e13a49aed86c470451df964f25705f2d96d4a75034b83e8fcca",
+      "size": 28389,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/vlm-history-completer/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/vlm-history-completer",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/vlm-history-completer",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "web_search",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "playwright_with_chunk",
+      "google_sheet",
+      "arxiv_local",
+      "huggingface",
+      "fetch"
+    ]
+  }
+}

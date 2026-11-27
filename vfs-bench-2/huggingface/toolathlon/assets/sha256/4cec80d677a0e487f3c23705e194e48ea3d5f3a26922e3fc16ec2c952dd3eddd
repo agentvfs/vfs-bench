@@ -1,0 +1,41 @@
+mode: EXEC
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace
+runtimes:
+  - workspace
+clis:
+  emails:
+    cli: ../../../../cli/toolathlon/emails.mjs:EMAILS
+    config:
+      apiBase: ${EMAILS_CLI_URL}
+      timeoutMs: 120000
+  snowflake:
+    cli: ../../../../cli/toolathlon/travel-video.mjs:SNOWFLAKE
+    config:
+      apiBase: ${SNOWFLAKE_CLI_URL}
+      timeoutMs: 120000
+  pdf-tools:
+    cli: ../../../../cli/toolathlon/documents.mjs:PDF
+    config:
+      apiBase: ${PDF_TOOLS_CLI_URL}
+mounts:
+  /tmp:
+    vfs: ram
+  /mail:
+    vfs: email
+    config:
+      imapHost: localhost
+      imapPort: 1143
+      smtpHost: localhost
+      smtpPort: 1587
+      username: richard_chavez@mcp.com
+      password: RC0913@3rN1T
+      useSsl: false
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}

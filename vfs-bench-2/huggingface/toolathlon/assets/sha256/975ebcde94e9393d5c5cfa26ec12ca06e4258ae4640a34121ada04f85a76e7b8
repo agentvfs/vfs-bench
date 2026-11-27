@@ -1,0 +1,49 @@
+mode: EXEC
+runtimes:
+  - workspace
+clis:
+  woocommerce:
+    cli: ../../../../cli/toolathlon/woocommerce.mjs:WOO
+    config:
+      apiBase: ${WOOCOMMERCE_CLI_URL}
+      timeoutMs: 10000
+  emails:
+    cli: ../../../../cli/toolathlon/emails.mjs:EMAILS
+    config:
+      apiBase: ${EMAILS_CLI_URL}
+      timeoutMs: 120000
+  google-forms:
+    cli: ../../../../cli/toolathlon/forms.mjs:FORMS
+    config:
+      apiBase: ${FORMS_CLI_URL}
+      timeoutMs: 20000
+mounts:
+  /tmp:
+    vfs: ram
+  /woo:
+    vfs: ../../../../vfs/woocommerce.mjs:WooCommerceVFS
+    mode: READ
+    config:
+      apiBase: ${WOOCOMMERCE_API_BASE}
+      key: ${WOOCOMMERCE_CONSUMER_KEY}
+      secret: ${WOOCOMMERCE_CONSUMER_SECRET}
+  /mail:
+    vfs: email
+    config:
+      imapHost: localhost
+      imapPort: ${BUSINESS_IMAP_PORT}
+      smtpHost: localhost
+      smtpPort: ${BUSINESS_SMTP_PORT}
+      username: johnh@mcp.com
+      password: JH0613!Kw2AM
+      useSsl: false
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace

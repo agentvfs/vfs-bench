@@ -1,0 +1,114 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "role": "workspace",
+      "sha256": "e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "size": 482,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/7522fd72ce08cf2e444db77945517a223b7f0b244c0e8cf3a1a140b5f99e4de6",
+      "role": "workspace_config",
+      "sha256": "7522fd72ce08cf2e444db77945517a223b7f0b244c0e8cf3a1a140b5f99e4de6",
+      "size": 1512,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/15fa91a9161751ba7007492d3986f5a2c89d84c8ad70e20cab84b6dc12af3e04",
+      "role": "parity",
+      "sha256": "15fa91a9161751ba7007492d3986f5a2c89d84c8ad70e20cab84b6dc12af3e04",
+      "size": 3081,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/44652a71391a7261682033488eb1cad03b1db29778afa49046d276a31bd40cb0",
+      "role": "verifier",
+      "sha256": "44652a71391a7261682033488eb1cad03b1db29778afa49046d276a31bd40cb0",
+      "size": 247,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "cli-mcp-server_run_command",
+    "cli-mcp-server_show_security_rules",
+    "git_git_status",
+    "git_git_diff_unstaged",
+    "git_git_diff_staged",
+    "git_git_diff",
+    "git_git_log",
+    "git_git_show",
+    "github_search_repositories",
+    "github_get_issue",
+    "github_search_issues",
+    "github_list_issues",
+    "github_get_repository",
+    "github_get_issue_comments",
+    "github_list_commits",
+    "github_get_commit",
+    "github_get_pull_request",
+    "github_list_pull_requests",
+    "github_get_pull_request_files",
+    "github_get_pull_request_status"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "serpent-repo-first-pr-branch",
+  "schema_version": 1,
+  "servers": [
+    "cli-mcp-server",
+    "git",
+    "github"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/serpent-repo-first-pr-branch/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "2cde71a46ff213e4d939c45f3f4ff170a8503a0bd68e2361f24b541e571f4286",
+      "size": 875,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/serpent-repo-first-pr-branch/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689f4d693e212e8ef3390737",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/serpent-repo-first-pr-branch",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

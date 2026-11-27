@@ -1,0 +1,14 @@
+{
+  "id": "toolathlon_travel-expense-reimbursement",
+  "fixtures": [
+    {
+      "id": "mail/jennifer_peterson22@mcp.com",
+      "kind": "mail"
+    },
+    {
+      "id": "pg/TRAVEL_EXPENSE_REIMBURSEMENT",
+      "kind": "script",
+      "run": "shared/seed_db.py"
+    }
+  ]
+}

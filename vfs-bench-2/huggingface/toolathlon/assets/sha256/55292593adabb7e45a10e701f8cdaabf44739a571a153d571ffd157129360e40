@@ -1,0 +1,10 @@
+{
+  "id": "toolathlon_investment-decision-analysis",
+  "fixtures": [
+    {
+      "id": "drive/InvestmentAnalysisWorkspace",
+      "kind": "script",
+      "run": "shared/seed_db.py"
+    }
+  ]
+}

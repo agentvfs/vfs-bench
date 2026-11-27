@@ -1,0 +1,192 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/610f8d93007ac748dcedd01d3b39b3b8489944f6e40d00abf639b76de2f326f6",
+      "role": "seed_manifest",
+      "sha256": "610f8d93007ac748dcedd01d3b39b3b8489944f6e40d00abf639b76de2f326f6",
+      "size": 59,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/77f668286680e6624c70be9310d9677c6ceea431aa7fca2266ad30cc592c3689",
+      "role": "parity_test",
+      "sha256": "77f668286680e6624c70be9310d9677c6ceea431aa7fca2266ad30cc592c3689",
+      "size": 764,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/f8fb82a454c098244745c2b22cd5eee7d7ba23c485b7a7431521e3e4f33bba9e",
+      "role": "workspace_documentation",
+      "sha256": "f8fb82a454c098244745c2b22cd5eee7d7ba23c485b7a7431521e3e4f33bba9e",
+      "size": 559,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/851c5738d4c927ebe1ee0a9c11447f249ac6dc5012a0cac9ff097c11d8b11042",
+      "role": "workspace_config",
+      "sha256": "851c5738d4c927ebe1ee0a9c11447f249ac6dc5012a0cac9ff097c11d8b11042",
+      "size": 1003,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "canvas-art-quiz",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-art-quiz/canvas_api.py",
+      "role": "upstream_source",
+      "sha256": "916a807a10eda60b5ed6beeb67c13f2056853fe94e9980c5b9788dff4febd0ed",
+      "size": 51497,
+      "target": "upstream/canvas_api.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-art-quiz/canvas_api.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-art-quiz/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-art-quiz/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/canvas-art-quiz/shared/task.md",
+      "role": "instruction",
+      "sha256": "5883f99fb182728c034871bba18a51246dfc9ec349f49c49e2cb2ae5cf3fb731",
+      "size": 1941,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-art-quiz/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-art-quiz/docs/task_cn.md",
+      "role": "upstream_source",
+      "sha256": "872b8e60f8b051340ed41be6d733b6209920f0a5036cc7e2d8c4d5748c2df551",
+      "size": 1729,
+      "target": "upstream/docs/task_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-art-quiz/docs/task_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-art-quiz/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "97df395f9a355935b47192bd08fbda18c6110b8e4ac0b3a305758b986ffe83de",
+      "size": 14875,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-art-quiz/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-art-quiz/initial_workspace/student_list.csv",
+      "role": "initial_workspace",
+      "sha256": "7fdd7e43d2e137942484bb1d1a4e338be291e9185b6e36c83c1042f8255375c8",
+      "size": 214,
+      "target": "upstream/initial_workspace/student_list.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-art-quiz/initial_workspace/student_list.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-art-quiz/other_key.py",
+      "role": "upstream_source",
+      "sha256": "4e41d3a6b91fea36de73b8c1a820fc06e4c283ca051014e193c6404912f4976a",
+      "size": 435,
+      "target": "upstream/other_key.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-art-quiz/other_key.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-art-quiz/preprocess/assignments/homework1.md",
+      "role": "preprocessor_source",
+      "sha256": "7f2bcdc76821fdff18b434b34b18bbdab5b1b800c052016554abf1386a53ccda",
+      "size": 888,
+      "target": "upstream/preprocess/assignments/homework1.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-art-quiz/preprocess/assignments/homework1.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-art-quiz/preprocess/assignments/project1.md",
+      "role": "preprocessor_source",
+      "sha256": "6136d984c09d62e5aee1da280ed85c3a169e86feb7dd389818a400151cb9f22c",
+      "size": 1439,
+      "target": "upstream/preprocess/assignments/project1.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-art-quiz/preprocess/assignments/project1.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-art-quiz/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "f2175f03a9041ef462a4f60e6a0a4b53bd2f075acea35a94453fb6e8ae9bacd9",
+      "size": 13856,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-art-quiz/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-art-quiz/preprocess/student_list.csv",
+      "role": "preprocessor_source",
+      "sha256": "7fdd7e43d2e137942484bb1d1a4e338be291e9185b6e36c83c1042f8255375c8",
+      "size": 214,
+      "target": "upstream/preprocess/student_list.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-art-quiz/preprocess/student_list.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-art-quiz/task_config.json",
+      "role": "upstream_config",
+      "sha256": "382e803d074ae1e9fb98da90cb0d893379faf205100fec79bd426f3f78c516a3",
+      "size": 237,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-art-quiz/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/canvas-art-quiz/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "493c6dcf62454b2413a536b8beeea5d783b724885206d4fe60464f6be441b8f7",
+      "size": 263,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/canvas-art-quiz/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/canvas-art-quiz/README.md",
+      "role": "documentation",
+      "sha256": "580870d0c17cb7fcc432094ebf0617cacb09af7201e1a2d2a3d66666b2ea4248",
+      "size": 2096,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/canvas-art-quiz/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/canvas-art-quiz/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "996b2ac027cf901c2f8b5202bc849b069a21cf19b331da2aa51f513ebc79f2e4",
+      "size": 22185,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/canvas-art-quiz/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/canvas-art-quiz",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/canvas-art-quiz",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "python_execute",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "filesystem",
+      "canvas",
+      "terminal"
+    ]
+  }
+}

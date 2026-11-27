@@ -1,0 +1,184 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "browser_navigate",
+      "why": "navigating to the same page yields the same snapshot",
+      "mcp": {
+        "server": "playwright_with_chunk",
+        "tool": "browser_navigate",
+        "args": {
+          "url": "https://example.com/"
+        }
+      },
+      "mirage": {
+        "command": "browser navigate '{\"url\":\"https://example.com/\"}'"
+      }
+    },
+    {
+      "name": "browser_tab_list",
+      "why": "the open tabs agree after the same navigation",
+      "mcp": {
+        "server": "playwright_with_chunk",
+        "tool": "browser_tab_list",
+        "args": {}
+      },
+      "mirage": {
+        "command": "browser tab-list"
+      }
+    },
+    {
+      "name": "google_sheet_list_folders",
+      "why": "both arms see the same Drive folders",
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "list_folders",
+        "args": {}
+      },
+      "mirage": {
+        "command": "google-sheet list-folders"
+      }
+    },
+    {
+      "name": "google_sheet_list_spreadsheets",
+      "why": "the same spreadsheets with the same ids",
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "list_spreadsheets",
+        "args": {}
+      },
+      "mirage": {
+        "command": "google-sheet list-spreadsheets"
+      }
+    },
+    {
+      "name": "scholarly_search_arxiv",
+      "why": "the same arXiv search",
+      "mcp": {
+        "server": "scholarly",
+        "tool": "search-arxiv",
+        "args": {
+          "keyword": "Alita"
+        }
+      },
+      "mirage": {
+        "command": "scholarly search-arxiv '{\"keyword\":\"Alita\"}'"
+      }
+    },
+    {
+      "name": "fetch_fetch_html",
+      "why": "the raw body is identical through either arm",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_html",
+        "args": {
+          "url": "https://example.com/"
+        }
+      },
+      "mirage": {
+        "command": "fetch html '{\"url\":\"https://example.com/\"}'"
+      }
+    },
+    {
+      "name": "fetch_fetch_txt",
+      "why": "markup stripping agrees",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_txt",
+        "args": {
+          "url": "https://example.com/"
+        }
+      },
+      "mirage": {
+        "command": "fetch txt '{\"url\":\"https://example.com/\"}'"
+      }
+    },
+    {
+      "name": "fetch_fetch_markdown",
+      "why": "markdown conversion agrees",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_markdown",
+        "args": {
+          "url": "https://example.com/"
+        }
+      },
+      "mirage": {
+        "command": "fetch markdown '{\"url\":\"https://example.com/\"}'"
+      }
+    },
+    {
+      "name": "fetch_fetch_json",
+      "why": "the same URL parses to the same document",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_json",
+        "args": {
+          "url": "https://api.github.com/repos/mojombo/grit"
+        }
+      },
+      "mirage": {
+        "command": "fetch json '{\"url\":\"https://api.github.com/repos/mojombo/grit\"}'"
+      }
+    },
+    {
+      "name": "google_sheet_list_sheets",
+      "why": "the tab list agrees",
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "list_sheets",
+        "args": {
+          "spreadsheet_id": "1lAEe-NX5H0c2bsLbBaLljG8_3Ei359c-DkOCK7idPfg"
+        }
+      },
+      "mirage": {
+        "command": "google-sheet list-sheets '{\"spreadsheet_id\":\"1lAEe-NX5H0c2bsLbBaLljG8_3Ei359c-DkOCK7idPfg\"}'"
+      }
+    },
+    {
+      "name": "google_sheet_get_sheet_data",
+      "why": "the cells read back identically",
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "get_sheet_data",
+        "args": {
+          "spreadsheet_id": "1lAEe-NX5H0c2bsLbBaLljG8_3Ei359c-DkOCK7idPfg",
+          "sheet": "ptdata",
+          "range": "A1:C3"
+        }
+      },
+      "mirage": {
+        "command": "google-sheet get-sheet-data '{\"spreadsheet_id\":\"1lAEe-NX5H0c2bsLbBaLljG8_3Ei359c-DkOCK7idPfg\",\"sheet\":\"ptdata\",\"range\":\"A1:C3\"}'"
+      }
+    },
+    {
+      "name": "google_sheet_update_cells",
+      "why": "a write through either arm lands in the same cells",
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "update_cells",
+        "args": {
+          "spreadsheet_id": "1lAEe-NX5H0c2bsLbBaLljG8_3Ei359c-DkOCK7idPfg",
+          "sheet": "ptdata",
+          "range": "H1:I2",
+          "data": [
+            [
+              "parity",
+              "check"
+            ],
+            [
+              "second",
+              "row"
+            ]
+          ]
+        }
+      },
+      "mirage": {
+        "command": "google-sheet update-cells '{\"spreadsheet_id\":\"1lAEe-NX5H0c2bsLbBaLljG8_3Ei359c-DkOCK7idPfg\",\"sheet\":\"ptdata\",\"range\":\"H1:I2\",\"data\":[[\"parity\",\"check\"],[\"second\",\"row\"]]}'"
+      },
+      "mutates": [
+        "gws"
+      ]
+    }
+  ]
+}

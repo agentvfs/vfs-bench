@@ -1,0 +1,27 @@
+mode: EXEC
+runtimes:
+  - workspace
+clis:
+  arxiv-local:
+    cli: ../../../../cli/toolathlon/papers.mjs:ARXIV
+    config:
+      apiBase: ${ARXIV_CLI_URL}
+      timeoutMs: 60000
+  scholarly:
+    cli: ../../../../cli/toolathlon/papers.mjs:SCHOLARLY
+    config:
+      apiBase: ${SCHOLARLY_CLI_URL}
+      timeoutMs: 30000
+mounts:
+  /tmp:
+    vfs: ram
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace

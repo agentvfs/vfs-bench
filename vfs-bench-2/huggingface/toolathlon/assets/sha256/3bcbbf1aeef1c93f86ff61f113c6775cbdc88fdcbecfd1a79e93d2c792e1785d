@@ -1,0 +1,102 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "browser_navigate",
+      "why": "navigating to the same page yields the same snapshot",
+      "mcp": {
+        "server": "playwright_with_chunk",
+        "tool": "browser_navigate",
+        "args": {
+          "url": "https://example.com/"
+        }
+      },
+      "mirage": {
+        "command": "browser navigate '{\"url\":\"https://example.com/\"}'"
+      }
+    },
+    {
+      "name": "browser_tab_list",
+      "why": "the open tabs agree after the same navigation",
+      "mcp": {
+        "server": "playwright_with_chunk",
+        "tool": "browser_tab_list",
+        "args": {}
+      },
+      "mirage": {
+        "command": "browser tab-list"
+      }
+    },
+    {
+      "name": "arxiv_local_search_papers",
+      "why": "the same search over the captured arXiv answer; the other three tools read or fill a per-arm store, and on an empty one upstream queries arXiv with no ids and gets an HTTP error, so they are not compared",
+      "mcp": {
+        "server": "arxiv_local",
+        "tool": "search_papers",
+        "args": {
+          "query": "Alita",
+          "max_results": 5
+        }
+      },
+      "mirage": {
+        "command": "arxiv-local search-papers '{\"query\":\"Alita\",\"max_results\":5}'"
+      }
+    },
+    {
+      "name": "fetch_fetch_html",
+      "why": "the raw body is identical through either arm",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_html",
+        "args": {
+          "url": "https://example.com/"
+        }
+      },
+      "mirage": {
+        "command": "fetch html '{\"url\":\"https://example.com/\"}'"
+      }
+    },
+    {
+      "name": "fetch_fetch_txt",
+      "why": "markup stripping agrees",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_txt",
+        "args": {
+          "url": "https://example.com/"
+        }
+      },
+      "mirage": {
+        "command": "fetch txt '{\"url\":\"https://example.com/\"}'"
+      }
+    },
+    {
+      "name": "fetch_fetch_markdown",
+      "why": "markdown conversion agrees",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_markdown",
+        "args": {
+          "url": "https://example.com/"
+        }
+      },
+      "mirage": {
+        "command": "fetch markdown '{\"url\":\"https://example.com/\"}'"
+      }
+    },
+    {
+      "name": "fetch_fetch_json",
+      "why": "the same URL parses to the same document",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch_json",
+        "args": {
+          "url": "https://api.github.com/repos/mojombo/grit"
+        }
+      },
+      "mirage": {
+        "command": "fetch json '{\"url\":\"https://api.github.com/repos/mojombo/grit\"}'"
+      }
+    }
+  ]
+}

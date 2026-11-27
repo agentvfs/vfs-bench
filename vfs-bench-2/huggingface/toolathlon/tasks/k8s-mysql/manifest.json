@@ -1,0 +1,335 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/665522a5abe4534d84dda23af17f540f5e566fe5532375225f36eb16e6271fb2",
+      "role": "seed_manifest",
+      "sha256": "665522a5abe4534d84dda23af17f540f5e566fe5532375225f36eb16e6271fb2",
+      "size": 53,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/17d4e5b558bdc2c0aafbe2f50a7989ce36e070ad64d00ac289f9b8b1970f105f",
+      "role": "parity_test",
+      "sha256": "17d4e5b558bdc2c0aafbe2f50a7989ce36e070ad64d00ac289f9b8b1970f105f",
+      "size": 1324,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/4a768687d0f7ccb5aa11150f3ff93690216a5c3f52404764d68378bac58c688b",
+      "role": "workspace_documentation",
+      "sha256": "4a768687d0f7ccb5aa11150f3ff93690216a5c3f52404764d68378bac58c688b",
+      "size": 531,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/ac849a85591387560ce927f6c7f4e71ff10ab783242b7d4846aa45b584e39271",
+      "role": "workspace_config",
+      "sha256": "ac849a85591387560ce927f6c7f4e71ff10ab783242b7d4846aa45b584e39271",
+      "size": 1069,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "k8s-mysql",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/README.md",
+      "role": "upstream_source",
+      "sha256": "ca4645ee5eb957cf415ac7110c679d706c54940f11fafad04a0b75ebdfdcd95d",
+      "size": 3294,
+      "target": "upstream/README.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/README.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/data/f1/circuits.csv",
+      "role": "upstream_source",
+      "sha256": "8a2ac67a0946ac238ddeaa4a212a1f3969f0108527b0213e7a38b3a5c3cba6eb",
+      "size": 10104,
+      "target": "upstream/data/f1/circuits.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/data/f1/circuits.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/data/f1/constructor_results.csv",
+      "role": "upstream_source",
+      "sha256": "8f1ebc0ce822bc02326b9bf13616f22a81514a6d35e5b744fd6f627b9ef99634",
+      "size": 219365,
+      "target": "upstream/data/f1/constructor_results.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/data/f1/constructor_results.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/data/f1/constructor_standings.csv",
+      "role": "upstream_source",
+      "sha256": "9f07b1b9f235625165f62c6fcd6b1938cd7daa6f7e4a580f9937c6268056de9b",
+      "size": 317206,
+      "target": "upstream/data/f1/constructor_standings.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/data/f1/constructor_standings.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/data/f1/constructors.csv",
+      "role": "upstream_source",
+      "sha256": "ae423f6f2d6cd74d5cd594eac0bdec7e1e9be2cda3097eb69f870294a225618c",
+      "size": 17478,
+      "target": "upstream/data/f1/constructors.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/data/f1/constructors.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/data/f1/driver_standings.csv",
+      "role": "upstream_source",
+      "sha256": "58397ed38d29f71316ba272a2ffd5bd00b6174774d919ce079ae4d3cfb27befb",
+      "size": 883771,
+      "target": "upstream/data/f1/driver_standings.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/data/f1/driver_standings.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/data/f1/drivers.csv",
+      "role": "upstream_source",
+      "sha256": "6a894569cb031dd65fb5f113f57b235100966653eaedd9310503dc2e94afae6b",
+      "size": 94367,
+      "target": "upstream/data/f1/drivers.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/data/f1/drivers.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/data/f1/lap_times.csv",
+      "role": "upstream_source",
+      "sha256": "70a772924f67682701acf1a6f26e8225ffd1b9f50844b2f9fb42ce311333cc33",
+      "size": 17622395,
+      "target": "upstream/data/f1/lap_times.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/data/f1/lap_times.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/data/f1/pit_stops.csv",
+      "role": "upstream_source",
+      "sha256": "70cff48b96416d46b8f6f162e778fcee45582b8fa85e9ec4a5e2c7b60bead75c",
+      "size": 443719,
+      "target": "upstream/data/f1/pit_stops.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/data/f1/pit_stops.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/data/f1/qualifying.csv",
+      "role": "upstream_source",
+      "sha256": "49c4ff9ae0be93d5f850f56c553d5e264914c7ba0c4d583462f3de06aebed3cc",
+      "size": 465231,
+      "target": "upstream/data/f1/qualifying.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/data/f1/qualifying.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/data/f1/races.csv",
+      "role": "upstream_source",
+      "sha256": "4839d035abc603fa88fa08fa976a86d76cff35f3e94cb767d25f735a5a3376ef",
+      "size": 164344,
+      "target": "upstream/data/f1/races.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/data/f1/races.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/data/f1/results.csv",
+      "role": "upstream_source",
+      "sha256": "a2392658044286800a0a946138067d9823f39e59147eeef0cbdda858ff172441",
+      "size": 1721961,
+      "target": "upstream/data/f1/results.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/data/f1/results.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/data/f1/seasons.csv",
+      "role": "upstream_source",
+      "sha256": "9562d2374cced42e24988fb2325cca5c82455815a5f5d40f6a6f5262a36106dc",
+      "size": 4594,
+      "target": "upstream/data/f1/seasons.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/data/f1/seasons.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/data/f1/sprint_results.csv",
+      "role": "upstream_source",
+      "sha256": "4a20b577098bafd2683c4f4ac1bb1cf4b2e8cc6a13c91c16878c7b2b21a24647",
+      "size": 24732,
+      "target": "upstream/data/f1/sprint_results.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/data/f1/sprint_results.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/data/f1/status.csv",
+      "role": "upstream_source",
+      "sha256": "c36b1287f2421a288c38b0ce875d6ed04ff26bbda3e06db3d99e12197ea894aa",
+      "size": 2136,
+      "target": "upstream/data/f1/status.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/data/f1/status.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/data/f1_schema.sql",
+      "role": "upstream_source",
+      "sha256": "f3879fed96029593b31362487b824d03bf940419c4a7fc87e1fc6a08658fee3c",
+      "size": 7714,
+      "target": "upstream/data/f1_schema.sql",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/data/f1_schema.sql"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/k8s-mysql/shared/task.md",
+      "role": "instruction",
+      "sha256": "754addcb200974aafbfa16044a2ea4cc0ab757ed3f75283c9652ea844a33cf83",
+      "size": 362,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/evaluation/check_cluster.py",
+      "role": "verifier_source",
+      "sha256": "67addaa1529c514096477e3a8d6cbeba01cf4adeebb6d7257a56b26ff0085278",
+      "size": 15382,
+      "target": "upstream/evaluation/check_cluster.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/evaluation/check_cluster.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "8fc7bb45a1b489c3d5960dccd12b49e92f5d2272482e8e5d498231fae5ed27c4",
+      "size": 9271,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/groundtruth_workspace/gtq1.csv",
+      "role": "verifier_input",
+      "sha256": "32bac2824747bf2ec5a727eadbf9dbb3d06000b88585f359c0c0827ec840f5d8",
+      "size": 2123,
+      "target": "upstream/groundtruth_workspace/gtq1.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/groundtruth_workspace/gtq1.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/groundtruth_workspace/gtq2.csv",
+      "role": "verifier_input",
+      "sha256": "3b34dc09539044034e9b018eb4b3304b7f945f9413aa6d8947facc2e2cbb08b5",
+      "size": 425,
+      "target": "upstream/groundtruth_workspace/gtq2.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/groundtruth_workspace/gtq2.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/initial_workspace/results_template_first_question.csv",
+      "role": "initial_workspace",
+      "sha256": "a15bc3b9740bbb799116a08e42250a331fd8643b38067998c21c01dc021378df",
+      "size": 24,
+      "target": "upstream/initial_workspace/results_template_first_question.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/initial_workspace/results_template_first_question.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/initial_workspace/results_template_second_question.csv",
+      "role": "initial_workspace",
+      "sha256": "6b190237fae091ac29aedfe783cfdb1501bb926a3cc9d611a8b0d552cd6531f9",
+      "size": 9,
+      "target": "upstream/initial_workspace/results_template_second_question.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/initial_workspace/results_template_second_question.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/initial_workspace/task.md",
+      "role": "initial_workspace",
+      "sha256": "0d7c305d469bb6bdbb22b93483445f25e95b7adc5e8c22e84d5c89b9e7448542",
+      "size": 858,
+      "target": "upstream/initial_workspace/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/initial_workspace/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/k8s_resources/k8s_mysql.yaml",
+      "role": "upstream_source",
+      "sha256": "0d045cb6800535327b92452cbf34d47adeeeaabe89526cb9fdb52d6fea861074",
+      "size": 4357,
+      "target": "upstream/k8s_resources/k8s_mysql.yaml",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/k8s_resources/k8s_mysql.yaml"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "8655543349952c9a25d1370770d9708dae40ef77f16764a5777eb623c87ae1cb",
+      "size": 2372,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/scripts/k8s_mysql.sh",
+      "role": "upstream_source",
+      "sha256": "cd0b0d7cb049686f13ce90e9ebcd02c9045814d808e1b499548ebc4177853d8e",
+      "size": 17283,
+      "target": "upstream/scripts/k8s_mysql.sh",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/scripts/k8s_mysql.sh"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/task_config.json",
+      "role": "upstream_config",
+      "sha256": "be8cfd8452ad5896f10c9629fd6253168a4fecaeb0e0b5aee724c1f1740adc55",
+      "size": 218,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/tests/test_apply_retry.py",
+      "role": "verifier_source",
+      "sha256": "4ded03795ff9c8e049b424845f109d8ba3648da855a940dfefda8a47953ed62b",
+      "size": 3686,
+      "target": "upstream/tests/test_apply_retry.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/tests/test_apply_retry.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/k8s-mysql/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "65184ff32c95377210fac0f6338bfc41b77113d11669eaeebe1804f6176d24dd",
+      "size": 1001,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/k8s-mysql/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/k8s-mysql/README.md",
+      "role": "documentation",
+      "sha256": "c60c4eb8426c94412422c536d0016d7347938b7e3b5bf0a363f2ac2859b60c88",
+      "size": 2018,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/k8s-mysql/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/k8s-mysql/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "221e097725cebd3eb5391c5fb91f685425dd2612d710cc08b51ac46eb49fe470",
+      "size": 1200,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/k8s-mysql/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/k8s-mysql",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/k8s-mysql",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "python_execute",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "k8s",
+      "filesystem"
+    ]
+  }
+}

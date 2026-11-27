@@ -1,0 +1,129 @@
+{
+  "note": "Both arms read the repositories at one path -- the MCP arm's git server reads the image's own /data/repos in the run's container, and each mirage /data/repos mount is a copy of one taken out of the same image; no tool this task enables reads the rest of /data. The repositories under repos/ are the clones upstream's image makes, at upstream's commits. GitHub is mirage's GitHub fake on both arms, and it holds nothing. MongoDB is the database this run restores from Atlas's dump, the same one both arms read. Airtable is the fake both arms read, seeded per run with the base Atlas shares in place of an export.",
+  "cases": [
+    {
+      "name": "aggregate",
+      "why": "both arms group the same August 2023 stock by genre",
+      "mcp": {
+        "server": "mongodb",
+        "tool": "aggregate",
+        "args": {
+          "database": "video_game_store",
+          "collection": "Inventory",
+          "pipeline": [
+            {
+              "$match": {
+                "Inventory Date": {
+                  "$gte": {
+                    "$date": "2023-08-01T00:00:00Z"
+                  },
+                  "$lt": {
+                    "$date": "2023-09-01T00:00:00Z"
+                  }
+                }
+              }
+            },
+            {
+              "$group": {
+                "_id": "$Game Genre",
+                "stock": {
+                  "$sum": "$Current Stock"
+                },
+                "games": {
+                  "$sum": 1
+                }
+              }
+            }
+          ]
+        },
+        "pipe": "sed 1d | jq -r '[._id, .stock, .games] | @tsv' | sort"
+      },
+      "mirage": {
+        "command": "grep '2023-08-' /mongodb/video_game_store/collections/Inventory/documents.jsonl",
+        "pipe": "jq -s -r 'map(select(.\"Inventory Date\".\"$date\" | startswith(\"2023-08-\"))) | group_by(.\"Game Genre\")[] | [.[0].\"Game Genre\", (map(.\"Current Stock\") | add), length] | @tsv' | sort"
+      }
+    },
+    {
+      "name": "list-collections",
+      "why": "both arms see the same six collections of video_game_store",
+      "mcp": {
+        "server": "mongodb",
+        "tool": "list-collections",
+        "args": {
+          "database": "video_game_store"
+        },
+        "pipe": "sed 's/^Name: \"\\(.*\\)\"$/\\1/' | sort"
+      },
+      "mirage": {
+        "command": "ls /mongodb/video_game_store/collections",
+        "pipe": "sort"
+      }
+    },
+    {
+      "name": "get_record",
+      "why": "one record, cell for cell",
+      "mcp": {
+        "server": "airtable",
+        "tool": "get_record",
+        "args": {
+          "base_id": "appIF9byLfQwdHqE2",
+          "table_name": "Turnover Retention",
+          "record_id": "rec0nx6eNuyEzCdn8"
+        },
+        "pipe": "jq -c '[.id, .createdTime, .fields]' | grep ."
+      },
+      "mirage": {
+        "command": "grep '\"record_id\":\"rec0nx6eNuyEzCdn8\"' /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/Turnover_Retention__tblUuTBCVkTHKa0DN/records.jsonl",
+        "pipe": "jq -c '[.record_id, .created_time, .fields]' | grep ."
+      }
+    },
+    {
+      "name": "list_bases",
+      "why": "the same one base",
+      "mcp": {
+        "server": "airtable",
+        "tool": "list_bases",
+        "args": {},
+        "pipe": "jq -r '.[] | .id + \" \" + .name + \" \" + .permissionLevel' | grep ."
+      },
+      "mirage": {
+        "command": "jq -r '.base_id + \" \" + .base_name + \" \" + .permission_level' /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/base.json",
+        "pipe": "grep ."
+      }
+    },
+    {
+      "name": "list_records",
+      "why": "the same first records, in the same order",
+      "mcp": {
+        "server": "airtable",
+        "tool": "list_records",
+        "args": {
+          "base_id": "appIF9byLfQwdHqE2",
+          "table_name": "Turnover Retention",
+          "max_records": 5
+        },
+        "pipe": "jq -c '.[] | [.id, .createdTime, .fields]' | grep ."
+      },
+      "mirage": {
+        "command": "head -5 /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/Turnover_Retention__tblUuTBCVkTHKa0DN/records.jsonl",
+        "pipe": "jq -c '[.record_id, .created_time, .fields]' | grep ."
+      }
+    },
+    {
+      "name": "list_tables",
+      "why": "the same nine tables, and the same fields in the one the answer reads",
+      "mcp": {
+        "server": "airtable",
+        "tool": "list_tables",
+        "args": {
+          "base_id": "appIF9byLfQwdHqE2"
+        },
+        "pipe": "jq -r '(.[] | .id + \" \" + .name), (.[] | select(.name == \"Turnover Retention\") | .fields[] | .id + \" \" + .name + \" \" + .type)' | grep ."
+      },
+      "mirage": {
+        "command": "jq -r '.tables[] | .table_id + \" \" + .table_name' /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/base.json; jq -r '.fields[] | .field_id + \" \" + .field_name + \" \" + .type' /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/Turnover_Retention__tblUuTBCVkTHKa0DN/table.json",
+        "pipe": "grep ."
+      }
+    }
+  ]
+}

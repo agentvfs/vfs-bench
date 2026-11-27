@@ -1,0 +1,17 @@
+{
+  "id": "toolathlon_git-bug-hunt",
+  "fixtures": [
+    {
+      "id": "mail/micheller@mcp.com",
+      "kind": "mail"
+    },
+    {
+      "id": "workspace/files.tar.gz",
+      "kind": "script",
+      "run": "shared/seed_mock.py",
+      "with": [
+        "openpyxl"
+      ]
+    }
+  ]
+}

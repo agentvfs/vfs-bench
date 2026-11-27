@@ -1,0 +1,46 @@
+mode: EXEC
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace
+runtimes:
+  - name: pyodide
+    config:
+      lockFileUrl: ${TOOLATHLON_PYTHON}/pyodide-lock.json
+      packageBaseUrl: ${TOOLATHLON_PYTHON}/
+      packages:
+        - openpyxl
+        - xlsxwriter
+        - pypdf2
+        - pymupdf
+        - pandas
+        - numpy
+        - pyarrow
+        - pillow
+        - lxml
+        - python-docx
+        - python-pptx
+        - pytesseract
+        - olefile
+  - workspace
+clis:
+  yahoo-finance:
+    cli: ../../../../cli/toolathlon/travel-video.mjs:YAHOO
+    config:
+      apiBase: ${YAHOO_CLI_URL}
+      timeoutMs: 60000
+  excel:
+    cli: ../../../../cli/toolathlon/documents.mjs:EXCEL
+    config:
+      apiBase: ${EXCEL_CLI_URL}
+  git:
+    cli: git
+mounts:
+  /tmp:
+    vfs: ram
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}

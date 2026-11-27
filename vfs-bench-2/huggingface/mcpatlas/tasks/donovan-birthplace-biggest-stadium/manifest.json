@@ -1,0 +1,123 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "role": "workspace",
+      "sha256": "e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "size": 482,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/c7e37e313e34b03db1f84d2b50b0396d976996ac8a41766e70a7e15d8ed70f66",
+      "role": "workspace_config",
+      "sha256": "c7e37e313e34b03db1f84d2b50b0396d976996ac8a41766e70a7e15d8ed70f66",
+      "size": 3899,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/8980332799562ed7b0bfd31e5d72f9a06a598f38f896472a5daa2c8ecf76e2d6",
+      "role": "parity",
+      "sha256": "8980332799562ed7b0bfd31e5d72f9a06a598f38f896472a5daa2c8ecf76e2d6",
+      "size": 2643,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/d321b84dbb96989f6c5c197c39b7086f4bfee208b1e6df5229137a8a91611559",
+      "role": "verifier",
+      "sha256": "d321b84dbb96989f6c5c197c39b7086f4bfee208b1e6df5229137a8a91611559",
+      "size": 292,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "context7_get-library-docs",
+    "e2b-server_run_code",
+    "github_search_repositories",
+    "airtable_get_record",
+    "mongodb_list-collections",
+    "pubmed_search_pubmed_key_words",
+    "clinicaltrialsgov-mcp-server_clinicaltrials_get_study",
+    "desktop-commander_read_file",
+    "git_git_show",
+    "weather_get_current_weather",
+    "weather_get_weather_forecast",
+    "wikipedia_search_wikipedia",
+    "context7_resolve-library-id",
+    "osm-mcp-server_geocode_address",
+    "osm-mcp-server_find_nearby_places",
+    "osm-mcp-server_reverse_geocode",
+    "wikipedia_get_article",
+    "exa_web_search_exa",
+    "osm-mcp-server_find_ev_charging_stations"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "donovan-birthplace-biggest-stadium",
+  "schema_version": 1,
+  "servers": [
+    "context7",
+    "e2b-server",
+    "github",
+    "airtable",
+    "mongodb",
+    "pubmed",
+    "clinicaltrialsgov-mcp-server",
+    "desktop-commander",
+    "git",
+    "weather",
+    "wikipedia",
+    "osm-mcp-server",
+    "exa"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/donovan-birthplace-biggest-stadium/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "9367e6264c4276d3b5a219092ef8ee744eea57e759a1de00bb1cb90b9de6a2ef",
+      "size": 6799,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/donovan-birthplace-biggest-stadium/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "688ba1b3e95696e72dd93ebb",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/donovan-birthplace-biggest-stadium",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

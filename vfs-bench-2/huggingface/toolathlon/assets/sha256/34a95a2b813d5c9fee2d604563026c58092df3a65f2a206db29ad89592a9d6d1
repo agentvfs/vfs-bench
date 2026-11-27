@@ -1,0 +1,46 @@
+mode: EXEC
+runtimes:
+  - workspace
+clis:
+  web-search:
+    cli: ../../../../cli/toolathlon/research.mjs:SEARCH
+    config:
+      apiBase: ${SEARCH_CLI_URL}
+  browser:
+    cli: ../../../../cli/toolathlon/browser.mjs:BROWSER
+    config:
+      apiBase: ${BROWSER_URL}
+      timeoutMs: 120000
+  fetch:
+    cli: ../../../../cli/toolathlon/research.mjs:WEB
+    config:
+      apiBase: ${FETCH_CLI_URL}
+      timeoutMs: 100000
+  emails:
+    cli: ../../../../cli/toolathlon/emails.mjs:EMAILS
+    config:
+      apiBase: ${EMAILS_CLI_URL}
+      timeoutMs: 120000
+mounts:
+  /tmp:
+    vfs: ram
+  /mail:
+    vfs: email
+    config:
+      imapHost: 127.0.0.1
+      imapPort: ${BUSINESS_IMAP_PORT}
+      smtpHost: 127.0.0.1
+      smtpPort: ${BUSINESS_SMTP_PORT}
+      username: donna_castillo56@mcp.com
+      password: donna_76VOui
+      useSsl: false
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace

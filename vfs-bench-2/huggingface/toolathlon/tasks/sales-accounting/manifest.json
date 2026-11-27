@@ -1,0 +1,169 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/938b0c9006eac263b857facbc787a1326855752c65a089bf71eeb7266e5b0ee4",
+      "role": "parity_test",
+      "sha256": "938b0c9006eac263b857facbc787a1326855752c65a089bf71eeb7266e5b0ee4",
+      "size": 546,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/be1d9b1c14eb04158172e2f8aa7d4a3acdd26fc879dacd00e5a21452b70d5a03",
+      "role": "workspace_config",
+      "sha256": "be1d9b1c14eb04158172e2f8aa7d4a3acdd26fc879dacd00e5a21452b70d5a03",
+      "size": 864,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "sales-accounting",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/sales-accounting/README.md",
+      "role": "upstream_source",
+      "sha256": "f6ea5d5f02a97b0c05599d8d2cc6ddb71af05bd48c69c048d0b69b1c28f07fec",
+      "size": 2199,
+      "target": "upstream/README.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/sales-accounting/README.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/sales-accounting/build_excel_ledger.py",
+      "role": "upstream_source",
+      "sha256": "3315a969c9c6f4e185e0357caf03e020bb4c8dc201126902b425c9313da6d121",
+      "size": 15073,
+      "target": "upstream/build_excel_ledger.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/sales-accounting/build_excel_ledger.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/sales-accounting/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/sales-accounting/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/sales-accounting/shared/task.md",
+      "role": "instruction",
+      "sha256": "6ff65014330c18197415ff90208af11b34b05186fff5ab57c2eaa509b0484725",
+      "size": 217,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/sales-accounting/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/sales-accounting/evaluation/check_local.py",
+      "role": "verifier_source",
+      "sha256": "e24b35c83cadf9b87e59aff7c0c9dd9e35bcdb9bb55c7e46f4b369e90800f2fe",
+      "size": 2473,
+      "target": "upstream/evaluation/check_local.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/sales-accounting/evaluation/check_local.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/sales-accounting/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "9bf3468aca6f967dc3dd0976f929b4d16dfb4b3e106aa751a4312a5e998b565f",
+      "size": 914,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/sales-accounting/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/sales-accounting/generate_groundtruth.py",
+      "role": "verifier_source",
+      "sha256": "d1ad9aa9d35fe15a7c340e67a93d3e034b671d5ae11efae4352feb609b63ff28",
+      "size": 9623,
+      "target": "upstream/generate_groundtruth.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/sales-accounting/generate_groundtruth.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/sales-accounting/groundtruth_workspace/Account_Book_Complete.xlsx",
+      "role": "verifier_input",
+      "sha256": "fc54500f2ffbe6e46eddf41d4374a54beb75f90d91500b45c7a04ca76629b842",
+      "size": 10197,
+      "target": "upstream/groundtruth_workspace/Account_Book_Complete.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/sales-accounting/groundtruth_workspace/Account_Book_Complete.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/sales-accounting/initial_workspace/Account_Book.xlsx",
+      "role": "initial_workspace",
+      "sha256": "c227250a7ab72300653672be4f0e7ab936ee1d5b014356f2956aee6ce0e15401",
+      "size": 9937,
+      "target": "upstream/initial_workspace/Account_Book.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/sales-accounting/initial_workspace/Account_Book.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/sales-accounting/initial_workspace/memory/memory.json",
+      "role": "initial_workspace",
+      "sha256": "2b8f3d4c2d10da790fe6ce3f9931197a4dd18d62b033212ed1a89272ccfa5b37",
+      "size": 4415,
+      "target": "upstream/initial_workspace/memory/memory.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/sales-accounting/initial_workspace/memory/memory.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/sales-accounting/task_config.json",
+      "role": "upstream_config",
+      "sha256": "ed7429165eb8ed9ae5cbd7aa1579e174f8ce8a410d6361ea4cc47c4710c220f3",
+      "size": 220,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/sales-accounting/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/sales-accounting/README.md",
+      "role": "documentation",
+      "sha256": "8f036cc892a9fa516142b518c90d64ae00597f1be4487f99498ef24577950864",
+      "size": 541,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/sales-accounting/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/sales-accounting/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "4b934c306a483b43746ac6c11c537d9cf4f31273a69f87c3024adaea0dbc6443",
+      "size": 7781,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/sales-accounting/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/sales-accounting",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/sales-accounting",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "python_execute",
+      "claim_done",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "memory",
+      "excel",
+      "filesystem"
+    ]
+  }
+}

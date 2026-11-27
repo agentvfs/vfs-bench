@@ -1,0 +1,117 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/a057fac5097daf453db7e68a26b0c4f54c7ab292154b52e3f442be1096111c62",
+      "role": "workspace",
+      "sha256": "a057fac5097daf453db7e68a26b0c4f54c7ab292154b52e3f442be1096111c62",
+      "size": 1236,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/46bf2aab32f44bd2fe30d934c99738440d7f06a308b29075f481511ccf08fb26",
+      "role": "workspace_config",
+      "sha256": "46bf2aab32f44bd2fe30d934c99738440d7f06a308b29075f481511ccf08fb26",
+      "size": 2530,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/a275ef99d47c6a1e63b7902408f6fcc727cc80b0479ce0d4aa4255f39121ed97",
+      "role": "parity",
+      "sha256": "a275ef99d47c6a1e63b7902408f6fcc727cc80b0479ce0d4aa4255f39121ed97",
+      "size": 1317,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/20963bf99875c322677cbd7e6fb24421d7a21aab43a90baea87b572272b24c17",
+      "role": "verifier",
+      "sha256": "20963bf99875c322677cbd7e6fb24421d7a21aab43a90baea87b572272b24c17",
+      "size": 658,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "airtable_get_record",
+    "mongodb_list-collections",
+    "mongodb_list-databases",
+    "mongodb_collection-indexes",
+    "mongodb_collection-schema",
+    "mongodb_find",
+    "wikipedia_search_wikipedia",
+    "wikipedia_get_article",
+    "wikipedia_get_summary",
+    "wikipedia_summarize_article_for_query",
+    "wikipedia_summarize_article_section",
+    "wikipedia_get_related_topics",
+    "wikipedia_extract_key_facts",
+    "wikipedia_get_sections",
+    "wikipedia_get_links",
+    "google-maps_maps_geocode",
+    "google-maps_maps_reverse_geocode",
+    "google-maps_maps_search_places",
+    "google-maps_maps_place_details",
+    "google-maps_maps_distance_matrix",
+    "google-maps_maps_elevation",
+    "google-maps_maps_directions"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "royal-wedding-louvre-walk",
+  "schema_version": 1,
+  "servers": [
+    "airtable",
+    "mongodb",
+    "wikipedia",
+    "google-maps"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/royal-wedding-louvre-walk/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "c852be35aa57882626cecf86fcb6d193c8570dd550d97b6ee5e0018b426cbb97",
+      "size": 5835,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/royal-wedding-louvre-walk/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "688fb11183792b921381bd59",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/royal-wedding-louvre-walk",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

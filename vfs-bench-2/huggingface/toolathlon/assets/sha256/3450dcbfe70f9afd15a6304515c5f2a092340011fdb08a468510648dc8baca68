@@ -1,0 +1,14 @@
+{
+  "id": "toolathlon_landing-task-reminder",
+  "fixtures": [
+    {
+      "id": "mail/richard_chavez@mcp.com",
+      "kind": "mail"
+    },
+    {
+      "id": "pg/LANDING_TASK_REMINDER",
+      "kind": "script",
+      "run": "shared/seed_db.py"
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "yahoo_finance_get_historical_stock_prices",
+      "why": "`get_historical_stock_prices` and `yahoo-finance get_historical_stock_prices` read the same fixture rows",
+      "mcp": {
+        "server": "yahoo-finance",
+        "tool": "get_historical_stock_prices",
+        "args": {
+          "ticker": "NVDA",
+          "period": "1mo",
+          "interval": "1d"
+        }
+      },
+      "mirage": {
+        "command": "yahoo-finance get-historical-stock-prices '{\"ticker\":\"NVDA\",\"period\":\"1mo\",\"interval\":\"1d\"}'"
+      }
+    },
+    {
+      "name": "yahoo_finance_get_stock_info",
+      "why": "`get_stock_info` and `yahoo-finance get_stock_info` read the same fixture row",
+      "mcp": {
+        "server": "yahoo-finance",
+        "tool": "get_stock_info",
+        "args": {
+          "ticker": "NVDA"
+        }
+      },
+      "mirage": {
+        "command": "yahoo-finance get-stock-info '{\"ticker\":\"NVDA\"}'"
+      }
+    },
+    {
+      "name": "yahoo_finance_get_financial_statement",
+      "why": "the same income statement",
+      "mcp": {
+        "server": "yahoo-finance",
+        "tool": "get_financial_statement",
+        "args": {
+          "ticker": "NVDA",
+          "financial_type": "income_stmt"
+        }
+      },
+      "mirage": {
+        "command": "yahoo-finance get-financial-statement '{\"ticker\":\"NVDA\",\"financial_type\":\"income_stmt\"}'"
+      }
+    },
+    {
+      "name": "yahoo_finance_get_holder_info",
+      "why": "the same holders",
+      "mcp": {
+        "server": "yahoo-finance",
+        "tool": "get_holder_info",
+        "args": {
+          "ticker": "NVDA",
+          "holder_type": "major_holders"
+        }
+      },
+      "mirage": {
+        "command": "yahoo-finance get-holder-info '{\"ticker\":\"NVDA\",\"holder_type\":\"major_holders\"}'"
+      }
+    },
+    {
+      "name": "browser_navigate",
+      "why": "navigating to the same page yields the same snapshot",
+      "mcp": {
+        "server": "playwright_with_chunk",
+        "tool": "browser_navigate",
+        "args": {
+          "url": "https://example.com/"
+        }
+      },
+      "mirage": {
+        "command": "browser navigate '{\"url\":\"https://example.com/\"}'"
+      }
+    },
+    {
+      "name": "browser_tab_list",
+      "why": "the open tabs agree after the same navigation",
+      "mcp": {
+        "server": "playwright_with_chunk",
+        "tool": "browser_tab_list",
+        "args": {}
+      },
+      "mirage": {
+        "command": "browser tab-list"
+      }
+    }
+  ]
+}

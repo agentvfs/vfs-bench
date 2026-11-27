@@ -1,0 +1,40 @@
+{
+  "project": "mcp-bench0606",
+  "tables": [
+    {
+      "dataset": "academic_warning",
+      "table": "scores_2501",
+      "csv": "files/scores_2501.csv"
+    },
+    {
+      "dataset": "academic_warning",
+      "table": "scores_2502",
+      "csv": "files/scores_2502.csv"
+    },
+    {
+      "dataset": "academic_warning",
+      "table": "scores_2503",
+      "csv": "files/scores_2503.csv"
+    },
+    {
+      "dataset": "academic_warning",
+      "table": "scores_2504",
+      "csv": "files/scores_2504.csv"
+    },
+    {
+      "dataset": "academic_warning",
+      "table": "scores_2505",
+      "csv": "files/scores_2505.csv"
+    },
+    {
+      "dataset": "academic_warning",
+      "table": "scores_2506",
+      "csv": "files/scores_2506.csv"
+    },
+    {
+      "dataset": "academic_warning",
+      "table": "scores_2507",
+      "csv": "files/scores_2507.csv"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "toolathlon_k8s-deployment-cleanup",
+  "fixtures": [
+    {
+      "id": "mail/mitchelle75@mcp.com",
+      "kind": "mail"
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "note": "The mirage arm reads the template through the `/template` mount and writes through `gh`; the MCP arm has the 88-tool GitHub surface. These cases pair the operations this task's agent performs, plus the one it must not be able to perform on either arm.",
+  "cases": [
+    {
+      "name": "template_config",
+      "why": "both arms read the template's _config.yml at the ref the grader reads, byte for byte",
+      "mcp": {
+        "server": "github",
+        "tool": "get_file_contents",
+        "args": {
+          "owner": "academicpages",
+          "repo": "academicpages.github.io",
+          "path": "_config.yml",
+          "ref": "master"
+        },
+        "jq": ".content",
+        "raw": true
+      },
+      "mirage": {
+        "command": "cat /template/_config.yml"
+      }
+    },
+    {
+      "name": "template_pages",
+      "why": "both arms enumerate the same _pages directory, which is what the agent edits",
+      "mcp": {
+        "server": "github",
+        "tool": "get_file_contents",
+        "args": {
+          "owner": "academicpages",
+          "repo": "academicpages.github.io",
+          "path": "_pages/",
+          "ref": "master"
+        },
+        "jq": "[.[].name] | sort | .[]",
+        "raw": true
+      },
+      "mirage": {
+        "command": "ls /template/_pages | sort"
+      }
+    },
+    {
+      "name": "create_repo_refused",
+      "why": "creating LJT-Homepage outright is a verified-passing path that skips the fork and the whole /template survey the measured draws spend most of their tokens on; the MCP arm cannot take it, so the mirage arm must not either",
+      "note": "LJT-Homepage is inside this task's github_allowed_repos and does not exist after seeding, so the github state snapshot can see it if either arm brings it into existence. The two arms word the refusal differently -- upstream's wrapper message against the fake's 403 -- so the projection asserts the fact and fails the case if a repository comes back.",
+      "mutates": [
+        "github"
+      ],
+      "mcp": {
+        "server": "github",
+        "tool": "create_repository",
+        "args": {
+          "name": "LJT-Homepage",
+          "description": "parity probe"
+        },
+        "pipe": "! grep -q full_name && echo refused"
+      },
+      "mirage": {
+        "command": "gh api user/repos -X POST -f name=LJT-Homepage",
+        "pipe": "! grep -q full_name && echo refused"
+      }
+    },
+    {
+      "name": "create_repo_refused_via_curl",
+      "why": "`curl` and `wget` are unconditional builtins with no host allowlist, and `gh api /` hands out the base URL, so a refusal that lives in the gh CLI is not a refusal at all; this case fails if the enforcement ever moves up a layer",
+      "note": "the MCP arm has no raw-HTTP route, so both refusal cases pair against the same create_repository tool -- the fact under test belongs to the account, and each arm reaches it by whichever route it has.",
+      "mutates": [
+        "github"
+      ],
+      "mcp": {
+        "server": "github",
+        "tool": "create_repository",
+        "args": {
+          "name": "LJT-Homepage",
+          "description": "parity probe"
+        },
+        "pipe": "! grep -q full_name && echo refused"
+      },
+      "mirage": {
+        "command": "curl -s -X POST \"$(gh api / | grep -o 'http://[0-9.]*:[0-9]*/user/repos')\" -H 'Authorization: Bearer fake-token' -d '{\"name\":\"LJT-Homepage\"}'",
+        "pipe": "! grep -q full_name && echo refused"
+      }
+    },
+    {
+      "name": "fork_still_works",
+      "why": "the constraint is on creating from nothing, not on a repository coming into existence; the fork-and-rename path this task is built around has to survive the refusal",
+      "note": "the replies are not comparable and are not what this asserts -- upstream's tool answers the prose line `Fork is in progress` where the API returns the repository -- so each side is projected to whether it was refused, and `mutates` does the real work: the github snapshot is taken after each arm and the two must agree on the fork that landed.",
+      "mutates": [
+        "github"
+      ],
+      "mcp": {
+        "server": "github",
+        "tool": "fork_repository",
+        "args": {
+          "owner": "academicpages",
+          "repo": "academicpages.github.io"
+        },
+        "pipe": "! grep -qi 'error\\|not allowed\\|disabled' && echo forked"
+      },
+      "mirage": {
+        "command": "gh api repos/academicpages/academicpages.github.io/forks -X POST",
+        "pipe": "! grep -qi 'error\\|not allowed\\|disabled' && echo forked"
+      }
+    }
+  ]
+}

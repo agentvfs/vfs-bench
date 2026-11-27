@@ -1,0 +1,33 @@
+{
+  "note": "This task's Hub starts EMPTY -- upstream's preprocess deletes the repository the agent is asked to create -- and its workspace mounts no `/hub`, so there is no repository content for the two arms to read the same way. What both arms do read before any upload is the identity they will upload UNDER: `upload_folder` resolves the namespace from whoami, and a repository created under the wrong owner is the failure this pairs against. The MCP arm asks upstream's own huggingface server, which is `mcp-remote` pointed at the fake's MCP port; the mirage arm asks the `hf` CLI over the same fake. Both answer in prose, in different prose, so each side names the sed that reaches the same fact.",
+  "cases": [
+    {
+      "name": "hub_identity",
+      "why": "the account the upload namespaces under; both arms authenticate with the task's own name as the bearer, and the fake reads the bearer as the tenant",
+      "mcp": {
+        "server": "huggingface",
+        "tool": "hf_whoami",
+        "args": {},
+        "pipe": "sed -n 's/.*Authenticated as \\[@\\([^]]*\\)\\].*/\\1/p'"
+      },
+      "mirage": {
+        "command": "hf auth whoami",
+        "pipe": "head -1"
+      }
+    },
+    {
+      "name": "hub_orgs",
+      "why": "the org memberships the same identity carries, which upstream prints and this CLI dropped until it was fixed -- an agent that cannot see its orgs cannot choose to push to one",
+      "mcp": {
+        "server": "huggingface",
+        "tool": "hf_whoami",
+        "args": {},
+        "pipe": "sed -n '/## Organizations/,$ s/^- .\\(.*\\).$/\\1/p'"
+      },
+      "mirage": {
+        "command": "hf auth whoami",
+        "pipe": "sed -n 2p | sed 's/^orgs:[[:space:]]*//'"
+      }
+    }
+  ]
+}

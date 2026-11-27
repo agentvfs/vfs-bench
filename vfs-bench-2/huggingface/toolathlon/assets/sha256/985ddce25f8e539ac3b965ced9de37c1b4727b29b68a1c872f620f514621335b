@@ -1,0 +1,19 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "arxiv_latex_get_paper_prompt",
+      "why": "the same LaTeX source rendered the same way",
+      "mcp": {
+        "server": "arxiv-latex",
+        "tool": "get_paper_prompt",
+        "args": {
+          "arxiv_id": "2412.17451"
+        }
+      },
+      "mirage": {
+        "command": "arxiv-latex get-paper-prompt '{\"arxiv_id\":\"2412.17451\"}'"
+      }
+    }
+  ]
+}

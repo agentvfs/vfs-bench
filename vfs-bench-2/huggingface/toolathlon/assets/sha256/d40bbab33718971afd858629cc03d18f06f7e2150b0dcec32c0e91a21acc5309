@@ -1,0 +1,62 @@
+mode: EXEC
+runtimes:
+  - name: pyodide
+    config:
+      lockFileUrl: ${TOOLATHLON_PYTHON}/pyodide-lock.json
+      packageBaseUrl: ${TOOLATHLON_PYTHON}/
+      packages:
+        - openpyxl
+        - xlsxwriter
+        - pypdf2
+        - pymupdf
+        - pandas
+        - numpy
+        - pyarrow
+        - pillow
+        - lxml
+        - python-docx
+        - python-pptx
+        - pytesseract
+        - olefile
+  - workspace
+clis:
+  kubectl:
+    cli: ../../../../cli/toolathlon/kubectl.mjs:KUBECTL
+    config:
+      binary: ${KUBECTL}
+      native: ${KUBECTL_NATIVE}
+      processDir: ${K8S_PROCESS_DIR}
+      kubeconfig: ${KUBECONFIG}
+      workdir: ${AGENT_WORKSPACE}
+  helm:
+    cli: ../../../../cli/toolathlon/helm.mjs:HELM
+    config:
+      binary: ${HELM}
+      kubeconfig: ${KUBECONFIG}
+      workdir: ${AGENT_WORKSPACE}
+      env:
+        HELM_NATIVE: ${HELM_NATIVE}
+        HELM_FIXTURE_URL: ${HELM_FIXTURE_URL}
+        HELM_CONFIG_HOME: ${HELM_CONFIG_HOME}
+        HELM_CACHE_HOME: ${HELM_CACHE_HOME}
+        HELM_DATA_HOME: ${HELM_DATA_HOME}
+  git:
+    cli: git
+mounts:
+  /tmp:
+    vfs: ram
+  /k8s:
+    vfs: ../../../../vfs/kubernetes.mjs:KubernetesVFS
+    mode: READ
+    config:
+      kubeconfig: ${KUBECONFIG}
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace

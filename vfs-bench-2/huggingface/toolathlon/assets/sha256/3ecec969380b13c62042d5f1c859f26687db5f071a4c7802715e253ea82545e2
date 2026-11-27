@@ -1,0 +1,65 @@
+{
+  "note": "The google-cloud MCP server answers in prose with a row preview; `bq` returns JSON. Requires the emulator started for this task: uv run python server/fakes/gcp.py academic-warning. Every google-cloud projection ends in `grep .`, so an arm whose reply carries no such line fails the case instead of agreeing on nothing.",
+  "cases": [
+    {
+      "name": "run_query_count",
+      "why": "the same statement returns the same answer through either arm",
+      "mcp": {
+        "server": "google-cloud",
+        "tool": "bigquery_run_query",
+        "args": {
+          "query": "SELECT COUNT(*) AS n FROM academic_warning.scores_2501"
+        },
+        "pipe": "sed -n \"s/^Row 1: {'n': \\([0-9]*\\)}/\\1/p\" | grep ."
+      },
+      "mirage": {
+        "command": "google-cloud bigquery-run-query '{\"query\":\"SELECT COUNT(*) AS n FROM academic_warning.scores_2501\"}'",
+        "pipe": "sed -n \"s/^Row 1: {'n': \\([0-9]*\\)}/\\1/p\" | grep ."
+      }
+    },
+    {
+      "name": "scores_by_student",
+      "why": "the scores the warning is computed from agree value for value",
+      "mcp": {
+        "server": "google-cloud",
+        "tool": "bigquery_run_query",
+        "args": {
+          "query": "SELECT score FROM academic_warning.scores_2501 ORDER BY student_id LIMIT 3"
+        },
+        "pipe": "sed -n \"s/^Row [0-9]*: {'score': \\(.*\\)}/\\1/p\" | grep ."
+      },
+      "mirage": {
+        "command": "google-cloud bigquery-run-query '{\"query\":\"SELECT score FROM academic_warning.scores_2501 ORDER BY student_id LIMIT 3\"}'",
+        "pipe": "sed -n \"s/^Row [0-9]*: {'score': \\(.*\\)}/\\1/p\" | grep ."
+      }
+    },
+    {
+      "name": "log_starts_empty",
+      "why": "the grade counts entries written during the run, so both arms have to start from the same empty log -- and the check that asserts it is skipped silently when the launch timestamp will not parse",
+      "mcp": {
+        "server": "google-cloud",
+        "tool": "logging_read_logs",
+        "args": {},
+        "pipe": "sed -n 's/^Found \\([0-9]*\\) log entries.*/\\1/p; s/^No log entries found.*/0/p' | grep ."
+      },
+      "mirage": {
+        "command": "google-cloud logging-read-logs",
+        "pipe": "sed -n 's/^Found \\([0-9]*\\) log entries.*/\\1/p; s/^No log entries found.*/0/p' | grep ."
+      }
+    },
+    {
+      "name": "log_bucket_visible",
+      "why": "the task names its destination by prefix, so both arms must be able to discover the same seeded log bucket through the confined Cloud Logging client",
+      "mcp": {
+        "server": "google-cloud",
+        "tool": "logging_list_logs",
+        "args": {},
+        "pipe": "sed -n 's/^Log Bucket: //p' | sort | grep ."
+      },
+      "mirage": {
+        "command": "google-cloud logging-list-logs",
+        "pipe": "sed -n 's/^Log Bucket: //p' | sort | grep ."
+      }
+    }
+  ]
+}

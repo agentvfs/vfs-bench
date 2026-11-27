@@ -1,0 +1,66 @@
+mode: EXEC
+runtimes:
+  - name: pyodide
+    config:
+      lockFileUrl: ${TOOLATHLON_PYTHON}/pyodide-lock.json
+      packageBaseUrl: ${TOOLATHLON_PYTHON}/
+      packages:
+        - openpyxl
+        - xlsxwriter
+        - pypdf2
+        - pymupdf
+        - pandas
+        - numpy
+        - pyarrow
+        - pillow
+        - lxml
+        - python-docx
+        - python-pptx
+        - pytesseract
+        - olefile
+  - workspace
+clis:
+  canvas:
+    cli: ../../../../cli/toolathlon/canvas.mjs:CANVAS
+    config:
+      apiBase: ${CANVAS_CLI_URL}
+      timeoutMs: 10000
+      files:
+        apiBase: ${CANVAS_API_BASE}
+        token: ${CANVAS_API_TOKEN}
+  emails:
+    cli: ../../../../cli/toolathlon/emails.mjs:EMAILS
+    config:
+      apiBase: ${EMAILS_CLI_URL}
+      timeoutMs: 120000
+  git:
+    cli: git
+mounts:
+  /tmp:
+    vfs: ram
+  /canvas:
+    vfs: ../../../../vfs/canvas.mjs:CanvasVFS
+    mode: READ
+    config:
+      apiBase: ${CANVAS_API_BASE}
+      token: ${CANVAS_API_TOKEN}
+  /mail:
+    vfs: email
+    config:
+      imapHost: localhost
+      imapPort: ${BUSINESS_IMAP_PORT}
+      smtpHost: localhost
+      smtpPort: ${BUSINESS_SMTP_PORT}
+      username: mcpcanvasadmin3@mcp.com
+      password: mcpcanvasadminpass3
+      useSsl: false
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace

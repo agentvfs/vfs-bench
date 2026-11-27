@@ -1,0 +1,82 @@
+mode: EXEC
+runtimes:
+  - name: pyodide
+    config:
+      lockFileUrl: ${TOOLATHLON_PYTHON}/pyodide-lock.json
+      packageBaseUrl: ${TOOLATHLON_PYTHON}/
+      packages:
+        - openpyxl
+        - xlsxwriter
+        - pypdf2
+        - pymupdf
+        - pandas
+        - numpy
+        - pyarrow
+        - pillow
+        - lxml
+        - python-docx
+        - python-pptx
+        - pytesseract
+        - olefile
+  - workspace
+clis:
+  fetch:
+    cli: ../../../../cli/toolathlon/research.mjs:WEB
+    config:
+      apiBase: ${FETCH_CLI_URL}
+      timeoutMs: 100000
+  gh:
+    cli: gh
+    config:
+      token: fake-token
+      baseUrl: ${GITHUB_URL}
+      repo: integ-user/Annoy-DataSync
+  hf:
+    cli: hf
+    config:
+      endpoint: ${HF_ENDPOINT}
+      token: dataset-license-issue
+  huggingface:
+    cli: ../../../../cli/toolathlon/hub.mjs:HUB
+    config:
+      endpoint: http://127.0.0.1:5200/mcp
+      token: dataset-license-issue
+  web-search:
+    cli: ../../../../cli/toolathlon/research.mjs:SEARCH
+    config:
+      apiBase: ${SEARCH_CLI_URL}
+  git:
+    cli: git
+mounts:
+  /tmp:
+    vfs: ram
+  /project:
+    vfs: github
+    config:
+      token: fake-token
+      owner: integ-user
+      repo: Annoy-DataSync
+      ref: main
+      baseUrl: ${GITHUB_URL}
+  /hub/Annoy-PyEdu-Rs:
+    vfs: hf_datasets
+    config:
+      repo_id: dataset-license-issue/Annoy-PyEdu-Rs
+      endpoint: ${HF_ENDPOINT}
+      token: dataset-license-issue
+  /hub/Annoy-PyEdu-Rs-Raw:
+    vfs: hf_datasets
+    config:
+      repo_id: dataset-license-issue/Annoy-PyEdu-Rs-Raw
+      endpoint: ${HF_ENDPOINT}
+      token: dataset-license-issue
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace

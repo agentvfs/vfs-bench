@@ -1,0 +1,14 @@
+{
+  "id": "toolathlon_sla-timeout-monitor",
+  "fixtures": [
+    {
+      "id": "mail/moralesp@mcp.com",
+      "kind": "mail"
+    },
+    {
+      "id": "pg/SLA_MONITOR",
+      "kind": "script",
+      "run": "shared/seed_db.py"
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/9d49f28c71f6b999c6d64ce3df112b1cbf19977e6469038a90f27ce889087ce1",
+      "role": "workspace",
+      "sha256": "9d49f28c71f6b999c6d64ce3df112b1cbf19977e6469038a90f27ce889087ce1",
+      "size": 1613,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/9d6bda7425223e9c6d10369a97686c5e4fdc7abd8b2b1890a602fba1bda45c0b",
+      "role": "workspace_config",
+      "sha256": "9d6bda7425223e9c6d10369a97686c5e4fdc7abd8b2b1890a602fba1bda45c0b",
+      "size": 2786,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/db8e94635e8d3ce73aea81cecd580d4f7c4838da740f421e6f314546a000e3ef",
+      "role": "parity",
+      "sha256": "db8e94635e8d3ce73aea81cecd580d4f7c4838da740f421e6f314546a000e3ef",
+      "size": 4537,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/1dea64ad85a1da3f076a44f319cced30772c3f09e2917a2240f086ae4c8bbcaa",
+      "role": "verifier",
+      "sha256": "1dea64ad85a1da3f076a44f319cced30772c3f09e2917a2240f086ae4c8bbcaa",
+      "size": 282,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "airtable_list_bases",
+    "airtable_list_tables",
+    "airtable_list_records",
+    "airtable_search_records",
+    "airtable_get_record",
+    "fetch_fetch",
+    "git_git_status",
+    "git_git_log",
+    "github_search_repositories",
+    "github_list_commits",
+    "calculator_calculate",
+    "filesystem_read_file",
+    "filesystem_list_directory",
+    "filesystem_list_allowed_directories"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "sports-drinks-article-site-metric",
+  "schema_version": 1,
+  "servers": [
+    "airtable",
+    "fetch",
+    "git",
+    "github",
+    "calculator",
+    "filesystem"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/sports-drinks-article-site-metric/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "876f41c73727a5e94a901e30b2f9917647a3b348d0d588486709777475be2e60",
+      "size": 2629,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/sports-drinks-article-site-metric/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689bd255c0422b257e7dfcf4",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/sports-drinks-article-site-metric",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

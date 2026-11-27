@@ -1,0 +1,112 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "role": "workspace",
+      "sha256": "e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "size": 482,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/93cbb8d478d8eb89861b50b63892e4e4287258c3328b3d19bced6eedae6ed7df",
+      "role": "workspace_config",
+      "sha256": "93cbb8d478d8eb89861b50b63892e4e4287258c3328b3d19bced6eedae6ed7df",
+      "size": 2292,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/cd36a697ae53fccf1cb6183f06aa93b61176d5555723991fd869e82614311ed7",
+      "role": "parity",
+      "sha256": "cd36a697ae53fccf1cb6183f06aa93b61176d5555723991fd869e82614311ed7",
+      "size": 1661,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2e28f62552999b966cbea66fbebe1d0751e39b0d9e10517fc4d1f6fa96df4739",
+      "role": "verifier",
+      "sha256": "2e28f62552999b966cbea66fbebe1d0751e39b0d9e10517fc4d1f6fa96df4739",
+      "size": 586,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "oxylabs_google_search_scraper",
+    "mcp-code-executor_execute_code",
+    "weather-data_weather_astronomy",
+    "weather-data_weather_search",
+    "weather-data_weather_history",
+    "weather_find_weather_stations",
+    "git_git_status",
+    "git_git_diff_unstaged",
+    "git_git_diff_staged",
+    "git_git_diff",
+    "git_git_log",
+    "git_git_show",
+    "github_search_repositories",
+    "github_search_code",
+    "github_search_users"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "one-piece-city-sunset-difference",
+  "schema_version": 1,
+  "servers": [
+    "oxylabs",
+    "mcp-code-executor",
+    "weather-data",
+    "weather",
+    "git",
+    "github"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/one-piece-city-sunset-difference/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "75adfe80ceee08531b72c130ce14ed2970097c51a11aea472211e9c2f12e61a5",
+      "size": 3311,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/one-piece-city-sunset-difference/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689e0b1d9c8e2ac413c1f245",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/one-piece-city-sunset-difference",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

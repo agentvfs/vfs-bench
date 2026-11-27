@@ -1,0 +1,134 @@
+mode: EXEC
+
+# The character type upstream's servers run under: started with no locale,
+# their Python coerces it to C.UTF-8 (PEP 538) and what they run inherits
+# it, so grep, sed and expr match whole characters there as here.
+env:
+  LC_CTYPE: C.UTF-8
+
+# No Python. None of the twenty-two tools Atlas enables runs code on this
+# machine, so an interpreter here would be a capability the other arm was
+# never given.
+runtimes:
+  - workspace
+
+clis:
+  # Airtable as the MCP arm has it: its own server, on the fake this run seeds
+  # from the base Atlas shares, listing only the tools Atlas enables,
+  # `airtable <tool>` for its `airtable_<tool>`. timeoutMs is that arm's
+  # per-call bound, upstream's `toolCallTimeoutMs`.
+  airtable:
+    cli: ../../../../cli/mcpatlas/tools.mjs:AIRTABLE
+    config:
+      apiBase: ${AIRTABLE_CLI_URL}
+      timeoutMs: 60000
+
+  # GitHub, mirage's fake, on the one token both arms are given: the MCP
+  # arm's server is sent there by its hook and reads GITHUB_TOKEN, and `gh`
+  # is handed the same fake and token.
+  gh:
+    cli: gh
+    config:
+      token: ${GITHUB_TOKEN}
+      baseUrl: ${GITHUB_URL}
+
+  # The repositories are real clones under /data/repos, so git reads them
+  # where they are, as the MCP arm's git server does.
+  git:
+    cli: git
+
+  # The four servers no mount or native CLI can speak for. Each is the server
+  # the MCP arm runs, on the same workspace, listing only the tools Atlas
+  # enables. timeoutMs is that arm's per-call bound, which is upstream's: its
+  # harness gives each tool call `toolCallTimeoutMs`, 60 seconds by default.
+  open-library:
+    cli: ../../../../cli/mcpatlas/tools.mjs:OPEN_LIBRARY
+    config:
+      apiBase: ${OPEN_LIBRARY_CLI_URL}
+      timeoutMs: 60000
+
+  context7:
+    cli: ../../../../cli/mcpatlas/tools.mjs:CONTEXT7
+    config:
+      apiBase: ${CONTEXT7_CLI_URL}
+      timeoutMs: 60000
+
+  weather:
+    cli: ../../../../cli/mcpatlas/tools.mjs:WEATHER
+    config:
+      apiBase: ${WEATHER_CLI_URL}
+      timeoutMs: 60000
+
+  weather-data:
+    cli: ../../../../cli/mcpatlas/tools.mjs:WEATHER_DATA
+    config:
+      apiBase: ${WEATHER_DATA_CLI_URL}
+      timeoutMs: 60000
+
+mounts:
+  # A shell without scratch space is not a shell: agents write a heredoc to
+  # /tmp and read it back a line later.
+  /tmp:
+    vfs: ram
+
+  # The repositories, and nothing else of /data: this task's MCP arm reads
+  # /data only through its git server, which reads a repository and
+  # nothing beside it -- not the CSVs, not the memory server's graph.
+  /data/repos/balldontlie-mcp:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}/repos/balldontlie-mcp
+
+  /data/repos/mcp-server-calculator:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}/repos/mcp-server-calculator
+
+  /data/repos/metmuseum-mcp:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}/repos/metmuseum-mcp
+
+  /data/repos/mongodb-mcp-server:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}/repos/mongodb-mcp-server
+
+  /data/repos/slackr:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}/repos/slackr
+
+  /data/repos/snake-game:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}/repos/snake-game
+
+  /data/repos/storyteller:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}/repos/storyteller
+
+  /data/repos/tree-sitter-diff:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}/repos/tree-sitter-diff
+
+  # The base, read-only, as every Airtable tool Atlas enables here reads.
+  /airtable:
+    vfs: airtable
+    mode: READ
+    config:
+      token: ${AIRTABLE_API_KEY}
+      baseUrl: ${AIRTABLE_URL}/v0
+
+# Every command runs under `whole_mount.py`, which refuses a walk of a
+# whole mount and a `cat` of a whole table, asked before the line runs, to
+# refuse it whole, and before each command.
+profiles:
+  default:
+    policy:
+      pre_execute:
+        - {script: ../../whole_mount.py, runtime: monty}
+      pre_command:
+        - {script: ../../whole_mount.py, runtime: monty}
