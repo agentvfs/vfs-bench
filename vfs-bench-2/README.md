@@ -58,6 +58,8 @@ files = nhl.materialize()  # task-relative names mapped to verified local files
 
 Pass a release folder explicitly when using the reader outside the checkout, e.g. `Toolathlon("/data/toolathlon")`. `materialize(include_sources=True)` also retrieves the task's individually referenced source files. Code and grading inputs in this mapping are for the benchmark controller. The package exposes `task.open()` for Mirage Python trials and `trial.verify()` for grading while each trial's services are live. Check execution coverage with `vfsbench status <release-folder>`. [Python package, verifier and Harbor examples](PACKAGE.md)
 
+With the Harbor extra installed, `vfsbench run toolathlon --task wandb-best-score --agent nop` runs a single baseline. The [Python and CLI walkthrough](PACKAGE.md#run-the-same-task-from-python-and-the-cli) also runs a scoring agent against the same mock.
+
 Rebuild or verify both upload folders from the pinned v1 Git revision with:
 
 ```sh

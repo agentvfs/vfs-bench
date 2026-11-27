@@ -26,7 +26,9 @@ def export(dataset: Dataset,
            *,
            task_ids=None,
            local_files_only: bool = False,
-           available: bool = False) -> Path:
+           available: bool = False,
+           agent: dict | None = None,
+           concurrency: int | None = None) -> Path:
     """Write a new job directory. Run Harbor from this directory."""
     output = Path(output).resolve()
     if output.exists():
@@ -109,10 +111,12 @@ def export(dataset: Dataset,
             "verifier": {
                 "import_path": "vfsbench.harbor:MirageVerifier"
             },
-            "agents": [{
+            "agents": [agent if agent is not None else {
                 "name": "nop"
             }],
         }
+        if concurrency is not None:
+            job["n_concurrent_trials"] = concurrency
         (stage / "job.json").write_text(json.dumps(job, indent=2) + "\n")
         stage.rename(output)
     return output / "job.json"

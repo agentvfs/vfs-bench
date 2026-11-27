@@ -122,7 +122,52 @@ async def environment(task, config, run_dir):
 
 Each state reader is an async function returning the current run's state. A factory can provide a default `verifier` alongside the workspace. For use from the CLI or Harbor, register the factory in the installed project's `[project.entry-points."vfsbench.environments"]` and put its name in `[trial].environment`. The default `"suite"` selects the built-in environment.
 
-## Run through Harbor
+## Run the same task from Python and the CLI
+
+From the repository root, prepare the W&B task once. The examples use the
+local mock project and its five recorded experiment histories.
+
+```sh
+vfsbench snapshot build
+vfsbench prepare toolathlon --task wandb-best-score
+python vfs-bench-2/examples/wandb_best_score.py
+```
+
+The Python example opens a trial, runs the analysis inside its microVM and
+records a structured result. The original verifier reads the CSV in the
+workspace. It gives the correct experiment and step a reward of 1.
+[Python example](examples/wandb_best_score.py) · [Analysis script](examples/best_experiment.py)
+
+Use `vfsbench run` to execute the same analysis as a Harbor agent.
+
+```sh
+PYTHONPATH="$PWD/vfs-bench-2/examples" vfsbench run toolathlon \
+  --task wandb-best-score --agent-import-path wandb_agent:WandbAgent --offline
+```
+
+For an empty baseline, run `vfsbench run toolathlon --task wandb-best-score
+--agent nop --offline`. Its expected reward is 0. Each invocation creates
+a fresh directory under `runs/` with the exported `job.json`, Harbor
+results and a `verifier/vfsbench.json` for each trial. `--output` selects
+a new directory. A completed benchmark score of 0 is a successful command.
+Harbor launch errors and trial exceptions give the command a nonzero exit.
+
+Repeat `--task` to select multiple tasks or omit it to run the whole release.
+Use `-n` to control concurrency, `--config` for trial settings and
+`--agent NAME --model MODEL` for a configured Harbor model agent. After
+upload, replace `toolathlon` with the Hub repository ID and use
+`--revision COMMIT` to select an immutable release. Outside a checkout,
+a local release folder also works. [Harbor agent example](examples/wandb_agent.py)
+
+## Export a Harbor job for editing
+
+Stock Harbor loads two providers from the installed Python package.
+`vfsbench.harbor:MirageEnvironment` opens the selected task with
+`task.open()` and releases the trial after grading.
+`vfsbench.harbor:MirageVerifier` records the available agent evidence and
+calls `trial.verify()` while the workspace and service state are live.
+Both `vfsbench run` and a manual export write these provider paths to
+`job.json`.
 
 ```sh
 vfsbench harbor export --dataset vfs-bench-2/huggingface/toolathlon \

@@ -1,12 +1,13 @@
-"""Inspect releases, prepare the Python guest, or export Harbor jobs."""
+"""Inspect releases, prepare trials, and run benchmarks through Harbor."""
 
 import argparse
 import asyncio
 import sys
 from collections import Counter
+from importlib.util import find_spec
 from pathlib import Path
 
-from .dataset import Dataset
+from .dataset import Dataset, MCPAtlas, Toolathlon
 from .runtime import TrialConfig
 from .suites import execution_status
 
@@ -39,14 +40,41 @@ def main(argv=None):
     warm = commands.add_parser(
         "prepare",
         help="warm the Toolathlon cache by starting and grading empty trials")
-    for command in (inspect, warm):
+    launch = commands.add_parser("run", help="run tasks in Mirage with Harbor")
+    agent = launch.add_mutually_exclusive_group()
+    agent.add_argument("-a",
+                       "--agent",
+                       help="Harbor agent name (default: nop)")
+    agent.add_argument("--agent-import-path",
+                       metavar="MODULE:CLASS",
+                       help="load a custom Harbor agent")
+    launch.add_argument("-m",
+                        "--model",
+                        help="model name for the Harbor agent")
+    launch.add_argument("-n",
+                        "--n-concurrent",
+                        dest="concurrency",
+                        type=int,
+                        help="maximum number of simultaneous trials")
+    launch.add_argument("--output",
+                        type=Path,
+                        help="new job directory (default: runs/vfsbench-...)")
+    for command in (inspect, warm, launch):
         command.add_argument(
-            "release", help="local folder or Hugging Face dataset repo ID")
-        command.add_argument("--revision", default="main")
+            "release",
+            help="suite name in a checkout, local release folder, "
+            "or Hugging Face dataset repo ID")
+        command.add_argument("--revision", help="Hub revision (default: main)")
         command.add_argument("--config", type=Path)
-        command.add_argument("--task",
-                             action="append",
-                             help="select a task ID (repeatable)")
+        selection = (command.add_mutually_exclusive_group()
+                     if command is launch else command)
+        selection.add_argument("--task",
+                               action="append",
+                               help="select a task ID (repeatable)")
+        if command is launch:
+            selection.add_argument("--available",
+                                   action="store_true",
+                                   help="select tasks with a suite adapter")
         command.add_argument("--offline", action="store_true")
     commands.add_parser(
         "harbor",
@@ -57,14 +85,34 @@ def main(argv=None):
 
         print(build() if args.action == "build" else SNAPSHOT)
         return
-    config = TrialConfig.from_toml(
-        args.config) if args.config else TrialConfig()
+    if args.command == "run":
+        if find_spec("harbor") is None:
+            parser.error("run requires the vfsbench[harbor] extra")
+        if args.concurrency is not None and args.concurrency < 1:
+            parser.error("--n-concurrent must be positive")
+        if args.model and not (args.agent or args.agent_import_path):
+            parser.error("--model requires --agent or --agent-import-path")
+
+    named = {"toolathlon": Toolathlon, "mcpatlas": MCPAtlas}
     if Path(args.release).is_dir():
+        if args.revision:
+            parser.error("--revision requires a Hub repository ID")
         suite = Dataset(args.release, local_files_only=args.offline)
+    elif args.release in named and not args.revision:
+        suite = named[args.release](local_files_only=args.offline)
     else:
         suite = Dataset.from_hub(args.release,
-                                 revision=args.revision,
+                                 revision=args.revision or "main",
                                  local_files_only=args.offline)
+    if args.command == "run":
+        from .harbor.run import run
+
+        try:
+            return run(suite, args)
+        except (FileExistsError, KeyError, ValueError) as exc:
+            parser.error(str(exc))
+    config = TrialConfig.from_toml(
+        args.config) if args.config else TrialConfig()
     tasks = [suite[key] for key in args.task] if args.task else suite
     if args.command == "prepare":
         if (config.environment != "suite" or config.verifier.name != "suite"
@@ -84,4 +132,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

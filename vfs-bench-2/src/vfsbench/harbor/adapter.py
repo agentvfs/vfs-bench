@@ -97,7 +97,7 @@ class MirageEnvironment(BaseEnvironment):
         if manifest_hash(task.manifest) != self.descriptor["manifest_sha256"]:
             raise ValueError(
                 f"Release manifest changed since export for {task.id}")
-        return Trial(task, config=config)
+        return task.open(config=config)
 
     async def start(self, force_build=False):
         if self.trial is not None:

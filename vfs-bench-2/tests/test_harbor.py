@@ -3,6 +3,7 @@ workspace."""
 
 import importlib.util
 import json
+import subprocess
 import tempfile
 import unittest
 from contextlib import asynccontextmanager, chdir
@@ -18,6 +19,44 @@ from vfsbench.verifier import SuiteVerifier
 @unittest.skipUnless(importlib.util.find_spec("harbor"),
                      "install vfsbench[harbor]")
 class HarborTests(unittest.IsolatedAsyncioTestCase):
+
+    def test_run_saves_agent_config_and_reports_failed_trials(self):
+        from vfsbench.cli import main
+
+        with tempfile.TemporaryDirectory() as directory:
+            for errors in (0, 1):
+                output = Path(directory) / f"job-{errors}"
+
+                def launch(argv, *, cwd):
+                    job = json.loads((cwd / "job.json").read_text())
+                    self.assertEqual(job["agents"], [{
+                        "import_path": "sample:Agent",
+                        "model_name": "model"
+                    }])
+                    self.assertEqual(job["n_concurrent_trials"], 2)
+                    self.assertEqual(argv[-3:], ["run", "-c", "job.json"])
+                    summary = cwd / "jobs" / "test" / "result.json"
+                    summary.parent.mkdir(parents=True)
+                    summary.write_text(
+                        json.dumps({
+                            "n_total_trials": 1,
+                            "stats": {
+                                "n_completed_trials": 1,
+                                "n_errored_trials": errors,
+                                "n_cancelled_trials": 0
+                            }
+                        }))
+                    return subprocess.CompletedProcess(argv, 0)
+
+                with self.subTest(errors=errors), patch(
+                        "vfsbench.harbor.run.subprocess.run", launch):
+                    code = main([
+                        "run", "toolathlon", "--task", "wandb-best-score",
+                        "--offline", "--output",
+                        str(output), "--agent-import-path", "sample:Agent",
+                        "--model", "model", "-n", "2"
+                    ])
+                    self.assertEqual(code, errors)
 
     def test_export_ported_toolathlon_tasks(self):
         from vfsbench.suites.toolathlon import SUPPORTED
