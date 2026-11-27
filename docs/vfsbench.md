@@ -8,21 +8,30 @@ pip install .
 
 ## Run one trial
 
-These calls use the same function, trial configuration, and verifier. Both list the five experiment runs in the W&B mock, grade the attempt, and return a trial report. Listing the runs earns a reward of zero on this task.
+The trial supplies the workspace. Use Mirage's `shell -c` to run a shell line or `workspace vfs` to call the filesystem directly. Each invocation opens a fresh trial and grades it before teardown.
 
 ```sh
-vfsbench run toolathlon --task wandb-best-score --command 'ls /wandb/mluo/deepscaler-1.5b'
+vfsbench run toolathlon --task wandb-best-score shell -c 'ls /wandb/mluo/deepscaler-1.5b'
+vfsbench run toolathlon --task wandb-best-score workspace vfs readdir /wandb/mluo/deepscaler-1.5b
 ```
+
+Both examples list the five W&B runs. Mirage's shell prints command output and returns the shell exit code. Its VFS uses native call names, arguments, and output types. For example, `workspace vfs read PATH` emits the selected bytes, and `workspace vfs write PATH` reads bytes from stdin. Use `workspace vfs --help` to list operations. [Mirage CLI](https://github.com/strukto-ai/mirage/tree/main/python/mirage/cli)
+
+In Python, `run` passes your async function the actual Mirage `Workspace`.
 
 ```python
 from vfsbench import run
 
-# Within an async application
-report = await run("toolathlon", task="wandb-best-score", command="ls /wandb/mluo/deepscaler-1.5b")
+async def inspect(ws):
+    entries = await ws.vfs.readdir("/wandb/mluo/deepscaler-1.5b")
+    result = await ws.shell("ls /wandb/mluo/deepscaler-1.5b")
+    print(entries, await result.stdout_str())
+
+report = await run("toolathlon", task="wandb-best-score", action=inspect)
 print(report.verification.reward)
 ```
 
-The CLI prints the JSON representation of `report.to_dict()`. Omit the command to grade the initial state. A completed trial with a reward of zero is a successful run. A trial or verifier exception fails the command and propagates to a Python caller.
+Use `--output run1` before `shell` or `workspace` to save the controller's report to `run1/trial.json`. A run with no operation grades the initial state and prints that report as JSON. Listing the runs earns a reward of zero on this task.
 
 | Operation | CLI | Python |
 | --- | --- | --- |
@@ -40,7 +49,7 @@ from vfsbench import load_dataset
 
 task = load_dataset("toolathlon")["wandb-best-score"]
 async with task.open() as trial:
-    listing = await trial.exec("ls /wandb/mluo/deepscaler-1.5b")
+    listing = await trial.workspace.vfs.readdir("/wandb/mluo/deepscaler-1.5b")
     verdict = await trial.verify()
 print(trial.report.to_dict())
 ```
@@ -75,13 +84,13 @@ The verifier gets a read-only view of one attempt.
 | Evidence | Contents |
 | --- | --- |
 | `trial.trace.commands` | Commands issued through the runner with times, stdout, stderr and exit codes |
-| `trial.trace.workspace_events` | Mirage's native event log, including commands issued through its workspace API |
+| `trial.trace.workspace_events` | Mirage's native shell, result and VFS events from the CLI and Python workspace |
 | `trial.trace.agent` | The runner's structured trajectory, when available. Harbor records its ATIF trajectory here. |
 | `trial.result` | The optional `AgentResult` recorded by the runner, with structured output, a final answer or metadata |
 | `await trial.read_file(path)` | The bytes currently visible at a virtual workspace path |
 | `await trial.service_state(name)` | A detached, controller-side snapshot of the named mock run. `trial.services` lists the names. |
 
-A Python runner can capture a structured return value with `trial.record_result(AgentResult(output=value))` and an agent trajectory with `trial.record_agent_trace(trajectory)`. Both are optional. Command stdout, stderr and exit codes are captured automatically by `trial.exec()`. A verifier can grade an attempt entirely from service state. It can include selected observations in `VerificationResult.details` so they survive teardown. The full mock database lives only for the duration of the trial. A verifier exception propagates and is recorded separately from a benchmark reward.
+A Python runner can capture a structured return value with `trial.record_result(AgentResult(output=value))` and an agent trajectory with `trial.record_agent_trace(trajectory)`. Both are optional. Mirage records native shell output, exit codes, and VFS calls in `trial.trace.workspace_events`. Calls made through the Harbor adapter or the existing `trial.exec()` helper also populate `trial.trace.commands`. A verifier can grade an attempt entirely from service state. It can include selected observations in `VerificationResult.details` so they survive teardown. The full mock database lives only for the duration of the trial. A verifier exception propagates and is recorded separately from a benchmark reward.
 
 For a reusable verifier selected by TOML, register the verifier class in your installed project's `[project.entry-points."vfsbench.verifiers"]`. The entry point name goes in `[verifier].name`, and `[verifier.options]` contains its constructor arguments. The included trial configuration uses `name = "suite"`. The `[trial]` section controls the snapshot, CPU count, memory, command timeout and optional staging parent directory. Suite-specific service settings go in `[suite_options]`. [Example configuration](../trial.toml)
 

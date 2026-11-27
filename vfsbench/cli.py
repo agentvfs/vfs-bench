@@ -20,8 +20,7 @@ def main(argv=None):
     launch = commands.add_parser(
         "run", help="open a trial, verify it, and return its report")
     launch.add_argument("--task", required=True, help="task ID")
-    launch.add_argument("--command",
-                        help="shell command to execute before verification")
+    launch.add_argument("--command", help=argparse.SUPPRESS)
     launch.add_argument("--output", help="new directory for trial.json")
     inspect = commands.add_parser(
         "status", help="list task availability and service requirements")
@@ -39,6 +38,15 @@ def main(argv=None):
                          "--offline",
                          action="store_true",
                          help="require cached dependencies")
+    surfaces = launch.add_subparsers(dest="surface")
+    for name, description in (("shell", "run a Mirage shell line"),
+                              ("workspace",
+                               "use Mirage workspace shell or vfs")):
+        surface = surfaces.add_parser(name,
+                                      help=description,
+                                      add_help=False,
+                                      prefix_chars="+")
+        surface.add_argument("arguments", nargs=argparse.REMAINDER)
     snapshot = commands.add_parser("snapshot",
                                    help="manage the default microsandbox disk")
     snapshot.add_argument("operation", choices=("build", "name"))
@@ -52,6 +60,11 @@ def main(argv=None):
         return
     try:
         if action == "run":
+            surface = options.pop("surface")
+            if surface:
+                from .mirage_cli import invoke
+
+                return invoke(surface, options.pop("arguments"), options)
             report = asyncio.run(api.run(**options))
             print(json.dumps(report.to_dict(), indent=2, allow_nan=False))
             return

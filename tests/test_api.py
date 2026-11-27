@@ -78,3 +78,82 @@ class RunTests(unittest.TestCase):
                 self.assertEqual(outcome["trace"]["commands"][0]["command"],
                                  command)
                 self.assertIsNotNone(outcome["closed_at"])
+
+    def test_native_workspace_shell_and_vfs_cli(self):
+        from mirage.workspace.workspace import Workspace
+
+        expected = b"\x00\x80\xff"
+
+        async def evaluate(view):
+            self.assertIsNone(view.result)
+            found = await view.read_file("/workspace/input")
+            return {"reward": int(found == expected)}
+
+        @asynccontextmanager
+        async def environment(task, config, directory):
+
+            async def install(ws):
+                await ws.vfs.write("/workspace/input", expected)
+
+            yield TrialEnvironment({},
+                                   SuiteVerifier(evaluate),
+                                   python=False,
+                                   install=install)
+
+        async def inspect(ws):
+            self.assertIsInstance(ws, Workspace)
+            self.assertEqual(await ws.vfs.read("/workspace/input", raw=True),
+                             expected)
+            result = await ws.shell("pwd")
+            self.assertEqual(await result.stdout_str(), "/workspace\n")
+
+        with tempfile.TemporaryDirectory() as temp, patch(
+                "vfsbench.runtime._prepare", return_value=environment):
+            root = Path(temp)
+            args = ["run", "toolathlon", "--task", "wandb-best-score"]
+            report = asyncio.run(
+                run("toolathlon", task="wandb-best-score", action=inspect))
+            self.assertEqual(report.verification.reward, 1)
+            types = {event["type"] for event in report.trace.workspace_events}
+            self.assertTrue({"command", "result", "vfs"} <= types)
+
+            def launch(name, suffix, stdin=b""):
+                out = io.BytesIO()
+                text = io.TextIOWrapper(out,
+                                        encoding="utf-8",
+                                        write_through=True)
+                with tempfile.TemporaryFile("w+b") as source:
+                    source.write(stdin)
+                    source.seek(0)
+                    with (io.TextIOWrapper(source) as
+                          reader, patch("sys.stdin",
+                                        reader), redirect_stdout(text)):
+                        code = main(
+                            [*args, "--output",
+                             str(root / name), *suffix])
+                saved = json.loads((root / name / "trial.json").read_bytes())
+                self.assertIsNotNone(saved["closed_at"])
+                data = out.getvalue()
+                text.close()
+                return code, data, saved["verification"]["reward"]
+
+            vfs = ["workspace", "vfs"]
+            filename = "/workspace/input"
+            self.assertEqual(
+                launch("read",
+                       [*vfs, "read", filename, "--raw", "--offset", "1"]),
+                (0, expected[1:], 1))
+            self.assertEqual(
+                launch("write", [*vfs, "write", filename], b"replacement"),
+                (0, b"", 0))
+            status, listing, reward = launch("list",
+                                             [*vfs, "readdir", "/workspace"])
+            self.assertEqual((status, json.loads(listing), reward),
+                             (0, [filename], 1))
+            self.assertEqual(
+                launch("shell", ["shell", "-c", "cat", "--cwd", "/workspace"],
+                       expected), (0, expected, 1))
+            code, message, reward = launch(
+                "nonzero", ["workspace", "shell", "-c", "false", "--json"])
+            self.assertEqual((code, json.loads(message)["exit_code"], reward),
+                             (1, 1, 1))
