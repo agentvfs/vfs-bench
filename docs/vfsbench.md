@@ -43,6 +43,8 @@ Use `--output run1` before `shell` or `workspace` to save the controller's repor
 
 ## Mirage workspace YAML
 
+Toolathlon ships its workspace defaults in the Python package. Each of the 38 task IDs selects its built-in Mirage commands and whether the agent has a CPython guest. The suite adapter binds the live service endpoints, custom commands and filesystems for each trial. Opening a task in Python, from the CLI, or through Harbor applies those settings automatically. [Toolathlon workspace definitions](../vfsbench/suites/toolathlon_workspace.py)
+
 Pass the same Mirage workspace file to a Python run, a CLI run or a Harbor job. For example, save this as `workspace.yaml` to give each trial a writable RAM mount.
 
 ```yaml
@@ -71,7 +73,13 @@ report = await run("complexmcp", task="good-morning-paisley",
 
 For an open trial, pass `TrialConfig(workspace_yaml=Path("workspace.yaml"))` to `task.open(config=...)`. You can also set `workspace_yaml = "workspace.yaml"` under `[trial]` in TOML. Paths there resolve relative to the TOML file. An explicit run or export option takes precedence. Harbor reads the referenced file when it starts a trial.
 
-Mirage loads and validates the YAML. Use `mounts: {}` when configuring only profiles, limits or environment variables. Named entries are combined with the trial configuration. Suite mounts, suite-configured CLIs and the trial's managed Python machine reserve their names. The trial's network policy permits individual loopback mock ports.
+Mirage loads and validates the YAML. Use `mounts: {}` when configuring only profiles, limits or environment variables. The application can add a scratch mount, another CLI, or resource limits. Task-owned mount trees, CLI names, machine names, environment variables, and any task-specified clock and mock network settings are reserved.
+
+### Implementing a Toolathlon command or mount
+
+Custom command implementations live under `vfsbench/cli/`. A suite adapter supplies its Mirage CLI objects in `TrialEnvironment.clis`. For example, the two Calendar tasks bind `google-calendar` to the private Mirage Calendar API. The five commands use the original argument schemas and operate on the same events the verifier reads. Several other tasks still use a pinned upstream MCP process behind a Mirage command, including the Word, recipe and WooCommerce tools. [Calendar commands](../vfsbench/cli/google_calendar.py)
+
+Custom filesystem implementations live under `vfsbench/vfs/`. A suite supplies its read-only Python backends in `TrialEnvironment.mounts`. The WooCommerce integration binds `/woo` to the current trial's store. For built-in Mirage backends such as W&B or Drive, the adapter sets the backend and its credentials in the workspace configuration. [WooCommerce filesystem](../vfsbench/vfs/woocommerce.py)
 
 ## Application lifecycle
 
@@ -94,6 +102,15 @@ print(trial.report.to_dict())
 Pass a checkout suite name (`toolathlon`, `mcpatlas`, or `complexmcp`), a release directory, or a Hugging Face dataset ID to `load_dataset`, `run`, or the CLI. For a published release, loading initially reads the catalog. Accessing a task fetches its manifest, prompt or assets as needed, pinned to the catalog's Hub commit. `Toolathlon()` is the typed checkout reader. [Release format and upload](datasets.md)
 
 Tasks using a microVM require a working `msb` installation. On first use the runtime builds the default disk snapshot with CPython, SSHFS and the pinned analysis packages. Each agent guest and verifier guest restores a separate disk from that snapshot. The snapshot contains the runtime dependencies. Task fixtures and private grading inputs are staged per trial. Operators can prebuild the disk with `vfsbench snapshot build` or select their own installed snapshot in `trial.toml`. [Microsandbox](https://github.com/microsandbox/microsandbox)
+
+For a task that needs another CPython package, select its exact PyPI version in the trial configuration. For example, save the following as `trial.toml` and pass `--config trial.toml` to a run or Harbor export.
+
+```toml
+[trial]
+python_packages = ["tabulate==0.9.0"]
+```
+
+The equivalent Python call is `task.open(config=TrialConfig(python_packages=("tabulate==0.9.0",)))`. The builder installs compatible binary wheels before a trial starts and caches the disk by its image and package pins. You can also prebuild it with `vfsbench snapshot build --package tabulate==0.9.0`. The default disk already includes pandas, openpyxl, SciPy and PyMuPDF. A task that exposes only service commands still uses its configured agent workspace. [Guest package pins](../vfsbench/snapshot.py)
 
 Dependency downloads are enabled by default. The Toolathlon release uses local fixtures and private mock endpoints for task execution. For an intentionally disconnected host, the optional `--local-files-only` flag corresponds to Python's `local_files_only=True` and requires the dependencies to be present. Some tasks require Docker or additional provider software. `vfsbench status` lists those requirements. The separate MCP-Atlas catalog includes tasks that need provisioned services or an external judge. [MCP-Atlas configuration](../vfsbench/suites/MCP_ATLAS.md)
 

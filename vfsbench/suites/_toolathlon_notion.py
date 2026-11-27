@@ -1,6 +1,3 @@
-"""Run the v1 Mirage Notion fixture and Toolathlon's original Notion and
-Word MCPs."""
-
 import asyncio
 import hashlib
 import json
@@ -15,7 +12,8 @@ from aiohttp import web
 from vfsbench.runtime import TrialEnvironment, VerifierGuest
 from vfsbench.verifier import SuiteVerifier
 
-from ._mcpatlas_services import stdio_service, tool_cli
+from ..cli.tools import tool_cli
+from ._mcpatlas_services import stdio_service
 from ._toolathlon_documents import document_tools
 from ._woocommerce_store import docker
 
@@ -267,10 +265,6 @@ async def prepare(task, config, run_dir):
                          task, run_dir, root, instructions,
                          ["word"]) as (docs, _):
 
-        async def install(workspace):
-            workspace.register_cli("notion", notion)
-            workspace.register_cli("word", docs["word"])
-
         async def state():
             return await store.page_state(page_id)
 
@@ -286,7 +280,9 @@ async def prepare(task, config, run_dir):
             }
         },
                                verifier=SuiteVerifier(evaluate),
-                               install=install,
+                               clis={
+                                   "notion": notion,
+                                   "word": docs["word"]
+                               },
                                instructions=instructions,
-                               state_readers={"notion": state},
-                               python=False)
+                               state_readers={"notion": state})

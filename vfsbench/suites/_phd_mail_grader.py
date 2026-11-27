@@ -1,6 +1,3 @@
-"""Run the source checker and mail manager in the verifier VM using frozen
-RFC822 records."""
-
 import base64
 import email
 import imaplib

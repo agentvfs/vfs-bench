@@ -1,24 +1,18 @@
-"""Run Toolathlon’s WooCommerce tasks on the original API, MCP server and
-verifiers."""
-
 import asyncio
 import gzip
 import hashlib
 import json
-import re
 import tarfile
 from contextlib import asynccontextmanager
 from functools import partial
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 
-from mirage.errors.fs import eisdir, enoent
-from mirage.types import ContentType, FileStat, FileType
-from mirage.vfs.base import BaseVFS
-
+from ..cli.tools import tool_cli
 from ..runtime import TrialEnvironment, VerifierGuest
 from ..verifier import SuiteVerifier
+from ..vfs.woocommerce import WooFiles
 from . import _woocommerce_inventory
-from ._mcpatlas_services import stdio_service, tool_cli
+from ._mcpatlas_services import stdio_service
 from ._npm import install_locked
 from ._woocommerce_store import VENDOR, serve
 
@@ -28,73 +22,6 @@ MANIFESTS = {
     "inventory-sync":
     "53c0d5b975085d5f4e7bd6f2af51ca2f169e1b393e84151048ef8e856dc2c66d"
 }
-ROOTS = ("products", "orders", "customers", "categories")
-LISTING = re.compile(
-    r"(?:products|orders|customers|categories|products/\d+/variations)")
-OBJECT = re.compile(
-    r"(?:products|orders|customers|categories|products/\d+/variations)/\d+")
-
-
-class WooFiles(BaseVFS):
-    name = "woocommerce"
-    index_ttl = 0
-    caches_reads = False
-
-    def __init__(self, store):
-        super().__init__(vfs_md="WooCommerce API objects as JSON. Use the "
-                         "woocommerce CLI to "
-                         "update the store.")
-        self.store = store
-
-    @staticmethod
-    def _entry(name):
-        if name.endswith(".json"):
-            return FileStat(name=name,
-                            type=FileType.FILE,
-                            content=ContentType.JSON)
-        return FileStat(name=name, type=FileType.DIRECTORY, size=0)
-
-    @staticmethod
-    def _endpoint(path):
-        if path.split("/", 1)[0] == "categories":
-            return "products/" + path
-        return path
-
-    async def readdir(self, path):
-        name = (path.dir if path.pattern else path).vfs_path.strip("/")
-        if not name:
-            names = ROOTS
-        elif re.fullmatch(r"products/\d+", name):
-            await self.store.get(name)
-            names = ["variations"]
-        elif LISTING.fullmatch(name):
-            rows = await self.store.listing(self._endpoint(name))
-            names = []
-            for row in rows:
-                names.append(f"{row['id']}.json")
-                if name == "products" and row["type"] == "variable":
-                    names.append(str(row["id"]))
-        else:
-            raise enoent(path)
-        return [self._entry(n) for n in names]
-
-    async def read(self, path):
-        name = path.vfs_path.strip("/")
-        if not name.endswith(".json"):
-            raise eisdir(path)
-        route = name.removesuffix(".json")
-        if not OBJECT.fullmatch(route):
-            raise enoent(path)
-        data, _ = await self.store.get(self._endpoint(route))
-        return (json.dumps(data, indent=2, ensure_ascii=False) + "\n").encode()
-
-    async def stat(self, path):
-        name = PurePosixPath(path.vfs_path).name or "/"
-        if name.endswith(".json"):
-            await self.read(path)
-        else:
-            await self.readdir(path)
-        return self._entry(name)
 
 
 def _comparison(state):
@@ -136,18 +63,12 @@ async def tools(task, store, url, run_dir):
     async with stdio_service(argv, env, run_dir,
                              tools) as (client, descriptions):
 
-        async def install(workspace):
-            workspace.add_mount("/woo", WooFiles(store))
-            workspace.register_cli(
-                "woocommerce",
-                tool_cli("woocommerce",
-                         client,
-                         descriptions,
-                         tools,
-                         prefix="woo_",
-                         write=True))
-
-        yield install
+        yield tool_cli("woocommerce",
+                       client,
+                       descriptions,
+                       tools,
+                       prefix="woo_",
+                       write=True)
 
 
 @asynccontextmanager
@@ -172,7 +93,7 @@ async def prepare(task, config, run_dir):
                 raise ValueError(
                     "Restored WooCommerce REST objects differ from the "
                     "original capture")
-        async with tools(task, store, url, run_dir) as install:
+        async with tools(task, store, url, run_dir) as cli:
 
             async def evaluate(trial):
                 if inventory:
@@ -214,5 +135,6 @@ async def prepare(task, config, run_dir):
             yield TrialEnvironment(workspace={},
                                    verifier=SuiteVerifier(evaluate),
                                    instructions=instructions,
-                                   install=install,
+                                   clis={"woocommerce": cli},
+                                   mounts={"/woo": WooFiles(store)},
                                    state_readers={"woocommerce": store.state})

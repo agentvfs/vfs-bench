@@ -1,5 +1,3 @@
-"""Run the original VFS-Bench Cloud Logging store in a private directory."""
-
 import asyncio
 import json
 from contextlib import contextmanager

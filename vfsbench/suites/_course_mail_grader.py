@@ -1,6 +1,3 @@
-"""Rebind the original course grader's IMAP reads to the frozen mailboxes
-inside the verifier VM."""
-
 import base64
 import email
 import imaplib

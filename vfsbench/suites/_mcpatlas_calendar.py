@@ -1,6 +1,3 @@
-"""Serve the original Atlas event export through one trial's Google
-Workspace mock."""
-
 import asyncio
 import json
 import re
@@ -12,8 +9,8 @@ from zoneinfo import ZoneInfo
 from aiohttp import ClientSession, web
 from mcp import types
 
+from ..cli.tools import tool_cli
 from . import _toolathlon_gws as gws
-from ._mcpatlas_services import tool_cli
 
 INPUTS = (
     ("agentvfs/vfs-bench", "3f45f90f620c8096dd85bbe854b757eae1231392",

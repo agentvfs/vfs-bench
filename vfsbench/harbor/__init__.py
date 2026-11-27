@@ -1,5 +1,3 @@
-"""Harbor providers for exported VFS-Bench tasks (install vfsbench[harbor])."""
-
 from .export import export
 
 __all__ = ["export", "MirageEnvironment", "MirageVerifier"]

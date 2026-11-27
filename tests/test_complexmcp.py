@@ -1,5 +1,3 @@
-"""Test ComplexMCP service isolation and state grading on Mirage."""
-
 import os
 import tempfile
 import unittest

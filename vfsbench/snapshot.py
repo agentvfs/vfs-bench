@@ -1,6 +1,3 @@
-"""Build the reusable disk snapshot used by Mirage's Python machine and
-offline graders."""
-
 import argparse
 import hashlib
 import json
@@ -9,6 +6,10 @@ import subprocess
 import sys
 from pathlib import Path
 from uuid import uuid4
+
+from packaging.requirements import Requirement
+from packaging.utils import canonicalize_name
+from packaging.version import Version
 
 # The official python:3.14-slim multi-platform index. msb selects this host's
 # platform.
@@ -38,12 +39,46 @@ PACKAGES = (
 MODULES = ("numpy", "pandas", "pyarrow", "pymupdf", "PIL", "lxml", "tzdata",
            "pypdf", "openpyxl", "docx", "pptx", "xlsxwriter", "PyPDF2",
            "pytesseract", "olefile", "scipy")
-SNAPSHOT = "vfsbench:python-" + hashlib.sha256(
-    json.dumps([IMAGE, APT, PACKAGES]).encode()).hexdigest()[:12]
 
 
-def _installed() -> bool:
-    result = subprocess.run(["msb", "snapshot", "inspect", SNAPSHOT],
+def _packages(pins):
+    """Keep base disk order and normalize any additional package pins."""
+    if isinstance(pins, str):
+        raise ValueError(
+            "Pass python_packages as a sequence of exact package pins")
+    packages = {canonicalize_name(p.split("==")[0]): p for p in PACKAGES}
+    requested = {}
+    for pin in pins:
+        req = Requirement(pin)
+        specs = tuple(req.specifier)
+        if (req.url or req.marker or req.extras or len(specs) != 1
+                or specs[0].operator != "=="):
+            raise ValueError(f"Expected a package==version pin: {pin!r}")
+        name = canonicalize_name(req.name)
+        version = str(Version(specs[0].version))
+        if name in requested and requested[name] != version:
+            raise ValueError(f"Conflicting versions for {name}")
+        requested[name] = version
+    for name, version in sorted(requested.items()):
+        original = packages.get(name, "").partition("==")
+        packages[name] = f"{original[0] or name}=={version}"
+    return tuple(packages.values())
+
+
+def snapshot_name(python_packages=()) -> str:
+    return _name(_packages(python_packages))
+
+
+def _name(packages):
+    digest = hashlib.sha256(json.dumps([IMAGE, APT, packages]).encode())
+    return "vfsbench:python-" + digest.hexdigest()[:12]
+
+
+SNAPSHOT = snapshot_name()
+
+
+def _installed(snapshot) -> bool:
+    result = subprocess.run(["msb", "snapshot", "inspect", snapshot],
                             capture_output=True,
                             text=True)
     if not result.returncode:
@@ -54,23 +89,25 @@ def _installed() -> bool:
         f"Cannot inspect microsandbox snapshot: {result.stderr}")
 
 
-def build() -> str:
-    """Build the default disk once across concurrent workers."""
-    if _installed():
-        return SNAPSHOT
+def build(python_packages=()) -> str:
+    """Build a reusable guest disk with the selected Python package pins."""
+    packages = _packages(python_packages)
+    snapshot = _name(packages)
+    if _installed(snapshot):
+        return snapshot
     import fcntl
 
     cache = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache"))
-    lock = cache / "vfsbench" / f"{SNAPSHOT}.lock"
+    lock = cache / "vfsbench" / f"{snapshot}.lock"
     lock.parent.mkdir(parents=True, exist_ok=True)
     with lock.open("a") as stream:
         fcntl.flock(stream, fcntl.LOCK_EX)
-        if not _installed():
-            _build_guest()
-    return SNAPSHOT
+        if not _installed(snapshot):
+            _build_guest(snapshot, packages)
+    return snapshot
 
 
-def _build_guest() -> None:
+def _build_guest(snapshot, packages) -> None:
     builder = "vfsbench-build-" + uuid4().hex
 
     def msb(*args):
@@ -84,16 +121,16 @@ def _build_guest() -> None:
             "--no-install-recommends", *APT)
         msb("exec", builder, "--", "python3", "-m", "pip", "install",
             "--only-binary=:all:", "--no-cache-dir",
-            "--root-user-action=ignore", *PACKAGES)
+            "--root-user-action=ignore", *packages)
         msb("exec", builder, "--", "python3", "-c",
             "import " + ", ".join(MODULES))
         msb("stop", builder)
-        group, member = SNAPSHOT.split(":")
+        group, member = snapshot.split(":")
         try:
             msb("snapshot", "create", "--sandbox", builder, "--group", group,
                 member)
         except subprocess.CalledProcessError:
-            if subprocess.run(["msb", "snapshot", "inspect", SNAPSHOT],
+            if subprocess.run(["msb", "snapshot", "inspect", snapshot],
                               capture_output=True).returncode:
                 raise
     finally:
@@ -106,10 +143,17 @@ def _build_guest() -> None:
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    description = ("Build the reusable disk snapshot used by Mirage's Python "
+                   'machine and offline graders.')
+    parser = argparse.ArgumentParser(description=description)
     parser.add_argument("command", choices=["build", "name"])
+    parser.add_argument("--package",
+                        dest="python_packages",
+                        action="append",
+                        default=[])
     args = parser.parse_args()
-    print(build() if args.command == "build" else SNAPSHOT)
+    print((build if args.command == "build" else snapshot_name)(
+        args.python_packages))
 
 
 if __name__ == "__main__":

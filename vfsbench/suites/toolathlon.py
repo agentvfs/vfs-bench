@@ -1,31 +1,3 @@
-"""Build isolated trials for supported Toolathlon release tasks.
-
-File tasks mount the original workspace and run Python in the trial's private
-microVM. GitHub, Google Workspace, HowToCook and W&B use fresh service fixtures
-for each run.
-The separate verifier microVM reads selected outputs and frozen service state,
-then executes the hash-pinned upstream evaluator. Its SDK shims replay the
-same service reads without giving the verifier network access.
-
-Google Cloud tasks require a local Docker engine and V1's digest-pinned
-BigQuery image. This covers flagged-transactions, price-comparison,
-game-statistics, machine-operating, ab-testing, academic-warning and
-live-transactions.
-Machine-operating, ab-testing and live-transactions also use V1's pinned
-fake-gcs-server image. Both containers share a trial-private loopback. Offline
-execution requires those images to be cached first. Cloud Logging uses the
-bundled V1 store in a trial-private directory for ab-testing, academic-warning
-and live-transactions. Game-statistics runs the original date-dependent fixture
-generator in a separate offline microVM before opening its workspace.
-WooCommerce-new-welcome combines BigQuery with a trial-private WooCommerce
-installation and the Mirage mail server to grade CRM updates and sent messages.
-
-Use `vfsbench status <release-dir>` for the installed adapters and their
-requirements. All release rows remain available through the dataset API.
-Additional tasks require their own platform fixtures, live-source replacements,
-workspace preprocessing or verifier integrations.
-"""
-
 import asyncio
 import csv
 import hashlib
@@ -47,6 +19,7 @@ from . import _toolathlon_gws as gws
 from . import _toolathlon_logging as cloud_logging
 from . import _toolathlon_notion as notion
 from . import _toolathlon_services as services
+from .toolathlon_workspace import WORKSPACES
 
 HERE = Path(__file__).parent
 # These reviewed paths and hashes are part of the installed controller. A Hub
@@ -71,11 +44,7 @@ COOKING = {'cooking-guidance', 'dietary-health'}
 WOOCOMMERCE = {
     'woocommerce-update-cover', 'inventory-sync', 'update-material-inventory'
 }
-SUPPORTED = frozenset(INPUTS) | COOKING | documents.MANIFESTS.keys(
-) | notion.MANIFESTS.keys() | calendar_tasks.MANIFESTS.keys() | WOOCOMMERCE | {
-    "apply-phd-email", "course-assistant", "course-schedule",
-    "woocommerce-new-welcome"
-}
+SUPPORTED = frozenset(WORKSPACES)
 OUTPUT_TREES = {
     'arrange-workspace': '',
     'privacy-desensitization': 'desensitized_documents',
@@ -192,33 +161,13 @@ def _verifier_files(task, final_answer):
 
 def _local_setup(task, run_dir):
     _stage_workspace(task, run_dir / 'workspace')
-    clis = []
-    if task.id in {
-            'detect-revised-terms', 'imagenet', 'reimbursement-form-filler',
-            'arrange-workspace'
-    }:
-        clis.extend(('pdftotext', 'pdfinfo'))
-    if task.id in {
-            'excel-data-transformation', 'excel-market-research',
-            'sales-accounting', 'arrange-workspace', 'courses-ta-hws',
-            'reimbursement-form-filler'
-    }:
-        clis.append('office')
-    tools = ', '.join(clis)
+    tools = ', '.join(WORKSPACES[task.id].clis)
     instructions = (
         'The original task files are in /workspace. Use Python or the '
         'shell to complete the task '
         'in that directory.' +
         (f' The configured document commands are {tools}.' if tools else ''))
-    return {
-        'clis': {
-            name: {
-                'cli': name,
-                'machine': 'in_process'
-            }
-            for name in clis
-        }
-    }, instructions
+    return {}, instructions
 
 
 def _freeze_output_tree(root, task_id, files):
@@ -254,6 +203,16 @@ def _freeze_output_tree(root, task_id, files):
 
 @asynccontextmanager
 async def prepare(task, config, run_dir: Path):
+    if task.id not in SUPPORTED:
+        raise NotImplementedError(
+            f'Toolathlon task {task.id!r} has no verified execution adapter. '
+            f'Available tasks: {", ".join(sorted(SUPPORTED))}')
+    async with _environment(task, config, run_dir) as prepared:
+        yield WORKSPACES[task.id].bind(prepared)
+
+
+@asynccontextmanager
+async def _environment(task, config, run_dir):
     if task.id in notion.MANIFESTS:
         async with notion.prepare(task, config, run_dir) as prepared:
             yield prepared
@@ -303,13 +262,10 @@ async def prepare(task, config, run_dir: Path):
         async with prepare_howtocook(task, config, run_dir) as prepared:
             yield prepared
         return
-    if task.id not in SUPPORTED:
-        raise NotImplementedError(
-            f'Toolathlon task {task.id!r} has no verified execution adapter. '
-            f'Available tasks: {", ".join(sorted(SUPPORTED))}')
     async with AsyncExitStack() as stack:
         state_readers = {}
         install = None
+        clis = {}
         if task.id in services.INPUTS:
             setup = await services.workspace(task, config, run_dir, stack)
             workspace_config, instructions, state_readers = setup
@@ -318,7 +274,6 @@ async def prepare(task, config, run_dir: Path):
                                     run_dir / 'workspace')
             provider = await stack.enter_async_context(
                 bigquery.serve(task, run_dir, config))
-            install = provider.install
             state_readers['bigquery'] = provider.state
             if task.id in {
                     'ab-testing', 'live-transactions', 'machine-operating'
@@ -331,20 +286,10 @@ async def prepare(task, config, run_dir: Path):
                 provider.logging = await asyncio.to_thread(
                     cloud_logging.Logging, task, run_dir / 'cloud-logging')
                 state_readers['logging'] = provider.logging.state
-            tools = {
-                'flagged-transactions': ['office'],
-                'machine-operating': ['office'],
-                'price-comparison': ['pdftotext', 'pdfinfo']
-            }.get(task.id, [])
-            workspace_config = {
-                'clis': {
-                    name: {
-                        'cli': name,
-                        'machine': 'in_process'
-                    }
-                    for name in tools
-                }
-            }
+            clis['google-cloud'] = provider.cli()
+            if provider.storage is not None:
+                install = provider.storage.bind_workspace
+            workspace_config = {}
             instructions = (
                 'Query the private BigQuery emulator using google-cloud '
                 'bigquery-list-datasets and '
@@ -402,8 +347,6 @@ async def prepare(task, config, run_dir: Path):
                 },
                 'clis': {
                     'gws': {
-                        'cli': 'gws',
-                        'machine': 'in_process',
                         'config': credentials
                     }
                 },
@@ -500,4 +443,5 @@ async def prepare(task, config, run_dir: Path):
                                verifier=SuiteVerifier(evaluate),
                                instructions=instructions,
                                state_readers=state_readers,
-                               install=install)
+                               install=install,
+                               clis=clis)

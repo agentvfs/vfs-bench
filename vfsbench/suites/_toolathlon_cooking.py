@@ -1,5 +1,3 @@
-"""The offline HowToCook service and original Toolathlon evaluators."""
-
 import asyncio
 import hashlib
 import json
@@ -7,9 +5,10 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
 from pathlib import Path
 
+from ..cli.tools import tool_cli
 from ..runtime import TrialEnvironment, VerifierGuest
 from ..verifier import SuiteVerifier
-from ._mcpatlas_services import stdio_service, tool_cli
+from ._mcpatlas_services import stdio_service
 from ._npm import install_locked
 
 HERE = Path(__file__).parent
@@ -56,14 +55,7 @@ async def prepare_howtocook(task, config, run_dir):
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(contents)
     dietary = task.id == "dietary-health"
-    clis = {
-        name: {
-            "cli": name,
-            "machine": "in_process"
-        }
-        for name in ("office", "git")
-    } if dietary else {}
-    spec = {"env": {"HOME": "/workspace", "LC_CTYPE": "C.UTF-8"}, "clis": clis}
+    spec = {"env": {"HOME": "/workspace", "LC_CTYPE": "C.UTF-8"}}
     instructions = (
         "Use the howtocook CLI to query the pinned recipe collection. "
         "Your files are in /workspace.")
@@ -79,14 +71,11 @@ async def prepare_howtocook(task, config, run_dir):
                 return await session.call_tool(PREFIX + name,
                                                arguments=arguments)
 
-        async def install(workspace):
-            exposed = {
-                name.removeprefix(PREFIX): tool
-                for name, tool in tools.items()
-            }
-            workspace.register_cli(
-                "howtocook", tool_cli("howtocook", Recipes(), exposed,
-                                      exposed))
+        exposed = {
+            name.removeprefix(PREFIX): tool
+            for name, tool in tools.items()
+        }
+        cli = tool_cli("howtocook", Recipes(), exposed, exposed)
 
         async def recipe_state():
             # This server loads one immutable recipe corpus on startup.
@@ -151,6 +140,5 @@ async def prepare_howtocook(task, config, run_dir):
         yield TrialEnvironment(workspace=spec,
                                verifier=SuiteVerifier(evaluate),
                                instructions=instructions,
-                               python=dietary,
-                               install=install,
+                               clis={"howtocook": cli},
                                state_readers={"howtocook": recipe_state})

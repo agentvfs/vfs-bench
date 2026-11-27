@@ -1,6 +1,3 @@
-"""Run the unmodified Toolathlon cover verifier against the frozen REST
-responses."""
-
 import asyncio
 import importlib
 import json

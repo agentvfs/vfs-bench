@@ -1,6 +1,3 @@
-"""Restore a captured WooCommerce store in disposable, network-isolated OCI
-services."""
-
 import asyncio
 import base64
 import gzip

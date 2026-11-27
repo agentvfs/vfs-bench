@@ -1,6 +1,3 @@
-"""Build the inventory-sync state using its original warehouse and
-WooCommerce initializer."""
-
 import asyncio
 import json
 import shutil

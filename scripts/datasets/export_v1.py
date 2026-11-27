@@ -1,6 +1,3 @@
-"""Build uploadable Hugging Face dataset folders from the published
-VFS-Bench 1 tasks."""
-
 import argparse
 import contextlib
 import hashlib
@@ -239,7 +236,9 @@ def sync(suite, out, *, check):
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    description = ('Build uploadable Hugging Face dataset folders from the '
+                   'published VFS-Bench 1 tasks.')
+    parser = argparse.ArgumentParser(description=description)
     parser.add_argument("suite",
                         nargs="?",
                         choices=SUITES,

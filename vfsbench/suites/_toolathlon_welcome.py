@@ -1,10 +1,3 @@
-"""Run the welcome workflow with private WooCommerce, BigQuery and mail.
-
-WooCommerce and BigQuery use the suite's pinned Docker images. The order
-generator runs in an offline microVM. Mirage captures mail for the fixture's
-off-domain recipients in the sender's Sent folder, which the grader inspects.
-"""
-
 import ast
 import asyncio
 import hashlib
@@ -15,6 +8,7 @@ from pathlib import Path
 
 from ..runtime import TrialEnvironment, VerifierGuest
 from ..verifier import SuiteVerifier
+from ..vfs.woocommerce import WooFiles
 from . import _toolathlon_bigquery as bq
 from . import _toolathlon_woocommerce as woo
 from . import _woocommerce_inventory as inventory
@@ -206,7 +200,7 @@ async def prepare(task, config, run_dir):
     async with AsyncExitStack() as stack:
         store, url = await stack.enter_async_context(
             serve_store(task, site='store88', initialize=initialize))
-        install_store = await stack.enter_async_context(
+        store_cli = await stack.enter_async_context(
             woo.tools(task, store, url, run_dir))
         warehouse = await stack.enter_async_context(
             bq.serve(task, run_dir, config, empty_dataset=CRM))
@@ -229,8 +223,6 @@ async def prepare(task, config, run_dir):
             },
             'clis': {
                 'himalaya': {
-                    'cli': 'himalaya',
-                    'machine': 'in_process',
                     'config': access
                 }
             },
@@ -241,10 +233,6 @@ async def prepare(task, config, run_dir):
                 ]
             }
         }
-
-        async def install(ws):
-            await install_store(ws)
-            await warehouse.install(ws)
 
         async def crm_state():
             try:
@@ -286,7 +274,11 @@ async def prepare(task, config, run_dir):
         yield TrialEnvironment(workspace,
                                SuiteVerifier(evaluate),
                                instructions,
-                               install=install,
+                               clis={
+                                   "woocommerce": store_cli,
+                                   "google-cloud": warehouse.cli()
+                               },
+                               mounts={"/woo": WooFiles(store)},
                                state_readers={
                                    'woocommerce': store.state,
                                    'bigquery': crm_state,

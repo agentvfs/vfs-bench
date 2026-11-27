@@ -14,9 +14,40 @@ from vfsbench.dataset import Toolathlon
 from vfsbench.runtime import TrialConfig
 from vfsbench.suites import _toolathlon_gws as gws
 from vfsbench.suites import toolathlon
+from vfsbench.suites.toolathlon_workspace import WORKSPACES
 
 
 class GoogleWorkspaceMockTest(unittest.IsolatedAsyncioTestCase):
+
+    def test_every_released_task_has_a_fixed_workspace(self):
+        from vfsbench import TrialEnvironment
+
+        self.assertEqual(set(WORKSPACES), {task.id for task in Toolathlon()})
+        for task_id, defaults in WORKSPACES.items():
+            with self.subTest(task=task_id):
+                env = defaults.bind(TrialEnvironment({}))
+                self.assertEqual(tuple(env.workspace["clis"]), defaults.clis)
+                self.assertEqual(env.python, defaults.python)
+
+    def test_application_yaml_cannot_shadow_task_resources(self):
+        from vfsbench import TrialEnvironment
+        from vfsbench.runtime import _workspace_config
+
+        env = TrialEnvironment({"system_time": "2025-09-15T00:00:00Z"},
+                               clis={"google-calendar": object()},
+                               mounts={"/woo": object()})
+        for setting in ("mounts: {/woo/products: {vfs: ram}}",
+                        "mounts: {/workspace: {vfs: ram}}",
+                        "mounts: {}\nclis: {google-calendar: {cli: git, "
+                        "machine: in_process}}",
+                        'mounts: {}\nsystem_time: "2026-01-01T00:00:00Z"'):
+            with self.subTest(
+                    setting=setting), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp)
+                path = root / "workspace.yaml"
+                path.write_text(setting)
+                with self.assertRaisesRegex(ValueError, "Workspace YAML"):
+                    _workspace_config(env, root, "test", path)
 
     async def test_concurrent_processes_keep_output_private(self):
         with tempfile.TemporaryDirectory(

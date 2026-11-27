@@ -1,6 +1,3 @@
-"""Serve the three v1 GitHub fixtures through Mirage's offline repository
-model."""
-
 import asyncio
 import base64
 import copy
@@ -89,8 +86,6 @@ def workspace(task, state):
     config = {
         'clis': {
             'gh': {
-                'cli': 'gh',
-                'machine': 'in_process',
                 'config': common
             }
         },
@@ -100,8 +95,6 @@ def workspace(task, state):
         'mounts': {}
     }
     if task.id == 'git-repo':
-        for name in ('pdfinfo', 'pdftotext'):
-            config['clis'][name] = {'cli': name, 'machine': 'in_process'}
         instructions = (
             'Read the original paper in /workspace. Use gh api '
             'search/repositories to search the captured GitHub repositories.')

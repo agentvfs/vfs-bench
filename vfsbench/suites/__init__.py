@@ -1,6 +1,3 @@
-"""Benchmark-specific workspace and verifier adapters."""
-
-
 def execution_status(task, config):
     """Describe whether the installed suite adapter has the task's service
     implementations."""
@@ -47,7 +44,9 @@ def execution_status(task, config):
                 return "available", "Docker (WordPress and MySQL), Node MCP"
             if task.id in COOKING:
                 return "available", "locked HowToCook npm service"
-            if task.id in {"course-assistant", *calendar_tasks.MANIFESTS}:
+            if task.id in calendar_tasks.MANIFESTS:
+                return "available", "Mirage Calendar and mail mocks"
+            if task.id == "course-assistant":
                 return "available", ("Mirage mail mock and locked npm "
                                      "dependencies")
             return "available", ""

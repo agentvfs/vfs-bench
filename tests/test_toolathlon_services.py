@@ -1,5 +1,3 @@
-"""Exercise real loopback services and upstream Toolathlon evaluators."""
-
 import json
 import os
 import shlex

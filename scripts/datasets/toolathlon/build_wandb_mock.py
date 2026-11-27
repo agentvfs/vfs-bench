@@ -1,5 +1,3 @@
-"""Rebuild the offline W&B server shipped in the Python wheel."""
-
 import argparse
 import io
 import json
@@ -14,7 +12,8 @@ VFS_BENCH = "3f45f90f620c8096dd85bbe854b757eae1231392"
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    description = 'Rebuild the offline W&B server shipped in the Python wheel.'
+    parser = argparse.ArgumentParser(description=description)
     parser.add_argument("--mirage", required=True, type=Path)
     parser.add_argument("--graphql",
                         required=True,

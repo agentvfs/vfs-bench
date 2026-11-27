@@ -1,4 +1,3 @@
-"""Rebuild the installed mock and judge from the existing ComplexMCP port."""
 import argparse
 import json
 import shutil
@@ -11,7 +10,9 @@ VENDOR = ROOT / "vfsbench/suites/vendor/complexmcp"
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    description = ('Rebuild the installed mock and judge from the existing '
+                   'ComplexMCP port.')
+    parser = argparse.ArgumentParser(description=description)
     parser.add_argument("--esbuild", default="esbuild")
     parser.add_argument("--yaml",
                         type=Path,

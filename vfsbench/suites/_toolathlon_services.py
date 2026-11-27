@@ -1,5 +1,3 @@
-"""Service-backed Toolathlon tasks with captured W&B runs or a Google Sheet."""
-
 import asyncio
 import base64
 import hashlib
@@ -134,17 +132,7 @@ async def workspace(task, config, run_dir, stack):
                 "config": credentials
             }
         }
-        clis = {
-            "gws": {
-                "cli": "gws",
-                "machine": "in_process",
-                "config": credentials
-            },
-            "office": {
-                "cli": "office",
-                "machine": "in_process"
-            }
-        }
+        clis = {"gws": {"config": credentials}}
         instruction = (
             "Read the Billboard Pop Chart by Year spreadsheet under "
             "/gd/Music-Analysis. "

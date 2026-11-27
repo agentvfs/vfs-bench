@@ -1,6 +1,3 @@
-"""Run the source-pinned welcome grader with its original recipient and MIME
-checks."""
-
 import base64
 import json
 import runpy

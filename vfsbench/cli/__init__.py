@@ -1,21 +1,21 @@
-"""Run and inspect Mirage benchmark trials."""
-
 import argparse
 import asyncio
 import json
 import sys
 from collections import Counter
 
-from . import api
+from .. import api
 
 
 def main(argv=None):
     argv = sys.argv[1:] if argv is None else argv
     if argv[:1] == ["harbor"]:
-        from .harbor.export import main as harbor
+        from ..harbor.export import main as harbor
 
         return harbor(argv[1:])
-    parser = argparse.ArgumentParser(prog="vfsbench", description=__doc__)
+    parser = argparse.ArgumentParser(
+        prog="vfsbench",
+        description='Run and inspect Mirage benchmark trials.')
     commands = parser.add_subparsers(dest="action", required=True)
     launch = commands.add_parser(
         "run", help="open a trial, verify it, and return its report")
@@ -50,21 +50,30 @@ def main(argv=None):
                                       prefix_chars="+")
         surface.add_argument("arguments", nargs=argparse.REMAINDER)
     snapshot = commands.add_parser("snapshot",
-                                   help="manage the default microsandbox disk")
+                                   help="manage microsandbox guest disks")
     snapshot.add_argument("operation", choices=("build", "name"))
+    snapshot.add_argument("--package",
+                          dest="python_packages",
+                          action="append",
+                          default=[],
+                          help="guest Python package==version (repeatable)")
     commands.add_parser("harbor", help="export a Harbor job")
     options = vars(parser.parse_args(argv))
     action = options.pop("action")
     if action == "snapshot":
-        from .snapshot import SNAPSHOT, build
+        from ..snapshot import build, snapshot_name
 
-        print(build() if options["operation"] == "build" else SNAPSHOT)
+        operation = build if options["operation"] == "build" else snapshot_name
+        try:
+            print(operation(options["python_packages"]))
+        except ValueError as exc:
+            parser.error(str(exc))
         return
     try:
         if action == "run":
             surface = options.pop("surface")
             if surface:
-                from .mirage_cli import invoke
+                from .mirage import invoke
 
                 return invoke(surface, options.pop("arguments"), options)
             report = asyncio.run(api.run(**options))
@@ -79,7 +88,3 @@ def main(argv=None):
         print("\t".join(part for part in (key, state, reason) if part))
     print(", ".join(f"{count} {state}"
                     for state, count in sorted(counts.items())))
-
-
-if __name__ == "__main__":
-    sys.exit(main())

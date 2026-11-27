@@ -1,6 +1,3 @@
-"""Run inside the isolated verifier VM, with the frozen inputs under
-/grading."""
-
 import base64
 import importlib
 import json

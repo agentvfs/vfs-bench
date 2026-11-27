@@ -1,5 +1,3 @@
-"""Run a Harbor task and verifier on one VFS-Bench trial."""
-
 from __future__ import annotations
 
 import asyncio

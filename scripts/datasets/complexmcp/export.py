@@ -1,5 +1,3 @@
-"""Build the ComplexMCP Hub release from its pinned source data."""
-
 import argparse
 import hashlib
 import json
@@ -129,7 +127,9 @@ def export(source, check):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=__doc__)
+    description = ('Build the ComplexMCP Hub release from its pinned '
+                   'source data.')
+    parser = argparse.ArgumentParser(description=description)
     parser.add_argument("--source",
                         required=True,
                         type=Path,

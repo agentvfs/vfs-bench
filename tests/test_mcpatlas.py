@@ -1,6 +1,3 @@
-"""Atlas release contracts and opt-in tests using the published environment
-and scorer."""
-
 import hashlib
 import json
 import os

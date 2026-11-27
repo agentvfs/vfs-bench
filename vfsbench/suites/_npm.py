@@ -1,6 +1,3 @@
-"""Install integrity-pinned npm dependencies shared by built-in task
-services."""
-
 import hashlib
 import os
 import shutil

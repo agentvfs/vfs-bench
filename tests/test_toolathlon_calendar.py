@@ -1,5 +1,3 @@
-"""Exercise the two coupled mail/calendar tasks and their upstream graders."""
-
 import json
 import os
 import shlex
@@ -32,8 +30,10 @@ class CalendarTrials(unittest.IsolatedAsyncioTestCase):
         }
         result = await trial.exec("google-calendar create-event " +
                                   shlex.quote(json.dumps(args)))
-        self.assertEqual(result.return_code, 0, result.stderr)
+        self.assertEqual(result.return_code, 0, result.stderr or result.stdout)
         self.assertIn(summary, result.stdout)
+        return result.stdout.splitlines()[0].removeprefix(
+            "Event created with ID: ")
 
     async def test_conference_deadline(self):
         task = self.suite["set-conf-cr-ddl"]
@@ -49,6 +49,27 @@ class CalendarTrials(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(date.stdout.strip(), "2025-09-15")
             self.assertEqual((await trial.service_state("calendar"))["events"],
                              [])
+            event = await self.create_event(trial, "Draft reminder",
+                                            "2025-09-26T12:00:00Z",
+                                            "2025-09-26T12:15:00Z")
+            for verb, args in (("update-event", {
+                    "eventId": event,
+                    "summary": "Updated draft"
+            }), ("get-event", {
+                    "eventId": event
+            }), ("list-events", {
+                    "timeMin": "2025-09-26T00:00:00Z",
+                    "timeMax": "2025-09-27T00:00:00Z"
+            }), ("delete-event", {
+                    "eventId": event
+            })):
+                result = await trial.exec("google-calendar " + verb + " " +
+                                          shlex.quote(json.dumps(args)))
+                self.assertEqual(result.return_code, 0, result.stderr
+                                 or result.stdout)
+                self.assertIn(
+                    event if verb == "delete-event" else "Updated draft",
+                    result.stdout)
             self.assertEqual((await trial.verify()).reward, 0)
         async with task.open(config=self.config) as trial:
             await self.create_event(trial, "COML camera-ready reminder",

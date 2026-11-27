@@ -1,5 +1,3 @@
-"""A per-trial loopback Google Workspace service for the NHL task."""
-
 import asyncio
 import json
 import os

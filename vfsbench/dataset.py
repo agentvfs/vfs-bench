@@ -1,5 +1,3 @@
-"""Read release catalogs and fetch individual task files on demand."""
-
 from __future__ import annotations
 
 import hashlib

@@ -1,6 +1,3 @@
-"""Course Assistant uses the original gradebook, presentation messages and
-per-student mail checks."""
-
 import ast
 import asyncio
 import hashlib
@@ -130,17 +127,7 @@ async def prepare(task, config, run_dir):
             },
             "clis": {
                 "himalaya": {
-                    "cli": "himalaya",
-                    "machine": "in_process",
                     "config": access
-                },
-                "office": {
-                    "cli": "office",
-                    "machine": "in_process"
-                },
-                "git": {
-                    "cli": "git",
-                    "machine": "in_process"
                 }
             },
             "network": {

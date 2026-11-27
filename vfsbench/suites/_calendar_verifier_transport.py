@@ -1,6 +1,3 @@
-"""Replay the original Calendar MCP response recorded when the trial was
-sealed."""
-
 import json
 from pathlib import Path
 from types import SimpleNamespace

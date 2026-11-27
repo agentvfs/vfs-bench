@@ -220,10 +220,31 @@ class SnapshotTests(unittest.IsolatedAsyncioTestCase):
         ready = threading.Event()
         with (tempfile.TemporaryDirectory() as
               cache, patch.dict(os.environ, XDG_CACHE_HOME=cache),
-              patch("vfsbench.snapshot._installed", side_effect=ready.is_set),
+              patch("vfsbench.snapshot._installed",
+                    side_effect=lambda name: ready.is_set()),
               patch("vfsbench.snapshot._build_guest",
-                    side_effect=ready.set) as create):
+                    side_effect=lambda name, packages: ready.set()) as create):
             disks = await asyncio.gather(*(asyncio.to_thread(build)
                                            for _ in range(4)))
             self.assertEqual(disks, [SNAPSHOT] * 4)
             create.assert_called_once()
+
+    async def test_guest_packages_select_the_same_disk_for_build_and_restore(
+            self):
+        from vfsbench.runtime import _restore_guest
+        from vfsbench.snapshot import SNAPSHOT, snapshot_name
+
+        pins = ("tabulate==0.9.0", "openpyxl==3.1.5")
+        config = TrialConfig(python_packages=pins)
+        self.assertEqual(SNAPSHOT, snapshot_name(["OpenPyXL==3.1.5"]))
+        self.assertNotEqual(config.guest_snapshot, SNAPSHOT)
+        self.assertEqual(config.guest_snapshot, snapshot_name(reversed(pins)))
+        with patch("vfsbench.runtime.build") as build, patch(
+                "vfsbench.runtime._msb") as msb:
+            await _restore_guest(config, "trial")
+            build.assert_called_once_with(pins)
+            self.assertEqual(msb.await_args.args[-1], config.guest_snapshot)
+        for invalid in (["tabulate>=0.9"], ["tabulate==1.*"],
+                        ["tabulate==0.9", "Tabulate==0.8"]):
+            with self.assertRaises(ValueError):
+                TrialConfig(python_packages=invalid)

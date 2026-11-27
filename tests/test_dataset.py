@@ -1,6 +1,3 @@
-"""Transport tests using an index, a shared blob, and a separately sourced
-instruction."""
-
 import hashlib
 import io
 import json

@@ -1,5 +1,3 @@
-"""Export the MCP-Atlas tasks used in VFS-Bench 1.0."""
-
 import hashlib
 import json
 import runpy

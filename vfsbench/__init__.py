@@ -1,5 +1,3 @@
-"""Load datasets, run Mirage trials and verify the evidence they produce."""
-
 from .api import run, status
 from .dataset import (ComplexMCP, Dataset, MCPAtlas, Task, Toolathlon,
                       load_dataset)

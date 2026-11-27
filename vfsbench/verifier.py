@@ -1,6 +1,3 @@
-"""Evidence and results shared by Python callers, Harbor and benchmark
-verifiers."""
-
 from __future__ import annotations
 
 import math

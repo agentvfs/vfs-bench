@@ -1,6 +1,3 @@
-"""Build Mirage's IMAP/SMTP handlers and the run database schema for the
-wheel."""
-
 import argparse
 import io
 import shutil
@@ -13,7 +10,9 @@ REVISION = "b8a3422d28f2fecf32ccb0ff9e7bd87317e4bad1"
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    description = ("Build Mirage's IMAP/SMTP handlers and the run database "
+                   'schema for the wheel.')
+    parser = argparse.ArgumentParser(description=description)
     parser.add_argument("--mirage", type=Path, required=True)
     parser.add_argument("--esbuild", type=Path, required=True)
     parser.add_argument("--prisma", type=Path, required=True)

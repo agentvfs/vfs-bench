@@ -1,6 +1,3 @@
-"""Verify the real material inventory task requires changes to both
-services."""
-
 import json
 import os
 import shlex

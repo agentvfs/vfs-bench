@@ -1,6 +1,3 @@
-"""Check the document services, task preparations and frozen upstream
-verdicts."""
-
 import json
 import os
 import unittest

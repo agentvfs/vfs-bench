@@ -1,6 +1,3 @@
-"""Grade a fresh captured Notion page and the same page edited through the
-original MCP."""
-
 import json
 import os
 import shlex

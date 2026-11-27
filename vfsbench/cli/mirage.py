@@ -1,5 +1,3 @@
-"""Bind Mirage's CLI commands to the open trial's workspace."""
-
 import asyncio
 import sys
 from contextlib import aclosing
@@ -18,7 +16,7 @@ from mirage.workspace.tools.io_text import decision_line
 from mirage.workspace.workspace import Session
 from typer.main import get_command
 
-from .api import run
+from ..api import run
 
 
 async def _shell(session, command, cwd, machine, no_record, json_output,

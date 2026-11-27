@@ -1,6 +1,3 @@
-"""Replay the original grader's REST transport from the private page
-snapshot."""
-
 import json
 import runpy
 import sys

@@ -1,6 +1,3 @@
-"""Restore the original typed Sheets, formatting proxy, and twenty locked
-MCP tools."""
-
 import asyncio
 import gzip
 import hashlib
@@ -14,8 +11,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from urllib.parse import quote
 
+from ..cli.tools import tool_cli
 from . import _toolathlon_gws as gws
-from ._mcpatlas_services import stdio_service, tool_cli
+from ._mcpatlas_services import stdio_service
 
 VENDOR = Path(__file__).parent / "vendor/google_sheets"
 FIXTURE = "shared/fixtures/woocommerce/"
@@ -173,14 +171,11 @@ async def captured_sheets(task, run_dir):
                     [str(executable / "mcp-google-sheets")], env, run_dir,
                         tools) as (session, schemas):
 
-                    async def install(workspace):
-                        workspace.register_cli(
-                            "google-sheet",
-                            tool_cli("google-sheet",
-                                     session,
-                                     schemas,
-                                     tools,
-                                     write=True))
+                    cli = tool_cli("google-sheet",
+                                   session,
+                                   schemas,
+                                   tools,
+                                   write=True)
 
                     async def state():
                         return await asyncio.to_thread(gws.state, formatted)
@@ -202,4 +197,4 @@ async def captured_sheets(task, run_dir):
                             "allowed_domains":
                             [endpoint.removeprefix("http://")]
                         }
-                    }, install, state
+                    }, cli, state

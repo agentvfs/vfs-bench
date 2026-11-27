@@ -1,6 +1,3 @@
-"""Run one benchmark attempt in a Mirage workspace with its own offline
-Python guest."""
-
 from __future__ import annotations
 
 import asyncio
@@ -17,11 +14,13 @@ from typing import TYPE_CHECKING, Self
 from uuid import uuid4
 
 from .dataset import Task
-from .snapshot import SNAPSHOT, build
+from .snapshot import SNAPSHOT, build, snapshot_name
 from .verifier import (AgentResult, CommandEvent, TrialReport, TrialTrace,
                        TrialView, VerificationResult, Verifier, VerifierConfig)
 
 if TYPE_CHECKING:
+    from mirage.commands.cli.types import CLI
+    from mirage.vfs.base import BaseVFS
     from mirage.workspace.workspace import Workspace
 
 
@@ -31,6 +30,7 @@ class TrialConfig:
     snapshot."""
 
     snapshot: str = SNAPSHOT
+    python_packages: tuple[str, ...] = ()
     auto_build_snapshot: bool = True
     cpus: int = 1
     memory: str = "2G"
@@ -45,6 +45,15 @@ class TrialConfig:
         if not isinstance(self.snapshot, str) or not self.snapshot.strip(
         ) or self.snapshot.startswith("-"):
             raise ValueError("snapshot must name a microsandbox snapshot")
+        if not isinstance(self.python_packages, (list, tuple)) or any(
+                not isinstance(pin, str) for pin in self.python_packages):
+            raise ValueError("python_packages must be a list of package pins")
+        object.__setattr__(self, "python_packages",
+                           tuple(self.python_packages))
+        if self.python_packages and self.snapshot != SNAPSHOT:
+            raise ValueError("Select python_packages or a prebuilt snapshot")
+        if self.python_packages:
+            snapshot_name(self.python_packages)
         if type(self.auto_build_snapshot) is not bool:
             raise ValueError("auto_build_snapshot must be a boolean")
         for name in ("cpus", "timeout_sec"):
@@ -60,6 +69,11 @@ class TrialConfig:
             raise ValueError(
                 "environment must name a suite or installed environment "
                 "factory")
+
+    @property
+    def guest_snapshot(self) -> str:
+        return snapshot_name(
+            self.python_packages) if self.python_packages else self.snapshot
 
     @classmethod
     def from_toml(cls, path: str | Path) -> Self:
@@ -93,6 +107,8 @@ class TrialEnvironment:
     install: Callable[[Workspace], Awaitable[None]] | None = None
     state_readers: dict[str, Callable[[],
                                       Awaitable]] = field(default_factory=dict)
+    clis: dict[str, CLI] = field(default_factory=dict)
+    mounts: dict[str, BaseVFS] = field(default_factory=dict)
 
 
 EnvironmentFactory = Callable[[Task, TrialConfig, Path],
@@ -145,9 +161,10 @@ async def _msb(*args: str) -> None:
 
 async def _restore_guest(config: TrialConfig, name: str) -> None:
     if config.snapshot == SNAPSHOT and config.auto_build_snapshot:
-        await asyncio.to_thread(build)
+        await asyncio.to_thread(build, config.python_packages)
     await _msb("restore", "--no-net", "--name", name, "--cpus",
-               str(config.cpus), "--memory", config.memory, config.snapshot)
+               str(config.cpus), "--memory", config.memory,
+               config.guest_snapshot)
 
 
 async def _remove_guest(name: str) -> None:
@@ -261,18 +278,31 @@ def _workspace_config(prepared: TrialEnvironment,
         overlay = load_config(Path(workspace_yaml).expanduser()).model_dump(
             exclude_unset=True, by_alias=True)
         reserved = {
-            "mounts": set(prepared.workspace.get("mounts") or {}),
             "machines": set(values["machines"]),
-            "clis": set(prepared.workspace.get("clis") or {}),
+            "clis": set(values.get("clis") or {}) | prepared.clis.keys(),
+            "env": set(values.get("env") or {}),
         }
-        if prepared.instructions:
-            reserved["mounts"].add("/vfsbench")
+        protected = [
+            PurePosixPath(p) for p in mounts.keys() | prepared.mounts.keys()
+        ]
+        for prefix in overlay.get("mounts") or {}:
+            path = PurePosixPath(prefix)
+            if (not path.is_absolute() or ".." in path.parts or any(
+                    path.is_relative_to(p) or p.is_relative_to(path)
+                    for p in protected)):
+                raise ValueError(
+                    f"Workspace YAML conflicts with trial mounts: {prefix}")
+        for key in ("system_time", "network"):
+            if key in prepared.workspace and key in overlay and overlay[
+                    key] != values[key]:
+                raise ValueError(f"Workspace YAML replaces trial {key}")
         for key, names in reserved.items():
             if conflicts := names.intersection(overlay.get(key) or {}):
                 raise ValueError(
                     f"Workspace YAML replaces trial {key}: {sorted(conflicts)}"
                 )
-        for key in (*reserved, "profiles", "env", "secrets", "command_limits"):
+        for key in (*reserved, "mounts", "profiles", "secrets",
+                    "command_limits"):
             if additions := overlay.pop(key, None):
                 values[key] = {**(values.get(key) or {}), **additions}
         values.update(overlay)
@@ -356,9 +386,9 @@ class Trial:
     def report(self) -> TrialReport:
         ds = self.task._dataset
         return TrialReport(self.id, self.task.id, self._suite, ds.repo_id,
-                           ds.revision, self.config.snapshot, self._started_at,
-                           self._closed_at, self.trace, self.result,
-                           deepcopy(self._verification),
+                           ds.revision, self.config.guest_snapshot,
+                           self._started_at, self._closed_at, self.trace,
+                           self.result, deepcopy(self._verification),
                            self._verification_error)
 
     def _require_recording(self):
@@ -451,6 +481,10 @@ class Trial:
                                        prefix,
                                        mountpoint,
                                        backend=backend)
+                for prefix, backend in prepared.mounts.items():
+                    workspace.add_mount(prefix, backend)
+                for command, cli in prepared.clis.items():
+                    workspace.register_cli(command, cli)
                 if prepared.install is not None:
                     await prepared.install(workspace)
                 await workspace.vfs_md("/VFS.md")

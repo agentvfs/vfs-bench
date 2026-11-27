@@ -1,6 +1,3 @@
-"""Export the 100 VFS-Bench 1 Toolathlon tasks and refresh their upstream
-inventory."""
-
 import argparse
 import hashlib
 import json

@@ -1,6 +1,3 @@
-"""Run Mirage IMAP/SMTP on private loopback ports with one database per
-trial."""
-
 import asyncio
 import base64
 import json

@@ -1,6 +1,3 @@
-"""Verifier-only adapter for the ingredient lookup in
-cooking-guidance/evaluation."""
-
 import json
 from contextlib import nullcontext
 from functools import cache

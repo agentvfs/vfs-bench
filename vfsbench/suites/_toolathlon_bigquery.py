@@ -1,6 +1,3 @@
-"""Run VFS-Bench 1's pinned BigQuery emulator with a private container per
-trial."""
-
 import ast
 import asyncio
 import csv
@@ -15,7 +12,7 @@ from uuid import uuid4
 
 from mcp import types
 
-from ._mcpatlas_services import tool_cli
+from ..cli.tools import tool_cli
 
 IMAGE = ('ghcr.io/goccy/bigquery-emulator:0.8.1@sha256:'
          'f4e428d265a93dc5ce36c294e1c584c7c9b384117d47ab8ddbb63d8d50b7f393')
@@ -268,15 +265,13 @@ class BigQuery:
                 state['queries'][sql] = {'error': str(exc)}
         return state
 
-    async def install(self, workspace):
+    def cli(self):
         tools = TOOLS
         if self.storage is not None:
-            self.storage.workspace = workspace
             tools = {**TOOLS, **self.storage.tools}
         if self.logging is not None:
             tools = {**tools, **self.logging.tools}
-        workspace.register_cli('google-cloud',
-                               tool_cli('google-cloud', self, tools, tools))
+        return tool_cli('google-cloud', self, tools, tools)
 
 
 def _rows(result):

@@ -1,6 +1,3 @@
-"""Harbor 0.25 export, file transfer and grading against a real Mirage
-workspace."""
-
 import importlib.util
 import json
 import tempfile

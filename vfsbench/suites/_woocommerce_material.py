@@ -1,6 +1,3 @@
-"""Toolathlon material inventory task with the captured WooCommerce and
-Google Sheets services."""
-
 import asyncio
 import gzip
 import hashlib
@@ -11,6 +8,7 @@ from pathlib import Path
 
 from ..runtime import TrialEnvironment, VerifierGuest
 from ..verifier import SuiteVerifier
+from ..vfs.woocommerce import WooFiles
 from . import _toolathlon_woocommerce as woo
 from ._toolathlon_sheets import captured_sheets
 from ._woocommerce_store import serve
@@ -81,13 +79,9 @@ async def prepare(task, config, run_dir):
                 "Restored WooCommerce REST objects differ from the material "
                 "inventory capture")
         async with woo.tools(task, store, url,
-                             run_dir) as install_woo, captured_sheets(
+                             run_dir) as store_cli, captured_sheets(
                                  task, run_dir) as sheets:
-            spec, install_sheets, sheet_state = sheets
-
-            async def install(workspace):
-                await install_woo(workspace)
-                await install_sheets(workspace)
+            spec, sheet_cli, sheet_state = sheets
 
             instructions = (
                 "The active spreadsheet ID is in /workspace/config.json. "
@@ -100,7 +94,11 @@ async def prepare(task, config, run_dir):
                 verifier=SuiteVerifier(
                     lambda view: verify(task, config, view)),
                 instructions=instructions,
-                install=install,
+                clis={
+                    "woocommerce": store_cli,
+                    "google-sheet": sheet_cli
+                },
+                mounts={"/woo": WooFiles(store)},
                 state_readers={
                     "woocommerce": store.state,
                     "gws": sheet_state

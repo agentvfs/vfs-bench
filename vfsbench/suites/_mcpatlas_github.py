@@ -1,5 +1,3 @@
-"""Read-only GitHub routes for the original Atlas gh CLI."""
-
 import re
 from contextlib import asynccontextmanager
 from urllib.parse import urlsplit

@@ -1,5 +1,3 @@
-"""Check the complete private mailbox, PDF and memory task with its upstream
-grader."""
 import json
 import os
 import shlex

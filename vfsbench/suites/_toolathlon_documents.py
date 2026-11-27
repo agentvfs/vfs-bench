@@ -1,6 +1,3 @@
-"""Run Toolathlon's original document services over a trial-private
-workspace."""
-
 import asyncio
 import hashlib
 import json
@@ -14,7 +11,8 @@ from uuid import uuid4
 from vfsbench.runtime import TrialEnvironment, VerifierGuest
 from vfsbench.verifier import SuiteVerifier
 
-from ._mcpatlas_services import stdio_service, tool_cli
+from ..cli.tools import tool_cli
+from ._mcpatlas_services import stdio_service
 
 MANIFESTS = {
     "interview-report":
@@ -180,20 +178,15 @@ async def prepare(task, config, run_dir):
     async with document_tools(task, run_dir, root, instructions,
                               needed) as (clis, readers):
 
-        async def install(workspace):
-            for service, cli in clis.items():
-                workspace.register_cli(service, cli)
-
         yield TrialEnvironment(
             workspace={"env": {
                 "HOME": "/workspace",
                 "LC_CTYPE": "C.UTF-8"
             }},
             verifier=SuiteVerifier(evaluate),
-            install=install,
+            clis=clis,
             instructions=instructions,
-            state_readers=readers,
-            python=False)
+            state_readers=readers)
 
 
 @asynccontextmanager

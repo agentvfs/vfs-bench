@@ -1,6 +1,3 @@
-"""Create one Atlas workspace from its pinned VFS specification and original
-tool list."""
-
 import asyncio
 import hashlib
 import json
@@ -16,10 +13,11 @@ from uuid import uuid4
 from vfsbench.runtime import TrialEnvironment
 from vfsbench.verifier import SuiteVerifier
 
+from ..cli.tools import STATE_TOOL, tool_cli
 from ._mcpatlas_calendar import calendar
 from ._mcpatlas_github import LIVE_TASKS, github_api
-from ._mcpatlas_services import (STATE_TOOL, check_snapshot, provider_command,
-                                 provider_state, stdio_service, tool_cli)
+from ._mcpatlas_services import (check_snapshot, provider_command,
+                                 provider_state, stdio_service)
 
 ATLAS_REV = "f24ba3fb0bfa484c86acb28431fad6d7282455f9"
 V1_REV = "3f45f90f620c8096dd85bbe854b757eae1231392"
@@ -438,10 +436,6 @@ async def prepare(task, config, run_dir: Path):
                     }
                 }
 
-        async def install(ws):
-            for name, cli in clis.items():
-                ws.register_cli(name, cli)
-
         if origins:
             workspace["network"] = {
                 "allowed_domains":
@@ -451,5 +445,5 @@ async def prepare(task, config, run_dir: Path):
                                verifier=SuiteVerifier(evaluate),
                                state_readers=state_readers,
                                instructions=instructions,
-                               install=install,
+                               clis=clis,
                                python="pyodide" in spec.get("runtimes", []))

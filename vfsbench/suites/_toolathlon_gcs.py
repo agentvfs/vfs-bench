@@ -1,6 +1,3 @@
-"""Cloud Storage on V1's pinned fake-gcs-server beside one isolated BigQuery
-trial."""
-
 import asyncio
 import base64
 import json
@@ -58,6 +55,9 @@ class Storage:
     def __init__(self, bridge):
         self.bridge = bridge
         self.workspace = None
+
+    async def bind_workspace(self, workspace):
+        self.workspace = workspace
 
     async def request(self, method, path, body=b'', kind='application/json'):
         return await request_bytes(self.bridge, 4443, method, path, body, kind)

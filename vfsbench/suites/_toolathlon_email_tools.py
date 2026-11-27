@@ -1,6 +1,3 @@
-"""Run the original emails MCP and Mirage mail together on a network with
-only loopback."""
-
 import asyncio
 import hashlib
 import json
@@ -11,8 +8,9 @@ from contextlib import AsyncExitStack, asynccontextmanager, suppress
 from pathlib import Path
 from uuid import uuid4
 
+from ..cli.tools import tool_cli
 from . import _toolathlon_mail as mail
-from ._mcpatlas_services import stdio_service, tool_cli
+from ._mcpatlas_services import stdio_service
 from ._npm import install_locked
 from ._woocommerce_store import docker
 

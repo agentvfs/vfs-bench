@@ -1,6 +1,3 @@
-"""Run the original game generator inside an offline microVM and collect its
-Google SDK writes."""
-
 import json
 import runpy
 import sys

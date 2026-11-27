@@ -1,6 +1,3 @@
-"""Run the unmodified material checks on a detached view of the trial's live
-APIs."""
-
 import importlib
 import json
 import re

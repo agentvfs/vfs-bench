@@ -1,5 +1,3 @@
-"""List a task's W&B runs through the Mirage filesystem and shell."""
-
 import asyncio
 
 from vfsbench import run

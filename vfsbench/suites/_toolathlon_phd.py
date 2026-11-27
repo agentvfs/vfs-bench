@@ -1,6 +1,3 @@
-"""Toolathlon PhD application with local original email, memory and PDF tool
-servers."""
-
 import asyncio
 import hashlib
 import imaplib
@@ -134,13 +131,6 @@ async def prepare(task, config, run_dir):
                                node_image=NODE) as (memory, graph)):
         await asyncio.to_thread(_seed, settings, sender["email"], messages)
 
-        async def install(workspace):
-            for name, cli in {
-                    **docs, "emails": emails,
-                    "memory": memory
-            }.items():
-                workspace.register_cli(name, cli)
-
         workspace = {
             "system_time": today.isoformat(),
             "mounts": {
@@ -148,12 +138,6 @@ async def prepare(task, config, run_dir):
                     "vfs": "email",
                     "mode": "read",
                     "config": settings
-                }
-            },
-            "clis": {
-                "git": {
-                    "cli": "git",
-                    "machine": "in_process"
                 }
             },
             "network": {
@@ -171,4 +155,7 @@ async def prepare(task, config, run_dir):
                 "mail": state,
                 "memory": graph
             },
-            install=install)
+            clis={
+                **docs, "emails": emails,
+                "memory": memory
+            })

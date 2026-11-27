@@ -1,6 +1,3 @@
-"""Run the original student memory service and the private exam schedule
-evaluator."""
-
 import asyncio
 import hashlib
 import json
@@ -12,9 +9,10 @@ from uuid import uuid4
 
 from mcp import types
 
+from ..cli.tools import tool_cli
 from ..runtime import TrialEnvironment, VerifierGuest
 from ..verifier import SuiteVerifier
-from ._mcpatlas_services import stdio_service, tool_cli
+from ._mcpatlas_services import stdio_service
 from ._npm import install_locked
 
 VENDOR = Path(__file__).parent / "vendor/memory"
@@ -110,13 +108,11 @@ async def prepare(task, config, run_dir):
     declarations = json.loads((VENDOR / "course-tools.json").read_bytes())
     async with memory_session(task, run_dir, memory) as (memory_cli, graph):
 
-        async def install(workspace):
-            workspace.register_cli("memory", memory_cli)
-            for service in ("fetch", "web-search"):
-                shapes = {s["command"]: s for s in declarations[service]}
-                workspace.register_cli(
-                    service,
-                    tool_cli(service, EmptyWebCapture(), shapes, shapes))
+        clis = {"memory": memory_cli}
+        for service in ("fetch", "web-search"):
+            shapes = {s["command"]: s for s in declarations[service]}
+            clis[service] = tool_cli(service, EmptyWebCapture(), shapes,
+                                     shapes)
 
         async def evaluate(view):
 
@@ -169,13 +165,6 @@ async def prepare(task, config, run_dir):
                         "root": str(memory.parent)
                     }
                 }
-            },
-            "clis": {
-                n: {
-                    "cli": n,
-                    "machine": "in_process"
-                }
-                for n in ("office", "pdfinfo", "pdftotext")
             }
         }
         instructions = (
@@ -188,5 +177,5 @@ async def prepare(task, config, run_dir):
         yield TrialEnvironment(spec,
                                SuiteVerifier(evaluate),
                                instructions,
-                               install=install,
+                               clis=clis,
                                state_readers={"memory": graph})

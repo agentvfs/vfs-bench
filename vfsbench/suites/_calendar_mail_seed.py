@@ -1,6 +1,3 @@
-"""Run the trusted upstream email builders in a short-lived controller
-subprocess."""
-
 import ast
 import imaplib
 import json

@@ -1,6 +1,3 @@
-"""Generate Harbor task directories from a release without copying its
-fixtures."""
-
 from __future__ import annotations
 
 import argparse
@@ -132,7 +129,9 @@ def export(dataset: Dataset | str | Path,
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description=__doc__)
+    description = ('Generate Harbor task directories from a release without '
+                   'copying its fixtures.')
+    parser = argparse.ArgumentParser(description=description)
     command = parser.add_subparsers(dest="command", required=True)
     create = command.add_parser(
         "export", help="write Harbor tasks and a job configuration")
