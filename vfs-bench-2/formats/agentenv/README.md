@@ -25,8 +25,10 @@ and plug Mirage in through two of its classes:
   - `urn:mirage:workspace/v1` `snapshot` answers the task's environment as one
     JSON document: its Mirage workspace (Mirage's own snapshot), its runs on
     the fakes (the kit's `GET /_kit/runs/<run>/snapshot`), the tools' dispatch
-    log and its clock. `load` makes the environment a snapshot's. A clone is a
-    new env of the task loaded with another's snapshot.
+    log, the last reserved tool-call ID and its clock. A clone is a new env
+    of the task loaded with another's snapshot. During `load`, shell and grade
+    requests wait. A failed load restores the previous state. If a service
+    also fails during rollback, reset the environment before using it again.
 - `tools.py`: the task's tools as CLIs, as `workspace/cli.ts` makes them for
   Harbor's TypeScript Mirage. The agent sees the same `SKILL.md`, help and
   output on either.

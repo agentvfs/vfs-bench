@@ -31,9 +31,8 @@ from mirage.config import WorkspaceConfig
 from mirage.workspace.workspace import Workspace as Mirage
 from vfsbench_agentenv import fakes, sandbox, tools
 from vfsbench_agentenv.sandbox import MirageSandboxProvider, task_of
-from vfsbench_agentenv.server import (GRADE, REWARD, ROOT,
-                                      WORKSPACE_EXTENSION, Workspace,
-                                      _free_port, _request, run_id)
+from vfsbench_agentenv.server import (GRADE, REWARD, ROOT, WORKSPACE_EXTENSION,
+                                      Workspace, _free_port, _request, run_id)
 
 HERE = Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location("bundle", HERE / "bundle.py")
@@ -133,7 +132,12 @@ class ServerTest(unittest.TestCase):
     def test_a_failed_run_ends_the_others_first(self):
         entered, ended, dropped = [], [], []
 
-        async def start(self, fake, run, fixture, epoch, faults=None,
+        async def start(self,
+                        fake,
+                        run,
+                        fixture,
+                        epoch,
+                        faults=None,
                         extras=None):
             # The news run fails once every other has started; the math
             # run has opened by then, and the rest are still opening.
@@ -165,6 +169,42 @@ class ServerTest(unittest.TestCase):
         # opened was dropped.
         self.assertEqual(len(ended), 13)
         self.assertEqual(dropped, ["complexmcp_math"])
+
+    def test_failed_deletion_is_retried_on_stop(self):
+
+        async def check():
+            pool = fakes.pool()
+            fake = mock.Mock(url="http://fake")
+            fake.process.poll.return_value = None
+            run = fakes.Run("service", "run", Path(), "")
+            process = mock.Mock(returncode=0)
+            statuses = iter([503, 404])
+
+            async def delete(request):
+                self.assertEqual(request.method, "DELETE")
+                return httpx.Response(next(statuses))
+
+            key = "mirage-123-1234"
+            clients = [
+                httpx.AsyncClient(transport=httpx.MockTransport(delete))
+                for _ in range(2)
+            ]
+            with (mock.patch.dict(pool._fakes, service=fake),
+                  mock.patch.dict(sandbox._SERVERS, {key: process}),
+                  mock.patch.dict(sandbox._RUNS, {key: [run]}),
+                  mock.patch.object(fakes, "_send"),
+                  mock.patch.object(httpx, "AsyncClient",
+                                    side_effect=clients)):
+                with self.assertRaises(ExceptionGroup) as caught:
+                    await sandbox._stop(key)
+                self.assertIsInstance(caught.exception.exceptions[0],
+                                      httpx.HTTPStatusError)
+                self.assertEqual(sandbox._RUNS[key], [run])
+                await sandbox._stop(key)
+                self.assertNotIn(key, sandbox._RUNS)
+                self.assertNotIn(key, sandbox._SERVERS)
+
+        asyncio.run(check())
 
     def test_a_workspace_takes_its_task_s_fakes(self):
         workspace = Workspace("complexmcp/mint-100g")
@@ -212,13 +252,19 @@ TS_TOOLS = """
 import { readFileSync } from 'node:fs'
 import { MountMode } from '@struktoai/mirage-core/types'
 import { RAMVFS } from '@struktoai/mirage-core/vfs/ram/ram'
-import { Workspace } from '@struktoai/mirage-core/workspace/workspace/workspace'
-const { specName, toolsCli } = await import(`${process.cwd()}/workspace/cli.ts`)
+import { Workspace }
+  from '@struktoai/mirage-core/workspace/workspace/workspace'
+const { specName, toolsCli } =
+  await import(`${process.cwd()}/workspace/cli.ts`)
 const [clis, lines] = JSON.parse(readFileSync(0, 'utf8'))
 const send = async (tool, args) =>
-  tool.name === 'fail' ? { ok: false, error: 'it failed' } : { ok: true, result: { tool: tool.name, args } }
+  tool.name === 'fail' ? { ok: false, error: 'it failed' }
+                       : { ok: true, result: { tool: tool.name, args } }
 const ws = new Workspace({ '/': [new RAMVFS(), MountMode.WRITE] })
-for (const cli of clis) ws.registerCli(cli.name, toolsCli(specName(cli), cli.tools, cli.description, send), { url: 'http://svc' })
+for (const cli of clis) {
+  const spec = toolsCli(specName(cli), cli.tools, cli.description, send)
+  ws.registerCli(cli.name, spec, { url: 'http://svc' })
+}
 await ws.skillMd('/SKILL.md')
 const out = []
 for (const line of lines) {
@@ -231,28 +277,61 @@ await ws.close()
 
 # Every kind of parameter cli.ts maps to a flag.
 KINDS = [{
-    "name": "svc",
-    "description": "A service.",
+    "name":
+    "svc",
+    "description":
+    "A service.",
     "tools": [{
         "name": "make",
         "description": "Make one.",
         "parameters": {
             "type": "object",
             "properties": {
-                "count": {"type": "integer", "description": "How many."},
-                "ratio": {"type": "number"},
-                "kind": {"type": "string", "enum": ["a", "b"]},
-                "tags": {"type": "array", "items": {"type": "string"}},
-                "ids": {"type": "array", "items": {"type": "integer"}},
-                "on": {"type": "boolean"},
-                "force": {"type": "boolean", "x-flag": True},
+                "count": {
+                    "type": "integer",
+                    "description": "How many."
+                },
+                "ratio": {
+                    "type": "number"
+                },
+                "kind": {
+                    "type": "string",
+                    "enum": ["a", "b"]
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "on": {
+                    "type": "boolean"
+                },
+                "force": {
+                    "type": "boolean",
+                    "x-flag": True
+                },
                 "meta": {
                     "type": "object",
-                    "properties": {"x": {"type": "number"}},
+                    "properties": {
+                        "x": {
+                            "type": "number"
+                        }
+                    },
                     "required": ["x"]
                 },
                 "note": {
-                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                    "anyOf": [{
+                        "type": "string"
+                    }, {
+                        "type": "null"
+                    }],
                     "default": None
                 },
             },
@@ -262,8 +341,15 @@ KINDS = [{
         "name": "items.list_all",
         "parameters": {
             "type": "object",
-            "properties": {"page": {"type": "integer"},
-                           "size": {"type": "number", "enum": [10, 2.5]}},
+            "properties": {
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "number",
+                    "enum": [10, 2.5]
+                }
+            },
             "required": ["page"]
         },
         "strict": False
@@ -292,9 +378,14 @@ def _python_tools(clis: list, lines: list) -> list:
         return True, {"tool": tool["name"], "args": args}
 
     async def run():
-        ws = Mirage(**WorkspaceConfig.model_validate(
-            {"mounts": {"/": {"vfs": "ram", "mode": "write"}}}
-        ).to_workspace_kwargs())
+        ws = Mirage(**WorkspaceConfig.model_validate({
+            "mounts": {
+                "/": {
+                    "vfs": "ram",
+                    "mode": "write"
+                }
+            }
+        }).to_workspace_kwargs())
         try:
             for cli in clis:
                 ws.register_cli(
@@ -321,24 +412,25 @@ class ToolsTest(unittest.TestCase):
     the same on either Mirage."""
 
     def _same(self, clis: list, lines: list):
-        ts = subprocess.run(["node", "--no-warnings", "--input-type=module",
-                             "-e", TS_TOOLS],
-                            input=json.dumps([clis, lines]),
-                            capture_output=True,
-                            text=True,
-                            cwd=ROOT,
-                            check=True)
+        ts = subprocess.run(
+            ["node", "--no-warnings", "--input-type=module", "-e", TS_TOOLS],
+            input=json.dumps([clis, lines]),
+            capture_output=True,
+            text=True,
+            cwd=ROOT,
+            check=True)
         expected = json.loads(ts.stdout)
-        for line, want, got in zip(lines, expected,
-                                   _python_tools(clis, lines)):
+        for line, want, got in zip(lines, expected, _python_tools(clis,
+                                                                  lines)):
             self.assertEqual(got, want, line)
 
     def test_every_kind_of_parameter(self):
         self._same(KINDS, KIND_LINES)
 
     def test_complexmcp_tools(self):
-        clis = json.loads((bundle.DATASETS / "complexmcp" /
-                           "unblock-relatives/workspace/tools.json").read_text())
+        clis = json.loads(
+            (bundle.DATASETS / "complexmcp" /
+             "unblock-relatives/workspace/tools.json").read_text())
         lines = ["cat /SKILL.md"] + [
             f"{cli['name']} {' '.join(tools.command_path(t['name']))} --help"
             for cli in clis for t in cli["tools"]
@@ -347,17 +439,24 @@ class ToolsTest(unittest.TestCase):
 
     def test_spec_names(self):
         clis = [
-            cli for path in sorted(bundle.DATASETS.glob("*/*/workspace/tools.json"))
+            cli for path in sorted(
+                bundle.DATASETS.glob("*/*/workspace/tools.json"))
             for cli in json.loads(path.read_text())
         ]
-        ts = subprocess.run(
-            ["node", "--no-warnings", "--input-type=module", "-e",
-             "import { readFileSync } from 'node:fs'\n"
-             "const { specName } = await import(`${process.cwd()}/workspace/cli.ts`)\n"
-             "console.log(JSON.stringify(JSON.parse(readFileSync(0, 'utf8')).map(specName)))"],
-            input=json.dumps(clis), capture_output=True, text=True, cwd=ROOT,
-            check=True)
-        self.assertEqual([tools.spec_name(c) for c in clis], json.loads(ts.stdout))
+        ts = subprocess.run([
+            "node", "--no-warnings", "--input-type=module", "-e",
+            "import { readFileSync } from 'node:fs'\n"
+            "const { specName } = await import('./workspace/cli.ts')\n"
+            "const clis = JSON.parse(readFileSync(0, 'utf8'))\n"
+            "console.log(JSON.stringify(clis.map(specName)))"
+        ],
+                            input=json.dumps(clis),
+                            capture_output=True,
+                            text=True,
+                            cwd=ROOT,
+                            check=True)
+        self.assertEqual([tools.spec_name(c) for c in clis],
+                         json.loads(ts.stdout))
 
 
 class SnapshotTest(unittest.TestCase):
@@ -398,8 +497,7 @@ class SnapshotTest(unittest.TestCase):
         self.assertEqual(await self._line(workspace, "pwd; echo $KEPT"),
                          "/tmp\n1\n")
         self.assertEqual(
-            await self._line(workspace, "cat /workspace/kept.txt"),
-            "before\n")
+            await self._line(workspace, "cat /workspace/kept.txt"), "before\n")
         made = await workspace.shell("ls /workspace/made.txt")
         self.assertNotEqual(made["exit_code"], 0)
         self.assertEqual(len(self._dispatches(workspace)), 2)
@@ -428,7 +526,41 @@ class SnapshotTest(unittest.TestCase):
                 "rm /workspace/kept.txt && cd / && export KEPT=2 && "
                 "light-shop delete-item-in-cart "
                 "--caid cart_X7M5Px84kFZatHvqMLJdcw")
-            self.assertNotEqual(await self._line(workspace, self.CART), cart)
+            changed_cart = await self._line(workspace, self.CART)
+            self.assertNotEqual(changed_cart, cart)
+
+            changed = await workspace.snapshot()
+            # Have one fake reject its load after its peers have started.
+            # The other fakes must have their changes rolled back.
+            runs_to_load = dict(taken["fakes"])
+            runs_to_load["complexmcp_math"] = dict(
+                runs_to_load["complexmcp_math"], schema="wrong")
+            invalid = dict(taken, fakes=runs_to_load)
+            with self.assertRaises(ExceptionGroup):
+                await workspace.load(invalid)
+            restored = await workspace.snapshot()
+            for service, before in changed["fakes"].items():
+                self.assertEqual(restored["fakes"][service]["tenants"],
+                                 before["tenants"], service)
+            # Fail once after the workspace has already been replaced.
+            documents = workspace._documents
+
+            async def fail_once():
+                workspace._documents = documents
+                raise ValueError("document restore failed")
+
+            with mock.patch.object(workspace, "_documents", fail_once):
+                with self.assertRaisesRegex(ValueError, "document restore"):
+                    await workspace.load(taken)
+            self.assertEqual(
+                await self._line(workspace, "cat /workspace/made.txt"),
+                "after\n")
+            self.assertEqual(await self._line(workspace, "pwd; echo $KEPT"),
+                             "/\n2\n")
+            self.assertEqual(len(self._dispatches(workspace)),
+                             changed["calls"])
+            self.assertEqual(await self._line(workspace, self.CART),
+                             changed_cart)
 
             await workspace.load(taken)
             await self._is_taken(workspace, cart)
@@ -442,6 +574,20 @@ class SnapshotTest(unittest.TestCase):
             self.assertNotEqual(await self._line(clone, self.CART), cart)
             self.assertEqual(await self._line(workspace, self.CART), cart,
                              "a clone's runs are its own")
+
+            # A canceled call may reserve an ID without writing a line.
+            tools.CALLS[clone.dispatches] = 9
+            gap = await clone.snapshot()
+            await clone.load(gap)
+            await self._line(clone, self.CART)
+            self.assertEqual(
+                self._dispatches(clone)[-1]["tool_use_id"], "call_10")
+            legacy = await clone.snapshot()
+            del legacy["calls"]
+            await clone.load(legacy)
+            await self._line(clone, self.CART)
+            self.assertEqual(
+                self._dispatches(clone)[-1]["tool_use_id"], "call_11")
 
             other = dict(taken, task="complexmcp/apple-watch-delete-history")
             with self.assertRaisesRegex(ValueError, "a snapshot of"):

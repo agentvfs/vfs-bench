@@ -163,8 +163,8 @@ class MirageSandboxProvider(SandboxProvider):
         run = run_id(task)
         runs = await fakes.open_task(task, run)
         try:
-            with (RUNS / f"server-{task.replace('/', '-')}-{own}.log").open(
-                    "ab") as log:
+            with (RUNS / f"server-{task.replace('/', '-')}-{own}.log"
+                  ).open("ab") as log:
                 # Its stdin stays open: it exits when this process does.
                 process = await asyncio.create_subprocess_exec(
                     sys.executable,
@@ -238,12 +238,12 @@ async def _stop(sandbox_id: str) -> None:
     """Close the workspace, saving its history, stop its server, then drop
     its runs."""
     pid, own = _parse(sandbox_id)
-    try:
-        await protocol.reset_data(f"http://127.0.0.1:{own}", timeout=60)
-    except Exception:
-        pass
-    process = _SERVERS.pop(sandbox_id, None)
-    try:
+    process = _SERVERS.get(sandbox_id)
+    if process is None or process.returncode is None:
+        try:
+            await protocol.reset_data(f"http://127.0.0.1:{own}", timeout=60)
+        except Exception:
+            pass
         if process is None:
             try:
                 os.kill(pid, signal.SIGTERM)
@@ -255,5 +255,9 @@ async def _stop(sandbox_id: str) -> None:
                 await asyncio.wait_for(process.wait(), 30)
             except TimeoutError:
                 process.kill()
-    finally:
-        await fakes.close_task(_RUNS.pop(sandbox_id, []))
+                await process.wait()
+    # A failed deletion leaves the runs and the exited process handle
+    # available for retry. Repeating DELETE for an absent run succeeds.
+    await fakes.close_task(_RUNS.get(sandbox_id, []))
+    _RUNS.pop(sandbox_id, None)
+    _SERVERS.pop(sandbox_id, None)

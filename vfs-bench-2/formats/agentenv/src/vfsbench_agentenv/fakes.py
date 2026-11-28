@@ -19,7 +19,6 @@ content, so one fake seeds every task's runs from its own task directory.
 import asyncio
 import atexit
 import concurrent.futures
-import contextlib
 import hashlib
 import json
 import os
@@ -35,7 +34,6 @@ from urllib.parse import quote
 
 import httpx
 import yaml
-
 from vfsbench_agentenv.server import DATASETS, NODE, ROOT, RUNS, _host_env
 
 LAUNCHER = ROOT / "workspace" / "fakes.ts"
@@ -194,9 +192,7 @@ class SharedFakes:
         except BaseException:
             # No task holds the run yet, so its close would never drop it:
             # a run seeded, or half seeded, goes before the error does.
-            with contextlib.suppress(httpx.HTTPError):
-                await asyncio.shield(self.drop(Run(fake.service, run, Path(),
-                                                   "")))
+            await asyncio.shield(self.drop(Run(fake.service, run, Path(), "")))
             raise
         return Run(fake.service, run, files[0], address, fake.url)
 
@@ -207,7 +203,9 @@ class SharedFakes:
             return
         _send(fake, {"close": run.name})
         async with httpx.AsyncClient(timeout=60) as client:
-            await client.delete(f"{fake.url}/_kit/runs/{run.name}")
+            reply = await client.delete(f"{fake.url}/_kit/runs/{run.name}")
+            if reply.status_code != 404:
+                reply.raise_for_status()
 
     def close(self) -> None:
         """Stop every fake and remove the pool's root."""
@@ -318,9 +316,15 @@ async def open_task(task: str, run: str) -> list[Run]:
 
 async def close_task(runs: list[Run]) -> None:
     """Drop a task's runs."""
+    errors = []
     for run in runs:
-        with contextlib.suppress(httpx.HTTPError):
+        try:
             await pool().drop(run)
+        except Exception as error:
+            error.add_note(f"deleting run {run.name} of {run.service}")
+            errors.append(error)
+    if errors:
+        raise ExceptionGroup("failed to delete fake runs", errors)
 
 
 def views(task: str, runs: list[Run]) -> dict:
@@ -330,9 +334,8 @@ def views(task: str, runs: list[Run]) -> dict:
     the server snapshots and loads the run at and its workspace is never
     allowed."""
     dataset, name = task.split("/")
-    spec = yaml.safe_load(
-        (DATASETS / dataset / name / "workspace" /
-         "workspace.yaml").read_text()) or {}
+    spec = yaml.safe_load((DATASETS / dataset / name / "workspace" /
+                           "workspace.yaml").read_text()) or {}
     out = {}
     for run in runs:
         opened = {"url": run.address, "db": str(run.db), "kit": run.kit}

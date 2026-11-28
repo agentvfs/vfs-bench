@@ -50,7 +50,7 @@ import threading
 import time
 import uuid
 from datetime import datetime, timezone
-from functools import cache
+from functools import cache, wraps
 from pathlib import Path
 from types import SimpleNamespace
 from urllib.parse import unquote, urlparse
@@ -73,7 +73,6 @@ from mirage.server.logs import completed_logs, log_lines
 from mirage.types import PathSpec
 from mirage.workspace.snapshot import apply_state_dict, read_tar
 from mirage.workspace.workspace import Workspace as Mirage
-
 from vfsbench_agentenv import tools
 
 ROOT = Path(__file__).resolve().parents[4]
@@ -210,8 +209,8 @@ async def _grade(_accessor, _paths: list[PathSpec], _texts: list[str],
     own = DATASETS / dataset / "graders" / "verify.ts"
     if runtime == "typescript":
         runner = RUNNER
-    elif (re.fullmatch(r"[a-z0-9]+", dataset)
-          and runtime == f"{dataset}-monty" and own.is_file()):
+    elif (re.fullmatch(r"[a-z0-9]+", dataset) and runtime == f"{dataset}-monty"
+          and own.is_file()):
         runner = own
     else:
         return None, IOResult(
@@ -243,7 +242,8 @@ async def _grade(_accessor, _paths: list[PathSpec], _texts: list[str],
 
 
 GRADE_CLI = CLI(spec=CommandSpec(
-    name="grade", description="Grade a trial's frozen inputs (/request.json)."),
+    name="grade",
+    description="Grade a trial's frozen inputs (/request.json)."),
                 handlers={"": CLIHandler(fn=_grade)})
 
 
@@ -263,9 +263,12 @@ def _config(plan: dict) -> dict:
                 raise RuntimeError(f"no CPython WASI build at {WASI}: run "
                                    "formats/agentenv/python.py")
             machines[name] = {
-                "provider": "in_process",
-                "runtime": "wasi",
-                "home": str(WASI),
+                "provider":
+                "in_process",
+                "runtime":
+                "wasi",
+                "home":
+                str(WASI),
                 **({
                     "max_memory": machine["max_memory"]
                 } if "max_memory" in machine else {}),
@@ -273,9 +276,8 @@ def _config(plan: dict) -> dict:
     if machines:
         config["machines"] = machines
     config["network"] = {
-        "allowed_domains":
-        sorted({_netloc(u)
-                for u in plan.get("allow", [])}),
+        "allowed_domains": sorted({_netloc(u)
+                                   for u in plan.get("allow", [])}),
         "routes": {
             f"{host}:{port}": _netloc(url)
             for port, url in plan["routes"].items()
@@ -309,6 +311,7 @@ class Workspace:
         self.workdir = "/"
         self.epoch: int | None = None
         self.started = 0
+        self.restore_failed = False
         self.grade: Mirage | None = None
         self.logs = self.run / "verifier" / "logs"
 
@@ -380,8 +383,10 @@ class Workspace:
         # The layout takes each run's port and files; the fake's own URL
         # is this server's alone.
         plan = await self._plan({
-            service: {k: v
-                      for k, v in fake.items() if k != "kit"}
+            service: {
+                k: v
+                for k, v in fake.items() if k != "kit"
+            }
             for service, fake in fakes.items()
         })
         self.fakes = fakes
@@ -458,82 +463,118 @@ class Workspace:
             "time": self.now().isoformat(timespec="milliseconds"),
             "mirage": base64.b64encode(tar.getvalue()).decode(),
             "fakes": dict(zip(services, runs)),
+            "calls": tools.CALLS.get(self.dispatches, 0),
             "files": {
                 view: base64.b64encode(live.read_bytes()).decode()
                 for view, live in self._files().items() if live.exists()
             },
         }
 
-    async def load(self, snapshot: dict) -> None:
-        """Make the environment a snapshot's, of this task: each run on the
-        fakes loaded (the kit's ``POST /_kit/runs/<run>/load``), the state
-        files written, and the Mirage workspace made again from the task's
-        config at the snapshot's time, the snapshot applied to it as
-        Mirage's agents adapter restores one into a live workspace. Its
-        disk mounts are emptied first, so a file made since the snapshot
-        is gone. A snapshot of another task is refused before anything
-        changes."""
+    def _decode(self, snapshot: dict, staging: Path) -> tuple:
+        """Decode local state before sending a load to any service."""
         task = f"{self.dataset}/{self.name}"
         if snapshot.get("task") != task:
             raise ValueError(f"a snapshot of {snapshot.get('task')}, "
                              f"not {task}")
-        if sorted(snapshot.get("fakes") or {}) != sorted(self.fakes):
+        runs = snapshot["fakes"]
+        if (not isinstance(runs, dict) or runs.keys() != self.fakes.keys()
+                or any(not isinstance(run, dict) or run.get("service") != name
+                       for name, run in runs.items())):
             raise ValueError(f"the snapshot's fakes are not {task}'s")
-        files = snapshot.get("files") or {}
         ours = self._files()
-        if not set(files) <= set(ours):
+        files = snapshot["files"]
+        if not isinstance(files, dict) or not files.keys() <= ours.keys():
             raise ValueError(f"the snapshot's state files are not {task}'s")
-        staging = Path(tempfile.mkdtemp(prefix="vfsbench-load-"))
-        try:
-            state = await asyncio.to_thread(
-                read_tar, io.BytesIO(base64.b64decode(snapshot["mirage"])),
-                staging)
+        data = {
+            ours[k]: base64.b64decode(v, validate=True)
+            for k, v in files.items()
+        }
+        calls = snapshot.get("calls", 0)
+        if type(calls) is not int or calls < 0:
+            raise ValueError("invalid snapshot call counter")
+        if self.dispatches:
+            # Older snapshots have only the log. Calls finish out of order
+            # and cancellation can leave gaps.
+            for line in data.get(Path(self.dispatches), b"").splitlines():
+                match = re.fullmatch(r"call_([0-9]+)",
+                                     json.loads(line)["tool_use_id"])
+                if not match:
+                    raise ValueError("invalid dispatch call ID")
+                calls = max(calls, int(match[1]))
+        epoch = _ms(snapshot["time"])
+        archive = base64.b64decode(snapshot["mirage"], validate=True)
+        return read_tar(io.BytesIO(archive), staging), data, calls, epoch
 
-            async def run(client: httpx.AsyncClient, service: str) -> None:
+    async def _load_fakes(self, runs: dict) -> None:
+        async with httpx.AsyncClient(timeout=300) as client:
+
+            async def one(service, run):
                 reply = await client.post(
                     f"{self.fakes[service]['kit']}/_kit/runs/{self.id}/load",
-                    json=snapshot["fakes"][service])
-                if reply.status_code != 200:
-                    raise RuntimeError(f"loading run {self.id} of the "
-                                       f"{service} fake failed "
-                                       f"({reply.status_code}): {reply.text}")
+                    json=run)
+                reply.raise_for_status()
 
-            async with httpx.AsyncClient(timeout=300) as client:
-                await asyncio.gather(*(run(client, s) for s in self.fakes))
-            if self.grade is not None:
-                grade, self.grade = self.grade, None
-                await grade.close()
-            shutil.rmtree(self.run / "verifier", ignore_errors=True)
-            mirage, self.mirage = self.mirage, None
-            await mirage.close()
-            for root in self._roots():
-                shutil.rmtree(root, ignore_errors=True)
-            for root in self._roots():
-                root.mkdir(parents=True, exist_ok=True)
-            for view, live in ours.items():
-                if view in files:
-                    live.write_bytes(base64.b64decode(files[view]))
-                else:
-                    live.unlink(missing_ok=True)
-            if self.dispatches is not None:
-                log = Path(self.dispatches)
-                tools.CALLS[self.dispatches] = (len(
-                    log.read_bytes().splitlines()) if log.exists() else 0)
-            if self.epoch is not None:
-                self.epoch = _ms(snapshot["time"])
-                self.started = int(time.time() * 1000)
-            mirage = self._mirage()
-            try:
-                await apply_state_dict(mirage, state, built_for_state=True)
-                self.mirage = mirage
-                await self._documents()
-            except BaseException:
-                self.mirage = None
-                await mirage.close()
-                raise
-        finally:
-            shutil.rmtree(staging, ignore_errors=True)
+            results = await asyncio.gather(*(one(s, r)
+                                             for s, r in runs.items()),
+                                           return_exceptions=True)
+            errors = [r for r in results if isinstance(r, BaseException)]
+            if errors:
+                raise BaseExceptionGroup("loading fake runs failed", errors)
+
+    async def _load_local(self, state, data, calls, epoch) -> None:
+        if self.mirage is not None:
+            await self.mirage.close()
+            self.mirage = None
+        for root in self._roots():
+            if root.exists():
+                shutil.rmtree(root)
+        for root in self._roots():
+            root.mkdir(parents=True, exist_ok=True)
+        for live in self._files().values():
+            if live in data:
+                live.write_bytes(data[live])
+            else:
+                live.unlink(missing_ok=True)
+        if self.dispatches:
+            tools.CALLS[self.dispatches] = calls
+        if self.epoch is not None:
+            self.epoch = epoch
+            self.started = int(time.time() * 1000)
+        self.mirage = self._mirage()
+        await apply_state_dict(self.mirage, state, built_for_state=True)
+        await self._documents()
         await asyncio.to_thread(self.refresh)
+
+    async def load(self, snapshot: dict) -> None:
+        """Restore the workspace and all its runs as one operation."""
+        with tempfile.TemporaryDirectory(prefix="vfsbench-load-") as tmp:
+            staging = Path(tmp)
+            target = await asyncio.to_thread(self._decode, snapshot,
+                                             staging / "target")
+            previous = await self.snapshot()
+            touched_local = False
+            try:
+                await self._load_fakes(snapshot["fakes"])
+                touched_local = True
+                await self._load_local(*target)
+                if self.grade is not None:
+                    grade, self.grade = self.grade, None
+                    await grade.close()
+            except BaseException:
+                try:
+                    # Even a service whose response timed out may have
+                    # committed its load. Restore every service.
+                    await self._load_fakes(previous["fakes"])
+                    if touched_local:
+                        local = await asyncio.to_thread(
+                            self._decode, previous, staging / "previous")
+                        await self._load_local(*local)
+                except BaseException:
+                    self.restore_failed = True
+                    raise RuntimeError("snapshot rollback failed; "
+                                       "reset the environment")
+                raise
+        shutil.rmtree(self.run / "verifier", ignore_errors=True)
 
     def _roots(self) -> list[Path]:
         """The host directories of the workspace's disk mounts, each under
@@ -759,24 +800,49 @@ def _request(parts: list) -> dict:
     raise ValueError("data/add named no task")
 
 
+def _serialized(method):
+    """Keep requests from observing a partial restore or reset."""
+
+    @wraps(method)
+    async def wrapped(self, *args, **kwargs):
+        async with self.lock:
+            return await method(self, *args, **kwargs)
+
+    return wrapped
+
+
 @environment_card(name="mirage")
 class VfsBench(AgentEnvEnvironment):
     """A vfs-bench-2 task's Mirage workspace; its one tool is ``shell``."""
 
     def __init__(self) -> None:
+        self.lock = asyncio.Lock()
         self.workspace: Workspace | None = None
         self.runs: dict[str, dict] = {}
 
+    def _active(self) -> Workspace:
+        if self.workspace is None:
+            raise RuntimeError("no task is loaded")
+        if self.workspace.restore_failed:
+            raise RuntimeError(
+                "snapshot rollback failed; reset the environment")
+        return self.workspace
+
     @reset_data
+    @_serialized
     async def _reset(self) -> None:
+        await self._close()
+
+    async def _close(self) -> None:
         self.runs = {}
         if self.workspace is not None:
             workspace, self.workspace = self.workspace, None
             await workspace.close()
 
     @add_data
+    @_serialized
     async def _add(self, parts: list) -> None:
-        await self._reset()
+        await self._close()
         request = _request(parts)
         if "fakes" not in request:
             raise ValueError("data/add named no runs (fakes): the process "
@@ -791,20 +857,19 @@ class VfsBench(AgentEnvEnvironment):
         self.workspace = workspace
 
     @get_data
+    @_serialized
     async def _state(self, paths: list | None = None) -> list:
-        if self.workspace is None:
-            raise RuntimeError("no task is loaded")
+        workspace = self._active()
         if paths is None:
             return [
-                DataPart(
-                    data={
-                        "request": await self.workspace.freeze(),
-                        "run": str(self.workspace.run)
-                    })
+                DataPart(data={
+                    "request": await workspace.freeze(),
+                    "run": str(workspace.run)
+                })
             ]
         parts = []
         for path in paths:
-            data = self.workspace.read(path)
+            data = workspace.read(path)
             if data is not None:
                 parts.append(
                     FilePart(
@@ -819,14 +884,14 @@ class VfsBench(AgentEnvEnvironment):
                op="run",
                description="Run a command line in the task's grade "
                "workspace: its frozen state read-only at /, logs/ writable.")
+    @_serialized
     async def _run(self,
                    argv: list,
                    request_id: str,
                    cwd: str | None = None,
                    env: dict | None = None,
                    timeout_s: float | None = None) -> dict:
-        if self.workspace is None:
-            raise RuntimeError("no task is loaded")
+        workspace = self._active()
         if request_id in self.runs:
             return self.runs[request_id]
         line = (argv[2] if len(argv) == 3 and argv[:2] == ["bash", "-c"] else
@@ -834,8 +899,8 @@ class VfsBench(AgentEnvEnvironment):
         exports = "".join(f"export {k}={shlex.quote(v)}; "
                           for k, v in (env or {}).items())
         try:
-            done = await self.workspace.grade_shell(exports + line, cwd,
-                                                    timeout_s or 600)
+            done = await workspace.grade_shell(exports + line, cwd, timeout_s
+                                               or 600)
             answer = {
                 "exit_code": done["exit_code"],
                 "stdout": done["stdout"],
@@ -858,20 +923,31 @@ class VfsBench(AgentEnvEnvironment):
                op="snapshot",
                method="GET",
                description=WORKSPACE_DESCRIPTION)
+    @_serialized
     async def _snapshot_environment(self) -> dict:
-        if self.workspace is None:
-            raise RuntimeError("no task is loaded")
-        return await self.workspace.snapshot()
+        workspace = self._active()
+        return await workspace.snapshot()
 
     @extension(WORKSPACE_EXTENSION,
                op="load",
                description=WORKSPACE_DESCRIPTION)
+    @_serialized
     async def _load_environment(self, snapshot: dict) -> dict:
-        if self.workspace is None:
-            raise RuntimeError("no task is loaded")
-        self.runs = {}
-        await self.workspace.load(snapshot)
-        return {"task": snapshot["task"], "run": self.workspace.id}
+        workspace = self._active()
+
+        async def restore():
+            await workspace.load(snapshot)
+            self.runs.clear()
+
+        # A disconnected client must not interrupt the transaction or
+        # release the request lock while HTTP loads are still in flight.
+        pending = asyncio.create_task(restore())
+        try:
+            await asyncio.shield(pending)
+        except asyncio.CancelledError:
+            await pending
+            raise
+        return {"task": snapshot["task"], "run": workspace.id}
 
     def extension_params(self, uri: str) -> dict:
         return {
@@ -879,13 +955,13 @@ class VfsBench(AgentEnvEnvironment):
         } if uri == COMPUTER_EXEC else {}
 
     @tool()
+    @_serialized
     async def shell(self, command: str) -> CallToolResult:
         """Run a bash command line in the workspace, from its working
         directory. Pipes, redirects and Unix commands work on its mounts;
         /VFS.md lists the mounts and /SKILL.md the CLIs."""
-        if self.workspace is None:
-            raise RuntimeError("no task is loaded")
-        done = await self.workspace.shell(command)
+        workspace = self._active()
+        done = await workspace.shell(command)
         text = done["stdout"]
         if done["stderr"]:
             text = f"{text}\n{done['stderr']}" if text else done["stderr"]

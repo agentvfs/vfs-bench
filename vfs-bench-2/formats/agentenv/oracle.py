@@ -1,7 +1,8 @@
 """Run each task's solution through the mirage env, and grade it.
 
     uv run --project formats/agentenv \
-      python -I formats/agentenv/oracle.py <dataset> [-n 4] [--nop | --clone] [task ...]
+      python -I formats/agentenv/oracle.py <dataset> \
+      [-n 4] [--nop | --clone] [task ...]
 
 For each task: its runs on the fakes this process shares (``fakes.py``),
 as the mirage sandbox provider opens them, the env's server, ``data/add``

@@ -67,7 +67,8 @@ def _number(value: float) -> str:
     if whole != "0":
         point = len(whole) + int(exponent or 0)
     else:
-        point = int(exponent or 0) - (len(fraction) - len(fraction.lstrip("0")))
+        point = int(exponent
+                    or 0) - (len(fraction) - len(fraction.lstrip("0")))
     digits = (whole + fraction).lstrip("0").rstrip("0") or "0"
     k = len(digits)
     if k <= point <= 21:
@@ -105,21 +106,21 @@ def stringify(value, indent: int | None = None, depth: int = 0) -> str:
     if isinstance(value, str):
         return json.dumps(value, ensure_ascii=False)
     if isinstance(value, (list, dict)):
-        items = ([stringify(v, indent, depth + 1) for v in value] if isinstance(
-            value, list) else [
-                f"{json.dumps(k, ensure_ascii=False)}:"
-                f"{'' if indent is None else ' '}"
-                f"{stringify(value[k], indent, depth + 1)}"
-                for k in _keys(value)
-            ])
+        items = ([stringify(v, indent, depth + 1)
+                  for v in value] if isinstance(value, list) else [
+                      f"{json.dumps(k, ensure_ascii=False)}:"
+                      f"{'' if indent is None else ' '}"
+                      f"{stringify(value[k], indent, depth + 1)}"
+                      for k in _keys(value)
+                  ])
         open_, close = "[]" if isinstance(value, list) else "{}"
         if not items:
             return open_ + close
         if indent is None:
             return open_ + ",".join(items) + close
         inner = "\n" + " " * (indent * (depth + 1))
-        return (open_ + inner + f",{inner}".join(items) + "\n" +
-                " " * (indent * depth) + close)
+        return (open_ + inner + f",{inner}".join(items) + "\n" + " " *
+                (indent * depth) + close)
     raise TypeError(f"not JSON: {value!r}")
 
 
@@ -130,8 +131,7 @@ def _concrete(schema: dict) -> dict:
     if union is not None:
         real = [s for s in union if s.get("type") != "null"]
         if len(real) == 1:
-            description = schema.get("description",
-                                     real[0].get("description"))
+            description = schema.get("description", real[0].get("description"))
             out = {**_concrete(real[0])}
             out.pop("description", None)
             if description is not None:
@@ -229,12 +229,13 @@ def _argument(name: str, raw: dict, listed: bool,
     kind = _kind(schema)
     needed = (kind != "flag" and listed and "default" not in raw
               and not _nullable(raw))
-    item = _kind(_concrete(schema.get("items") or {})) if kind == "list" else kind
+    item = _kind(_concrete(schema.get("items")
+                           or {})) if kind == "list" else kind
     help_ = "; ".join(part for part in (
         schema.get("description") or "",
         _shape(schema) if kind == "json" else "",
-        f"default {stringify(schema['default'])}"
-        if "default" in schema else "",
+        f"default {stringify(schema['default'])}" if "default" in
+        schema else "",
         # What a strict flag's own checks would say.
         "one of " + ", ".join(_text(v) for v in schema["enum"])
         if not strict and "enum" in schema else "",
@@ -291,8 +292,8 @@ def _loose(text: str, kind: str):
     """A loose flag's value as the schema's type where it reads as one,
     else as it is."""
     if kind == "int":
-        return (_js_number(text) if re.fullmatch(r"[+-]?\d+", text.strip())
-                else text)
+        return (_js_number(text)
+                if re.fullmatch(r"[+-]?\d+", text.strip()) else text)
     if kind == "float":
         value = _js_number(text) if text.strip() != "" else None
         return text if value is None else value
@@ -353,7 +354,8 @@ def _arguments(params: list[Param], ctx: Context) -> dict:
             try:
                 out[p.name] = json.loads(text)
             except ValueError:
-                raise ValueError(f"{_flag(p.name)} takes JSON: {text}") from None
+                raise ValueError(
+                    f"{_flag(p.name)} takes JSON: {text}") from None
         else:
             out[p.name] = flags.as_str(key)
     return out
@@ -391,15 +393,21 @@ async def send(tool: dict, args: dict, config: Config) -> tuple[bool, object]:
         body = {"error": f"{type(error).__name__}: {error}"}
     now = system_date()
     dispatch = {
-        "tool_use_id": f"call_{call}",
-        "tool_name": tool.get("call", tool["name"]),
-        "endpoint_url": endpoint["url"],
-        "request_body": args,
-        "response_status": status,
-        "response_body": body,
+        "tool_use_id":
+        f"call_{call}",
+        "tool_name":
+        tool.get("call", tool["name"]),
+        "endpoint_url":
+        endpoint["url"],
+        "request_body":
+        args,
+        "response_status":
+        status,
+        "response_body":
+        body,
         "latency_ms": (time.perf_counter() - started) * 1000,
-        "timestamp": now.strftime("%Y-%m-%dT%H:%M:%S.") +
-        f"{now.microsecond // 1000:03d}Z",
+        "timestamp":
+        now.strftime("%Y-%m-%dT%H:%M:%S.") + f"{now.microsecond // 1000:03d}Z",
     }
     with Path(config.dispatches).open("a") as log:
         log.write(stringify(dispatch) + "\n")
@@ -413,15 +421,17 @@ async def send(tool: dict, args: dict, config: Config) -> tuple[bool, object]:
 def _handler(tool: dict, params: list[Param]) -> CLIHandler:
 
     async def run(accessor: NOOPAccessor, paths: list[PathSpec],
-                  texts: list[str], ctx: Context) -> tuple[bytes | None, IOResult]:
+                  texts: list[str],
+                  ctx: Context) -> tuple[bytes | None, IOResult]:
         try:
             args = _arguments(params, ctx)
         except ValueError as error:
             return None, IOResult(exit_code=2, stderr=f"{error}\n".encode())
         ok, value = await send(tool, args, accessor.config)
         if not ok:
-            return None, IOResult(exit_code=1,
-                                  stderr=_render("failed" if value is None else value).encode())
+            return None, IOResult(
+                exit_code=1,
+                stderr=_render("failed" if value is None else value).encode())
         return _render(value).encode(), IOResult()
 
     return CLIHandler(fn=run, write=True)
@@ -471,11 +481,11 @@ def tools_cli(name: str, tools: list[dict], description: str | None) -> CLI:
                                build(child, sub)
                                for child, sub in node["children"].items()))
 
-    return CLI(spec=CommandSpec(name=name,
-                                description=description,
-                                subcommands=tuple(
-                                    build(part, node)
-                                    for part, node in root["children"].items())),
+    return CLI(spec=CommandSpec(
+        name=name,
+        description=description,
+        subcommands=tuple(
+            build(part, node) for part, node in root["children"].items())),
                handlers=handlers,
                config_model=Config)
 
