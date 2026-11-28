@@ -67,8 +67,8 @@ async def prepare(task, config, run_dir, *, run_id=None):
             raise ValueError(
                 "Expected complexmcp_kit_endpoints to be a service mapping")
     api = tool_api(partial(server.call, run_id), tools)
-    async with server._run(run_id, settings,
-                           corpus), api as (call_tool, address):
+    async with api as (call_tool,
+                       address), server._run(run_id, settings, corpus):
         initial = await server.state(run_id)
 
         def score(final):

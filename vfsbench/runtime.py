@@ -566,6 +566,10 @@ class Trial:
             self._started_at = datetime.now(UTC).isoformat()
 
     async def close(self) -> None:
+        # A command or a verifier can be waiting for this worker under _lock.
+        if (self._lock.locked() and not self._closed and self._prepared
+                and self._prepared.server):
+            await self._prepared.server.stop(self.id)
         async with self._lock:
             self._closed = True
             if self._stack is None:

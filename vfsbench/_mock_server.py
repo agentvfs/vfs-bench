@@ -8,7 +8,7 @@ import time
 from contextlib import AsyncExitStack, asynccontextmanager
 from pathlib import Path
 
-from aiohttp import web
+from aiohttp import ClientSession, web
 
 from .server import _local_token
 from .suites._complexmcp_kit import kit_run
@@ -23,6 +23,7 @@ class Run:
         self.mock = mock
         self.resources = resources
         self.lock = asyncio.Lock()
+        self.active = None
         self.stopped = False
 
     def info(self):
@@ -58,16 +59,10 @@ class Registry:
             async with AsyncExitStack() as resources:
                 endpoints = settings.get("endpoints")
                 if endpoints is not None:
-                    mock = await resources.enter_async_context(
-                        kit_run(endpoints,
-                                settings["tools"],
-                                settings["task"],
-                                settings,
-                                run_id=run_id))
-                    if source:
-                        await source.mock.clone_into(mock)
-                    else:
-                        await mock.request("init")
+                    client = await resources.enter_async_context(
+                        ClientSession())
+                    mock = kit_run(client, endpoints, settings["tools"],
+                                   settings["task"], settings, run_id)
                 else:
                     root = Path(
                         resources.enter_context(tempfile.TemporaryDirectory()))
@@ -82,17 +77,26 @@ class Registry:
                         dest.write_text(contents, encoding="utf-8")
                     mock = await resources.enter_async_context(_stdio_run(root)
                                                                )
-                    if source:
-                        await mock.request("load",
-                                           snapshot=await
-                                           source.mock.request("snapshot"))
-                    else:
-                        await mock.request("init",
-                                           seed=settings["seed"],
-                                           apps=settings["apps"])
                 run = Run(run_id, settings, mock, resources.pop_all())
                 self.runs[run_id] = run
-                return run.info()
+                try:
+                    async with self.live(run_id):
+                        if endpoints is not None:
+                            if source:
+                                await source.mock.clone_into(mock)
+                            else:
+                                await mock.request("init")
+                        elif source:
+                            snapshot = await source.mock.request("snapshot")
+                            await mock.request("load", snapshot=snapshot)
+                        else:
+                            await mock.request("init",
+                                               seed=settings["seed"],
+                                               apps=settings["apps"])
+                    return run.info()
+                except BaseException:
+                    await self._stop(run)
+                    raise
         finally:
             self.pending.pop(run_id).set()
 
@@ -104,18 +108,33 @@ class Registry:
         async with run.lock:
             if run.stopped:
                 raise web.HTTPNotFound(text="Mock run has stopped")
-            yield run
+            run.active = asyncio.current_task()
+            try:
+                yield run
+            except asyncio.CancelledError:
+                if run.stopped:
+                    raise web.HTTPGone(text="Mock run stopped") from None
+                raise
+            finally:
+                run.active = None
 
     async def stop(self, rid):
-        if event := self.pending.get(rid):
+        if rid not in self.runs and (event := self.pending.get(rid)):
             await event.wait()
-        run = self.runs.get(rid)
-        if run:
-            async with run.lock:
-                if not run.stopped:
-                    await run.resources.aclose()
-                    run.stopped = True
-                    self.runs.pop(rid, None)
+        if run := self.runs.get(rid):
+            await self._stop(run)
+
+    async def _stop(self, run):
+        if not run.stopped:
+            run.stopped = True
+            if run.active is not None:
+                run.active.cancel()
+        async with run.lock:
+            if self.runs.get(run.id) is run:
+                if run.settings.get("endpoints") is not None:
+                    await run.mock.delete_services()
+                await run.resources.aclose()
+                del self.runs[run.id]
 
 
 def application(token, registry):

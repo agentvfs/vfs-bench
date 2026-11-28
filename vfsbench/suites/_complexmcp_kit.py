@@ -1,9 +1,8 @@
 import asyncio
 import re
 import secrets
-from contextlib import AsyncExitStack, asynccontextmanager
+from contextlib import asynccontextmanager
 from urllib.parse import urlsplit
-from uuid import uuid4
 
 import aiohttp
 from aiohttp import web
@@ -15,9 +14,9 @@ class KitHTTPError(RuntimeError):
 
 class KitRun:
 
-    def __init__(self, client, cleanup, endpoints, task, manifest):
+    def __init__(self, client, endpoints, task, manifest, run_id):
         self.client = client
-        self.cleanup = cleanup
+        self.pending_deletes = {}
         self.endpoints = endpoints
         self.task = task
         self.epoch = manifest["system_time"]
@@ -25,7 +24,7 @@ class KitRun:
             app: app.replace("Light", "light-", 1).lower()
             for app in manifest["apps"]
         }
-        self.run_id = uuid4().hex
+        self.run_id = run_id
         self.active = {}
         self.lock = asyncio.Lock()
 
@@ -35,6 +34,18 @@ class KitRun:
             if reply.status not in (200, 204, 404):
                 raise RuntimeError(
                     f"Kit could not delete run {self.run_id} ({reply.status})")
+
+    async def delete_services(self):
+        failures = []
+        for base in reversed(tuple(self.pending_deletes)):
+            try:
+                await self._delete(base)
+            except Exception as exc:
+                failures.append(exc)
+            else:
+                del self.pending_deletes[base]
+        if failures:
+            raise ExceptionGroup("Kit run cleanup failed", failures)
 
     async def _post(self, service, path, body, headers=None):
         try:
@@ -55,7 +66,7 @@ class KitRun:
         if service not in self.active:
             base = self.endpoints[service]
             # Reset can create a run even when its response is lost.
-            self.cleanup.push_async_callback(self._delete, base)
+            self.pending_deletes[base] = None
             await self._post(service, "/reset", {
                 "run": self.run_id,
                 "fixture": self.task,
@@ -87,9 +98,9 @@ class KitRun:
                     raise
                 except BaseException:
                     # A lost reply may follow a successful clone.
-                    other.cleanup.push_async_callback(other._delete, base)
+                    other.pending_deletes[base] = None
                     raise
-                other.cleanup.push_async_callback(other._delete, base)
+                other.pending_deletes[base] = None
                 other.active[service] = base
 
     async def metadata(self):
@@ -121,8 +132,7 @@ class KitRun:
             return reply
 
 
-@asynccontextmanager
-async def kit_run(endpoints, services, task, manifest, *, run_id=None):
+def kit_run(client, endpoints, services, task, manifest, run_id):
     if not isinstance(endpoints, dict) or set(endpoints) != set(services):
         raise ValueError(
             "complexmcp_kit_endpoints must map every service to a Kit URL")
@@ -136,11 +146,7 @@ async def kit_run(endpoints, services, task, manifest, *, run_id=None):
         bases[service] = url.rstrip("/")
     if len(set(bases.values())) != len(bases):
         raise ValueError("Each Kit service needs its own base URL")
-    async with aiohttp.ClientSession() as client, AsyncExitStack() as cleanup:
-        kit = KitRun(client, cleanup, bases, task, manifest)
-        if run_id is not None:
-            kit.run_id = run_id
-        yield kit
+    return KitRun(client, bases, task, manifest, run_id)
 
 
 @asynccontextmanager

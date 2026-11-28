@@ -178,29 +178,108 @@ class ComplexMCPTests(unittest.IsolatedAsyncioTestCase):
         else:
             self.fail("Controller still accepts connections after shutdown")
 
-    async def test_kit_partial_startup_drops_allocated_runs(self):
-        from vfsbench.suites._complexmcp_kit import KitRun, kit_run
+    async def test_stop_interrupts_worker_and_rejects_waiting_calls(self):
+        from aiohttp import web
+        from vfsbench._mock_server import Registry
+
+        registry = Registry()
+        rid = "a" * 32
+        await registry.create(rid, dict(task="test", seed=1, apps=[],
+                                        tools={}))
+        worker = registry.runs[rid].mock.process
+        entered = asyncio.Event()
+
+        async def call():
+            async with registry.live(rid):
+                entered.set()
+                await asyncio.Event().wait()
+
+        active = asyncio.create_task(call())
+        await entered.wait()
+        waiting = asyncio.create_task(call())
+        await asyncio.wait_for(registry.stop(rid), 3)
+        with self.assertRaises(web.HTTPGone):
+            await active
+        with self.assertRaises(web.HTTPNotFound):
+            await waiting
+        self.assertIsNotNone(worker.returncode)
+        self.assertNotIn(rid, registry.runs)
+
+    async def test_trial_close_interrupts_a_blocked_stdio_read(self):
+        from aiohttp.test_utils import TestServer
+        from vfsbench._mock_server import Registry, application
+        from vfsbench.suites import _complexmcp_stdio as stdio
+
+        registry = Registry()
+        with (tempfile.TemporaryDirectory() as
+              tmp, patch.dict(os.environ, {"VFSBENCH_SERVER_TOKEN": "test"})):
+            bundle = Path(tmp) / "worker.mjs"
+            bundle.write_text(
+                "import {createInterface} from 'node:readline';"
+                "const lines = createInterface({input: process.stdin});"
+                "for await (const line of lines) {"
+                "  if (JSON.parse(line).op === 'call') continue;"
+                "  console.log('{\"result\":{}}');"
+                "}")
+            async with TestServer(application("test", registry)) as controller:
+                config = TrialConfig(server_url=str(controller.make_url("/")))
+                task = ComplexMCP()["mark-sean-baker-read"]
+                with patch.object(stdio, "BUNDLE", bundle):
+                    async with task.start(config=config) as trial:
+                        run = registry.runs[trial.id]
+                        worker = run.mock.process
+                        call = asyncio.create_task(
+                            trial.exec("light-system now"))
+                        async with asyncio.timeout(5):
+                            while run.active is None:
+                                await asyncio.sleep(.01)
+                            await trial.close()
+                            await asyncio.gather(call, return_exceptions=True)
+                        self.assertIsNotNone(worker.returncode)
+                        self.assertNotIn(trial.id, registry.runs)
+
+    async def test_kit_stop_retries_only_failed_deletions(self):
+        from aiohttp import web
+        from vfsbench._mock_server import Registry
+        from vfsbench.suites._complexmcp_kit import KitRun
 
         endpoints = {
             "light-system": "http://system",
             "light-talk": "http://talk"
         }
-        manifest = {
-            "apps": ["LightSystem", "LightTalk"],
-            "system_time": "2026-01-01T00:00:00Z"
-        }
-        post = AsyncMock(side_effect=[{}, {
-            "status": "ok"
-        }, RuntimeError("reset failed")])
-        delete = AsyncMock()
-        with patch.object(KitRun, "_post",
-                          post), patch.object(KitRun, "_delete", delete):
-            with self.assertRaisesRegex(RuntimeError, "reset failed"):
-                async with kit_run(endpoints, endpoints, "task",
-                                   manifest) as kit:
-                    await kit.request("init")
-            self.assertEqual([call.args[0] for call in delete.await_args_list],
-                             ["http://talk", "http://system"])
+        settings = dict(task="task",
+                        apps=["LightSystem", "LightTalk"],
+                        system_time="2026-01-01T00:00:00Z",
+                        tools=endpoints,
+                        endpoints=endpoints)
+        for partial_startup in (False, True):
+            with self.subTest(partial_startup=partial_startup):
+                registry = Registry()
+                rid = "a" * 32
+                post = AsyncMock(side_effect=[{}, {
+                    "status": "ok"
+                },
+                                              RuntimeError("reset failed")
+                                              if partial_startup else {}, {
+                                                  "status": "ok"
+                                              }])
+                delete = AsyncMock(
+                    side_effect=[OSError("unreachable"), None, None])
+                with patch.object(KitRun, "_post",
+                                  post), patch.object(KitRun, "_delete",
+                                                      delete):
+                    with self.assertRaises(ExceptionGroup):
+                        await registry.create(rid, settings)
+                        await registry.stop(rid)
+                    self.assertIn(rid, registry.runs)
+                    with self.assertRaises(web.HTTPNotFound):
+                        async with registry.live(rid):
+                            self.fail("Closing run still accepts calls")
+                    await registry.stop(rid)
+                    self.assertNotIn(rid, registry.runs)
+                    self.assertEqual(
+                        [call.args[0] for call in delete.await_args_list],
+                        ["http://talk", "http://system", "http://talk"])
 
     async def test_kit_workspace_api_only_serves_catalog_tools(self):
         from vfsbench.suites._complexmcp_kit import tool_api
