@@ -7,12 +7,46 @@ from contextlib import asynccontextmanager, redirect_stdout
 from pathlib import Path
 from unittest.mock import patch
 
-from vfsbench import TrialEnvironment, run
+from vfsbench import AgentResult, TrialEnvironment, run
 from vfsbench.cli import main
 from vfsbench.verifier import SuiteVerifier
 
 
 class RunTests(unittest.TestCase):
+
+    def test_run_records_callback_and_cli_answers_before_grading(self):
+        task_id = "fantasy-sports-average"
+        expected = "31.5 points"
+
+        async def evaluate(view):
+            return {"reward": float(view.result.final_answer == expected)}
+
+        @asynccontextmanager
+        async def environment(task, config, directory):
+            yield TrialEnvironment({}, SuiteVerifier(evaluate), python=False)
+
+        async def action(ws):
+            return AgentResult(final_answer=expected, output={"points": 31.5})
+
+        with patch("vfsbench.runtime._prepare", return_value=environment):
+            report = asyncio.run(run("mcpatlas", task=task_id, action=action))
+            self.assertEqual(report.verification.reward, 1)
+            self.assertEqual(report.result.output, {"points": 31.5})
+            with self.assertRaisesRegex(ValueError, "final_answer"):
+                asyncio.run(
+                    run("mcpatlas",
+                        task=task_id,
+                        action=action,
+                        final_answer="a second answer"))
+            stdout = io.StringIO()
+            with redirect_stdout(stdout):
+                main([
+                    "run", "mcpatlas", "--task", task_id, "--final-answer",
+                    expected
+                ])
+            saved = json.loads(stdout.getvalue())
+            self.assertEqual(saved["result"]["final_answer"], expected)
+            self.assertEqual(saved["verification"]["reward"], 1)
 
     def test_mirage_workspace_limits_in_python_and_cli(self):
         from mirage.config import load_config

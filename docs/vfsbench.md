@@ -36,6 +36,7 @@ Use `--output run1` before `shell` or `workspace` to save the controller's repor
 | Operation | CLI | Python |
 | --- | --- | --- |
 | Select a Hub revision | `--revision COMMIT` | `revision=commit` |
+| Record an answer for the verifier | `--final-answer "answer text"` | `final_answer="answer text"` |
 | Load Mirage workspace settings | `--config workspace.yaml` | `config="workspace.yaml"` or `config=WorkspaceConfig(...)` |
 | Select guest provisioning or a verifier | `--config trial.toml` | `config=TrialConfig(...)` |
 | Save the report to a new directory | `--output run1` | `output="run1"` |
@@ -145,6 +146,8 @@ class OrderVerifier:
 ```
 
 A custom environment can expose that `orders` reader. Pass the instance with `task.open(verifier=OrderVerifier(), environment=environment)` or select installed providers in TOML for both Python and the CLI.
+
+A Python action can return `AgentResult(final_answer=answer, output=data)` from the workspace callback. `run` records it before invoking the verifier. If the runner already has the answer, pass `final_answer=answer` to `run` or `--final-answer "$answer"` to the CLI.
 
 The verifier gets a read-only view of one attempt.
 

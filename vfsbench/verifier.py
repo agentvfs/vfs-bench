@@ -70,6 +70,7 @@ class TrialReport:
     result: AgentResult | None
     verification: VerificationResult | None
     verification_error: str | None
+    startup_error: str | None = None
 
     def to_dict(self) -> dict:
         return asdict(self)

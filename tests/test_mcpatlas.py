@@ -90,6 +90,29 @@ class AtlasTests(unittest.IsolatedAsyncioTestCase):
             with self.assertRaisesRegex(RuntimeError, "EVAL_LLM_API_KEY"):
                 await mcpatlas._grade(None, None, ["a claim"], "an answer")
 
+    async def test_cache_only_applies_to_uv_and_preserves_judge_endpoint(self):
+        endpoint = "http://127.0.0.1:8888"
+        with tempfile.TemporaryDirectory() as tmp, patch.dict(
+                os.environ, {
+                    "UV_OFFLINE": "false",
+                    "EVAL_LLM_BASE_URL": endpoint,
+                    "EVAL_LLM_API_KEY": "test"
+                }):
+            for local in (True, False):
+                dataset = MCPAtlas(local_files_only=local)
+                with self.subTest(local=local), patch.object(
+                        dataset, "_source_file",
+                        return_value=Path(__file__)), patch.object(
+                            mcpatlas,
+                            "_command",
+                            return_value=b'{"coverage_score": 1}') as command:
+                    await mcpatlas._grade(dataset["fantasy-sports-average"],
+                                          Path(tmp), ["claim"], "answer")
+                    env = command.await_args.kwargs["env"]
+                    self.assertEqual(env["UV_OFFLINE"],
+                                     "true" if local else "false")
+                    self.assertEqual(env["EVAL_LLM_BASE_URL"], endpoint)
+
     @unittest.skipUnless(os.getenv("VFSBENCH_TEST_ATLAS_SCORER"),
                          "requires uv and pinned scorer inputs")
     async def test_official_scorer_with_a_local_judge(self):
@@ -124,7 +147,8 @@ class AtlasTests(unittest.IsolatedAsyncioTestCase):
         self.addAsyncCleanup(runner.cleanup)
         await web.TCPSite(runner, "127.0.0.1", 0).start()
         endpoint = f"http://127.0.0.1:{runner.addresses[0][1]}/v1"
-        task = suite()["fantasy-sports-average"]
+        task = MCPAtlas(cache_dir=os.getenv("VFSBENCH_TEST_ATLAS_CACHE"),
+                        local_files_only=True)["fantasy-sports-average"]
         with tempfile.TemporaryDirectory() as tmp, patch.dict(
                 os.environ, {
                     "EVAL_LLM_BASE_URL": endpoint,

@@ -5,6 +5,7 @@ import io
 import json
 import os
 import shlex
+import sys
 import tarfile
 import tempfile
 import unittest
@@ -18,6 +19,39 @@ from vfsbench.suites.toolathlon_workspace import WORKSPACES
 
 
 class GoogleWorkspaceMockTest(unittest.IsolatedAsyncioTestCase):
+
+    async def test_service_stderr_survives_failed_trial_start(self):
+        from contextlib import asynccontextmanager
+        from unittest.mock import patch
+
+        from vfsbench import TrialEnvironment, run
+
+        @asynccontextmanager
+        async def environment(task, config, directory):
+            argv = [
+                sys.executable, "-c", "import sys\n"
+                "print('first diagnostic', file=sys.stderr)\n"
+                "print('x' * 10000, file=sys.stderr)\n"
+                "sys.exit('could not load mock fixture')"
+            ]
+            try:
+                async with gws.launch(directory, argv, "GWS_URL"):
+                    yield TrialEnvironment({})
+            finally:
+                log = (directory / "GWS_URL.stderr.log").read_text()
+                self.assertIn("first diagnostic", log)
+                self.assertIn("could not load mock fixture", log)
+
+        with tempfile.TemporaryDirectory() as temp, patch(
+                "vfsbench.runtime._prepare", return_value=environment):
+            output = Path(temp) / "report"
+            with self.assertRaisesRegex(
+                    RuntimeError, "could not load mock fixture") as error:
+                await run("toolathlon", task="wandb-best-score", output=output)
+            report = json.loads((output / "trial.json").read_bytes())
+            self.assertIn(str(error.exception), report["startup_error"])
+            self.assertNotIn("first diagnostic", report["startup_error"])
+            self.assertIsNone(report["verification"])
 
     def test_every_released_task_has_a_fixed_workspace(self):
         from vfsbench import TrialEnvironment

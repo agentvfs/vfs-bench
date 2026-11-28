@@ -23,6 +23,8 @@ def main(argv=None):
     launch.add_argument("--workspace-yaml",
                         help="Mirage workspace configuration file")
     launch.add_argument("--command", help=argparse.SUPPRESS)
+    launch.add_argument("--final-answer",
+                        help="agent answer to record for verification")
     launch.add_argument("--output", help="new directory for trial.json")
     inspect = commands.add_parser(
         "status", help="list task availability and service requirements")

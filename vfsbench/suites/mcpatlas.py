@@ -209,6 +209,8 @@ async def _grade(task, run_dir, claims, answer):
             "MPLCONFIGDIR": tmp,
             "PYTHON_DOTENV_DISABLED": "1"
         }
+        if task._dataset.local_files_only:
+            environment["UV_OFFLINE"] = "true"
         row = {"GTFA_CLAIMS": claims, "response": answer, "judge": JUDGE}
         output = await _command(
             "uv",

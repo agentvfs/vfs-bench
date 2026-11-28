@@ -65,37 +65,55 @@ async def serve(run_dir, checkout=None):
 
 @asynccontextmanager
 async def launch(run_dir, argv, variable):
-    proc = await asyncio.create_subprocess_exec(
-        *argv,
-        cwd=run_dir,
-        stdin=asyncio.subprocess.DEVNULL,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.DEVNULL,
-        env={
-            'PATH': os.environ.get('PATH', ''),
-            'MIRAGE_BIND_HOST': '127.0.0.1',
-            'MIRAGE_ADVERTISE_HOST': '127.0.0.1',
-            'TMPDIR': str(run_dir)
-        },
-    )
+    log_path = Path(run_dir) / f'{variable}.stderr.log'
+    with log_path.open('wb') as log:
+        proc = await asyncio.create_subprocess_exec(
+            *argv,
+            cwd=run_dir,
+            stdin=asyncio.subprocess.DEVNULL,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=log,
+            env={
+                'PATH': os.environ.get('PATH', ''),
+                'MIRAGE_BIND_HOST': '127.0.0.1',
+                'MIRAGE_ADVERTISE_HOST': '127.0.0.1',
+                'TMPDIR': str(run_dir)
+            },
+        )
     try:
-        async with asyncio.timeout(60):
-            line = (await proc.stdout.readline()).decode().strip()
-        match = re.fullmatch(
-            re.escape(variable) + r'=(http://127\.0\.0\.1:[0-9]+)', line)
-        if not match:
-            raise RuntimeError(
-                f'{variable} mock failed to announce its loopback endpoint '
-                f'(exit {proc.returncode})')
-        yield match.group(1)
+        try:
+            line = await asyncio.wait_for(proc.stdout.readline(), timeout=60)
+        except TimeoutError:
+            reason = 'timed out waiting for its loopback endpoint'
+        except ValueError:
+            reason = 'sent an oversized endpoint announcement'
+        else:
+            match = re.fullmatch(
+                re.escape(variable) + r'=(http://127\.0\.0\.1:[0-9]+)',
+                line.decode(errors='replace').strip())
+            if match:
+                yield match.group(1)
+                return
+            reason = 'failed to announce its loopback endpoint'
     finally:
         if proc.returncode is None:
-            proc.terminate()
+            try:
+                proc.terminate()
+            except ProcessLookupError:
+                pass
             try:
                 await asyncio.wait_for(proc.wait(), timeout=5)
             except TimeoutError:
                 proc.kill()
                 await proc.wait()
+    # The run directory is private and is removed during trial cleanup.
+    with log_path.open('rb') as log:
+        size = log.seek(0, os.SEEK_END)
+        log.seek(max(0, size - 8192))
+        lines = log.read().decode(errors='replace').splitlines()
+    tail = '\n'.join([line for line in lines if line.strip()][-8:])
+    message = f'{variable} mock {reason} (exit {proc.returncode})'
+    raise RuntimeError(f'{message}\n{tail}' if tail else message)
 
 
 def call(base, path, body=None, method=None):

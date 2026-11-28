@@ -407,6 +407,7 @@ class Trial:
         self._result: AgentResult | None = None
         self._verification: VerificationResult | None = None
         self._verification_error: str | None = None
+        self._startup_error: str | None = None
         self._sealed = False
 
     @property
@@ -437,7 +438,7 @@ class Trial:
                            ds.revision, self.config.guest_snapshot,
                            self._started_at, self._closed_at, self.trace,
                            self.result, deepcopy(self._verification),
-                           self._verification_error)
+                           self._verification_error, self._startup_error)
 
     def _require_recording(self):
         if self._closed or self._workspace is None or self._sealed:
@@ -470,11 +471,6 @@ class Trial:
             return deepcopy(await self._prepared.state_readers[name]())
 
     async def start(self) -> Self:
-        from mirage.concurrency.limiter import run_blocking
-        from mirage.config import (WorkspaceConfig, build_mcp_clis,
-                                   resolve_secrets)
-        from mirage.workspace.workspace import Workspace
-
         async with self._lock:
             if self._closed:
                 raise RuntimeError(
@@ -482,68 +478,77 @@ class Trial:
                     "attempt.")
             if self._stack is not None:
                 return self
-            async with AsyncExitStack() as stack:
-                parent = self.config.work_dir
-                if parent is not None:
-                    Path(parent).mkdir(parents=True, exist_ok=True)
-                run = Path(
-                    stack.enter_context(
-                        tempfile.TemporaryDirectory(
-                            prefix=f"vfsbench-{self.id}-",
-                            dir=parent))).resolve()
-                manifest = await asyncio.to_thread(lambda: self.task.manifest)
-                self._suite = manifest["dataset"]
-                prepare = self._environment
-                if prepare is None:
-                    name = self.config.environment
-                    prepare = _prepare(
-                        self._suite
-                    ) if name == "suite" else _installed_environment(name)
-                verifier = self._verifier
-                if verifier is None:
-                    verifier = self.config.verifier.load()
-                prepared = await stack.enter_async_context(
-                    prepare(self.task, self.config, run))
-                if verifier is None:
-                    verifier = prepared.verifier
-                if not callable(getattr(verifier, "verify", None)):
-                    raise TypeError(
-                        "The trial needs a verifier, supplied by its "
-                        "environment or operator")
-                name = f"vfsbench-{self.id}"
-                spec = WorkspaceConfig.model_validate(
-                    _workspace_config(prepared, run, name,
-                                      self._workspace_source))
-                # Register cleanup before restore, which can allocate the VM
-                # and then fail.
-                if prepared.python:
-                    stack.push_async_callback(_remove_guest, name)
-                    await _restore_guest(self.config, name)
-                spec = await resolve_secrets(spec)
-                workspace = Workspace(**spec.to_workspace_kwargs(
-                    mcp_clis=await build_mcp_clis(spec)))
-                stack.push_async_callback(workspace.close)
-                for prefix, (backend,
-                             mountpoint) in spec.kernel_mounts().items():
-                    await run_blocking(workspace.add_fuse_mount,
-                                       prefix,
-                                       mountpoint,
-                                       backend=backend)
-                for prefix, backend in prepared.mounts.items():
-                    workspace.add_mount(prefix, backend)
-                for command, cli in prepared.clis.items():
-                    workspace.register_cli(command, cli)
-                if prepared.install is not None:
-                    await prepared.install(workspace)
-                await workspace.vfs_md("/VFS.md")
-                await workspace.skill_md("/SKILL.md")
-                self._stack = stack.pop_all()
-                self._workspace = workspace
-                self._prepared = prepared
-                self.run_dir = run
-                self._verifier = verifier
-                self._started_at = datetime.now(UTC).isoformat()
+            try:
+                await self._start_workspace()
+            except Exception as exc:
+                self._startup_error = f"{type(exc).__name__}: {exc}"
+                raise
+            self._startup_error = None
         return self
+
+    async def _start_workspace(self) -> None:
+        from mirage.concurrency.limiter import run_blocking
+        from mirage.config import (WorkspaceConfig, build_mcp_clis,
+                                   resolve_secrets)
+        from mirage.workspace.workspace import Workspace
+
+        async with AsyncExitStack() as stack:
+            parent = self.config.work_dir
+            if parent is not None:
+                Path(parent).mkdir(parents=True, exist_ok=True)
+            run = Path(
+                stack.enter_context(
+                    tempfile.TemporaryDirectory(prefix=f"vfsbench-{self.id}-",
+                                                dir=parent))).resolve()
+            manifest = await asyncio.to_thread(lambda: self.task.manifest)
+            self._suite = manifest["dataset"]
+            prepare = self._environment
+            if prepare is None:
+                name = self.config.environment
+                prepare = _prepare(
+                    self._suite
+                ) if name == "suite" else _installed_environment(name)
+            verifier = self._verifier
+            if verifier is None:
+                verifier = self.config.verifier.load()
+            prepared = await stack.enter_async_context(
+                prepare(self.task, self.config, run))
+            if verifier is None:
+                verifier = prepared.verifier
+            if not callable(getattr(verifier, "verify", None)):
+                raise TypeError("The trial needs a verifier, supplied by its "
+                                "environment or operator")
+            name = f"vfsbench-{self.id}"
+            spec = WorkspaceConfig.model_validate(
+                _workspace_config(prepared, run, name, self._workspace_source))
+            # Register cleanup before restore, which can allocate the VM
+            # and then fail.
+            if prepared.python:
+                stack.push_async_callback(_remove_guest, name)
+                await _restore_guest(self.config, name)
+            spec = await resolve_secrets(spec)
+            workspace = Workspace(**spec.to_workspace_kwargs(
+                mcp_clis=await build_mcp_clis(spec)))
+            stack.push_async_callback(workspace.close)
+            for prefix, (backend, mountpoint) in spec.kernel_mounts().items():
+                await run_blocking(workspace.add_fuse_mount,
+                                   prefix,
+                                   mountpoint,
+                                   backend=backend)
+            for prefix, backend in prepared.mounts.items():
+                workspace.add_mount(prefix, backend)
+            for command, cli in prepared.clis.items():
+                workspace.register_cli(command, cli)
+            if prepared.install is not None:
+                await prepared.install(workspace)
+            await workspace.vfs_md("/VFS.md")
+            await workspace.skill_md("/SKILL.md")
+            self._stack = stack.pop_all()
+            self._workspace = workspace
+            self._prepared = prepared
+            self.run_dir = run
+            self._verifier = verifier
+            self._started_at = datetime.now(UTC).isoformat()
 
     async def close(self) -> None:
         async with self._lock:
