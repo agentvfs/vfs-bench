@@ -1,0 +1,247 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/26379939e79be5b43bdb3caff4aaaed5f6f29de1b95a557f422196a5eb71983d",
+      "role": "seed_manifest",
+      "sha256": "26379939e79be5b43bdb3caff4aaaed5f6f29de1b95a557f422196a5eb71983d",
+      "size": 58,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/b343f77a45b0a5cecf75d809ab8b943d3d505679dbf8b29f3065463dda7b1f10",
+      "role": "parity_test",
+      "sha256": "b343f77a45b0a5cecf75d809ab8b943d3d505679dbf8b29f3065463dda7b1f10",
+      "size": 1817,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/a039138bf878503427e36e9ba72f64e177dc21179a6bae5eeec73d86f1fbef87",
+      "role": "workspace_documentation",
+      "sha256": "a039138bf878503427e36e9ba72f64e177dc21179a6bae5eeec73d86f1fbef87",
+      "size": 731,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/f37c960297709b48e0c5a6085e02185041b3911044930999cc1bf17ec7e9c92c",
+      "role": "workspace_config",
+      "sha256": "f37c960297709b48e0c5a6085e02185041b3911044930999cc1bf17ec7e9c92c",
+      "size": 974,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "inventory-sync",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/inventory-sync/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/inventory-sync/shared/task.md",
+      "role": "instruction",
+      "sha256": "53293b7d5d1a394c2beb29007d8f4363c0b71b8a03ded88d3b2835364a46165e",
+      "size": 527,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/inventory-sync/docs/task_cn.md",
+      "role": "upstream_source",
+      "sha256": "5173a280d82c779ee4492682d53e07e993e6d0b35f3b811bf56352a3aa1b4645",
+      "size": 3220,
+      "target": "upstream/docs/task_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/docs/task_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/inventory-sync/evaluation/check_db.py",
+      "role": "verifier_source",
+      "sha256": "41ed3b7499fb27bee996d192bc591069ee3c07d1d948e0c9e5493442f31a2bb3",
+      "size": 14864,
+      "target": "upstream/evaluation/check_db.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/evaluation/check_db.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/inventory-sync/evaluation/evaluate_report.py",
+      "role": "verifier_source",
+      "sha256": "c4f36e281869e8601fd83d524b86ce7c6cf4de832c1b41a7f2bb1d2ca68d90ef",
+      "size": 25518,
+      "target": "upstream/evaluation/evaluate_report.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/evaluation/evaluate_report.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/inventory-sync/evaluation/evaluate_sync.py",
+      "role": "verifier_source",
+      "sha256": "1bba68c994d1b7f0d738e4a2f172ce304a503543ef244f174c2632faad262100",
+      "size": 17514,
+      "target": "upstream/evaluation/evaluate_sync.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/evaluation/evaluate_sync.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/inventory-sync/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "cc80cd8e3f89f3bcda2dcc60d79d5c87b35bd0e7a76a3857c54eb9913ee93a47",
+      "size": 6467,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/inventory-sync/initial_workspace/warehouse/warehouse_boston.db",
+      "role": "initial_workspace",
+      "sha256": "113cba546dcdce42dbfd7a3674635516468ab15587ef71eef1934369776871bd",
+      "size": 28672,
+      "target": "upstream/initial_workspace/warehouse/warehouse_boston.db",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/initial_workspace/warehouse/warehouse_boston.db"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/inventory-sync/initial_workspace/warehouse/warehouse_dallas.db",
+      "role": "initial_workspace",
+      "sha256": "d7f6e3fd2b5818716d3029952322e6a2a1aa0fd087e55475278b0e8aeb7e704e",
+      "size": 28672,
+      "target": "upstream/initial_workspace/warehouse/warehouse_dallas.db",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/initial_workspace/warehouse/warehouse_dallas.db"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/inventory-sync/initial_workspace/warehouse/warehouse_houston.db",
+      "role": "initial_workspace",
+      "sha256": "efe6e6877b6382dda25350cedb529c38757838c1664a187d0a0a846efbea25be",
+      "size": 28672,
+      "target": "upstream/initial_workspace/warehouse/warehouse_houston.db",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/initial_workspace/warehouse/warehouse_houston.db"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/inventory-sync/initial_workspace/warehouse/warehouse_los_angeles.db",
+      "role": "initial_workspace",
+      "sha256": "6ad050c2e865a45c55601d904a2ff03339d7c116bbfc44de32383429ee0b14a1",
+      "size": 28672,
+      "target": "upstream/initial_workspace/warehouse/warehouse_los_angeles.db",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/initial_workspace/warehouse/warehouse_los_angeles.db"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/inventory-sync/initial_workspace/warehouse/warehouse_new_york.db",
+      "role": "initial_workspace",
+      "sha256": "dc4411f4fea3e53e28940090312ee195472165cec366c4b69a4a992f6ee93854",
+      "size": 28672,
+      "target": "upstream/initial_workspace/warehouse/warehouse_new_york.db",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/initial_workspace/warehouse/warehouse_new_york.db"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/inventory-sync/initial_workspace/warehouse/warehouse_san_francisco.db",
+      "role": "initial_workspace",
+      "sha256": "10ff84d93200d27266ae8541d5020ec331582f1b73ab040431d8c460b17cfa2f",
+      "size": 28672,
+      "target": "upstream/initial_workspace/warehouse/warehouse_san_francisco.db",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/initial_workspace/warehouse/warehouse_san_francisco.db"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/inventory-sync/preprocess/clear_all_products.py",
+      "role": "preprocessor_source",
+      "sha256": "87d0aaec61aa0c337b680e642bc6c6e7f61a344a3f4b93579f2c4557d2c88158",
+      "size": 15647,
+      "target": "upstream/preprocess/clear_all_products.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/preprocess/clear_all_products.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/inventory-sync/preprocess/database_setup.py",
+      "role": "preprocessor_source",
+      "sha256": "0b27e09f8b7b40ccc55276e1d4d38a82f7538985c3d411df3207b551bfb78baf",
+      "size": 9061,
+      "target": "upstream/preprocess/database_setup.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/preprocess/database_setup.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/inventory-sync/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "9294141158f0b8aa798506e6f3815a80e8f91c75433a7d1795fef6144184fb53",
+      "size": 6533,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/inventory-sync/preprocess/woocommerce_client.py",
+      "role": "preprocessor_source",
+      "sha256": "097319a3ec106a7bbca2f19c26c76fcd06d753d4396005e758f3bcaa0530a3aa",
+      "size": 19243,
+      "target": "upstream/preprocess/woocommerce_client.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/preprocess/woocommerce_client.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/inventory-sync/preprocess/woocommerce_initializer.py",
+      "role": "preprocessor_source",
+      "sha256": "4f13d8bda851303da2cc91168521da72341159561b625f012fa907940440cc55",
+      "size": 16691,
+      "target": "upstream/preprocess/woocommerce_initializer.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/preprocess/woocommerce_initializer.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/inventory-sync/task_config.json",
+      "role": "upstream_config",
+      "sha256": "ba687f6ca26b4324934c5c9fe69f8021678fb3c583bae7719de41f125da2be97",
+      "size": 226,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/inventory-sync/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "47536fc7d78ba0556b9db8f9f22836702d73f6de68eb253f06f8a2b4cf65377d",
+      "size": 429,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/inventory-sync/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/inventory-sync/README.md",
+      "role": "documentation",
+      "sha256": "561f25bab7cbafc11d3a5349a2d00320d4ba947449e4c56d0c02ccb1dda4c86e",
+      "size": 1713,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/inventory-sync/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/inventory-sync/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "1f78576181fa658fc03cf3fbc4d7558852f3be252313607b4eea126b2f52584e",
+      "size": 18558,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/inventory-sync/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/inventory-sync",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/inventory-sync",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "python_execute",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "woocommerce",
+      "filesystem"
+    ]
+  }
+}

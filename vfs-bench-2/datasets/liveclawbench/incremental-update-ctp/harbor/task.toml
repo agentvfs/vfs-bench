@@ -1,0 +1,40 @@
+version = "1.0"
+
+[task]
+name = "vfs-bench-2/liveclawbench.incremental-update-ctp"
+
+[metadata]
+difficulty = "easy"
+category = "open-world"
+tags = ["documents_knowledge", "deep_research_report"]
+
+domain = "Documents & Knowledge"
+domains_multi = ["Documents & Knowledge", "Deep Research & Report"]
+
+# Triple-Axis Complexity Factors (0 = absent, 1 = present)
+factor_a1 = 0   # Cross-Service Dependency
+factor_a2 = 1   # Contaminated Initial State
+factor_b1 = 0   # Implicit Goal Resolution
+factor_b2 = 1   # Knowledge System Maintenance
+factor_c1 = 0
+factor_c2 = 0
+
+case_id = 26
+
+[verifier]
+timeout_sec = 240.0
+
+[verifier.env]
+JUDGE_API_KEY = "${OPENAI_API_KEY:-}"
+JUDGE_BASE_URL = "${OPENAI_BASE_URL:-https://api.openai.com/v1}"
+JUDGE_MODEL_ID = "${JUDGE_MODEL:-deepseek-v3.2}"
+
+[agent]
+timeout_sec = 900.0
+
+[environment]
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240
+allow_internet = true

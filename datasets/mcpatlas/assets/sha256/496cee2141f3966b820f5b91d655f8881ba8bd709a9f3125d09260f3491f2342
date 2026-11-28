@@ -1,0 +1,102 @@
+{
+  "note": "Both arms read the repositories at one path -- the MCP arm's git server reads the image's own /data/repos in the run's container, and each mirage /data/repos mount is a copy of one taken out of the same image; no tool this task enables reads the rest of /data. The repositories under repos/ are the clones upstream's image makes, at upstream's commits. GitHub is mirage's GitHub fake on both arms, and it holds nothing. Airtable is the fake both arms read, seeded per run with the base Atlas shares in place of an export.",
+  "cases": [
+    {
+      "name": "list_bases",
+      "why": "the same one base",
+      "mcp": {
+        "server": "airtable",
+        "tool": "list_bases",
+        "args": {},
+        "pipe": "jq -r '.[] | .id + \" \" + .name + \" \" + .permissionLevel' | grep ."
+      },
+      "mirage": {
+        "command": "jq -r '.base_id + \" \" + .base_name + \" \" + .permission_level' /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/base.json",
+        "pipe": "grep ."
+      }
+    },
+    {
+      "name": "list_tables",
+      "why": "the same nine tables, and the same fields in the one the answer reads",
+      "mcp": {
+        "server": "airtable",
+        "tool": "list_tables",
+        "args": {
+          "base_id": "appIF9byLfQwdHqE2"
+        },
+        "pipe": "jq -r '(.[] | .id + \" \" + .name), (.[] | select(.name == \"Turnover Retention\") | .fields[] | .id + \" \" + .name + \" \" + .type)' | grep ."
+      },
+      "mirage": {
+        "command": "jq -r '.tables[] | .table_id + \" \" + .table_name' /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/base.json; jq -r '.fields[] | .field_id + \" \" + .field_name + \" \" + .type' /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/Turnover_Retention__tblUuTBCVkTHKa0DN/table.json",
+        "pipe": "grep ."
+      }
+    },
+    {
+      "name": "search_records",
+      "why": "one field searched, the same records; `grep .` fails either arm that finds nothing, so two empty searches cannot agree",
+      "mcp": {
+        "server": "airtable",
+        "tool": "search_records",
+        "args": {
+          "base_id": "appIF9byLfQwdHqE2",
+          "table_name": "Turnover Retention",
+          "field_name": "Date",
+          "value": "2023-Q1"
+        },
+        "pipe": "jq -r '.[] | select(.fields.Date == \"2023-Q1\" and .fields[\"Employee Status\"] == \"Left\") | .fields.Department + \" \" + (.fields[\"Employee Count\"] | tostring)' | sort | grep ."
+      },
+      "mirage": {
+        "command": "jq -r 'select(.fields.Date == \"2023-Q1\" and .fields[\"Employee Status\"] == \"Left\") | .fields.Department + \" \" + (.fields[\"Employee Count\"] | tostring)' /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/Turnover_Retention__tblUuTBCVkTHKa0DN/records.jsonl",
+        "pipe": "sort | grep ."
+      }
+    },
+    {
+      "name": "get_issue",
+      "why": "neither arm finds the issue live GitHub holds: both read the one fake, which holds nothing",
+      "mcp": {
+        "server": "github",
+        "tool": "get_issue",
+        "args": {
+          "owner": "theonion",
+          "repo": "fartscroll.js",
+          "issue_number": 59
+        },
+        "pipe": "sed 's/^Error: \\(.*\\) - https:.*$/\\1/'"
+      },
+      "mirage": {
+        "command": "gh api repos/theonion/fartscroll.js/issues/59 2>/dev/null | jq -r .message"
+      }
+    },
+    {
+      "name": "search_issues",
+      "why": "both arms are refused a search of a repository the fake does not hold, in GitHub's words",
+      "mcp": {
+        "server": "github",
+        "tool": "search_issues",
+        "args": {
+          "q": "repo:theonion/fartscroll.js created:2014-09-22"
+        },
+        "pipe": "sed 's/.*\"message\":\"\\([^\"]*\\)\".*/\\1/'"
+      },
+      "mirage": {
+        "command": "gh api search/issues -X GET -f 'q=repo:theonion/fartscroll.js created:2014-09-22' 2>/dev/null | jq -r '.errors[].message'"
+      }
+    },
+    {
+      "name": "git_log",
+      "why": "the local clone has the same history on both arms, which is where the second commit is counted",
+      "mcp": {
+        "server": "git",
+        "tool": "git_log",
+        "args": {
+          "repo_path": "/data/repos/snake-game",
+          "max_count": 100
+        },
+        "pipe": "sed -n \"s/^Commit: '\\(.*\\)'$/\\1/p\""
+      },
+      "mirage": {
+        "command": "git -C /data/repos/snake-game log --format=%H"
+      }
+    }
+  ]
+}

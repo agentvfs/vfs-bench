@@ -46,7 +46,7 @@ export async function verifyComplex(request: ComplexRequest, signal?: AbortSigna
       '/output': [output, MountMode.WRITE],
     },
     {
-      runtimes: [runtime, 'workspace'],
+      machines: [runtime],
       commandLimits: { '@line': new Limit({ timeoutSeconds: request.timeoutSeconds }) },
     }
   )

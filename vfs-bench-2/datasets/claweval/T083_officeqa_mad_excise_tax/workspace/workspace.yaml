@@ -17,13 +17,15 @@ workspace:
   profiles:
     default:
       commands:
-        deny:
-        - commands:
-          - curl
-          - wget
+        curl:
+          decision: deny
+          reason: the services are reached through their tools
+        wget:
+          decision: deny
           reason: the services are reached through their tools
   clis:
     ocr-t57:
       cli: ocr-t57
+      machine: in_process
       config:
         url: ${CLAWEVAL_OCR_URL}

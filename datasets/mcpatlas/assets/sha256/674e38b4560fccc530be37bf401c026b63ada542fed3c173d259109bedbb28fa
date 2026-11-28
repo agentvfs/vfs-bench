@@ -1,0 +1,58 @@
+mode: EXEC
+
+# The character type upstream's servers run under: started with no locale,
+# their Python coerces it to C.UTF-8 (PEP 538) and what they run inherits
+# it, so grep, sed and expr match whole characters there as here.
+env:
+  LC_CTYPE: C.UTF-8
+
+# pyodide, because Atlas enables `mcp-code-executor` here: the MCP arm has an
+# interpreter, so this one has one too.
+runtimes:
+  - pyodide
+  - workspace
+
+clis:
+  # Airtable as the MCP arm has it: its own server, on the fake this run seeds
+  # from the base Atlas shares, listing only the tools Atlas enables,
+  # `airtable <tool>` for its `airtable_<tool>`. timeoutMs is that arm's
+  # per-call bound, upstream's `toolCallTimeoutMs`.
+  airtable:
+    cli: ../../../../cli/mcpatlas/tools.mjs:AIRTABLE
+    config:
+      apiBase: ${AIRTABLE_CLI_URL}
+      timeoutMs: 60000
+
+  # The one server no mount or native CLI can speak for: the MCP arm's own, on
+  # the same workspace, listing only the tools Atlas enables. timeoutMs is
+  # that arm's per-call bound, which is upstream's: its harness gives each
+  # tool call `toolCallTimeoutMs`, 60 seconds by default.
+  arxiv:
+    cli: ../../../../cli/mcpatlas/tools.mjs:ARXIV
+    config:
+      apiBase: ${ARXIV_CLI_URL}
+      timeoutMs: 60000
+
+mounts:
+  # A shell without scratch space is not a shell: agents write a heredoc to
+  # /tmp and read it back a line later.
+  /tmp:
+    vfs: ram
+
+  # The fixture. Named /data because that is where Atlas puts it, so the two
+  # arms are told the same path as well as given the same bytes.
+  /data:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}
+
+# Every command runs under `whole_mount.py`, which refuses a walk of a
+# whole mount and a `cat` of a whole table, asked before the line runs, to
+# refuse it whole, and before each command.
+profiles:
+  default:
+    policy:
+      pre_execute:
+        - {script: ../../whole_mount.py, runtime: monty}
+      pre_command:
+        - {script: ../../whole_mount.py, runtime: monty}

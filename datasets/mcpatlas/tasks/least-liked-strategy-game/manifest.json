@@ -1,0 +1,115 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/67adda8699370a2465fb1630b908a8effa329ef6944e5165fd65e6f9cc7dcb69",
+      "role": "workspace",
+      "sha256": "67adda8699370a2465fb1630b908a8effa329ef6944e5165fd65e6f9cc7dcb69",
+      "size": 1262,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/00233a13a6edebfe6a85b803932f365eb044538146f58123e66ea1dbe5290779",
+      "role": "workspace_config",
+      "sha256": "00233a13a6edebfe6a85b803932f365eb044538146f58123e66ea1dbe5290779",
+      "size": 2905,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/441a4f9a4986129cedeacdb9453055d90f1e86767919f94d3d89a11783978dd6",
+      "role": "parity",
+      "sha256": "441a4f9a4986129cedeacdb9453055d90f1e86767919f94d3d89a11783978dd6",
+      "size": 4275,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/3eafa1f2cb595311c984079f4bb13fc2af1b933bf2c7d8d57f153492ab5333ce",
+      "role": "verifier",
+      "sha256": "3eafa1f2cb595311c984079f4bb13fc2af1b933bf2c7d8d57f153492ab5333ce",
+      "size": 285,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "airtable_get_record",
+    "mongodb_find",
+    "mongodb_count",
+    "mongodb_aggregate",
+    "mongodb_collection-schema",
+    "mongodb_list-databases",
+    "mongodb_list-collections",
+    "osm-mcp-server_analyze_neighborhood",
+    "osm-mcp-server_find_schools_nearby",
+    "osm-mcp-server_find_parking_facilities",
+    "osm-mcp-server_get_route_directions",
+    "clinicaltrialsgov-mcp-server_clinicaltrials_list_studies",
+    "clinicaltrialsgov-mcp-server_clinicaltrials_get_study",
+    "git_git_log",
+    "git_git_diff",
+    "desktop-commander_read_file",
+    "cli-mcp-server_run_command"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "least-liked-strategy-game",
+  "schema_version": 1,
+  "servers": [
+    "airtable",
+    "mongodb",
+    "osm-mcp-server",
+    "clinicaltrialsgov-mcp-server",
+    "git",
+    "desktop-commander",
+    "cli-mcp-server"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/least-liked-strategy-game/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "298cfa521ef1bb3d2991e181ada516e67820c010b262d07419ad87c5bc341529",
+      "size": 5615,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/least-liked-strategy-game/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "688ba1b3e95696e72dd93ee0",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/least-liked-strategy-game",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

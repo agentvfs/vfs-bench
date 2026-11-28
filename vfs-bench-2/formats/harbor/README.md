@@ -37,8 +37,14 @@ worker processes (see below). `--ek node=<path>` names the Node binary if
 `node` on `PATH` is not 24.15 or later. Each trial's environment is under `<trial dir>/mirage/`: the
 generated `workspace.yaml` and `plan.json`, the logs of the daemon, and
 `history.json`, the workspace's history (each line, its output and when it
-ran) from Mirage's `GET /v1/workspaces/<id>/history`, saved as it closes. The
+ran) from Mirage's `GET /v1/workspaces/<id>/logs?format=jsonl`, saved as it closes. The
 shared fakes log into the job's directory, as `fake-<service>.log`.
+The history holds Harbor's own commands too (`chmod` of the solution,
+`test -d` of the artifacts) and the workspace's `run` lines, so the
+environment marks when an agent runs (`agent_run`: a host agent's run,
+an oracle's solution) and `agent_history` gives the commands run then,
+with their results, for a grader that counts the agent's shell commands
+(Claw-Eval's T070zh).
 
 ## The environment
 
@@ -58,7 +64,8 @@ and creates the workspace on it.
 | The oracle runs `/solution/solve.sh` | The workspace's shell runs the script's code, as typed, so its history holds the code and what it wrote; `/logs/agent/oracle.txt` gets the output |
 | `/workspace`, `/logs`, `/tests`, `/solution`, `/tmp` | Disk mounts on directories under the trial's run dir |
 | `upload_*`, `download_*` | Copies into and out of those directories |
-| `python3` | Pyodide, from `workspace/python.py`'s bundle |
+| `python3` | An `in_process` machine on Pyodide, from `workspace/python.py`'s bundle |
+| The image itself, where a task needs its programs | A microsandbox entry in the task's `machines` with a `snapshot`: each trial restores it as a sandbox of its own (no network, the task's CPUs and memory), which runs what the entry captures; removed when the trial stops |
 | The container's users | None. `user` changes nothing |
 
 Mirage revalidates each mount's listings against its folder (`read: fresh`),

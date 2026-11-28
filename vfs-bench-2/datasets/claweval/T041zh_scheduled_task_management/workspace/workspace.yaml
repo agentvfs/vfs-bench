@@ -38,10 +38,11 @@ workspace:
   profiles:
     default:
       commands:
-        deny:
-        - commands:
-          - curl
-          - wget
+        curl:
+          decision: deny
+          reason: the services are reached through their tools
+        wget:
+          decision: deny
           reason: the services are reached through their tools
   mounts:
     /gmail:
@@ -53,18 +54,22 @@ workspace:
   clis:
     scheduler:
       cli: scheduler
+      machine: in_process
       config:
         url: ${CLAWEVAL_SCHEDULER_URL}
     kb:
       cli: kb
+      machine: in_process
       config:
         url: ${CLAWEVAL_KB_URL}
     gmail:
       cli: gmail
+      machine: in_process
       config:
         url: ${CLAWEVAL_GMAIL_URL}
     gws:
       cli: gws
+      machine: in_process
       config:
         accessToken: gws-integ-token
         apiBase: ${GWS_URL}

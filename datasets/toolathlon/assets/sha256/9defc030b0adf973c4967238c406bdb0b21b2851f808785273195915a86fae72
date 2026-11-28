@@ -1,0 +1,44 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "gh_list_branches",
+      "why": "both arms see the same branches",
+      "mcp": {
+        "server": "github",
+        "tool": "list_branches",
+        "args": {
+          "owner": "integ-user",
+          "repo": "LUFFY"
+        },
+        "jq": "[.[].name] | sort | .[]",
+        "raw": true
+      },
+      "mirage": {
+        "command": "gh api repos/integ-user/LUFFY/branches",
+        "jq": "[.[].name] | sort | .[]",
+        "raw": true
+      }
+    },
+    {
+      "name": "gh_file_contents",
+      "why": "the same file reads back byte for byte",
+      "mcp": {
+        "server": "github",
+        "tool": "get_file_contents",
+        "args": {
+          "owner": "integ-user",
+          "repo": "LUFFY",
+          "path": "README.md"
+        },
+        "jq": ".content",
+        "raw": true
+      },
+      "mirage": {
+        "command": "gh api repos/integ-user/LUFFY/contents/README.md",
+        "jq": ".content | gsub(\"\\n\"; \"\") | @base64d",
+        "raw": true
+      }
+    }
+  ]
+}

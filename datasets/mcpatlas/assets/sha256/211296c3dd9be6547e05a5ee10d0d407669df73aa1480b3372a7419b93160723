@@ -1,0 +1,15 @@
+[
+  "There are only 3 movies present in both the Slack channel #movie-suggestions and the local database.",
+  "Fight Club is present in Slack channel #movie-suggestions and the local database",
+  "The Matrix is present in Slack channel #movie-suggestions and the local database",
+  "Reservoir Dogs is present in Slack channel #movie-suggestions and the local database",
+  "Fight Club's genre in the local database is drama",
+  "The Matrix's genre in the local database is action",
+  "Reservoir Dog's genre in the local database is crime",
+  "The Shawshank Redemption is the drama with the highest IMDb rating in the local database",
+  "The Shawshank Redemption has an IMDb rating of 9.3 in the local database",
+  "The Dark Knight is the action movie with the highest IMDb rating in the local database",
+  "The Dark Knight has an IMDb rating of 9 in the local database",
+  "The Godfather is the crime movie with the highest IMDb rating in the local database",
+  "The Godfather has an IMDb rating of 9.2 in the local database"
+]

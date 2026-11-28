@@ -1,0 +1,108 @@
+{
+  "note": "GitHub is mirage's GitHub fake on both arms, and it holds nothing. MongoDB is the database this run restores from Atlas's dump, the same one both arms read.",
+  "cases": [
+    {
+      "name": "count",
+      "why": "both arms count the same Inventory documents",
+      "mcp": {
+        "server": "mongodb",
+        "tool": "count",
+        "args": {
+          "database": "video_game_store",
+          "collection": "Inventory"
+        },
+        "pipe": "grep -o '[0-9][0-9]*' | head -1"
+      },
+      "mirage": {
+        "command": "wc -l < /mongodb/video_game_store/collections/Inventory/documents.jsonl"
+      }
+    },
+    {
+      "name": "count-twitter-2020",
+      "why": "both arms count the same 2020 Twitter posts in Social Media, the documents the question reads",
+      "mcp": {
+        "server": "mongodb",
+        "tool": "count",
+        "args": {
+          "database": "video_game_store",
+          "collection": "Social Media",
+          "query": {
+            "Social Media Platform": "Twitter",
+            "Date": {
+              "$gte": {
+                "$date": "2020-01-01T00:00:00Z"
+              },
+              "$lt": {
+                "$date": "2021-01-01T00:00:00Z"
+              }
+            }
+          }
+        },
+        "pipe": "grep -o '[0-9][0-9]*' | head -1"
+      },
+      "mirage": {
+        "command": "grep '\"Social Media Platform\": \"Twitter\"' \"/mongodb/video_game_store/collections/Social Media/documents.jsonl\"",
+        "pipe": "jq -s 'map(select(.Date.\"$date\" | startswith(\"2020-\"))) | length'"
+      }
+    },
+    {
+      "name": "list-collections",
+      "why": "both arms see the same six collections of video_game_store",
+      "mcp": {
+        "server": "mongodb",
+        "tool": "list-collections",
+        "args": {
+          "database": "video_game_store"
+        },
+        "pipe": "sed 's/^Name: \"\\(.*\\)\"$/\\1/' | sort"
+      },
+      "mirage": {
+        "command": "ls /mongodb/video_game_store/collections",
+        "pipe": "sort"
+      }
+    },
+    {
+      "name": "read_graph",
+      "why": "the memory CLI is the MCP arm's memory server over the same graph file",
+      "mcp": {
+        "server": "memory",
+        "tool": "read_graph",
+        "args": {},
+        "pipe": "jq -r '.entities[].name' | sort"
+      },
+      "mirage": {
+        "command": "memory read-graph '{}'",
+        "pipe": "jq -r '.entities[].name' | sort"
+      }
+    },
+    {
+      "name": "search_nodes",
+      "why": "the memory CLI is the MCP arm's memory server over the same graph file",
+      "mcp": {
+        "server": "memory",
+        "tool": "search_nodes",
+        "args": {
+          "query": "Alice"
+        }
+      },
+      "mirage": {
+        "command": "memory search-nodes '{\"query\":\"Alice\"}'"
+      }
+    },
+    {
+      "name": "fetch",
+      "why": "the fetch CLI is the MCP arm's fetch server, reading the same page live",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch",
+        "args": {
+          "url": "https://raw.githubusercontent.com/theonion/fartscroll.js/master/README.md",
+          "max_length": 400
+        }
+      },
+      "mirage": {
+        "command": "fetch fetch '{\"url\":\"https://raw.githubusercontent.com/theonion/fartscroll.js/master/README.md\",\"max_length\":400}'"
+      }
+    }
+  ]
+}

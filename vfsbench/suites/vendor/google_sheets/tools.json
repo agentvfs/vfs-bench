@@ -1,0 +1,22 @@
+[
+  "get_sheet_data",
+  "get_sheet_formulas",
+  "update_cells",
+  "batch_update_cells",
+  "add_rows",
+  "add_columns",
+  "list_sheets",
+  "copy_sheet",
+  "rename_sheet",
+  "get_multiple_sheet_data",
+  "get_multiple_spreadsheet_summary",
+  "create_spreadsheet",
+  "create_sheet",
+  "list_spreadsheets",
+  "share_spreadsheet",
+  "list_folders",
+  "search_spreadsheets",
+  "find_in_spreadsheet",
+  "batch_update",
+  "add_chart"
+]

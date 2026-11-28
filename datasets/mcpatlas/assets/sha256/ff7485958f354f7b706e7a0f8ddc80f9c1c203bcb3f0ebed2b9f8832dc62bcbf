@@ -1,0 +1,79 @@
+{
+  "note": "Both arms read the repositories at one path -- the MCP arm's git server reads the image's own /data/repos in the run's container, and each mirage /data/repos mount is a copy of one taken out of the same image; no tool this task enables reads the rest of /data. The repositories under repos/ are the clones upstream's image makes, at upstream's commits. MongoDB is the database this run restores from Atlas's dump, the same one both arms read.",
+  "cases": [
+    {
+      "name": "aggregate",
+      "why": "both arms group the same August 2023 stock by genre",
+      "mcp": {
+        "server": "mongodb",
+        "tool": "aggregate",
+        "args": {
+          "database": "video_game_store",
+          "collection": "Inventory",
+          "pipeline": [
+            {
+              "$match": {
+                "Inventory Date": {
+                  "$gte": {
+                    "$date": "2023-08-01T00:00:00Z"
+                  },
+                  "$lt": {
+                    "$date": "2023-09-01T00:00:00Z"
+                  }
+                }
+              }
+            },
+            {
+              "$group": {
+                "_id": "$Game Genre",
+                "stock": {
+                  "$sum": "$Current Stock"
+                },
+                "games": {
+                  "$sum": 1
+                }
+              }
+            }
+          ]
+        },
+        "pipe": "sed 1d | jq -r '[._id, .stock, .games] | @tsv' | sort"
+      },
+      "mirage": {
+        "command": "grep '2023-08-' /mongodb/video_game_store/collections/Inventory/documents.jsonl",
+        "pipe": "jq -s -r 'map(select(.\"Inventory Date\".\"$date\" | startswith(\"2023-08-\"))) | group_by(.\"Game Genre\")[] | [.[0].\"Game Genre\", (map(.\"Current Stock\") | add), length] | @tsv' | sort"
+      }
+    },
+    {
+      "name": "list-collections",
+      "why": "both arms see the same six collections of video_game_store",
+      "mcp": {
+        "server": "mongodb",
+        "tool": "list-collections",
+        "args": {
+          "database": "video_game_store"
+        },
+        "pipe": "sed 's/^Name: \"\\(.*\\)\"$/\\1/' | sort"
+      },
+      "mirage": {
+        "command": "ls /mongodb/video_game_store/collections",
+        "pipe": "sort"
+      }
+    },
+    {
+      "name": "git_status",
+      "why": "both arms find the clone detached at upstream's commit",
+      "mcp": {
+        "server": "git",
+        "tool": "git_status",
+        "args": {
+          "repo_path": "/data/repos/snake-game"
+        },
+        "pipe": "grep -o 'HEAD detached at [0-9a-f]*'"
+      },
+      "mirage": {
+        "command": "git -C /data/repos/snake-game status",
+        "pipe": "grep -o 'HEAD detached at [0-9a-f]*'"
+      }
+    }
+  ]
+}

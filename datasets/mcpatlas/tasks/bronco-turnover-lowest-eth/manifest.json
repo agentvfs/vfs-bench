@@ -1,0 +1,114 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/9d49f28c71f6b999c6d64ce3df112b1cbf19977e6469038a90f27ce889087ce1",
+      "role": "workspace",
+      "sha256": "9d49f28c71f6b999c6d64ce3df112b1cbf19977e6469038a90f27ce889087ce1",
+      "size": 1613,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/bd87e8a08e715132e6d3f20be389092b337d94fae1537c77554bd419b7566946",
+      "role": "workspace_config",
+      "sha256": "bd87e8a08e715132e6d3f20be389092b337d94fae1537c77554bd419b7566946",
+      "size": 2939,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/56ff306872ea9bc62fd3f772e11cc592a9d467f36ca0e8f22adf7527c8ed32e2",
+      "role": "parity",
+      "sha256": "56ff306872ea9bc62fd3f772e11cc592a9d467f36ca0e8f22adf7527c8ed32e2",
+      "size": 3927,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/1299a0fdb9b6ab607d5eb4e18960e243a3c1cff5e6abacc3b83d6e306e6efa34",
+      "role": "verifier",
+      "sha256": "1299a0fdb9b6ab607d5eb4e18960e243a3c1cff5e6abacc3b83d6e306e6efa34",
+      "size": 230,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "cli-mcp-server_run_command",
+    "cli-mcp-server_show_security_rules",
+    "airtable_list_bases",
+    "airtable_list_tables",
+    "airtable_list_records",
+    "airtable_search_records",
+    "airtable_get_record",
+    "github_search_repositories",
+    "open-library_get_book_by_title",
+    "weather-data_weather_history",
+    "weather-data_weather_astronomy",
+    "weather-data_weather_search",
+    "weather_find_weather_stations",
+    "met-museum_list-departments",
+    "met-museum_search-museum-objects",
+    "met-museum_get-museum-object"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "bronco-turnover-lowest-eth",
+  "schema_version": 1,
+  "servers": [
+    "cli-mcp-server",
+    "airtable",
+    "github",
+    "open-library",
+    "weather-data",
+    "weather",
+    "met-museum"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/bronco-turnover-lowest-eth/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "e301c946734949618719c588c7f651234fcc882207e03ff16f13e4ff9685dd63",
+      "size": 4938,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/bronco-turnover-lowest-eth/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "68952adeba1c2ad4e6a5db37",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/bronco-turnover-lowest-eth",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

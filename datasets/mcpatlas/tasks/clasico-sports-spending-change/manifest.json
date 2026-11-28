@@ -1,0 +1,109 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/a057fac5097daf453db7e68a26b0c4f54c7ab292154b52e3f442be1096111c62",
+      "role": "workspace",
+      "sha256": "a057fac5097daf453db7e68a26b0c4f54c7ab292154b52e3f442be1096111c62",
+      "size": 1236,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/e0725ac8f2fc21671a5f652a13fe9157fce8551e5fcc47a6067aef6265019520",
+      "role": "workspace_config",
+      "sha256": "e0725ac8f2fc21671a5f652a13fe9157fce8551e5fcc47a6067aef6265019520",
+      "size": 2363,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/e958c376e3319ee472522e7357ba6ba0292aacc2556c3f35d8fddd70602b283b",
+      "role": "parity",
+      "sha256": "e958c376e3319ee472522e7357ba6ba0292aacc2556c3f35d8fddd70602b283b",
+      "size": 3820,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/cbcc18c05848f01cc0794cc4ec695b3b17727b76efd2fd50437eaff54adf128b",
+      "role": "verifier",
+      "sha256": "cbcc18c05848f01cc0794cc4ec695b3b17727b76efd2fd50437eaff54adf128b",
+      "size": 354,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "airtable_list_records",
+    "airtable_list_tables",
+    "mongodb_list-collections",
+    "mongodb_list-databases",
+    "mongodb_collection-indexes",
+    "mongodb_find",
+    "mongodb_collection-schema",
+    "mongodb_collection-storage-size",
+    "mongodb_count",
+    "mongodb_db-stats",
+    "mongodb_aggregate",
+    "mongodb_explain",
+    "wikipedia_search_wikipedia",
+    "wikipedia_get_article",
+    "wikipedia_get_summary"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "clasico-sports-spending-change",
+  "schema_version": 1,
+  "servers": [
+    "airtable",
+    "mongodb",
+    "wikipedia"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/clasico-sports-spending-change/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "81008d31177d3c93091b395a75b69a66f23be75e726f0d97221e13f49e0bc160",
+      "size": 4276,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/clasico-sports-spending-change/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "6890e7fd2516f66b0a628e40",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/clasico-sports-spending-change",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

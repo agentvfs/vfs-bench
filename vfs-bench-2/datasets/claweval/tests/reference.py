@@ -22,7 +22,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 UPSTREAM = ROOT / "state/claweval/src"
-TRAJECTORY = DISPATCHES = GWS_SEED = Path("/nonexistent")
+TRAJECTORY = DISPATCHES = GWS_SEED = HISTORY = Path("/nonexistent")
 STATE = {}
 
 
@@ -35,6 +35,8 @@ def writes(trace, seed):
 
 
 GWS = ("gmail", "calendar")
+SHELL = "Bash"
+SHELL_ENDPOINT = f"local://sandbox/{SHELL}"
 
 ENDPOINTS = {
     "gmail_list_messages": "http://localhost:9100/gmail/messages",
@@ -115,6 +117,38 @@ def text_of(content) -> str:
         return content
     return "\n".join(
         part.get("text", "") for part in content if part.get("type") == "text")
+
+
+def shell_trace(task) -> list[dict]:
+    """The agent's shell commands as upstream's ``Bash`` dispatches, for a
+    task that lists the tool: each ``command`` entry of the staged history,
+    its ``result``'s exit code and output the response."""
+    if not HISTORY.is_file() or not any(t.name == SHELL for t in task.tools):
+        return []
+    events = json.loads(HISTORY.read_text())
+    results = {e.get("parent"): e for e in events if e.get("type") == "result"}
+    out = []
+    for event in events:
+        if event.get("type") != "command":
+            continue
+        result = results.get(event.get("id"))
+        out.append({
+            "tool_use_id": event.get("id", ""),
+            "tool_name": SHELL,
+            "endpoint_url": SHELL_ENDPOINT,
+            "request_body": {
+                "command": event.get("command", "")
+            },
+            "response_status": 200,
+            "response_body": {
+                "exit_code":
+                -1 if result is None else result.get("exit_code", -1),
+                "stdout": "" if result is None else result.get("stdout", ""),
+                "stderr": "" if result is None else result.get("stderr", ""),
+            },
+            "timestamp": now(),
+        })
+    return out
 
 
 def dispatches() -> list[dict]:
@@ -379,10 +413,10 @@ def _upstream():
 
 def grade(case, respond):
     """Grade ``case`` (``task``, ``audit``, ``gws``, ``epoch``, ``model``,
-    and the ``trajectory``, ``dispatches`` and ``seed`` file texts, each
-    None for none) as main.py did; ``respond(request, index)`` answers each
-    judge call with a reply, or ``{"error": {...}}``."""
-    global TRAJECTORY, DISPATCHES, GWS_SEED
+    and the ``trajectory``, ``dispatches``, ``seed`` and ``history`` file
+    texts, each None for none) as main.py did; ``respond(request, index)``
+    answers each judge call with a reply, or ``{"error": {...}}``."""
+    global TRAJECTORY, DISPATCHES, GWS_SEED, HISTORY
     up = _upstream()
     tape = []
 
@@ -442,9 +476,11 @@ def grade(case, respond):
             TRAJECTORY = root / "trajectory.json"
             DISPATCHES = root / "dispatches.jsonl"
             GWS_SEED = root / "gws_seed.json"
-            for path, key in ((TRAJECTORY, "trajectory"),
-                              (DISPATCHES, "dispatches"), (GWS_SEED, "seed")):
-                if case[key] is not None:
+            HISTORY = root / "history.json"
+            for path, key in ((TRAJECTORY, "trajectory"), (DISPATCHES,
+                                                           "dispatches"),
+                              (GWS_SEED, "seed"), (HISTORY, "history")):
+                if case.get(key) is not None:
                     path.write_text(case[key])
             task_id = case["task"]
             tasks = UPSTREAM / "tasks"
@@ -460,7 +496,7 @@ def grade(case, respond):
                 built = gws_trace(task, audit_data)
                 trace_dispatches = [
                     up["ToolDispatch"](**trace, **d)
-                    for d in dispatches() + built
+                    for d in dispatches() + shell_trace(task) + built
                 ]
             printed = io.StringIO()
             with contextlib.redirect_stdout(printed):

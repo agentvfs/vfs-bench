@@ -1,0 +1,9 @@
+{
+  "id": "toolathlon_price-comparison",
+  "fixtures": [
+    {
+      "id": "bq/bigquery_pricing_analysis",
+      "kind": "bigquery"
+    }
+  ]
+}

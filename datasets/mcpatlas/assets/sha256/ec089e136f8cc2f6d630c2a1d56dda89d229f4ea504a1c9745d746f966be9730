@@ -1,0 +1,90 @@
+{
+  "note": "Both arms read the repositories at one path -- the MCP arm's git server reads the image's own /data/repos in the run's container, and each mirage /data/repos mount is a copy of one taken out of the same image; no tool this task enables reads the rest of /data. The repositories under repos/ are the clones upstream's image makes, at upstream's commits. GitHub is mirage's GitHub fake on both arms, and it holds nothing. Slack is the fake both arms read, seeded per run from Atlas's export. Airtable is the fake both arms read, seeded per run with the base Atlas shares in place of an export.",
+  "cases": [
+    {
+      "name": "list_bases",
+      "why": "the same one base",
+      "mcp": {
+        "server": "airtable",
+        "tool": "list_bases",
+        "args": {},
+        "pipe": "jq -r '.[] | .id + \" \" + .name + \" \" + .permissionLevel' | grep ."
+      },
+      "mirage": {
+        "command": "jq -r '.base_id + \" \" + .base_name + \" \" + .permission_level' /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/base.json",
+        "pipe": "grep ."
+      }
+    },
+    {
+      "name": "list_records",
+      "why": "the same first records, in the same order",
+      "mcp": {
+        "server": "airtable",
+        "tool": "list_records",
+        "args": {
+          "base_id": "appIF9byLfQwdHqE2",
+          "table_name": "Turnover Retention",
+          "max_records": 5
+        },
+        "pipe": "jq -c '.[] | [.id, .createdTime, .fields]' | grep ."
+      },
+      "mirage": {
+        "command": "head -5 /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/Turnover_Retention__tblUuTBCVkTHKa0DN/records.jsonl",
+        "pipe": "jq -c '[.record_id, .created_time, .fields]' | grep ."
+      }
+    },
+    {
+      "name": "list_tables",
+      "why": "the same nine tables, and the same fields in the one the answer reads",
+      "mcp": {
+        "server": "airtable",
+        "tool": "list_tables",
+        "args": {
+          "base_id": "appIF9byLfQwdHqE2"
+        },
+        "pipe": "jq -r '(.[] | .id + \" \" + .name), (.[] | select(.name == \"Turnover Retention\") | .fields[] | .id + \" \" + .name + \" \" + .type)' | grep ."
+      },
+      "mirage": {
+        "command": "jq -r '.tables[] | .table_id + \" \" + .table_name' /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/base.json; jq -r '.fields[] | .field_id + \" \" + .field_name + \" \" + .type' /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/Turnover_Retention__tblUuTBCVkTHKa0DN/table.json",
+        "pipe": "grep ."
+      }
+    },
+    {
+      "name": "search_records",
+      "why": "one field searched, the same records; `grep .` fails either arm that finds nothing, so two empty searches cannot agree",
+      "mcp": {
+        "server": "airtable",
+        "tool": "search_records",
+        "args": {
+          "base_id": "appIF9byLfQwdHqE2",
+          "table_name": "Turnover Retention",
+          "field_name": "Date",
+          "value": "2023-Q1"
+        },
+        "pipe": "jq -r '.[] | select(.fields.Date == \"2023-Q1\" and .fields[\"Employee Status\"] == \"Left\") | .fields.Department + \" \" + (.fields[\"Employee Count\"] | tostring)' | sort | grep ."
+      },
+      "mirage": {
+        "command": "jq -r 'select(.fields.Date == \"2023-Q1\" and .fields[\"Employee Status\"] == \"Left\") | .fields.Department + \" \" + (.fields[\"Employee Count\"] | tostring)' /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/Turnover_Retention__tblUuTBCVkTHKa0DN/records.jsonl",
+        "pipe": "sort | grep ."
+      }
+    },
+    {
+      "name": "conversations_history",
+      "why": "both arms read every message of #movie-suggestions, joins and leaves included, at the same timestamps",
+      "mcp": {
+        "server": "slack",
+        "tool": "conversations_history",
+        "args": {
+          "channel_id": "C093FF10B5J",
+          "limit": "100",
+          "include_activity_messages": true
+        },
+        "pipe": "grep -o '17[0-9]\\{8\\}\\.[0-9]\\{6\\}' | sort"
+      },
+      "mirage": {
+        "command": "cat /slack/channels/movie-suggestions__C093FF10B5J/*/chat.jsonl",
+        "pipe": "jq -r .ts | sort"
+      }
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/ff9aaba884b02309fdceaf2a2071164fc285deca65f169d488684d0d5e7fc78a",
+      "role": "workspace",
+      "sha256": "ff9aaba884b02309fdceaf2a2071164fc285deca65f169d488684d0d5e7fc78a",
+      "size": 1273,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/c0c12dfdf00445a6156673ad9ad6919263b8affd41cccd1e5e200ecacde25afe",
+      "role": "workspace_config",
+      "sha256": "c0c12dfdf00445a6156673ad9ad6919263b8affd41cccd1e5e200ecacde25afe",
+      "size": 2194,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/1807737b978ed892a8956bd86287d24f327ef0a219c93d25405b66adf545f805",
+      "role": "parity",
+      "sha256": "1807737b978ed892a8956bd86287d24f327ef0a219c93d25405b66adf545f805",
+      "size": 2526,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/8a1e06a08c917c1cbf668a1f29613e4daac7e955f974a2626695fe8f987b382b",
+      "role": "verifier",
+      "sha256": "8a1e06a08c917c1cbf668a1f29613e4daac7e955f974a2626695fe8f987b382b",
+      "size": 208,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "exa_web_search_exa",
+    "filesystem_read_file",
+    "filesystem_read_text_file",
+    "filesystem_read_media_file",
+    "filesystem_read_multiple_files",
+    "filesystem_list_directory",
+    "filesystem_list_directory_with_sizes",
+    "filesystem_directory_tree",
+    "filesystem_search_files",
+    "filesystem_get_file_info",
+    "filesystem_list_allowed_directories",
+    "google-workspace_list_events",
+    "mcp-code-executor_execute_code",
+    "mcp-code-executor_read_code_file"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "unwatched-imdb-movie-night",
+  "schema_version": 1,
+  "servers": [
+    "exa",
+    "filesystem",
+    "google-workspace",
+    "mcp-code-executor"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/unwatched-imdb-movie-night/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "d2e8795bf9afe4fd620a954ad8387e676677c3d75e1cfe558d2215e0ac29a35d",
+      "size": 1730,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/unwatched-imdb-movie-night/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689bd255c0422b257e7dfcaf",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/unwatched-imdb-movie-night",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "toolathlon_flagged-transactions",
+  "fixtures": [
+    {
+      "id": "bq/all_transactions",
+      "kind": "bigquery"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "cases": [
+    {
+      "name": "get_document_text",
+      "why": "The pinned upstream handler reads the same task fixture through MCP and the workspace CLI.",
+      "mcp": {
+        "server": "word",
+        "tool": "get_document_text",
+        "args": {
+          "filename": "${AGENT_WORKSPACE}/Candidates_resumes.docx"
+        }
+      },
+      "mirage": {
+        "command": "word get-document-text '{\"filename\": \"/workspace/Candidates_resumes.docx\"}'"
+      }
+    }
+  ]
+}

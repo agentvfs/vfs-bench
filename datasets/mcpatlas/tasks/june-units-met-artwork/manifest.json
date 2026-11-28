@@ -1,0 +1,111 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/a0c73f6826972a81b3e8f0d871c796f87243a3c48a02af891b26d88e2099251d",
+      "role": "workspace",
+      "sha256": "a0c73f6826972a81b3e8f0d871c796f87243a3c48a02af891b26d88e2099251d",
+      "size": 1630,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/f77125c51847aa63e1d8dcf544b91b7119e40ade9b53c5034253fc5eeb48c5da",
+      "role": "workspace_config",
+      "sha256": "f77125c51847aa63e1d8dcf544b91b7119e40ade9b53c5034253fc5eeb48c5da",
+      "size": 3511,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/496cee2141f3966b820f5b91d655f8881ba8bd709a9f3125d09260f3491f2342",
+      "role": "parity",
+      "sha256": "496cee2141f3966b820f5b91d655f8881ba8bd709a9f3125d09260f3491f2342",
+      "size": 4384,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/4ad99cbb6f5e2c25bdc90ecf6b49aeef5b6df4560b947df9751f38afce88993e",
+      "role": "verifier",
+      "sha256": "4ad99cbb6f5e2c25bdc90ecf6b49aeef5b6df4560b947df9751f38afce88993e",
+      "size": 262,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "airtable_list_bases",
+    "airtable_search_records",
+    "met-museum_list-departments",
+    "met-museum_search-museum-objects",
+    "met-museum_get-museum-object",
+    "github_search_repositories",
+    "github_search_code",
+    "github_search_users",
+    "github_get_issue",
+    "github_search_issues",
+    "git_git_status",
+    "git_git_diff_unstaged",
+    "git_git_diff_staged",
+    "git_git_diff",
+    "git_git_log",
+    "airtable_list_tables"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "june-units-met-artwork",
+  "schema_version": 1,
+  "servers": [
+    "airtable",
+    "met-museum",
+    "github",
+    "git"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/june-units-met-artwork/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "fc9c14de5f88bfa21a92c1c13e81ee4345c5b3bd78f12fa1f685285d2b9fe92e",
+      "size": 2634,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/june-units-met-artwork/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "68940d8355faa0b720f0b478",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/june-units-met-artwork",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

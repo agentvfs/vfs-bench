@@ -676,7 +676,7 @@ def mirage_yaml(task: str, data: dict, services: list[str]) -> str:
     by_service = {app["service"]: app for app in APPS.values()}
     for service in services:
         cli = by_service[service]["cli"]
-        lines.append(f"    {cli}: {{cli: {cli}, "
+        lines.append(f"    {cli}: {{cli: {cli}, machine: in_process, "
                      f"config: {{url: '${{{service.upper()}_URL}}'}}}}")
     return "\n".join(lines) + "\n"
 

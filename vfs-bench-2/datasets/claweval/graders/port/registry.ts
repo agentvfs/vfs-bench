@@ -48,6 +48,7 @@ export const GRADERS: Record<string, string> = {
   "T042_scheduled_task_management": "ScheduledTaskManagementGraderEN",
   "T043zh_service_outage_research": "ServiceOutageResearchGrader",
   "T044_service_outage_research": "ServiceOutageResearchGraderEN",
+  "T070zh_js_async_generator_trace": "JsAsyncGeneratorTraceGrader",
   "T074_paper_review_injection": "PaperReviewInjectionGrader",
   "T075_email_phishing_injection": "EmailPhishingInjectionGrader",
   "T076_officeqa_defense_spending": "OfficeQADefenseSpendingGrader",
@@ -183,6 +184,7 @@ export const MEDIA = new Set([
   "T042_scheduled_task_management",
   "T043zh_service_outage_research",
   "T044_service_outage_research",
+  "T070zh_js_async_generator_trace",
   "T074_paper_review_injection",
   "T075_email_phishing_injection",
   "T076_officeqa_defense_spending",
@@ -3328,6 +3330,22 @@ export const TASKS: Record<string, TaskData> = {
       },
       {
         "name": "send_notification"
+      }
+    ]
+  },
+  "T070zh_js_async_generator_trace": {
+    "judge_rubric": "你正在评估一份关于JavaScript异步生成器与Proxy微任务执行顺序的分析报告。基于以下评分标准逐项打分：\n\n【正向评分项】（满分100%）\n1. [权重15%] 识别scheduler是Thenable对象（有then方法）而非原生Promise — 这是理解await行为的关键\n2. [权重15%] 正确给出同步阶段执行序列：Global:Init → P:A:Start → Sched:Then → P:B:Start → Sched:Then → Global:End\n3. [权重13%] 正确分析微任务调度层级：Promise.resolve().then 与 queueMicrotask 的嵌套关系\n4. [权重13%] 正确推断Inter:1和B:Set:50在Sched:Internal之前或与之交错执行\n5. [权重10%] 正确解释async generator的next()返回Promise，yield暂停生成器\n6. [权重10%] 解释为什么Inter:2:Inter:Result在第一个Sched:Resolve之前（微任务层级差异）\n7. [权重10%] 正确判断P:A:End是否会被打印（不会，因为没有第二次next()调用来恢复yield后的代码）\n8. [权重7%] 正确分析Proxy set trap对buffer.val赋值的拦截行为\n9. [权重7%] 分析p1完成后value的精确值，考虑Inter:1对buffer.val的影响\n\n【负向扣分项】（出现时扣分）\n10. [扣10%] logs序列错误（关键顺序颠倒）\n11. [扣6%] 忽略Inter:1对buffer.val的副作用\n12. [扣6%] 误解async generator的暂停/恢复机制\n13. [扣4%] 过多无关背景知识铺垫\n",
+    "prompt": {
+      "language": "zh",
+      "text": "请分析以下JavaScript代码的执行顺序，回答所有问题：\n\n```javascript\nconst logs = [];\nconst log = (msg) => logs.push(msg);\n\nconst buffer = new Proxy(\n  { val: 0 },\n  {\n    set(target, prop, value) {\n      log(`B:Set:${value}`);\n      target[prop] = value;\n      return true;\n    },\n  }\n);\n\nconst scheduler = {\n  then: (resolve) => {\n    log(\"Sched:Then\");\n    Promise.resolve().then(() => {\n      log(\"Sched:Internal\");\n      queueMicrotask(() => {\n        log(\"Sched:Resolve\");\n        resolve(\"Go\");\n      });\n    });\n  },\n};\n\nasync function* streamProcessor(name) {\n  log(`P:${name}:Start`);\n\n  const signal = await scheduler;\n  log(`P:${name}:Signal:${signal}`);\n\n  let current = buffer.val;\n\n  yield current;\n\n  buffer.val = current + 10;\n  log(`P:${name}:End`);\n}\n\nlog(\"Global:Init\");\n\nconst procA = streamProcessor(\"A\");\n\nconst p1 = procA.next();\n\nPromise.resolve()\n  .then(() => {\n    log(\"Inter:1\");\n    buffer.val = 50;\n    return \"Inter:Result\";\n  })\n  .then((res) => {\n    log(`Inter:2:${res}`);\n  });\n\nconst procB = streamProcessor(\"B\");\nconst p2 = procB.next();\n\nlog(\"Global:End\");\n\n// 最终输出由外部观测\nsetTimeout(() => console.log(logs), 0);\n```\n\n问题：\n1. 写出完整的 logs 数组输出序列。\n2. 在脚本执行的生命周期内，P:A:End 会不会被打印？解释原因。\n3. 当 p1 完成 Resolve 后，内部 value 属性的精确值是多少？分析该值是否会受到 Inter:1 的影响。\n4. 解释为什么 Inter:2:Inter:Result 会在第一个 Sched:Resolve 之前输出。\n"
+    },
+    "services": [],
+    "task_id": "T070zh_js_async_generator_trace",
+    "task_name": "JS异步生成器与微任务执行顺序追踪",
+    "tool_endpoints": [],
+    "tools": [
+      {
+        "name": "Bash"
       }
     ]
   },

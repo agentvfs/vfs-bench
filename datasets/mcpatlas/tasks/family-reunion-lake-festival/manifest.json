@@ -1,0 +1,116 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/ff9aaba884b02309fdceaf2a2071164fc285deca65f169d488684d0d5e7fc78a",
+      "role": "workspace",
+      "sha256": "ff9aaba884b02309fdceaf2a2071164fc285deca65f169d488684d0d5e7fc78a",
+      "size": 1273,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/fb15a9d6acb2046dd55fd6fc04207b389366d08d08058773822d2bba18de1ed2",
+      "role": "workspace_config",
+      "sha256": "fb15a9d6acb2046dd55fd6fc04207b389366d08d08058773822d2bba18de1ed2",
+      "size": 3200,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/483d1042e790c4021712c67ce54cc291c75c551000e8cd2d55aa7dba5efe969b",
+      "role": "parity",
+      "sha256": "483d1042e790c4021712c67ce54cc291c75c551000e8cd2d55aa7dba5efe969b",
+      "size": 2896,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/b04f55ee5fac4050c69f623b813e9fa71a63c7e3a516da77e4260fbb5641dc86",
+      "role": "verifier",
+      "sha256": "b04f55ee5fac4050c69f623b813e9fa71a63c7e3a516da77e4260fbb5641dc86",
+      "size": 142,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "context7_resolve-library-id",
+    "context7_get-library-docs",
+    "calculator_calculate",
+    "fetch_fetch",
+    "mcp-server-code-runner_run-code",
+    "git_git_status",
+    "git_git_diff_unstaged",
+    "git_git_diff_staged",
+    "git_git_diff",
+    "git_git_log",
+    "git_git_show",
+    "national-parks_findParks",
+    "national-parks_getParkDetails",
+    "national-parks_getVisitorCenters",
+    "national-parks_getCampgrounds",
+    "google-workspace_list_events",
+    "exa_web_search_exa"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "family-reunion-lake-festival",
+  "schema_version": 1,
+  "servers": [
+    "context7",
+    "calculator",
+    "fetch",
+    "mcp-server-code-runner",
+    "git",
+    "national-parks",
+    "google-workspace",
+    "exa"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/family-reunion-lake-festival/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "5bf0e55f178f6bb64aebe17f75260aaac831031e81bd32c4908ff22db418d4bc",
+      "size": 5179,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/family-reunion-lake-festival/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689bd255c0422b257e7dfd08",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/family-reunion-lake-festival",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

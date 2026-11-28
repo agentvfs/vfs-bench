@@ -1,0 +1,4 @@
+# T070zh_js_async_generator_trace, on vfsbench_harbor's mirage environment (datasets/claweval/convert.py writes it).
+#
+# No service: the agent works in the terminal alone.
+fakes: {}

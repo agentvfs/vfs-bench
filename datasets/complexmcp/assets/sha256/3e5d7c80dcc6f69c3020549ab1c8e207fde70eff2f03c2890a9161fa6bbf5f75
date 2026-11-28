@@ -1,0 +1,562 @@
+airports:
+  # 北美地区
+  - aid: "airport_1"
+    name: "John F. Kennedy International Airport"
+    city: "New York"
+    code: "JFK"
+    _coord: [40.6413, -73.7781]
+  - aid: "airport_2"
+    name: "Los Angeles International Airport"
+    city: "Los Angeles"
+    code: "LAX"
+    _coord: [33.9416, -118.4085]
+  - aid: "airport_3"
+    name: "Chicago O'Hare International Airport"
+    city: "Chicago"
+    code: "ORD"
+    _coord: [41.9786, -87.9048]
+  - aid: "airport_4"
+    name: "Miami International Airport"
+    city: "Miami"
+    code: "MIA"
+    _coord: [25.7959, -80.2870]
+  - aid: "airport_5"
+    name: "San Francisco International Airport"
+    city: "San Francisco"
+    code: "SFO"
+    _coord: [37.6213, -122.3790]
+  - aid: "airport_6"
+    name: "Toronto Pearson International Airport"
+    city: "Toronto"
+    code: "YYZ"
+    _coord: [43.6777, -79.6248]
+  - aid: "airport_7"
+    name: "Vancouver International Airport"
+    city: "Vancouver"
+    code: "YVR"
+    _coord: [49.1967, -123.1815]
+  - aid: "airport_8"
+    name: "Mexico City International Airport"
+    city: "Mexico City"
+    code: "MEX"
+    _coord: [19.4363, -99.0721]
+  - aid: "airport_9"
+    name: "Cancún International Airport"
+    city: "Cancún"
+    code: "CUN"
+    _coord: [21.0365, -86.8771]
+  - aid: "airport_10"
+    name: "Washington Dulles International Airport"
+    city: "Washington DC"
+    code: "IAD"
+    _coord: [38.9531, -77.4565]
+  - aid: "airport_11"
+    name: "Boston Logan International Airport"
+    city: "Boston"
+    code: "BOS"
+    _coord: [42.3656, -71.0096]
+  - aid: "airport_12"
+    name: "Seattle-Tacoma International Airport"
+    city: "Seattle"
+    code: "SEA"
+    _coord: [47.4489, -122.3094]
+  - aid: "airport_13"
+    name: "Atlanta Hartsfield-Jackson Airport"
+    city: "Atlanta"
+    code: "ATL"
+    _coord: [33.6407, -84.4277]
+  - aid: "airport_14"
+    name: "Dallas/Fort Worth International Airport"
+    city: "Dallas"
+    code: "DFW"
+    _coord: [32.8998, -97.0403]
+  - aid: "airport_15"
+    name: "Houston George Bush Intercontinental Airport"
+    city: "Houston"
+    code: "IAH"
+    _coord: [29.9902, -95.3368]
+  - aid: "airport_16"
+    name: "Montreal-Pierre Elliott Trudeau Airport"
+    city: "Montreal"
+    code: "YUL"
+    _coord: [45.4706, -73.7408]
+  - aid: "airport_17"
+    name: "Calgary International Airport"
+    city: "Calgary"
+    code: "YYC"
+    _coord: [51.1214, -114.0078]
+  - aid: "airport_18"
+    name: "Guadalajara International Airport"
+    city: "Guadalajara"
+    code: "GDL"
+    _coord: [20.5218, -103.3111]
+  - aid: "airport_19"
+    name: "Honolulu International Airport"
+    city: "Honolulu"
+    code: "HNL"
+    _coord: [21.3207, -157.9242]
+  - aid: "airport_20"
+    name: "Las Vegas McCarran International Airport"
+    city: "Las Vegas"
+    code: "LAS"
+    _coord: [36.0840, -115.1537]
+  - aid: "airport_21"
+    name: "Orlando International Airport"
+    city: "Orlando"
+    code: "MCO"
+    _coord: [28.4312, -81.3081]
+  - aid: "airport_22"
+    name: "Denver International Airport"
+    city: "Denver"
+    code: "DEN"
+    _coord: [39.8561, -104.6737]
+  - aid: "airport_23"
+    name: "Phoenix Sky Harbor International Airport"
+    city: "Phoenix"
+    code: "PHX"
+    _coord: [33.4343, -112.0080]
+  - aid: "airport_24"
+    name: "Detroit Metropolitan Airport"
+    city: "Detroit"
+    code: "DTW"
+    _coord: [42.2162, -83.3554]
+  - aid: "airport_25"
+    name: "Minneapolis-Saint Paul International Airport"
+    city: "Minneapolis"
+    code: "MSP"
+    _coord: [44.8819, -93.2218]
+
+  # 欧洲地区
+  - aid: "airport_26"
+    name: "London Heathrow Airport"
+    city: "London"
+    code: "LHR"
+    _coord: [51.4700, -0.4543]
+  - aid: "airport_27"
+    name: "Paris Charles de Gaulle Airport"
+    city: "Paris"
+    code: "CDG"
+    _coord: [49.0097, 2.5479]
+  - aid: "airport_28"
+    name: "Frankfurt Airport"
+    city: "Frankfurt"
+    code: "FRA"
+    _coord: [50.0330, 8.5706]
+  - aid: "airport_29"
+    name: "Amsterdam Airport Schiphol"
+    city: "Amsterdam"
+    code: "AMS"
+    _coord: [52.3105, 4.7683]
+  - aid: "airport_30"
+    name: "Madrid Barajas Airport"
+    city: "Madrid"
+    code: "MAD"
+    _coord: [40.4900, -3.5666]
+  - aid: "airport_31"
+    name: "Rome Fiumicino Airport"
+    city: "Rome"
+    code: "FCO"
+    _coord: [41.8045, 12.2508]
+  - aid: "airport_32"
+    name: "Barcelona El Prat Airport"
+    city: "Barcelona"
+    code: "BCN"
+    _coord: [41.2974, 2.0833]
+  - aid: "airport_33"
+    name: "Munich Airport"
+    city: "Munich"
+    code: "MUC"
+    _coord: [48.3538, 11.7861]
+  - aid: "airport_34"
+    name: "Istanbul Airport"
+    city: "Istanbul"
+    code: "IST"
+    _coord: [41.2753, 28.7519]
+  - aid: "airport_35"
+    name: "Moscow Sheremetyevo International Airport"
+    city: "Moscow"
+    code: "SVO"
+    _coord: [55.9726, 37.4146]
+  - aid: "airport_36"
+    name: "Zurich Airport"
+    city: "Zurich"
+    code: "ZRH"
+    _coord: [47.4582, 8.5556]
+  - aid: "airport_37"
+    name: "Vienna International Airport"
+    city: "Vienna"
+    code: "VIE"
+    _coord: [48.1103, 16.5697]
+  - aid: "airport_38"
+    name: "Dublin Airport"
+    city: "Dublin"
+    code: "DUB"
+    _coord: [53.4213, -6.2701]
+  - aid: "airport_39"
+    name: "Brussels Airport"
+    city: "Brussels"
+    code: "BRU"
+    _coord: [50.9010, 4.4844]
+  - aid: "airport_40"
+    name: "Copenhagen Airport"
+    city: "Copenhagen"
+    code: "CPH"
+    _coord: [55.6180, 12.6561]
+  - aid: "airport_41"
+    name: "Stockholm Arlanda Airport"
+    city: "Stockholm"
+    code: "ARN"
+    _coord: [59.6498, 17.9238]
+  - aid: "airport_42"
+    name: "Oslo Gardermoen Airport"
+    city: "Oslo"
+    code: "OSL"
+    _coord: [60.1939, 11.1004]
+  - aid: "airport_43"
+    name: "Helsinki-Vantaa Airport"
+    city: "Helsinki"
+    code: "HEL"
+    _coord: [60.3172, 24.9633]
+  - aid: "airport_44"
+    name: "Athens International Airport"
+    city: "Athens"
+    code: "ATH"
+    _coord: [37.9364, 23.9445]
+  - aid: "airport_45"
+    name: "Lisbon Portela Airport"
+    city: "Lisbon"
+    code: "LIS"
+    _coord: [38.7742, -9.1342]
+  - aid: "airport_46"
+    name: "Prague Václav Havel Airport"
+    city: "Prague"
+    code: "PRG"
+    _coord: [50.1000, 14.2600]
+  - aid: "airport_47"
+    name: "Budapest Ferenc Liszt International Airport"
+    city: "Budapest"
+    code: "BUD"
+    _coord: [47.4298, 19.2611]
+  - aid: "airport_48"
+    name: "Warsaw Chopin Airport"
+    city: "Warsaw"
+    code: "WAW"
+    _coord: [52.1657, 20.9671]
+  - aid: "airport_49"
+    name: "Berlin Brandenburg Airport"
+    city: "Berlin"
+    code: "BER"
+    _coord: [52.3622, 13.5007]
+  - aid: "airport_50"
+    name: "Manchester Airport"
+    city: "Manchester"
+    code: "MAN"
+    _coord: [53.3537, -2.2750]
+
+  # 亚洲地区
+  - aid: "airport_51"
+    name: "Tokyo Haneda Airport"
+    city: "Tokyo"
+    code: "HND"
+    _coord: [35.5494, 139.7798]
+  - aid: "airport_52"
+    name: "Tokyo Narita International Airport"
+    city: "Tokyo"
+    code: "NRT"
+    _coord: [35.7647, 140.3864]
+  - aid: "airport_53"
+    name: "Beijing Capital International Airport"
+    city: "Beijing"
+    code: "PEK"
+    _coord: [40.0799, 116.6031]
+  - aid: "airport_54"
+    name: "Shanghai Pudong International Airport"
+    city: "Shanghai"
+    code: "PVG"
+    _coord: [31.1443, 121.8083]
+  - aid: "airport_55"
+    name: "Hong Kong International Airport"
+    city: "Hong Kong"
+    code: "HKG"
+    _coord: [22.3089, 113.9146]
+  - aid: "airport_56"
+    name: "Singapore Changi Airport"
+    city: "Singapore"
+    code: "SIN"
+    _coord: [1.3644, 103.9915]
+  - aid: "airport_57"
+    name: "Seoul Incheon International Airport"
+    city: "Seoul"
+    code: "ICN"
+    _coord: [37.4602, 126.4407]
+  - aid: "airport_58"
+    name: "Delhi Indira Gandhi International Airport"
+    city: "Delhi"
+    code: "DEL"
+    _coord: [28.5562, 77.1000]
+  - aid: "airport_59"
+    name: "Mumbai Chhatrapati Shivaji International Airport"
+    city: "Mumbai"
+    code: "BOM"
+    _coord: [19.0896, 72.8656]
+  - aid: "airport_60"
+    name: "Dubai International Airport"
+    city: "Dubai"
+    code: "DXB"
+    _coord: [25.2532, 55.3657]
+  - aid: "airport_61"
+    name: "Bangkok Suvarnabhumi Airport"
+    city: "Bangkok"
+    code: "BKK"
+    _coord: [13.6900, 100.7501]
+  - aid: "airport_62"
+    name: "Kuala Lumpur International Airport"
+    city: "Kuala Lumpur"
+    code: "KUL"
+    _coord: [2.7433, 101.6984]
+  - aid: "airport_63"
+    name: "Taiwan Taoyuan International Airport"
+    city: "Taipei"
+    code: "TPE"
+    _coord: [25.0777, 121.2328]
+  - aid: "airport_64"
+    name: "Osaka Kansai International Airport"
+    city: "Osaka"
+    code: "KIX"
+    _coord: [34.4343, 135.2441]
+  - aid: "airport_65"
+    name: "Jakarta Soekarno-Hatta International Airport"
+    city: "Jakarta"
+    code: "CGK"
+    _coord: [-6.1256, 106.6558]
+  - aid: "airport_66"
+    name: "Manila Ninoy Aquino International Airport"
+    city: "Manila"
+    code: "MNL"
+    _coord: [14.5086, 121.0195]
+  - aid: "airport_67"
+    name: "Ho Chi Minh City Tan Son Nhat International Airport"
+    city: "Ho Chi Minh City"
+    code: "SGN"
+    _coord: [10.8188, 106.6520]
+  - aid: "airport_68"
+    name: "Seoul Gimpo International Airport"
+    city: "Seoul"
+    code: "GMP"
+    _coord: [37.5583, 126.7906]
+  - aid: "airport_69"
+    name: "Guangzhou Baiyun International Airport"
+    city: "Guangzhou"
+    code: "CAN"
+    _coord: [23.3924, 113.2988]
+  - aid: "airport_70"
+    name: "Shenzhen Bao'an International Airport"
+    city: "Shenzhen"
+    code: "SZX"
+    _coord: [22.6393, 113.8105]
+  - aid: "airport_71"
+    name: "Chengdu Shuangliu International Airport"
+    city: "Chengdu"
+    code: "CTU"
+    _coord: [30.5785, 103.9467]
+  - aid: "airport_72"
+    name: "Shanghai Hongqiao International Airport"
+    city: "Shanghai"
+    code: "SHA"
+    _coord: [31.1979, 121.3363]
+  - aid: "airport_73"
+    name: "Shenyang Taoxian International Airport"
+    city: "Shenyang"
+    code: "SHE"
+    _coord: [41.6397, 123.4831]
+  - aid: "airport_74"
+    name: "Xian Xianyang International Airport"
+    city: "Xian"
+    code: "XIY"
+    _coord: [34.4471, 108.7516]
+  - aid: "airport_75"
+    name: "Chongqing Jiangbei International Airport"
+    city: "Chongqing"
+    code: "CKG"
+    _coord: [29.7192, 106.6417]
+
+  # 澳大利亚和大洋洲
+  - aid: "airport_76"
+    name: "Sydney Kingsford Smith Airport"
+    city: "Sydney"
+    code: "SYD"
+    _coord: [-33.9399, 151.1753]
+  - aid: "airport_77"
+    name: "Melbourne Airport"
+    city: "Melbourne"
+    code: "MEL"
+    _coord: [-37.6733, 144.8433]
+  - aid: "airport_78"
+    name: "Auckland Airport"
+    city: "Auckland"
+    code: "AKL"
+    _coord: [-37.0081, 174.7850]
+  - aid: "airport_79"
+    name: "Brisbane Airport"
+    city: "Brisbane"
+    code: "BNE"
+    _coord: [-27.3842, 153.1175]
+  - aid: "airport_80"
+    name: "Perth Airport"
+    city: "Perth"
+    code: "PER"
+    _coord: [-31.9403, 115.9669]
+  - aid: "airport_81"
+    name: "Christchurch International Airport"
+    city: "Christchurch"
+    code: "CHC"
+    _coord: [-43.4894, 172.5324]
+  - aid: "airport_82"
+    name: "Adelaide Airport"
+    city: "Adelaide"
+    code: "ADL"
+    _coord: [-34.9450, 138.5306]
+  - aid: "airport_83"
+    name: "Wellington International Airport"
+    city: "Wellington"
+    code: "WLG"
+    _coord: [-41.3272, 174.8053]
+  - aid: "airport_84"
+    name: "Gold Coast Airport"
+    city: "Gold Coast"
+    code: "OOL"
+    _coord: [-28.1644, 153.5047]
+
+  # 南美洲
+  - aid: "airport_85"
+    name: "São Paulo-Guarulhos International Airport"
+    city: "São Paulo"
+    code: "GRU"
+    _coord: [-23.4356, -46.4731]
+  - aid: "airport_86"
+    name: "Rio de Janeiro-Galeão International Airport"
+    city: "Rio de Janeiro"
+    code: "GIG"
+    _coord: [-22.8090, -43.2506]
+  - aid: "airport_87"
+    name: "Buenos Aires Ezeiza International Airport"
+    city: "Buenos Aires"
+    code: "EZE"
+    _coord: [-34.8122, -58.5398]
+  - aid: "airport_88"
+    name: "Lima Jorge Chávez International Airport"
+    city: "Lima"
+    code: "LIM"
+    _coord: [-12.0219, -77.1143]
+  - aid: "airport_89"
+    name: "Santiago Arturo Merino Benítez International Airport"
+    city: "Santiago"
+    code: "SCL"
+    _coord: [-33.3930, -70.7858]
+  - aid: "airport_90"
+    name: "Bogotá El Dorado International Airport"
+    city: "Bogotá"
+    code: "BOG"
+    _coord: [4.7016, -74.1469]
+  - aid: "airport_91"
+    name: "Medellín José María Córdova International Airport"
+    city: "Medellín"
+    code: "MDE"
+    _coord: [6.1644, -75.4231]
+  - aid: "airport_92"
+    name: "Caracas Simón Bolívar International Airport"
+    city: "Caracas"
+    code: "CCS"
+    _coord: [10.6031, -66.9906]
+  - aid: "airport_93"
+    name: "Montevideo Carrasco International Airport"
+    city: "Montevideo"
+    code: "MVD"
+    _coord: [-34.8384, -56.0308]
+  - aid: "airport_94"
+    name: "Quito Mariscal Sucre International Airport"
+    city: "Quito"
+    code: "UIO"
+    _coord: [-0.1412, -78.4882]
+
+  # 非洲和中东
+  - aid: "airport_95"
+    name: "Cairo International Airport"
+    city: "Cairo"
+    code: "CAI"
+    _coord: [30.1219, 31.4056]
+  - aid: "airport_96"
+    name: "Johannesburg O.R. Tambo International Airport"
+    city: "Johannesburg"
+    code: "JNB"
+    _coord: [-26.1392, 28.2460]
+  - aid: "airport_97"
+    name: "Casablanca Mohammed V International Airport"
+    city: "Casablanca"
+    code: "CMN"
+    _coord: [33.3675, -7.5900]
+  - aid: "airport_98"
+    name: "Nairobi Jomo Kenyatta International Airport"
+    city: "Nairobi"
+    code: "NBO"
+    _coord: [-1.3219, 36.9308]
+  - aid: "airport_99"
+    name: "Doha Hamad International Airport"
+    city: "Doha"
+    code: "DOH"
+    _coord: [25.2609, 51.6138]
+  - aid: "airport_100"
+    name: "Abu Dhabi International Airport"
+    city: "Abu Dhabi"
+    code: "AUH"
+    _coord: [24.4330, 54.6511]
+  - aid: "airport_101"
+    name: "Riyadh King Khalid International Airport"
+    city: "Riyadh"
+    code: "RUH"
+    _coord: [24.9578, 46.6989]
+  - aid: "airport_102"
+    name: "Tel Aviv Ben Gurion Airport"
+    city: "Tel Aviv"
+    code: "TLV"
+    _coord: [32.0114, 34.8867]
+  - aid: "airport_103"
+    name: "Istanbul Sabiha Gökçen International Airport"
+    city: "Istanbul"
+    code: "SAW"
+    _coord: [40.8986, 29.3092]
+  - aid: "airport_104"
+    name: "Cape Town International Airport"
+    city: "Cape Town"
+    code: "CPT"
+    _coord: [-33.9715, 18.6021]
+  - aid: "airport_105"
+    name: "Lagos Murtala Muhammed International Airport"
+    city: "Lagos"
+    code: "LOS"
+    _coord: [6.5774, 3.3212]
+  - aid: "airport_106"
+    name: "Addis Ababa Bole International Airport"
+    city: "Addis Ababa"
+    code: "ADD"
+    _coord: [8.9779, 38.7993]
+  - aid: "airport_107"
+    name: "Accra Kotoka International Airport"
+    city: "Accra"
+    code: "ACC"
+    _coord: [5.6052, -0.1668]
+  - aid: "airport_108"
+    name: "Dar es Salaam Julius Nyerere International Airport"
+    city: "Dar es Salaam"
+    code: "DAR"
+    _coord: [-6.8781, 39.2026]
+  - aid: "airport_109"
+    name: "Algiers Houari Boumediene Airport"
+    city: "Algiers"
+    code: "ALG"
+    _coord: [36.6910, 3.2154]
+  - aid: "airport_110"
+    name: "Tunis Carthage International Airport"
+    city: "Tunis"
+    code: "TUN"
+    _coord: [36.8510, 10.2262]

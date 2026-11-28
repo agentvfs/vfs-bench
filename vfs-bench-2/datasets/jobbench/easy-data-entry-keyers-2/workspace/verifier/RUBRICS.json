@@ -1,0 +1,206 @@
+{
+  "rubrics": [
+    {
+      "rubric": "Does the submission provide both required deliverables, `cpau_bill_entry.csv` and `cpau_qc_log.txt`?",
+      "weight": 10,
+      "criterion": [
+        "The submission includes a file named `cpau_bill_entry.csv`.",
+        "The submission includes a file named `cpau_qc_log.txt`.",
+        "The deliverables are provided as working files rather than only a prose explanation."
+      ]
+    },
+    {
+      "rubric": "Does `cpau_bill_entry.csv` use the exact required column set for downstream key entry?",
+      "weight": 9,
+      "criterion": [
+        "The CSV columns are exactly `source_file`, `account_number`, `statement_print_date`, `due_date`, `service_period_start`, `service_period_end`, `service_days`, `customer_name`, `service_address`, `service_category`, `charge_description`, `usage_units`, `usage_quantity`, `charge_amount`, `total_current_charges`, `total_amount_due`.",
+        "Each CSV row represents one billed charge line rather than a bill-level summary row.",
+        "The CSV structure is machine-readable and consistent across all rows."
+      ]
+    },
+    {
+      "rubric": "Does the CSV cover both source bills with the correct row counts by file?",
+      "weight": 10,
+      "criterion": [
+        "The CSV includes rows sourced from `utl-bill-sample.pdf`.",
+        "The CSV includes rows sourced from `nem-2-utility-bill-sample.pdf`.",
+        "There are 12 billed charge rows for `utl-bill-sample.pdf`.",
+        "There are 21 billed charge rows for `nem-2-utility-bill-sample.pdf`."
+      ]
+    },
+    {
+      "rubric": "Are the repeated bill-level fields correct on all rows from `utl-bill-sample.pdf`?",
+      "weight": 9,
+      "criterion": [
+        "All `utl-bill-sample.pdf` rows use account number `XXXXXXXX`.",
+        "All `utl-bill-sample.pdf` rows use statement print date `May-08-2020` and due date `Jun-01-2020`.",
+        "All `utl-bill-sample.pdf` rows use service period start `04/04/2020`, service period end `05/07/2020`, and `service_days` `34`.",
+        "All `utl-bill-sample.pdf` rows use customer name `FIRST LAST` and service address `250 HAMILTON AVE PALO ALTO CA 94301`.",
+        "All `utl-bill-sample.pdf` rows use `total_current_charges` `103.43` and `total_amount_due` `103.43`."
+      ]
+    },
+    {
+      "rubric": "Does the standard sample bill section include every billed charge description and amount from `utl-bill-sample.pdf`?",
+      "weight": 10,
+      "criterion": [
+        "The CSV includes the electric charge lines `E1 COMMODITY` `7.42`, `E1 DISTRIBUTION` `4.42`, `E1 PUBLIC BENEFITS` `0.40`, and `STATE ENERGY SURCHARGE` `0.03`.",
+        "The CSV includes the gas charge lines `CARBON OFFSET CHARGE` `1.30`, `G1 COMMODITY CHARGE SUMMER` `6.86`, `G1 DISTRIBUTION SUMMER` `21.03`, `GAS CAP AND TRADE COMPLIANCE` `1.07`, `MONTHLY SERVICE CHARGE` `13.35`, and `TRANSPORTATION CHARGE` `3.22`.",
+        "The CSV includes the sewer charge line `S1 WASTEWATER` `41.37`.",
+        "The CSV includes a `UTILITY USERS TAX` row for `2.96`."
+      ]
+    },
+    {
+      "rubric": "Do the `utl-bill-sample.pdf` charge rows foot correctly to the billed totals?",
+      "weight": 9,
+      "criterion": [
+        "The electric rows for `utl-bill-sample.pdf` sum to `12.27`.",
+        "The gas rows for `utl-bill-sample.pdf` sum to `46.83`.",
+        "The sewer rows for `utl-bill-sample.pdf` sum to `41.37`.",
+        "Including the `UTILITY USERS TAX` row brings the bill total to `103.43`."
+      ]
+    },
+    {
+      "rubric": "Are the repeated bill-level fields correct on all rows from `nem-2-utility-bill-sample.pdf`?",
+      "weight": 9,
+      "criterion": [
+        "All `nem-2-utility-bill-sample.pdf` rows use account number `XXXXXXXX`.",
+        "All `nem-2-utility-bill-sample.pdf` rows use statement print date `Jun-29-2022` and due date `Jul-20-2022`.",
+        "All `nem-2-utility-bill-sample.pdf` rows use service period start `05/26/2022`, service period end `06/28/2022`, and `service_days` `34`.",
+        "All `nem-2-utility-bill-sample.pdf` rows use customer name `FIRST LAST` and service address `250 HAMILTON AVE PALO ALTO CA 94301`.",
+        "All `nem-2-utility-bill-sample.pdf` rows use `total_current_charges` `539.89` and `total_amount_due` `539.89`."
+      ]
+    },
+    {
+      "rubric": "Does the NEM sample bill section include every electric charge line and preserve the export credit as a credit?",
+      "weight": 10,
+      "criterion": [
+        "The CSV includes `E1 COMMODITY` `100.14`, `E1 DISTRIBUTION` `62.40`, `E1 PUBLIC BENEFITS` `4.33`, `HYDRO RATE ADJUSTER` `12.61`, and `STATE ENERGY SURCHARGE` `0.29` for `nem-2-utility-bill-sample.pdf`.",
+        "The CSV includes `EEC-1 SOLAR EXPORT CREDIT` for `nem-2-utility-bill-sample.pdf`.",
+        "The `EEC-1 SOLAR EXPORT CREDIT` amount is entered as `-83.33`.",
+        "The electric charge rows for `nem-2-utility-bill-sample.pdf` sum to `96.44`."
+      ]
+    },
+    {
+      "rubric": "Does the NEM sample bill section include every non-electric charge description and amount?",
+      "weight": 10,
+      "criterion": [
+        "The CSV includes gas charge lines `CARBON OFFSET CHARGE` `0.42`, `G1 COMMODITY CHARGE SUMMER` `10.34`, `G1 DISTRIBUTION SUMMER` `5.52`, `GAS CAP AND TRADE COMPLIANCE` `0.80`, `MONTHLY SERVICE CHARGE` `10.89`, and `TRANSPORTATION CHARGE` `1.50`.",
+        "The CSV includes water charge lines `1 INCH METER MONTHLY CHARGE` `20.25`, `W1 COMMODITY CHARGE` `123.00`, `W1 DISTRIBUTION CHARGE` `155.23`, and `W1 DROUGHT SURCHARGE` `0.00`.",
+        "The CSV includes `S1 WASTEWATER` `43.32`, `R1 BACKYARD SERVICE - RESIDENT` `3.66`, `R1 SERVICES W/MINICAN` `27.81`, and `D1 STORMWATER MANAGEMENT` `15.34`.",
+        "The CSV includes a `UTILITY USERS TAX` row for `25.37`."
+      ]
+    },
+    {
+      "rubric": "Do the `nem-2-utility-bill-sample.pdf` charge rows foot correctly to the billed totals?",
+      "weight": 9,
+      "criterion": [
+        "The gas rows for `nem-2-utility-bill-sample.pdf` sum to `29.47`.",
+        "The water rows for `nem-2-utility-bill-sample.pdf` sum to `298.48`.",
+        "The sewer, refuse, and storm drain rows sum to `43.32`, `31.47`, and `15.34`.",
+        "Including the `UTILITY USERS TAX` row brings the bill total to `539.89`."
+      ]
+    },
+    {
+      "rubric": "Does the CSV keep service categories separated in a way that matches each bill's printed service groups?",
+      "weight": 8,
+      "criterion": [
+        "Rows from `utl-bill-sample.pdf` separate electricity, gas, sewer, and utility users tax.",
+        "Rows from `nem-2-utility-bill-sample.pdf` separate electricity, gas, water, sewer, refuse, storm drain, and utility users tax.",
+        "The solar export credit stays under the electric service category."
+      ]
+    },
+    {
+      "rubric": "Does the CSV leave usage fields blank for flat-rate and tax lines that show no printed usage quantity?",
+      "weight": 8,
+      "criterion": [
+        "The sewer rows leave `usage_units` and `usage_quantity` blank.",
+        "The refuse rows leave `usage_units` and `usage_quantity` blank.",
+        "The storm drain row leaves `usage_units` and `usage_quantity` blank.",
+        "The utility users tax rows leave `usage_units` and `usage_quantity` blank."
+      ]
+    },
+    {
+      "rubric": "Does the CSV preserve printed metered-service usage values from `utl-bill-sample.pdf` on the relevant charge rows?",
+      "weight": 7,
+      "criterion": [
+        "At least one `utl-bill-sample.pdf` electric row carries `usage_quantity` `89` and `usage_units` `KWH`.",
+        "At least one `utl-bill-sample.pdf` gas row carries `usage_quantity` `32.50` and `usage_units` `THERMS`."
+      ]
+    },
+    {
+      "rubric": "Does the CSV preserve printed metered-service usage values from `nem-2-utility-bill-sample.pdf` on the relevant charge rows?",
+      "weight": 8,
+      "criterion": [
+        "At least one `nem-2-utility-bill-sample.pdf` electric-import row carries `usage_quantity` `970` and `usage_units` `KWH`.",
+        "At least one `nem-2-utility-bill-sample.pdf` solar export credit row carries `usage_quantity` `773` and `usage_units` `KWH`.",
+        "At least one `nem-2-utility-bill-sample.pdf` gas row carries `usage_quantity` `10.44` and `usage_units` `THERMS`.",
+        "At least one `nem-2-utility-bill-sample.pdf` water row carries `usage_quantity` `30` and `usage_units` `CCF`."
+      ]
+    },
+    {
+      "rubric": "Does the QC log document the second-pass verification outcome for each source bill?",
+      "weight": 8,
+      "criterion": [
+        "The QC log explicitly states that a second-pass verification against the PDFs was completed.",
+        "The QC log lists any corrections made or explicitly states that no corrections were needed.",
+        "The QC log identifies which source bill each correction or no-change result applies to."
+      ]
+    },
+    {
+      "rubric": "Does the QC log identify bill-specific fields or line items that were easy to mis-key?",
+      "weight": 8,
+      "criterion": [
+        "The QC log identifies at least one easy-to-miskey item from `utl-bill-sample.pdf`.",
+        "The QC log identifies at least one easy-to-miskey item from `nem-2-utility-bill-sample.pdf`.",
+        "At least one cited risk is specific to this packet, such as estimated read markers, the negative solar export credit, or multiple flat-rate service lines."
+      ]
+    },
+    {
+      "rubric": "Does the QC log correctly flag estimated reads that appear on the source bills?",
+      "weight": 9,
+      "criterion": [
+        "The QC log notes that `utl-bill-sample.pdf` contains estimated read markers in the meter-reading section.",
+        "The QC log notes that `nem-2-utility-bill-sample.pdf` contains an estimated gas read marker.",
+        "The QC log does not treat an estimated read as a reason to change billed charge amounts."
+      ]
+    },
+    {
+      "rubric": "Does the QC log flag the future-review account features required by the assignment?",
+      "weight": 9,
+      "criterion": [
+        "The QC log flags the solar export credit on `nem-2-utility-bill-sample.pdf`.",
+        "The QC log flags flat-rate services such as sewer, refuse, and storm drain.",
+        "The QC log flags that the bills are multi-service utility accounts."
+      ]
+    },
+    {
+      "rubric": "Does the QC log explicitly confirm whether each bill foots cleanly to `TOTAL CURRENT CHARGES`?",
+      "weight": 8,
+      "criterion": [
+        "The QC log addresses the footing result for `utl-bill-sample.pdf`.",
+        "The QC log addresses the footing result for `nem-2-utility-bill-sample.pdf`.",
+        "If the first bill has no discrepancy, the QC log states that it foots to `103.43`.",
+        "If the second bill has no discrepancy, the QC log states that it foots to `539.89`."
+      ]
+    },
+    {
+      "rubric": "Does the QC log include the required file-routing note for all four reference files?",
+      "weight": 8,
+      "criterion": [
+        "The routing note marks `utl-bill-sample.pdf` as `source bill`.",
+        "The routing note marks `nem-2-utility-bill-sample.pdf` as `source bill`.",
+        "The routing note marks `pal003howtoreadutilitybill-1.pdf` as `reference only`.",
+        "The routing note marks `rule-10-meter-reading-april-2023.pdf` as `reference only`."
+      ]
+    },
+    {
+      "rubric": "Does the QC log end with a completed-work note that includes the finish date and time?",
+      "weight": 6,
+      "criterion": [
+        "The QC log ends with a completed-work note.",
+        "The completed-work note includes a calendar date.",
+        "The completed-work note includes a time of completion."
+      ]
+    }
+  ]
+}

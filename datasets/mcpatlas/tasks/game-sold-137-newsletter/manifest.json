@@ -1,0 +1,107 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/a057fac5097daf453db7e68a26b0c4f54c7ab292154b52e3f442be1096111c62",
+      "role": "workspace",
+      "sha256": "a057fac5097daf453db7e68a26b0c4f54c7ab292154b52e3f442be1096111c62",
+      "size": 1236,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/8318b85877a7cbafd3ef2cdc22183281e59cd5adbf2ffaa3f8439efe90d0d1a0",
+      "role": "workspace_config",
+      "sha256": "8318b85877a7cbafd3ef2cdc22183281e59cd5adbf2ffaa3f8439efe90d0d1a0",
+      "size": 2364,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/61e2cabf60076b7e31c06e5fd6dcab8362935f46edd620ef54f3a1fcc4813db5",
+      "role": "parity",
+      "sha256": "61e2cabf60076b7e31c06e5fd6dcab8362935f46edd620ef54f3a1fcc4813db5",
+      "size": 3105,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/a1248e6066d69b3cf114d838664dbb8db9317f6b30e356e09b319ac98b667f6b",
+      "role": "verifier",
+      "sha256": "a1248e6066d69b3cf114d838664dbb8db9317f6b30e356e09b319ac98b667f6b",
+      "size": 123,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "airtable_get_record",
+    "mongodb_list-collections",
+    "mongodb_list-databases",
+    "mongodb_collection-indexes",
+    "mongodb_collection-schema",
+    "mongodb_find",
+    "mongodb_collection-storage-size",
+    "mongodb_count",
+    "mongodb_db-stats",
+    "mongodb_aggregate",
+    "mongodb_explain",
+    "wikipedia_search_wikipedia",
+    "wikipedia_get_article"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "game-sold-137-newsletter",
+  "schema_version": 1,
+  "servers": [
+    "airtable",
+    "mongodb",
+    "wikipedia"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/game-sold-137-newsletter/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "0f4f7ef0d38255025c5fc9a0e5cd4d3bd50eee8d269dc809087c4740da183831",
+      "size": 4033,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/game-sold-137-newsletter/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "688ba1b3e95696e72dd93ed9",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/game-sold-137-newsletter",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

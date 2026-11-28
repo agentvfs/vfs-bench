@@ -1,0 +1,110 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/d14e3f6368e6de9795ea52c1b44bf5b94024c2644d6ca2793226f37b6b16ca15",
+      "role": "workspace",
+      "sha256": "d14e3f6368e6de9795ea52c1b44bf5b94024c2644d6ca2793226f37b6b16ca15",
+      "size": 1156,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/a1c7be64c52912701decd114e5ff3b14b780c4933f42e593745ff9f26a51c353",
+      "role": "workspace_config",
+      "sha256": "a1c7be64c52912701decd114e5ff3b14b780c4933f42e593745ff9f26a51c353",
+      "size": 3609,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/9082e99d61f97a880659d70f2db163663e451d488cd26fbf40b1730699d9c120",
+      "role": "parity",
+      "sha256": "9082e99d61f97a880659d70f2db163663e451d488cd26fbf40b1730699d9c120",
+      "size": 2572,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/a53a7a36705393910e8ab38a0d2b6638777e14c4dd357dd64974e96fa81659ef",
+      "role": "verifier",
+      "sha256": "a53a7a36705393910e8ab38a0d2b6638777e14c4dd357dd64974e96fa81659ef",
+      "size": 270,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "national-parks_findParks",
+    "national-parks_getVisitorCenters",
+    "national-parks_getParkDetails",
+    "national-parks_getCampgrounds",
+    "arxiv_search_papers",
+    "git_git_status",
+    "slack_channels_list",
+    "slack_conversations_search_messages",
+    "slack_conversations_replies",
+    "slack_conversations_history",
+    "slack_conversations_add_message",
+    "met-museum_list-departments",
+    "met-museum_get-museum-object",
+    "met-museum_search-museum-objects"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "old-faithful-park-headquarters",
+  "schema_version": 1,
+  "servers": [
+    "national-parks",
+    "arxiv",
+    "git",
+    "slack",
+    "met-museum"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/old-faithful-park-headquarters/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "5fb95f95db28014ff12fa5da2d4aafda2f2d45154a7fab10c2c9d8dd872a38e8",
+      "size": 5469,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/old-faithful-park-headquarters/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689cd6f8522029b7ad7b1fdb",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/old-faithful-park-headquarters",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

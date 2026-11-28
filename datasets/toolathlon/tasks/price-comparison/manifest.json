@@ -1,0 +1,199 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/912b9bce02fd75bce39af497a049a264cc5a8b1382a2c3a82e6404e894d632a9",
+      "role": "service_config",
+      "sha256": "912b9bce02fd75bce39af497a049a264cc5a8b1382a2c3a82e6404e894d632a9",
+      "size": 86,
+      "target": "shared/bigquery.json"
+    },
+    {
+      "path": "assets/sha256/edb4b82b4dd114b2519cacc9e5b88679674b19cd1f1856d11567d065ed7bab24",
+      "role": "seed_manifest",
+      "sha256": "edb4b82b4dd114b2519cacc9e5b88679674b19cd1f1856d11567d065ed7bab24",
+      "size": 144,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/f9789edca9b9b23e2584ac128c7cc25e338f02e3ca4fe187ebfad50827f855d3",
+      "role": "parity_test",
+      "sha256": "f9789edca9b9b23e2584ac128c7cc25e338f02e3ca4fe187ebfad50827f855d3",
+      "size": 1485,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/c8ab66b899f1c14173a85be5fce3fb3ad023ddd83a93521f9e32e7d7a97c0170",
+      "role": "workspace_config",
+      "sha256": "c8ab66b899f1c14173a85be5fce3fb3ad023ddd83a93521f9e32e7d7a97c0170",
+      "size": 907,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "price-comparison",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/price-comparison/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/price-comparison/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/price-comparison/docs/agent_system_prompt_cn.md",
+      "role": "upstream_source",
+      "sha256": "41b87c72dacccc71e8ed04ee1fc32b79895730bcd8171d131ae6edf870c01816",
+      "size": 337,
+      "target": "upstream/docs/agent_system_prompt_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/price-comparison/docs/agent_system_prompt_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/price-comparison/shared/task.md",
+      "role": "instruction",
+      "sha256": "99f96c5fcc2e7bdd8d55259ce4eeb30ffde15f91edf29340e1572d4f5a94689b",
+      "size": 712,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/price-comparison/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/price-comparison/docs/task_cn.md",
+      "role": "upstream_source",
+      "sha256": "d442dcca0a116318dc484e9cb9cf739288747fe4629a3419c51978a6f85b791d",
+      "size": 619,
+      "target": "upstream/docs/task_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/price-comparison/docs/task_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/price-comparison/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "a9037a9d539627e41e6ca46c3543fd9913182df9c417c7e41ef911cf891e5833",
+      "size": 17068,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/price-comparison/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/price-comparison/futuregadget_pricing.md",
+      "role": "upstream_source",
+      "sha256": "af5e5bd75bb3584aa358f65a39fc986e38d04f5c528476d5cbad606f33c23da0",
+      "size": 1916,
+      "target": "upstream/futuregadget_pricing.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/price-comparison/futuregadget_pricing.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/price-comparison/groundtruth_workspace/competitive_pricing_analysis_ground_truth.csv",
+      "role": "verifier_input",
+      "sha256": "6456778ee4528015475d62b5a2814f9125ef12028e3ab2f46a4c0ef1fb10d4b8",
+      "size": 431,
+      "target": "upstream/groundtruth_workspace/competitive_pricing_analysis_ground_truth.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/price-comparison/groundtruth_workspace/competitive_pricing_analysis_ground_truth.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/price-comparison/initial_workspace/futuregadget_pricing.pdf",
+      "role": "initial_workspace",
+      "sha256": "02894b4d3c5912895663bfeb5ec374c0973c4093a3ee78b9e27453ce554f6ba6",
+      "size": 70316,
+      "target": "upstream/initial_workspace/futuregadget_pricing.pdf",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/price-comparison/initial_workspace/futuregadget_pricing.pdf"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/price-comparison/initial_workspace/internal_pricing_sheet.csv",
+      "role": "initial_workspace",
+      "sha256": "d0c78b7e34441a6ae7eea930b16f7de26d6bf537cb8e95a1bd80934ae6c2d320",
+      "size": 717,
+      "target": "upstream/initial_workspace/internal_pricing_sheet.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/price-comparison/initial_workspace/internal_pricing_sheet.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/price-comparison/initial_workspace/requirement.md",
+      "role": "initial_workspace",
+      "sha256": "249c9d279000f60cca9936b0491e5fe784be7e3b2df68258c4c9da68c0627c9d",
+      "size": 775,
+      "target": "upstream/initial_workspace/requirement.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/price-comparison/initial_workspace/requirement.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/price-comparison/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "51f7eb54927954f30dd8088a79a4a77222accb367d00526114dd586d8f64488c",
+      "size": 8183,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/price-comparison/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/price-comparison/task_config.json",
+      "role": "upstream_config",
+      "sha256": "494624306b9f5f08ea8dcb82049945caf9000f99589860198a7856bfaea7c2cb",
+      "size": 238,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/price-comparison/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/price-comparison/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "1ad29696007c95b6c6479a235beddc0abb8e6345236865251bfe333edcb6e3b5",
+      "size": 420,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/price-comparison/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/price-comparison/README.md",
+      "role": "documentation",
+      "sha256": "a52280ba1ada8a1dd026c41b49e3c6cbadff123eb22a62349a46fae07ddb8a94",
+      "size": 3515,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/price-comparison/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/price-comparison/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "b9b1595fab17be62c5f9bd30db7b40fdcfda7ceaa55da1d572e3f94be1e8f6d4",
+      "size": 14974,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/price-comparison/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/price-comparison",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/price-comparison",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "filesystem",
+      "terminal",
+      "pdf-tools",
+      "google-cloud"
+    ]
+  }
+}
