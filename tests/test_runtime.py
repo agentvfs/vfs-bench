@@ -13,6 +13,24 @@ from vfsbench.verifier import AgentResult, SuiteVerifier, VerificationResult
 
 class LifecycleTests(unittest.IsolatedAsyncioTestCase):
 
+    async def test_await_task_start_and_legacy_open(self):
+        task = MCPAtlas()[0]
+
+        @asynccontextmanager
+        async def environment(task, config, run_dir):
+            yield TrialEnvironment({}, verifier=AsyncMock(), python=False)
+
+        trial = await task.start(environment=environment)
+        try:
+            result = await trial.exec("echo ready")
+            self.assertEqual(result.stdout.strip(), "ready")
+        finally:
+            await trial.close()
+        self.assertIsNotNone(trial.report.closed_at)
+
+        async with task.open(environment=environment) as other:
+            self.assertNotEqual(other.id, trial.id)
+
     def test_partial_mirage_command_limit_inherits_task_fields(self):
         from mirage.config import WorkspaceConfig
         from vfsbench.runtime import _workspace_config
@@ -75,7 +93,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
             finally:
                 stopped.set()
 
-        async with MCPAtlas()[0].open(environment=environment) as trial:
+        async with MCPAtlas()[0].start(environment=environment) as trial:
             verification = asyncio.create_task(trial.verify())
             await asyncio.wait_for(reading.wait(), 5)
             closing = asyncio.create_task(trial.close())
@@ -98,7 +116,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
                 closed.append(run)
 
         with tempfile.TemporaryDirectory() as directory:
-            trial = MCPAtlas()[0].open(config=TrialConfig(
+            trial = MCPAtlas()[0].start(config=TrialConfig(
                 snapshot="missing", work_dir=Path(directory)))
             with (patch("vfsbench.runtime._prepare", return_value=prepare),
                   patch("vfsbench.runtime._restore_guest",
@@ -137,7 +155,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
                                    verifier=SuiteVerifier(evaluate))
 
         with patch("vfsbench.runtime._prepare", return_value=prepare):
-            async with MCPAtlas()[0].open(config=config) as trial:
+            async with MCPAtlas()[0].start(config=config) as trial:
                 run = trial.run_dir
                 result = await trial.exec(
                     "python3 -c 'import pathlib, sys; "
@@ -200,8 +218,8 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
             finally:
                 active.clear()
 
-        async with MCPAtlas()[0].open(environment=prepare,
-                                      verifier=SheetVerifier()) as trial:
+        async with MCPAtlas()[0].start(environment=prepare,
+                                       verifier=SheetVerifier()) as trial:
             await trial.exec("echo done > /workspace/output")
             trial.record_agent_trace({"steps": [1, 2]})
             trial.record_result(
@@ -230,7 +248,7 @@ class SnapshotTests(unittest.IsolatedAsyncioTestCase):
                 "vfsbench.runtime._msb") as restore:
             await _restore_guest(TrialConfig(), "first")
             await _restore_guest(TrialConfig(snapshot="custom:disk"), "second")
-            cache_only = MCPAtlas(local_files_only=True)[0].open()
+            cache_only = MCPAtlas(local_files_only=True)[0].start()
             await _restore_guest(cache_only.config, "third")
             build.assert_called_once()
             self.assertEqual(restore.await_count, 3)

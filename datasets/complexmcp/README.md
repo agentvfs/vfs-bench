@@ -21,10 +21,14 @@ task = suite["good-morning-paisley"]
 print(task.instruction)
 ```
 
-Each trial starts a private world with a shared simulated clock for its Light apps. The agent can use the 15 service CLIs in Mirage. The verifier compares the initial and final service state against the upstream expected state. It awards one point when every required change is present and there are zero unintended changes.
+Each task manifest fixes the seed, clock, apps, tool definitions, corpus and Python runtime. The current release uses Mirage's in-process Monty interpreter. Older manifests without `python_runtime` use CPython in microsandbox. An operator can select a custom guest snapshot or request guest packages for a CPython run.
+
+Each trial starts a private world with a shared simulated clock for its Light apps. The agent can use the service CLIs in Mirage. The verifier compares the initial and final service state against the upstream expected state. It awards one point when every required change is present and there are zero unintended changes.
+
+The current release uses Mirage's MCP-to-CLI syntax inside the shell. For example, `light-talk get-uid-from-name '{"name":"Paisley"}'` passes one JSON object. Use `light-talk get-uid-from-name --help` to see its schema. Older releases without `cli_format` retain their named flags.
 
 ```sh
-vfsbench run complexmcp --task good-morning-paisley shell -c 'light-talk get-uid-from-name --name Paisley'
+vfsbench run complexmcp --task good-morning-paisley shell -c 'light-system now'
 vfsbench harbor export complexmcp --output job --task good-morning-paisley
 ```
 

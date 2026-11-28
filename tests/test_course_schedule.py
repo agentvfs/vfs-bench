@@ -13,7 +13,7 @@ class CourseScheduleTest(unittest.IsolatedAsyncioTestCase):
         task = Toolathlon(
             cache_dir=os.getenv("VFSBENCH_TEST_CACHE"))["course-schedule"]
         config = TrialConfig(snapshot=os.environ["VFSBENCH_TEST_SNAPSHOT"])
-        async with task.open(config=config) as trial:
+        async with task.start(config=config) as trial:
             graph = await trial.exec("memory read-graph")
             self.assertEqual(graph.return_code, 0, graph.stderr)
             self.assertIn("2401210477", graph.stdout)
@@ -23,7 +23,7 @@ class CourseScheduleTest(unittest.IsolatedAsyncioTestCase):
             self.assertNotEqual(fetch.return_code, 0)
             self.assertIn("No recorded response", fetch.stdout)
             self.assertEqual((await trial.verify()).reward, 0)
-        async with task.open(config=config) as trial:
+        async with task.start(config=config) as trial:
             target = "upstream/groundtruth_workspace/exam_schedule.jsonl"
             reference = task.file(target).read_bytes()
             self.assertTrue(all(json.loads(s) for s in reference.splitlines()))

@@ -20,7 +20,7 @@ class WooCommerceMaterialTests(unittest.IsolatedAsyncioTestCase):
         for change_sheet, change_store in [(False, False), (True, False),
                                            (False, True), (True, True)]:
             with self.subTest(sheet=change_sheet, store=change_store):
-                async with task.open(config=config) as trial:
+                async with task.start(config=config) as trial:
                     if change_sheet or change_store:
                         await self._apply(trial, change_sheet, change_store)
                     self.assertEqual((await trial.verify()).reward,

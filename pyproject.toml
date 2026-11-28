@@ -22,6 +22,7 @@ dependencies = [
 
 [project.optional-dependencies]
 harbor = ["harbor==0.25.0"]
+notebook = ["jupyterlab>=4,<5", "ipykernel>=6", "openai-agents==0.26.0"]
 
 [project.scripts]
 vfsbench = "vfsbench.cli:main"

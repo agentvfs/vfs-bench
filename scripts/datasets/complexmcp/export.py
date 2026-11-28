@@ -11,6 +11,10 @@ import yaml
 ROOT = Path(__file__).resolve().parents[3]
 PORT = ROOT / "vfs-bench-2/datasets/complexmcp"
 RELEASE = ROOT / "datasets/complexmcp"
+STATUS_GUIDANCE = (
+    "A command can exit 0 even when the service reports a failure. "
+    "If the response includes `status` and `output`, check both "
+    "before continuing.")
 
 
 def sha(data):
@@ -20,6 +24,28 @@ def sha(data):
 def encode(value):
     return (json.dumps(value, ensure_ascii=False, sort_keys=True) +
             "\n").encode()
+
+
+def command_guide(services):
+    lines = [
+        "## Tools", "",
+        "Run `<service> <tool> '<JSON object>'`. Omit the object for tools "
+        "with no arguments. Use `<service> <tool> --help` for the JSON "
+        "schema.", "", "Example: `math-server add '{\"a\":2,\"b\":3}'`.", "",
+        STATUS_GUIDANCE, ""
+    ]
+    for service in services:
+        name = service["name"]
+        lines.extend([f"### {name}", ""])
+        for tool in service["tools"]:
+            verb = tool["name"].replace("_", "-")
+            keys = ", ".join(tool["parameters"].get("properties", {}))
+            fields = f" JSON keys: {keys}." if keys else ""
+            description = " ".join((tool["description"] or "").split())
+            lines.append(
+                f"- `{name} {verb}`: {description}{fields}".rstrip(": "))
+        lines.append("")
+    return "\n".join(lines).encode()
 
 
 def export(source, check):
@@ -33,11 +59,11 @@ def export(source, check):
 
     rows = pq.read_table(pa.BufferReader(
         blob("benchmark/data/data.parquet"))).to_pylist()
-    corpus_paths = subprocess.check_output([
+    software_paths = subprocess.check_output([
         "git", "-C", source, "ls-tree", "-r", "--name-only", revision,
         "software"
     ],
-                                           text=True).splitlines()
+                                             text=True).splitlines()
     files = {}
 
     def asset(target, data, role):
@@ -52,7 +78,15 @@ def export(source, check):
 
     corpora = {
         p: asset(p, blob(p), "corpus")
-        for p in corpus_paths if "/corpus/" in p and p.endswith(".yaml")
+        for p in software_paths if "/corpus/" in p and p.endswith(".yaml")
+    }
+    returns = {
+        Path(p).parent.name: {
+            tool["tool_name"]: tool["returns"]["description"]
+            for tool in json.loads(blob(p))
+        }
+        for p in software_paths
+        if p.startswith("software/Light") and p.endswith("/desc.json")
     }
     catalog = []
     if sorted(v["row"]
@@ -73,15 +107,19 @@ def export(source, check):
                           sort_keys=True).encode()) != pin["row_sha256"]:
             raise ValueError(f"Upstream row differs for {slug}")
         folder = PORT / slug
-        prompt, guide = (folder / "harbor/instruction.md").read_text().split(
-            "\n\n## Tools\n", 1)
+        services = json.loads((folder / "workspace/tools.json").read_bytes())
+        for service in services:
+            if service["name"].startswith("light-"):
+                app = "Light" + service["name"].removeprefix("light-").title()
+                service["description"] += " " + STATUS_GUIDANCE
+                for tool in service["tools"]:
+                    tool["description"] += "\n\n" + returns[app][tool["name"]]
         workspace = yaml.safe_load(
             (folder / "workspace/workspace.yaml").read_bytes())
         epoch = workspace["fakes"]["complexmcp_system"]["epoch"]
         assets = [
-            asset("workspace/tools.json",
-                  (folder / "workspace/tools.json").read_bytes(), "tools"),
-            asset("workspace/instructions.md", ("## Tools\n" + guide).encode(),
+            asset("workspace/tools.json", encode(services), "tools"),
+            asset("workspace/instructions.md", command_guide(services),
                   "instructions"),
             asset("verifier/expected.json", encode(record["gt_env"]),
                   "expected"),
@@ -94,6 +132,8 @@ def export(source, check):
                                            id=slug,
                                            seed=record["seed"],
                                            system_time=epoch,
+                                           python_runtime="monty",
+                                           cli_format="mirage-mcp",
                                            apps=pin["apps"],
                                            assets=assets,
                                            upstream_revision=revision,
@@ -104,7 +144,7 @@ def export(source, check):
                 dict(id=slug,
                      upstream_id=str(index),
                      manifest=manifest,
-                     instruction=prompt,
+                     instruction=record["query"],
                      level=record["level"])))
     files["index.jsonl"] = b"".join(catalog)
     files["LICENSE"] = blob("LICENSE")

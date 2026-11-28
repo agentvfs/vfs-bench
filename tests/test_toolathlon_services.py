@@ -19,9 +19,9 @@ class ToolathlonServices(unittest.IsolatedAsyncioTestCase):
                            cache_dir=os.getenv("VFSBENCH_TEST_CACHE"))
         task = suite[name]
         config = TrialConfig(snapshot=os.environ["VFSBENCH_TEST_SNAPSHOT"])
-        async with task.open(config=config) as nop:
+        async with task.start(config=config) as nop:
             self.assertEqual((await nop.verify()).reward, 0)
-        async with task.open(config=config) as trial:
+        async with task.start(config=config) as trial:
             vfs = trial.workspace.vfs
             filename = OUTPUTS[name]
             if name == "music-analysis":
@@ -84,8 +84,8 @@ class ToolathlonServices(unittest.IsolatedAsyncioTestCase):
             local_files_only=True,
             cache_dir=os.getenv("VFSBENCH_TEST_CACHE"))["wandb-best-score"]
         config = TrialConfig(snapshot=os.environ["VFSBENCH_TEST_SNAPSHOT"])
-        async with task.open(config=config,
-                             verifier=SuiteVerifier(evaluate)) as trial:
+        async with task.start(config=config,
+                              verifier=SuiteVerifier(evaluate)) as trial:
             self.assertEqual((await trial.verify()).details["project"],
                              "deepscaler-1.5b")
 
@@ -96,9 +96,9 @@ class ToolathlonServices(unittest.IsolatedAsyncioTestCase):
             local_files_only=True, cache_dir=os.getenv(
                 "VFSBENCH_TEST_CACHE"))["woocommerce-update-cover"]
         config = TrialConfig(snapshot=os.environ["VFSBENCH_TEST_SNAPSHOT"])
-        async with task.open(config=config) as first:
+        async with task.start(config=config) as first:
             self.assertEqual((await first.verify()).reward, 0)
-        async with task.open(config=config) as trial:
+        async with task.start(config=config) as trial:
             for product, image in [(21, 10), (26, 12), (31, 16)]:
                 # These are the expected covers in the captured upstream
                 # evaluator data.
@@ -134,9 +134,9 @@ class ToolathlonServices(unittest.IsolatedAsyncioTestCase):
             local_files_only=True,
             cache_dir=os.getenv("VFSBENCH_TEST_CACHE"))["inventory-sync"]
         config = TrialConfig(snapshot=os.environ["VFSBENCH_TEST_SNAPSHOT"])
-        async with task.open(config=config) as first:
+        async with task.start(config=config) as first:
             self.assertEqual((await first.verify()).reward, 0)
-        async with task.open(config=config) as trial:
+        async with task.start(config=config) as trial:
             # Read the six agent-visible SQLite databases and stock counts
             # through the same
             # Mirage tools and WooCommerce handlers an agent receives.

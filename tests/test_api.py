@@ -72,7 +72,7 @@ class RunTests(unittest.TestCase):
             task = Toolathlon()["wandb-best-score"]
 
             async def check():
-                async with task.open(config=native) as trial:
+                async with task.start(config=native) as trial:
                     with self.assertRaises(QuotaExceededError):
                         await trial.workspace.vfs.write(
                             "/scratch/large", bytes(3 * 1024 * 1024))

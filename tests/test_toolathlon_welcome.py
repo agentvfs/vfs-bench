@@ -21,7 +21,7 @@ class WelcomeTest(unittest.IsolatedAsyncioTestCase):
                 'VFSBENCH_TEST_CACHE'))['woocommerce-new-welcome']
         config = TrialConfig(snapshot=os.environ['VFSBENCH_TEST_SNAPSHOT'])
         for complete in (False, True):
-            async with task.open(config=config) as trial:
+            async with task.start(config=config) as trial:
 
                 async def shell(command):
                     result = await trial.exec(command)

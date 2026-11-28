@@ -18,8 +18,11 @@ def main(argv=None):
         description='Run and inspect Mirage benchmark trials.')
     commands = parser.add_subparsers(dest="action", required=True)
     launch = commands.add_parser(
-        "run", help="open a trial, verify it, and return its report")
+        "run", help="start a trial, verify it, and return its report")
     launch.add_argument("--task", required=True, help="task ID")
+    launch.add_argument("--instructions-file",
+                        action="store_true",
+                        help="Expose the public guide at /INSTRUCTIONS.md")
     launch.add_argument("--workspace-yaml",
                         help="Mirage workspace configuration file")
     launch.add_argument("--command", help=argparse.SUPPRESS)
@@ -60,6 +63,9 @@ def main(argv=None):
                           action="append",
                           default=[],
                           help="guest Python package==version (repeatable)")
+    from . import server
+
+    server.add_parser(commands)
     commands.add_parser("harbor", help="export a Harbor job")
     options = vars(parser.parse_args(argv))
     action = options.pop("action")
@@ -73,6 +79,13 @@ def main(argv=None):
             parser.error(str(exc))
         return
     try:
+        if action == "server":
+            from aiohttp import ClientError
+
+            try:
+                return server.invoke(**options)
+            except (ClientError, RuntimeError) as exc:
+                parser.error(str(exc))
         if action == "run":
             surface = options.pop("surface")
             if surface:

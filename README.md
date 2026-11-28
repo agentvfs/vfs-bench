@@ -40,6 +40,9 @@ AgentVFS alone.
 ## vfsbench
 
 Install the Python package from this repository root with `pip install .` (Python 3.12+).
+
+To run a ComplexMCP benchmark in Jupyter with the OpenAI Agents SDK, install
+`pip install -e '.[notebook]'` and open the [benchmark notebook](examples/complexmcp_colab.ipynb).
 The CLI and application API open the same Mirage environment and call the same verifier.
 
 ```sh
@@ -50,7 +53,7 @@ vfsbench run toolathlon --task wandb-best-score workspace vfs readdir /wandb/mlu
 ```python
 from vfsbench import Toolathlon
 
-async with Toolathlon()["wandb-best-score"].open() as trial:
+async with Toolathlon()["wandb-best-score"].start() as trial:
     ws = trial.workspace
     runs = await ws.vfs.readdir("/wandb/mluo/deepscaler-1.5b")
     verdict = await trial.verify()

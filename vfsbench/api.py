@@ -40,6 +40,7 @@ async def run(release: str | Path | Dataset,
               revision: str | None = None,
               config: TrialConfig | WorkspaceConfig | str | Path | None = None,
               workspace_yaml: str | Path | None = None,
+              instructions_file: bool = False,
               output: str | Path | None = None,
               local_files_only: bool = False) -> TrialReport:
     """Give an async action the native Mirage Workspace, then verify and close.
@@ -54,7 +55,9 @@ async def run(release: str | Path | Dataset,
                                       release,
                                       revision=revision,
                                       local_files_only=local_files_only)
-    trial = dataset[task].open(config=config, workspace=workspace_yaml)
+    trial = dataset[task].start(config=config,
+                                workspace=workspace_yaml,
+                                instructions_file=instructions_file)
     directory = Path(output) if output is not None else None
     if directory is not None:
         directory.mkdir(parents=True, exist_ok=False)

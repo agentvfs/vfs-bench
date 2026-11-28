@@ -63,7 +63,7 @@ class TrialReport:
     dataset: str | None
     repo_id: str | None
     revision: str | None
-    snapshot: str
+    snapshot: str | None
     started_at: str | None
     closed_at: str | None
     trace: TrialTrace

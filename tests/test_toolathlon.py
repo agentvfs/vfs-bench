@@ -124,7 +124,7 @@ class ToolathlonTrialTest(unittest.IsolatedAsyncioTestCase):
         for name in ids:
             with self.subTest(task=name):
                 task = suite[name]
-                async with task.open(config=config) as trial:
+                async with task.start(config=config) as trial:
                     if name == 'ab-testing':
                         # All file/storage evidence is correct but the original
                         # evaluator requires an empty logging bucket for B
@@ -141,7 +141,7 @@ class ToolathlonTrialTest(unittest.IsolatedAsyncioTestCase):
                             '/workspace/anomaly_report.csv',
                             truth.read_bytes())
                     self.assertEqual((await trial.verify()).reward, 0)
-                async with task.open(config=config) as trial:
+                async with task.start(config=config) as trial:
                     if name in toolathlon.cloud_logging.TASKS:
                         await logging_oracle(self, task, trial)
                     elif name == 'flagged-transactions':

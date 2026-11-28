@@ -29,16 +29,24 @@ class HarborTests(unittest.IsolatedAsyncioTestCase):
                                   root / "api",
                                   config=workspace,
                                   task_ids=[task],
+                                  instructions_file=False,
                                   concurrency=2)
             main([
                 "harbor", "export", "toolathlon", "--output",
                 str(root / "cli"), "--task", task, "--concurrency", "2",
                 "--config",
-                str(workspace)
+                str(workspace), "--no-instructions-file"
             ])
             self.assertEqual(programmatic.read_bytes(),
                              (root / "cli/job.json").read_bytes())
             job = json.loads(programmatic.read_bytes())
+            for target in ("api", "cli"):
+                folder = root / target / "tasks" / task
+                self.assertNotIn("/INSTRUCTIONS.md",
+                                 (folder / "instruction.md").read_text())
+                descriptor = json.loads(
+                    (folder / "environment/vfsbench.json").read_text())
+                self.assertIs(descriptor["instructions_file"], False)
             self.assertEqual(job["verifier"]["import_path"],
                              "vfsbench.harbor:MirageVerifier")
             self.assertEqual(job["environment"]["import_path"],
@@ -111,6 +119,7 @@ class HarborTests(unittest.IsolatedAsyncioTestCase):
                 return {"reward": float(answer == "done"), "answer": answer}
 
             yield TrialEnvironment(workspace={},
+                                   instructions="Public task guide.",
                                    verifier=SuiteVerifier(evaluate))
 
         def no_machine(*args):
@@ -137,7 +146,7 @@ class HarborTests(unittest.IsolatedAsyncioTestCase):
                                  [task_id])
                 task = Task(found[0].path)
                 self.assertIn(release[task_id].instruction, task.instruction)
-                self.assertIn("/vfsbench/INSTRUCTIONS.md", task.instruction)
+                self.assertIn("/INSTRUCTIONS.md", task.instruction)
                 paths = TrialPaths(root / "trial")
                 paths.mkdir()
                 env = EnvironmentFactory.create_environment_from_import_path(
@@ -165,6 +174,11 @@ class HarborTests(unittest.IsolatedAsyncioTestCase):
                                     env.trial.workspace.vfs.is_dir("/scratch"))
                     private = env.trial.run_dir
                     try:
+                        self.assertFalse(await env.is_dir("/vfsbench"))
+                        self.assertEqual(
+                            await env.files.read("/INSTRUCTIONS.md"),
+                            b"Public task guide.")
+                        self.assertTrue(await env.is_dir("/logs/agent"))
                         for path in ("/grading", "/tests", "/solution",
                                      "/logs/verifier"):
                             self.assertFalse(await env.is_dir(path), path)
@@ -229,6 +243,21 @@ class HarborTests(unittest.IsolatedAsyncioTestCase):
                         (paths.verifier_dir / "vfsbench.json").read_bytes())
                     self.assertGreaterEqual(report["closed_at"],
                                             report["started_at"])
+                    env.descriptor["instructions_file"] = False
+                    await env.start()
+                    try:
+                        self.assertFalse(await env.is_file("/INSTRUCTIONS.md"))
+                        self.assertTrue(await env.is_dir("/logs/agent"))
+                    finally:
+                        await env.stop()
+                    del env.descriptor["instructions_file"]
+                    await env.start()
+                    try:
+                        self.assertEqual(
+                            await env.files.read("/vfsbench/INSTRUCTIONS.md"),
+                            b"Public task guide.")
+                    finally:
+                        await env.stop()
 
 
 if __name__ == "__main__":

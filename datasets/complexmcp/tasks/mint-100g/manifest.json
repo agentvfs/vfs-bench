@@ -4,6 +4,8 @@
   "id": "mint-100g",
   "seed": 7,
   "system_time": "2026-05-06T18:20:24Z",
+  "python_runtime": "monty",
+  "cli_format": "mirage-mcp",
   "apps": [
     "LightSystem",
     "LightShop"
@@ -12,16 +14,16 @@
     {
       "target": "workspace/tools.json",
       "role": "tools",
-      "path": "assets/sha256/c45f4aee9fc0fea1160a1dbc30f1e3585328dd3f7a04c85e182640821cb2db97",
-      "sha256": "c45f4aee9fc0fea1160a1dbc30f1e3585328dd3f7a04c85e182640821cb2db97",
-      "size": 173777
+      "path": "assets/sha256/45ceaed8c7b8997216ef67f3fb6d0657d54ac379a09f96f1e1d7b9c8359d28f4",
+      "sha256": "45ceaed8c7b8997216ef67f3fb6d0657d54ac379a09f96f1e1d7b9c8359d28f4",
+      "size": 158232
     },
     {
       "target": "workspace/instructions.md",
       "role": "instructions",
-      "path": "assets/sha256/f8f1275669672c77aa3130b347f1c0c491d7f23d8f00e9bd855e55cfb4904d96",
-      "sha256": "f8f1275669672c77aa3130b347f1c0c491d7f23d8f00e9bd855e55cfb4904d96",
-      "size": 41356
+      "path": "assets/sha256/8d0beff99539cc887da3ae6e28bd2d6a67929ad4becf3fe35ba5bc429b72068a",
+      "sha256": "8d0beff99539cc887da3ae6e28bd2d6a67929ad4becf3fe35ba5bc429b72068a",
+      "size": 65743
     },
     {
       "target": "verifier/expected.json",
