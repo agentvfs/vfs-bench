@@ -1,0 +1,9 @@
+{
+  "id": "toolathlon_course-assistant",
+  "fixtures": [
+    {
+      "id": "mail/virginia_diaz@mcp.com",
+      "kind": "mail"
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/2feddab89a58ead74faf2ebd911df1e4caaa60259dea5c76773442dba64c5493",
+      "role": "parity_test",
+      "sha256": "2feddab89a58ead74faf2ebd911df1e4caaa60259dea5c76773442dba64c5493",
+      "size": 544,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/08e82b4f5420063f08192be0a234917f7c26450fb2c836859b7661ff3afa9189",
+      "role": "workspace_config",
+      "sha256": "08e82b4f5420063f08192be0a234917f7c26450fb2c836859b7661ff3afa9189",
+      "size": 745,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "excel-market-research",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/excel-market-research/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-market-research/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/excel-market-research/shared/task.md",
+      "role": "instruction",
+      "sha256": "6c5abc40f57b876c7ada9428ca71a6f12d8b9f5e9af33b3a497e6bb51360b4f8",
+      "size": 506,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-market-research/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/excel-market-research/evaluation/check_local.py",
+      "role": "verifier_source",
+      "sha256": "979d851c842f6d5d0068af7c51105986693be2bce9de0de264258b580e1ef15e",
+      "size": 882,
+      "target": "upstream/evaluation/check_local.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-market-research/evaluation/check_local.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/excel-market-research/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "f3ea5fa444fac74f4a7f28ae7128f1b8cba97be34b7ba2a4cc52b8cb6315a266",
+      "size": 819,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-market-research/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/excel-market-research/groundtruth_workspace/segment_growth_rates.xlsx",
+      "role": "verifier_input",
+      "sha256": "8ae9511d18da5cc96637b9f17104c28915fb5914ee6d17ace6b147dad6120ba8",
+      "size": 6016,
+      "target": "upstream/groundtruth_workspace/segment_growth_rates.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-market-research/groundtruth_workspace/segment_growth_rates.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/excel-market-research/initial_workspace/Market_Data.xlsx",
+      "role": "initial_workspace",
+      "sha256": "f60f0d8fb5f9b4e7c598fc7d647fde221b6af8adb2cc2e62abe612b330a62b55",
+      "size": 17544,
+      "target": "upstream/initial_workspace/Market_Data.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-market-research/initial_workspace/Market_Data.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/excel-market-research/task_config.json",
+      "role": "upstream_config",
+      "sha256": "a935db48f543bebba385463db7fafe22912e6a7801a8277a55a110b209952c74",
+      "size": 222,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-market-research/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/excel-market-research/README.md",
+      "role": "documentation",
+      "sha256": "a0fd218e6643b7bc0cf5a6b6927a4532cc42e425101175638025f3c4212b812d",
+      "size": 579,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/excel-market-research/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/excel-market-research/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "d0cfb79e89765d2eaeea7b1a01d67822dfbdd906341eb80750ad3ccc26495627",
+      "size": 5358,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/excel-market-research/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/excel-market-research",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/excel-market-research",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "python_execute",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "excel",
+      "filesystem",
+      "terminal"
+    ]
+  }
+}

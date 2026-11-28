@@ -41,4 +41,5 @@ workspace:
   clis:
     gws:
       cli: gws
+      machine: in_process
       config: {accessToken: gws-integ-token, apiBase: '${GWS_URL}'}

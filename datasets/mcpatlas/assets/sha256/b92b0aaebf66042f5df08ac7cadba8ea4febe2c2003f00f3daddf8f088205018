@@ -1,0 +1,69 @@
+{
+  "note": "Both arms read one tree at one path -- the MCP arm's servers read the image's own /data in the run's container, and the mirage /data mount is a copy of it taken out of the same image -- and one Notion and one Slack, the fakes this run starts, seeded from Atlas's exports. Live services Atlas enables beside the task have no reply case: `map` checks that each CLI is the server's own tool, schema for schema, and a live reply is not the same twice.",
+  "cases": [
+    {
+      "name": "list_directory",
+      "why": "both arms see the same tree -- the eight CSVs and the repos/ directory",
+      "mcp": {
+        "server": "filesystem",
+        "tool": "list_directory",
+        "args": {
+          "path": "/data"
+        },
+        "pipe": "sed -n 's/^\\[FILE\\] //p; s/^\\[DIR\\] //p' | sort"
+      },
+      "mirage": {
+        "command": "ls /data",
+        "pipe": "sort"
+      }
+    },
+    {
+      "name": "arson",
+      "why": "the same May 2017 crimes",
+      "mcp": {
+        "server": "filesystem",
+        "tool": "read_file",
+        "args": {
+          "path": "/data/Crime_records.csv"
+        },
+        "pipe": "grep '2017-05'"
+      },
+      "mirage": {
+        "command": "grep '2017-05' '/data/Crime_records.csv'"
+      }
+    },
+    {
+      "name": "may_requests",
+      "why": "the same service requests in May 2017",
+      "mcp": {
+        "server": "notion",
+        "tool": "API-post-database-query",
+        "args": {
+          "database_id": "21b97551-844e-808d-a0c5-ed2d08f39729",
+          "filter": {
+            "and": [
+              {
+                "property": "InteractionDate",
+                "date": {
+                  "on_or_after": "2017-05-01"
+                }
+              },
+              {
+                "property": "InteractionDate",
+                "date": {
+                  "before": "2017-06-01"
+                }
+              }
+            ]
+          },
+          "page_size": 20
+        },
+        "pipe": "jq -r '.results[].id'"
+      },
+      "mirage": {
+        "command": "notion post-database-query '{\"database_id\": \"21b97551-844e-808d-a0c5-ed2d08f39729\", \"filter\": {\"and\": [{\"property\": \"InteractionDate\", \"date\": {\"on_or_after\": \"2017-05-01\"}}, {\"property\": \"InteractionDate\", \"date\": {\"before\": \"2017-06-01\"}}]}, \"page_size\": 20}'",
+        "pipe": "jq -r '.results[].id'"
+      }
+    }
+  ]
+}

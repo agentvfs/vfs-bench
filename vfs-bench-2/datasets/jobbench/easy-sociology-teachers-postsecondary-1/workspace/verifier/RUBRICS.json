@@ -1,0 +1,86 @@
+{
+  "rubrics": [
+    {
+      "rubric": "Does the response correctly define the day-117 checkpoint and the first three assessed items for AAA 2014J?",
+      "weight": 10,
+      "criterion": [
+        "Limits the analysis to code_module `AAA` and code_presentation `2014J`.",
+        "Identifies assessments `1758`, `1759`, and `1760` as the first three TMAs.",
+        "States the due dates as days `19`, `54`, and `117`.",
+        "States the TMA weights as `10`, `20`, and `20`, for `50` coursework points available by day 117."
+      ]
+    },
+    {
+      "rubric": "Does the monitoring table cover the full AAA/2014J cohort rather than only students with assessment records?",
+      "weight": 9,
+      "criterion": [
+        "Uses the AAA/2014J student roster from `studentInfo.csv` and `studentRegistration.csv` as the row base.",
+        "Covers all `365` AAA/2014J students.",
+        "Keeps `id_student` as the row-level identifier."
+      ]
+    },
+    {
+      "rubric": "Does the response distinguish submission presence from score availability for edge cases in the assessment records?",
+      "weight": 7,
+      "criterion": [
+        "Treats a blank score cell as an unavailable score rather than numeric zero.",
+        "Explicitly handles `id_student 2606802` on `TMA03` as a late submission record with a blank score (`date_submitted = 180`).",
+        "Does not award weighted points for a submission record without a usable score."
+      ]
+    },
+    {
+      "rubric": "Does the memo separate the still-enrolled cohort from the students who had already left by the checkpoint?",
+      "weight": 8,
+      "criterion": [
+        "Reports or clearly reflects `332` still-enrolled students and `33` students unregistered by day 117.",
+        "Notes that all `33` students unregistered by day 117 later recorded `final_result = Withdrawn`.",
+        "Keeps the follow-up discussion centered on still-enrolled students rather than blending both groups together."
+      ]
+    },
+    {
+      "rubric": "Does the memo summarize the still-enrolled cohort using checkpoint-appropriate submission patterns?",
+      "weight": 7,
+      "criterion": [
+        "Identifies that `203` still-enrolled students had all three TMAs on record by day 117.",
+        "Identifies that `129` still-enrolled students were missing at least one of the first three TMAs by day 117.",
+        "Notes that `127` still-enrolled students did not yet have `TMA03` on record by day 117."
+      ]
+    },
+    {
+      "rubric": "Does the memo interpret missing TMA03 at day 117 with appropriate caution instead of treating it as uniformly high risk?",
+      "weight": 8,
+      "criterion": [
+        "Recognizes that `99` still-enrolled students missing `TMA03` at day 117 later submitted it after the checkpoint.",
+        "Distinguishes the missing-`TMA03` group from students with repeated earlier missed TMAs.",
+        "Avoids ranking every day-117 `TMA03` non-submitter above students with clearer persistent disengagement."
+      ]
+    },
+    {
+      "rubric": "Does the response prioritize the strongest follow-up cases among students who were still enrolled at day 117?",
+      "weight": 9,
+      "criterion": [
+        "Identifies still-enrolled students who missed at least two of the first three TMAs as the top-priority outreach group, or defines an equivalent rule that isolates the same group.",
+        "Reflects that this top-priority group contains `21` students.",
+        "Notes that this group is dominated by later `Fail` or `Withdrawn` outcomes (`15` Fail, `5` Withdrawn, `1` Pass)."
+      ]
+    },
+    {
+      "rubric": "Does the memo correctly recognize earlier missed TMAs as stronger warning signs than TMA03-only absence at the checkpoint?",
+      "weight": 8,
+      "criterion": [
+        "Notes that among still-enrolled students, `10` missed `TMA01` by day 117 and `9` of those later failed.",
+        "Notes that `20` missed `TMA02` by day 117 and `18` of those later failed or withdrew.",
+        "Uses those earlier-miss patterns to justify more urgent outreach to repeat or earlier non-submitters."
+      ]
+    },
+    {
+      "rubric": "Does the memo use retrospective final-result data to validate the proposed risk rule rather than as live checkpoint input?",
+      "weight": 8,
+      "criterion": [
+        "Uses `final_result` as a retrospective check on whether the day-117 flags were sensible.",
+        "Does not write as if the instructor already knew `final_result` on day 117.",
+        "Connects the proposed outreach logic to later `Fail` and `Withdrawn` outcomes."
+      ]
+    }
+  ]
+}

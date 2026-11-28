@@ -1,0 +1,8 @@
+{
+  "name": "vfs-bench-howtocook-mcp",
+  "private": true,
+  "description": "Pinned howtocook-mcp, vendored by server/mcp/setup_howtocook.py",
+  "dependencies": {
+    "howtocook-mcp": "0.2.2"
+  }
+}

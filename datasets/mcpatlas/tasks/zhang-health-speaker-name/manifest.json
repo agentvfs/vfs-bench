@@ -1,0 +1,108 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/ff9aaba884b02309fdceaf2a2071164fc285deca65f169d488684d0d5e7fc78a",
+      "role": "workspace",
+      "sha256": "ff9aaba884b02309fdceaf2a2071164fc285deca65f169d488684d0d5e7fc78a",
+      "size": 1273,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/811f928f2cd9b7f2c9f303188c1922a7f34a0d23aac7193b1dfcf320e0e24d78",
+      "role": "workspace_config",
+      "sha256": "811f928f2cd9b7f2c9f303188c1922a7f34a0d23aac7193b1dfcf320e0e24d78",
+      "size": 2392,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/4e6c8b7f2a187ceea850f3835f873f44f09cbf1c46ea3d2e182f4c18481f9eb2",
+      "role": "parity",
+      "sha256": "4e6c8b7f2a187ceea850f3835f873f44f09cbf1c46ea3d2e182f4c18481f9eb2",
+      "size": 1592,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/202354dd00cb046c0256b45af8b644ef58dcc7b813314a08abb89618e50a5763",
+      "role": "verifier",
+      "sha256": "202354dd00cb046c0256b45af8b644ef58dcc7b813314a08abb89618e50a5763",
+      "size": 217,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "cli-mcp-server_run_command",
+    "cli-mcp-server_show_security_rules",
+    "google-workspace_list_events",
+    "memory_read_graph",
+    "memory_search_nodes",
+    "memory_open_nodes",
+    "wikipedia_search_wikipedia",
+    "wikipedia_get_article",
+    "wikipedia_get_summary",
+    "wikipedia_summarize_article_for_query",
+    "wikipedia_summarize_article_section",
+    "wikipedia_extract_key_facts",
+    "wikipedia_get_related_topics"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "zhang-health-speaker-name",
+  "schema_version": 1,
+  "servers": [
+    "cli-mcp-server",
+    "google-workspace",
+    "memory",
+    "wikipedia"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/zhang-health-speaker-name/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "e019fcaabe12a440a81bc970601f49d1a13c17d09f0fcbac3757f7791565b073",
+      "size": 3359,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/zhang-health-speaker-name/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "68a398aa2f58036e8d45eddc",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/zhang-health-speaker-name",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

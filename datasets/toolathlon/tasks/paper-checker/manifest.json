@@ -1,0 +1,169 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/384a9da6114bdda8dbfb6454bf7852618f46bcb9313dd6d0ca0511a8710043ba",
+      "role": "workspace_config",
+      "sha256": "384a9da6114bdda8dbfb6454bf7852618f46bcb9313dd6d0ca0511a8710043ba",
+      "size": 636,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "paper-checker",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/paper-checker/EVALUATION_ENHANCEMENT_REPORT.md",
+      "role": "upstream_source",
+      "sha256": "b1c4f6469c7185c836132a49bc5bfa682143d3ad9fea3168ea08e05a6b0044ab",
+      "size": 3593,
+      "target": "upstream/EVALUATION_ENHANCEMENT_REPORT.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/paper-checker/EVALUATION_ENHANCEMENT_REPORT.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/paper-checker/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/paper-checker/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/paper-checker/docs/agent_system_prompt_cn.md",
+      "role": "upstream_source",
+      "sha256": "d04e8e0c05b205a0fbf8057e562b34e38d54f64089e40e57619a6aafdeb18dda",
+      "size": 338,
+      "target": "upstream/docs/agent_system_prompt_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/paper-checker/docs/agent_system_prompt_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/paper-checker/shared/task.md",
+      "role": "instruction",
+      "sha256": "a515f22ea0ac9c6720550c71d41ee4a0a8a47a095dbc257c16b06453e42ea870",
+      "size": 410,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/paper-checker/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/paper-checker/docs/task_cn.md",
+      "role": "upstream_source",
+      "sha256": "fc2f851b766a28a8729cf49e0dc12b3388e4979b12ec1f907dff3cce77ada182",
+      "size": 427,
+      "target": "upstream/docs/task_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/paper-checker/docs/task_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/paper-checker/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "c91058797fc88592763ff2af9645a4a90bd0532b4ff1e3f6fb337d37e7e3534c",
+      "size": 7615,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/paper-checker/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/paper-checker/groundtruth_workspace/files.tar.gz",
+      "role": "verifier_input",
+      "sha256": "ad01a527908a670a4db234decb6472fc70c494c204e9d0214dd4e906823cf189",
+      "size": 83690,
+      "target": "upstream/groundtruth_workspace/files.tar.gz",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/paper-checker/groundtruth_workspace/files.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/paper-checker/initial_workspace/files.tar.gz",
+      "role": "initial_workspace",
+      "sha256": "87c942af85d48d337ef039b95d7c4daaa0aac9b1e384a6efc7e275f981e953f3",
+      "size": 83633,
+      "target": "upstream/initial_workspace/files.tar.gz",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/paper-checker/initial_workspace/files.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/paper-checker/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "666c5141ca65ef429b730eff679aa6b76116d0e0a58212c6bf064047ed79b546",
+      "size": 1312,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/paper-checker/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/paper-checker/task_config.json",
+      "role": "upstream_config",
+      "sha256": "280482d099f085b0f5790213b2a3d63f0ba00864777ffe8501263747b6632efa",
+      "size": 223,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/paper-checker/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/paper-checker/test_evaluation.py",
+      "role": "verifier_source",
+      "sha256": "1e7b7c4df4cf77082eeaab0df34ff61e16e44269883666a42d1868f77ab5d344",
+      "size": 11247,
+      "target": "upstream/test_evaluation.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/paper-checker/test_evaluation.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/paper-checker/test_evaluation_enhanced.py",
+      "role": "verifier_source",
+      "sha256": "f81e6181a21122adc69189be394dfcdbe47538893765d53a998b6fdefdb76c10",
+      "size": 13283,
+      "target": "upstream/test_evaluation_enhanced.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/paper-checker/test_evaluation_enhanced.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/paper-checker/README.md",
+      "role": "documentation",
+      "sha256": "129a0569afffa556b213ed05d7e6b98f2aa43837889e50c09490b7cb3bbac698",
+      "size": 916,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/paper-checker/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/paper-checker/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "38ed6663cb5d02a7d972330bec5f5690a61fcc7ac45ff0971dd4c19182153590",
+      "size": 910,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/paper-checker/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/paper-checker",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/paper-checker",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "python_execute",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "filesystem",
+      "terminal"
+    ]
+  }
+}

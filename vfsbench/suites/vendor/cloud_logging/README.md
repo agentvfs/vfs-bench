@@ -1,0 +1,3 @@
+The original VFS-Bench Cloud Logging store is included under the MIT license at commit `3f45f90f620c8096dd85bbe854b757eae1231392`. It scopes all entries and buckets to an individual trial using its `ROOT_OVERRIDE` context variable. [Source](https://github.com/agentvfs/vfs-bench/blob/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/server/api/logging_store.py)
+
+The CSV type inference and value conversions in `csv_types.py` are copied from the same revision of the [BigQuery seed loader](https://github.com/agentvfs/vfs-bench/blob/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/server/seed/seed_bigquery.py).

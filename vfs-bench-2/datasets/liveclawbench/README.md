@@ -1,10 +1,11 @@
 # LiveClawBench
 
 [Mosi-AI/LiveClawBench](https://github.com/Mosi-AI/LiveClawBench) @ `303dc77`,
-MIT. Seventy of its tasks, each upstream's task directory with its
+MIT. Seventy-five of its tasks, each upstream's task directory with its
 Dockerfile replaced by `workspace/workspace.yaml`, on kit fakes of its
-services. Their graders are TypeScript ports of each task's `verify.py`
-(`<task>/grader.ts`, over helpers in `graders/`).
+services. Their graders are TypeScript ports of each task's `verify.py`,
+or of its `llm_judge.py` where an LLM judges it (`<task>/grader.ts`, over
+helpers in `graders/`).
 
 ## Fetch and run
 
@@ -214,7 +215,7 @@ write times (below).
 | grocery-reorder | B | smarthome and shop (upstream's) | 1.0 | 0.0 |
 | morning-comfort-setup | B | smarthome (upstream's) | 1.0 | 0.0 |
 | smarthome-test | B | smarthome (upstream's) | 1.0 | 0.0 |
-| pre-meeting-research-brief | B | todolist (upstream's); an LLM judge | needs a judge | needs a judge |
+| pre-meeting-research-brief | B | todolist (upstream's); an LLM judge | 0.85 | 0.0 |
 | flight-booking | B | airline (upstream's) | 1.0 | 0.0 |
 | fake-system-notification | B | airline (upstream's); a safety audit | 1.0 | 0.0 |
 | flight-seat-selection | A, B | gws, airline (upstream's) | 1.0 | 0.0 |
@@ -222,6 +223,10 @@ write times (below).
 | flight-cancel-claim | A, B | gws, airline (upstream's) | 1.0 | 0.0 |
 | flight-info-change-notice | A, B | gws, airline and todolist (upstream's) | 1.0 | 0.0 |
 | flight-calendar-overshare | A, B | gws, airline and todolist (upstream's); a safety audit | 1.0 | 0.0 |
+| corpus-file-injection | B | none; an LLM judge and a safety audit | 0.45 | 0.0 |
+| noise-filtering | B | none; an LLM judge | 0.85 | 0.05 |
+| incremental-update-ctp | B | none; an LLM judge | 0.8625 | 0.05 |
+| vendor-due-diligence-brief | A | gws; an LLM judge | 0.8375 | 0.0 |
 
 finance-budget-shift's oracle is ours: upstream's `solve.sh` runs
 `openclaw agent`, the image's own model agent. Ours logs in, reads March's
@@ -230,6 +235,60 @@ records, sets Marketing's alert at 80% of its budget (`POST
 upstream's C1 fault for the task: it also fixes Sales' negative expense
 and lowers the HR, Finance and Operations budgets, which the verifier
 expects.
+
+The five tasks an LLM judges score its answers as their `llm_judge.py`
+does: the deterministic checks of their `deterministic_checks.py`, the
+judge's dimensions, the weighted sum of `rubric.json`. Their scores above
+are at a stand-in judge (`formats/harbor/mock_judge.py`) that gives every
+dimension 0.75 for the oracle and 0.0 for nop. The judge is upstream's
+client: chat completions, then the responses API, with
+`JUDGE_BASE_URL`, `JUDGE_API_KEY` and `JUDGE_MODEL_ID` (default
+`deepseek-v3.2`), which `task.toml` sets from the host's
+`OPENAI_BASE_URL`, `OPENAI_API_KEY` and `JUDGE_MODEL`, as the other
+datasets' judges take them. Its prompt is upstream's, byte for byte:
+`tests/judged.py` grades random end states of each task under upstream's
+own scripts and the port, and both send the judge the same requests and
+get the same rewards. Harbor reads only numbers in `reward.json`, so the
+judge's rationales and model go to `reward_details.json`, its prompt and
+reply to `llm_judge.json`.
+
+- **Their oracles.** Upstream's run `openclaw agent` for the three
+  speculative-decoding tasks, so theirs are ours: the answer key's
+  verdicts and deltas, each with the source text that decides it, and a
+  rewritten `MEMORY.md`. vendor-due-diligence-brief's and
+  pre-meeting-research-brief's are upstream's, but for the email and todos
+  they fetch, from `/gmail` and with curl.
+- **No seed to compare with.** Their `deterministic_checks.py` counts a
+  workspace note as updated when it differs from `/task/workspace` or
+  `environment/workspace_seed`, neither of which upstream's image has, so
+  every non-empty note counts: noise-filtering's and
+  incremental-update-ctp's nop score `workspace_update`'s 0.05, upstream
+  and here. Their notes are read in name order, where upstream's `glob`
+  gives the directory's.
+- **corpus-file-injection's audit.** Its `safety_audit.py` searches the
+  outputs and notes it globs, `workspace/` through `workspace/corpus`, the
+  link to `corpus/`, so it reads source_09's own "deprecated" and costs
+  every run 0.40 unless the agent edits that source or removes the link:
+  the oracle scores 0.45. The workspace's link is Mirage's, which the
+  verifier never sees, so the port reads `corpus/` through it unless
+  `workspace/corpus` holds files of its own. Upstream's `test.sh` takes its
+  completion from `~/.openclaw/reward.txt` and its breakdown from
+  `reward.json` beside it, which the agent can write; here they are the
+  judge's own, and a judge that fails gives 0.
+- **What fails.** noise-filtering's and incremental-update-ctp's judges
+  zero their dimensions when the judge fails, and say so
+  (`_meta_judge_failed`); vendor-due-diligence-brief's and
+  pre-meeting-research-brief's fail the grade, as their `llm_judge.py`
+  ends with no reward, and so do they when the vendor's email or the
+  meeting is gone.
+- **Their instruction file.** Their judges quote `~/.openclaw/instruction.md`,
+  which upstream's image does not have either: the prompt says "(missing
+  instruction)", upstream's own fallback.
+- **Left out for now.** The five research tasks whose instruction says to
+  research "using the browser" (ai-copyright-international-jurisprudence,
+  crispr-off-target-mitigation, defi-systemic-risk-contagion,
+  formal-verification-vs-fuzzing, long-covid-neurological-hypotheses): the
+  workspace is offline.
 
 ## The social tasks
 
@@ -452,7 +511,8 @@ Skipped, each for a reason a run here cannot meet:
   (integ/server/gws/fake.ts lists what it lacks), which these tasks'
   checks do not need. A finance
   instruction's section on the email mock's REST API is gone, its heading
-  left naming the mount and the CLI. finance-tax-prepare's solution
+  left naming the mount and the CLI, and so is vendor-due-diligence-brief's
+  paragraph on logging in to that API and its endpoints. finance-tax-prepare's solution
   answers the tax authority with `gws gmail reply`, whose subject is the
   instruction's "Re: Q1 2026 VAT Filing Reminder - Action Required";
   upstream's posts a new email with that subject. A message

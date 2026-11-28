@@ -1,0 +1,366 @@
+## Tools
+
+Run `<service> <tool> '<JSON object>'`. Omit the object for tools with no arguments. Use `<service> <tool> --help` for the JSON schema.
+
+Example: `math-server add '{"a":2,"b":3}'`.
+
+A command can exit 0 even when the service reports a failure. If the response includes `status` and `output`, check both before continuing.
+
+### math-server
+
+- `math-server add`: Adds a and b together. JSON keys: a, b.
+- `math-server sub`: Subtracts b from a. JSON keys: a, b.
+- `math-server mul`: Multiplies two numbers together. JSON keys: a, b.
+- `math-server div`: Divides a by b. JSON keys: a, b.
+- `math-server pow`: Raises a to the power of b. JSON keys: a, b.
+- `math-server sqrt`: Calculates the square root of a. JSON keys: a.
+- `math-server abs-val`: Returns the absolute value of a. JSON keys: a.
+- `math-server mod`: Finds the remainder of a divided by b. JSON keys: a, b.
+- `math-server floor-div`: Performs floor division of a by b. JSON keys: a, b.
+- `math-server max-val`: Returns the maximum of a and b. JSON keys: a, b.
+- `math-server min-val`: Returns the minimum of a and b. JSON keys: a, b.
+- `math-server round-val`: Rounds a to the given number of decimal places. JSON keys: a, ndigits.
+- `math-server log`: Calculates the logarithm of a with the given base. JSON keys: a, base.
+- `math-server exp`: Calculates e raised to the power of a. JSON keys: a.
+- `math-server sin`: Calculates the sine of a (in radians). JSON keys: a.
+- `math-server cos`: Calculates the cosine of a (in radians). JSON keys: a.
+- `math-server tan`: Calculates the tangent of a (in radians). JSON keys: a.
+- `math-server asin`: Calculates the arcsine of a. JSON keys: a.
+- `math-server acos`: Calculates the arccosine of a. JSON keys: a.
+- `math-server atan`: Calculates the arctangent of a. JSON keys: a.
+- `math-server sinh`: Calculates the hyperbolic sine of a. JSON keys: a.
+- `math-server cosh`: Calculates the hyperbolic cosine of a. JSON keys: a.
+- `math-server tanh`: Calculates the hyperbolic tangent of a. JSON keys: a.
+- `math-server factorial`: Calculates the factorial of a. JSON keys: a.
+- `math-server gcd`: Calculates the greatest common divisor of a and b. JSON keys: a, b.
+- `math-server lcm`: Calculates the least common multiple of a and b. JSON keys: a, b.
+- `math-server deg-to-rad`: Converts degrees to radians. JSON keys: a.
+- `math-server rad-to-deg`: Converts radians to degrees. JSON keys: a.
+- `math-server is-even`: Checks if a number is even. JSON keys: a.
+- `math-server is-odd`: Checks if a number is odd. JSON keys: a.
+- `math-server is-prime`: Checks if a number is prime. JSON keys: a.
+- `math-server nth-fibonacci`: Calculates the nth Fibonacci number. JSON keys: n.
+- `math-server sum-of-list`: Calculates the sum of a list of numbers. JSON keys: numbers.
+- `math-server product-of-list`: Calculates the product of a list of numbers. JSON keys: numbers.
+- `math-server mean`: Calculates the mean of a list of numbers. JSON keys: numbers.
+- `math-server median`: Calculates the median of a list of numbers. JSON keys: numbers.
+- `math-server mode`: Calculates the mode of a list of numbers. JSON keys: numbers.
+- `math-server variance`: Calculates the variance of a list of numbers. JSON keys: numbers.
+- `math-server standard-deviation`: Calculates the standard deviation of a list of numbers. JSON keys: numbers.
+- `math-server clamp`: Clamps a value between min_val and max_val. JSON keys: value, min_val, max_val.
+- `math-server hypot`: Calculates the hypotenuse of a right triangle with sides a and b. JSON keys: a, b.
+- `math-server cbrt`: Calculates the cube root of a. JSON keys: a.
+
+### unit-server
+
+- `unit-server convert-temperature`: Convert temperature between units. JSON keys: value, from_unit, to_unit.
+- `unit-server convert-angle`: Convert angle between units. JSON keys: value, from_unit, to_unit.
+- `unit-server convert-length`: Convert length between units. JSON keys: value, from_unit, to_unit.
+- `unit-server convert-energy`: Convert energy between units. JSON keys: value, from_unit, to_unit.
+- `unit-server convert-force`: Convert force between units. JSON keys: value, from_unit, to_unit.
+- `unit-server convert-pressure`: Convert pressure between units. JSON keys: value, from_unit, to_unit.
+- `unit-server convert-power`: Convert power between units. JSON keys: value, from_unit, to_unit.
+- `unit-server convert-speed`: Convert speed between units. JSON keys: value, from_unit, to_unit.
+- `unit-server convert-area`: Convert area between units. JSON keys: value, from_unit, to_unit.
+- `unit-server convert-mass`: Convert weight between units. JSON keys: value, from_unit, to_unit.
+- `unit-server convert-volume`: Convert volume between units. JSON keys: value, from_unit, to_unit.
+- `unit-server convert-computer-data`: Convert computer storage between units. JSON keys: value, from_unit, to_unit.
+- `unit-server convert-density`: Convert density between units. JSON keys: value, from_unit, to_unit.
+- `unit-server convert-time`: Convert time between units. JSON keys: value, from_unit, to_unit.
+- `unit-server convert-batch`: Perform multiple unit conversions in a single batch request. Each request in the batch should contain: - value: The numeric value to convert - from_unit: Source unit for conversion - to_unit: Target unit for conversion - conversion_type: Type of conversion (temperature, length, mass, etc.) - request_id: Optional identifier for tracking individual requests Returns a structured response with individual results for each conversion, including success/failure status and either converted values or error messages. JSON keys: requests.
+- `unit-server list-supported-units`: List all supported units for each conversion type or for a specific type. JSON keys: unit_type.
+
+### osint-server
+
+- `osint-server whois-lookup`:  JSON keys: target.
+- `osint-server nmap-scan`:  JSON keys: target.
+- `osint-server dnsrecon-lookup`:  JSON keys: target.
+- `osint-server dnstwist-lookup`:  JSON keys: domain.
+- `osint-server dig-lookup`:  JSON keys: target.
+- `osint-server host-lookup`:  JSON keys: target.
+- `osint-server osint-overview`:  JSON keys: target.
+
+### time-server
+
+- `time-server days-diff`: Calculate the day difference between two dates in "YYYY-MM-DD" format. Args: t1: Start date in "YYYY-MM-DD". t2: End date in "YYYY-MM-DD". Returns: A dict containing status and the day difference (t2 - t1) in days. JSON keys: t1, t2.
+- `time-server date-to-weekday`: Convert a date string into a weekday name. Notes: - This function uses English weekday names only (locale parameter is reserved for future extension). - Input format: "YYYY-MM-DD". Args: d: Date string in "YYYY-MM-DD". locale: Reserved; currently only "en" is supported. short: If True, return abbreviated weekday (e.g., "Mon"); otherwise full name. Returns: A dict containing status and weekday name. JSON keys: d, locale, short.
+- `time-server iso-seconds-diff`: Calculate the seconds difference between two ISO-8601 datetime strings. Supported examples: - "2026-01-14T12:30:00" - "2026-01-14T12:30:00Z" - "2026-01-14T12:30:00+08:00" Interpretation: - If timezone info is present, it is respected. - If timezone info is absent, the datetime is treated as naive local time. Args: t1: ISO datetime string. t2: ISO datetime string. Returns: A dict containing status and the seconds difference (t2 - t1) in seconds. JSON keys: t1, t2.
+- `time-server convert-time-units`: Convert between common time units. Supported units: - "ms" (milliseconds) - "s" (seconds) - "min" (minutes) - "h" (hours) - "d" (days) - "w" (weeks) Args: value: Numeric value to convert. from_unit: Source unit. to_unit: Target unit. Returns: A dict containing status and the converted value. JSON keys: value, from_unit, to_unit.
+- `time-server add-seconds-iso`: Add seconds to an ISO-8601 datetime string and return an ISO string. Notes: - If input ends with "Z", it is treated as UTC. - Output uses ISO format; if timezone-aware, includes offset. Args: t: ISO datetime string. seconds: Seconds to add (can be negative). Returns: A dict containing status and the resulting ISO datetime string. JSON keys: t, seconds.
+
+### lang-server
+
+- `lang-server tokenize`: Simple whitespace-and-punctuation tokenizer. JSON keys: text.
+- `lang-server detokenize`: Join tokens with spaces, simple heuristic. JSON keys: tokens.
+- `lang-server normalize-whitespace`: Collapse consecutive whitespace into a single space and trim ends. Returns a cleaned string with normalized spacing suitable for downstream NLP tasks. JSON keys: text.
+- `lang-server remove-punctuation`: Remove punctuation characters from `text`, leaving words and whitespace. Useful for simple token-counting or normalization when punctuation is not needed. JSON keys: text.
+- `lang-server count-words`: Return the number of word tokens in `text` using the server tokenizer. JSON keys: text.
+- `lang-server word-freq`: Return a frequency mapping (word -> count) for tokens in `text`. Tokens are lowercased so counts are case-insensitive. JSON keys: text.
+- `lang-server sentence-split`: Split `text` into sentences using a simple punctuation-based heuristic. Returns a list of sentence strings (may not handle all edge cases). JSON keys: text.
+- `lang-server simple-summarize`: Very small extractive summarizer by sentence length heuristic. JSON keys: text, max_sentences.
+- `lang-server levenshtein`: Compute the Levenshtein edit distance between strings `a` and `b`. This implementation is memory-efficient (row-wise DP). JSON keys: a, b.
+- `lang-server jaccard-similarity`: Compute Jaccard similarity between token sets of `a` and `b`. Returns a float in [0, 1], 1.0 when both inputs have identical token sets. JSON keys: a, b.
+- `lang-server ngrams`: Return a list of n-grams (as space-joined strings) from `text` tokens. If there are fewer than `n` tokens an empty list is returned. JSON keys: text, n.
+- `lang-server to-lower`: Return `text` converted to lowercase. JSON keys: text.
+- `lang-server to-upper`: Return `text` converted to uppercase. JSON keys: text.
+- `lang-server title-case`: Return `text` converted to title case. JSON keys: text.
+- `lang-server snake-case`: Convert `text` to `snake_case` by lowercasing and joining word tokens with underscores. JSON keys: text.
+- `lang-server camel-case`: Convert `text` to `camelCase` using word tokens (lower-first, capitalize-following). JSON keys: text.
+- `lang-server slugify`: Create a URL-friendly slug from `text`: lowercase, remove punctuation, replace spaces with hyphens. JSON keys: text.
+- `lang-server extract-numbers`: Extract all integers and decimal numbers from `text` and return them as floats. JSON keys: text.
+- `lang-server hash-text`: Return a hexadecimal digest of `text` using the specified hashing `algo`. The default algorithm is `sha256`. JSON keys: text, algo.
+- `lang-server base64-encode`: Encode `text` to standard Base64 and return the ASCII string. JSON keys: text.
+- `lang-server base64-decode`: Decode a Base64-encoded ASCII string and return the UTF-8 text. JSON keys: b64.
+- `lang-server is-palindrome`: Return True if `text` is a palindrome when lowercased and alphanumerics only. Ignores punctuation and spacing when checking the palindrome property. JSON keys: text.
+- `lang-server regex-search`: Return all non-overlapping matches of `pattern` in `text` using `re.findall`. JSON keys: pattern, text.
+- `lang-server replace`: Replace occurrences of `pattern` in `text` with `repl` using regular expressions. JSON keys: pattern, repl, text.
+- `lang-server truncate`: Truncate `text` to `length` characters, appending ellipsis if truncated. JSON keys: text, length.
+- `lang-server read-time-estimate`: Estimate reading time in minutes for `text` assuming `wpm` words per minute. JSON keys: text, wpm.
+- `lang-server remove-stopwords`: Remove a small set of common English stopwords from `text` and return the filtered text. JSON keys: text.
+- `lang-server simple-paraphrase`: A tiny rule-based paraphrase that substitutes a few common words with synonyms. This is placeholder, rule-based, and not a replacement for a full paraphrasing model. JSON keys: text.
+- `lang-server syllable-estimate`: Estimate the number of syllables in `word` using a simple vowel-group heuristic. JSON keys: word.
+- `lang-server ordinal`: Return the ordinal string for integer `n`, e.g. 1 -> '1st', 2 -> '2nd'. JSON keys: n.
+- `lang-server count-chars`: Return the number of characters in `text` (including whitespace). JSON keys: text.
+- `lang-server template-render`: Render a simple Python `str.format` template using `values` mapping. JSON keys: template, values.
+
+### crypto-server
+
+- `crypto-server sha256`: Return the SHA-256 hex digest of the given `text`. JSON keys: text.
+- `crypto-server sha1`: Return the SHA-1 hex digest of the given `text`. JSON keys: text.
+- `crypto-server md5`: Return the MD5 hex digest of the given `text` (legacy/compatibility). JSON keys: text.
+- `crypto-server hmac-sha256`: Compute HMAC-SHA256 of `message` using `key`, returning a hex digest. JSON keys: key, message.
+- `crypto-server pbkdf2-hex`: Derive a key from `password` and `salt` using PBKDF2-HMAC-SHA256. Returns the derived key as a hex string. JSON keys: password, salt, iterations, dklen.
+- `crypto-server random-bytes`: Return `n` cryptographically-secure random bytes encoded as a hex string. JSON keys: n.
+- `crypto-server random-hex`: Return `nbytes` random bytes encoded as a hex string (alias of `random_bytes`). JSON keys: nbytes.
+- `crypto-server base64-encode`: Encode `text` to Base64 and return the encoded string. JSON keys: text.
+- `crypto-server base64-decode`: Decode a Base64-encoded string and return the decoded text. JSON keys: b64.
+- `crypto-server xor-cipher`: Apply a repeating-key XOR of `text` with `key` and return hex-encoded ciphertext. Note: this is not secure encryption; provided for toy/offline uses only. JSON keys: text, key.
+- `crypto-server xor-dec`: Decode a hex-encoded XOR ciphertext produced by `xor_cipher` using the same `key`. JSON keys: hextext, key.
+- `crypto-server simple-caesar`: Apply a simple Caesar cipher shifting alphabetic characters by `shift` positions. JSON keys: text, shift.
+- `crypto-server rot13`: Return ROT13 transformation of `text` (a reversible letter substitution). JSON keys: text.
+- `crypto-server timing-safe-compare`: Compare two strings in a timing-safe way to mitigate timing attacks. JSON keys: a, b.
+- `crypto-server derive-key`: Convenience wrapper returning a PBKDF2-derived key hex string for `password` and `salt`. JSON keys: password, salt, iterations.
+- `crypto-server entropy-estimate-hex`: Estimate the Shannon entropy (bits per symbol) of hex-encoded `hexstr`. JSON keys: hexstr.
+- `crypto-server uuid4`: Return a random UUID4 string.
+- `crypto-server hex-to-bytes`: Convert a hex string into raw bytes. JSON keys: hexstr.
+- `crypto-server bytes-to-hex`: Convert raw bytes to a lowercase hex string. JSON keys: b.
+- `crypto-server urlsafe-b64-encode`: Encode `text` as URL-safe Base64 string. JSON keys: text.
+- `crypto-server urlsafe-b64-decode`: Decode a URL-safe Base64 string and return the decoded text. JSON keys: text.
+- `crypto-server hmac-sign-hex`: Return HMAC-SHA256 signature (hex) for `message` with `key`. JSON keys: key, message.
+- `crypto-server hmac-verify-hex`: Verify that `signature` matches HMAC-SHA256(message,key) in a timing-safe way. JSON keys: key, message, signature.
+- `crypto-server checksum-sha256-hex`: Alias for SHA-256 digest of `text` (hex string). JSON keys: text.
+- `crypto-server random-choice`: Return a cryptographically-secure random element from `seq`. JSON keys: seq.
+- `crypto-server secure-token-urlsafe`: Return a URL-safe secure token with the specified `length` (approx bytes). JSON keys: length.
+- `crypto-server file-digest`: Compute the digest of a file at `path` using hash `algo` and return hex digest. JSON keys: path, algo.
+- `crypto-server xor-bytes-hex`: XOR two equal-length hex-encoded byte strings and return hex-encoded result. JSON keys: a_hex, b_hex.
+
+### graph-server
+
+- `graph-server bfs`: Perform breadth-first search on `adj` from `start` and return visit order. `adj` is expected to be a mapping node -> iterable of neighbors. JSON keys: adj, start.
+- `graph-server dfs`: Perform depth-first search on `adj` from `start` and return visit order. JSON keys: adj, start.
+- `graph-server shortest-path-dijkstra`: Compute shortest-path distances from `source` using Dijkstra's algorithm. `adj` should map nodes to an iterable of `(neighbor, weight)` pairs. Returns a mapping node -> distance. JSON keys: adj, source.
+- `graph-server is-bipartite`: Return True if graph `adj` is bipartite (2-colorable), False otherwise. JSON keys: adj.
+- `graph-server connected-components`: Return a list of connected components (each a list of nodes) in `adj`. JSON keys: adj.
+- `graph-server topological-sort`: Return a topological ordering of `adj` if it is a DAG; raises on cycles. JSON keys: adj.
+- `graph-server mst-kruskal`: Compute a Minimum Spanning Tree using Kruskal's algorithm. `edges` is a list of `(weight, u, v)` triples and `nodes` lists all nodes. Returns a list of edges included in the MST. JSON keys: edges, nodes.
+- `graph-server shortest-path-unweighted`: Compute shortest path distances in an unweighted graph (BFS distances). JSON keys: adj, source.
+- `graph-server path-exists`: Return True if there exists a path from node `a` to node `b` in `adj`. JSON keys: adj, a, b.
+- `graph-server adjacency-matrix`: Build an adjacency matrix for `nodes` from adjacency mapping `adj`. Returns a square matrix of 0/1 ints where entry [i][j] is 1 if there is an edge. JSON keys: adj, nodes.
+- `graph-server adjacency-list-to-matrix`: Convert adjacency list mapping to an adjacency matrix using the list of keys as nodes. JSON keys: adj.
+- `graph-server degree-centrality`: Return the degree (number of neighbors) for each node in `adj`. JSON keys: adj.
+- `graph-server is-connected`: Return True if the graph `adj` is connected (single component). JSON keys: adj.
+- `graph-server graph-complement`: Return the complement graph of `adj` over the provided `nodes`. Nodes not present in `adj` are treated as having no neighbors. JSON keys: adj, nodes.
+- `graph-server random-erdos-renyi`: Generate a random undirected Erdos-Renyi graph with `n` nodes and edge probability `p`. Returns an adjacency mapping node -> list of neighbors. JSON keys: n, p.
+
+### chem-server
+
+- `chem-server molar-mass`: Compute an approximate molar mass for `formula` using a small periodic table. This is a naive parser that matches element symbols followed by optional integer counts. Unknown elements contribute 0.0. JSON keys: formula.
+- `chem-server empirical-formula`: Return the empirical (reduced) formula for `formula` by dividing element counts by their GCD. JSON keys: formula.
+- `chem-server percent-composition`: Return percent by mass composition for each element in `formula`. Percentages sum to (approximately) 100 for known elements in the small periodic table. JSON keys: formula.
+- `chem-server balance-simple-reaction`: Placeholder reaction balancer: returns input mapping unchanged. This function is a stub for offline use and does not perform true balancing. JSON keys: reactants, products.
+- `chem-server is-balanced`: Placeholder validator that currently always returns True for a formula's balance. JSON keys: formula.
+- `chem-server ph-from-concentration`: Convert hydrogen ion concentration `h_conc` (mol/L) to pH value. JSON keys: h_conc.
+- `chem-server concentration-from-ph`: Convert pH value back to hydrogen ion concentration (mol/L). JSON keys: ph.
+- `chem-server ideal-gas-pressure`: Compute pressure (in SI units of kPa equivalently via ideal gas law) for given moles, temperature, and volume. Note: this uses a simple ideal gas approximation and performs unit conversions from liters. JSON keys: n_moles, temp_k, volume_l.
+- `chem-server convert-moles-to-grams`: Convert an amount in `moles` of a substance with `formula` to mass in grams (approx). JSON keys: moles, formula.
+- `chem-server convert-grams-to-moles`: Convert `grams` of a substance with `formula` to moles using approximate molar mass. JSON keys: grams, formula.
+- `chem-server normalize-formula`: Return `formula` with whitespace removed for normalization. JSON keys: formula.
+- `chem-server element-list`: Return a list of element symbols present in `formula` in the order they appear. JSON keys: formula.
+- `chem-server combustion-products`: Naive estimator of complete combustion products (CO2 and H2O) from a hydrocarbon `fuel_formula`. This is a heuristic estimator that assumes integer counts and complete combustion. JSON keys: fuel_formula.
+- `chem-server is-organic`: Return True if `formula` contains carbon (simple organic check). JSON keys: formula.
+- `chem-server simple-smiles-validate`: Very small validator for a SMILES-like string: checks balanced parentheses only. JSON keys: smiles.
+- `chem-server mole-fraction`: Compute a mole fraction given `partial_moles` and `total_moles` (returns 0 if total is zero). JSON keys: partial_moles, total_moles.
+- `chem-server clamp`: Clamp `value` between `lo` and `hi` and return the clamped float. JSON keys: value, lo, hi.
+
+### light-system
+
+- `light-system now`: Get the current time A dictionary containing status and output. On success, output is a timestamp; on failure, output contains an error message.
+- `light-system health`: Check if this LightSystem is work A dictionary containing status and output.
+
+### light-talk
+
+- `light-talk get-all-contacts`: Get the information of all contacts in LightTalk. A dictionary containing status and output. On success, output is a list of all contacts; on failure, output contains an error message.
+- `light-talk get-uid-from-name`: Look up a user's unique ID (UID) by their display name in LightTalk. A dictionary containing status and output. On success, output is the UID string; on failure, output contains an error message. JSON keys: name.
+- `light-talk fuzzy-search-uids-from-name`: Perform a fuzzy (approximate) search to find user IDs (UIDs) in LightTalk based on a partial or misspelled contact name. A dictionary containing status and output. On success, output is a list of matching UIDs along with their display names; on failure (e.g., no matches or invalid input), output contains an error message. JSON keys: name.
+- `light-talk send-message`: Send a message to a specific contact in LightTalk using their UID. A dictionary containing status and output. On success, output may confirm delivery; on failure, output contains an error message. JSON keys: uid, content.
+- `light-talk get-myuid`: Retrieve the current user's own unique ID (UID) in LightTalk. A dictionary containing status and output. On success, output is the current user's UID; on failure, output contains an error message.
+- `light-talk get-chat-history`: Fetch the chat history with a specific contact in LightTalk. A dictionary containing status and output. On success, output is a list of message records; on failure, output contains an error message. JSON keys: uid.
+- `light-talk get-contacts`: Retrieve a paginated list of contacts from LightTalk. Each page contains up to 10 contacts. A dictionary containing status and output. On success, output is a list of up to 10 contacts for the requested page; on failure (e.g., invalid session), output contains an error message. JSON keys: page.
+- `light-talk delete-chat-history`: Delete the entire chat history with a specific contact in LightTalk. A dictionary containing status and output. On success, output confirms deletion; on failure (e.g., UID not found), output contains an error message. JSON keys: uid.
+- `light-talk delete-message`: Delete a specific message in a chat with a contact in LightTalk. A dictionary containing status and output. On success, output confirms deletion; on failure (e.g., session not found, message not found, or insufficient permissions), output contains an error message. JSON keys: uid, mid.
+- `light-talk block`: Block a contact in LightTalk by their unique ID (UID). A dictionary containing status and output. On success, output confirms the contact was blocked; on failure (e.g., contact not found or already blocked), output contains an error message. JSON keys: uid.
+- `light-talk unblock`: Unblock a contact in LightTalk by their unique ID (UID). A dictionary containing status and output. On success, output confirms the contact was unblocked; on failure (e.g., contact not found or not currently blocked), output contains an error message. JSON keys: uid.
+- `light-talk get-contact-info`: Retrieve detailed information about a specific contact in LightTalk. A dictionary containing status and output. On success, output includes contact details (e.g., name, status, blocked state); on failure, output contains an error message. JSON keys: uid.
+- `light-talk get-all-moments`: Fetch all public moments (posts) published by a specific contact in LightTalk. A dictionary containing status and output. On success, output is a list of all moments; on failure (e.g., contact not found), output contains an error message. JSON keys: uid.
+- `light-talk get-last-k-moments`: Retrieve the most recent K moments published by a specific contact in LightTalk. A dictionary containing status and output. On success, output is a list of up to K most recent moments; on failure, output contains an error message. JSON keys: uid, k.
+- `light-talk get-moment`: Fetch a specific moment by its index from a contact's timeline in LightTalk. A dictionary containing status and output. On success, output is the moment object; on failure (e.g., invalid index or contact not found), output contains an error message. JSON keys: uid, index.
+- `light-talk like-moment`: Like a specific moment posted by a contact in LightTalk. A dictionary containing status and output. On success, output confirms the like action; on failure (e.g., moment not found or already liked), output contains an error message. JSON keys: uid, moid.
+- `light-talk unlike-moment`: Remove your like from a specific moment posted by a contact in LightTalk. A dictionary containing status and output. On success, output confirms the like was removed; on failure (e.g., moment not found, not previously liked, or invalid contact), output contains an error message. JSON keys: uid, moid.
+- `light-talk comment-moment`: Post a comment on a specific moment in LightTalk. A dictionary containing status and output. On success, output confirms the comment was posted; on failure (e.g., invalid moment or empty content), output contains an error message. JSON keys: uid, moid, content.
+- `light-talk comment-comment`: Post a nested reply (comment on a comment) under a specific moment in LightTalk. A dictionary containing status and output. On success, output confirms the nested comment was posted; on failure (e.g., invalid moment or empty content), output contains an error message. JSON keys: uid, moid, cid, content.
+- `light-talk list-all-tags`: Retrieve a list of all available contact tags in LightTalk. A dictionary containing status and output. On success, output is a list of tag names; on failure, output contains an error message.
+- `light-talk get-contacts-by-tag`: Find all contacts in LightTalk that are labeled with a specific tag. A dictionary containing status and output. On success, output is a list of contacts associated with the given tag; on failure (e.g., tag not found), output contains an error message. JSON keys: tag.
+- `light-talk get-contacts-by-gender`: Retrieve all contacts in LightTalk filtered by gender. A dictionary containing status and output. On success, output is a list of contacts matching the specified gender; on failure (e.g., invalid gender value), output contains an error message. JSON keys: gender.
+- `light-talk withdraw-comment-moment`: Delete (withdraw) your own comment on a moment in LightTalk. A dictionary containing status and output. On success, output confirms the comment was deleted; on failure (e.g., comment not found, not owned by you, or invalid moment), output contains an error message. JSON keys: uid, moid, my_cid.
+- `light-talk withdraw-comment-comment`: Delete (withdraw) your own nested comment (reply to a comment) under a specific moment in LightTalk. A dictionary containing status and output. On success, output confirms the nested comment was deleted; on failure (e.g., comment not found, not owned by you, or invalid context), output contains an error message. JSON keys: uid, moid, cid, my_cid.
+- `light-talk mark-as-read`: Mark the chat with a specific contact as read in LightTalk, clearing any unread message indicators. A dictionary containing status and output. On success, output confirms the chat was marked as read; on failure (e.g., contact not found), output contains an error message. JSON keys: uid.
+- `light-talk mark-as-unread`: Mark the chat with a specific contact as unread in LightTalk, so it appears as having new messages. A dictionary containing status and output. On success, output confirms the chat was marked as unread; on failure (e.g., contact not found), output contains an error message. JSON keys: uid.
+- `light-talk get-my-moments`: Retrieve all moments (posts) that you have published in LightTalk. A dictionary containing status and output. On success, output is a list of your own moments; on failure, output contains an error message.
+- `light-talk post-moment`: Publish a new moment (post) in LightTalk with optional images. A dictionary containing status and output. On success, output confirms the moment was posted and may include its unique ID (MOID); on failure (e.g., empty content), output contains an error message. JSON keys: content, img_urls.
+- `light-talk delete-moment`: Delete one of your own moments (posts) in LightTalk by its unique ID. A dictionary containing status and output. On success, output confirms deletion; on failure (e.g., moment not found or not owned by you), output contains an error message. JSON keys: moid.
+- `light-talk get-shared-url-of-moment`: Generate a shareable URL for a specific moment posted by a contact in LightTalk. A dictionary containing status and output. On success, output is a public or semi-public shareable URL string; on failure (e.g., invalid moment), output contains an error message. JSON keys: uid, moid.
+- `light-talk get-shared-url-of-contact`: Generate a shareable profile URL for a contact in LightTalk. A dictionary containing status and output. On success, output is a shareable contact profile URL; on failure (e.g., contact not found), output contains an error message. JSON keys: uid.
+- `light-talk delete-contact`: Remove a contact from your contact list in LightTalk. A dictionary containing status and output. On success, output confirms the contact was removed; on failure (e.g., contact not found), output contains an error message. JSON keys: uid.
+- `light-talk ask-for-privilege`: Request elevated privileges or special access permissions in LightTalk (e.g., for deletion, moderation, API access, or advanced features). A dictionary containing status and output. On success, output confirms the privilege request was submitted or granted; on failure (e.g., already have privilege or not eligible), output contains an error message.
+- `light-talk list-ip-choices`: List available IP/address choices that can be used by the current LightTalk session. A dictionary containing status and output. On success, output is a list of available IP/address choices; on failure, output contains an error message.
+- `light-talk change-my-ip`: Change the current session's IP/address to one of the available choices. A dictionary containing status and output. On success, output confirms the IP/address was changed; on failure (e.g., invalid choice), output contains an error message. JSON keys: where.
+- `light-talk edit-remark`: Edit the remark/note associated with a contact in LightTalk. A dictionary containing status and output. On success, output confirms the remark was updated; on failure, output contains an error message. JSON keys: uid, remark.
+- `light-talk delete-remark`: Remove the remark/note associated with a contact in LightTalk. A dictionary containing status and output. On success, output confirms the remark was deleted; on failure, output contains an error message. JSON keys: uid.
+- `light-talk create-group-chat`: Create a new group chat with a list of participants in LightTalk. A dictionary containing status and output. On success, output includes the new group's ID (GID) and info; on failure, output contains an error message. JSON keys: uids.
+- `light-talk send-message-to-group`: Send a text message to a group chat, optionally addressing specific members. A dictionary containing status and output. On success, output may confirm delivery and list mentions; on failure, output contains an error message. JSON keys: gid, content, at.
+- `light-talk get-group-chat-history`: Retrieve the chat history of a specific group in LightTalk. A dictionary containing status and output. On success, output is a list of group messages; on failure, output contains an error message. JSON keys: gid.
+- `light-talk send-image`: Send an image to a specific contact in LightTalk by URL. A dictionary containing status and output. On success, output confirms the image was sent; on failure, output contains an error message. JSON keys: uid, img_url.
+- `light-talk send-image-to-group`: Send an image to a group chat by URL, optionally mentioning members. A dictionary containing status and output. On success, output confirms the image was sent to the group; on failure, output contains an error message. JSON keys: gid, img_url, at.
+- `light-talk rename-group`: Change the display name of an existing group chat in LightTalk. A dictionary containing status and output. On success, output confirms the group's name was changed; on failure, output contains an error message. JSON keys: gid, name.
+- `light-talk delete-group`: Delete an existing group chat in LightTalk. A dictionary containing status and output. On success, output confirms the group was deleted; on failure, output contains an error message. JSON keys: gid.
+- `light-talk change-owner-of-group`: Transfer group ownership to another member in LightTalk. A dictionary containing status and output. On success, output confirms ownership transfer; on failure, output contains an error message. JSON keys: gid, uid.
+- `light-talk quit-group`: Leave a group chat in LightTalk. A dictionary containing status and output. On success, output confirms you left the group; on failure, output contains an error message. JSON keys: gid.
+- `light-talk invite-new-member`: Invite a new member into an existing group chat in LightTalk. A dictionary containing status and output. On success, output confirms the invite was sent; on failure, output contains an error message. JSON keys: gid, uid.
+- `light-talk list-all-groups`: List all group chats that the current user is a member of in LightTalk. A dictionary containing status and output. On success, output is a list of group metadata; on failure, output contains an error message.
+- `light-talk get-group-info`: Retrieve detailed information about a specific group chat in LightTalk. A dictionary containing status and output. On success, output includes group details (members, name, owner); on failure, output contains an error message. JSON keys: gid.
+- `light-talk mark-as-read-in-group`: Mark a group's chat as read for the current user in LightTalk. A dictionary containing status and output. On success, output confirms the group was marked as read; on failure, output contains an error message. JSON keys: gid.
+- `light-talk mark-as-unread-in-group`: Mark a group's chat as unread so it appears to have new messages in LightTalk. A dictionary containing status and output. On success, output confirms the group was marked as unread; on failure, output contains an error message. JSON keys: gid.
+- `light-talk acc-network`: Optimize and accelerate the network connection for LightTalk to reduce latency and improve responsiveness. A dictionary containing status and output. On success, output confirms that network acceleration has been applied; on failure, output contains an error message (e.g., already optimized or network unavailable).
+- `light-talk get-my-name`: Retrieve your own display name in LightTalk. A dictionary containing status and output. On success, output is your current display name; on failure (e.g., session invalid), output contains an error message.
+
+### light-shop
+
+- `light-shop list-all-shop-categories`: Retrieve a list of all available shop categories in LightShop. A dictionary containing status and output. On success, output is a list of category names; on failure, output contains an error message.
+- `light-shop get-shop-id-by-name`: Look up a shop's unique ID (SID) by its display name in LightShop. A dictionary containing status and output. On success, output is the shop's unique ID (SID); on failure (e.g., shop not found), output contains an error message. JSON keys: shop_name.
+- `light-shop list-items`: List all items available in a specific shop in LightShop. A dictionary containing status and output. On success, output is a list of item details (e.g., name, price, stock); on failure, output contains an error message. JSON keys: sid.
+- `light-shop add-to-cart`: Add a specified quantity of an item from a shop to your shopping cart in LightShop. A dictionary containing status and output. On success, output confirms the item was added; on failure (e.g., out of stock or invalid item), output contains an error message. JSON keys: sid, tid, cnt.
+- `light-shop get-item-info`: Retrieve detailed information about a specific item in a shop in LightShop. A dictionary containing status and output. On success, output includes item details such as name, price, description, and stock; on failure, output contains an error message. JSON keys: sid, tid.
+- `light-shop delete-item-in-cart`: Remove a specific item from your shopping cart in LightShop. A dictionary containing status and output. On success, output confirms deletion; on failure (e.g., item not in cart), output contains an error message. JSON keys: caid.
+- `light-shop check-balance`: Check your current account balance in LightShop. A dictionary containing status and output. On success, output is your current balance (e.g., in credits or currency); on failure, output contains an error message.
+- `light-shop checkout-all`: Complete the purchase of all items currently in your shopping cart in LightShop. A dictionary containing status and output. On success, output confirms successful payment and order placement; on failure (e.g., insufficient balance), output contains an error message.
+- `light-shop get-trans-history`: Retrieve your transaction history in LightShop, including purchased items and quantities. A dictionary containing status and output. On success, output is a list of past transactions with item names, quantities, and timestamps; on failure, output contains an error message.
+- `light-shop list-all-shops-by-category`: List all shops in LightShop that belong to a specific category. A dictionary containing status and output. On success, output is a list of shops in the given category, including their names and IDs; on failure (e.g., invalid category), output contains an error message. JSON keys: category.
+- `light-shop get-cart-summary`: Retrieve a summary of the current shopping cart in LightShop, including total price and item counts. A dictionary containing status and output. On success, output includes cart total, number of items, and list of cart entries; on failure, output contains an error message.
+- `light-shop search-shops`: Search for shops in LightShop by exact or partial name match (case-insensitive). A dictionary containing status and output. On success, output is a list of matching shops with names and IDs; on failure, output contains an error message. JSON keys: shop_name.
+- `light-shop fuzzy-search-shops`: Perform a fuzzy (approximate) search for shops in LightShop based on shop name. A dictionary containing status and output. On success, output is a ranked list of potentially matching shops; on failure, output contains an error message. JSON keys: shop_name.
+- `light-shop search-items`: Search for items across all shops in LightShop by item name (exact or partial match). A dictionary containing status and output. On success, output is a list of matching items with shop info, prices, and IDs; on failure, output contains an error message. JSON keys: item_name.
+- `light-shop fuzzy-search-items`: Perform a fuzzy (approximate) search for items across all shops in LightShop by item name. A dictionary containing status and output. On success, output is a list of likely matching items; on failure, output contains an error message. JSON keys: item_name.
+- `light-shop search-items-in-shop`: Search for items within a specific shop in LightShop by item name (exact or partial match). A dictionary containing status and output. On success, output is a list of matching items from that shop; on failure, output contains an error message. JSON keys: sid, item_name.
+- `light-shop fuzzy-search-items-in-shop`: Perform a fuzzy search for items within a specific shop in LightShop by item name. A dictionary containing status and output. On success, output is a list of likely matching items from that shop; on failure, output contains an error message. JSON keys: sid, item_name.
+- `light-shop get-trans-info`: Retrieve detailed information about a specific transaction in LightShop. A dictionary containing status and output. On success, output includes items purchased, total amount, timestamp, and status; on failure (e.g., invalid TRID), output contains an error message. JSON keys: trid.
+- `light-shop delete-trans-history`: Delete a specific transaction record from your transaction history in LightShop. A dictionary containing status and output. On success, output confirms deletion; on failure (e.g., transaction not found or not owned by you), output contains an error message. JSON keys: trid.
+- `light-shop star-shop`: Mark a shop as starred (favorited) in LightShop for quick access. A dictionary containing status and output. On success, output confirms the shop was starred; on failure (e.g., already starred or invalid shop), output contains an error message. JSON keys: sid.
+- `light-shop unstar-shop`: Remove a shop from your starred (favorited) list in LightShop. A dictionary containing status and output. On success, output confirms the shop was unstarred; on failure (e.g., not previously starred), output contains an error message. JSON keys: sid.
+- `light-shop star-item`: Mark a specific item as starred (favorited) in LightShop. A dictionary containing status and output. On success, output confirms the item was starred; on failure (e.g., already starred or invalid item), output contains an error message. JSON keys: sid, tid.
+- `light-shop unstar-item`: Remove a specific item from your starred (favorited) list in LightShop. A dictionary containing status and output. On success, output confirms the item was unstarred; on failure (e.g., not previously starred), output contains an error message. JSON keys: sid, tid.
+- `light-shop get-starred-shops`: Retrieve a list of all shops you have starred (favorited) in LightShop. A dictionary containing status and output. On success, output is a list of starred shops with names and IDs; on failure, output contains an error message.
+- `light-shop get-my-starred-items`: Retrieve a list of all items you have starred (favorited) in LightShop. A dictionary containing status and output. On success, output is a list of starred items with shop info, names, and IDs; on failure, output contains an error message.
+- `light-shop wait-payment-password`: Prompt the user to enter or verify their payment password in LightShop. This step is required before proceeding with checkout. A dictionary containing status and output. On success, output confirms that payment authentication is complete and checkout may proceed; on failure (e.g., user cancellation or timeout), output contains an error message.
+
+### light-weather
+
+- `light-weather list-cities`: List all cities supported by LightWeather. A dictionary containing status and output. On success, output is a list of city names; on failure, output contains an error message.
+- `light-weather get-current-weather`: Get the current weather observation for a city. A dictionary containing status and output. On success, output includes temperature, humidity, wind, condition, and other current weather data; on failure, output contains an error message. JSON keys: location.
+- `light-weather get-forecast`: Get a multi-day weather forecast for a city. A dictionary containing status and output. On success, output is a list of daily forecast entries (date, high/low temp, condition, etc.); on failure, output contains an error message. JSON keys: location, days.
+- `light-weather get-hourly-forecast`: Get an hourly weather forecast for a city. A dictionary containing status and output. On success, output is a list of hourly forecast entries (time, temperature, precipitation chance, etc.); on failure, output contains an error message. JSON keys: location, hours.
+- `light-weather list-stations`: List all available weather stations in LightWeather. A dictionary containing status and output. On success, output is a list of station identifiers and basic info; on failure, output contains an error message.
+- `light-weather get-station-info`: Get metadata for a specific weather station. A dictionary containing status and output. On success, output includes station name, location, elevation, and operational details; on failure, output contains an error message. JSON keys: station_id.
+- `light-weather get-station-observation`: Get the latest weather observation from a specific weather station. A dictionary containing status and output. On success, output includes real-time measurements such as temperature, pressure, wind speed, and humidity; on failure, output contains an error message. JSON keys: station_id.
+- `light-weather get-historical-weather`: Fetch historical weather records for a location over a specified date range. A dictionary containing status and output. On success, output is a list of daily historical weather records; on failure (e.g., invalid dates), output contains an error message. JSON keys: location, start, end.
+- `light-weather get-weather-alerts`: Retrieve active weather alerts (e.g., storms, heatwaves) for a location. A dictionary containing status and output. On success, output is a list of active alerts with type, severity, and description; on failure, output contains an error message. JSON keys: location.
+- `light-weather create-alert`: Create a custom weather alert for a location based on a condition and threshold. A dictionary containing status and output. On success, output confirms the alert was created and includes its ID; on failure, output contains an error message. JSON keys: location, condition, threshold.
+- `light-weather delete-alert`: Delete an existing custom weather alert by its ID. A dictionary containing status and output. On success, output confirms deletion; on failure (e.g., alert not found), output contains an error message. JSON keys: alert_id.
+- `light-weather list-alerts`: List all custom weather alerts created during the current session. A dictionary containing status and output. On success, output is a list of active alerts with conditions and thresholds; on failure, output contains an error message.
+- `light-weather get-uv-index`: Get the current UV index and risk level for a location. A dictionary containing status and output. On success, output includes the UV index value (0–11+) and associated health risk level; on failure, output contains an error message. JSON keys: location.
+- `light-weather get-air-quality`: Get the current air quality index (AQI) and category for a location. A dictionary containing status and output. On success, output includes AQI value and category (e.g., 'Good', 'Moderate', 'Unhealthy'); on failure, output contains an error message. JSON keys: location.
+- `light-weather get-sun-times`: Get sunrise and sunset times for a location on the current date. A dictionary containing status and output. On success, output includes ISO-formatted sunrise and sunset times; on failure, output contains an error message. JSON keys: location.
+- `light-weather convert-temperature`: Convert a temperature value between Celsius, Fahrenheit, and Kelvin. A dictionary containing status and output. On success, output is the converted temperature as a number; on failure (e.g., invalid units), output contains an error message. JSON keys: value, from_unit, to_unit.
+- `light-weather estimate-travel-weather`: Estimate current weather conditions along a travel route consisting of multiple cities. A dictionary containing status and output. On success, output is a list of weather summaries for each city in the route; on failure, output contains an error message. JSON keys: route.
+- `light-weather compare-climate`: Compare average climate conditions (e.g., temperature, rainfall) between two locations. A dictionary containing status and output. On success, output highlights key differences in annual averages; on failure, output contains an error message. JSON keys: location1, location2.
+- `light-weather get-precip-probability`: Get the probability of precipitation for each hour over the next N hours in a location. A dictionary containing status and output. On success, output is a list of hourly precipitation probabilities (0–100%); on failure, output contains an error message. JSON keys: location, next_hours.
+- `light-weather get-wind-forecast`: Get a wind speed and direction forecast for a location over the next N hours. A dictionary containing status and output. On success, output is a list of hourly wind forecasts (speed, gust, direction); on failure, output contains an error message. JSON keys: location, hours.
+- `light-weather get-climate-summary`: Get an annual climate summary for a location and year, including temperature and precipitation trends. A dictionary containing status and output. On success, output includes yearly averages and notable weather events; on failure, output contains an error message. JSON keys: location, year.
+- `light-weather set-primary-location`: Set a default primary location for weather queries in the current session. A dictionary containing status and output. On success, output confirms the primary location was updated; on failure, output contains an error message. JSON keys: location.
+- `light-weather get-primary-location`: Retrieve the current session's primary location, if one has been set. A dictionary containing status and output. On success, output is the primary location name or null if none is set; on failure, output contains an error message.
+
+### light-flight
+
+- `light-flight list-all-cities`: Retrieve a list of all cities that have airports in LightFlight. A dictionary containing status and output. On success, output is a list of city names; on failure, output contains an error message.
+- `light-flight list-airports-by-city`: List all airports located in a specific city in LightFlight. A dictionary containing status and output. On success, output is a list of airport names in that city; on failure (e.g., city not found), output contains an error message. JSON keys: city.
+- `light-flight get-flight-details`: Get detailed information about a specific flight in LightFlight using its unique flight ID (FID). A dictionary containing status and output. On success, output includes departure/arrival cities and airports, times, duration, prices by class, and seat availability; on failure (e.g., invalid FID), output contains an error message. JSON keys: fid.
+- `light-flight search-flights`: Search for available flights between two cities on a specific date in LightFlight. A dictionary containing status and output. On success, output is a list of matching flight IDs (FIDs); on failure (e.g., no flights or invalid date), output contains an error message. JSON keys: departure, arrival, date.
+- `light-flight check-seat-availability`: Check the number of remaining seats for a specific cabin class on a given flight in LightFlight. A dictionary containing status and output. On success, output states the number of remaining seats; on failure (e.g., invalid FID or class), output contains an error message. JSON keys: fid, seat_class.
+- `light-flight check-passengers`: List all passengers currently registered in your LightFlight profile. A dictionary containing status and output. On success, output is a list of passenger records (name and optional LightTalk UID); on failure, output contains an error message.
+- `light-flight add-passenger`: Add a new passenger to your LightFlight profile for booking purposes. A dictionary containing status and output. On success, output confirms the passenger was added and includes their index; on failure, output contains an error message. JSON keys: name, light_talk_uid.
+- `light-flight remove-passenger`: Remove a passenger from your LightFlight profile by their index. A dictionary containing status and output. On success, output confirms removal; on failure (e.g., index out of range), output contains an error message. JSON keys: passenger_idx.
+- `light-flight add-to-booking`: Add a flight seat for a specific passenger to your current booking cart in LightFlight. A dictionary containing status and output. On success, output confirms the booking item was added; on failure (e.g., no seats, invalid passenger), output contains an error message. JSON keys: fid, seat_class, passenger_idx.
+- `light-flight check-bookings`: View all flight bookings currently in your cart (both paid and unpaid) in LightFlight. A dictionary containing status and output. On success, output is a list of booking items with flight, class, passenger, price, and payment status; on failure, output contains an error message.
+- `light-flight remove-from-booking`: Remove an unpaid booking item from your cart using its booking ID (BID) in LightFlight. A dictionary containing status and output. On success, output confirms removal; on failure (e.g., BID not found or already paid), output contains an error message. JSON keys: bid.
+- `light-flight wait-payment-password`: Prompt the user to enter their payment password in LightFlight. This step is required before checkout. A dictionary containing status and output. On success, output confirms authentication is complete; on failure, output contains an error message.
+- `light-flight checkout-bookings`: Complete payment for all unpaid bookings in your cart in LightFlight. A dictionary containing status and output. On success, output confirms successful checkout and updates balance/history; on failure (e.g., password not entered or insufficient balance), output contains an error message.
+- `light-flight check-balance`: Check your current account balance in LightFlight. A dictionary containing status and output. On success, output is your current balance (e.g., '$ 12345'); on failure, output contains an error message.
+- `light-flight get-booking-history`: Retrieve your historical flight booking records in LightFlight. A dictionary containing status and output. On success, output is a list of past booking records with timestamps, total prices, and flight details; on failure, output contains an error message.
+- `light-flight cancel-booking`: Cancel one or more paid bookings and receive a 95% refund in LightFlight. A dictionary containing status and output. On success, output confirms cancellation and refund amount; on failure (e.g., unpaid booking or invalid BID), output contains an error message. JSON keys: bids.
+- `light-flight search-airports`: Search for airports by name (partial match) in LightFlight. A dictionary containing status and output. On success, output is a list of matching airports with ID, name, city, and code; on failure (e.g., no matches), output contains an error message. JSON keys: airport_name.
+- `light-flight star-airport`: Mark an airport as starred (favorited) in LightFlight for quick access. A dictionary containing status and output. On success, output confirms the airport was starred; on failure (e.g., already starred or invalid AID), output contains an error message. JSON keys: aid.
+- `light-flight unstar-airport`: Remove an airport from your starred list in LightFlight. A dictionary containing status and output. On success, output confirms the airport was unstarred; on failure (e.g., not previously starred), output contains an error message. JSON keys: aid.
+- `light-flight get-my-starred-airports`: Retrieve a list of all airports you have starred in LightFlight. A dictionary containing status and output. On success, output is a list of starred airports with ID, name, city, and code; on failure, output contains an error message.
+- `light-flight get-fids-by-arrival`: Retrieve all flight IDs (FIDs) that arrive at a specific destination city in LightFlight. A dictionary containing status and output. On success, output is a list of flight IDs (FIDs) arriving at the specified city; on failure (e.g., city not found), output contains an error message. JSON keys: arrival.
+- `light-flight get-fids-by-departure`: Retrieve all flight IDs (FIDs) that depart from a specific origin city in LightFlight. A dictionary containing status and output. On success, output is a list of flight IDs (FIDs) departing from the specified city; on failure (e.g., city not found), output contains an error message. JSON keys: departure.
+
+### light-stock
+
+- `light-stock get-account-summary`: Retrieve a summary of your account status in LightStock, including user tier and balances. A dictionary containing status and output. On success, output includes user tier (Basic/VIP), trading balance, savings balance, and frozen margin; on failure, output contains an error message.
+- `light-stock list-all-sectors`: List all industry sectors available in LightStock. A dictionary containing status and output. On success, output is a sorted list of sector names; on failure, output contains an error message.
+- `light-stock list-all-tickers-by-sector`: List all stock tickers belonging to a specific industry sector in LightStock. A dictionary containing status and output. On success, output is a list of ticker symbols in that sector; on failure (e.g., invalid sector), output contains an error message. JSON keys: sector.
+- `light-stock search-stocks`: Search for stocks by ticker symbol or company name in LightStock. A dictionary containing status and output. On success, output is a list of matching stocks with ticker, name, and current price; on failure, output contains an error message. JSON keys: query.
+- `light-stock get-stock-details`: Get detailed information about a specific stock, including price, P/E ratio, market cap, and description. A dictionary containing status and output. On success, output includes full stock metadata; on failure (e.g., invalid ticker), output contains an error message. JSON keys: ticker.
+- `light-stock wait-trade-password`: Authenticate the user by entering the trading password. Required before placing orders or upgrading to VIP. A dictionary containing status and output. On success, output confirms successful authentication; on failure, output contains an error message.
+- `light-stock transfer-funds`: Transfer funds between your trading account and savings account in LightStock. A dictionary containing status and output. On success, output confirms the transfer; on failure (e.g., insufficient balance), output contains an error message. JSON keys: amount, direction.
+- `light-stock place-market-order`: Place a market order to buy or sell a stock at the current market price. A dictionary containing status and output. On success, output confirms execution with fee; on failure (e.g., market closed, insufficient funds, or daily trade limit reached), output contains an error message. JSON keys: ticker, side, quantity.
+- `light-stock place-limit-order`: Place a limit order to buy or sell a stock only at a specified price or better. A dictionary containing status and output. On success, output confirms order placement and shows frozen funds; on failure (e.g., market closed, insufficient available cash), output contains an error message. JSON keys: ticker, side, quantity, limit_price.
+- `light-stock place-stop-loss-order`: Place a stop-loss order to automatically sell a stock when its price falls to a specified level. (VIP-only feature) A dictionary containing status and output. On success, output confirms the stop-loss order; on failure (e.g., not VIP, invalid price, or insufficient shares), output contains an error message. JSON keys: ticker, quantity, stop_price.
+- `light-stock get-portfolio`: Retrieve your current stock holdings (positions) in LightStock. A dictionary containing status and output. On success, output is a list of positions with ticker, quantity, and average cost; on failure, output contains an error message.
+- `light-stock get-pending-orders`: List all active pending orders (limit or stop-loss) in your account. A dictionary containing status and output. On success, output is a list of pending orders with details; on failure, output contains an error message.
+- `light-stock cancel-order`: Cancel a pending order by its unique order ID and release any frozen funds. A dictionary containing status and output. On success, output confirms cancellation; on failure (e.g., order not found), output contains an error message. JSON keys: oid.
+- `light-stock get-trade-history`: Retrieve a complete history of all executed trades in your account. A dictionary containing status and output. On success, output is a list of past transactions with timestamp, ticker, side, price, and fee; on failure, output contains an error message.
+- `light-stock toggle-watchlist`: Add or remove a stock from your watchlist in LightStock. A dictionary containing status and output. On success, output confirms whether the stock was added or removed; on failure (e.g., invalid ticker), output contains an error message. JSON keys: ticker.
+- `light-stock get-watchlist-details`: Get current price and key metrics for all stocks in your watchlist. A dictionary containing status and output. On success, output is a list of watchlist stocks with ticker, price, and P/E ratio; on failure, output contains an error message.
+- `light-stock check-vip-price`: Check the current fee required to upgrade your account to VIP status in LightStock. A dictionary containing status and output. On success, output is the VIP upgrade fee (in dollars); on failure, output contains an error message.
+- `light-stock upgrade-to-vip`: Upgrade your account to VIP status to unlock advanced features like short selling and unlimited day trades. A dictionary containing status and output. On success, output confirms VIP activation and deducts the fee; on failure (e.g., already VIP or insufficient funds), output contains an error message.
+- `light-stock get-day-trades-remaining`: Check how many day trades you have left today. Basic users have a daily limit; VIP users have unlimited trades. A dictionary containing status and output. On success, output is either a number (Basic) or 'Unlimited' (VIP); on failure, output contains an error message.
+- `light-stock set-price-alert`: Set a price alert for a stock to notify you when it reaches a target price. A dictionary containing status and output. On success, output confirms the alert was set; on failure (e.g., invalid ticker), output contains an error message. JSON keys: ticker, price.
+- `light-stock remove-price-alert`: Remove an existing price alert for a stock. A dictionary containing status and output. On success, output confirms removal; on failure (e.g., no alert exists), output contains an error message. JSON keys: ticker.
+
+### light-news
+
+- `light-news list-all-sections`: Retrieve a list of all available news sections (categories) in LightNews, such as 'World', 'Technology', 'Sports', etc. A dictionary containing status and output. On success, output is a list of section names; on failure, output contains an error message.
+- `light-news get-last-k-news`: Fetch the most recent K news articles from a specific section in LightNews. A dictionary containing status and output. On success, output is a list of news articles (including title, summary, publish time, and NID); on failure, output contains an error message. JSON keys: section, k.
+- `light-news search`: Search for news articles in a specific section using keywords, with optional date range filtering. A dictionary containing status and output. On success, output is a list of matching news articles (with NID, title, snippet, and publish date); on failure, output contains an error message. JSON keys: section, query, maxn, begin_date, end_date.
+- `light-news get-details`: Retrieve the full content and metadata of a specific news article in LightNews using its unique ID. A dictionary containing status and output. On success, output includes the article's title, full body text, author, publish time, section, and associated media; on failure (e.g., invalid or non-existent NID), output contains an error message. JSON keys: nid.
+- `light-news get-news-url`: Retrieve the shareable URL for a specific news article in LightNews using its unique ID. A dictionary containing status and output. On success, output is the full URL string to the news article; on failure (e.g., invalid NID), output contains an error message. JSON keys: nid.

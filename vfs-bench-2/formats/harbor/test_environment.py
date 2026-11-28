@@ -315,6 +315,62 @@ class FailedSetup(unittest.TestCase):
             self.assertEqual(env._runs, [])
 
 
+class Machines(unittest.TestCase):
+
+    def test_each_trial_restores_a_sandbox_and_removes_it(self) -> None:
+        calls: list[tuple] = []
+
+        async def msb(*argv, check=False):
+            calls.append(argv)
+
+        env = object.__new__(MirageEnvironment)
+        env._sandboxes = []
+        env._workspace_id = "t__env"
+        env.task_env_config = SimpleNamespace(cpus=2, memory_mb=4096)
+        env._client = None
+        env._processes = []
+        env._runs = []
+        captures = ["@python", "@external"]
+
+        async def scenario() -> dict:
+            machines = await env._open_machines({
+                "box": {
+                    "provider": "microsandbox",
+                    "snapshot": "img:v1",
+                    "mount_type": "ssh",
+                    "captures": captures,
+                },
+                "py": {
+                    "provider": "in_process",
+                    "runtime": "monty"
+                },
+            })
+            await env.stop(delete=False)
+            return machines
+
+        with patch.object(environment, "_msb", msb):
+            machines = asyncio.run(scenario())
+        self.assertEqual(
+            machines, {
+                "box": {
+                    "provider": "microsandbox",
+                    "sandbox": "t__env-box",
+                    "mount_type": "ssh",
+                    "captures": captures,
+                },
+                "py": {
+                    "provider": "in_process",
+                    "runtime": "monty"
+                },
+            })
+        self.assertEqual(calls, [
+            ("restore", "--no-net", "--name", "t__env-box", "--cpus", "2",
+             "--memory", "4096M", "img:v1"),
+            ("remove", "--force", "t__env-box"),
+        ])
+        self.assertEqual(env._sandboxes, [])
+
+
 class CanceledLayout(unittest.TestCase):
 
     def test_stop_deletes_the_files_once_the_layout_is_done(self) -> None:
@@ -323,6 +379,7 @@ class CanceledLayout(unittest.TestCase):
             env._client = None
             env._processes = []
             env._runs = []
+            env._sandboxes = []
             env._run_dir = Path(tmp, "run")
             env._run_dir.mkdir()
 
@@ -347,7 +404,7 @@ class UnsavedHistory(unittest.TestCase):
         def answer(request: httpx.Request) -> httpx.Response:
             if request.method == "GET":
                 return history(request)
-            self.posted.append(request.url.path)
+            self.posted.append(f"{request.method} {request.url.path}")
             return httpx.Response(200, json={})
 
         env = object.__new__(MirageEnvironment)
@@ -358,6 +415,7 @@ class UnsavedHistory(unittest.TestCase):
         env._workers = None
         env._processes = []
         env._runs = []
+        env._sandboxes = []
         env._run_dir = run_dir
         client = env._client
         try:
@@ -373,14 +431,14 @@ class UnsavedHistory(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp:
             self.stop(Path(tmp), history)
-        self.assertEqual(self.posted, ["/v1/workspaces/t__env/close"])
+        self.assertEqual(self.posted, ["DELETE /v1/workspaces/t__env"])
 
     def test_a_failed_write_still_closes_the_workspace(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             with self.assertRaises(FileNotFoundError):
                 self.stop(Path(tmp, "gone"),
-                          lambda request: httpx.Response(200, json=[]))
-        self.assertEqual(self.posted, ["/v1/workspaces/t__env/close"])
+                          lambda request: httpx.Response(200, text=""))
+        self.assertEqual(self.posted, ["DELETE /v1/workspaces/t__env"])
 
 
 if __name__ == "__main__":

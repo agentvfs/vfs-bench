@@ -112,7 +112,7 @@ export async function gaia2Workspace(request: Gaia2Request, signal?: AbortSignal
     '/': [new RAMVFS(), MountMode.EXEC],
     '/input': [input, MountMode.READ], '/output': [output, MountMode.WRITE],
   }, {
-    runtimes: [runtime, 'workspace'], maxMemory: 512 * 1024 * 1024,
+    machines: [runtime], maxMemory: 512 * 1024 * 1024,
     commandLimits: { '@line': new Limit({ timeoutSeconds: request.timeoutSeconds }) },
   })
   return { workspace, transport }

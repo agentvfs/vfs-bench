@@ -1,0 +1,820 @@
+stocks:
+  # --- Technology: AI, Software, & Chips ---
+  - ticker: AAPL
+    name: Apple Inc.
+    price: 189.43
+    sector: Technology
+    description: >
+      A leading global technology company that designs, manufactures,
+      and markets smartphones (iPhone), personal computers (Mac),
+      tablets (iPad), and wearables. It also provides various related services.
+    pe_ratio: 28.5
+    market_cap: 2.89T
+
+  - ticker: MSFT
+    name: Microsoft Corporation
+    price: 415.22
+    sector: Technology
+    description: >
+      A technology giant known for Windows OS, Office suite, and Azure cloud services.
+      Leading the AI revolution through partnership with OpenAI and Copilot integration.
+    pe_ratio: 35.2
+    market_cap: 3.12T
+
+  - ticker: NVDA
+    name: NVIDIA Corporation
+    price: 875.35
+    sector: Technology
+    description: >
+      The dominant provider of graphics processing units (GPUs) essential for deep learning, 
+      artificial intelligence, and high-performance computing.
+    pe_ratio: 72.4
+    market_cap: 2.15T
+
+  - ticker: GOOGL
+    name: Alphabet Inc.
+    price: 152.10
+    sector: Technology
+    description: >
+      Parent company of Google, YouTube, and Waymo. Dominates online search and 
+      advertising markets while investing heavily in Gemini AI models.
+    pe_ratio: 24.1
+    market_cap: 1.88T
+
+  - ticker: AMD
+    name: Advanced Micro Devices
+    price: 170.23
+    sector: Technology
+    description: >
+      A semiconductor company producing CPUs and GPUs for data centers, gaming consoles, 
+      and personal computers. Main rival to Intel and NVIDIA.
+    pe_ratio: 310.5
+    market_cap: 275.4B
+
+  - ticker: CRM
+    name: Salesforce Inc.
+    price: 295.15
+    sector: Technology
+    description: >
+      Global leader in Customer Relationship Management (CRM) software and cloud-based 
+      enterprise applications like Slack and Tableau.
+    pe_ratio: 65.2
+    market_cap: 285.6B
+
+  - ticker: ADBE
+    name: Adobe Inc.
+    price: 485.30
+    sector: Technology
+    description: >
+      Provider of creative software solutions including Photoshop, Illustrator, and 
+      Premiere Pro. Expanding into generative AI with Firefly.
+    pe_ratio: 45.8
+    market_cap: 220.1B
+
+  - ticker: ASML
+    name: ASML Holding
+    price: 920.45
+    sector: Technology
+    description: >
+      Dutch company that manufactures photolithography machines used to produce the 
+      world's most advanced computer chips.
+    pe_ratio: 44.2
+    market_cap: 385.2B
+
+  - ticker: PLTR
+    name: Palantir Technologies
+    price: 23.45
+    sector: Technology
+    description: >
+      Specializes in big data analytics for government agencies and commercial enterprises. 
+      Known for Gotham and Foundry platforms.
+    pe_ratio: 165.0
+    market_cap: 52.1B
+
+  - ticker: SNOW
+    name: Snowflake Inc.
+    price: 160.22
+    sector: Technology
+    description: >
+      A cloud-based data warehousing and analytics company that allows businesses to 
+      store and analyze data using cloud-based hardware and software.
+    pe_ratio: -12.4
+    market_cap: 53.5B
+
+  # --- Consumer Discretionary: EV & Retail ---
+  - ticker: TSLA
+    name: Tesla Inc.
+    price: 175.45
+    sector: Consumer Discretionary
+    description: >
+      Electric vehicle (EV) pioneer focused on sustainable energy, battery storage 
+      systems, and autonomous driving technology (FSD).
+    pe_ratio: 42.1
+    market_cap: 560.2B
+
+  - ticker: AMZN
+    name: Amazon.com Inc.
+    price: 178.50
+    sector: Consumer Discretionary
+    description: >
+      E-commerce giant and cloud computing leader (AWS). Also operates Prime Video, 
+      Whole Foods, and a massive logistics network.
+    pe_ratio: 60.5
+    market_cap: 1.85T
+
+  - ticker: NKE
+    name: Nike Inc.
+    price: 92.15
+    sector: Consumer Discretionary
+    description: >
+      The world's largest designer and seller of athletic footwear and apparel. 
+      Known for the 'Just Do It' slogan and Jordan Brand.
+    pe_ratio: 28.2
+    market_cap: 138.4B
+
+  - ticker: SBUX
+    name: Starbucks Corporation
+    price: 88.30
+    sector: Consumer Discretionary
+    description: >
+      Leading specialty coffee roaster and retailer with thousands of stores globally. 
+      Focuses on premium coffee experience and digital loyalty.
+    pe_ratio: 24.5
+    market_cap: 100.2B
+
+  - ticker: TM
+    name: Toyota Motor Corp
+    price: 245.20
+    sector: Consumer Discretionary
+    description: >
+      World's largest automaker by volume. Known for hybrid vehicles like the Prius 
+      and reputation for reliability.
+    pe_ratio: 10.2
+    market_cap: 330.5B
+
+  - ticker: BYDDF
+    name: BYD Company Limited
+    price: 25.10
+    sector: Consumer Discretionary
+    description: >
+      Chinese EV and battery manufacturer. Competitive rival to Tesla in global 
+      electric car sales and vertical integration.
+    pe_ratio: 18.5
+    market_cap: 75.2B
+
+  - ticker: F
+    name: Ford Motor Company
+    price: 12.35
+    sector: Consumer Discretionary
+    description: >
+      Legacy American automaker transitioning to electric vehicles with the F-150 
+      Lightning and Mustang Mach-E.
+    pe_ratio: 11.4
+    market_cap: 49.2B
+
+  - ticker: SHOP
+    name: Shopify Inc.
+    price: 75.20
+    sector: Consumer Discretionary
+    description: >
+      Provides e-commerce platforms for small and medium-sized businesses to sell 
+      products online. Competitor to Amazon's marketplace.
+    pe_ratio: 750.0
+    market_cap: 96.4B
+
+  - ticker: LULU
+    name: Lululemon Athletica
+    price: 380.15
+    sector: Consumer Discretionary
+    description: >
+      High-end athletic apparel retailer known for yoga pants and premium 
+      athleisure wear.
+    pe_ratio: 32.4
+    market_cap: 48.5B
+
+  - ticker: MCD
+    name: McDonald's Corp
+    price: 282.50
+    sector: Consumer Discretionary
+    description: >
+      The world's largest fast-food restaurant chain. Also a massive real estate 
+      owner through its franchise model.
+    pe_ratio: 24.1
+    market_cap: 205.2B
+
+  # --- Financial Services: Banks & Payments ---
+  - ticker: JPM
+    name: JPMorgan Chase & Co.
+    price: 195.30
+    sector: Financial Services
+    description: >
+      Largest bank in the United States. Offers investment banking, asset 
+      management, and consumer financial services.
+    pe_ratio: 11.5
+    market_cap: 560.8B
+
+  - ticker: GS
+    name: Goldman Sachs Group
+    price: 410.25
+    sector: Financial Services
+    description: >
+      Leading global investment banking and securities firm. Expert in M&A 
+      advisory and institutional trading.
+    pe_ratio: 15.2
+    market_cap: 135.4B
+
+  - ticker: V
+    name: Visa Inc.
+    price: 280.45
+    sector: Financial Services
+    description: >
+      Digital payment giant facilitating global credit and debit card transactions 
+      across 200+ countries.
+    pe_ratio: 32.1
+    market_cap: 570.2B
+
+  - ticker: MA
+    name: Mastercard Inc.
+    price: 465.10
+    sector: Financial Services
+    description: >
+      Second-largest payment processor worldwide. Innovating in contactless 
+      payments and blockchain technology.
+    pe_ratio: 38.5
+    market_cap: 435.6B
+
+  - ticker: PYPL
+    name: PayPal Holdings
+    price: 65.30
+    sector: Financial Services
+    description: >
+      Digital wallet and payment platform. Owner of Venmo. Facing competition 
+      from Apple Pay and Google Pay.
+    pe_ratio: 15.4
+    market_cap: 70.2B
+
+  - ticker: COIN
+    name: Coinbase Global
+    price: 250.15
+    sector: Financial Services
+    description: >
+      The largest cryptocurrency exchange in the U.S. Business highly correlated 
+      with Bitcoin and crypto market volatility.
+    pe_ratio: 125.0
+    market_cap: 60.5B
+
+  - ticker: BRK.B
+    name: Berkshire Hathaway
+    price: 405.30
+    sector: Financial Services
+    description: >
+      Warren Buffett's conglomerate owning GEICO, Dairy Queen, and massive 
+      stakes in Apple and Coca-Cola.
+    pe_ratio: 12.5
+    market_cap: 880.4B
+
+  - ticker: MSTR
+    name: MicroStrategy Inc.
+    price: 1650.00
+    sector: Technology
+    description: >
+      Software company famous for its massive Bitcoin treasury. Often used 
+      as a proxy for Bitcoin investment.
+    pe_ratio: -45.2
+    market_cap: 28.2B
+
+  - ticker: SQ
+    name: Block Inc.
+    price: 78.45
+    sector: Financial Services
+    description: >
+      Formerly Square. Operates Cash App and merchant payment services. 
+      Focused on Bitcoin and decentralized finance.
+    pe_ratio: 85.2
+    market_cap: 48.1B
+
+  - ticker: BAC
+    name: Bank of America
+    price: 37.20
+    sector: Financial Services
+    description: >
+      Large retail bank in the U.S. Significant player in mortgage lending 
+      and corporate banking.
+    pe_ratio: 10.5
+    market_cap: 290.4B
+
+  # --- Healthcare: Pharma & Biotech ---
+  - ticker: JNJ
+    name: Johnson & Johnson
+    price: 155.40
+    sector: Healthcare
+    description: >
+      Diversified healthcare giant producing pharmaceuticals, medical devices, 
+      and consumer health products like Band-Aids.
+    pe_ratio: 14.5
+    market_cap: 375.2B
+
+  - ticker: LLY
+    name: Eli Lilly & Co.
+    price: 760.35
+    sector: Healthcare
+    description: >
+      Pharmaceutical company leading in diabetes and obesity treatments with 
+      drugs like Mounjaro and Zepbound.
+    pe_ratio: 125.4
+    market_cap: 720.5B
+
+  - ticker: PFE
+    name: Pfizer Inc.
+    price: 27.50
+    sector: Healthcare
+    description: >
+      Global pharmaceutical company known for the COVID-19 vaccine (Comirnaty) 
+      and Paxlovid. Currently diversifying post-pandemic.
+    pe_ratio: 12.2
+    market_cap: 155.4B
+
+  - ticker: UNH
+    name: UnitedHealth Group
+    price: 485.20
+    sector: Healthcare
+    description: >
+      The largest health insurance company in the U.S. Also provides data 
+      analytics and healthcare services through Optum.
+    pe_ratio: 18.2
+    market_cap: 445.6B
+
+  - ticker: MRNA
+    name: Moderna Inc.
+    price: 105.15
+    sector: Healthcare
+    description: >
+      Biotech pioneer specializing in mRNA technology for vaccines and 
+      cancer treatments.
+    pe_ratio: -5.4
+    market_cap: 40.2B
+
+  - ticker: ABBV
+    name: AbbVie Inc.
+    price: 175.40
+    sector: Healthcare
+    description: >
+      Biopharmaceutical company known for Humira, the world's top-selling drug, 
+      and Skyrizi.
+    pe_ratio: 15.1
+    market_cap: 310.2B
+
+  - ticker: AMGN
+    name: Amgen Inc.
+    price: 270.50
+    sector: Healthcare
+    description: >
+      One of the world's largest independent biotechnology companies focused 
+      on oncology and inflammation.
+    pe_ratio: 20.4
+    market_cap: 145.2B
+
+  - ticker: ISRG
+    name: Intuitive Surgical
+    price: 395.10
+    sector: Healthcare
+    description: >
+      Leader in robotic-assisted surgery with the Da Vinci Surgical System. 
+      High recurring revenue from instruments.
+    pe_ratio: 75.2
+    market_cap: 140.4B
+
+  - ticker: CVS
+    name: CVS Health
+    price: 72.30
+    sector: Healthcare
+    description: >
+      Operates a massive pharmacy chain and Aetna health insurance. Integrating 
+      pharmacy and primary care.
+    pe_ratio: 11.5
+    market_cap: 90.2B
+
+  - ticker: VRTX
+    name: Vertex Pharmaceuticals
+    price: 420.50
+    sector: Healthcare
+    description: >
+      Specializes in treatments for cystic fibrosis and expanding into 
+      gene editing for sickle cell disease.
+    pe_ratio: 28.4
+    market_cap: 108.4B
+
+  # --- Energy & Utilities ---
+  - ticker: XOM
+    name: Exxon Mobil Corp
+    price: 120.45
+    sector: Energy
+    description: >
+      One of the world's largest oil and gas companies. Focused on fossil 
+      fuel extraction and carbon capture technology.
+    pe_ratio: 13.1
+    market_cap: 480.2B
+
+  - ticker: CVX
+    name: Chevron Corporation
+    price: 160.20
+    sector: Energy
+    description: >
+      Major integrated energy company. Investing in lower-carbon intensity 
+      oil, gas, and renewable fuels.
+    pe_ratio: 14.2
+    market_cap: 300.5B
+
+  - ticker: NEE
+    name: NextEra Energy
+    price: 65.10
+    sector: Utilities
+    description: >
+      The largest renewable energy company in the world, operating major 
+      wind and solar projects across the U.S.
+    pe_ratio: 22.4
+    market_cap: 135.2B
+
+  - ticker: BP
+    name: BP p.l.c.
+    price: 38.45
+    sector: Energy
+    description: >
+      British energy giant transitioning toward integrated energy, including 
+      electric vehicle charging and hydrogen.
+    pe_ratio: 7.5
+    market_cap: 105.4B
+
+  - ticker: SLB
+    name: Schlumberger NV
+    price: 55.20
+    sector: Energy
+    description: >
+      The world's leading provider of technology for reservoir characterization, 
+      drilling, and production to the oil and gas industry.
+    pe_ratio: 16.5
+    market_cap: 78.2B
+
+  - ticker: OXY
+    name: Occidental Petroleum
+    price: 68.10
+    sector: Energy
+    description: >
+      Oil company backed by Warren Buffett. Leader in enhanced oil recovery 
+      and direct air capture of CO2.
+    pe_ratio: 14.8
+    market_cap: 60.2B
+
+  - ticker: Duke
+    name: Duke Energy
+    price: 95.30
+    sector: Utilities
+    description: >
+      One of the largest electric power holding companies in the U.S., 
+      serving millions of customers in the Southeast.
+    pe_ratio: 18.2
+    market_cap: 73.5B
+
+  - ticker: TTE
+    name: TotalEnergies SE
+    price: 72.10
+    sector: Energy
+    description: >
+      French broad energy company that produces and markets fuels, 
+      natural gas, and low-carbon electricity.
+    pe_ratio: 8.4
+    market_cap: 165.2B
+
+  # --- Communication & Entertainment ---
+  - ticker: META
+    name: Meta Platforms Inc.
+    price: 495.20
+    sector: Communication Services
+    description: >
+      Owner of Facebook, Instagram, and WhatsApp. Pivoting to the Metaverse 
+      and open-source Llama AI models.
+    pe_ratio: 32.5
+    market_cap: 1.25T
+
+  - ticker: NFLX
+    name: Netflix Inc.
+    price: 610.15
+    sector: Communication Services
+    description: >
+      The pioneer of streaming television. Focused on original content and 
+      cracking down on password sharing.
+    pe_ratio: 48.2
+    market_cap: 265.4B
+
+  - ticker: DIS
+    name: The Walt Disney Co
+    price: 115.30
+    sector: Communication Services
+    description: >
+      Entertainment empire owning Pixar, Marvel, Star Wars, and theme parks. 
+      Battling in the streaming space with Disney+.
+    pe_ratio: 72.4
+    market_cap: 210.2B
+
+  - ticker: T
+    name: AT&T Inc.
+    price: 17.50
+    sector: Communication Services
+    description: >
+      Telecommunications giant providing wireless and fiber internet services. 
+      High dividend yield stock.
+    pe_ratio: 9.2
+    market_cap: 125.4B
+
+  - ticker: TMUS
+    name: T-Mobile US
+    price: 165.40
+    sector: Communication Services
+    description: >
+      Leader in 5G wireless coverage in the U.S. Known for its 'Un-carrier' 
+      marketing and aggressive growth.
+    pe_ratio: 22.5
+    market_cap: 195.2B
+
+  - ticker: VZ
+    name: Verizon Communications
+    price: 40.20
+    sector: Communication Services
+    description: >
+      Massive wireless carrier known for network reliability and significant 
+      dividend payments to shareholders.
+    pe_ratio: 8.8
+    market_cap: 170.4B
+
+  - ticker: RBLX
+    name: Roblox Corporation
+    price: 35.15
+    sector: Communication Services
+    description: >
+      Online gaming platform and game creation system that allows users to 
+      program and play games created by others.
+    pe_ratio: -15.4
+    market_cap: 22.2B
+
+  - ticker: SONY
+    name: Sony Group Corp
+    price: 85.30
+    sector: Communication Services
+    description: >
+      Japanese conglomerate famous for PlayStation, music publishing, and 
+      image sensors for smartphones.
+    pe_ratio: 15.5
+    market_cap: 105.2B
+
+  - ticker: SPOT
+    name: Spotify Technology
+    price: 305.10
+    sector: Communication Services
+    description: >
+      World's most popular audio streaming subscription service, covering 
+      music and podcasts.
+    pe_ratio: 120.4
+    market_cap: 60.1B
+
+  # --- Consumer Staples: Retail & Food ---
+  - ticker: WMT
+    name: Walmart Inc.
+    price: 60.45
+    sector: Consumer Staples
+    description: >
+      The world's largest retailer by revenue. Operating massive discount 
+      department stores and growing its online presence.
+    pe_ratio: 28.2
+    market_cap: 485.6B
+
+  - ticker: COST
+    name: Costco Wholesale
+    price: 720.50
+    sector: Consumer Staples
+    description: >
+      Membership-only warehouse club known for bulk sales, high member 
+      retention, and the famous $1.50 hot dog.
+    pe_ratio: 48.5
+    market_cap: 320.4B
+
+  - ticker: KO
+    name: Coca-Cola Company
+    price: 59.20
+    sector: Consumer Staples
+    description: >
+      Global beverage leader with brands like Coke, Sprite, and Dasani. 
+      Famous for its consistent dividend growth.
+    pe_ratio: 24.1
+    market_cap: 255.2B
+
+  - ticker: PEP
+    name: PepsiCo Inc.
+    price: 172.10
+    sector: Consumer Staples
+    description: >
+      Food and beverage giant owning Pepsi, Lay's, Gatorade, and Quaker Oats. 
+      Diversified across snacks and drinks.
+    pe_ratio: 26.4
+    market_cap: 235.4B
+
+  - ticker: TGT
+    name: Target Corporation
+    price: 168.30
+    sector: Consumer Discretionary
+    description: >
+      General merchandise retailer known for stylish affordable products and 
+      successful 'cheap-chic' branding.
+    pe_ratio: 18.5
+    market_cap: 78.2B
+
+  - ticker: PG
+    name: Procter & Gamble
+    price: 162.15
+    sector: Consumer Staples
+    description: >
+      Consumer goods leader owning Tide, Gillette, and Pampers. Defensive 
+      stock known for stability.
+    pe_ratio: 25.2
+    market_cap: 382.1B
+
+  - ticker: PM
+    name: Philip Morris International
+    price: 92.40
+    sector: Consumer Staples
+    description: >
+      Leading tobacco company transitioning to a smoke-free future with 
+      IQOS heated tobacco products.
+    pe_ratio: 18.1
+    market_cap: 142.5B
+
+  # --- Industrials & Aerospace ---
+  - ticker: BA
+    name: Boeing Company
+    price: 180.35
+    sector: Industrials
+    description: >
+      Global aerospace leader manufacturing commercial jetliners (737, 787) 
+      and defense, space, and security systems.
+    pe_ratio: -18.4
+    market_cap: 110.2B
+
+  - ticker: LMT
+    name: Lockheed Martin
+    price: 450.20
+    sector: Industrials
+    description: >
+      The world's largest defense contractor, famous for the F-35 fighter jet 
+      and advanced missile systems.
+    pe_ratio: 16.2
+    market_cap: 108.4B
+
+  - ticker: GE
+    name: GE Aerospace
+    price: 155.10
+    sector: Industrials
+    description: >
+      Recently spun-off focused solely on jet engines and aviation systems 
+      for commercial and military aircraft.
+    pe_ratio: 20.5
+    market_cap: 170.2B
+
+  - ticker: RTX
+    name: Raytheon Technologies
+    price: 98.45
+    sector: Industrials
+    description: >
+      Aerospace and defense company providing advanced systems for commercial, 
+      military, and government customers.
+    pe_ratio: 19.1
+    market_cap: 145.2B
+
+  - ticker: CAT
+    name: Caterpillar Inc.
+    price: 360.25
+    sector: Industrials
+    description: >
+      The world's leading manufacturer of construction and mining equipment, 
+      diesel and natural gas engines.
+    pe_ratio: 18.5
+    market_cap: 178.6B
+
+  - ticker: UPS
+    name: United Parcel Service
+    price: 145.10
+    sector: Industrials
+    description: >
+      Global logistics and package delivery leader. Indicator of global 
+      trade and e-commerce health.
+    pe_ratio: 18.4
+    market_cap: 125.2B
+
+  - ticker: HON
+    name: Honeywell International
+    price: 198.50
+    sector: Industrials
+    description: >
+      Diversified technology and manufacturing leader serving aerospace, 
+      building technologies, and performance materials.
+    pe_ratio: 22.4
+    market_cap: 130.4B
+
+  # --- Special Cases / High Growth ---
+  - ticker: PLTR
+    name: Palantir Technologies
+    price: 24.15
+    sector: Technology
+    description: >
+      Data analytics software for government and commercial sectors. Known 
+      for its Artificial Intelligence Platform (AIP).
+    pe_ratio: 180.2
+    market_cap: 53.4B
+
+  - ticker: U
+    name: Unity Software Inc.
+    price: 25.40
+    sector: Technology
+    description: >
+      The world's leading platform for creating and operating interactive, 
+      real-time 3D (RT3D) content.
+    pe_ratio: -8.5
+    market_cap: 9.8B
+
+  - ticker: RDDT
+    name: Reddit Inc.
+    price: 45.20
+    sector: Communication Services
+    description: >
+      Social media platform organized around thousands of communities (subreddits) 
+      ranging from finance to entertainment.
+    pe_ratio: -12.4
+    market_cap: 7.2B
+
+  - ticker: HOOD
+    name: Robinhood Markets
+    price: 18.50
+    sector: Financial Services
+    description: >
+      Financial services platform that pioneered commission-free stock 
+      trading and popularized 'meme stock' trading.
+    pe_ratio: -105.2
+    market_cap: 16.4B
+
+  - ticker: ARM
+    name: Arm Holdings
+    price: 125.40
+    sector: Technology
+    description: >
+      British semiconductor designer whose architecture powers almost all 
+      smartphones and increasingly more data centers.
+    pe_ratio: 95.4
+    market_cap: 130.2B
+
+  - ticker: PANW
+    name: Palo Alto Networks
+    price: 290.30
+    sector: Technology
+    description: >
+      Global cybersecurity leader providing next-generation firewalls and 
+      cloud security solutions.
+    pe_ratio: 44.5
+    market_cap: 95.4B
+
+  - ticker: ABNB
+    name: Airbnb Inc.
+    price: 160.20
+    sector: Consumer Discretionary
+    description: >
+      Online marketplace for lodging, primarily homestays for vacation 
+      rentals, and tourism activities.
+    pe_ratio: 35.1
+    market_cap: 102.4B
+
+  - ticker: DASH
+    name: DoorDash Inc.
+    price: 135.50
+    sector: Consumer Discretionary
+    description: >
+      The largest food delivery platform in the United States, expanding 
+      into grocery and convenience delivery.
+    pe_ratio: -40.2
+    market_cap: 55.4B
+
+  - ticker: DKNG
+    name: DraftKings Inc.
+    price: 42.15
+    sector: Consumer Discretionary
+    description: >
+      Digital sports entertainment and gaming company famous for daily 
+      fantasy sports and mobile sports betting.
+    pe_ratio: -15.4
+    market_cap: 20.4B
+
+  - ticker: ZM
+    name: Zoom Video
+    price: 65.10
+    sector: Technology
+    description: >
+      Communications technology company providing videotelephony and 
+      online chat services through a cloud-based software platform.
+    pe_ratio: 12.5
+    market_cap: 20.1B

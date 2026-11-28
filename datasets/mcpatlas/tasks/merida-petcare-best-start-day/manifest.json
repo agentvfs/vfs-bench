@@ -1,0 +1,117 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/ff9aaba884b02309fdceaf2a2071164fc285deca65f169d488684d0d5e7fc78a",
+      "role": "workspace",
+      "sha256": "ff9aaba884b02309fdceaf2a2071164fc285deca65f169d488684d0d5e7fc78a",
+      "size": 1273,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/f814ddce4e5f676e04c343607dea086cea23b1fea82a9da9be7f110137a9f896",
+      "role": "workspace_config",
+      "sha256": "f814ddce4e5f676e04c343607dea086cea23b1fea82a9da9be7f110137a9f896",
+      "size": 3055,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/a6babd3ff1b9ed3d2948cfb7734b93b9eccbe3833f3506efcaff2692f3017d0a",
+      "role": "parity",
+      "sha256": "a6babd3ff1b9ed3d2948cfb7734b93b9eccbe3833f3506efcaff2692f3017d0a",
+      "size": 3099,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/c2fd2d7e6f8926c689524480e75cd63847fe26678c85f1d7bf568cf86c01e6f7",
+      "role": "verifier",
+      "sha256": "c2fd2d7e6f8926c689524480e75cd63847fe26678c85f1d7bf568cf86c01e6f7",
+      "size": 304,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "weather-data_weather_history",
+    "weather-data_weather_astronomy",
+    "google-workspace_list_events",
+    "filesystem_read_multiple_files",
+    "filesystem_list_directory_with_sizes",
+    "filesystem_read_text_file",
+    "fetch_fetch",
+    "e2b-server_run_code",
+    "context7_resolve-library-id",
+    "context7_get-library-docs",
+    "clinicaltrialsgov-mcp-server_clinicaltrials_list_studies",
+    "weather_find_weather_stations",
+    "weather-data_weather_search",
+    "desktop-commander_get_config",
+    "desktop-commander_read_file",
+    "desktop-commander_list_directory",
+    "desktop-commander_search_files"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "merida-petcare-best-start-day",
+  "schema_version": 1,
+  "servers": [
+    "weather-data",
+    "google-workspace",
+    "filesystem",
+    "fetch",
+    "e2b-server",
+    "context7",
+    "clinicaltrialsgov-mcp-server",
+    "weather",
+    "desktop-commander"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/merida-petcare-best-start-day/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "4dd3319f4a218f0f0ac4107fb0144024a30fb202738c3b939b8db98e24837f61",
+      "size": 5487,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/merida-petcare-best-start-day/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689a373e148a49f91233e02b",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/merida-petcare-best-start-day",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

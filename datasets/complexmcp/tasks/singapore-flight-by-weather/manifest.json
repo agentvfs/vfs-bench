@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "dataset": "complexmcp",
+  "id": "singapore-flight-by-weather",
+  "seed": 12,
+  "system_time": "2026-07-04T07:19:09Z",
+  "python_runtime": "monty",
+  "cli_format": "mirage-mcp",
+  "apps": [
+    "LightSystem",
+    "LightTalk",
+    "LightWeather",
+    "LightFlight"
+  ],
+  "assets": [
+    {
+      "target": "workspace/tools.json",
+      "role": "tools",
+      "path": "assets/sha256/45ceaed8c7b8997216ef67f3fb6d0657d54ac379a09f96f1e1d7b9c8359d28f4",
+      "sha256": "45ceaed8c7b8997216ef67f3fb6d0657d54ac379a09f96f1e1d7b9c8359d28f4",
+      "size": 158232
+    },
+    {
+      "target": "workspace/instructions.md",
+      "role": "instructions",
+      "path": "assets/sha256/8d0beff99539cc887da3ae6e28bd2d6a67929ad4becf3fe35ba5bc429b72068a",
+      "sha256": "8d0beff99539cc887da3ae6e28bd2d6a67929ad4becf3fe35ba5bc429b72068a",
+      "size": 65743
+    },
+    {
+      "target": "verifier/expected.json",
+      "role": "expected",
+      "path": "assets/sha256/74fe42ba19502a5dfb66ed5c659726cde18622c5887a0849e1b0b68b09d037b4",
+      "sha256": "74fe42ba19502a5dfb66ed5c659726cde18622c5887a0849e1b0b68b09d037b4",
+      "size": 35614
+    },
+    {
+      "target": "software/LightFlight/corpus/airports.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/3e5d7c80dcc6f69c3020549ab1c8e207fde70eff2f03c2890a9161fa6bbf5f75",
+      "sha256": "3e5d7c80dcc6f69c3020549ab1c8e207fde70eff2f03c2890a9161fa6bbf5f75",
+      "size": 15084
+    },
+    {
+      "target": "software/LightTalk/corpus/contact.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/099ea613408c2ac6ce9c75f9723812dab05356acaad8abe728a5ab00c0bd2863",
+      "sha256": "099ea613408c2ac6ce9c75f9723812dab05356acaad8abe728a5ab00c0bd2863",
+      "size": 6785
+    },
+    {
+      "target": "software/LightTalk/corpus/message.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/f5291cf497927d67e5e2721437c09b5711f0453bf09bc08736fa7e8bc13d0272",
+      "sha256": "f5291cf497927d67e5e2721437c09b5711f0453bf09bc08736fa7e8bc13d0272",
+      "size": 18514
+    },
+    {
+      "target": "software/LightTalk/corpus/moment.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/7e2fc988d4af1ef1a78844ef873cd6fcfdf7a28e29148145e7f16081ae2e517d",
+      "sha256": "7e2fc988d4af1ef1a78844ef873cd6fcfdf7a28e29148145e7f16081ae2e517d",
+      "size": 39181
+    },
+    {
+      "target": "software/LightWeather/corpus/weather.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/59affbe16a20faef6a1173ae351b8b7c8efa58b7e550dca82d904b6ce1be8d90",
+      "sha256": "59affbe16a20faef6a1173ae351b8b7c8efa58b7e550dca82d904b6ce1be8d90",
+      "size": 18873
+    }
+  ],
+  "upstream_revision": "7c01f92e38be6e0c193d5c6c9a55baa92fb628cb",
+  "row_sha256": "19d1f6125d856e3756cc650c4c0e69b6fe685fa1be9ac7145e005a5920e3cde8"
+}

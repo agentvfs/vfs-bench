@@ -1,0 +1,76 @@
+{
+  "note": "Both arms call the pinned emails-mcp handlers. Each case projects the original prose response with `pipe` so it compares the requested field.",
+  "cases": [
+    {
+      "name": "folders",
+      "why": "both arms see the same IMAP folders",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_folders",
+        "args": {},
+        "pipe": "sed -n 's/^ *[0-9]*\\. \\([^ ]*\\) .*/\\1/p' | sort"
+      },
+      "mirage": {
+        "command": "ls /mail | sort"
+      }
+    },
+    {
+      "name": "inbox_subjects",
+      "why": "the same messages, with the same subjects, in the same order",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_emails",
+        "args": {
+          "folder": "INBOX"
+        },
+        "pipe": "sed -n 's/^ *Subject: //p'"
+      },
+      "mirage": {
+        "command": "emails get-emails '{\"folder\":\"INBOX\"}'",
+        "pipe": "sed -n 's/^ *Subject: //p'"
+      }
+    },
+    {
+      "name": "inbox_senders",
+      "why": "the same messages carry the same From addresses",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_emails",
+        "args": {
+          "folder": "INBOX"
+        },
+        "pipe": "sed -n 's/^ *From: //p'"
+      },
+      "mirage": {
+        "command": "emails get-emails '{\"folder\":\"INBOX\"}'",
+        "pipe": "sed -n 's/^ *From: //p'"
+      }
+    },
+    {
+      "name": "merge_pdf_bytes",
+      "why": "both arms merge the same PDF pages through the pinned upstream pdf-tools handler; both arms write into the shared workspace, so it is re-seeded between them and the tree each leaves is compared",
+      "mutates": [
+        "workspace"
+      ],
+      "ignore": [
+        ".pdf_tools_tempfiles"
+      ],
+      "mcp": {
+        "server": "pdf-tools",
+        "tool": "merge_pdfs",
+        "args": {
+          "pdf_paths": [
+            "${AGENT_WORKSPACE}/Application_Materials_flat/Outstanding_Student_Award_2021.pdf",
+            "${AGENT_WORKSPACE}/Application_Materials_flat/Research_Competition_First_Place_2022.pdf",
+            "${AGENT_WORKSPACE}/Application_Materials_flat/Academic_Excellence_Award_2023.pdf"
+          ],
+          "output_path": "${AGENT_WORKSPACE}/merged.pdf"
+        },
+        "pipe": "shasum -a 256 \"$AGENT_WORKSPACE/merged.pdf\" | cut -d \" \" -f1"
+      },
+      "mirage": {
+        "command": "pdf-tools merge-pdfs '{\"pdf_paths\":[\"/workspace/Application_Materials_flat/Outstanding_Student_Award_2021.pdf\",\"/workspace/Application_Materials_flat/Research_Competition_First_Place_2022.pdf\",\"/workspace/Application_Materials_flat/Academic_Excellence_Award_2023.pdf\"],\"output_path\":\"/workspace/merged.pdf\"}' > /dev/null && sha256sum /workspace/merged.pdf | cut -d ' ' -f1"
+      }
+    }
+  ]
+}

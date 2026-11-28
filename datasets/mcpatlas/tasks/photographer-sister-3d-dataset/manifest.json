@@ -1,0 +1,114 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "role": "workspace",
+      "sha256": "e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "size": 482,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/0c1100ef4a632c1275d842b321f1e17ad7f7c3b3a8f6c5d3c385d09e200d5fc4",
+      "role": "workspace_config",
+      "sha256": "0c1100ef4a632c1275d842b321f1e17ad7f7c3b3a8f6c5d3c385d09e200d5fc4",
+      "size": 2557,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/429e3c0fc91051e74bf7148d777632346dbf45167857d29c1c6ebec4b3e0d147",
+      "role": "parity",
+      "sha256": "429e3c0fc91051e74bf7148d777632346dbf45167857d29c1c6ebec4b3e0d147",
+      "size": 2642,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/5e6081ecfd1835c1fc8136597249632174d0ad557fb52dc6a293d6750c63b315",
+      "role": "verifier",
+      "sha256": "5e6081ecfd1835c1fc8136597249632174d0ad557fb52dc6a293d6750c63b315",
+      "size": 299,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "memory_read_graph",
+    "memory_open_nodes",
+    "memory_search_nodes",
+    "whois_whois_domain",
+    "pubmed_search_pubmed_key_words",
+    "context7_resolve-library-id",
+    "context7_get-library-docs",
+    "github_search_repositories",
+    "filesystem_read_file",
+    "filesystem_list_directory",
+    "filesystem_list_allowed_directories",
+    "git_git_log",
+    "git_git_show",
+    "arxiv_search_papers",
+    "git_git_diff_staged"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "photographer-sister-3d-dataset",
+  "schema_version": 1,
+  "servers": [
+    "memory",
+    "whois",
+    "pubmed",
+    "context7",
+    "github",
+    "filesystem",
+    "git",
+    "arxiv"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/photographer-sister-3d-dataset/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "876167e1f8e1540de1a4436f31ac0191fb8ec9ccb57a3b7b3f84c78d9c73ec23",
+      "size": 3344,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/photographer-sister-3d-dataset/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689f4d693e212e8ef3390708",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/photographer-sister-3d-dataset",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

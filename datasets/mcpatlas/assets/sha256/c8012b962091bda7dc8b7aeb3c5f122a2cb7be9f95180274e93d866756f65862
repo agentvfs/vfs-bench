@@ -1,0 +1,69 @@
+{
+ "note": "Both arms read one tree at one path -- the MCP arm's servers read the image's own /data in the run's container, and the mirage /data mount is a copy of it taken out of the same image. The repositories under repos/ are the clones upstream's image makes, at upstream's commits. GitHub is mirage's GitHub fake on both arms, and it holds nothing.",
+ "cases": [
+  {
+   "name": "git_log",
+   "why": "the local clone has the same history on both arms, which is where the second commit is counted",
+   "mcp": {
+    "server": "git",
+    "tool": "git_log",
+    "args": {
+     "repo_path": "/data/repos/snake-game",
+     "max_count": 100
+    },
+    "pipe": "sed -n \"s/^Commit: '\\(.*\\)'$/\\1/p\""
+   },
+   "mirage": {
+    "command": "git -C /data/repos/snake-game log --format=%H"
+   }
+  },
+  {
+   "name": "git_show",
+   "why": "the second commit touches the same file on both arms",
+   "mcp": {
+    "server": "git",
+    "tool": "git_show",
+    "args": {
+     "repo_path": "/data/repos/snake-game",
+     "revision": "e1984699c141c683d9fdf92ff9d558808ff197d5"
+    },
+    "pipe": "sed -n 's|^+++ ||p'"
+   },
+   "mirage": {
+    "command": "git -C /data/repos/snake-game show --name-only --format= e1984699c141c683d9fdf92ff9d558808ff197d5"
+   }
+  },
+  {
+   "name": "get_issue",
+   "why": "neither arm finds the issue live GitHub holds: both read the one fake, which holds nothing",
+   "mcp": {
+    "server": "github",
+    "tool": "get_issue",
+    "args": {
+     "owner": "theonion",
+     "repo": "fartscroll.js",
+     "issue_number": 59
+    },
+    "pipe": "sed 's/^Error: \\(.*\\) - https:.*$/\\1/'"
+   },
+   "mirage": {
+    "command": "gh api repos/theonion/fartscroll.js/issues/59 2>/dev/null | jq -r .message"
+   }
+  },
+  {
+   "name": "search_issues",
+   "why": "both arms are refused a search of a repository the fake does not hold, in GitHub's words",
+   "mcp": {
+    "server": "github",
+    "tool": "search_issues",
+    "args": {
+     "q": "repo:theonion/fartscroll.js created:2014-09-22"
+    },
+    "pipe": "sed 's/.*\"message\":\"\\([^\"]*\\)\".*/\\1/'"
+   },
+   "mirage": {
+    "command": "gh api search/issues -X GET -f 'q=repo:theonion/fartscroll.js created:2014-09-22' 2>/dev/null | jq -r '.errors[].message'"
+   }
+  }
+ ]
+}

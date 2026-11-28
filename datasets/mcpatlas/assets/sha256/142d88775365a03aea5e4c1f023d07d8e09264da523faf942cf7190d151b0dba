@@ -1,0 +1,101 @@
+{
+ "note": "Both arms read one tree at one path -- the MCP arm's servers read the image's own /data in the run's container, and the mirage /data mount is a copy of it taken out of the same image. The repositories under repos/ are the clones upstream's image makes, at upstream's commits. GitHub is mirage's GitHub fake on both arms, and it holds nothing.",
+ "cases": [
+  {
+   "name": "list_directory",
+   "why": "both arms see the same tree -- the eight CSVs and the repos/ directory",
+   "mcp": {
+    "server": "filesystem",
+    "tool": "list_directory",
+    "args": {
+     "path": "/data"
+    },
+    "pipe": "sed -n 's/^\\[FILE\\] //p; s/^\\[DIR\\] //p' | sort"
+   },
+   "mirage": {
+    "command": "ls /data",
+    "pipe": "sort"
+   }
+  },
+  {
+   "name": "consumption",
+   "why": "the same survey rows, by age group",
+   "mcp": {
+    "server": "filesystem",
+    "tool": "read_file",
+    "args": {
+     "path": "/data/food and beverage consumption.csv"
+    },
+    "pipe": "grep '18-24'"
+   },
+   "mirage": {
+    "command": "grep '18-24' '/data/food and beverage consumption.csv'"
+   }
+  },
+  {
+   "name": "git_log",
+   "why": "the local clone has the same history on both arms, which is where the second commit is counted",
+   "mcp": {
+    "server": "git",
+    "tool": "git_log",
+    "args": {
+     "repo_path": "/data/repos/snake-game",
+     "max_count": 100
+    },
+    "pipe": "sed -n \"s/^Commit: '\\(.*\\)'$/\\1/p\""
+   },
+   "mirage": {
+    "command": "git -C /data/repos/snake-game log --format=%H"
+   }
+  },
+  {
+   "name": "git_show",
+   "why": "the second commit touches the same file on both arms",
+   "mcp": {
+    "server": "git",
+    "tool": "git_show",
+    "args": {
+     "repo_path": "/data/repos/snake-game",
+     "revision": "e1984699c141c683d9fdf92ff9d558808ff197d5"
+    },
+    "pipe": "sed -n 's|^+++ ||p'"
+   },
+   "mirage": {
+    "command": "git -C /data/repos/snake-game show --name-only --format= e1984699c141c683d9fdf92ff9d558808ff197d5"
+   }
+  },
+  {
+   "name": "git_status",
+   "why": "both arms find the clone detached at upstream's commit",
+   "mcp": {
+    "server": "git",
+    "tool": "git_status",
+    "args": {
+     "repo_path": "/data/repos/snake-game"
+    },
+    "pipe": "grep -o 'HEAD detached at [0-9a-f]*'"
+   },
+   "mirage": {
+    "command": "git -C /data/repos/snake-game status",
+    "pipe": "grep -o 'HEAD detached at [0-9a-f]*'"
+   }
+  },
+  {
+   "name": "get_commit",
+   "why": "neither arm finds the merge live GitHub holds: both read the one fake, which holds nothing",
+   "mcp": {
+    "server": "github",
+    "tool": "get_commit",
+    "args": {
+     "owner": "lgrammel",
+     "repo": "storyteller",
+     "sha": "0865ef487b8100848fcab25af80e60bffb4f42da"
+    },
+    "pipe": "sed 's/^Error: \\(.*\\) - https:.*$/\\1/'"
+   },
+   "mirage": {
+    "command": "gh api repos/lgrammel/storyteller/commits/0865ef487b8100848fcab25af80e60bffb4f42da 2>/dev/null | jq -r .message"
+   }
+  }
+ ]
+}

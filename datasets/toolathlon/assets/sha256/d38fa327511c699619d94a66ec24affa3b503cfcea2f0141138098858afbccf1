@@ -1,0 +1,68 @@
+{
+  "cases": [
+    {
+      "name": "getAllRecipes",
+      "why": "the whole corpus, dish for dish",
+      "note": "names only: the descriptions are the full recipe text and comparing them whole would drown a real difference in noise",
+      "mcp": {
+        "server": "howtocook",
+        "tool": "mcp_howtocook_getAllRecipes",
+        "args": {},
+        "jq": "[.[].name] | sort | .[]",
+        "raw": true
+      },
+      "mirage": {
+        "command": "howtocook getAllRecipes",
+        "jq": "[.[].name] | sort | .[]",
+        "raw": true
+      }
+    },
+    {
+      "name": "getRecipesByCategory",
+      "why": "one category resolves to the same dishes",
+      "mcp": {
+        "server": "howtocook",
+        "tool": "mcp_howtocook_getRecipesByCategory",
+        "args": {
+          "category": "荤菜"
+        },
+        "jq": "[.[].name] | sort | .[]",
+        "raw": true
+      },
+      "mirage": {
+        "command": "howtocook getRecipesByCategory '{\"category\":\"荤菜\"}'",
+        "jq": "[.[].name] | sort | .[]",
+        "raw": true
+      }
+    },
+    {
+      "name": "getRecipeById",
+      "why": "one dish reads back in full, ingredients and steps, the same through either arm",
+      "mcp": {
+        "server": "howtocook",
+        "tool": "mcp_howtocook_getRecipeById",
+        "args": {
+          "query": "乡村啤酒鸭"
+        }
+      },
+      "mirage": {
+        "command": "howtocook getRecipeById '{\"query\":\"乡村啤酒鸭\"}'"
+      }
+    },
+    {
+      "name": "get_workbook_metadata",
+      "why": "The pinned upstream handler reads the same task fixture through MCP and the workspace CLI.",
+      "mcp": {
+        "server": "excel",
+        "tool": "get_workbook_metadata",
+        "args": {
+          "filepath": "${AGENT_WORKSPACE}/Nutrition.xlsx",
+          "include_ranges": true
+        }
+      },
+      "mirage": {
+        "command": "excel get-workbook-metadata '{\"filepath\": \"/workspace/Nutrition.xlsx\", \"include_ranges\": true}'"
+      }
+    }
+  ]
+}

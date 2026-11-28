@@ -1,0 +1,96 @@
+{
+  "note": "Both arms read one tree at one path -- the MCP arm's servers read the image's own /data in the run's container, and the mirage /data mount is a copy of it taken out of the same image. Notion is the fake both arms read, seeded per run from Atlas's export.",
+  "cases": [
+    {
+      "name": "built_2010",
+      "why": "the same apartments built in 2010",
+      "mcp": {
+        "server": "notion",
+        "tool": "API-post-database-query",
+        "args": {
+          "database_id": "21b97551-844e-8090-b48d-d33c1c2be7f8",
+          "filter": {
+            "property": "YearBuilt",
+            "number": {
+              "equals": 2010
+            }
+          },
+          "page_size": 100
+        },
+        "pipe": "jq -r '.results[].id' | sort | grep ."
+      },
+      "mirage": {
+        "command": "notion post-database-query '{\"database_id\": \"21b97551-844e-8090-b48d-d33c1c2be7f8\", \"filter\": {\"property\": \"YearBuilt\", \"number\": {\"equals\": 2010}}, \"page_size\": 100}'",
+        "pipe": "jq -r '.results[].id' | sort | grep ."
+      }
+    },
+    {
+      "name": "premium_one_bedroom_2010",
+      "why": "the same 2010 premium one-bedroom units, with their ratings and rents, from the server and from the mount",
+      "mcp": {
+        "server": "notion",
+        "tool": "API-post-database-query",
+        "args": {
+          "database_id": "21b97551-844e-8090-b48d-d33c1c2be7f8",
+          "filter": {
+            "and": [
+              {
+                "property": "YearBuilt",
+                "number": {
+                  "equals": 2010
+                }
+              },
+              {
+                "property": "Bedrooms",
+                "number": {
+                  "equals": 1
+                }
+              },
+              {
+                "property": "Amenities",
+                "select": {
+                  "equals": "Premium"
+                }
+              }
+            ]
+          },
+          "page_size": 100
+        },
+        "pipe": "jq -r '.results[].properties | [.PropertyID.rich_text[0].plain_text, .ApartmentNumber.rich_text[0].plain_text, .EnergyEfficiencyRating.select.name, (.MonthlyRent.number | tostring)] | @tsv' | sort | grep ."
+      },
+      "mirage": {
+        "command": "jq -r 'select(.properties.YearBuilt.number == 2010 and .properties.Bedrooms.number == 1 and .properties.Amenities.select.name == \"Premium\") | .properties | [.PropertyID.rich_text[0].plain_text, .ApartmentNumber.rich_text[0].plain_text, .EnergyEfficiencyRating.select.name, (.MonthlyRent.number | tostring)] | @tsv' '/notion/databases/Real_Estate__21b97551-844e-8090-b48d-d33c1c2be7f8/Real_Estate__d5000000-844e-8090-b48d-d33c1c2be7f8/rows.jsonl'",
+        "pipe": "sort | grep ."
+      }
+    },
+    {
+      "name": "users",
+      "why": "the same workspace members",
+      "mcp": {
+        "server": "notion",
+        "tool": "API-get-users",
+        "args": {},
+        "pipe": "jq -r '.results[] | select(.type == \"person\") | .person.email' | sort"
+      },
+      "mirage": {
+        "command": "notion get-users '{}'",
+        "pipe": "jq -r '.results[] | select(.type == \"person\") | .person.email' | sort"
+      }
+    },
+    {
+      "name": "fetch",
+      "why": "the fetch CLI is the MCP arm's fetch server, reading the same page live",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch",
+        "args": {
+          "url": "https://raw.githubusercontent.com/theonion/fartscroll.js/master/README.md",
+          "max_length": 400
+        }
+      },
+      "mirage": {
+        "command": "fetch fetch '{\"url\":\"https://raw.githubusercontent.com/theonion/fartscroll.js/master/README.md\",\"max_length\":400}'"
+      }
+    }
+  ]
+}

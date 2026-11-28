@@ -210,7 +210,8 @@ async def _boot_job_daemon(node: str, workers: int, dataset: Path,
                     f"the job's Mirage daemon exited ({process.returncode}):"
                     f"\n{(home / 'daemon.log').read_text()[-4000:]}")
             try:
-                if (await client.get(f"{url}/v1/ready")).status_code == 200:
+                ready = await client.get(f"{url}/v1/daemon/ready")
+                if ready.status_code == 200:
                     return url, process
             except httpx.TransportError:
                 pass
@@ -337,6 +338,20 @@ def _snapshot(view: Path, live: Path) -> None:
     os.replace(temp, view)
 
 
+async def _msb(*argv: str, check: bool = False) -> None:
+    """Run ``msb`` (microsandbox's CLI); ``check`` raises on a failure."""
+    process = await asyncio.create_subprocess_exec(
+        "msb",
+        *argv,
+        stdin=asyncio.subprocess.DEVNULL,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.STDOUT)
+    out, _ = await process.communicate()
+    if check and process.returncode:
+        raise RuntimeError(f"msb {' '.join(argv)} exited "
+                           f"{process.returncode}:\n{out.decode()}")
+
+
 class MirageEnvironment(BaseEnvironment):
     """A trial's environment as a workspace on a Mirage daemon.
 
@@ -368,6 +383,9 @@ class MirageEnvironment(BaseEnvironment):
         self._runs: list[fakes.Run] = []
         # When an agent ran (`agent_run`), in the daemon's milliseconds.
         self._agent_spans: list[list[float | None]] = []
+        # The trial's microsandbox sandboxes, restored from the snapshots
+        # its config's `machines` name (_open_machines).
+        self._sandboxes: list[str] = []
         self._url = ""
         # The run's epoch and when the trial started, in ms, which together
         # are its clock: None where the task has no fakes, and the host's.
@@ -519,6 +537,35 @@ class MirageEnvironment(BaseEnvironment):
             raise
         return dict(zip(blocks, opened))
 
+    async def _open_machines(self, machines: dict[str, dict]) -> dict:
+        """The config's ``machines``, each microsandbox entry that names a
+        ``snapshot`` given a sandbox restored from it, this trial's alone.
+
+        Mirage runs programs in a sandbox it is given and leaves creating
+        one to the caller, and a sandbox shows one workspace's mounts, so
+        each trial gets its own, with no network and the task's CPUs and
+        memory.
+        """
+        opened = {}
+        for name, entry in machines.items():
+            entry = dict(entry)
+            snapshot = entry.pop("snapshot", None)
+            if snapshot is not None:
+                if entry.get("provider") != "microsandbox":
+                    raise ValueError(f"machine {name!r}: a snapshot is a "
+                                     "microsandbox entry's")
+                sandbox = f"{self._workspace_id}-{name}"[-128:]
+                argv = ["restore", "--no-net", "--name", sandbox]
+                if self.task_env_config.cpus:
+                    argv += ["--cpus", str(self.task_env_config.cpus)]
+                if self.task_env_config.memory_mb:
+                    argv += ["--memory", f"{self.task_env_config.memory_mb}M"]
+                await _msb(*argv, snapshot, check=True)
+                self._sandboxes.append(sandbox)
+                entry["sandbox"] = sandbox
+            opened[name] = entry
+        return opened
+
     async def _plan(self, runs: dict[str, dict]) -> dict:
         """Lay out the workspace and read the plan ``mirage.ts`` writes."""
         planners = _planners.get(self._node)
@@ -644,6 +691,8 @@ class MirageEnvironment(BaseEnvironment):
         # The workspace's clock starts at the trial's time (Mirage's
         # system_time): `date`, file times and the runtimes read it.
         config = dict(plan["config"])
+        if config.get("machines"):
+            config["machines"] = await self._open_machines(config["machines"])
         if self._workers is not None:
             # The trial's runs alone, each at a port of its own, and each
             # upstream port on localhost routed to its run's.
@@ -691,19 +740,25 @@ class MirageEnvironment(BaseEnvironment):
                 try:
                     try:
                         # The workspace's history (each line, its output and
-                        # when it ran) outlives it, in the trial's mirage/.
+                        # when it ran) outlives it, in the trial's mirage/:
+                        # its logs' JSONL export, one entry a line.
                         history = await self._client.get(
-                            f"/v1/workspaces/{self._workspace_id}/history")
+                            f"/v1/workspaces/{self._workspace_id}/logs",
+                            params={"format": "jsonl"})
                         if history.status_code == 200:
                             (self._run_dir / "history.json").write_text(
-                                history.text)
+                                json.dumps([
+                                    json.loads(line)
+                                    for line in history.text.splitlines()
+                                    if line
+                                ]))
                     finally:
-                        # Closed whether or not its history was saved: a
+                        # Deleted whether or not its history was saved: a
                         # shared daemon outlives the trial.
-                        await self._client.post(
-                            f"/v1/workspaces/{self._workspace_id}/close")
+                        await self._client.delete(
+                            f"/v1/workspaces/{self._workspace_id}")
                         if self._daemon_url is None and self._workers is None:
-                            await self._client.post("/v1/shutdown")
+                            await self._client.post("/v1/daemon/shutdown")
                 except httpx.TransportError:
                     pass
                 finally:
@@ -726,6 +781,11 @@ class MirageEnvironment(BaseEnvironment):
                 except httpx.HTTPError:
                     pass
             self._runs = []
+            # The trial's sandboxes, once its workspace no longer runs
+            # programs in them.
+            for sandbox in self._sandboxes:
+                await _msb("remove", "--force", sandbox)
+            self._sandboxes = []
         if delete:
             if self._layout is not None:
                 await asyncio.wait([self._layout])
@@ -913,7 +973,8 @@ class MirageEnvironment(BaseEnvironment):
             },
             "clis": {
                 "grade": {
-                    "cli": "grade"
+                    "cli": "grade",
+                    "machine": "in_process"
                 }
             },
             "max_memory": 2 * size + 32 * 1024 * 1024,
@@ -935,7 +996,7 @@ class MirageEnvironment(BaseEnvironment):
                                       "cwd": "/"
                                   }), timeout_sec)
         finally:
-            await self._client.post(f"/v1/workspaces/{workspace}/close")
+            await self._client.delete(f"/v1/workspaces/{workspace}")
         if reply.status_code >= 300:
             raise RuntimeError(f"the grade workspace's shell failed "
                                f"({reply.status_code}): {reply.text}")

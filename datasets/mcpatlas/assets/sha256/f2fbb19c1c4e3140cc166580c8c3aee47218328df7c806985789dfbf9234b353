@@ -1,0 +1,76 @@
+{
+  "note": "Both arms read one MongoDB and one calendar: the database this run restores from Atlas's dump, and the Google Workspace fake this run starts, seeded from Atlas's calendar export. Live services Atlas enables beside the task have no reply case: `map` checks that each CLI is the server's own tool, schema for schema, and a live reply is not the same twice.",
+  "cases": [
+    {
+      "name": "list-collections",
+      "why": "both arms see the same six collections of video_game_store",
+      "mcp": {
+        "server": "mongodb",
+        "tool": "list-collections",
+        "args": {
+          "database": "video_game_store"
+        },
+        "pipe": "sed 's/^Name: \"\\(.*\\)\"$/\\1/' | sort"
+      },
+      "mirage": {
+        "command": "ls /mongodb/video_game_store/collections",
+        "pipe": "sort"
+      }
+    },
+    {
+      "name": "count",
+      "why": "both arms count the same Inventory documents",
+      "mcp": {
+        "server": "mongodb",
+        "tool": "count",
+        "args": {
+          "database": "video_game_store",
+          "collection": "Inventory"
+        },
+        "pipe": "grep -o '[0-9][0-9]*' | head -1"
+      },
+      "mirage": {
+        "command": "wc -l < /mongodb/video_game_store/collections/Inventory/documents.jsonl"
+      }
+    },
+    {
+      "name": "aggregate",
+      "why": "both arms group the same August 2023 stock by genre",
+      "mcp": {
+        "server": "mongodb",
+        "tool": "aggregate",
+        "args": {
+          "database": "video_game_store",
+          "collection": "Inventory",
+          "pipeline": [
+            {"$match": {"Inventory Date": {"$gte": {"$date": "2023-08-01T00:00:00Z"}, "$lt": {"$date": "2023-09-01T00:00:00Z"}}}},
+            {"$group": {"_id": "$Game Genre", "stock": {"$sum": "$Current Stock"}, "games": {"$sum": 1}}}
+          ]
+        },
+        "pipe": "sed 1d | jq -r '[._id, .stock, .games] | @tsv' | sort"
+      },
+      "mirage": {
+        "command": "grep '2023-08-' /mongodb/video_game_store/collections/Inventory/documents.jsonl",
+        "pipe": "jq -s -r 'map(select(.\"Inventory Date\".\"$date\" | startswith(\"2023-08-\"))) | group_by(.\"Game Genre\")[] | [.[0].\"Game Genre\", (map(.\"Current Stock\") | add), length] | @tsv' | sort"
+      }
+    },
+    {
+      "name": "list_events",
+      "why": "both arms find the same events on July 15, 2025, New York time",
+      "mcp": {
+        "server": "google-workspace",
+        "tool": "list_events",
+        "args": {
+          "timeMin": "2025-07-15T04:00:00Z",
+          "timeMax": "2025-07-16T04:00:00Z",
+          "maxResults": 50
+        },
+        "pipe": "jq -r '.[].id' | sort"
+      },
+      "mirage": {
+        "command": "ls /calendar/primary/2025-07-15",
+        "pipe": "sed 's/__.*//' | sort"
+      }
+    }
+  ]
+}

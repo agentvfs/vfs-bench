@@ -1,0 +1,21 @@
+# main-web-administrators-1, on vfsbench_harbor's mirage environment
+# (datasets/jobbench/convert.py writes it).
+#
+# In place of upstream's environment.Dockerfile: its COPY of task_folder/ and
+# its mkdir of /workspace/output, and its image, which download.py builds as
+# a microsandbox snapshot. Each trial runs python3 and every program Mirage
+# does not have in a sandbox of its own from it. No services.
+fakes: {}
+workdir: /workspace
+workspace:
+  machines:
+    jobbench:
+      provider: microsandbox
+      snapshot: jobbench:660b33a86e
+      mount_type: ssh
+      captures: ["@python", "@external"]
+      env: {"DEBIAN_FRONTEND": "noninteractive", "PYTHONDONTWRITEBYTECODE": "1", "PYTHONUNBUFFERED": "1", "MPLBACKEND": "Agg"}
+run:
+  - mkdir -p /workspace/task_folder /workspace/output
+copy:
+  /workspace/task_folder: task_folder/

@@ -1,0 +1,112 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/ff9aaba884b02309fdceaf2a2071164fc285deca65f169d488684d0d5e7fc78a",
+      "role": "workspace",
+      "sha256": "ff9aaba884b02309fdceaf2a2071164fc285deca65f169d488684d0d5e7fc78a",
+      "size": 1273,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/88ecbc7301052f6ba0b52517265d7c21df6257e13ef24cfa55d1ce52b931517e",
+      "role": "workspace_config",
+      "sha256": "88ecbc7301052f6ba0b52517265d7c21df6257e13ef24cfa55d1ce52b931517e",
+      "size": 2980,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/28dde7fbc8abf9f89c0089f52bd8a2139a11d527d5ad3c06604b13a140eff747",
+      "role": "parity",
+      "sha256": "28dde7fbc8abf9f89c0089f52bd8a2139a11d527d5ad3c06604b13a140eff747",
+      "size": 3626,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/3af42c027d2f9cf9226d960cdf7f8d94e722ba9e12f3d88b26e94a18c0b71f00",
+      "role": "verifier",
+      "sha256": "3af42c027d2f9cf9226d960cdf7f8d94e722ba9e12f3d88b26e94a18c0b71f00",
+      "size": 228,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "calculator_calculate",
+    "memory_read_graph",
+    "memory_search_nodes",
+    "memory_open_nodes",
+    "filesystem_list_allowed_directories",
+    "filesystem_list_directory",
+    "filesystem_read_file",
+    "oxylabs_google_search_scraper",
+    "filesystem_read_multiple_files",
+    "filesystem_list_directory_with_sizes",
+    "filesystem_directory_tree",
+    "notion_API-post-database-query",
+    "notion_API-post-search",
+    "notion_API-retrieve-a-page-property",
+    "google-workspace_list_events"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "park-event-family-crimes",
+  "schema_version": 1,
+  "servers": [
+    "calculator",
+    "memory",
+    "filesystem",
+    "oxylabs",
+    "notion",
+    "google-workspace"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/park-event-family-crimes/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "31ef95c257afda3e0ee8cd054fee2a9dbba3741cfaad73fb972f61c939a0f2a5",
+      "size": 3928,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/park-event-family-crimes/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "686d2c79e1db37ea23ddda15",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/park-event-family-crimes",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

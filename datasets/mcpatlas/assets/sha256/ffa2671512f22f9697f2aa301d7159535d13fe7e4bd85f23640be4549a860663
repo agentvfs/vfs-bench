@@ -1,0 +1,52 @@
+{
+  "note": "Both arms read one tree at one path -- the MCP arm's servers read the image's own /data in the run's container, and the mirage /data mount is a copy of it taken out of the same image. Notion is the fake both arms read, seeded per run from Atlas's export.",
+  "cases": [
+    {
+      "name": "users",
+      "why": "the same members, whose emails the answer reads",
+      "mcp": {
+        "server": "notion",
+        "tool": "API-get-users",
+        "args": {},
+        "pipe": "jq -r '.results[] | select(.type == \"person\") | .person.email' | sort"
+      },
+      "mirage": {
+        "command": "notion get-users '{}'",
+        "pipe": "jq -r '.results[] | select(.type == \"person\") | .person.email' | sort"
+      }
+    },
+    {
+      "name": "may_requests",
+      "why": "the same service requests in May 2017",
+      "mcp": {
+        "server": "notion",
+        "tool": "API-post-database-query",
+        "args": {
+          "database_id": "21b97551-844e-808d-a0c5-ed2d08f39729",
+          "filter": {
+            "and": [
+              {
+                "property": "InteractionDate",
+                "date": {
+                  "on_or_after": "2017-05-01"
+                }
+              },
+              {
+                "property": "InteractionDate",
+                "date": {
+                  "before": "2017-06-01"
+                }
+              }
+            ]
+          },
+          "page_size": 20
+        },
+        "pipe": "jq -r '.results[].id'"
+      },
+      "mirage": {
+        "command": "notion post-database-query '{\"database_id\": \"21b97551-844e-808d-a0c5-ed2d08f39729\", \"filter\": {\"and\": [{\"property\": \"InteractionDate\", \"date\": {\"on_or_after\": \"2017-05-01\"}}, {\"property\": \"InteractionDate\", \"date\": {\"before\": \"2017-06-01\"}}]}, \"page_size\": 20}'",
+        "pipe": "jq -r '.results[].id'"
+      }
+    }
+  ]
+}

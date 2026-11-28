@@ -1,0 +1,110 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/f038e3b18432eef0c6a7e9f17fc79c206c16a374d38c26a2b70d858b38cfca01",
+      "role": "workspace",
+      "sha256": "f038e3b18432eef0c6a7e9f17fc79c206c16a374d38c26a2b70d858b38cfca01",
+      "size": 2393,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/3595b53fca95d5258590fb6d84e305f48f48b53b045d5576bd75c840d482aa44",
+      "role": "workspace_config",
+      "sha256": "3595b53fca95d5258590fb6d84e305f48f48b53b045d5576bd75c840d482aa44",
+      "size": 2922,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/a141241fc88f163e76a88784b55253b60abb40bc784013312913d7a1fd26ea8e",
+      "role": "parity",
+      "sha256": "a141241fc88f163e76a88784b55253b60abb40bc784013312913d7a1fd26ea8e",
+      "size": 4402,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/4d2610155caeb38d4e4b18b258f761517ac163c3b2381f7ca22dc77b025a3b33",
+      "role": "verifier",
+      "sha256": "4d2610155caeb38d4e4b18b258f761517ac163c3b2381f7ca22dc77b025a3b33",
+      "size": 207,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "cli-mcp-server_run_command",
+    "cli-mcp-server_show_security_rules",
+    "exa_web_search_exa",
+    "mongodb_list-collections",
+    "mongodb_list-databases",
+    "mongodb_find",
+    "airtable_list_bases",
+    "airtable_list_tables",
+    "airtable_list_records",
+    "airtable_search_records",
+    "airtable_get_record",
+    "weather-data_weather_history",
+    "weather-data_weather_airquality",
+    "weather-data_weather_search"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "celtics-game-seven-weekly-profit",
+  "schema_version": 1,
+  "servers": [
+    "cli-mcp-server",
+    "exa",
+    "mongodb",
+    "airtable",
+    "weather-data"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/celtics-game-seven-weekly-profit/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "a34a952326bfdd1af877c8e40649dd24a3aa0be3b008f0e4fa2e23bfdbdc1180",
+      "size": 3805,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/celtics-game-seven-weekly-profit/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "68925f01db31fe35560e3e70",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/celtics-game-seven-weekly-profit",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

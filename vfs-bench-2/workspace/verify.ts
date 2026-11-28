@@ -51,7 +51,6 @@ export async function verifierWorkspace(
   const workspace = new Workspace(
     { '/': [input, MountMode.READ], '/.verifier-output': [output, MountMode.WRITE] },
     {
-      runtimes: ['workspace'],
       commandLimits: { '@line': new Limit({ timeoutSeconds: request.timeoutSeconds }) },
     }
   )

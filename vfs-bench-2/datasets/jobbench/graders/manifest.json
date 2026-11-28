@@ -1,0 +1,178 @@
+{
+ "main-technical-writers-1": {
+  "files": {
+   "RUBRICS.json": "4e97df76c8afbaf84d41411a57174aa9cc4254949cf1d09534ede6c2f6a002c4"
+  },
+  "inputs": [
+   "/tests/RUBRICS.json"
+  ],
+  "trees": [
+   "/workspace/output"
+  ]
+ },
+ "main-technical-writers-2": {
+  "files": {
+   "RUBRICS.json": "4833760461378a07fc84893c58b058779655117791b00f8f7ff7f22c190dde40"
+  },
+  "inputs": [
+   "/tests/RUBRICS.json"
+  ],
+  "trees": [
+   "/workspace/output"
+  ]
+ },
+ "main-technical-writers-3": {
+  "files": {
+   "RUBRICS.json": "455866a847f622cac585e191377a706fd330ffc746652a4482bee1f7fca8468f"
+  },
+  "inputs": [
+   "/tests/RUBRICS.json"
+  ],
+  "trees": [
+   "/workspace/output"
+  ]
+ },
+ "main-web-administrators-1": {
+  "files": {
+   "RUBRICS.json": "0aa960c72261ac46d632b7c290147438ced45358750eba99b741532d11a7f55b"
+  },
+  "inputs": [
+   "/tests/RUBRICS.json"
+  ],
+  "trees": [
+   "/workspace/output"
+  ]
+ },
+ "easy-bookkeeping-accounting-and-auditing-clerks-1": {
+  "files": {
+   "RUBRICS.json": "43a65690157e3cf2a0da545f8e01521a701fc7b31f6de6962b4b4b78026a2307"
+  },
+  "inputs": [
+   "/tests/RUBRICS.json"
+  ],
+  "trees": [
+   "/workspace/output"
+  ]
+ },
+ "easy-computer-user-support-specialists-1": {
+  "files": {
+   "RUBRICS.json": "644689ed267e3dfcf4945920549bb2140a7bfa031d8eea31d07ee4325c333ad2"
+  },
+  "inputs": [
+   "/tests/RUBRICS.json"
+  ],
+  "trees": [
+   "/workspace/output"
+  ]
+ },
+ "easy-customer-service-representatives-1": {
+  "files": {
+   "RUBRICS.json": "3c2f159a7e9eaa8c52043d5c753918b6ca96c68f9fc83fc586cab4f1e3d86316"
+  },
+  "inputs": [
+   "/tests/RUBRICS.json"
+  ],
+  "trees": [
+   "/workspace/output"
+  ]
+ },
+ "easy-data-entry-keyers-1": {
+  "files": {
+   "RUBRICS.json": "92aad24724dad01d91e08f000ebba1736f1f7a9a6bd1eb0962e8158c2f4b343d"
+  },
+  "inputs": [
+   "/tests/RUBRICS.json"
+  ],
+  "trees": [
+   "/workspace/output"
+  ]
+ },
+ "easy-data-entry-keyers-2": {
+  "files": {
+   "RUBRICS.json": "9344a23b28ac32c7d18cd6ca41e097daa6a560d961016ecdc4d192906021fc72"
+  },
+  "inputs": [
+   "/tests/RUBRICS.json"
+  ],
+  "trees": [
+   "/workspace/output"
+  ]
+ },
+ "easy-personal-financial-advisors-1": {
+  "files": {
+   "RUBRICS.json": "7f1f7a13974beffa421aa62b646290a0a3c732ed2fad768541d8a75808b88637"
+  },
+  "inputs": [
+   "/tests/RUBRICS.json"
+  ],
+  "trees": [
+   "/workspace/output"
+  ]
+ },
+ "easy-personal-financial-advisors-2": {
+  "files": {
+   "RUBRICS.json": "6655980d5990883d37e33313c2286c0ea9eb94b18807f989ef493f8093ee0feb"
+  },
+  "inputs": [
+   "/tests/RUBRICS.json"
+  ],
+  "trees": [
+   "/workspace/output"
+  ]
+ },
+ "easy-police-fire-and-ambulance-dispatchers-3": {
+  "files": {
+   "RUBRICS.json": "84785509fe5bee8da437b04649085766d6281ee163d298cd68584ead52925dfc"
+  },
+  "inputs": [
+   "/tests/RUBRICS.json"
+  ],
+  "trees": [
+   "/workspace/output"
+  ]
+ },
+ "easy-reporters-and-correspondents-3": {
+  "files": {
+   "RUBRICS.json": "f1bcb6450cbcd5f4306e965264269c765b4d3675d5e1f41761545417e52aed40"
+  },
+  "inputs": [
+   "/tests/RUBRICS.json"
+  ],
+  "trees": [
+   "/workspace/output"
+  ]
+ },
+ "easy-social-science-research-assistants-1": {
+  "files": {
+   "RUBRICS.json": "a0d6d3f769d3671ab4b78b9621d1356480b9ce016ba9006ba84af24b8db08c79"
+  },
+  "inputs": [
+   "/tests/RUBRICS.json"
+  ],
+  "trees": [
+   "/workspace/output"
+  ]
+ },
+ "easy-sociology-teachers-postsecondary-1": {
+  "files": {
+   "RUBRICS.json": "b1484221b198a56c52f4d8f5446089fff4feb31ef714503cf33a592db0cf5f0d"
+  },
+  "inputs": [
+   "/tests/RUBRICS.json"
+  ],
+  "trees": [
+   "/workspace/output"
+  ]
+ },
+ "easy-statisticians-2": {
+  "files": {
+   "RUBRICS.json": "50736f0b79113330c1cd50d486483ae0c47a30ae81b9d7d8d78ce1c75e26f756"
+  },
+  "inputs": [
+   "/tests/RUBRICS.json"
+  ],
+  "trees": [
+   "/workspace/output"
+  ]
+ }
+}

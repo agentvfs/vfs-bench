@@ -1,0 +1,109 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "role": "workspace",
+      "sha256": "e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "size": 482,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/674e38b4560fccc530be37bf401c026b63ada542fed3c173d259109bedbb28fa",
+      "role": "workspace_config",
+      "sha256": "674e38b4560fccc530be37bf401c026b63ada542fed3c173d259109bedbb28fa",
+      "size": 1968,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/00d9f25b8b0e012e2b407a8451e8d8e3ec4560c9714b540578d0a94bb0eaf6c2",
+      "role": "parity",
+      "sha256": "00d9f25b8b0e012e2b407a8451e8d8e3ec4560c9714b540578d0a94bb0eaf6c2",
+      "size": 2442,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/6d985797f32649f9239c890f5ec787d1610988a11083891fcc88af697b0f777a",
+      "role": "verifier",
+      "sha256": "6d985797f32649f9239c890f5ec787d1610988a11083891fcc88af697b0f777a",
+      "size": 203,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "filesystem_read_file",
+    "filesystem_read_text_file",
+    "filesystem_read_media_file",
+    "filesystem_read_multiple_files",
+    "filesystem_list_directory",
+    "filesystem_list_directory_with_sizes",
+    "filesystem_directory_tree",
+    "filesystem_search_files",
+    "filesystem_get_file_info",
+    "filesystem_list_allowed_directories",
+    "mcp-code-executor_execute_code",
+    "mcp-code-executor_read_code_file",
+    "arxiv_search_papers",
+    "airtable_list_bases"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "barber-shop-female-clients",
+  "schema_version": 1,
+  "servers": [
+    "filesystem",
+    "mcp-code-executor",
+    "arxiv",
+    "airtable"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/barber-shop-female-clients/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "933f30e490527826fd3d6609569d67e6b64935fe5f686a06bb0bb6f01b80ef3f",
+      "size": 1611,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/barber-shop-female-clients/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689bd255c0422b257e7dfcc5",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/barber-shop-female-clients",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

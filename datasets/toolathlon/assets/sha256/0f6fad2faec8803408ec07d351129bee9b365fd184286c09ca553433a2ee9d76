@@ -1,0 +1,51 @@
+{
+  "note": "The google-cloud MCP server answers in prose with a row preview; `bq` returns JSON. Requires the emulator started for this task: uv run python server/fakes/gcp.py live-transactions. Every google-cloud projection ends in `grep .`, so an arm whose reply carries no such line fails the case instead of agreeing on nothing.",
+  "cases": [
+    {
+      "name": "run_query_count",
+      "why": "the same statement returns the same answer through either arm",
+      "mcp": {
+        "server": "google-cloud",
+        "tool": "bigquery_run_query",
+        "args": {
+          "query": "SELECT COUNT(*) AS n FROM transactions_analytics.live_transactions"
+        },
+        "pipe": "sed -n \"s/^Row 1: {'n': \\([0-9]*\\)}/\\1/p\" | grep ."
+      },
+      "mirage": {
+        "command": "google-cloud bigquery-run-query '{\"query\":\"SELECT COUNT(*) AS n FROM transactions_analytics.live_transactions\"}'",
+        "pipe": "sed -n \"s/^Row 1: {'n': \\([0-9]*\\)}/\\1/p\" | grep ."
+      }
+    },
+    {
+      "name": "suspect_transaction",
+      "why": "the row the whole task is about reads the same through either arm",
+      "mcp": {
+        "server": "google-cloud",
+        "tool": "bigquery_run_query",
+        "args": {
+          "query": "SELECT user_id FROM transactions_analytics.live_transactions WHERE transaction_id = 'T8492XJ3'"
+        },
+        "pipe": "sed -n \"s/^Row [0-9]*: {'user_id': \\(.*\\)}/\\1/p\" | tr -d \"'\" | grep ."
+      },
+      "mirage": {
+        "command": "google-cloud bigquery-run-query \"{\\\"query\\\":\\\"SELECT user_id FROM transactions_analytics.live_transactions WHERE transaction_id = 'T8492XJ3'\\\"}\"",
+        "pipe": "sed -n \"s/^Row [0-9]*: {'user_id': \\(.*\\)}/\\1/p\" | tr -d \"'\" | grep ."
+      }
+    },
+    {
+      "name": "archive_bucket_present",
+      "why": "the task uploads into a bucket that must already exist, and both arms have to find the same one",
+      "mcp": {
+        "server": "google-cloud",
+        "tool": "storage_list_buckets",
+        "args": {},
+        "pipe": "sed -n 's/^- \\([^:]*\\):.*/\\1/p' | sort | grep ."
+      },
+      "mirage": {
+        "command": "google-cloud storage-list-buckets",
+        "pipe": "sed -n 's/^- \\([^:]*\\):.*/\\1/p' | sort | grep ."
+      }
+    }
+  ]
+}

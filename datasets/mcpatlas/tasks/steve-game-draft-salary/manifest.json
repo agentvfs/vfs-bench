@@ -1,0 +1,112 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/48bf42078c2e9759e2229f4b929fb7b0ce471e497a1801434e54c4d1ad3f8b5e",
+      "role": "workspace",
+      "sha256": "48bf42078c2e9759e2229f4b929fb7b0ce471e497a1801434e54c4d1ad3f8b5e",
+      "size": 1139,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/06d27309c77a1403df48d385d16e1187f5122260e6e4be63308e3263c235ccc3",
+      "role": "workspace_config",
+      "sha256": "06d27309c77a1403df48d385d16e1187f5122260e6e4be63308e3263c235ccc3",
+      "size": 2277,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/a56b66ddfd36926b98378e9d44043f57f823418c3e0212c65e414230c3181ba9",
+      "role": "parity",
+      "sha256": "a56b66ddfd36926b98378e9d44043f57f823418c3e0212c65e414230c3181ba9",
+      "size": 2338,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/9a059e7823ac033fc77482a50ee53022110732c54428717ea948de4a6b1ded2b",
+      "role": "verifier",
+      "sha256": "9a059e7823ac033fc77482a50ee53022110732c54428717ea948de4a6b1ded2b",
+      "size": 247,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "filesystem_read_file",
+    "filesystem_read_text_file",
+    "filesystem_read_media_file",
+    "filesystem_read_multiple_files",
+    "filesystem_list_directory",
+    "filesystem_list_directory_with_sizes",
+    "filesystem_directory_tree",
+    "filesystem_search_files",
+    "filesystem_get_file_info",
+    "filesystem_list_allowed_directories",
+    "oxylabs_universal_scraper",
+    "oxylabs_google_search_scraper",
+    "oxylabs_amazon_search_scraper",
+    "slack_channels_list",
+    "slack_conversations_add_message",
+    "slack_conversations_history",
+    "slack_conversations_replies",
+    "slack_conversations_search_messages"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "steve-game-draft-salary",
+  "schema_version": 1,
+  "servers": [
+    "filesystem",
+    "oxylabs",
+    "slack"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/steve-game-draft-salary/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "68d90133c6747d139f6f6287ddfe3a812cd25101c2c5ef44f8897272c304d9bd",
+      "size": 4662,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/steve-game-draft-salary/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689cd6f8522029b7ad7b201e",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/steve-game-draft-salary",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}
