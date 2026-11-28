@@ -1,0 +1,19 @@
+{
+  "music-analysis": {
+    "upstream/evaluation/main.py": "cb012cc671e5bbb1074f37ae37a6ff4f546d15fe1a1937436e2d9a0e5a691f62",
+    "upstream/groundtruth_workspace/Billboard Pop Chart by Year.xlsx": "732a839f1f6bdff5f41fc489a02a6f8f97cdc88a1e54fc193ae2bcdeb84dd05a",
+    "upstream/groundtruth_workspace/music_analysis_result.xlsx": "81dd5118f47fa11c943dff54d623d7782586ff90b68ae45983b6e1db152648d8",
+    "upstream/initial_workspace/music_analysis_result_example.xlsx": "213950dd69d1181eb4c71b54f6b39faaa23f0f87b218c4109ed413c22c8a973c"
+  },
+  "wandb-best-score": {
+    "suite_shared/fixtures/wandb/deepscaler-1.5b.json": "b93d374fb6191b122aabd3be2e5da7f073ab3ea310416f3182a2ebf250f2a1ab",
+    "upstream/evaluation/main.py": "337a0c0325d5d666707f61fe3c050852f343434f289a1a7cff1b65789dea0f9e",
+    "upstream/initial_workspace/best_experiment.csv": "ab31e604eeaec33271b7f4c528e5fc82f92f54e63e990f31b118109fbb3e0ca6"
+  },
+  "wandb-shortest-length": {
+    "suite_shared/fixtures/wandb/deepscaler-1.5b.json": "b93d374fb6191b122aabd3be2e5da7f073ab3ea310416f3182a2ebf250f2a1ab",
+    "upstream/evaluation/main.py": "3cdca8a2ade6a1d74b449e06303f14e08d364a6c5e81d827b38b30821c9219da",
+    "upstream/groundtruth_workspace/shortest_length_experiment.csv": "0b6353049595f6750e6cdfb19f09bcd0afcaad4f6f8dd2384f002977aca0c6fd",
+    "upstream/initial_workspace/shortest_length_experiment.csv": "e570ffc393a9f730f5e5b498915fd49db3d9603f3b4c7c2c55c49d9f75a3309d"
+  }
+}

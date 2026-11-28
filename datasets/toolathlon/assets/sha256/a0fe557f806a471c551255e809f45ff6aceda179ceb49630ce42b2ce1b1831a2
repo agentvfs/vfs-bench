@@ -1,0 +1,175 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "google_sheet_list_folders",
+      "why": "both arms see the same Drive folders",
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "list_folders",
+        "args": {}
+      },
+      "mirage": {
+        "command": "google-sheet list-folders"
+      }
+    },
+    {
+      "name": "google_sheet_list_spreadsheets",
+      "why": "the same spreadsheets with the same ids",
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "list_spreadsheets",
+        "args": {}
+      },
+      "mirage": {
+        "command": "google-sheet list-spreadsheets"
+      }
+    },
+    {
+      "name": "woocommerce_products_list",
+      "why": "the same first page of products",
+      "mcp": {
+        "server": "woocommerce",
+        "tool": "woo_products_list",
+        "args": {
+          "perPage": 5
+        },
+        "pipe": "grep -E '^ {4}\"(id|name|status|price)\": '"
+      },
+      "mirage": {
+        "command": "woocommerce products-list '{\"perPage\":5}' | grep -E '^ {4}\"(id|name|status|price)\": '"
+      }
+    },
+    {
+      "name": "woocommerce_products_categories_list",
+      "why": "the same categories",
+      "mcp": {
+        "server": "woocommerce",
+        "tool": "woo_products_categories_list",
+        "args": {}
+      },
+      "mirage": {
+        "command": "woocommerce products-categories-list"
+      }
+    },
+    {
+      "name": "woocommerce_orders_list",
+      "why": "the same first page of orders",
+      "mcp": {
+        "server": "woocommerce",
+        "tool": "woo_orders_list",
+        "args": {
+          "perPage": 5
+        },
+        "jq": "[.[] | {id, status, total}]"
+      },
+      "mirage": {
+        "command": "woocommerce orders-list '{\"perPage\":5}' | jq -c '[.[] | {id, status, total}]'"
+      }
+    },
+    {
+      "name": "woocommerce_customers_list",
+      "why": "the same first page of customers",
+      "mcp": {
+        "server": "woocommerce",
+        "tool": "woo_customers_list",
+        "args": {
+          "perPage": 5
+        },
+        "jq": "[.[] | {id, email}]"
+      },
+      "mirage": {
+        "command": "woocommerce customers-list '{\"perPage\":5}' | jq -c '[.[] | {id, email}]'"
+      }
+    },
+    {
+      "name": "woocommerce_products_get",
+      "why": "one product reads back the same",
+      "mcp": {
+        "server": "woocommerce",
+        "tool": "woo_products_get",
+        "args": {
+          "productId": 11
+        },
+        "pipe": "grep -E '^ {2}\"(id|name|sku|status|price|stock_status)\": '"
+      },
+      "mirage": {
+        "command": "woocommerce products-get '{\"productId\":11}' | grep -E '^ {2}\"(id|name|sku|status|price|stock_status)\": '"
+      }
+    },
+    {
+      "name": "woocommerce_orders_get",
+      "why": "one order reads back the same",
+      "mcp": {
+        "server": "woocommerce",
+        "tool": "woo_orders_get",
+        "args": {
+          "orderId": 14
+        },
+        "jq": "{id, status, total, line_items: [.line_items[] | {product_id, quantity}]}"
+      },
+      "mirage": {
+        "command": "woocommerce orders-get '{\"orderId\":14}' | jq -c '{id, status, total, line_items: [.line_items[] | {product_id, quantity}]}'"
+      }
+    },
+    {
+      "name": "google_sheet_list_sheets",
+      "why": "the tab list agrees",
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "list_sheets",
+        "args": {
+          "spreadsheet_id": "f0002"
+        }
+      },
+      "mirage": {
+        "command": "google-sheet list-sheets '{\"spreadsheet_id\":\"f0002\"}'"
+      }
+    },
+    {
+      "name": "google_sheet_get_sheet_data",
+      "why": "the cells read back identically",
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "get_sheet_data",
+        "args": {
+          "spreadsheet_id": "f0002",
+          "sheet": "BOM",
+          "range": "A1:C3"
+        }
+      },
+      "mirage": {
+        "command": "google-sheet get-sheet-data '{\"spreadsheet_id\":\"f0002\",\"sheet\":\"BOM\",\"range\":\"A1:C3\"}'"
+      }
+    },
+    {
+      "name": "google_sheet_update_cells",
+      "why": "a write through either arm lands in the same cells",
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "update_cells",
+        "args": {
+          "spreadsheet_id": "f0002",
+          "sheet": "BOM",
+          "range": "H1:I2",
+          "data": [
+            [
+              "parity",
+              "check"
+            ],
+            [
+              "second",
+              "row"
+            ]
+          ]
+        }
+      },
+      "mirage": {
+        "command": "google-sheet update-cells '{\"spreadsheet_id\":\"f0002\",\"sheet\":\"BOM\",\"range\":\"H1:I2\",\"data\":[[\"parity\",\"check\"],[\"second\",\"row\"]]}'"
+      },
+      "mutates": [
+        "gws"
+      ]
+    }
+  ]
+}

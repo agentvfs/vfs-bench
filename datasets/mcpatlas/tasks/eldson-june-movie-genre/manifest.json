@@ -1,0 +1,109 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/48bf42078c2e9759e2229f4b929fb7b0ce471e497a1801434e54c4d1ad3f8b5e",
+      "role": "workspace",
+      "sha256": "48bf42078c2e9759e2229f4b929fb7b0ce471e497a1801434e54c4d1ad3f8b5e",
+      "size": 1139,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/315ced1f9b435382404ef671fdc27ac9509ba8a8f927e53227651585ee7d3850",
+      "role": "workspace_config",
+      "sha256": "315ced1f9b435382404ef671fdc27ac9509ba8a8f927e53227651585ee7d3850",
+      "size": 2444,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/cd42f74208f830125a423e88641d4b02c943e1a732a644966f5d684bafc74ad1",
+      "role": "parity",
+      "sha256": "cd42f74208f830125a423e88641d4b02c943e1a732a644966f5d684bafc74ad1",
+      "size": 2321,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/280f60eef7ac9da7654ddfc5e3b84e9501c6a800802103943886e987a89e73b6",
+      "role": "verifier",
+      "sha256": "280f60eef7ac9da7654ddfc5e3b84e9501c6a800802103943886e987a89e73b6",
+      "size": 192,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "filesystem_list_directory",
+    "filesystem_list_directory_with_sizes",
+    "filesystem_directory_tree",
+    "filesystem_search_files",
+    "filesystem_list_allowed_directories",
+    "slack_channels_list",
+    "slack_conversations_add_message",
+    "slack_conversations_history",
+    "slack_conversations_replies",
+    "slack_conversations_search_messages",
+    "weather_find_weather_stations",
+    "weather-data_weather_history",
+    "weather-data_weather_astronomy",
+    "filesystem_read_file"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "eldson-june-movie-genre",
+  "schema_version": 1,
+  "servers": [
+    "filesystem",
+    "slack",
+    "weather",
+    "weather-data"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/eldson-june-movie-genre/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "865319a0220844056762671f9aa6510a5685691bda429f9c78e4273cea6b64fc",
+      "size": 4209,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/eldson-june-movie-genre/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689cd6f8522029b7ad7b1fe0",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/eldson-june-movie-genre",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

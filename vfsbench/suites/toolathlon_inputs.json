@@ -1,0 +1,186 @@
+{
+  "ab-testing": {
+    "shared/bigquery.json": "3273ce850c19252d7f6b623da865665bc2d55ce5a0d0549983d70c7221c1ab89",
+    "shared/logging.json": "26e0bcc6686a72d7b722f4542712c060e1883c030a2bb2fde72a7a4db2541c96",
+    "shared/storage.json": "3944f6a18e974f817358d8d3a117638368c8590c5ad099cf051b6267a49f9c70",
+    "upstream/evaluation/main.py": "3bad26b61448f1f0c91808435e3239c3f7a6735ab865f0c27523fb6312a9b9ad",
+    "upstream/files/ab_Appliances.csv": "f4314145b031cb335d8c3ea385495543fb537341ddbbd2181effc5f86e7351cd",
+    "upstream/files/ab_Automotive.csv": "a851215ff243f0c17f3c01852b8f798a7fd36abb8bb9a854b7c7425770bb3501",
+    "upstream/files/ab_Baby.csv": "eb811f21f0f8e59006c6dbffde5ed65e6dfe1371a19cf2b9667413d8186cb0df",
+    "upstream/files/ab_Beauty.csv": "3c5e47277d9f8896cb5cb5c384dc34e153ce17e65a561a81a130449b440dd101",
+    "upstream/files/ab_Books.csv": "8357303508acb49644e612a8f44bfbf6d59b9dc203f29075fce12f7127a416e7",
+    "upstream/files/ab_Clothing.csv": "3cfda2d1b8bc8c0efc72634be0f3c5913f752947824d9c32b6284ec4e26ad00c",
+    "upstream/files/ab_Education.csv": "821733b664a642a529a0750addced3a0885e8137608a8f1e8476132dcb1343d3",
+    "upstream/files/ab_Electronics.csv": "da66739711f6d2d13cab8298edf8f47d2282c0b425e34f35e4cc84f886364d1a",
+    "upstream/files/ab_Food.csv": "7242708f4626cf899484a8b2564d59bde361971cad6c98075852d289766ee333",
+    "upstream/files/ab_FreshFood.csv": "e23de08e80ddc5c71aa12c5cdb4bbc783e6812e6905a2f06fa56172a6c3f5113",
+    "upstream/files/ab_Gaming.csv": "035d75aa39f1a81af271390dda029df690ff256dc0dffa18a13e5fd8786bc875",
+    "upstream/files/ab_Health.csv": "d5ac3b8351307322fb85d75712b5239df259d82d4116e2a82a096bfc36816855",
+    "upstream/files/ab_Home.csv": "1ecc2d084047750c2e265e24f9e2fea4d30dc1158279c42ce604645389597496",
+    "upstream/files/ab_Hospitality.csv": "75c9cd59ed68e3d41ce8f2117fdbd51fb9ff1d4842d6d797ee7146ab72f2be71",
+    "upstream/files/ab_Music.csv": "f53ddca8a082a6bdf6e39c866b93e283eacc2e49b3015013307155186806ee4a",
+    "upstream/files/ab_Office.csv": "66315a0a86b83a7dc3da9f5731aad21d3f0408e9bf3049f96008dec4a4908a9d",
+    "upstream/files/ab_Outdoor.csv": "f8f6ab5fe42e8a7d476a5dd0f1fec648e8ca2407994fe64a3390b507664ab126",
+    "upstream/files/ab_Pets.csv": "a940dfe3c9324bfb1c2d465655b5ff65abaec9c3666e11cc2b7aacc520002fac",
+    "upstream/files/ab_Sports.csv": "f04a64494f3373985ce2e16ed784a5cfbe2d9362ba5277e9dfd4775154b2cc03",
+    "upstream/files/ab_Travel.csv": "b85fd13ff4dc63808b50e6e9f01048e887405de91a354aeb86ff84961196857e",
+    "upstream/groundtruth_workspace/expected_ratio.csv": "360e2ccfb8de551ff5d6d5fd5c0136efd488b0a89f2d489a42a006c168f39d34",
+    "upstream/groundtruth_workspace/log_bucket_name.txt": "f772da549ea1699510f5d365f8d57e8280b127bfa2428cb5af4ff5f915271158",
+    "upstream/initial_workspace/record.csv": "f27ebb12c66aa387b39da5b9aad16b66cf3178895b57ba7e724d3d9003d58ea7"
+  },
+  "academic-warning": {
+    "shared/bigquery.json": "21c87ea1d795f3d1fb95b2550fdb0ba743dfa5b56c4d09076ad07e74ca79748b",
+    "shared/logging.json": "26e0bcc6686a72d7b722f4542712c060e1883c030a2bb2fde72a7a4db2541c96",
+    "upstream/evaluation/main.py": "551eda822226c70a2c928e942062affd9057d8f9cd6c25c221f8252647f6bfcb",
+    "upstream/files/scores_2501.csv": "cc653dc828193e873740df5662658ef8c45ca31fd25f38cc958215f1150f661b",
+    "upstream/files/scores_2502.csv": "766a5ffb6db7e729eca777dd957db4f6dcb3f011bd728b8f71894192ee3aa517",
+    "upstream/files/scores_2503.csv": "aadc1aec6466ce06cfb162176a6655b7030610c5b832af6c9acb81f062d6fc0e",
+    "upstream/files/scores_2504.csv": "aadc1aec6466ce06cfb162176a6655b7030610c5b832af6c9acb81f062d6fc0e",
+    "upstream/files/scores_2505.csv": "2cd7a72fe605310ff793e13a360226a2ab076e3f7699674be3bc47df01821c66",
+    "upstream/files/scores_2506.csv": "b1c7c26d5a81fa3a35f6902a4b5c2ce2abeac350071bc86a33d85ae34bcd497a",
+    "upstream/files/scores_2507.csv": "b1c7c26d5a81fa3a35f6902a4b5c2ce2abeac350071bc86a33d85ae34bcd497a",
+    "upstream/groundtruth_workspace/expected_alerts.csv": "2aeb016e95943f50afaf473b1426a5274007876aa07537a2e69889796da98539",
+    "upstream/groundtruth_workspace/log_bucket_name.txt": "e8be5c71fcb3cb84e36ad92ced1de00bbf8cc7b545a6efcf3d6534cea0bf974d",
+    "upstream/initial_workspace/latest_quiz_scores.csv": "6cede2b3d6c4646a51b1c6e93ca5e12d6f80f5445885980eeb8ff51a8006a415"
+  },
+  "arrange-workspace": {
+    "upstream/evaluation/check_local.py": "7e9f2aed5ade33ecd7866697e5d20ff39de98c2484c663cd41e33f3cb130f95d",
+    "upstream/evaluation/main.py": "0efd80af45fd2ba30ab4ea1b5b0879e6bbf0afd693a4611983d53bc7fdd17061",
+    "upstream/initial_workspace/initial_workspace.tar.gz": "33c3273646a587d9a2a00d8022b0598a852950aeac74a797d234c142366ccc0a"
+  },
+  "courses-ta-hws": {
+    "upstream/evaluation/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "upstream/evaluation/check_local.py": "76a80820c9f2099ddef26652d05d9178f4417acf81b3614547bf82ae53918d2c",
+    "upstream/evaluation/main.py": "7e9f3702b0c8e2c41f746f18fddcd3a50a61996ba45acf3bbacd32023ca0a442",
+    "upstream/groundtruth_workspace/expected_mapping.json": "430bbfc7bd99c252db212712971ed9b1bf26ebf2faf7a2d86c2bdd7ce3d8006c",
+    "upstream/initial_workspace/files.tar.gz": "7663565fec4793c8669d3b0cd617f2eaf902225cb5fe9a830e1104482e310cb7"
+  },
+  "detect-revised-terms": {
+    "upstream/evaluation/check_content.py": "d8a96520b6385f465b477b479386ef5baf0d8b2a2c05877a056a0600e8989d3e",
+    "upstream/evaluation/main.py": "29c23ad0f2522edbff14335d1209b7b753bec353c37f7497d41da5d3f75d27ac",
+    "upstream/groundtruth_workspace/revised_terms.csv": "62626a9b1e3c1fcd69372dae675a38b1b25e5ca4393fb76b54b84922e846590e",
+    "upstream/initial_workspace/case1.pdf": "75e8e3d87fc8df2a7d1ef633f1b1f98dc73956b1f7985fdd3619b75653910523",
+    "upstream/initial_workspace/case2.pdf": "2e028987a7142dbceb54fac2b99928a1d79e58bee4eb77049c354fc526c2fbfb",
+    "upstream/initial_workspace/case3.pdf": "859c6418fc3a759dc06d46580da0ccbe83bb8f03bd2ca7f7de1a688c72d26d94",
+    "upstream/initial_workspace/case4.pdf": "4ee532f7e6f2a9328e287dca975dd9defe37b2365ba0a29627fddd78526c14e7",
+    "upstream/initial_workspace/case5.pdf": "8da24331799d885705b3f1241871c379c9938dcfc3825170e0cfb98b341cb704",
+    "upstream/initial_workspace/new_law.pdf": "27d3e78e67d3dca4bee729fd20d4ec5aad959b561d3c4d9e5efde721916fb93b"
+  },
+  "excel-data-transformation": {
+    "upstream/evaluation/check_local_improved.py": "1ffefb745180924570d8b392213e11a8179a8d9fd1a52e98107c1deab62704bf",
+    "upstream/evaluation/main.py": "575a77c1b8225a98f4735bb7e7adfedfd84bba45565d7ffd180c6c99c7dcebb5",
+    "upstream/groundtruth_workspace/Processed.xlsx": "353a26c23340e694928f3c38ae033d8ff4d54ee41fc906ea7a8938cc4ed3d506",
+    "upstream/initial_workspace/Format_Example.xlsx": "a419bcc43fd3ebc0c5596c293dad07ad11bec2ee58b62224e952a8fe2de4519b",
+    "upstream/initial_workspace/Household_Appliances.xlsx": "0db0a07d8b32c96b42f9441f78acf27333f4d719fc8d488c08c316a51e92defe"
+  },
+  "excel-market-research": {
+    "upstream/evaluation/check_local.py": "979d851c842f6d5d0068af7c51105986693be2bce9de0de264258b580e1ef15e",
+    "upstream/evaluation/main.py": "f3ea5fa444fac74f4a7f28ae7128f1b8cba97be34b7ba2a4cc52b8cb6315a266",
+    "upstream/groundtruth_workspace/segment_growth_rates.xlsx": "8ae9511d18da5cc96637b9f17104c28915fb5914ee6d17ace6b147dad6120ba8",
+    "upstream/initial_workspace/Market_Data.xlsx": "f60f0d8fb5f9b4e7c598fc7d647fde221b6af8adb2cc2e62abe612b330a62b55"
+  },
+  "flagged-transactions": {
+    "upstream/evaluation/main.py": "766e25c616b6abe2b18259d85668bdc60ea82dc2f87a75d415d3ce94a6cde0d7",
+    "upstream/files/all_transactions.csv": "f858800c1282298cc8123646076e50c708ce67e290d3f52509528d610329334a",
+    "upstream/groundtruth_workspace/anomaly_audit_report.xlsx": "cd372b8707036d44c76a0fc51f4d1c2943974edd32e7f304fc8b5b5ab093fbf9",
+    "upstream/initial_workspace/anomaly_audit_report.xlsx": "430ccf22934d75665d2f30f9c6a1a5310e201676505b98996578905d73745e6e",
+    "upstream/initial_workspace/high_value_clients.csv": "bd18cffb3a1431a29f6635587a878c6251568f09ed98bff2ad1a04f77cf174ce"
+  },
+  "game-statistics": {
+    "shared/bigquery.json": "098c5e5ecc57f41003196ffabe69e4d0f3ea0136523727d23ac77b9e3fe769ce",
+    "upstream/evaluation/main.py": "037a5d7061c7ee5302a70eda1c3fbe5efbec8445b08c6bc0a90ddb701f95834b",
+    "upstream/preprocess/main.py": "504de30d2c721fbf05a34c949b29e80f5154885edfc8bd9bb6357b42181aaf2f"
+  },
+  "git-repo": {
+    "upstream/evaluation/check_local.py": "67c6a11f90f4d47cd9b132bfd269f6cb9cfb358abcd9715ce3c8bd7b4dfc5120",
+    "upstream/evaluation/main.py": "08142d36901cc3d662981adefca577323b4ede5d627b2a548d70d2fa2e09fe72",
+    "upstream/groundtruth_workspace/result.json": "e368f6e22eddf92af4344ff0308ac9350292e802d78946357f0ea832c806d920",
+    "upstream/initial_workspace/paper.pdf": "a64ff37ceb25d6f4b373e3a50fa65e4ae0397bc5835f44a4ab129b073c6d5fdf",
+    "upstream/initial_workspace/result.json": "4aea890d27ae9823199cc1c579f32dc8c4f5b0abe9a23e76a559a45af9498ce4"
+  },
+  "imagenet": {
+    "upstream/evaluation/check_local.py": "4a6422a5641aa51cdf6fe47bea2efb810385d6a29bd791b57c6b703586138830",
+    "upstream/evaluation/main.py": "03fbb927487ca98ab2cdcb1730976c357884e280259991be66ca26bdcc4b7b70",
+    "upstream/groundtruth_workspace/survey.tex": "3f99ec6deb39aed921f97d88fcc8c2a709ae551c50f6282fd38b2858f0c0999a",
+    "upstream/initial_workspace/2212.09748v2.pdf": "5fbb0ec35e3ae76826240171ca63ed4c27de6cb43180367453019e9d28a8b076",
+    "upstream/initial_workspace/2406.06525v1.pdf": "fd2c8453a061561d2bcb051eadf62f45aa3c17b2344499a7cf087fd53be4567d",
+    "upstream/initial_workspace/format.tex": "fe271aad249a7b89a85ddf1f9b9a0bfb449b435878c811b837dfcaf888cb7d18"
+  },
+  "live-transactions": {
+    "shared/bigquery.json": "0726a998a5ebf283e2598adfeda5ffef6e06451a0dd44771f565b441798199ed",
+    "shared/logging.json": "26e0bcc6686a72d7b722f4542712c060e1883c030a2bb2fde72a7a4db2541c96",
+    "shared/storage.json": "93935b4518b7a5395b99d77fa87ba9d60b9f30e470983636620133d265041400",
+    "upstream/evaluation/main.py": "96c3a05191cba96908be33176b37a718076022e1be2b4673f6c2474d20940908",
+    "upstream/groundtruth_workspace/T8492XJ3_investigation_report.json": "514f65ec53ab89ade6a3fad487695ec6de4f399a1c6c6bb8507bd0c3aab4181b",
+    "upstream/groundtruth_workspace/bucket_name.txt": "c5ba431fdd11f818be7780a8b258895eda2a4d7900b1332c109b2b56f5c0b5a7",
+    "upstream/groundtruth_workspace/log_bucket_name.txt": "c778d550665cc27f7eff4a2005aa2caa3748701a911573de9af271ae7093531d",
+    "upstream/preprocess/transactions_analytics/accounts.csv": "dff0e4b4d2109f45b752608a7eef2403f149c4e7c6408dc7f067c1297e32d38d",
+    "upstream/preprocess/transactions_analytics/blacklist.csv": "cc99047b7cec9b945fcd900f1c2e0521f9863b50407c3b0ac8517759b5b4f4a9",
+    "upstream/preprocess/transactions_analytics/cards.csv": "557c02d9aa0e70006fd8859889cb9d06646a883929fc2401e8dec59c32dd47bd",
+    "upstream/preprocess/transactions_analytics/devices.csv": "88fd204ef09cd2d08c1d0036c5279c87ddb871e0b56283f81ffb4013d0697c2a",
+    "upstream/preprocess/transactions_analytics/fraud_alerts.csv": "c9c3e81625083713fa7cbfc176fa4086263df0a1f7c704a330779e4aaf4e20ed",
+    "upstream/preprocess/transactions_analytics/live_transactions.csv": "6ffd4cbcb4f5a76f8c2dc1274e8d1c8a1034be4770012331ce0e2cb402758d09",
+    "upstream/preprocess/transactions_analytics/locations.csv": "c29a3ac72ffd7874f87b4be942cfb7ad4c7fb28dfff4151458a29898cbb01e53",
+    "upstream/preprocess/transactions_analytics/merchants.csv": "8a03240fbd4cea024cf78927ba99fd67dd28adc8d43f27c529c4d785ebf75f4c",
+    "upstream/preprocess/transactions_analytics/risk_scores.csv": "0d56fab458ca889298267af95dca6ec04392fec0a69f99ca261e33e341e72e65",
+    "upstream/preprocess/transactions_analytics/users.csv": "fdb47465c6845fb8da65f2ca77fc5978d1e35527e5fd16490ae3ba486df8c9cd"
+  },
+  "machine-operating": {
+    "shared/bigquery.json": "2e9d0b1b433a3b8ea7d7f7a03fe87d8f523215468f3acccdd79022ac2b3e5e75",
+    "shared/storage.json": "93935b4518b7a5395b99d77fa87ba9d60b9f30e470983636620133d265041400",
+    "upstream/evaluation/main.py": "a0c8615a5fa40f44b0966542fc088b68f5fdb98abcaccc0e54f3af27744bf275",
+    "upstream/groundtruth_workspace/anomaly_report.csv": "e70e685ee6fb2ea6974b17134ced771b1f21b599783054ee4856a013e4f2be44",
+    "upstream/groundtruth_workspace/bucket_name.txt": "680722a7090cedf975deb184890e59169cd06c60a9ee6a0bf7fc011f405ec14b",
+    "upstream/initial_workspace/machine_operating_parameters.xlsx": "59f700c7630bc45994264a8a96ccff43cab25e1560550b8b51ffcd4e62af1c03",
+    "upstream/preprocess/live_sensor_data.csv": "7dfdb6b003c242397dc08089c958c91399579ed692144646756cb703c0340074"
+  },
+  "nhl-b2b-analysis": {
+    "shared/nhl.csv": "051001820b69f6625c11e77ececd0609a8fa86adb3f9e720a4857b476c574080",
+    "upstream/evaluation/main.py": "169d646aa686986f114e54174f574439e3f7a95c0149ac6dee0fc42722cc74f2",
+    "upstream/groundtruth_workspace/standard_answer.csv": "c27e9af2430e18955500d83868597e8fb12247ba6506acb90eb9fed89d335dbe"
+  },
+  "paper-checker": {
+    "upstream/evaluation/main.py": "c91058797fc88592763ff2af9645a4a90bd0532b4ff1e3f6fb337d37e7e3534c",
+    "upstream/groundtruth_workspace/files.tar.gz": "ad01a527908a670a4db234decb6472fc70c494c204e9d0214dd4e906823cf189",
+    "upstream/initial_workspace/files.tar.gz": "87c942af85d48d337ef039b95d7c4daaa0aac9b1e384a6efc7e275f981e953f3"
+  },
+  "personal-website-construct": {
+    "upstream/evaluation/check_remote.py": "1dcb23d93379f11e2c2fa57cfe596b62eaea90f9ae4813162864c216725dcc6b",
+    "upstream/evaluation/main.py": "53ec2b168938615c21cf0c8f43a49a8231c5bd152733df1ebba5c6438e17c56a",
+    "upstream/groundtruth_workspace/memory/memory.json": "0540f2517ff6ad0571ede4ecb54587b28de58eea10e2e79ae7faf38e7276b2fd",
+    "upstream/initial_workspace/memory/memory.json": "528fb170788bcedd04fe2a7d31cdfdf58595f56d9f445250afbf7f8f7b6cb5c9"
+  },
+  "price-comparison": {
+    "shared/bigquery.json": "912b9bce02fd75bce39af497a049a264cc5a8b1382a2c3a82e6404e894d632a9",
+    "upstream/evaluation/main.py": "a9037a9d539627e41e6ca46c3543fd9913182df9c417c7e41ef911cf891e5833",
+    "upstream/groundtruth_workspace/competitive_pricing_analysis_ground_truth.csv": "6456778ee4528015475d62b5a2814f9125ef12028e3ab2f46a4c0ef1fb10d4b8",
+    "upstream/initial_workspace/futuregadget_pricing.pdf": "02894b4d3c5912895663bfeb5ec374c0973c4093a3ee78b9e27453ce554f6ba6",
+    "upstream/initial_workspace/internal_pricing_sheet.csv": "d0c78b7e34441a6ae7eea930b16f7de26d6bf537cb8e95a1bd80934ae6c2d320",
+    "upstream/initial_workspace/requirement.md": "249c9d279000f60cca9936b0491e5fe784be7e3b2df68258c4c9da68c0627c9d"
+  },
+  "privacy-desensitization": {
+    "upstream/evaluation/main.py": "b1745d04562ecebf243051481548fc682e1fd78cc9571ac14b21f373a2ae84e7",
+    "upstream/groundtruth_workspace/gt_files.tar.gz": "d163924afc70bd2f31999f0b6938c2b92877c477f8fcc6a9f9014caffba4ffd7",
+    "upstream/initial_workspace/files.tar.gz": "af057d4105b298cbb0e47644854929db0850901736f3f536159ae42a0fc3ee73"
+  },
+  "reimbursement-form-filler": {
+    "upstream/evaluation/__init__.py": "b9ad0c987a0c01fd00fc3b95c35ae2ec3a2da7f81b91a33e5839f9e54d7566c5",
+    "upstream/evaluation/check_local.py": "f7ea084dba14c0930737df3bdc7b8e97e9aa026123ebb677010c9450b61be9c8",
+    "upstream/evaluation/main.py": "9a2a6e303f160007574850e2f7cf82781a4751cb894e103781a4ba857a2d04b5",
+    "upstream/groundtruth_workspace/department_expenses.xlsx": "eeaddba9ad417789a5a966980e7ed92499cb3df4f6e232958348abce6f2ef897",
+    "upstream/initial_workspace/Bill_Format.xlsx": "8f944e3ee1e601092757ab44c1b6de6ed70952850f1a3898abacff74781526dd",
+    "upstream/initial_workspace/bills/bills.tar.gz": "a054ee6d628e7121718ea8c6e8ebe60a4d0ecfe083eccc5136725d1aa5205645",
+    "upstream/initial_workspace/requirement.txt": "cfd8ca0740b5f6d078f066b7f24fb9e44bb16bb07db99945ac2c298be9d95b4b"
+  },
+  "sales-accounting": {
+    "upstream/evaluation/check_local.py": "e24b35c83cadf9b87e59aff7c0c9dd9e35bcdb9bb55c7e46f4b369e90800f2fe",
+    "upstream/evaluation/main.py": "9bf3468aca6f967dc3dd0976f929b4d16dfb4b3e106aa751a4312a5e998b565f",
+    "upstream/groundtruth_workspace/Account_Book_Complete.xlsx": "fc54500f2ffbe6e46eddf41d4374a54beb75f90d91500b45c7a04ca76629b842",
+    "upstream/initial_workspace/Account_Book.xlsx": "c227250a7ab72300653672be4f0e7ab936ee1d5b014356f2956aee6ce0e15401",
+    "upstream/initial_workspace/memory/memory.json": "2b8f3d4c2d10da790fe6ce3f9931197a4dd18d62b033212ed1a89272ccfa5b37"
+  },
+  "sync-todo-to-readme": {
+    "upstream/evaluation/main.py": "6387075db4d95cfef7cd8ddc5e4ec52a98f1958cf16a41f94dc3396a95918afb",
+    "upstream/groundtruth_workspace/README.md": "795cf2bfe32c8bd3407aef7fb61025401e44750fac904412d94517bfc04e8e0b"
+  }
+}

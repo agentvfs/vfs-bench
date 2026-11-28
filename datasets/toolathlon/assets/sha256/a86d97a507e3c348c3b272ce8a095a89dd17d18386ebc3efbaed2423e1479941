@@ -1,0 +1,52 @@
+{
+  "note": "The google-cloud MCP server answers in prose with a row preview; `bq` returns JSON. Requires the emulator started for this task: uv run python server/fakes/gcp.py ab-testing. Every google-cloud projection ends in `grep .`, so an arm whose reply carries no such line fails the case instead of agreeing on nothing.",
+  "cases": [
+    {
+      "name": "run_query_count",
+      "why": "the same statement returns the same answer through either arm",
+      "mcp": {
+        "server": "google-cloud",
+        "tool": "bigquery_run_query",
+        "args": {
+          "query": "SELECT COUNT(*) AS n FROM ab_testing.ab_Books"
+        },
+        "pipe": "sed -n \"s/^Row 1: {'n': \\([0-9]*\\)}/\\1/p\" | grep ."
+      },
+      "mirage": {
+        "command": "google-cloud bigquery-run-query '{\"query\":\"SELECT COUNT(*) AS n FROM ab_testing.ab_Books\"}'",
+        "pipe": "sed -n \"s/^Row 1: {'n': \\([0-9]*\\)}/\\1/p\" | grep ."
+      }
+    },
+    {
+      "name": "clicks_by_window",
+      "why": "the clickstream the answer is computed from agrees value for value",
+      "mcp": {
+        "server": "google-cloud",
+        "tool": "bigquery_run_query",
+        "args": {
+          "query": "SELECT A_clicks FROM ab_testing.ab_Books ORDER BY time_window LIMIT 3"
+        },
+        "pipe": "sed -n \"s/^Row [0-9]*: {'A_clicks': \\(.*\\)}/\\1/p\" | grep ."
+      },
+      "mirage": {
+        "command": "google-cloud bigquery-run-query '{\"query\":\"SELECT A_clicks FROM ab_testing.ab_Books ORDER BY time_window LIMIT 3\"}'",
+        "pipe": "sed -n \"s/^Row [0-9]*: {'A_clicks': \\(.*\\)}/\\1/p\" | grep ."
+      }
+    },
+    {
+      "name": "promo_bucket_absent",
+      "why": "the answer's winning branch is 'a bucket with this prefix exists', so both arms must start with none -- and it is the seed's prefix delete, not a name, that makes that true",
+      "mcp": {
+        "server": "google-cloud",
+        "tool": "storage_list_buckets",
+        "args": {},
+        "pipe": "sed -n 's/^Found \\([0-9]*\\) buckets.*/total \\1/p; s/^- \\(promo-assets-for-b[^:]*\\):.*/\\1/p' | grep ."
+      },
+      "mirage": {
+        "command": "google-cloud storage-list-buckets",
+        "pipe": "sed -n 's/^Found \\([0-9]*\\) buckets.*/total \\1/p; s/^- \\(promo-assets-for-b[^:]*\\):.*/\\1/p' | grep ."
+      },
+      "note": "the bucket count proves the reply is a listing; the names, if any, are the ones that would decide the task"
+    }
+  ]
+}

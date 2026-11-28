@@ -1,0 +1,84 @@
+{
+ "note": "Both arms read one tree at one path -- the MCP arm's servers read the image's own /data in the run's container, and the mirage /data mount is a copy of it taken out of the same image. GitHub is mirage's GitHub fake on both arms, and it holds nothing.",
+ "cases": [
+  {
+   "name": "fetch",
+   "why": "the fetch CLI is the MCP arm's fetch server, reading the same page live",
+   "mcp": {
+    "server": "fetch",
+    "tool": "fetch",
+    "args": {
+     "url": "https://raw.githubusercontent.com/theonion/fartscroll.js/master/README.md",
+     "max_length": 400
+    }
+   },
+   "mirage": {
+    "command": "fetch fetch '{\"url\":\"https://raw.githubusercontent.com/theonion/fartscroll.js/master/README.md\",\"max_length\":400}'"
+   }
+  },
+  {
+   "name": "consumption",
+   "why": "the same survey rows, by age group",
+   "mcp": {
+    "server": "filesystem",
+    "tool": "read_file",
+    "args": {
+     "path": "/data/food and beverage consumption.csv"
+    },
+    "pipe": "grep '18-24'"
+   },
+   "mirage": {
+    "command": "grep '18-24' '/data/food and beverage consumption.csv'"
+   }
+  },
+  {
+   "name": "meal",
+   "why": "the same meal on the day of the fourth",
+   "mcp": {
+    "server": "filesystem",
+    "tool": "read_text_file",
+    "args": {
+     "path": "/data/food and beverage consumption.csv"
+    },
+    "pipe": "grep '17 Jun 2023'"
+   },
+   "mirage": {
+    "command": "grep '17 Jun 2023' '/data/food and beverage consumption.csv'"
+   }
+  },
+  {
+   "name": "get_commit",
+   "why": "neither arm finds the merge live GitHub holds: both read the one fake, which holds nothing",
+   "mcp": {
+    "server": "github",
+    "tool": "get_commit",
+    "args": {
+     "owner": "lgrammel",
+     "repo": "storyteller",
+     "sha": "0865ef487b8100848fcab25af80e60bffb4f42da"
+    },
+    "pipe": "sed 's/^Error: \\(.*\\) - https:.*$/\\1/'"
+   },
+   "mirage": {
+    "command": "gh api repos/lgrammel/storyteller/commits/0865ef487b8100848fcab25af80e60bffb4f42da 2>/dev/null | jq -r .message"
+   }
+  },
+  {
+   "name": "list_commits",
+   "why": "neither arm finds the repository live GitHub holds: both read the one fake, which holds nothing",
+   "mcp": {
+    "server": "github",
+    "tool": "list_commits",
+    "args": {
+     "owner": "Atamyrat2005",
+     "repo": "snake-game",
+     "per_page": 100
+    },
+    "pipe": "sed 's/^Error: \\(.*\\) - https:.*$/\\1/'"
+   },
+   "mirage": {
+    "command": "gh api repos/Atamyrat2005/snake-game/commits -X GET -f per_page=100 2>/dev/null | jq -r .message"
+   }
+  }
+ ]
+}

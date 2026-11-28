@@ -1,0 +1,248 @@
+{
+  "cases": [
+    {
+      "name": "all-five-run-ids",
+      "mcp": {
+        "server": "wandb",
+        "tool": "query_wandb_tool",
+        "args": {
+          "query": "query {project(entityName:\"mluo\",name:\"deepscaler-1.5b\"){runs(first:100){edges{node{id name displayName}} pageInfo{hasNextPage endCursor}}}}"
+        },
+        "jq": ".project.runs.edges | map(.node.name) | sort"
+      },
+      "mirage": {
+        "command": "ls /wandb/mluo/deepscaler-1.5b",
+        "pipe": "jq -Rsc 'split(\"\\n\") | map(select(length > 0)) | sort'"
+      }
+    },
+    {
+      "name": "2h1sn79d-history.jsonl",
+      "mcp": {
+        "server": "wandb",
+        "tool": "query_wandb_tool",
+        "args": {
+          "query": "query {project(entityName:\"mluo\",name:\"deepscaler-1.5b\"){run(name:\"2h1sn79d\"){history(samples:2000)}}}"
+        },
+        "jq": ".project.run.history | map(fromjson)"
+      },
+      "mirage": {
+        "command": "cat /wandb/mluo/deepscaler-1.5b/2h1sn79d/history.jsonl",
+        "pipe": "jq -s ."
+      }
+    },
+    {
+      "name": "2h1sn79d-config.json",
+      "mcp": {
+        "server": "wandb",
+        "tool": "query_wandb_tool",
+        "args": {
+          "query": "query {project(entityName:\"mluo\",name:\"deepscaler-1.5b\"){run(name:\"2h1sn79d\"){config}}}"
+        },
+        "jq": ".project.run.config | fromjson | with_entries(.value = .value.value)"
+      },
+      "mirage": {
+        "command": "cat /wandb/mluo/deepscaler-1.5b/2h1sn79d/config.json"
+      }
+    },
+    {
+      "name": "2h1sn79d-summary.json",
+      "mcp": {
+        "server": "wandb",
+        "tool": "query_wandb_tool",
+        "args": {
+          "query": "query {project(entityName:\"mluo\",name:\"deepscaler-1.5b\"){run(name:\"2h1sn79d\"){summaryMetrics}}}"
+        },
+        "jq": ".project.run.summaryMetrics | fromjson"
+      },
+      "mirage": {
+        "command": "cat /wandb/mluo/deepscaler-1.5b/2h1sn79d/summary.json"
+      }
+    },
+    {
+      "name": "iklki6k0-history.jsonl",
+      "mcp": {
+        "server": "wandb",
+        "tool": "query_wandb_tool",
+        "args": {
+          "query": "query {project(entityName:\"mluo\",name:\"deepscaler-1.5b\"){run(name:\"iklki6k0\"){history(samples:2000)}}}"
+        },
+        "jq": ".project.run.history | map(fromjson)"
+      },
+      "mirage": {
+        "command": "cat /wandb/mluo/deepscaler-1.5b/iklki6k0/history.jsonl",
+        "pipe": "jq -s ."
+      }
+    },
+    {
+      "name": "iklki6k0-config.json",
+      "mcp": {
+        "server": "wandb",
+        "tool": "query_wandb_tool",
+        "args": {
+          "query": "query {project(entityName:\"mluo\",name:\"deepscaler-1.5b\"){run(name:\"iklki6k0\"){config}}}"
+        },
+        "jq": ".project.run.config | fromjson | with_entries(.value = .value.value)"
+      },
+      "mirage": {
+        "command": "cat /wandb/mluo/deepscaler-1.5b/iklki6k0/config.json"
+      }
+    },
+    {
+      "name": "iklki6k0-summary.json",
+      "mcp": {
+        "server": "wandb",
+        "tool": "query_wandb_tool",
+        "args": {
+          "query": "query {project(entityName:\"mluo\",name:\"deepscaler-1.5b\"){run(name:\"iklki6k0\"){summaryMetrics}}}"
+        },
+        "jq": ".project.run.summaryMetrics | fromjson"
+      },
+      "mirage": {
+        "command": "cat /wandb/mluo/deepscaler-1.5b/iklki6k0/summary.json"
+      }
+    },
+    {
+      "name": "owwdhljy-history.jsonl",
+      "mcp": {
+        "server": "wandb",
+        "tool": "query_wandb_tool",
+        "args": {
+          "query": "query {project(entityName:\"mluo\",name:\"deepscaler-1.5b\"){run(name:\"owwdhljy\"){history(samples:2000)}}}"
+        },
+        "jq": ".project.run.history | map(fromjson)"
+      },
+      "mirage": {
+        "command": "cat /wandb/mluo/deepscaler-1.5b/owwdhljy/history.jsonl",
+        "pipe": "jq -s ."
+      }
+    },
+    {
+      "name": "owwdhljy-config.json",
+      "mcp": {
+        "server": "wandb",
+        "tool": "query_wandb_tool",
+        "args": {
+          "query": "query {project(entityName:\"mluo\",name:\"deepscaler-1.5b\"){run(name:\"owwdhljy\"){config}}}"
+        },
+        "jq": ".project.run.config | fromjson | with_entries(.value = .value.value)"
+      },
+      "mirage": {
+        "command": "cat /wandb/mluo/deepscaler-1.5b/owwdhljy/config.json"
+      }
+    },
+    {
+      "name": "owwdhljy-summary.json",
+      "mcp": {
+        "server": "wandb",
+        "tool": "query_wandb_tool",
+        "args": {
+          "query": "query {project(entityName:\"mluo\",name:\"deepscaler-1.5b\"){run(name:\"owwdhljy\"){summaryMetrics}}}"
+        },
+        "jq": ".project.run.summaryMetrics | fromjson"
+      },
+      "mirage": {
+        "command": "cat /wandb/mluo/deepscaler-1.5b/owwdhljy/summary.json"
+      }
+    },
+    {
+      "name": "rq8r5vf8-history.jsonl",
+      "mcp": {
+        "server": "wandb",
+        "tool": "query_wandb_tool",
+        "args": {
+          "query": "query {project(entityName:\"mluo\",name:\"deepscaler-1.5b\"){run(name:\"rq8r5vf8\"){history(samples:2000)}}}"
+        },
+        "jq": ".project.run.history | map(fromjson)"
+      },
+      "mirage": {
+        "command": "cat /wandb/mluo/deepscaler-1.5b/rq8r5vf8/history.jsonl",
+        "pipe": "jq -s ."
+      }
+    },
+    {
+      "name": "rq8r5vf8-config.json",
+      "mcp": {
+        "server": "wandb",
+        "tool": "query_wandb_tool",
+        "args": {
+          "query": "query {project(entityName:\"mluo\",name:\"deepscaler-1.5b\"){run(name:\"rq8r5vf8\"){config}}}"
+        },
+        "jq": ".project.run.config | fromjson | with_entries(.value = .value.value)"
+      },
+      "mirage": {
+        "command": "cat /wandb/mluo/deepscaler-1.5b/rq8r5vf8/config.json"
+      }
+    },
+    {
+      "name": "rq8r5vf8-summary.json",
+      "mcp": {
+        "server": "wandb",
+        "tool": "query_wandb_tool",
+        "args": {
+          "query": "query {project(entityName:\"mluo\",name:\"deepscaler-1.5b\"){run(name:\"rq8r5vf8\"){summaryMetrics}}}"
+        },
+        "jq": ".project.run.summaryMetrics | fromjson"
+      },
+      "mirage": {
+        "command": "cat /wandb/mluo/deepscaler-1.5b/rq8r5vf8/summary.json"
+      }
+    },
+    {
+      "name": "wgq08gza-history.jsonl",
+      "mcp": {
+        "server": "wandb",
+        "tool": "query_wandb_tool",
+        "args": {
+          "query": "query {project(entityName:\"mluo\",name:\"deepscaler-1.5b\"){run(name:\"wgq08gza\"){history(samples:2000)}}}"
+        },
+        "jq": ".project.run.history | map(fromjson)"
+      },
+      "mirage": {
+        "command": "cat /wandb/mluo/deepscaler-1.5b/wgq08gza/history.jsonl",
+        "pipe": "jq -s ."
+      }
+    },
+    {
+      "name": "wgq08gza-config.json",
+      "mcp": {
+        "server": "wandb",
+        "tool": "query_wandb_tool",
+        "args": {
+          "query": "query {project(entityName:\"mluo\",name:\"deepscaler-1.5b\"){run(name:\"wgq08gza\"){config}}}"
+        },
+        "jq": ".project.run.config | fromjson | with_entries(.value = .value.value)"
+      },
+      "mirage": {
+        "command": "cat /wandb/mluo/deepscaler-1.5b/wgq08gza/config.json"
+      }
+    },
+    {
+      "name": "wgq08gza-summary.json",
+      "mcp": {
+        "server": "wandb",
+        "tool": "query_wandb_tool",
+        "args": {
+          "query": "query {project(entityName:\"mluo\",name:\"deepscaler-1.5b\"){run(name:\"wgq08gza\"){summaryMetrics}}}"
+        },
+        "jq": ".project.run.summaryMetrics | fromjson"
+      },
+      "mirage": {
+        "command": "cat /wandb/mluo/deepscaler-1.5b/wgq08gza/summary.json"
+      }
+    },
+    {
+      "name": "wandb_original_query",
+      "why": "The W&B CLI returns the pinned original query result unchanged.",
+      "mcp": {
+        "server": "wandb",
+        "tool": "query_wandb_tool",
+        "args": {
+          "query": "query { project(entityName:\"mluo\", name:\"deepscaler-1.5b\") { name } }"
+        }
+      },
+      "mirage": {
+        "command": "wandb query-wandb-tool '{\"query\": \"query { project(entityName:\\\"mluo\\\", name:\\\"deepscaler-1.5b\\\") { name } }\"}'"
+      }
+    }
+  ]
+}

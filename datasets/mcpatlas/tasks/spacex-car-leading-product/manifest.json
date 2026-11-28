@@ -1,0 +1,117 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/a0c73f6826972a81b3e8f0d871c796f87243a3c48a02af891b26d88e2099251d",
+      "role": "workspace",
+      "sha256": "a0c73f6826972a81b3e8f0d871c796f87243a3c48a02af891b26d88e2099251d",
+      "size": 1630,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/a230bc81f120cb417a485a49e7620c7da113aadf0ac1ecbedaca7fe164a36247",
+      "role": "workspace_config",
+      "sha256": "a230bc81f120cb417a485a49e7620c7da113aadf0ac1ecbedaca7fe164a36247",
+      "size": 4203,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/3ff3ccc10e55997cd13f3dafe7e66ce5537dacd620020752ef97118c921293a1",
+      "role": "parity",
+      "sha256": "3ff3ccc10e55997cd13f3dafe7e66ce5537dacd620020752ef97118c921293a1",
+      "size": 3903,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/a41213631c22e6c8790eff858520a68ba5ee7700f4fa915efe5465946d37acd2",
+      "role": "verifier",
+      "sha256": "a41213631c22e6c8790eff858520a68ba5ee7700f4fa915efe5465946d37acd2",
+      "size": 337,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "airtable_list_bases",
+    "airtable_list_tables",
+    "airtable_list_records",
+    "airtable_search_records",
+    "exa_web_search_exa",
+    "git_git_status",
+    "github_search_repositories",
+    "google-maps_maps_geocode",
+    "google-maps_maps_search_places",
+    "google-maps_maps_place_details",
+    "context7_resolve-library-id",
+    "weather_get_current_weather",
+    "open-library_get_book_by_title",
+    "open-library_get_authors_by_name",
+    "open-library_get_author_info",
+    "pubmed_search_pubmed_key_words",
+    "pubmed_search_pubmed_advanced"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "spacex-car-leading-product",
+  "schema_version": 1,
+  "servers": [
+    "airtable",
+    "exa",
+    "git",
+    "github",
+    "google-maps",
+    "context7",
+    "weather",
+    "open-library",
+    "pubmed"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/spacex-car-leading-product/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "f4d79202de984cb54003ba2010d889993cac6edf1a08802dacf93865858f6fcc",
+      "size": 4970,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/spacex-car-leading-product/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "68925f01db31fe35560e3e97",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/spacex-car-leading-product",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

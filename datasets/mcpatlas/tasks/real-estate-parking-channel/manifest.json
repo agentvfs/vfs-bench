@@ -1,0 +1,107 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/fe1130fd20f19ff7b844b9304bedbd770320db953a1000d1dd33bf2c3eeb91e1",
+      "role": "workspace",
+      "sha256": "fe1130fd20f19ff7b844b9304bedbd770320db953a1000d1dd33bf2c3eeb91e1",
+      "size": 2651,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/1d3ba344ab5d0fa55ad7acefb57438ee4ed9929f3155c5ab1dbef43bc4dfdfe7",
+      "role": "workspace_config",
+      "sha256": "1d3ba344ab5d0fa55ad7acefb57438ee4ed9929f3155c5ab1dbef43bc4dfdfe7",
+      "size": 2311,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/1c0a9a2b5c83bbea35d22cb407cea5eef2a5f561160f346f0c57e0a2907ab639",
+      "role": "parity",
+      "sha256": "1c0a9a2b5c83bbea35d22cb407cea5eef2a5f561160f346f0c57e0a2907ab639",
+      "size": 2720,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/9298c0da2bcec652e86fcfa625534ba934c61552060fe47020f08f551da19808",
+      "role": "verifier",
+      "sha256": "9298c0da2bcec652e86fcfa625534ba934c61552060fe47020f08f551da19808",
+      "size": 208,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "notion_API-post-database-query",
+    "slack_channels_list",
+    "slack_conversations_search_messages",
+    "notion_API-post-search",
+    "slack_conversations_history",
+    "notion_API-get-user",
+    "notion_API-get-users",
+    "notion_API-get-self",
+    "notion_API-get-block-children",
+    "notion_API-retrieve-a-block",
+    "notion_API-retrieve-a-page",
+    "notion_API-retrieve-a-database",
+    "memory_read_graph"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "real-estate-parking-channel",
+  "schema_version": 1,
+  "servers": [
+    "notion",
+    "slack",
+    "memory"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/real-estate-parking-channel/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "5ee622bda61765882a90db168cca3f82ef7d38c5d6ebc89806c2717c1ac13784",
+      "size": 4105,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/real-estate-parking-channel/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "687ebf5ff5a578e0055a455e",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/real-estate-parking-channel",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

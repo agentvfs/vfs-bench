@@ -1,0 +1,110 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/ff9aaba884b02309fdceaf2a2071164fc285deca65f169d488684d0d5e7fc78a",
+      "role": "workspace",
+      "sha256": "ff9aaba884b02309fdceaf2a2071164fc285deca65f169d488684d0d5e7fc78a",
+      "size": 1273,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/0e48864a6d730ef73ed09959ede4f8a4a442f02db679804c539751d6474f1be5",
+      "role": "workspace_config",
+      "sha256": "0e48864a6d730ef73ed09959ede4f8a4a442f02db679804c539751d6474f1be5",
+      "size": 2801,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/33b288469577f51f868aa5f1a002eb4fb97c1fb19db3fb07705829a902d96dca",
+      "role": "parity",
+      "sha256": "33b288469577f51f868aa5f1a002eb4fb97c1fb19db3fb07705829a902d96dca",
+      "size": 3503,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/a227e6b64923e6933fcbb0c026b670dccc0f7d440d8e9ee8ac15e40ba34e001f",
+      "role": "verifier",
+      "sha256": "a227e6b64923e6933fcbb0c026b670dccc0f7d440d8e9ee8ac15e40ba34e001f",
+      "size": 297,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "cli-mcp-server_run_command",
+    "cli-mcp-server_show_security_rules",
+    "calculator_calculate",
+    "fetch_fetch",
+    "github_search_issues",
+    "github_list_issues",
+    "github_get_issue_comments",
+    "github_get_commit",
+    "github_get_repository",
+    "github_list_commits",
+    "google-workspace_list_events",
+    "memory_search_nodes",
+    "memory_open_nodes"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "eight-transactions-anniversary-events",
+  "schema_version": 1,
+  "servers": [
+    "cli-mcp-server",
+    "calculator",
+    "fetch",
+    "github",
+    "google-workspace",
+    "memory"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/eight-transactions-anniversary-events/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "c60e68a366c00bc6de6bff263e554260a7e6a57c8b0ae85ae415128a0291fb1f",
+      "size": 2501,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/eight-transactions-anniversary-events/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689bd255c0422b257e7dfcd7",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/eight-transactions-anniversary-events",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

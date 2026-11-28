@@ -1,0 +1,2519 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/3ef681ddeddd393ff67736249bddc21c667b8f599393d530365233d74a9d7d50",
+      "role": "parity_test",
+      "sha256": "3ef681ddeddd393ff67736249bddc21c667b8f599393d530365233d74a9d7d50",
+      "size": 1481,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/8bb4ad4321f7d88967e7546c8cc60e8c553c550af26c7feff178597418a30815",
+      "role": "workspace_config",
+      "sha256": "8bb4ad4321f7d88967e7546c8cc60e8c553c550af26c7feff178597418a30815",
+      "size": 375,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "cooking-guidance",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/README.md",
+      "role": "upstream_source",
+      "sha256": "d6db0c620e9fab45daffd06f1cb66d49bd9b8e7545335fe5eba07b4ab2c154be",
+      "size": 28,
+      "target": "upstream/README.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/README.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/cooking-guidance/shared/task.md",
+      "role": "instruction",
+      "sha256": "8e568d610212b1c5013d215cbae63c6e9fea76074766778ec0c4ff5929bb08ba",
+      "size": 933,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/evaluation/__init__.py",
+      "role": "verifier_source",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "target": "upstream/evaluation/__init__.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/evaluation/__init__.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/evaluation/check_local.py",
+      "role": "verifier_source",
+      "sha256": "90bee47b4ed846158c27da60a129a7a0b9faa5ef37667f806146eec9d270f188",
+      "size": 24856,
+      "target": "upstream/evaluation/check_local.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/evaluation/check_local.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/evaluation/ingredient_utils_enhanced.py",
+      "role": "verifier_source",
+      "sha256": "97aed2b7d5feea5e8234e2d8a15c0cde1cc57b0772d305bfaa8dd8899e35028b",
+      "size": 32302,
+      "target": "upstream/evaluation/ingredient_utils_enhanced.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/evaluation/ingredient_utils_enhanced.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "fcce2651a8dc579c92b1548823b6ef44664c1add99d2dac6c3dbc76a188d474d",
+      "size": 962,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/evaluation/recipe_quantity_extractor.py",
+      "role": "verifier_source",
+      "sha256": "565b9a0e790f40ed427b8833159112648de820218abca010dd19d1d1f9609424",
+      "size": 14536,
+      "target": "upstream/evaluation/recipe_quantity_extractor.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/evaluation/recipe_quantity_extractor.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/B52轰炸机.md",
+      "role": "verifier_input",
+      "sha256": "1b9a60af82c8e806e0ead72b9bc5459ccf9e5d7f01fb524d70c77f750b35c513",
+      "size": 1449,
+      "target": "upstream/groundtruth_workspace/dishes/B52轰炸机.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/B52%E8%BD%B0%E7%82%B8%E6%9C%BA.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/Mojito莫吉托.md",
+      "role": "verifier_input",
+      "sha256": "29065b9c53aa87fe76fa27976d50f5ac952fe0d8a39125a0815f5ed2a3ca20e0",
+      "size": 1170,
+      "target": "upstream/groundtruth_workspace/dishes/Mojito莫吉托.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/Mojito%E8%8E%AB%E5%90%89%E6%89%98.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/上汤娃娃菜.md",
+      "role": "verifier_input",
+      "sha256": "5d1af541ca0bd403c7dca6257d87a89d0d89257fcf266ac2a67bc71c5a4b4fbe",
+      "size": 1262,
+      "target": "upstream/groundtruth_workspace/dishes/上汤娃娃菜.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E4%B8%8A%E6%B1%A4%E5%A8%83%E5%A8%83%E8%8F%9C.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/中式馅饼.md",
+      "role": "verifier_input",
+      "sha256": "78cccf74583352ce1f003f443d4cc964ff08df71506a4a3f2d6562bf4eb6955a",
+      "size": 2029,
+      "target": "upstream/groundtruth_workspace/dishes/中式馅饼.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E4%B8%AD%E5%BC%8F%E9%A6%85%E9%A5%BC.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/乡村啤酒鸭.md",
+      "role": "verifier_input",
+      "sha256": "51371568c7567c2cd87b1b73a839c45d1333c5d570e26367e464b663db7ba664",
+      "size": 2304,
+      "target": "upstream/groundtruth_workspace/dishes/乡村啤酒鸭.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E4%B9%A1%E6%9D%91%E5%95%A4%E9%85%92%E9%B8%AD.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/冬瓜茶.md",
+      "role": "verifier_input",
+      "sha256": "5b76b96f448fc1546a66b3d0ff0354f1087e8f1e3bbadbb0d2fb5fd5d7e0df62",
+      "size": 1197,
+      "target": "upstream/groundtruth_workspace/dishes/冬瓜茶.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%86%AC%E7%93%9C%E8%8C%B6.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/冬瓜酿肉.md",
+      "role": "verifier_input",
+      "sha256": "bcd2cc48560262da23862ffc047589f95ff52b2eea06679a86b76ece3bf25b39",
+      "size": 1887,
+      "target": "upstream/groundtruth_workspace/dishes/冬瓜酿肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%86%AC%E7%93%9C%E9%85%BF%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/冰粉.md",
+      "role": "verifier_input",
+      "sha256": "4680d276307a40a7c229a58b74b988adf83a8d298122636f6cd46c8c5b02c8cf",
+      "size": 1631,
+      "target": "upstream/groundtruth_workspace/dishes/冰粉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%86%B0%E7%B2%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/冷吃兔.md",
+      "role": "verifier_input",
+      "sha256": "2edd3fa72d106daaaaf89fc07e4c0fb2f9cdc12c38f66ed0b93696da5dc9181f",
+      "size": 2236,
+      "target": "upstream/groundtruth_workspace/dishes/冷吃兔.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%86%B7%E5%90%83%E5%85%94.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/凉拌木耳.md",
+      "role": "verifier_input",
+      "sha256": "828bb5d0e8927205c983a474b3328fe96fe3d221c67042d94d54dfbc54977143",
+      "size": 1490,
+      "target": "upstream/groundtruth_workspace/dishes/凉拌木耳.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%87%89%E6%8B%8C%E6%9C%A8%E8%80%B3.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/凉拌油麦菜.md",
+      "role": "verifier_input",
+      "sha256": "b672c09e74525f0bd58bf3ddfe6e30539e9908d0d5ff7a19599ceb613454a54d",
+      "size": 809,
+      "target": "upstream/groundtruth_workspace/dishes/凉拌油麦菜.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%87%89%E6%8B%8C%E6%B2%B9%E9%BA%A6%E8%8F%9C.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/凉拌莴笋.md",
+      "role": "verifier_input",
+      "sha256": "48db03835f50537a0909aaf5e01626b93351bfd52f32d920242c3fea742ac144",
+      "size": 964,
+      "target": "upstream/groundtruth_workspace/dishes/凉拌莴笋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%87%89%E6%8B%8C%E8%8E%B4%E7%AC%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/凉拌鸡丝.md",
+      "role": "verifier_input",
+      "sha256": "aaba65c9a572c6a68e8b470acb8e3cf8e0bb87d2e3789bea7f2390a0e9ce661f",
+      "size": 1439,
+      "target": "upstream/groundtruth_workspace/dishes/凉拌鸡丝.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%87%89%E6%8B%8C%E9%B8%A1%E4%B8%9D.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/凉拌黄瓜.md",
+      "role": "verifier_input",
+      "sha256": "b0729af2b2ae11d588851584ec93a65e3df326e05f7ff4ff566a14b01b134d3d",
+      "size": 1002,
+      "target": "upstream/groundtruth_workspace/dishes/凉拌黄瓜.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%87%89%E6%8B%8C%E9%BB%84%E7%93%9C.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/凉皮.md",
+      "role": "verifier_input",
+      "sha256": "402499e70b13e619517b1eaa2f3334981f8e7c35e4829d648f10e651cdada898",
+      "size": 2168,
+      "target": "upstream/groundtruth_workspace/dishes/凉皮.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%87%89%E7%9A%AE.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/凉粉.md",
+      "role": "verifier_input",
+      "sha256": "55d2b7e9e1513893dc9a18107453bf10cb9e4e7218acfaee8b2585b8bf677a18",
+      "size": 1502,
+      "target": "upstream/groundtruth_workspace/dishes/凉粉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%87%89%E7%B2%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/勾芡香菇汤.md",
+      "role": "verifier_input",
+      "sha256": "7845c2d4e92a48d0df8f11718d7f68e0da504e4c8f3c555835f274c785e4415f",
+      "size": 1104,
+      "target": "upstream/groundtruth_workspace/dishes/勾芡香菇汤.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%8B%BE%E8%8A%A1%E9%A6%99%E8%8F%87%E6%B1%A4.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/包菜炒鸡蛋粉丝.md",
+      "role": "verifier_input",
+      "sha256": "3a01597181624f9540be1de3afca606df8a73b8946797f8e28952ea478048d74",
+      "size": 1078,
+      "target": "upstream/groundtruth_workspace/dishes/包菜炒鸡蛋粉丝.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%8C%85%E8%8F%9C%E7%82%92%E9%B8%A1%E8%9B%8B%E7%B2%89%E4%B8%9D.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/半成品意面.md",
+      "role": "verifier_input",
+      "sha256": "d03122604480ea8822f49836bc74619dc347c57447bf490feccdc1252f38e254",
+      "size": 1332,
+      "target": "upstream/groundtruth_workspace/dishes/半成品意面.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%8D%8A%E6%88%90%E5%93%81%E6%84%8F%E9%9D%A2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/南派红烧肉.md",
+      "role": "verifier_input",
+      "sha256": "b889c814c693dc4bdcc9c75c4ca5a0d5382ac0557e3ba87be5ad6fab8c791aa6",
+      "size": 2285,
+      "target": "upstream/groundtruth_workspace/dishes/南派红烧肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%8D%97%E6%B4%BE%E7%BA%A2%E7%83%A7%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/反沙芋头.md",
+      "role": "verifier_input",
+      "sha256": "351364104ed5d34a250e9157582bcd68c487eb9b60207e675bc415261b5cc7fb",
+      "size": 1062,
+      "target": "upstream/groundtruth_workspace/dishes/反沙芋头.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%8F%8D%E6%B2%99%E8%8A%8B%E5%A4%B4.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/口水鸡.md",
+      "role": "verifier_input",
+      "sha256": "188370559ccfa5fe19d32003c85c63068f69c1e8418b2ba192edeee04b978613",
+      "size": 1753,
+      "target": "upstream/groundtruth_workspace/dishes/口水鸡.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%8F%A3%E6%B0%B4%E9%B8%A1.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/可乐桶.md",
+      "role": "verifier_input",
+      "sha256": "3826119088750e373c565455d784ca096c06c76d30a0ac534f7d3ab842758b77",
+      "size": 1302,
+      "target": "upstream/groundtruth_workspace/dishes/可乐桶.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%8F%AF%E4%B9%90%E6%A1%B6.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/可乐鸡翅.md",
+      "role": "verifier_input",
+      "sha256": "8ed0774593acc0ef84135ab5ef57737937082bddf4e39431b6bb670bf869b2d4",
+      "size": 1607,
+      "target": "upstream/groundtruth_workspace/dishes/可乐鸡翅.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%8F%AF%E4%B9%90%E9%B8%A1%E7%BF%85.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/台式卤肉饭.md",
+      "role": "verifier_input",
+      "sha256": "c7a8c0c304ecaf12d253ada39505612eef31902e10ea5e06fef26fe4713e57a8",
+      "size": 3925,
+      "target": "upstream/groundtruth_workspace/dishes/台式卤肉饭.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%8F%B0%E5%BC%8F%E5%8D%A4%E8%82%89%E9%A5%AD.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/吐司果酱.md",
+      "role": "verifier_input",
+      "sha256": "85f48eb214fabd5e6dbdb668ae180f736faff4e56eb26110dd154f8b799207cb",
+      "size": 815,
+      "target": "upstream/groundtruth_workspace/dishes/吐司果酱.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%90%90%E5%8F%B8%E6%9E%9C%E9%85%B1.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/咕噜肉.md",
+      "role": "verifier_input",
+      "sha256": "dcf34d9d69cfc5e460c654cf7776a99d70abe63abf5a30a76969e66a4d14bc1c",
+      "size": 1608,
+      "target": "upstream/groundtruth_workspace/dishes/咕噜肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%92%95%E5%99%9C%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/咖啡椰奶冻.md",
+      "role": "verifier_input",
+      "sha256": "060d172b41448c608449f3518ce9c0b8fd6409cd94d5d2b00ff995c79e7c1fbf",
+      "size": 1493,
+      "target": "upstream/groundtruth_workspace/dishes/咖啡椰奶冻.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%92%96%E5%95%A1%E6%A4%B0%E5%A5%B6%E5%86%BB.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/咖喱炒蟹.md",
+      "role": "verifier_input",
+      "sha256": "6c7283be3590a3b405071684da980bc9eb7fb08bf7ade68d1bd4bdbafab6d61d",
+      "size": 1858,
+      "target": "upstream/groundtruth_workspace/dishes/咖喱炒蟹.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%92%96%E5%96%B1%E7%82%92%E8%9F%B9.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/咖喱肥牛.md",
+      "role": "verifier_input",
+      "sha256": "0a86a18ce85aeba8f8d67a6eb7821c22d00464cd75848be8a80779e539d79ccd",
+      "size": 1653,
+      "target": "upstream/groundtruth_workspace/dishes/咖喱肥牛.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%92%96%E5%96%B1%E8%82%A5%E7%89%9B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/商芝肉.md",
+      "role": "verifier_input",
+      "sha256": "7a2528a094bd61fb0fef3ae1f68af52e3a298b572223b532def581a5fabe26dc",
+      "size": 2346,
+      "target": "upstream/groundtruth_workspace/dishes/商芝肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%95%86%E8%8A%9D%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/啤酒鸭.md",
+      "role": "verifier_input",
+      "sha256": "9f830a890bb14a8110ece64c2628186b9c7d804bf624e34026a01826a050ad5c",
+      "size": 1488,
+      "target": "upstream/groundtruth_workspace/dishes/啤酒鸭.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%95%A4%E9%85%92%E9%B8%AD.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/回锅肉.md",
+      "role": "verifier_input",
+      "sha256": "c0ae56f9f024a43763bf1f0a8756a4b35d821dd39f881d56320c89389e1ee2c2",
+      "size": 2662,
+      "target": "upstream/groundtruth_workspace/dishes/回锅肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%9B%9E%E9%94%85%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/土豆炖排骨.md",
+      "role": "verifier_input",
+      "sha256": "bdbc6c2d8451d83cdcf6f9aafadb09fb77abc821fd5ee4d4994d622bf9061863",
+      "size": 1262,
+      "target": "upstream/groundtruth_workspace/dishes/土豆炖排骨.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%9C%9F%E8%B1%86%E7%82%96%E6%8E%92%E9%AA%A8.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/地三鲜.md",
+      "role": "verifier_input",
+      "sha256": "0ea47d25fb9dba9c4aaebd9a6ea4f7db251b8e43998eb8b040da5f8d95f072c0",
+      "size": 1174,
+      "target": "upstream/groundtruth_workspace/dishes/地三鲜.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%9C%B0%E4%B8%89%E9%B2%9C.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/基础牛奶面包.md",
+      "role": "verifier_input",
+      "sha256": "92c055e6ba2b8c5e7bb3adb721689ed3048da2894f1317c5ca3e87000a83f5e9",
+      "size": 11559,
+      "target": "upstream/groundtruth_workspace/dishes/基础牛奶面包.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%9F%BA%E7%A1%80%E7%89%9B%E5%A5%B6%E9%9D%A2%E5%8C%85.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/太阳蛋.md",
+      "role": "verifier_input",
+      "sha256": "932293f5b48cfc9f7ace8571ac86f9c0d84b0ece94a6e06f384207ff30f7324b",
+      "size": 1586,
+      "target": "upstream/groundtruth_workspace/dishes/太阳蛋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%A4%AA%E9%98%B3%E8%9B%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/奇异果菠菜特调.md",
+      "role": "verifier_input",
+      "sha256": "695c958552d56ca1e7d15bd6061ef6a9700528d70d654335611d36f7927ff884",
+      "size": 850,
+      "target": "upstream/groundtruth_workspace/dishes/奇异果菠菜特调.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%A5%87%E5%BC%82%E6%9E%9C%E8%8F%A0%E8%8F%9C%E7%89%B9%E8%B0%83.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/奥利奥冰淇淋.md",
+      "role": "verifier_input",
+      "sha256": "62a00c111dc2811374a924567e2bba9a0fa6d6bfa8addbac2383890845dbeb02",
+      "size": 1667,
+      "target": "upstream/groundtruth_workspace/dishes/奥利奥冰淇淋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%A5%A5%E5%88%A9%E5%A5%A5%E5%86%B0%E6%B7%87%E6%B7%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/奶茶.md",
+      "role": "verifier_input",
+      "sha256": "66d830302adf758f86693a1765d66c425b837d3a15f1a350fd7db583865a5d55",
+      "size": 957,
+      "target": "upstream/groundtruth_workspace/dishes/奶茶.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%A5%B6%E8%8C%B6.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/奶酪培根通心粉.md",
+      "role": "verifier_input",
+      "sha256": "25952d12b24d6905d29438db0cd62af7b49a34b304faeaf0bb64ce3f28441b97",
+      "size": 1444,
+      "target": "upstream/groundtruth_workspace/dishes/奶酪培根通心粉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%A5%B6%E9%85%AA%E5%9F%B9%E6%A0%B9%E9%80%9A%E5%BF%83%E7%B2%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/姜炒鸡.md",
+      "role": "verifier_input",
+      "sha256": "2a36c428ed9f1d1f9f59dd1260c6217004c197e861365a5c61605621bfb63d0e",
+      "size": 1118,
+      "target": "upstream/groundtruth_workspace/dishes/姜炒鸡.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%A7%9C%E7%82%92%E9%B8%A1.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/姜葱捞鸡.md",
+      "role": "verifier_input",
+      "sha256": "e89eab19bc904ccebe630574c7cb2599a2ef2a506ebc3caf9b075a30530ff2c1",
+      "size": 1097,
+      "target": "upstream/groundtruth_workspace/dishes/姜葱捞鸡.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%A7%9C%E8%91%B1%E6%8D%9E%E9%B8%A1.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/孜然牛肉.md",
+      "role": "verifier_input",
+      "sha256": "da0f7a0175a61ef79fa186b7656b1803e843fc56c3c7d61b7637a6345252d3e8",
+      "size": 1350,
+      "target": "upstream/groundtruth_workspace/dishes/孜然牛肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%AD%9C%E7%84%B6%E7%89%9B%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/完美水煮蛋.md",
+      "role": "verifier_input",
+      "sha256": "70aa680d1e68719c8cd3914bcc69d4070c2f7424fe58f6973ab988352a579cf8",
+      "size": 1240,
+      "target": "upstream/groundtruth_workspace/dishes/完美水煮蛋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%AE%8C%E7%BE%8E%E6%B0%B4%E7%85%AE%E8%9B%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/宫保鸡丁.md",
+      "role": "verifier_input",
+      "sha256": "e735e1d3ecc9ce5f86830628fb26f83d8dc9fd206d084ae894726f51e2c9e35c",
+      "size": 4236,
+      "target": "upstream/groundtruth_workspace/dishes/宫保鸡丁.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%AE%AB%E4%BF%9D%E9%B8%A1%E4%B8%81.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/小炒肉.md",
+      "role": "verifier_input",
+      "sha256": "6919a2b1c8f63a15ade24e43dbdca77634542a2fad7d456c38e1d00f249e2d2f",
+      "size": 880,
+      "target": "upstream/groundtruth_workspace/dishes/小炒肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%B0%8F%E7%82%92%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/小炒藕丁.md",
+      "role": "verifier_input",
+      "sha256": "6670d33e664f05740f899f8bc9b373ac9315d43c605fe0dd7de38eb47a1e4134",
+      "size": 1240,
+      "target": "upstream/groundtruth_workspace/dishes/小炒藕丁.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%B0%8F%E7%82%92%E8%97%95%E4%B8%81.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/小炒鸡肝.md",
+      "role": "verifier_input",
+      "sha256": "203268cb3a7d80b09575be0ebab770a135532e5556c5ab483c593c1c25cc7f2c",
+      "size": 2395,
+      "target": "upstream/groundtruth_workspace/dishes/小炒鸡肝.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%B0%8F%E7%82%92%E9%B8%A1%E8%82%9D.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/小炒黄牛肉.md",
+      "role": "verifier_input",
+      "sha256": "4c2135c2d423ca6113eae6e324b25ec76356eb85525ec25da00e877a72aafce6",
+      "size": 975,
+      "target": "upstream/groundtruth_workspace/dishes/小炒黄牛肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%B0%8F%E7%82%92%E9%BB%84%E7%89%9B%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/小米粥.md",
+      "role": "verifier_input",
+      "sha256": "2e0f0875f33dc0f07ea8f32f43dac7a80ae130092959bc0e2742e4012325c44d",
+      "size": 1620,
+      "target": "upstream/groundtruth_workspace/dishes/小米粥.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%B0%8F%E7%B1%B3%E7%B2%A5.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/小米辣炒肉.md",
+      "role": "verifier_input",
+      "sha256": "a19d3047cb203ccc3c52f1cb33ce6d7fb017772bea421613587b59d2f1723c34",
+      "size": 917,
+      "target": "upstream/groundtruth_workspace/dishes/小米辣炒肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%B0%8F%E7%B1%B3%E8%BE%A3%E7%82%92%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/小酥肉.md",
+      "role": "verifier_input",
+      "sha256": "6792ceb61a729b0833029cd3516da2fe36c8062fb5fa63e4e57b07f9a9093b3c",
+      "size": 2225,
+      "target": "upstream/groundtruth_workspace/dishes/小酥肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%B0%8F%E9%85%A5%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/小龙虾.md",
+      "role": "verifier_input",
+      "sha256": "6fae9d5666d93d8745674745692319e33b0001ae3fa36864b05af463575b774a",
+      "size": 1504,
+      "target": "upstream/groundtruth_workspace/dishes/小龙虾.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%B0%8F%E9%BE%99%E8%99%BE.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/尖叫牛蛙.md",
+      "role": "verifier_input",
+      "sha256": "39821aec96a6b9d814312cabe35ed3e3a98fce2629484a10137e05e957d4ff85",
+      "size": 2860,
+      "target": "upstream/groundtruth_workspace/dishes/尖叫牛蛙.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%B0%96%E5%8F%AB%E7%89%9B%E8%9B%99.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/尖椒炒牛肉.md",
+      "role": "verifier_input",
+      "sha256": "df2f5ad3af9e5f96a66d92cd552962b0aa584669c7c765b1771cc38c696fdd86",
+      "size": 1034,
+      "target": "upstream/groundtruth_workspace/dishes/尖椒炒牛肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%B0%96%E6%A4%92%E7%82%92%E7%89%9B%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/山西过油肉.md",
+      "role": "verifier_input",
+      "sha256": "a26e0dd9f20f14a75a4f6dc704747310b6e35aed84ad6cfd215e183b3c72dbb7",
+      "size": 1429,
+      "target": "upstream/groundtruth_workspace/dishes/山西过油肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%B1%B1%E8%A5%BF%E8%BF%87%E6%B2%B9%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/带把肘子.md",
+      "role": "verifier_input",
+      "sha256": "fc339e42b2c4e57e992e35b69f152a93a0b44904ff97fb67ddfa50d68eb055bf",
+      "size": 2119,
+      "target": "upstream/groundtruth_workspace/dishes/带把肘子.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%B8%A6%E6%8A%8A%E8%82%98%E5%AD%90.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/干煎阿根廷红虾.md",
+      "role": "verifier_input",
+      "sha256": "1c49d64e127b8a498d164b5ba7ce4f07109069fc4a0d52a193381326a6b05700",
+      "size": 2408,
+      "target": "upstream/groundtruth_workspace/dishes/干煎阿根廷红虾.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%B9%B2%E7%85%8E%E9%98%BF%E6%A0%B9%E5%BB%B7%E7%BA%A2%E8%99%BE.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/干煸仔鸡.md",
+      "role": "verifier_input",
+      "sha256": "2d2e228d46417a00853a1aa25e3a0e0bbd1f88499fa759f02de1afc5241abd70",
+      "size": 2238,
+      "target": "upstream/groundtruth_workspace/dishes/干煸仔鸡.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%B9%B2%E7%85%B8%E4%BB%94%E9%B8%A1.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/干锅花菜.md",
+      "role": "verifier_input",
+      "sha256": "ffb9ec070d5a1c78d2db05cd4cbf62fd7da0e4c79625909ca184ea49fabcbf64",
+      "size": 1073,
+      "target": "upstream/groundtruth_workspace/dishes/干锅花菜.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%B9%B2%E9%94%85%E8%8A%B1%E8%8F%9C.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/广式萝卜牛腩.md",
+      "role": "verifier_input",
+      "sha256": "40b339b1c4dcf7d79fff97bf86b9ef601eea8a5e1b645c83a522aa682f208f70",
+      "size": 1581,
+      "target": "upstream/groundtruth_workspace/dishes/广式萝卜牛腩.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%B9%BF%E5%BC%8F%E8%90%9D%E5%8D%9C%E7%89%9B%E8%85%A9.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/微波炉腊肠煲仔饭.md",
+      "role": "verifier_input",
+      "sha256": "faf677d3175f5e8ad5e655d4654c013743f89262280b2a082fb62aa2a1bf85c1",
+      "size": 1538,
+      "target": "upstream/groundtruth_workspace/dishes/微波炉腊肠煲仔饭.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%BE%AE%E6%B3%A2%E7%82%89%E8%85%8A%E8%82%A0%E7%85%B2%E4%BB%94%E9%A5%AD.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/微波炉荷包蛋.md",
+      "role": "verifier_input",
+      "sha256": "d89f8babbc4273d95822bd0a136f3e3349ee5fd13cab1a5599b508113358418b",
+      "size": 891,
+      "target": "upstream/groundtruth_workspace/dishes/微波炉荷包蛋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%BE%AE%E6%B3%A2%E7%82%89%E8%8D%B7%E5%8C%85%E8%9B%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/微波炉蛋糕.md",
+      "role": "verifier_input",
+      "sha256": "dac07ff692bc156a52500754ce90769f4457104868c17d2b3554fb3507dc230b",
+      "size": 1554,
+      "target": "upstream/groundtruth_workspace/dishes/微波炉蛋糕.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%BE%AE%E6%B3%A2%E7%82%89%E8%9B%8B%E7%B3%95.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/微波炉鸡蛋羹.md",
+      "role": "verifier_input",
+      "sha256": "25db0e5a9bd255bf65e1e48ffd65bb66142648d6ffc9befc3eb7452fd6709fa4",
+      "size": 1793,
+      "target": "upstream/groundtruth_workspace/dishes/微波炉鸡蛋羹.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%BE%AE%E6%B3%A2%E7%82%89%E9%B8%A1%E8%9B%8B%E7%BE%B9.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/微波葱姜黑鳕鱼.md",
+      "role": "verifier_input",
+      "sha256": "cd981caf2d2293401abbc8716ddf43589655f526462328ef704be23eccd8ba79",
+      "size": 2019,
+      "target": "upstream/groundtruth_workspace/dishes/微波葱姜黑鳕鱼.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%BE%AE%E6%B3%A2%E8%91%B1%E5%A7%9C%E9%BB%91%E9%B3%95%E9%B1%BC.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/徽派红烧肉.md",
+      "role": "verifier_input",
+      "sha256": "438063c2b1c6f943ffcf037ba50372200fea947cd5920f6e95ae2db52ce534c2",
+      "size": 1262,
+      "target": "upstream/groundtruth_workspace/dishes/徽派红烧肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E5%BE%BD%E6%B4%BE%E7%BA%A2%E7%83%A7%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/意式烤鸡.md",
+      "role": "verifier_input",
+      "sha256": "8a85ca72fafbce289da0cbc776cdfff2c9a9bcc32c71c8cf24caedd4ebf70c7f",
+      "size": 1073,
+      "target": "upstream/groundtruth_workspace/dishes/意式烤鸡.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%84%8F%E5%BC%8F%E7%83%A4%E9%B8%A1.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/懒人蛋挞.md",
+      "role": "verifier_input",
+      "sha256": "19c886ce19edec2082b34bd21b7216b047c45a86700347604eb8162d5b1dec10",
+      "size": 1333,
+      "target": "upstream/groundtruth_workspace/dishes/懒人蛋挞.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%87%92%E4%BA%BA%E8%9B%8B%E6%8C%9E.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/戚风蛋糕.md",
+      "role": "verifier_input",
+      "sha256": "e6eca84800b4dee31056dc6c4730b9c9bc48ad863b36e7020d1038364043953b",
+      "size": 6844,
+      "target": "upstream/groundtruth_workspace/dishes/戚风蛋糕.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%88%9A%E9%A3%8E%E8%9B%8B%E7%B3%95.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/手工水饺.md",
+      "role": "verifier_input",
+      "sha256": "d0c7ec8abcd8d74997bf13497800f9137d0c9dac2efe547062d7f0355af0e668",
+      "size": 2997,
+      "target": "upstream/groundtruth_workspace/dishes/手工水饺.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%89%8B%E5%B7%A5%E6%B0%B4%E9%A5%BA.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/手撕包菜.md",
+      "role": "verifier_input",
+      "sha256": "62d951411e244a19f6d3ca4bfa8340c610438ddc2b74db5b9a6e4e7068843384",
+      "size": 1567,
+      "target": "upstream/groundtruth_workspace/dishes/手撕包菜.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%89%8B%E6%92%95%E5%8C%85%E8%8F%9C.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/扬州炒饭.md",
+      "role": "verifier_input",
+      "sha256": "a06e92d1eb44c6ae82a65948967d2fd21bcf703fce70deac7970061ca59a1929",
+      "size": 2284,
+      "target": "upstream/groundtruth_workspace/dishes/扬州炒饭.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%89%AC%E5%B7%9E%E7%82%92%E9%A5%AD.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/披萨饼皮.md",
+      "role": "verifier_input",
+      "sha256": "57bac3fd85e5e7ea2d4a56a9851672c8b5487bd2791135f0c8846bb19e4a9958",
+      "size": 2562,
+      "target": "upstream/groundtruth_workspace/dishes/披萨饼皮.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%8A%AB%E8%90%A8%E9%A5%BC%E7%9A%AE.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/拔丝土豆.md",
+      "role": "verifier_input",
+      "sha256": "91fc770f213379756f1f484b73c016ffb67c5f0b365af7e92c7e1b2ff4055bff",
+      "size": 1201,
+      "target": "upstream/groundtruth_workspace/dishes/拔丝土豆.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%8B%94%E4%B8%9D%E5%9C%9F%E8%B1%86.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/排骨苦瓜汤.md",
+      "role": "verifier_input",
+      "sha256": "a380fe55cf1c9950c9430d4b1afc5f65e3d354dcbda42d4350272a9e40f3ab3c",
+      "size": 1609,
+      "target": "upstream/groundtruth_workspace/dishes/排骨苦瓜汤.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%8E%92%E9%AA%A8%E8%8B%A6%E7%93%9C%E6%B1%A4.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/提拉米苏.md",
+      "role": "verifier_input",
+      "sha256": "acd5187dfcf5d72fb1c1170e6eb749aad840a369877798268600e974e2f70575",
+      "size": 1452,
+      "target": "upstream/groundtruth_workspace/dishes/提拉米苏.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%8F%90%E6%8B%89%E7%B1%B3%E8%8B%8F.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/新疆大盘鸡.md",
+      "role": "verifier_input",
+      "sha256": "09dbd494f8d397e3a0bb0598352bcc1f587c54375ae300f249ab89bb739e840a",
+      "size": 1882,
+      "target": "upstream/groundtruth_workspace/dishes/新疆大盘鸡.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%96%B0%E7%96%86%E5%A4%A7%E7%9B%98%E9%B8%A1.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/无骨鸡爪.md",
+      "role": "verifier_input",
+      "sha256": "aed9e4c8b4207cd716ffa8b718d04ea0f79ac95bd69eb719d7dd3002ee11dbb8",
+      "size": 2604,
+      "target": "upstream/groundtruth_workspace/dishes/无骨鸡爪.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%97%A0%E9%AA%A8%E9%B8%A1%E7%88%AA.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/日式咖喱饭.md",
+      "role": "verifier_input",
+      "sha256": "0ba4bad251decb0ca2c56f34a7c00e935d28c9b449d781af4305852177df1156",
+      "size": 2299,
+      "target": "upstream/groundtruth_workspace/dishes/日式咖喱饭.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%97%A5%E5%BC%8F%E5%92%96%E5%96%B1%E9%A5%AD.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/日式肥牛丼饭.md",
+      "role": "verifier_input",
+      "sha256": "d184f26e8e3ddb89d0506eab848c9827669206f0aab06447b77b78f7a1470688",
+      "size": 2994,
+      "target": "upstream/groundtruth_workspace/dishes/日式肥牛丼饭.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%97%A5%E5%BC%8F%E8%82%A5%E7%89%9B%E4%B8%BC%E9%A5%AD.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/昂刺鱼豆腐汤.md",
+      "role": "verifier_input",
+      "sha256": "9f514aef41739e0facc47340b48a55bb16f7dceb02ad81ffc33078637fd537f4",
+      "size": 1358,
+      "target": "upstream/groundtruth_workspace/dishes/昂刺鱼豆腐汤.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%98%82%E5%88%BA%E9%B1%BC%E8%B1%86%E8%85%90%E6%B1%A4.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/杀猪菜.md",
+      "role": "verifier_input",
+      "sha256": "61d7c6ebcf7b1ee1443f2e93ad1b52cfb29f3891baccda611ede650f8021e253",
+      "size": 1401,
+      "target": "upstream/groundtruth_workspace/dishes/杀猪菜.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%9D%80%E7%8C%AA%E8%8F%9C.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/杨枝甘露.md",
+      "role": "verifier_input",
+      "sha256": "c849f2f89465ed65c3b83c17c5555954ccbcd16409c0b187237b5918f0444405",
+      "size": 771,
+      "target": "upstream/groundtruth_workspace/dishes/杨枝甘露.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%9D%A8%E6%9E%9D%E7%94%98%E9%9C%B2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/枝竹羊腩煲.md",
+      "role": "verifier_input",
+      "sha256": "c5550ac941e76d8d4c47fd6389151481c46134f3e6232da8a4fdff00b6919b10",
+      "size": 2305,
+      "target": "upstream/groundtruth_workspace/dishes/枝竹羊腩煲.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%9E%9D%E7%AB%B9%E7%BE%8A%E8%85%A9%E7%85%B2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/柱候牛腩.md",
+      "role": "verifier_input",
+      "sha256": "28902732e8f0018c393c2b218f3d27980d56db721abba1ec0f66b10997cf5630",
+      "size": 3629,
+      "target": "upstream/groundtruth_workspace/dishes/柱候牛腩.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%9F%B1%E5%80%99%E7%89%9B%E8%85%A9.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/桂圆红枣粥.md",
+      "role": "verifier_input",
+      "sha256": "7471738ff099da5e76b4a0b37e76551e891b7b4756c176f6b2d404d93986a7e1",
+      "size": 785,
+      "target": "upstream/groundtruth_workspace/dishes/桂圆红枣粥.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%A1%82%E5%9C%86%E7%BA%A2%E6%9E%A3%E7%B2%A5.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/梅菜扣肉.md",
+      "role": "verifier_input",
+      "sha256": "bf3f6157510738fe2fe33c0bbc5cca2ee5dc47fc31f962026a7a4738655936fd",
+      "size": 1648,
+      "target": "upstream/groundtruth_workspace/dishes/梅菜扣肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%A2%85%E8%8F%9C%E6%89%A3%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/椒盐排条.md",
+      "role": "verifier_input",
+      "sha256": "82a3ec2c435a1b144a10ac6429c08fef7d5060bedfc4c38d811d4a956568904a",
+      "size": 1723,
+      "target": "upstream/groundtruth_workspace/dishes/椒盐排条.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%A4%92%E7%9B%90%E6%8E%92%E6%9D%A1.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/椒盐玉米.md",
+      "role": "verifier_input",
+      "sha256": "a7c14b7fa05cb7be17e4181a169f9600a87709aa642b510f11572c7e4f1fc9ea",
+      "size": 1651,
+      "target": "upstream/groundtruth_workspace/dishes/椒盐玉米.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%A4%92%E7%9B%90%E7%8E%89%E7%B1%B3.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/榄菜肉末四季豆.md",
+      "role": "verifier_input",
+      "sha256": "0b5b5604a782169283f93cd0d1e2a7d74df0778625b98861bd2547e60358f143",
+      "size": 1296,
+      "target": "upstream/groundtruth_workspace/dishes/榄菜肉末四季豆.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%A6%84%E8%8F%9C%E8%82%89%E6%9C%AB%E5%9B%9B%E5%AD%A3%E8%B1%86.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/水油焖蔬菜.md",
+      "role": "verifier_input",
+      "sha256": "eea39ad2e8489ef7e4ece842827b57af577c6bfada4a20a6a6e595832dde7869",
+      "size": 876,
+      "target": "upstream/groundtruth_workspace/dishes/水油焖蔬菜.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%B0%B4%E6%B2%B9%E7%84%96%E8%94%AC%E8%8F%9C.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/水煮牛肉.md",
+      "role": "verifier_input",
+      "sha256": "ad90c46dd1f7b42ea9ebb9870f0ff6dbd72efbf9e39aae332fcba1de56f6c0aa",
+      "size": 1562,
+      "target": "upstream/groundtruth_workspace/dishes/水煮牛肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%B0%B4%E7%85%AE%E7%89%9B%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/水煮玉米.md",
+      "role": "verifier_input",
+      "sha256": "5b1d35a607e56cb50de67514d65c995511c1ef0f41b6d05143eb73d95bc05ac7",
+      "size": 664,
+      "target": "upstream/groundtruth_workspace/dishes/水煮玉米.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%B0%B4%E7%85%AE%E7%8E%89%E7%B1%B3.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/水煮肉片.md",
+      "role": "verifier_input",
+      "sha256": "fe726631ded65e2fc1b50e6323216518fdde2e02b8c522b18a212e5ffb047d96",
+      "size": 3630,
+      "target": "upstream/groundtruth_workspace/dishes/水煮肉片.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%B0%B4%E7%85%AE%E8%82%89%E7%89%87.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/水煮鱼.md",
+      "role": "verifier_input",
+      "sha256": "2644f671e3e08912c7e1575293547a3687cf83a3df630b1c182ea30a71466846",
+      "size": 2611,
+      "target": "upstream/groundtruth_workspace/dishes/水煮鱼.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%B0%B4%E7%85%AE%E9%B1%BC.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/汤面.md",
+      "role": "verifier_input",
+      "sha256": "ca32c04766875082e443e46bfa29b3019fc3ea3442dbe60bf16cd5b8f1f9533e",
+      "size": 1988,
+      "target": "upstream/groundtruth_workspace/dishes/汤面.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%B1%A4%E9%9D%A2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/河南蒸面条.md",
+      "role": "verifier_input",
+      "sha256": "318c99b261fec247f24d28e8a3b6f31059649846bfcc07b6cc673454a0a8df01",
+      "size": 2218,
+      "target": "upstream/groundtruth_workspace/dishes/河南蒸面条.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%B2%B3%E5%8D%97%E8%92%B8%E9%9D%A2%E6%9D%A1.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/油泼辣子.md",
+      "role": "verifier_input",
+      "sha256": "26b6bab52d3f6681867e3f754c045b171e37609ca84c9f3365633fa19ccfff04",
+      "size": 1843,
+      "target": "upstream/groundtruth_workspace/dishes/油泼辣子.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%B2%B9%E6%B3%BC%E8%BE%A3%E5%AD%90.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/油焖大虾.md",
+      "role": "verifier_input",
+      "sha256": "86945049090190912cd7088d718019de19b6a1d65a2a07c8d056da3be269dc3e",
+      "size": 1182,
+      "target": "upstream/groundtruth_workspace/dishes/油焖大虾.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%B2%B9%E7%84%96%E5%A4%A7%E8%99%BE.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/油酥.md",
+      "role": "verifier_input",
+      "sha256": "3fd472b021bc1d46b2f98c169ff5c549aeb47a25cec951f15cde9269135fe454",
+      "size": 516,
+      "target": "upstream/groundtruth_workspace/dishes/油酥.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%B2%B9%E9%85%A5.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/泰国手标红茶.md",
+      "role": "verifier_input",
+      "sha256": "45c01848abce21faa5700f6c0743ff7840d15603110a306583e62c2233fb223e",
+      "size": 853,
+      "target": "upstream/groundtruth_workspace/dishes/泰国手标红茶.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%B3%B0%E5%9B%BD%E6%89%8B%E6%A0%87%E7%BA%A2%E8%8C%B6.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/洋葱炒猪肉.md",
+      "role": "verifier_input",
+      "sha256": "e3793ff3cea1745374f80e487587edc47c04eed89365e29d7811cb412abacd14",
+      "size": 1141,
+      "target": "upstream/groundtruth_workspace/dishes/洋葱炒猪肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%B4%8B%E8%91%B1%E7%82%92%E7%8C%AA%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/洋葱炒鸡蛋.md",
+      "role": "verifier_input",
+      "sha256": "76ef619edfd65987bb5d58b6db5c0bd91e04e20e2a322813e4434b4c67c13499",
+      "size": 583,
+      "target": "upstream/groundtruth_workspace/dishes/洋葱炒鸡蛋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%B4%8B%E8%91%B1%E7%82%92%E9%B8%A1%E8%9B%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/海边落日.md",
+      "role": "verifier_input",
+      "sha256": "1318c220614f5ca40e97cddf4ee5c812d9100dc32ac3e19d53e943c798741657",
+      "size": 1067,
+      "target": "upstream/groundtruth_workspace/dishes/海边落日.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%B5%B7%E8%BE%B9%E8%90%BD%E6%97%A5.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/清蒸生蚝.md",
+      "role": "verifier_input",
+      "sha256": "5ecdb10ff6eb85f2a760e0ca561fb30e9f5eb4bf5d0820eb830dd584ed241772",
+      "size": 753,
+      "target": "upstream/groundtruth_workspace/dishes/清蒸生蚝.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%B8%85%E8%92%B8%E7%94%9F%E8%9A%9D.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/清蒸鲈鱼.md",
+      "role": "verifier_input",
+      "sha256": "a4ddef6dd53fc4054aabfbdeae09042eeca048cc23161fd09231a66ca50cc252",
+      "size": 1839,
+      "target": "upstream/groundtruth_workspace/dishes/清蒸鲈鱼.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%B8%85%E8%92%B8%E9%B2%88%E9%B1%BC.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/温泉蛋.md",
+      "role": "verifier_input",
+      "sha256": "62a24a903ff222027fde0e4d6d39b347e7566205a2b73a11d9a1ec62bccab97c",
+      "size": 1763,
+      "target": "upstream/groundtruth_workspace/dishes/温泉蛋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%B8%A9%E6%B3%89%E8%9B%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/湖南家常红烧肉.md",
+      "role": "verifier_input",
+      "sha256": "ac5eef5d4d42eb0874f100b6cd6d6fd3f97c079e6cbf68e494162bac137709d9",
+      "size": 1217,
+      "target": "upstream/groundtruth_workspace/dishes/湖南家常红烧肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%B9%96%E5%8D%97%E5%AE%B6%E5%B8%B8%E7%BA%A2%E7%83%A7%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/湘祁米夫鸭.md",
+      "role": "verifier_input",
+      "sha256": "3634e69487c944bcab44d503a4c63271e7a54cafc842468bdaa006123def8320",
+      "size": 1856,
+      "target": "upstream/groundtruth_workspace/dishes/湘祁米夫鸭.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%B9%98%E7%A5%81%E7%B1%B3%E5%A4%AB%E9%B8%AD.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/溏心蛋.md",
+      "role": "verifier_input",
+      "sha256": "825f93fe9a677ddc295b596a8ca3544c4e68fb9c792d9c7884b6f81fce18939a",
+      "size": 1073,
+      "target": "upstream/groundtruth_workspace/dishes/溏心蛋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E6%BA%8F%E5%BF%83%E8%9B%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/火腿饭团.md",
+      "role": "verifier_input",
+      "sha256": "cec41364300498e883061abc3f49fdafda344b9d661282963e97bcc4622512ed",
+      "size": 1214,
+      "target": "upstream/groundtruth_workspace/dishes/火腿饭团.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%81%AB%E8%85%BF%E9%A5%AD%E5%9B%A2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/炒凉粉.md",
+      "role": "verifier_input",
+      "sha256": "6d24c3d55da41f11c17c54d3d6f8ff063bc16c608a30a20b2194645bce55a393",
+      "size": 1238,
+      "target": "upstream/groundtruth_workspace/dishes/炒凉粉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%82%92%E5%87%89%E7%B2%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/炒年糕.md",
+      "role": "verifier_input",
+      "sha256": "0c39c973a8ddbf94acdbbcc0c841010158ae1a4204d7962e9e6419171cbef55a",
+      "size": 1498,
+      "target": "upstream/groundtruth_workspace/dishes/炒年糕.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%82%92%E5%B9%B4%E7%B3%95.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/炒意大利面.md",
+      "role": "verifier_input",
+      "sha256": "803faf597fba7e7e2f9a1f1e99abb57164abbf36c2dbb54948f7afed2481ce2d",
+      "size": 864,
+      "target": "upstream/groundtruth_workspace/dishes/炒意大利面.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%82%92%E6%84%8F%E5%A4%A7%E5%88%A9%E9%9D%A2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/炒方便面.md",
+      "role": "verifier_input",
+      "sha256": "dd4eb4d332a676ee294428df3ab955ee5db346cd9489dad3cccaac943d44cd7a",
+      "size": 2048,
+      "target": "upstream/groundtruth_workspace/dishes/炒方便面.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%82%92%E6%96%B9%E4%BE%BF%E9%9D%A2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/炒河粉.md",
+      "role": "verifier_input",
+      "sha256": "ad6e08272a137da0197cc531f1ad0b931100960fbead897a1edcfd27ceb57564",
+      "size": 2395,
+      "target": "upstream/groundtruth_workspace/dishes/炒河粉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%82%92%E6%B2%B3%E7%B2%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/炒滑蛋.md",
+      "role": "verifier_input",
+      "sha256": "4e2980c159d19a94a2a4f74704b76be9bfcd78a79b37b1e6dff406232e3c6525",
+      "size": 784,
+      "target": "upstream/groundtruth_workspace/dishes/炒滑蛋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%82%92%E6%BB%91%E8%9B%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/炒茄子.md",
+      "role": "verifier_input",
+      "sha256": "683a86221cc6b90c8a60bf54ce615cbc3edc0cb5e6d184ea1093ce5c522cc1bb",
+      "size": 1875,
+      "target": "upstream/groundtruth_workspace/dishes/炒茄子.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%82%92%E8%8C%84%E5%AD%90.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/炒青菜.md",
+      "role": "verifier_input",
+      "sha256": "8992dc15cf9f9713f40061471de2413cf6d860713cd4d9b9be6a69a30491ddaa",
+      "size": 898,
+      "target": "upstream/groundtruth_workspace/dishes/炒青菜.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%82%92%E9%9D%92%E8%8F%9C.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/炒馍.md",
+      "role": "verifier_input",
+      "sha256": "3a2aa681b4429995dc42ee4d54a90a3cded6d72eb0bf732fd7b3fd355c410048",
+      "size": 1447,
+      "target": "upstream/groundtruth_workspace/dishes/炒馍.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%82%92%E9%A6%8D.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/炸串酱料.md",
+      "role": "verifier_input",
+      "sha256": "1612f97e779c166c8426eb6493b3b2327b79816662ec61502791f7aad99d924d",
+      "size": 921,
+      "target": "upstream/groundtruth_workspace/dishes/炸串酱料.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%82%B8%E4%B8%B2%E9%85%B1%E6%96%99.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/炸薯条.md",
+      "role": "verifier_input",
+      "sha256": "b1d7487e4282725a3f1129f1e440348c49be099ecc171f46d3de50f12ee3815a",
+      "size": 2205,
+      "target": "upstream/groundtruth_workspace/dishes/炸薯条.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%82%B8%E8%96%AF%E6%9D%A1.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/炸酱面.md",
+      "role": "verifier_input",
+      "sha256": "2ba8d8db4641c0cb3aa4f01eabdcb0446e8aaca9d1bc8f6389d0d8be72271a2f",
+      "size": 1553,
+      "target": "upstream/groundtruth_workspace/dishes/炸酱面.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%82%B8%E9%85%B1%E9%9D%A2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/炸鲜奶.md",
+      "role": "verifier_input",
+      "sha256": "37fe8b0c14256e74eefd8506133db99ea8ad5ec70c54a71266ccd51c03912d97",
+      "size": 1309,
+      "target": "upstream/groundtruth_workspace/dishes/炸鲜奶.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%82%B8%E9%B2%9C%E5%A5%B6.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/烙饼.md",
+      "role": "verifier_input",
+      "sha256": "c6ad45742f7b2187091a8a5ebaa41db9a21a40cfc2a468672f572b1f28ce190b",
+      "size": 1338,
+      "target": "upstream/groundtruth_workspace/dishes/烙饼.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%83%99%E9%A5%BC.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/烤茄子.md",
+      "role": "verifier_input",
+      "sha256": "a9a6c1882a1bba0fea4c30dccc25dc87ccd9f9da011c58097176534d818ca958",
+      "size": 1601,
+      "target": "upstream/groundtruth_workspace/dishes/烤茄子.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%83%A4%E8%8C%84%E5%AD%90.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/烤蛋挞.md",
+      "role": "verifier_input",
+      "sha256": "0a15eb741c1d68807cc50d948945c2b9b1662e012423a65d7e9c551b1dda8e3f",
+      "size": 1878,
+      "target": "upstream/groundtruth_workspace/dishes/烤蛋挞.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%83%A4%E8%9B%8B%E6%8C%9E.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/烤鱼.md",
+      "role": "verifier_input",
+      "sha256": "0309ba3bfefcc1c1492c1bfca8fbee7f339a1af6e469ad553d8f28cacae23076",
+      "size": 2618,
+      "target": "upstream/groundtruth_workspace/dishes/烤鱼.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%83%A4%E9%B1%BC.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/烤鸡翅.md",
+      "role": "verifier_input",
+      "sha256": "810bff32ec1e23f823a8f1105ed38ab464dd278496769e10038f26cf7b025af9",
+      "size": 918,
+      "target": "upstream/groundtruth_workspace/dishes/烤鸡翅.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%83%A4%E9%B8%A1%E7%BF%85.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/热干面.md",
+      "role": "verifier_input",
+      "sha256": "ed2f6385808560208f8a8b435e0b6ba684888dae98ff625e83093218be33951b",
+      "size": 833,
+      "target": "upstream/groundtruth_workspace/dishes/热干面.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%83%AD%E5%B9%B2%E9%9D%A2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/煎饺.md",
+      "role": "verifier_input",
+      "sha256": "a9b5ed192d683b0fbeb90c0ef651c9100ef59c16fe18f73881d32160361a5e0c",
+      "size": 816,
+      "target": "upstream/groundtruth_workspace/dishes/煎饺.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%85%8E%E9%A5%BA.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/煮泡面加蛋.md",
+      "role": "verifier_input",
+      "sha256": "c0271452619a6ce5b6a6ee5c60d731587cd62468ba91cc7ff5b6ee42946bd100",
+      "size": 1132,
+      "target": "upstream/groundtruth_workspace/dishes/煮泡面加蛋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%85%AE%E6%B3%A1%E9%9D%A2%E5%8A%A0%E8%9B%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/煮锅蒸米饭.md",
+      "role": "verifier_input",
+      "sha256": "251b949ff80a79c437baa5abc01c8492df8abdf61ac33336bcf52add925d3ae7",
+      "size": 685,
+      "target": "upstream/groundtruth_workspace/dishes/煮锅蒸米饭.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%85%AE%E9%94%85%E8%92%B8%E7%B1%B3%E9%A5%AD.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/燕麦鸡蛋饼.md",
+      "role": "verifier_input",
+      "sha256": "88e908f13e3e59b2f5f1accbe9e015ca80c35c0edf075788993790787c8c0cc1",
+      "size": 1373,
+      "target": "upstream/groundtruth_workspace/dishes/燕麦鸡蛋饼.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%87%95%E9%BA%A6%E9%B8%A1%E8%9B%8B%E9%A5%BC.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/牛奶燕麦.md",
+      "role": "verifier_input",
+      "sha256": "587bb335b58d6dbfaba9dfd890d373afeae66e06e80a2b57da198cada0dad315",
+      "size": 1427,
+      "target": "upstream/groundtruth_workspace/dishes/牛奶燕麦.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%89%9B%E5%A5%B6%E7%87%95%E9%BA%A6.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/牛油火锅底料.md",
+      "role": "verifier_input",
+      "sha256": "56560779bb5b9bbab9279af118e180fd26309d1ce056873ccc3d58624ee961e9",
+      "size": 2904,
+      "target": "upstream/groundtruth_workspace/dishes/牛油火锅底料.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%89%9B%E6%B2%B9%E7%81%AB%E9%94%85%E5%BA%95%E6%96%99.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/猪皮冻.md",
+      "role": "verifier_input",
+      "sha256": "ff6ca575e7c711b10d40249fa5e49290c5d48547fd3b29bda896cda72ac26b21",
+      "size": 1821,
+      "target": "upstream/groundtruth_workspace/dishes/猪皮冻.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%8C%AA%E7%9A%AE%E5%86%BB.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/猪肉烩酸菜.md",
+      "role": "verifier_input",
+      "sha256": "fb2fe530d039f3a0183a858630d6c5d4f2879b923342bcf29820d5d63c28e32a",
+      "size": 2134,
+      "target": "upstream/groundtruth_workspace/dishes/猪肉烩酸菜.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%8C%AA%E8%82%89%E7%83%A9%E9%85%B8%E8%8F%9C.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/玉米排骨汤.md",
+      "role": "verifier_input",
+      "sha256": "e09f7d9b75d28d70fac8bd402a5c5188261f0764653ab678bfeb2880a02439e1",
+      "size": 1637,
+      "target": "upstream/groundtruth_workspace/dishes/玉米排骨汤.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%8E%89%E7%B1%B3%E6%8E%92%E9%AA%A8%E6%B1%A4.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/玛格丽特饼干.md",
+      "role": "verifier_input",
+      "sha256": "163f679fa17fb6431997abec485badcaf877acf7eaac7344a782a35accef6910",
+      "size": 1702,
+      "target": "upstream/groundtruth_workspace/dishes/玛格丽特饼干.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%8E%9B%E6%A0%BC%E4%B8%BD%E7%89%B9%E9%A5%BC%E5%B9%B2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/甜辣烤全翅.md",
+      "role": "verifier_input",
+      "sha256": "3e3a28542bddd0ec4874cd60ef6a59fca91e34c564fb6b451fe75a423fd85979",
+      "size": 2088,
+      "target": "upstream/groundtruth_workspace/dishes/甜辣烤全翅.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%94%9C%E8%BE%A3%E7%83%A4%E5%85%A8%E7%BF%85.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/生汆丸子汤.md",
+      "role": "verifier_input",
+      "sha256": "1a13e40be460c7c96060ca351fa6ca01f5f62dd1125062fb810b29cd291cd57b",
+      "size": 1724,
+      "target": "upstream/groundtruth_workspace/dishes/生汆丸子汤.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%94%9F%E6%B1%86%E4%B8%B8%E5%AD%90%E6%B1%A4.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/电饭煲蒸米饭.md",
+      "role": "verifier_input",
+      "sha256": "d7dd858358c5aad66be3f48882285cc9ac1e32029fc4b6e0aee88235a65c0ea1",
+      "size": 1336,
+      "target": "upstream/groundtruth_workspace/dishes/电饭煲蒸米饭.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%94%B5%E9%A5%AD%E7%85%B2%E8%92%B8%E7%B1%B3%E9%A5%AD.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/番茄牛肉蛋花汤.md",
+      "role": "verifier_input",
+      "sha256": "897ba7a2355707a5bfd9b9282d7591751895a327ddd2f83cc3509f79104faee6",
+      "size": 987,
+      "target": "upstream/groundtruth_workspace/dishes/番茄牛肉蛋花汤.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%95%AA%E8%8C%84%E7%89%9B%E8%82%89%E8%9B%8B%E8%8A%B1%E6%B1%A4.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/番茄红酱.md",
+      "role": "verifier_input",
+      "sha256": "12bfcb249ebf7f5acb6222bfcd651c17d633ad39b7ed8bf8aaa4c70334d9a805",
+      "size": 1478,
+      "target": "upstream/groundtruth_workspace/dishes/番茄红酱.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%95%AA%E8%8C%84%E7%BA%A2%E9%85%B1.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/瘦肉土豆片.md",
+      "role": "verifier_input",
+      "sha256": "cde51cfd0dc30b98581ee53e796b61397352a39a1aa5b1df5e0b9dc83ea53846",
+      "size": 1241,
+      "target": "upstream/groundtruth_workspace/dishes/瘦肉土豆片.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%98%A6%E8%82%89%E5%9C%9F%E8%B1%86%E7%89%87.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/白灼菜心.md",
+      "role": "verifier_input",
+      "sha256": "79d78ee6a6df85e16cf03c996a844d323e06993e2f710649160affe0ef452945",
+      "size": 2104,
+      "target": "upstream/groundtruth_workspace/dishes/白灼菜心.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%99%BD%E7%81%BC%E8%8F%9C%E5%BF%83.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/白灼虾.md",
+      "role": "verifier_input",
+      "sha256": "6e015f56faa6cf1894969faf4d90607b012be4614450d4f2b4d7e89cc0db8070",
+      "size": 1456,
+      "target": "upstream/groundtruth_workspace/dishes/白灼虾.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%99%BD%E7%81%BC%E8%99%BE.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/白菜猪肉炖粉条.md",
+      "role": "verifier_input",
+      "sha256": "26d0537a3725d17d7cac2a5dddcada8f97b01379432782720e02215a51ab6968",
+      "size": 1537,
+      "target": "upstream/groundtruth_workspace/dishes/白菜猪肉炖粉条.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%99%BD%E8%8F%9C%E7%8C%AA%E8%82%89%E7%82%96%E7%B2%89%E6%9D%A1.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/百香果橙子特调.md",
+      "role": "verifier_input",
+      "sha256": "3e5f441774948f6756ea726af7f0cb8625989fc2ebb36eaf9b5f0012ed7e9f4b",
+      "size": 2276,
+      "target": "upstream/groundtruth_workspace/dishes/百香果橙子特调.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%99%BE%E9%A6%99%E6%9E%9C%E6%A9%99%E5%AD%90%E7%89%B9%E8%B0%83.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/皮蛋瘦肉粥.md",
+      "role": "verifier_input",
+      "sha256": "be53d768f894d7953ea7043fe6f22e52e01b0e708e01021d3dc436ac0e633941",
+      "size": 1782,
+      "target": "upstream/groundtruth_workspace/dishes/皮蛋瘦肉粥.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%9A%AE%E8%9B%8B%E7%98%A6%E8%82%89%E7%B2%A5.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/砂糖椰子冰沙.md",
+      "role": "verifier_input",
+      "sha256": "85a4f715cf9935620a34412fc9371deea0127ec8f2c19ccc6ff2d459092cf1d9",
+      "size": 1204,
+      "target": "upstream/groundtruth_workspace/dishes/砂糖椰子冰沙.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%A0%82%E7%B3%96%E6%A4%B0%E5%AD%90%E5%86%B0%E6%B2%99.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/示例菜.md",
+      "role": "verifier_input",
+      "sha256": "b36f782d9f67afa1edb5ab1715b4f15a292127dc4e840f9e1b9da379b8a70aa9",
+      "size": 4965,
+      "target": "upstream/groundtruth_workspace/dishes/示例菜.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%A4%BA%E4%BE%8B%E8%8F%9C.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/空气炸锅照烧鸡饭.md",
+      "role": "verifier_input",
+      "sha256": "abf4a40ab9f91cbc127b3a94e1901e3addca02b30677931020254127f0588dab",
+      "size": 1191,
+      "target": "upstream/groundtruth_workspace/dishes/空气炸锅照烧鸡饭.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%A9%BA%E6%B0%94%E7%82%B8%E9%94%85%E7%85%A7%E7%83%A7%E9%B8%A1%E9%A5%AD.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/空气炸锅羊排.md",
+      "role": "verifier_input",
+      "sha256": "21733f5bac25cddd9fee6a195efffc775d88b1e702b493a99046053d472108f7",
+      "size": 1539,
+      "target": "upstream/groundtruth_workspace/dishes/空气炸锅羊排.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%A9%BA%E6%B0%94%E7%82%B8%E9%94%85%E7%BE%8A%E6%8E%92.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/空气炸锅面包片.md",
+      "role": "verifier_input",
+      "sha256": "a0dd3610a4a2da2ceef189c4af4d94aa16775385b682a21c62114d88456223cf",
+      "size": 555,
+      "target": "upstream/groundtruth_workspace/dishes/空气炸锅面包片.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%A9%BA%E6%B0%94%E7%82%B8%E9%94%85%E9%9D%A2%E5%8C%85%E7%89%87.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/空气炸锅鸡翅中.md",
+      "role": "verifier_input",
+      "sha256": "77a9261f6f6c213a9850e3ec0f56fc84cb197149992bfc5b009e494ef9cf4957",
+      "size": 1216,
+      "target": "upstream/groundtruth_workspace/dishes/空气炸锅鸡翅中.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%A9%BA%E6%B0%94%E7%82%B8%E9%94%85%E9%B8%A1%E7%BF%85%E4%B8%AD.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/简易红烧肉.md",
+      "role": "verifier_input",
+      "sha256": "b422161ffd491bec9b660e423fd8d4e1b8f21ec403d652ae80524df082529cc4",
+      "size": 2399,
+      "target": "upstream/groundtruth_workspace/dishes/简易红烧肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%AE%80%E6%98%93%E7%BA%A2%E7%83%A7%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/米粥.md",
+      "role": "verifier_input",
+      "sha256": "f09a2f1936e9c696071369af35008107a734b7680cb4fbd1bc9f5bfeb79e8d93",
+      "size": 1132,
+      "target": "upstream/groundtruth_workspace/dishes/米粥.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%B1%B3%E7%B2%A5.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/粉蒸肉.md",
+      "role": "verifier_input",
+      "sha256": "ca331d632e76cdf7260dc177226d899581d5912fdcb94d1438a80778403497c3",
+      "size": 2389,
+      "target": "upstream/groundtruth_workspace/dishes/粉蒸肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%B2%89%E8%92%B8%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/糖拌西红柿.md",
+      "role": "verifier_input",
+      "sha256": "adde6a363b64dc210506030c2d6640fea2d655d56067f08295dc5117e4a57567",
+      "size": 1079,
+      "target": "upstream/groundtruth_workspace/dishes/糖拌西红柿.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%B3%96%E6%8B%8C%E8%A5%BF%E7%BA%A2%E6%9F%BF.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/糖色.md",
+      "role": "verifier_input",
+      "sha256": "76af0eff309236b2206de984575039a58298511b238009ee8daf3724595f520b",
+      "size": 1412,
+      "target": "upstream/groundtruth_workspace/dishes/糖色.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%B3%96%E8%89%B2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/糖醋排骨.md",
+      "role": "verifier_input",
+      "sha256": "ff4b68aec40caac7918586c04890655b3e71ccf39db105743b678614c34fb0b3",
+      "size": 1378,
+      "target": "upstream/groundtruth_workspace/dishes/糖醋排骨.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%B3%96%E9%86%8B%E6%8E%92%E9%AA%A8.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/糖醋汁.md",
+      "role": "verifier_input",
+      "sha256": "6c23d4b10065bab68fc68d6ef5c1a407af2b3e28b6727bc364717f32ba9078a4",
+      "size": 824,
+      "target": "upstream/groundtruth_workspace/dishes/糖醋汁.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%B3%96%E9%86%8B%E6%B1%81.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/糖醋里脊.md",
+      "role": "verifier_input",
+      "sha256": "1f466d12bfd1c8eab4126caa71d78dd1531e2983cdc1af05b56b16e5b84eed52",
+      "size": 1906,
+      "target": "upstream/groundtruth_workspace/dishes/糖醋里脊.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%B3%96%E9%86%8B%E9%87%8C%E8%84%8A.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/糖醋鲤鱼.md",
+      "role": "verifier_input",
+      "sha256": "c45ec18071453d0bbd3d468614270dd9904a0a3a29550590cd74afa28140c40d",
+      "size": 2681,
+      "target": "upstream/groundtruth_workspace/dishes/糖醋鲤鱼.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%B3%96%E9%86%8B%E9%B2%A4%E9%B1%BC.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/素炒豆角.md",
+      "role": "verifier_input",
+      "sha256": "6897e333f85efda7eb178c6bd3e1d0da5d407aa20251e6a16e99678d17fdad45",
+      "size": 880,
+      "target": "upstream/groundtruth_workspace/dishes/素炒豆角.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%B4%A0%E7%82%92%E8%B1%86%E8%A7%92.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/紫菜蛋花汤.md",
+      "role": "verifier_input",
+      "sha256": "fb7af817df85b42b1d43f6739ec517747378238669fd1b1d1a7c132f94ff6e2c",
+      "size": 897,
+      "target": "upstream/groundtruth_workspace/dishes/紫菜蛋花汤.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%B4%AB%E8%8F%9C%E8%9B%8B%E8%8A%B1%E6%B1%A4.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/红柚蛋糕.md",
+      "role": "verifier_input",
+      "sha256": "9c703ad03c9550724c4a38ce0b7ee130274563def7b159d5df313657d2432d66",
+      "size": 1420,
+      "target": "upstream/groundtruth_workspace/dishes/红柚蛋糕.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%BA%A2%E6%9F%9A%E8%9B%8B%E7%B3%95.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/红烧冬瓜.md",
+      "role": "verifier_input",
+      "sha256": "242406455de126e7c13d5a5d125fa598b7c4e7faf6b59a83ddcfdc471646d6ba",
+      "size": 1139,
+      "target": "upstream/groundtruth_workspace/dishes/红烧冬瓜.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%BA%A2%E7%83%A7%E5%86%AC%E7%93%9C.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/红烧猪蹄.md",
+      "role": "verifier_input",
+      "sha256": "ca95dd48804b78d0d65c7bd06e651df1cdf74003effb9d5b891d19de76f1f19c",
+      "size": 1598,
+      "target": "upstream/groundtruth_workspace/dishes/红烧猪蹄.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%BA%A2%E7%83%A7%E7%8C%AA%E8%B9%84.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/红烧茄子.md",
+      "role": "verifier_input",
+      "sha256": "256fc14e7942a098111f0646348fd7be0342047907fa7315024db07531ed9699",
+      "size": 1948,
+      "target": "upstream/groundtruth_workspace/dishes/红烧茄子.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%BA%A2%E7%83%A7%E8%8C%84%E5%AD%90.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/红烧鱼.md",
+      "role": "verifier_input",
+      "sha256": "41700a0f88327851809165374399dd8f6bad35b1aa68eb02286f9b3450134059",
+      "size": 2277,
+      "target": "upstream/groundtruth_workspace/dishes/红烧鱼.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%BA%A2%E7%83%A7%E9%B1%BC.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/红烧鱼头.md",
+      "role": "verifier_input",
+      "sha256": "fdfc1c4ed660e36c38674aac7316dae440c6962b1098fd2db27e6c20d8b76d35",
+      "size": 3095,
+      "target": "upstream/groundtruth_workspace/dishes/红烧鱼头.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%BA%A2%E7%83%A7%E9%B1%BC%E5%A4%B4.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/红烧鲤鱼.md",
+      "role": "verifier_input",
+      "sha256": "82543747415ecdf1d6d1b53fa26868eea4ae385b34e753a194ea852894b2de32",
+      "size": 2051,
+      "target": "upstream/groundtruth_workspace/dishes/红烧鲤鱼.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%BA%A2%E7%83%A7%E9%B2%A4%E9%B1%BC.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/罗宋汤.md",
+      "role": "verifier_input",
+      "sha256": "473049a557125eb980b2aabad8accbcdcdc568a6a8bcdcca9954d8725a5b33ae",
+      "size": 1896,
+      "target": "upstream/groundtruth_workspace/dishes/罗宋汤.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%BD%97%E5%AE%8B%E6%B1%A4.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/羊排焖面.md",
+      "role": "verifier_input",
+      "sha256": "af150fd8782e0ebe3425c53c571036e4586ddee29b58a6b776e338c75d6ab4f1",
+      "size": 1675,
+      "target": "upstream/groundtruth_workspace/dishes/羊排焖面.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%BE%8A%E6%8E%92%E7%84%96%E9%9D%A2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/羊肉汤.md",
+      "role": "verifier_input",
+      "sha256": "1634d1d92268632a0d7fe574c8cd4dfbc9e5f57f6403334ab2e300b9e63283d7",
+      "size": 1073,
+      "target": "upstream/groundtruth_workspace/dishes/羊肉汤.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%BE%8A%E8%82%89%E6%B1%A4.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/美式炒蛋.md",
+      "role": "verifier_input",
+      "sha256": "cf318d70d388204d7f8ea679d8425d20e49f19fc8a477aedc7fccedbac2ddf18",
+      "size": 1019,
+      "target": "upstream/groundtruth_workspace/dishes/美式炒蛋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E7%BE%8E%E5%BC%8F%E7%82%92%E8%9B%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/老友猪肉粉.md",
+      "role": "verifier_input",
+      "sha256": "b491fa35684ce861390f6c2577f19e2bc35c585b73aa3a9c547d0ff1085a5880",
+      "size": 1245,
+      "target": "upstream/groundtruth_workspace/dishes/老友猪肉粉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%80%81%E5%8F%8B%E7%8C%AA%E8%82%89%E7%B2%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/老妈蹄花.md",
+      "role": "verifier_input",
+      "sha256": "e348f48f33f0088ce5655981af02440ce1c8e81dc1a9af08032f18b6e9c96385",
+      "size": 1445,
+      "target": "upstream/groundtruth_workspace/dishes/老妈蹄花.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%80%81%E5%A6%88%E8%B9%84%E8%8A%B1.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/老干妈拌面.md",
+      "role": "verifier_input",
+      "sha256": "60498fc8b7401cd730310378ca86e1bbf37f5739b7d414306f41247a3a76933d",
+      "size": 658,
+      "target": "upstream/groundtruth_workspace/dishes/老干妈拌面.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%80%81%E5%B9%B2%E5%A6%88%E6%8B%8C%E9%9D%A2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/老式锅包肉.md",
+      "role": "verifier_input",
+      "sha256": "51479d510aad00088889959aecbf08391d9ad5941c0b58a72b97e62e319fcee6",
+      "size": 3312,
+      "target": "upstream/groundtruth_workspace/dishes/老式锅包肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%80%81%E5%BC%8F%E9%94%85%E5%8C%85%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/耙耙柑茶.md",
+      "role": "verifier_input",
+      "sha256": "a72e313179b32089273cc045b5d7195753e5f14e3d012f97ffe29bb046bcd621",
+      "size": 1382,
+      "target": "upstream/groundtruth_workspace/dishes/耙耙柑茶.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%80%99%E8%80%99%E6%9F%91%E8%8C%B6.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/肉蛋盖饭.md",
+      "role": "verifier_input",
+      "sha256": "be87ff8a5c244974686d5d8b69d4823273a006ceaedc8887623f37936bed2f4e",
+      "size": 1063,
+      "target": "upstream/groundtruth_workspace/dishes/肉蛋盖饭.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%82%89%E8%9B%8B%E7%9B%96%E9%A5%AD.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/肉饼炖蛋.md",
+      "role": "verifier_input",
+      "sha256": "e883c8312345c88005ef44e0582d7ecf92100897aa9fb6be1024b6a4f7ed4e69",
+      "size": 816,
+      "target": "upstream/groundtruth_workspace/dishes/肉饼炖蛋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%82%89%E9%A5%BC%E7%82%96%E8%9B%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/脆皮豆腐.md",
+      "role": "verifier_input",
+      "sha256": "83c872bee5d71af8119ab1859c14e3d77233bd5cddb77837f6c0aedabccb845c",
+      "size": 1072,
+      "target": "upstream/groundtruth_workspace/dishes/脆皮豆腐.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%84%86%E7%9A%AE%E8%B1%86%E8%85%90.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/腊八粥.md",
+      "role": "verifier_input",
+      "sha256": "db3e110471a52e733a81a6de60e5f0195f50ae45e29ee1e581ed6ae18337a61d",
+      "size": 3371,
+      "target": "upstream/groundtruth_workspace/dishes/腊八粥.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%85%8A%E5%85%AB%E7%B2%A5.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/芋泥雪媚娘.md",
+      "role": "verifier_input",
+      "sha256": "e75cc169ba9e4b6c5188eb4325d861a671c8917fe6be38bb713783d6eb26d563",
+      "size": 1895,
+      "target": "upstream/groundtruth_workspace/dishes/芋泥雪媚娘.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%8A%8B%E6%B3%A5%E9%9B%AA%E5%AA%9A%E5%A8%98.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/芝麻烧饼.md",
+      "role": "verifier_input",
+      "sha256": "04a47869cf7b6d47f6058c465042451df485a94a34bbec32ac44d8471b032220",
+      "size": 1001,
+      "target": "upstream/groundtruth_workspace/dishes/芝麻烧饼.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%8A%9D%E9%BA%BB%E7%83%A7%E9%A5%BC.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/芥末黄油罗氏虾.md",
+      "role": "verifier_input",
+      "sha256": "8757d52f2cf764a851821e3482d8ccec72d2a99a3fc9e11cd435ab200dfee746",
+      "size": 1629,
+      "target": "upstream/groundtruth_workspace/dishes/芥末黄油罗氏虾.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%8A%A5%E6%9C%AB%E9%BB%84%E6%B2%B9%E7%BD%97%E6%B0%8F%E8%99%BE.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/芹菜拌茶树菇.md",
+      "role": "verifier_input",
+      "sha256": "34fc9d07eb5221e7c5e4f65cd26e06202bdc5871bfdd36a6fee76cb35251c874",
+      "size": 1653,
+      "target": "upstream/groundtruth_workspace/dishes/芹菜拌茶树菇.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%8A%B9%E8%8F%9C%E6%8B%8C%E8%8C%B6%E6%A0%91%E8%8F%87.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/苏格兰蛋.md",
+      "role": "verifier_input",
+      "sha256": "590d6e71f48b5bc4b7694c4eb66dd3aca0eef578ca43f0da30ab43aa3e63ae40",
+      "size": 1550,
+      "target": "upstream/groundtruth_workspace/dishes/苏格兰蛋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%8B%8F%E6%A0%BC%E5%85%B0%E8%9B%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/英式司康.md",
+      "role": "verifier_input",
+      "sha256": "a51e2d4e3100b33f2bfd4d9ddb6c9d108d820c193d5248ef156ec27285a14a5a",
+      "size": 1442,
+      "target": "upstream/groundtruth_workspace/dishes/英式司康.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%8B%B1%E5%BC%8F%E5%8F%B8%E5%BA%B7.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/茄子炖土豆.md",
+      "role": "verifier_input",
+      "sha256": "06d1f47945374e1fe5d5c6cda0d64cf7aa665ec6582d11b86ee59c13cf5a6268",
+      "size": 1619,
+      "target": "upstream/groundtruth_workspace/dishes/茄子炖土豆.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%8C%84%E5%AD%90%E7%82%96%E5%9C%9F%E8%B1%86.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/茄子肉煎饼.md",
+      "role": "verifier_input",
+      "sha256": "5550b936d7ed58623c880ac33cae19a60993277ca059b136814c5597f0f89d26",
+      "size": 1547,
+      "target": "upstream/groundtruth_workspace/dishes/茄子肉煎饼.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%8C%84%E5%AD%90%E8%82%89%E7%85%8E%E9%A5%BC.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/茭白炒肉.md",
+      "role": "verifier_input",
+      "sha256": "cddd6878dd8d202b232dceab703aa410dceaef5101cc986753f906c9efa859be",
+      "size": 990,
+      "target": "upstream/groundtruth_workspace/dishes/茭白炒肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%8C%AD%E7%99%BD%E7%82%92%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/茶叶蛋.md",
+      "role": "verifier_input",
+      "sha256": "7214332d73218b1fee9f1c90d32dd56bf2ccaf03394750ae40042500b40070b2",
+      "size": 1264,
+      "target": "upstream/groundtruth_workspace/dishes/茶叶蛋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%8C%B6%E5%8F%B6%E8%9B%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/草莓冰淇淋.md",
+      "role": "verifier_input",
+      "sha256": "b7cf1d82cdc56d7b6445c2a0b9670570d1b96ecfaa2924976c54b7f5357aca4b",
+      "size": 1660,
+      "target": "upstream/groundtruth_workspace/dishes/草莓冰淇淋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%8D%89%E8%8E%93%E5%86%B0%E6%B7%87%E6%B7%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/草莓酱.md",
+      "role": "verifier_input",
+      "sha256": "063796e39c27a97d7eac693206e509658e02fccac2aeac88d7d56e5ae91b58a7",
+      "size": 874,
+      "target": "upstream/groundtruth_workspace/dishes/草莓酱.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%8D%89%E8%8E%93%E9%85%B1.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/荔枝肉.md",
+      "role": "verifier_input",
+      "sha256": "daf199b94b4ec642a48dcb0a40d72a589f17808b787297844392c23420ec879d",
+      "size": 2020,
+      "target": "upstream/groundtruth_workspace/dishes/荔枝肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%8D%94%E6%9E%9D%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/荷兰豆炒腊肠.md",
+      "role": "verifier_input",
+      "sha256": "17b4df58981e99ae2bd31240a662bdd4c0e5f37301e1f025f3b6295ff0113ce2",
+      "size": 1418,
+      "target": "upstream/groundtruth_workspace/dishes/荷兰豆炒腊肠.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%8D%B7%E5%85%B0%E8%B1%86%E7%82%92%E8%85%8A%E8%82%A0.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/莴笋叶煎饼.md",
+      "role": "verifier_input",
+      "sha256": "c7f4527b5f32b75d2b5b22330e8d79d1cc42a6049faede10ce227580d6da253f",
+      "size": 779,
+      "target": "upstream/groundtruth_workspace/dishes/莴笋叶煎饼.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%8E%B4%E7%AC%8B%E5%8F%B6%E7%85%8E%E9%A5%BC.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/菌菇炖乳鸽.md",
+      "role": "verifier_input",
+      "sha256": "443d8af7f4946b0ecdb14d41da16e693a5f2a5a043b1adf3ee4d025729ae9ada",
+      "size": 840,
+      "target": "upstream/groundtruth_workspace/dishes/菌菇炖乳鸽.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%8F%8C%E8%8F%87%E7%82%96%E4%B9%B3%E9%B8%BD.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/菠菜炒鸡蛋.md",
+      "role": "verifier_input",
+      "sha256": "f2d9fedb0d418f3282ae18815a1715ba7d42e792330fa9c88e733914300f6754",
+      "size": 807,
+      "target": "upstream/groundtruth_workspace/dishes/菠菜炒鸡蛋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%8F%A0%E8%8F%9C%E7%82%92%E9%B8%A1%E8%9B%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/菠萝咖啡特调.md",
+      "role": "verifier_input",
+      "sha256": "9c71c189dcfeec1124b451c8989559191b82c74af3dcf8e056ed2250ca909249",
+      "size": 1125,
+      "target": "upstream/groundtruth_workspace/dishes/菠萝咖啡特调.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%8F%A0%E8%90%9D%E5%92%96%E5%95%A1%E7%89%B9%E8%B0%83.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/萝卜炖羊排.md",
+      "role": "verifier_input",
+      "sha256": "2dc35d20e43b8b057a6add1346cfa794b571066bfdfdb381c4b521df10c34c44",
+      "size": 1735,
+      "target": "upstream/groundtruth_workspace/dishes/萝卜炖羊排.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%90%9D%E5%8D%9C%E7%82%96%E7%BE%8A%E6%8E%92.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/葱油.md",
+      "role": "verifier_input",
+      "sha256": "941d7ecb6706d4e6061f0a13124de853211557fabb766c0d3c3fdf34e45bc3ae",
+      "size": 953,
+      "target": "upstream/groundtruth_workspace/dishes/葱油.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%91%B1%E6%B2%B9.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/葱油桂鱼.md",
+      "role": "verifier_input",
+      "sha256": "66dfb78ed6ccc8a14db9cfc39eb17367a9c2cf380878b808ed8e862d68678627",
+      "size": 3524,
+      "target": "upstream/groundtruth_workspace/dishes/葱油桂鱼.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%91%B1%E6%B2%B9%E6%A1%82%E9%B1%BC.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/葱烧海参.md",
+      "role": "verifier_input",
+      "sha256": "cc53fd5e017baee17ed8eb8552fdbb5ecde693fdac126ca19269e13670dde04a",
+      "size": 1479,
+      "target": "upstream/groundtruth_workspace/dishes/葱烧海参.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%91%B1%E7%83%A7%E6%B5%B7%E5%8F%82.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/葱煎豆腐.md",
+      "role": "verifier_input",
+      "sha256": "ce16e2200a276d0d7cb8036235c8df9094f3c150187e204edd0821a09fcd1a25",
+      "size": 1126,
+      "target": "upstream/groundtruth_workspace/dishes/葱煎豆腐.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%91%B1%E7%85%8E%E8%B1%86%E8%85%90.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/蒜苔炒肉末.md",
+      "role": "verifier_input",
+      "sha256": "22a8aacf62378c0de93f84e69501a85b3b4caba45cbb3c514c9d6e6179fa8d60",
+      "size": 1197,
+      "target": "upstream/groundtruth_workspace/dishes/蒜苔炒肉末.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%92%9C%E8%8B%94%E7%82%92%E8%82%89%E6%9C%AB.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/蒜蓉虾.md",
+      "role": "verifier_input",
+      "sha256": "705cdb90d0789a71785572ecd111e5073f0a0947e714b9faeb8173926d879e97",
+      "size": 579,
+      "target": "upstream/groundtruth_workspace/dishes/蒜蓉虾.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%92%9C%E8%93%89%E8%99%BE.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/蒜香酱油.md",
+      "role": "verifier_input",
+      "sha256": "d97b707fa8c0d7c3c48a9e3e5cca60fb01ead46a4b9593fe5f9dedf15e58e47f",
+      "size": 476,
+      "target": "upstream/groundtruth_workspace/dishes/蒜香酱油.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%92%9C%E9%A6%99%E9%85%B1%E6%B2%B9.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/蒲烧茄子.md",
+      "role": "verifier_input",
+      "sha256": "2f91043bd123d8a737941c9791f1aed88bdc1b5f6422ae23012a07f869025a63",
+      "size": 1543,
+      "target": "upstream/groundtruth_workspace/dishes/蒲烧茄子.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%92%B2%E7%83%A7%E8%8C%84%E5%AD%90.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/蒸卤面.md",
+      "role": "verifier_input",
+      "sha256": "a26775612429a93418a08c812768ffb4646cce32912b777066245983917bb4e8",
+      "size": 2628,
+      "target": "upstream/groundtruth_workspace/dishes/蒸卤面.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%92%B8%E5%8D%A4%E9%9D%A2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/蒸水蛋.md",
+      "role": "verifier_input",
+      "sha256": "9268ff046173cf73f3589d8cf8d475970470e5f8a4851d13c288aae327b8aa89",
+      "size": 909,
+      "target": "upstream/groundtruth_workspace/dishes/蒸水蛋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%92%B8%E6%B0%B4%E8%9B%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/蒸箱鸡蛋羹.md",
+      "role": "verifier_input",
+      "sha256": "f8648c3acba255f61001947e789927fce051e051023431cb6d142ee6e891dcae",
+      "size": 1210,
+      "target": "upstream/groundtruth_workspace/dishes/蒸箱鸡蛋羹.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%92%B8%E7%AE%B1%E9%B8%A1%E8%9B%8B%E7%BE%B9.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/蒸花卷.md",
+      "role": "verifier_input",
+      "sha256": "91ca243f4bd74182dc5d17426c7fb8820b73042f3c815807fde11c990cfa0692",
+      "size": 1032,
+      "target": "upstream/groundtruth_workspace/dishes/蒸花卷.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%92%B8%E8%8A%B1%E5%8D%B7.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/蔗糖糖浆.md",
+      "role": "verifier_input",
+      "sha256": "b6a7d770a7633794c046cc1a3de5dfe40ee7c3946e5440bf8a58ae679061c197",
+      "size": 743,
+      "target": "upstream/groundtruth_workspace/dishes/蔗糖糖浆.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%94%97%E7%B3%96%E7%B3%96%E6%B5%86.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/虎皮青椒.md",
+      "role": "verifier_input",
+      "sha256": "f854cce94a1ebe41180dcc20bce18593e512b0f7bd61776eeff0ba914c8dfa94",
+      "size": 1067,
+      "target": "upstream/groundtruth_workspace/dishes/虎皮青椒.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%99%8E%E7%9A%AE%E9%9D%92%E6%A4%92.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/蚂蚁上树.md",
+      "role": "verifier_input",
+      "sha256": "2dfb72b45b57d860ee31ec0c5d28e94bb45c8f0493ee5588178d916e45b269d1",
+      "size": 1502,
+      "target": "upstream/groundtruth_workspace/dishes/蚂蚁上树.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%9A%82%E8%9A%81%E4%B8%8A%E6%A0%91.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/蚝油三鲜菇.md",
+      "role": "verifier_input",
+      "sha256": "e025ad05eed133ab8863bb471900f2e7bdedfc07cd8872ddcb0dd1632d9057d5",
+      "size": 1385,
+      "target": "upstream/groundtruth_workspace/dishes/蚝油三鲜菇.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%9A%9D%E6%B2%B9%E4%B8%89%E9%B2%9C%E8%8F%87.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/蚝油生菜.md",
+      "role": "verifier_input",
+      "sha256": "28c50076e2a97ca859ca01e4504225a86b43474037a1ea4c49915fc2da55103d",
+      "size": 1086,
+      "target": "upstream/groundtruth_workspace/dishes/蚝油生菜.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%9A%9D%E6%B2%B9%E7%94%9F%E8%8F%9C.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/蛋炒饭.md",
+      "role": "verifier_input",
+      "sha256": "f244c5e7581fa4c9e41bfea91e7635fba848d3ec80b47bf2a8f39fd55e2f186d",
+      "size": 2219,
+      "target": "upstream/groundtruth_workspace/dishes/蛋炒饭.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%9B%8B%E7%82%92%E9%A5%AD.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/蛋煎糍粑.md",
+      "role": "verifier_input",
+      "sha256": "4f95fa001d6c2f76816ead4a617b7428f1fa57ebedf607c6deccd192800b83f8",
+      "size": 1038,
+      "target": "upstream/groundtruth_workspace/dishes/蛋煎糍粑.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%9B%8B%E7%85%8E%E7%B3%8D%E7%B2%91.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/蛏抱蛋.md",
+      "role": "verifier_input",
+      "sha256": "388e9883df6410439471795efc341027abb0426e6ea5980b39a87b1869a3a5bc",
+      "size": 1066,
+      "target": "upstream/groundtruth_workspace/dishes/蛏抱蛋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%9B%8F%E6%8A%B1%E8%9B%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/血浆鸭.md",
+      "role": "verifier_input",
+      "sha256": "e98abefdc82e49f1f99bb718aba966c403274524e6aafe96f39cc83ab3d43e28",
+      "size": 2169,
+      "target": "upstream/groundtruth_workspace/dishes/血浆鸭.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%A1%80%E6%B5%86%E9%B8%AD.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/西红柿土豆炖牛肉.md",
+      "role": "verifier_input",
+      "sha256": "cad25ef35c7e39dfbe3f6af7c9c9fb8f1894597d40f20d0e3ebfa30f71fbd488",
+      "size": 2743,
+      "target": "upstream/groundtruth_workspace/dishes/西红柿土豆炖牛肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%A5%BF%E7%BA%A2%E6%9F%BF%E5%9C%9F%E8%B1%86%E7%82%96%E7%89%9B%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/西红柿炒鸡蛋.md",
+      "role": "verifier_input",
+      "sha256": "ae6ab61aa13402b5f88d2f6e7b6dd072f8013d8e8683d19f5ebe5625bc984de4",
+      "size": 1925,
+      "target": "upstream/groundtruth_workspace/dishes/西红柿炒鸡蛋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%A5%BF%E7%BA%A2%E6%9F%BF%E7%82%92%E9%B8%A1%E8%9B%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/西红柿牛腩.md",
+      "role": "verifier_input",
+      "sha256": "6650f6e12f55cf4a3b02ecc8146728a594c05cd609aadd51ac3021a5675fb199",
+      "size": 1915,
+      "target": "upstream/groundtruth_workspace/dishes/西红柿牛腩.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%A5%BF%E7%BA%A2%E6%9F%BF%E7%89%9B%E8%85%A9.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/西红柿豆腐汤羹.md",
+      "role": "verifier_input",
+      "sha256": "5990c9287e68e5ee0ff518a7187f01e8b0f3b26df0ba94d1972aa70cb663440d",
+      "size": 797,
+      "target": "upstream/groundtruth_workspace/dishes/西红柿豆腐汤羹.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%A5%BF%E7%BA%A2%E6%9F%BF%E8%B1%86%E8%85%90%E6%B1%A4%E7%BE%B9.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/西红柿鸡蛋挂面.md",
+      "role": "verifier_input",
+      "sha256": "d4fbf176147339a7bd0823bb911761145a653abc75519c2bd143d711a2886c54",
+      "size": 3142,
+      "target": "upstream/groundtruth_workspace/dishes/西红柿鸡蛋挂面.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%A5%BF%E7%BA%A2%E6%9F%BF%E9%B8%A1%E8%9B%8B%E6%8C%82%E9%9D%A2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/西红柿鸡蛋汤.md",
+      "role": "verifier_input",
+      "sha256": "622e05c4d2bda48e4ecf71b23b6b7b6ea0524535876868b1342cd619d31192ba",
+      "size": 907,
+      "target": "upstream/groundtruth_workspace/dishes/西红柿鸡蛋汤.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%A5%BF%E7%BA%A2%E6%9F%BF%E9%B8%A1%E8%9B%8B%E6%B1%A4.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/西葫芦炒鸡蛋.md",
+      "role": "verifier_input",
+      "sha256": "b7f98086f4ed8e32748c1208143e22563e26f75bb91a3e3272fe2d53af62d625",
+      "size": 987,
+      "target": "upstream/groundtruth_workspace/dishes/西葫芦炒鸡蛋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%A5%BF%E8%91%AB%E8%8A%A6%E7%82%92%E9%B8%A1%E8%9B%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/话梅煮毛豆.md",
+      "role": "verifier_input",
+      "sha256": "ecbf4f3e4dd0a29f4c546d599b248355c772328245ea5262939c826fb6feb054",
+      "size": 421,
+      "target": "upstream/groundtruth_workspace/dishes/话梅煮毛豆.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%AF%9D%E6%A2%85%E7%85%AE%E6%AF%9B%E8%B1%86.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/豆角焖面.md",
+      "role": "verifier_input",
+      "sha256": "ec0cee8e253dc3d8985993d6daa3a3edec42c8a94f5add1e09069d7d1d3bf915",
+      "size": 3027,
+      "target": "upstream/groundtruth_workspace/dishes/豆角焖面.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%B1%86%E8%A7%92%E7%84%96%E9%9D%A2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/贵州辣子鸡.md",
+      "role": "verifier_input",
+      "sha256": "0500f4b2fed92b7c6789760143d97841abedf73caace8b9c8bed12f922137e1c",
+      "size": 1888,
+      "target": "upstream/groundtruth_workspace/dishes/贵州辣子鸡.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%B4%B5%E5%B7%9E%E8%BE%A3%E5%AD%90%E9%B8%A1.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/辣椒炒肉.md",
+      "role": "verifier_input",
+      "sha256": "9f3f3296d965e36119640a383630709db0fd3c8d7f7dbc8525013d6a30f51bc0",
+      "size": 1786,
+      "target": "upstream/groundtruth_workspace/dishes/辣椒炒肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E8%BE%A3%E6%A4%92%E7%82%92%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/速冻水饺.md",
+      "role": "verifier_input",
+      "sha256": "aef5e35b668a09f693ea926549e2a10a3a13e5958f4132bbd92cef5bbc53ffc6",
+      "size": 2255,
+      "target": "upstream/groundtruth_workspace/dishes/速冻水饺.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%80%9F%E5%86%BB%E6%B0%B4%E9%A5%BA.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/速冻汤圆.md",
+      "role": "verifier_input",
+      "sha256": "6355730bb17227eccb3908808a2a1a9111362ef345bf5c4f3a0b42b887d31b33",
+      "size": 852,
+      "target": "upstream/groundtruth_workspace/dishes/速冻汤圆.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%80%9F%E5%86%BB%E6%B1%A4%E5%9C%86.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/速冻馄饨.md",
+      "role": "verifier_input",
+      "sha256": "94f6b3f5ed025bc5ba48fb00e8e36e5c7af0d00f49bf67483f499bebc38cc779",
+      "size": 1736,
+      "target": "upstream/groundtruth_workspace/dishes/速冻馄饨.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%80%9F%E5%86%BB%E9%A6%84%E9%A5%A8.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/酱拌荞麦面.md",
+      "role": "verifier_input",
+      "sha256": "d71359da03c6b2124e6b7a0357281eb870beb331bfb8a8f5b64439b27795a23e",
+      "size": 816,
+      "target": "upstream/groundtruth_workspace/dishes/酱拌荞麦面.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%85%B1%E6%8B%8C%E8%8D%9E%E9%BA%A6%E9%9D%A2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/酱排骨.md",
+      "role": "verifier_input",
+      "sha256": "10260f4a7ccc52315de802914824318a256a9f21aea444294e9cea5b378dea8b",
+      "size": 1204,
+      "target": "upstream/groundtruth_workspace/dishes/酱排骨.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%85%B1%E6%8E%92%E9%AA%A8.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/酱牛肉.md",
+      "role": "verifier_input",
+      "sha256": "a13b1fc090ec5162acb7d027e35f0d0297c9d409732275d3bb23b82e9b6284d5",
+      "size": 1510,
+      "target": "upstream/groundtruth_workspace/dishes/酱牛肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%85%B1%E7%89%9B%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/酸奶意式奶冻.md",
+      "role": "verifier_input",
+      "sha256": "80b63f09469445b66751216f582ee176eca158b20967e2900b2156e3bb5d767c",
+      "size": 1022,
+      "target": "upstream/groundtruth_workspace/dishes/酸奶意式奶冻.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%85%B8%E5%A5%B6%E6%84%8F%E5%BC%8F%E5%A5%B6%E5%86%BB.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/酸梅汤.md",
+      "role": "verifier_input",
+      "sha256": "ac40bc4bd0b3b8bc08a3dcb3eb162d915b657a31c6b0a7c412a5fd070d3f9610",
+      "size": 1257,
+      "target": "upstream/groundtruth_workspace/dishes/酸梅汤.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%85%B8%E6%A2%85%E6%B1%A4.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/酸梅汤（半成品加工）.md",
+      "role": "verifier_input",
+      "sha256": "3de7f04b3eb093218ae124f6f601bb335ead0e2a54f406d6268095f2788bebc1",
+      "size": 866,
+      "target": "upstream/groundtruth_workspace/dishes/酸梅汤（半成品加工）.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%85%B8%E6%A2%85%E6%B1%A4%EF%BC%88%E5%8D%8A%E6%88%90%E5%93%81%E5%8A%A0%E5%B7%A5%EF%BC%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/酸辣土豆丝.md",
+      "role": "verifier_input",
+      "sha256": "7640ee579125a9134a5b6e1327bbad9b3fbd9f5d24f65b0595745884a7338c57",
+      "size": 1085,
+      "target": "upstream/groundtruth_workspace/dishes/酸辣土豆丝.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%85%B8%E8%BE%A3%E5%9C%9F%E8%B1%86%E4%B8%9D.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/酸辣蕨根粉.md",
+      "role": "verifier_input",
+      "sha256": "8b15a079142fed17225199ace8ce80e02352202e31ec61d6fb8f5c093d701b0f",
+      "size": 1639,
+      "target": "upstream/groundtruth_workspace/dishes/酸辣蕨根粉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%85%B8%E8%BE%A3%E8%95%A8%E6%A0%B9%E7%B2%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/醉排骨.md",
+      "role": "verifier_input",
+      "sha256": "f5bf980479fed79e48809aa5b33d81f6c114fb169bd7b0363ebc06af3ed9b202",
+      "size": 1384,
+      "target": "upstream/groundtruth_workspace/dishes/醉排骨.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%86%89%E6%8E%92%E9%AA%A8.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/醪糟小汤圆.md",
+      "role": "verifier_input",
+      "sha256": "8e4d670a1d9a94fc78c556a46097d5824a871ac9603d9107614c57ec9c0c5bd2",
+      "size": 719,
+      "target": "upstream/groundtruth_workspace/dishes/醪糟小汤圆.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%86%AA%E7%B3%9F%E5%B0%8F%E6%B1%A4%E5%9C%86.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/金枪鱼酱三明治.md",
+      "role": "verifier_input",
+      "sha256": "e894349c7d91f5114fe379705ad532acacc18af0181ec9c9f3164573e54a2bba",
+      "size": 1154,
+      "target": "upstream/groundtruth_workspace/dishes/金枪鱼酱三明治.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%87%91%E6%9E%AA%E9%B1%BC%E9%85%B1%E4%B8%89%E6%98%8E%E6%B2%BB.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/金汤力.md",
+      "role": "verifier_input",
+      "sha256": "b58f0b350ddaa7ae51fde1f23fd70710f05b65ba0b5d4155ddfe637fe135c75e",
+      "size": 1240,
+      "target": "upstream/groundtruth_workspace/dishes/金汤力.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%87%91%E6%B1%A4%E5%8A%9B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/金菲士.md",
+      "role": "verifier_input",
+      "sha256": "c7b78f9d2d2904d4c648c328dd2375b0165bccbd229a5df8a85730594a416024",
+      "size": 1696,
+      "target": "upstream/groundtruth_workspace/dishes/金菲士.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%87%91%E8%8F%B2%E5%A3%AB.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/金针菇日本豆腐煲.md",
+      "role": "verifier_input",
+      "sha256": "cc2dd3e157d86d29dbdd255e6815f4a320e73764566916812bf52bf5acdbbb04",
+      "size": 845,
+      "target": "upstream/groundtruth_workspace/dishes/金针菇日本豆腐煲.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%87%91%E9%92%88%E8%8F%87%E6%97%A5%E6%9C%AC%E8%B1%86%E8%85%90%E7%85%B2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/金针菇汤.md",
+      "role": "verifier_input",
+      "sha256": "ee7acf640e1a2ddc4044546437b5ae8261cdba6b45809412d237b4cdeba1eb88",
+      "size": 811,
+      "target": "upstream/groundtruth_workspace/dishes/金针菇汤.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%87%91%E9%92%88%E8%8F%87%E6%B1%A4.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/银耳莲子粥.md",
+      "role": "verifier_input",
+      "sha256": "a5e5fe95e684a4891fddaaa2e4b33587289dcc6aeee1cdcfc20a575c882999a7",
+      "size": 1016,
+      "target": "upstream/groundtruth_workspace/dishes/银耳莲子粥.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%93%B6%E8%80%B3%E8%8E%B2%E5%AD%90%E7%B2%A5.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/长岛冰茶.md",
+      "role": "verifier_input",
+      "sha256": "9ea70371aa8191c79f29e1fd48438c368500691e8a763cf880135d27fc7d72b3",
+      "size": 1133,
+      "target": "upstream/groundtruth_workspace/dishes/长岛冰茶.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%95%BF%E5%B2%9B%E5%86%B0%E8%8C%B6.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/陈皮排骨汤-陈皮排骨汤.md",
+      "role": "verifier_input",
+      "sha256": "7bab99697ec38b7191ca5482be9a6366d6713a06839c77a0d25d0c4df4355ccd",
+      "size": 1283,
+      "target": "upstream/groundtruth_workspace/dishes/陈皮排骨汤-陈皮排骨汤.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%99%88%E7%9A%AE%E6%8E%92%E9%AA%A8%E6%B1%A4-%E9%99%88%E7%9A%AE%E6%8E%92%E9%AA%A8%E6%B1%A4.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/陈皮排骨汤.md",
+      "role": "verifier_input",
+      "sha256": "4dfcf5d427f79cf4cfd948945f966f3912560766e5142f6fdf64bfe44d3784ba",
+      "size": 1243,
+      "target": "upstream/groundtruth_workspace/dishes/陈皮排骨汤.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%99%88%E7%9A%AE%E6%8E%92%E9%AA%A8%E6%B1%A4.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/陕北熬豆角.md",
+      "role": "verifier_input",
+      "sha256": "eb5a7cb223c09774607997447faed2e658baa2a68c8c7ddbd36b65f786947787",
+      "size": 1504,
+      "target": "upstream/groundtruth_workspace/dishes/陕北熬豆角.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%99%95%E5%8C%97%E7%86%AC%E8%B1%86%E8%A7%92.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/雪花酥.md",
+      "role": "verifier_input",
+      "sha256": "493e4802220c69033af1305304f31ae072efe96fee5842e51c4dc85383aabb4b",
+      "size": 1771,
+      "target": "upstream/groundtruth_workspace/dishes/雪花酥.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%9B%AA%E8%8A%B1%E9%85%A5.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/雷椒皮蛋.md",
+      "role": "verifier_input",
+      "sha256": "80c337542efbac44afc6cb950bd4ea413ee3f099b87971c59cf597c1271f581f",
+      "size": 1595,
+      "target": "upstream/groundtruth_workspace/dishes/雷椒皮蛋.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%9B%B7%E6%A4%92%E7%9A%AE%E8%9B%8B.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/青椒土豆炒肉.md",
+      "role": "verifier_input",
+      "sha256": "ec9056a92c32453aa766eadab0654f9f940e093dcf5b9dbb6c1ce7280f2ff554",
+      "size": 1529,
+      "target": "upstream/groundtruth_workspace/dishes/青椒土豆炒肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%9D%92%E6%A4%92%E5%9C%9F%E8%B1%86%E7%82%92%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/韩式拌饭.md",
+      "role": "verifier_input",
+      "sha256": "1b6417f8baff7a60822de3d32bd6e507d8d5dc0009d8d4c393411aa98d093b1a",
+      "size": 1299,
+      "target": "upstream/groundtruth_workspace/dishes/韩式拌饭.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%9F%A9%E5%BC%8F%E6%8B%8C%E9%A5%AD.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/韭菜盒子.md",
+      "role": "verifier_input",
+      "sha256": "28fec455ee43c91915efbff898c4b9e80864538db1c3085f09a77a910bf374d7",
+      "size": 1004,
+      "target": "upstream/groundtruth_workspace/dishes/韭菜盒子.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%9F%AD%E8%8F%9C%E7%9B%92%E5%AD%90.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/香干肉丝.md",
+      "role": "verifier_input",
+      "sha256": "23fcb4aa95b45558f6f185d8cd9672b7fef5985304cec791a89c8cc33ca0017b",
+      "size": 1523,
+      "target": "upstream/groundtruth_workspace/dishes/香干肉丝.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%A6%99%E5%B9%B2%E8%82%89%E4%B8%9D.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/香干芹菜炒肉.md",
+      "role": "verifier_input",
+      "sha256": "00c6638c875c7f0354edaea9a0c003afb2f4be6085d9eebb5a98a920a1e1baae",
+      "size": 1860,
+      "target": "upstream/groundtruth_workspace/dishes/香干芹菜炒肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%A6%99%E5%B9%B2%E8%8A%B9%E8%8F%9C%E7%82%92%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/香煎五花肉.md",
+      "role": "verifier_input",
+      "sha256": "2dd32497682d4a83faee4820182c0682a3bf3656783097a9577334cb10c3bf71",
+      "size": 1146,
+      "target": "upstream/groundtruth_workspace/dishes/香煎五花肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%A6%99%E7%85%8E%E4%BA%94%E8%8A%B1%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/香煎翘嘴鱼.md",
+      "role": "verifier_input",
+      "sha256": "1baa6c6092059e04e0e9a000a94066ac5fdf1c0298a02abf1c8efa1a06b4aa3d",
+      "size": 2166,
+      "target": "upstream/groundtruth_workspace/dishes/香煎翘嘴鱼.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%A6%99%E7%85%8E%E7%BF%98%E5%98%B4%E9%B1%BC.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/香菇滑鸡.md",
+      "role": "verifier_input",
+      "sha256": "063bdf3ee2403fc447a6082969a2a809f06fbf2efd0eb05b2f992bef080b6f12",
+      "size": 1555,
+      "target": "upstream/groundtruth_workspace/dishes/香菇滑鸡.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%A6%99%E8%8F%87%E6%BB%91%E9%B8%A1.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/香辣鸡爪煲.md",
+      "role": "verifier_input",
+      "sha256": "9ba76fe47fa05a1835409a83c177ac73d8e8b49b1d9f5a52302e8ade88f6db07",
+      "size": 1263,
+      "target": "upstream/groundtruth_workspace/dishes/香辣鸡爪煲.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%A6%99%E8%BE%A3%E9%B8%A1%E7%88%AA%E7%85%B2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/魔芋蛋糕.md",
+      "role": "verifier_input",
+      "sha256": "22e7233095ce73a65f22716cf8ea0abdcbc373aad5b4e3c72f44a46cf3d57000",
+      "size": 3345,
+      "target": "upstream/groundtruth_workspace/dishes/魔芋蛋糕.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%AD%94%E8%8A%8B%E8%9B%8B%E7%B3%95.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/鱼香肉丝.md",
+      "role": "verifier_input",
+      "sha256": "811ea84105f88ebd18d34fe2edc61bbcba15b9211f3bf7efbef1aea52aa59141",
+      "size": 1477,
+      "target": "upstream/groundtruth_workspace/dishes/鱼香肉丝.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%B1%BC%E9%A6%99%E8%82%89%E4%B8%9D.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/鱼香茄子.md",
+      "role": "verifier_input",
+      "sha256": "e5879c08fce2aa7ae80c0e4a3da52bc5cdb72c2eab3bf6b4c37976a22f2e54c1",
+      "size": 1641,
+      "target": "upstream/groundtruth_workspace/dishes/鱼香茄子.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%B1%BC%E9%A6%99%E8%8C%84%E5%AD%90.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/鲣鱼海苔玉米饭.md",
+      "role": "verifier_input",
+      "sha256": "6cd052eeb916e826fa104e15613ddaee8dea3bcd977264f3b4931c2dbe9846e7",
+      "size": 892,
+      "target": "upstream/groundtruth_workspace/dishes/鲣鱼海苔玉米饭.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%B2%A3%E9%B1%BC%E6%B5%B7%E8%8B%94%E7%8E%89%E7%B1%B3%E9%A5%AD.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/鲤鱼炖白菜.md",
+      "role": "verifier_input",
+      "sha256": "3bc85b9f7135ba392b14fb0197fc5671e674f15c7c74aec00d61cdc6dc73a34c",
+      "size": 1311,
+      "target": "upstream/groundtruth_workspace/dishes/鲤鱼炖白菜.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%B2%A4%E9%B1%BC%E7%82%96%E7%99%BD%E8%8F%9C.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/鳊鱼炖豆腐.md",
+      "role": "verifier_input",
+      "sha256": "53296de1b159ba7750a180b1fd759b14f02f724d043827e02da42a1226972034",
+      "size": 1629,
+      "target": "upstream/groundtruth_workspace/dishes/鳊鱼炖豆腐.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%B3%8A%E9%B1%BC%E7%82%96%E8%B1%86%E8%85%90.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/鸡蛋三明治.md",
+      "role": "verifier_input",
+      "sha256": "1f81105768a24f6353b7f8f97afe6ef91c57e16bf053bdd2dbc7f2f6b2328d1d",
+      "size": 620,
+      "target": "upstream/groundtruth_workspace/dishes/鸡蛋三明治.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%B8%A1%E8%9B%8B%E4%B8%89%E6%98%8E%E6%B2%BB.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/鸡蛋火腿炒黄瓜.md",
+      "role": "verifier_input",
+      "sha256": "6b620618a4aa478d48a81c35ec14ca4f04f211cb6205ae603d4a68d74725f73c",
+      "size": 1105,
+      "target": "upstream/groundtruth_workspace/dishes/鸡蛋火腿炒黄瓜.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%B8%A1%E8%9B%8B%E7%81%AB%E8%85%BF%E7%82%92%E9%BB%84%E7%93%9C.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/鸡蛋羹.md",
+      "role": "verifier_input",
+      "sha256": "c0f621576bdb3b5bb0dce9ced164d2990d9c8b3354653c2a54258256fbb87096",
+      "size": 1679,
+      "target": "upstream/groundtruth_workspace/dishes/鸡蛋羹.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%B8%A1%E8%9B%8B%E7%BE%B9.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/麻婆豆腐.md",
+      "role": "verifier_input",
+      "sha256": "536746677120c90d37ab6e4c25e02d207a43bdd5b306a5c85178e84cac640675",
+      "size": 1997,
+      "target": "upstream/groundtruth_workspace/dishes/麻婆豆腐.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%BA%BB%E5%A9%86%E8%B1%86%E8%85%90.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/麻油拌面.md",
+      "role": "verifier_input",
+      "sha256": "e6804216ac03f32f1465acc7d555c8d273999d433b069baae5443a956325974f",
+      "size": 1210,
+      "target": "upstream/groundtruth_workspace/dishes/麻油拌面.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%BA%BB%E6%B2%B9%E6%8B%8C%E9%9D%A2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/麻辣减脂荞麦面.md",
+      "role": "verifier_input",
+      "sha256": "248b3c005f2ce8edb701ca44b1031053ce0aad896031be56a2fbd5f7a7b4d89e",
+      "size": 1627,
+      "target": "upstream/groundtruth_workspace/dishes/麻辣减脂荞麦面.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%BA%BB%E8%BE%A3%E5%87%8F%E8%84%82%E8%8D%9E%E9%BA%A6%E9%9D%A2.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/麻辣香锅.md",
+      "role": "verifier_input",
+      "sha256": "39fb732b12ea0b2ddc1e437c55b1ca4dc061d1086eac7f6020617674e5f7d38a",
+      "size": 1649,
+      "target": "upstream/groundtruth_workspace/dishes/麻辣香锅.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%BA%BB%E8%BE%A3%E9%A6%99%E9%94%85.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/黄油煎虾.md",
+      "role": "verifier_input",
+      "sha256": "abee182a998d2fc5957b74aac9a2319280bb3cfc8cd7830e8132e922f727fe59",
+      "size": 1345,
+      "target": "upstream/groundtruth_workspace/dishes/黄油煎虾.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%BB%84%E6%B2%B9%E7%85%8E%E8%99%BE.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/黄焖鸡.md",
+      "role": "verifier_input",
+      "sha256": "016b3b79f30c262eed1ad0a2056dbe70d7b643bbfa94d09dc73674fc412bafa9",
+      "size": 1381,
+      "target": "upstream/groundtruth_workspace/dishes/黄焖鸡.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%BB%84%E7%84%96%E9%B8%A1.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/黄瓜炒肉.md",
+      "role": "verifier_input",
+      "sha256": "8e94df9f6297f9e794b0127c0ac24653854faa8f9700f66367d1bb3915af59d5",
+      "size": 1138,
+      "target": "upstream/groundtruth_workspace/dishes/黄瓜炒肉.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%BB%84%E7%93%9C%E7%82%92%E8%82%89.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/黑椒牛柳.md",
+      "role": "verifier_input",
+      "sha256": "40f2bdd160088e64b5ab3e2dacd76a665c1663295e2858db3b05262227d365d7",
+      "size": 2124,
+      "target": "upstream/groundtruth_workspace/dishes/黑椒牛柳.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%BB%91%E6%A4%92%E7%89%9B%E6%9F%B3.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/黔式腊肠娃娃菜.md",
+      "role": "verifier_input",
+      "sha256": "76a82af557b6a3bbf264e428003f44263c1b2d0ca2adce073e135d93c7883b3d",
+      "size": 838,
+      "target": "upstream/groundtruth_workspace/dishes/黔式腊肠娃娃菜.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/groundtruth_workspace/dishes/%E9%BB%94%E5%BC%8F%E8%85%8A%E8%82%A0%E5%A8%83%E5%A8%83%E8%8F%9C.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/initial_workspace/cuisine.json",
+      "role": "initial_workspace",
+      "sha256": "dbd6c4a9f651ab4830a5cd196e95c2c634bf4740baa67af9a2491faf98158dcc",
+      "size": 153,
+      "target": "upstream/initial_workspace/cuisine.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/initial_workspace/cuisine.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/initial_workspace/ingredients.csv",
+      "role": "initial_workspace",
+      "sha256": "a2aa25ed2afe39848a6b929ac87ffc13d9e2c30fe03642623a1bc99491542535",
+      "size": 215,
+      "target": "upstream/initial_workspace/ingredients.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/initial_workspace/ingredients.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/initial_workspace_cn/ingredients.csv",
+      "role": "upstream_source",
+      "sha256": "47b0e4e399c2b7ff375768df75b3a43f74b72456d6e226bd56f89a0a0897a7d9",
+      "size": 238,
+      "target": "upstream/initial_workspace_cn/ingredients.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/initial_workspace_cn/ingredients.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/cooking-guidance/task_config.json",
+      "role": "upstream_config",
+      "sha256": "e65e5ba62ce27e9e21c4f07f2b04c5ee4e01ef468db2dc5bb9c9171e83355cb8",
+      "size": 202,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/cooking-guidance/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/cooking-guidance/README.md",
+      "role": "documentation",
+      "sha256": "f6e66a400fc8f0d5190f4faf72bb451400b92eda1dc8df5015f124e9fb313749",
+      "size": 3934,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/cooking-guidance/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/cooking-guidance/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "8ec8e096e59963256bdfe143842925c7681e1c5159bc8ba90dcdcd3adf4eeb1f",
+      "size": 2138,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/cooking-guidance/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/cooking-guidance",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/cooking-guidance",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "filesystem",
+      "howtocook"
+    ]
+  }
+}

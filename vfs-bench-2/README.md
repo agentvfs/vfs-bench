@@ -35,6 +35,10 @@ wrapper. The plan and its status are tracked in the roadmap issue,
 | [Gaia2](datasets/gaia2/README.md) | Meta's ARE, gaia2-cli | 460 | Monty |
 | [JobBench](datasets/jobbench/README.md) | JobBench/job-bench | 16 | TypeScript |
 
+## Python package and V1 datasets
+
+The repository root contains the `vfsbench` Python package and the Toolathlon and MCP-Atlas release folders. [Python, CLI and Harbor usage](../docs/vfsbench.md) · [Dataset storage and migration](../docs/datasets.md)
+
 ## Setup
 
 You need Node 24.15 or later and pnpm, uv, Rust (`cargo`, for Mirage's

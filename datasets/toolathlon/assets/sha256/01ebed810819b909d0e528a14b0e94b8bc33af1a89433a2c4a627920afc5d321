@@ -1,0 +1,17 @@
+{
+  "id": "toolathlon_ab-testing",
+  "fixtures": [
+    {
+      "id": "bq/ab_testing",
+      "kind": "bigquery"
+    },
+    {
+      "id": "logging/abtesting_logging",
+      "kind": "logging"
+    },
+    {
+      "id": "gcs/promo-assets-for-b",
+      "kind": "storage"
+    }
+  ]
+}

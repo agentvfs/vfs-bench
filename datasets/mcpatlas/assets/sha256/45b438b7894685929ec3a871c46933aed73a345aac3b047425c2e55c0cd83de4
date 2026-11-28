@@ -1,0 +1,118 @@
+{
+ "note": "Both arms read one Airtable base, the fake this run starts, seeded with the base Atlas shares in place of an export. Live services Atlas enables beside the task have no reply case: `map` checks that each CLI is the server's own tool, schema for schema, and a live reply is not the same twice.",
+ "cases": [
+  {
+   "name": "list_bases",
+   "why": "the same one base",
+   "mcp": {
+    "server": "airtable",
+    "tool": "list_bases",
+    "args": {},
+    "pipe": "jq -r '.[] | .id + \" \" + .name + \" \" + .permissionLevel' | grep ."
+   },
+   "mirage": {
+    "command": "jq -r '.base_id + \" \" + .base_name + \" \" + .permission_level' /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/base.json",
+    "pipe": "grep ."
+   }
+  },
+  {
+   "name": "list_tables",
+   "why": "the same nine tables, and the same fields in the one the answer reads",
+   "mcp": {
+    "server": "airtable",
+    "tool": "list_tables",
+    "args": {
+     "base_id": "appIF9byLfQwdHqE2"
+    },
+    "pipe": "jq -r '(.[] | .id + \" \" + .name), (.[] | select(.name == \"Turnover Retention\") | .fields[] | .id + \" \" + .name + \" \" + .type)' | grep ."
+   },
+   "mirage": {
+    "command": "jq -r '.tables[] | .table_id + \" \" + .table_name' /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/base.json; jq -r '.fields[] | .field_id + \" \" + .field_name + \" \" + .type' /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/Turnover_Retention__tblUuTBCVkTHKa0DN/table.json",
+    "pipe": "grep ."
+   }
+  },
+  {
+   "name": "list_records",
+   "why": "the same first records, in the same order",
+   "mcp": {
+    "server": "airtable",
+    "tool": "list_records",
+    "args": {
+     "base_id": "appIF9byLfQwdHqE2",
+     "table_name": "Turnover Retention",
+     "max_records": 5
+    },
+    "pipe": "jq -c '.[] | [.id, .createdTime, .fields]' | grep ."
+   },
+   "mirage": {
+    "command": "head -5 /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/Turnover_Retention__tblUuTBCVkTHKa0DN/records.jsonl",
+    "pipe": "jq -c '[.record_id, .created_time, .fields]' | grep ."
+   }
+  },
+  {
+   "name": "get_record",
+   "why": "one record, cell for cell",
+   "mcp": {
+    "server": "airtable",
+    "tool": "get_record",
+    "args": {
+     "base_id": "appIF9byLfQwdHqE2",
+     "table_name": "Turnover Retention",
+     "record_id": "rec0nx6eNuyEzCdn8"
+    },
+    "pipe": "jq -c '[.id, .createdTime, .fields]' | grep ."
+   },
+   "mirage": {
+    "command": "grep '\"record_id\":\"rec0nx6eNuyEzCdn8\"' /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/Turnover_Retention__tblUuTBCVkTHKa0DN/records.jsonl",
+    "pipe": "jq -c '[.record_id, .created_time, .fields]' | grep ."
+   }
+  },
+  {
+   "name": "leavings",
+   "why": "the same departments leaving in the first quarter of 2023, Finance fewest; `grep .` fails either arm that finds nothing, so two empty searches cannot agree",
+   "mcp": {
+    "server": "airtable",
+    "tool": "search_records",
+    "args": {
+     "base_id": "appIF9byLfQwdHqE2",
+     "table_name": "Turnover Retention",
+     "field_name": "Date",
+     "value": "2023-Q1"
+    },
+    "pipe": "jq -r '.[] | select(.fields.Date == \"2023-Q1\" and .fields[\"Employee Status\"] == \"Left\") | .fields.Department + \" \" + (.fields[\"Employee Count\"] | tostring)' | sort | grep ."
+   },
+   "mirage": {
+    "command": "jq -r 'select(.fields.Date == \"2023-Q1\" and .fields[\"Employee Status\"] == \"Left\") | .fields.Department + \" \" + (.fields[\"Employee Count\"] | tostring)' /airtable/bases/Car_Dealership__appIF9byLfQwdHqE2/Turnover_Retention__tblUuTBCVkTHKa0DN/records.jsonl",
+    "pipe": "sort | grep ."
+   }
+  },
+  {
+   "name": "read_graph",
+   "why": "the memory CLI is the MCP arm's memory server over the same graph file",
+   "mcp": {
+    "server": "memory",
+    "tool": "read_graph",
+    "args": {},
+    "pipe": "jq -r '.entities[].name' | sort"
+   },
+   "mirage": {
+    "command": "memory read-graph '{}'",
+    "pipe": "jq -r '.entities[].name' | sort"
+   }
+  },
+  {
+   "name": "search_nodes",
+   "why": "the memory CLI is the MCP arm's memory server over the same graph file",
+   "mcp": {
+    "server": "memory",
+    "tool": "search_nodes",
+    "args": {
+     "query": "Alice"
+    }
+   },
+   "mirage": {
+    "command": "memory search-nodes '{\"query\":\"Alice\"}'"
+   }
+  }
+ ]
+}

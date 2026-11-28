@@ -1,0 +1,7 @@
+{
+  "name": "vfs-bench-memory-mcp",
+  "private": true,
+  "dependencies": {
+    "@modelcontextprotocol/server-memory": "^2025.4.25"
+  }
+}

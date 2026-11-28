@@ -1,0 +1,55 @@
+mode: EXEC
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace
+runtimes:
+  - name: pyodide
+    config:
+      lockFileUrl: ${TOOLATHLON_PYTHON}/pyodide-lock.json
+      packageBaseUrl: ${TOOLATHLON_PYTHON}/
+      packages:
+        - openpyxl
+        - xlsxwriter
+        - pypdf2
+        - pymupdf
+        - pandas
+        - numpy
+        - pyarrow
+        - pillow
+        - lxml
+        - python-docx
+        - python-pptx
+        - pytesseract
+        - olefile
+        - tzdata
+  - workspace
+clis:
+  emails:
+    cli: ../../../../cli/toolathlon/emails.mjs:EMAILS
+    config:
+      apiBase: ${EMAILS_CLI_URL}
+      timeoutMs: 120000
+  google-calendar:
+    cli: ../../../../cli/toolathlon/google.mjs:CALENDAR
+    config:
+      apiBase: ${CALENDAR_CLI_URL}
+mounts:
+  /tmp:
+    vfs: ram
+  /mail:
+    vfs: email
+    config:
+      imapHost: localhost
+      imapPort: 1143
+      smtpHost: localhost
+      smtpPort: 1587
+      username: swright@mcp.com
+      password: scotaW1MyWaw
+      useSsl: false
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}

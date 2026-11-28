@@ -1,0 +1,111 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "role": "workspace",
+      "sha256": "e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "size": 482,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/97987194a1e1e9f09402983a0cd822149a00f613db05b344c2de6f917805af9d",
+      "role": "workspace_config",
+      "sha256": "97987194a1e1e9f09402983a0cd822149a00f613db05b344c2de6f917805af9d",
+      "size": 2021,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/0b3585e492e9f085a55580cb3ea9a018eab1b89d9c5ead10377ccc8928c10abc",
+      "role": "parity",
+      "sha256": "0b3585e492e9f085a55580cb3ea9a018eab1b89d9c5ead10377ccc8928c10abc",
+      "size": 1763,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/897a469357e8ba349b8b6189b772e2c2e05b091c60e2328a437a727639d37599",
+      "role": "verifier",
+      "sha256": "897a469357e8ba349b8b6189b772e2c2e05b091c60e2328a437a727639d37599",
+      "size": 760,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "notion_API-get-user",
+    "notion_API-get-users",
+    "notion_API-get-self",
+    "mcp-code-executor_execute_code",
+    "filesystem_read_file",
+    "filesystem_list_allowed_directories",
+    "filesystem_list_directory",
+    "notion_API-post-search",
+    "notion_API-retrieve-a-database",
+    "notion_API-retrieve-a-page",
+    "notion_API-retrieve-a-block",
+    "git_git_status",
+    "github_search_repositories",
+    "github_search_users",
+    "notion_API-post-database-query"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "age-group-consumption-boss-email",
+  "schema_version": 1,
+  "servers": [
+    "notion",
+    "mcp-code-executor",
+    "filesystem",
+    "git",
+    "github"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/age-group-consumption-boss-email/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "d7bcd4d868db8b49d5c3dddd211b7fb3495ddd4f997e51ff9aab16e4e99874e5",
+      "size": 2491,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/age-group-consumption-boss-email/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689e0b1d9c8e2ac413c1f257",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/age-group-consumption-boss-email",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

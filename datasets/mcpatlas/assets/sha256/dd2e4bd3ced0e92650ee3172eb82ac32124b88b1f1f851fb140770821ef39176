@@ -1,0 +1,4 @@
+{
+ "note": "Both arms read the repositories at one path -- the MCP arm's git server reads the image's own /data/repos in the run's container, and each mirage /data/repos mount is a copy of one taken out of the same image; no tool this task enables reads the rest of /data. The repositories under repos/ are the clones upstream's image makes, at upstream's commits. GitHub is mirage's GitHub fake on both arms, and it holds nothing.",
+ "cases": []
+}

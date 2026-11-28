@@ -1,0 +1,303 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/3c8acaef9120d1a6bea1061315218bbdd0ad61766b7610d04d5a5ced48cb02de",
+      "role": "seed_manifest",
+      "sha256": "3c8acaef9120d1a6bea1061315218bbdd0ad61766b7610d04d5a5ced48cb02de",
+      "size": 69,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/a0fe557f806a471c551255e809f45ff6aceda179ceb49630ce42b2ce1b1831a2",
+      "role": "parity_test",
+      "sha256": "a0fe557f806a471c551255e809f45ff6aceda179ceb49630ce42b2ce1b1831a2",
+      "size": 4972,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/dae9a6fa0696c5f9282d2022c31a92a28b8c052dafdfd7234599a2e7e79624f4",
+      "role": "workspace_documentation",
+      "sha256": "dae9a6fa0696c5f9282d2022c31a92a28b8c052dafdfd7234599a2e7e79624f4",
+      "size": 2143,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/75a5742b88545aeaf0df5679be1b9ae4a882bdc7963de35663513e7eef3152e6",
+      "role": "workspace_config",
+      "sha256": "75a5742b88545aeaf0df5679be1b9ae4a882bdc7963de35663513e7eef3152e6",
+      "size": 1286,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "update-material-inventory",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/update-material-inventory/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/update-material-inventory/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/update-material-inventory/shared/task.md",
+      "role": "instruction",
+      "sha256": "b992e77b30485c72b006c319f33876258336ef8a4850372aa5e9ad79683574ff",
+      "size": 646,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/update-material-inventory/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/update-material-inventory/evaluation/check_sheets.py",
+      "role": "verifier_source",
+      "sha256": "45c207203b26356ec0b6bab132b22670e228297c8f90f6cd7cc82b127dcd88f4",
+      "size": 6844,
+      "target": "upstream/evaluation/check_sheets.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/update-material-inventory/evaluation/check_sheets.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/update-material-inventory/evaluation/check_woocommerce.py",
+      "role": "verifier_source",
+      "sha256": "fc006a3ea58baf89ca9b27dee62bd30e477ec0ebc61aee1a67ccd0474e0c9aa3",
+      "size": 6858,
+      "target": "upstream/evaluation/check_woocommerce.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/update-material-inventory/evaluation/check_woocommerce.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/update-material-inventory/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "30ebdd6d44cb73ebcedf3d39f374c7a04c42770f50b54c04f01a3f689fe39469",
+      "size": 4316,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/update-material-inventory/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/update-material-inventory/files/folder_id.txt",
+      "role": "upstream_source",
+      "sha256": "4576a3e6001f9711e4a3d49125ba366c2eb9558bec1ccc3794e430d38e55eee0",
+      "size": 33,
+      "target": "upstream/files/folder_id.txt",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/update-material-inventory/files/folder_id.txt"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/update-material-inventory/groundtruth_workspace/expected_results.json",
+      "role": "verifier_input",
+      "sha256": "b143e727864c998c5e92126583682e230aa5c61542726e29382da4311738fd17",
+      "size": 2945,
+      "target": "upstream/groundtruth_workspace/expected_results.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/update-material-inventory/groundtruth_workspace/expected_results.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/update-material-inventory/initial_workspace/config.json",
+      "role": "initial_workspace",
+      "sha256": "70f864583a840bcc686a2db5af55eb3c1980e13d100deea5c8c231365e4504e5",
+      "size": 325,
+      "target": "upstream/initial_workspace/config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/update-material-inventory/initial_workspace/config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/update-material-inventory/preprocess/calculate_expected_results.py",
+      "role": "preprocessor_source",
+      "sha256": "28adb054b4e0b1a52c1d2b0cd31508f8d0fb3a79153c856b6d427eba57ee325f",
+      "size": 5653,
+      "target": "upstream/preprocess/calculate_expected_results.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/update-material-inventory/preprocess/calculate_expected_results.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/update-material-inventory/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "692d31acfa1fc99cba758a96cc1c6748fc02c5943d647e7efac8df08c0decffa",
+      "size": 13029,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/update-material-inventory/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/update-material-inventory/preprocess/order_simulator.py",
+      "role": "preprocessor_source",
+      "sha256": "f44d60ea0efa77f87410918c9374a69c7b8a3f035ce696177e18649e28bf04ba",
+      "size": 9927,
+      "target": "upstream/preprocess/order_simulator.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/update-material-inventory/preprocess/order_simulator.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/update-material-inventory/preprocess/sheets_setup.py",
+      "role": "preprocessor_source",
+      "sha256": "d079897ad09dd3bb31ee40354a2106d65fdf62082eeb7a1843cb51265c85c387",
+      "size": 4022,
+      "target": "upstream/preprocess/sheets_setup.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/update-material-inventory/preprocess/sheets_setup.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/update-material-inventory/preprocess/test_orders.json",
+      "role": "preprocessor_source",
+      "sha256": "187eeb7fc64f8a4bed26d2028c52396bf2ef1e1f69c258503c0a167eb2ff5e82",
+      "size": 1523,
+      "target": "upstream/preprocess/test_orders.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/update-material-inventory/preprocess/test_orders.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/update-material-inventory/preprocess/woocommerce_client.py",
+      "role": "preprocessor_source",
+      "sha256": "4d1212f76cbf2fb8b9b83698a46e6982dfcdca6226dd5e2e1719796391e82d7a",
+      "size": 9638,
+      "target": "upstream/preprocess/woocommerce_client.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/update-material-inventory/preprocess/woocommerce_client.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/update-material-inventory/task_config.json",
+      "role": "upstream_config",
+      "sha256": "d58665fafe992bc35b9f479e8508a6c5002b9dd970c3d05138f569264dfb9346",
+      "size": 214,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/update-material-inventory/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/update-material-inventory/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "26a1a59c87bb29bd25e70af769535acdf2c34829d545b56444129d47f52a3ee5",
+      "size": 497,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/update-material-inventory/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/update-material-inventory/README.md",
+      "role": "documentation",
+      "sha256": "81206b664a4183b6e33e045e0c4e8b83348fbc5cb803ac34d82c7d98f9c3f48e",
+      "size": 2600,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/update-material-inventory/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/sheets/source.json",
+      "role": "fixture_source",
+      "sha256": "4fe90b57f770eaedcb9cee4f91e5b278271227a925b7559fb9da87f3329f6cde",
+      "size": 578,
+      "target": "shared/fixtures/sheets/source.json",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/sheets/source.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/sheets/source.xlsx",
+      "role": "fixture_source",
+      "sha256": "f374461ce5e34fc9bfb26578c75b883e541c0a596ecb0931f368f9f773491ad6",
+      "size": 7635,
+      "target": "shared/fixtures/sheets/source.xlsx",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/sheets/source.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/woocommerce/api.json.gz",
+      "role": "fixture_source",
+      "sha256": "04c3c06a1fcbbaaffc6274bed4f5f11a09852c737579ae42cd49c328816e9ca3",
+      "size": 2233,
+      "target": "shared/fixtures/woocommerce/api.json.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/woocommerce/api.json.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/woocommerce/database.sql.gz",
+      "role": "fixture_source",
+      "sha256": "f8f8390e8fac8e4f81b4dfd895f7577ac430e6d7c882450b86a329622080fdb3",
+      "size": 74636,
+      "target": "shared/fixtures/woocommerce/database.sql.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/woocommerce/database.sql.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/woocommerce/groundtruth.tar.gz",
+      "role": "verifier_input",
+      "sha256": "57558a3dfe59391388c43d74eabac017b5087644edb30e38e41899ae964ea0bb",
+      "size": 1481,
+      "target": "shared/fixtures/woocommerce/groundtruth.tar.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/woocommerce/groundtruth.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/woocommerce/sheet-formats.json",
+      "role": "fixture_source",
+      "sha256": "21215779c83855d3c6bf5ec7eae437a55b10fd90b4ee7f1f71f43d8ff6a9805c",
+      "size": 23923,
+      "target": "shared/fixtures/woocommerce/sheet-formats.json",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/woocommerce/sheet-formats.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/woocommerce/sheets-api.json.gz",
+      "role": "fixture_source",
+      "sha256": "a0777721a4080342533fedcb25a6ca8714e6124c797757d4cb1b43cf9194515f",
+      "size": 3776,
+      "target": "shared/fixtures/woocommerce/sheets-api.json.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/woocommerce/sheets-api.json.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/woocommerce/sheets.db.gz",
+      "role": "fixture_source",
+      "sha256": "0ad1878505acfa13774caf61fda9400d13819d453bbee10a48e3e9cbc3778855",
+      "size": 14446,
+      "target": "shared/fixtures/woocommerce/sheets.db.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/woocommerce/sheets.db.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/woocommerce/source.json",
+      "role": "fixture_source",
+      "sha256": "7505115f716d79ba2bc77d67e089b552d8516aecd26627152f2f064f2877c277",
+      "size": 32333,
+      "target": "shared/fixtures/woocommerce/source.json",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/woocommerce/source.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/woocommerce/uploads.tar.gz",
+      "role": "fixture_source",
+      "sha256": "b03d9dfa58122562d1e4d4c876d56ca53d5fc93a0f206e6b0925c2c3ac685e5b",
+      "size": 18626,
+      "target": "shared/fixtures/woocommerce/uploads.tar.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/woocommerce/uploads.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/woocommerce/workspace.tar.gz",
+      "role": "fixture_source",
+      "sha256": "857c0b68f7b16658eaa45ddc02a21433fc76e4d05dacf88f0cbfa300016da7a1",
+      "size": 304,
+      "target": "shared/fixtures/woocommerce/workspace.tar.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/update-material-inventory/shared/fixtures/woocommerce/workspace.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/update-material-inventory/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "3897c5444eff28186ae64fb0d408a5afae00a106e807a8ef5d370c58a2fd0fe4",
+      "size": 30200,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/update-material-inventory/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/update-material-inventory",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/update-material-inventory",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "python_execute",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "google_sheet",
+      "woocommerce"
+    ]
+  }
+}

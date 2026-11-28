@@ -1,0 +1,6 @@
+{
+  "project": "mcp-bench0606",
+  "datasets": [
+    "bigquery_pricing_analysis"
+  ]
+}

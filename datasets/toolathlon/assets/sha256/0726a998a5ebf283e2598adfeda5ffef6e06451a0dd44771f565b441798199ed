@@ -1,0 +1,55 @@
+{
+  "project": "mcp-bench0606",
+  "tables": [
+    {
+      "dataset": "transactions_analytics",
+      "table": "accounts",
+      "csv": "preprocess/transactions_analytics/accounts.csv"
+    },
+    {
+      "dataset": "transactions_analytics",
+      "table": "blacklist",
+      "csv": "preprocess/transactions_analytics/blacklist.csv"
+    },
+    {
+      "dataset": "transactions_analytics",
+      "table": "cards",
+      "csv": "preprocess/transactions_analytics/cards.csv"
+    },
+    {
+      "dataset": "transactions_analytics",
+      "table": "devices",
+      "csv": "preprocess/transactions_analytics/devices.csv"
+    },
+    {
+      "dataset": "transactions_analytics",
+      "table": "fraud_alerts",
+      "csv": "preprocess/transactions_analytics/fraud_alerts.csv"
+    },
+    {
+      "dataset": "transactions_analytics",
+      "table": "live_transactions",
+      "csv": "preprocess/transactions_analytics/live_transactions.csv"
+    },
+    {
+      "dataset": "transactions_analytics",
+      "table": "locations",
+      "csv": "preprocess/transactions_analytics/locations.csv"
+    },
+    {
+      "dataset": "transactions_analytics",
+      "table": "merchants",
+      "csv": "preprocess/transactions_analytics/merchants.csv"
+    },
+    {
+      "dataset": "transactions_analytics",
+      "table": "risk_scores",
+      "csv": "preprocess/transactions_analytics/risk_scores.csv"
+    },
+    {
+      "dataset": "transactions_analytics",
+      "table": "users",
+      "csv": "preprocess/transactions_analytics/users.csv"
+    }
+  ]
+}

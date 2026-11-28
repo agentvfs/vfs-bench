@@ -1,0 +1,186 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/d38fa327511c699619d94a66ec24affa3b503cfcea2f0141138098858afbccf1",
+      "role": "parity_test",
+      "sha256": "d38fa327511c699619d94a66ec24affa3b503cfcea2f0141138098858afbccf1",
+      "size": 2001,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/c38d78203f29ce13f0433695ea1a4db56459431c4e4cc25a41cf1d3a8ba5cf38",
+      "role": "workspace_config",
+      "sha256": "c38d78203f29ce13f0433695ea1a4db56459431c4e4cc25a41cf1d3a8ba5cf38",
+      "size": 894,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "dietary-health",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/dietary-health/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/dietary-health/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/dietary-health/shared/task.md",
+      "role": "instruction",
+      "sha256": "eaba12e6aec33fd76186d7cc6f10bf9e871d2f54f4d11f8496fcee69d32fbc0f",
+      "size": 723,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/dietary-health/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/dietary-health/evaluation/__init__.py",
+      "role": "verifier_source",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "target": "upstream/evaluation/__init__.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/dietary-health/evaluation/__init__.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/dietary-health/evaluation/check_local.py",
+      "role": "verifier_source",
+      "sha256": "81b2b976238a7760a29826f62013ab8b7b1df153af649232c649d57571ed3ab2",
+      "size": 4901,
+      "target": "upstream/evaluation/check_local.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/dietary-health/evaluation/check_local.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/dietary-health/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "84579ea5b8545c1df5e0145f71dd333cee4ac16dc2cef9d61a3aa9e9bad1519d",
+      "size": 1758,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/dietary-health/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/dietary-health/groundtruth_workspace/analysis.md",
+      "role": "verifier_input",
+      "sha256": "023577b8e5a931109560eecca4eb3e0a89cb01ed42403b93ac756fac6f31baa2",
+      "size": 181,
+      "target": "upstream/groundtruth_workspace/analysis.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/dietary-health/groundtruth_workspace/analysis.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/dietary-health/groundtruth_workspace/generate_gt.py",
+      "role": "verifier_input",
+      "sha256": "41d701f74ae30d659105e5052c17ac7f85a541e10622bca63fe1b3c027ea869e",
+      "size": 2797,
+      "target": "upstream/groundtruth_workspace/generate_gt.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/dietary-health/groundtruth_workspace/generate_gt.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/dietary-health/initial_workspace/Nutrition.xlsx",
+      "role": "initial_workspace",
+      "sha256": "cf714025be9b362c032dcb6954817f1d7e4f6b775a2e62c3c4f9b2c807301d36",
+      "size": 15282,
+      "target": "upstream/initial_workspace/Nutrition.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/dietary-health/initial_workspace/Nutrition.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/dietary-health/initial_workspace/body.md",
+      "role": "initial_workspace",
+      "sha256": "252c12326abcf13b7a58cf485258c1afc0b80fd82f0b5db146d20c3854de56c6",
+      "size": 119,
+      "target": "upstream/initial_workspace/body.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/dietary-health/initial_workspace/body.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/dietary-health/initial_workspace/cuisine.md",
+      "role": "initial_workspace",
+      "sha256": "50978d18e4464372643c4a3a4dfa60de5e42543d06c46df7b165736e19307da7",
+      "size": 82,
+      "target": "upstream/initial_workspace/cuisine.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/dietary-health/initial_workspace/cuisine.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/dietary-health/initial_workspace/format.md",
+      "role": "initial_workspace",
+      "sha256": "b0ef7bfa3438bdf4cacb9a3461fb5d16cade69cb35a7074e62c5f0c31f6c5daa",
+      "size": 1291,
+      "target": "upstream/initial_workspace/format.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/dietary-health/initial_workspace/format.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/dietary-health/initial_workspace/health_guide.md",
+      "role": "initial_workspace",
+      "sha256": "61cc23aa4faae5fcc21536fd4da82d76f059447f443fad7ec6061e6a59b6f891",
+      "size": 2169,
+      "target": "upstream/initial_workspace/health_guide.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/dietary-health/initial_workspace/health_guide.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/dietary-health/task_config.json",
+      "role": "upstream_config",
+      "sha256": "fe7d58a4829f0d228fa5f8e71db0eebd15b56175c3f4828b6bd78383af0382b3",
+      "size": 253,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/dietary-health/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/dietary-health/README.md",
+      "role": "documentation",
+      "sha256": "09fab1a876229ad5bd81b8045e8e680dd15010ee5fd67377e1fa976e872ae538",
+      "size": 2350,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/dietary-health/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/dietary-health/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "b8e435068159ba9deb43390c4bd20a013c975669a72e87d2ea03f0a0379a876d",
+      "size": 6808,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/dietary-health/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/dietary-health",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/dietary-health",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "python_execute",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "filesystem",
+      "howtocook",
+      "excel",
+      "terminal"
+    ]
+  }
+}

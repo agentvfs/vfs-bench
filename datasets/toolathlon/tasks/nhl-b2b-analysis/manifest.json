@@ -1,0 +1,232 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/8c828fc6ff6559f44fa81fb2cf2a85b9fb003370cd8e45db245cca00eb1a6764",
+      "role": "legacy_adapter",
+      "sha256": "8c828fc6ff6559f44fa81fb2cf2a85b9fb003370cd8e45db245cca00eb1a6764",
+      "size": 2185,
+      "target": "gym/seed_pg.py"
+    },
+    {
+      "path": "assets/sha256/b5773b6ad1894e21ee986cebf2f82aa28bfb07f85f684adf472045a077df5698",
+      "role": "fixture_script",
+      "sha256": "b5773b6ad1894e21ee986cebf2f82aa28bfb07f85f684adf472045a077df5698",
+      "size": 1475,
+      "target": "shared/capture_schedule.py"
+    },
+    {
+      "path": "assets/sha256/a7dc2a69ed2086065dcaab3ecbccf6b2c0780474dad3b496fded13655cfa09fd",
+      "role": "verifier_adapter",
+      "sha256": "a7dc2a69ed2086065dcaab3ecbccf6b2c0780474dad3b496fded13655cfa09fd",
+      "size": 1621,
+      "target": "shared/derive_gt.py"
+    },
+    {
+      "path": "assets/sha256/0a5e66f31ef5fac806e12434deb91e9901c7b0af6c074370bce6ffdb962e35f1",
+      "role": "fixture_script",
+      "sha256": "0a5e66f31ef5fac806e12434deb91e9901c7b0af6c074370bce6ffdb962e35f1",
+      "size": 2036,
+      "target": "shared/seed_mock.py"
+    },
+    {
+      "path": "assets/sha256/cafc3c110ec6ecf5be967b0e62b8ae6e73004a6abec264af4e3a3b56dbebb374",
+      "role": "verifier_adapter",
+      "sha256": "cafc3c110ec6ecf5be967b0e62b8ae6e73004a6abec264af4e3a3b56dbebb374",
+      "size": 8254,
+      "target": "shared/verify_mcp_solvable.py"
+    },
+    {
+      "path": "assets/sha256/d39d66f21f96b25087b84b6a045f24a31d446c46927861e06d01a5283ba46758",
+      "role": "verifier_adapter",
+      "sha256": "d39d66f21f96b25087b84b6a045f24a31d446c46927861e06d01a5283ba46758",
+      "size": 2156,
+      "target": "shared/verify_mock.py"
+    },
+    {
+      "path": "assets/sha256/83bef3f10eecf8c4bc7ea4f7d2610d3f8c7ffaae5511e363db64ba6d446b2adb",
+      "role": "seed_manifest",
+      "sha256": "83bef3f10eecf8c4bc7ea4f7d2610d3f8c7ffaae5511e363db64ba6d446b2adb",
+      "size": 212,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/4d9ed6b7e001896c1b34487d7c35cfcf7f82fcf01d20d84abfb156af1c880997",
+      "role": "parity_test",
+      "sha256": "4d9ed6b7e001896c1b34487d7c35cfcf7f82fcf01d20d84abfb156af1c880997",
+      "size": 3607,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/07353d53d45f83352598561fa715989589bc94d22fd7f51071b59f46095cc24f",
+      "role": "verifier_adapter",
+      "sha256": "07353d53d45f83352598561fa715989589bc94d22fd7f51071b59f46095cc24f",
+      "size": 170,
+      "target": "toolathlon/eval_shim/sitecustomize.py"
+    },
+    {
+      "path": "assets/sha256/15da28ed1526ceaaa6ea637b8346485084f9fe74fc81a074aac0b4ffed6dcf4c",
+      "role": "legacy_adapter",
+      "sha256": "15da28ed1526ceaaa6ea637b8346485084f9fe74fc81a074aac0b4ffed6dcf4c",
+      "size": 1424,
+      "target": "toolathlon/overrides/preprocess_main.py"
+    },
+    {
+      "path": "assets/sha256/df55588e4325ed68501a1a5caffe92778dad394ad813819f30ad06552c4a0f6d",
+      "role": "workspace_documentation",
+      "sha256": "df55588e4325ed68501a1a5caffe92778dad394ad813819f30ad06552c4a0f6d",
+      "size": 1853,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/3e7fdf55c57d39d6f514f6f0cf41c4cb4f3591d05f160d5626ea09e194c7a03b",
+      "role": "workspace_config",
+      "sha256": "3e7fdf55c57d39d6f514f6f0cf41c4cb4f3591d05f160d5626ea09e194c7a03b",
+      "size": 999,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "nhl-b2b-analysis",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nhl-b2b-analysis/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nhl-b2b-analysis/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/nhl-b2b-analysis/shared/task.md",
+      "role": "instruction",
+      "sha256": "65bcfefe4147b8cca26d162344cd2d593c8a6734ca225f2292e7e7694f36e382",
+      "size": 489,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nhl-b2b-analysis/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nhl-b2b-analysis/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "169d646aa686986f114e54174f574439e3f7a95c0149ac6dee0fc42722cc74f2",
+      "size": 3456,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nhl-b2b-analysis/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nhl-b2b-analysis/files/folder_id.txt",
+      "role": "upstream_source",
+      "sha256": "837b0810e9e41677f03d7e4e6ab87f4f18711f779660f8abe202f083d802d69c",
+      "size": 33,
+      "target": "upstream/files/folder_id.txt",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nhl-b2b-analysis/files/folder_id.txt"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nhl-b2b-analysis/groundtruth_workspace/standard_answer.csv",
+      "role": "verifier_input",
+      "sha256": "c27e9af2430e18955500d83868597e8fb12247ba6506acb90eb9fed89d335dbe",
+      "size": 939,
+      "target": "upstream/groundtruth_workspace/standard_answer.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nhl-b2b-analysis/groundtruth_workspace/standard_answer.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nhl-b2b-analysis/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "1d8d6f9ea9979233d832cb6a407759000164ec437bc45e7d57217dbb02936762",
+      "size": 1507,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nhl-b2b-analysis/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nhl-b2b-analysis/task_config.json",
+      "role": "upstream_config",
+      "sha256": "7519110e0e883be23e22355d8007f198418c6a440b88f9f882fc881263f36c55",
+      "size": 229,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nhl-b2b-analysis/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/nhl-b2b-analysis/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "e10a1b691fc9a2fddb160d064a2e1359fbc3f325d131ea91fad466aab1a3d03e",
+      "size": 301,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/nhl-b2b-analysis/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/nhl-b2b-analysis/README.md",
+      "role": "documentation",
+      "sha256": "2ff3b97d4c365922618642f2025461132568617fb7332f4282d0c527e26953c6",
+      "size": 1809,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/nhl-b2b-analysis/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/nhl-b2b-analysis/shared/gt.csv",
+      "role": "verifier_input",
+      "sha256": "67f47db3e88cd6a7a34a300225ab1b84ea006ddf9f34c3054f3bca56b46cfefb",
+      "size": 936,
+      "target": "shared/gt.csv",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/nhl-b2b-analysis/shared/gt.csv"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/nhl-b2b-analysis/shared/nhl.csv",
+      "role": "fixture_source",
+      "sha256": "051001820b69f6625c11e77ececd0609a8fa86adb3f9e720a4857b476c574080",
+      "size": 101634,
+      "target": "shared/nhl.csv",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/nhl-b2b-analysis/shared/nhl.csv"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/nhl-b2b-analysis/shared/nhl.source.json",
+      "role": "fixture_source",
+      "sha256": "2815c9c954de1e49b1381f145ea732441cc8adbcb7172328fd951bd1cb0f1377",
+      "size": 671,
+      "target": "shared/nhl.source.json",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/nhl-b2b-analysis/shared/nhl.source.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/nhl-b2b-analysis/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "4f47a02c4a0667610dc2931cd69a1960528427d890dc88df62dbe1a9c94a891a",
+      "size": 12583,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/nhl-b2b-analysis/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/nhl-b2b-analysis",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/nhl-b2b-analysis",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "python_execute",
+      "manage_context",
+      "history",
+      "claim_done",
+      "handle_overlong_tool_outputs"
+    ],
+    "needed_mcp_servers": [
+      "google_sheet",
+      "filesystem",
+      "terminal"
+    ]
+  }
+}

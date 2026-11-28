@@ -1,0 +1,112 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/1871e854839543909dfca81ec2201d129749634fe177c054d166d5b9eca99fc2",
+      "role": "workspace",
+      "sha256": "1871e854839543909dfca81ec2201d129749634fe177c054d166d5b9eca99fc2",
+      "size": 2020,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/deeacb81aa077e8af4ba6fff83f63f7d2ac656684d462f7f43f6deaf2475c3c9",
+      "role": "workspace_config",
+      "sha256": "deeacb81aa077e8af4ba6fff83f63f7d2ac656684d462f7f43f6deaf2475c3c9",
+      "size": 2730,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/ca226b7e1e18ead5614cfc788f47cee8f2fde85fb5a74875309bbab8fdb268a6",
+      "role": "parity",
+      "sha256": "ca226b7e1e18ead5614cfc788f47cee8f2fde85fb5a74875309bbab8fdb268a6",
+      "size": 1753,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/0c306da2f1b9ed9c4b6025fb3b4c09d7faea00cffdb555c36eeb3350d24fb051",
+      "role": "verifier",
+      "sha256": "0c306da2f1b9ed9c4b6025fb3b4c09d7faea00cffdb555c36eeb3350d24fb051",
+      "size": 223,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "memory_read_graph",
+    "memory_search_nodes",
+    "memory_open_nodes",
+    "filesystem_read_text_file",
+    "filesystem_list_directory",
+    "filesystem_list_allowed_directories",
+    "github_search_users",
+    "git_git_log",
+    "notion_API-get-self",
+    "notion_API-post-database-query",
+    "notion_API-post-search",
+    "notion_API-get-block-children",
+    "met-museum_list-departments",
+    "met-museum_search-museum-objects",
+    "met-museum_get-museum-object"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "storyteller-creator-first-commit",
+  "schema_version": 1,
+  "servers": [
+    "memory",
+    "filesystem",
+    "github",
+    "git",
+    "notion",
+    "met-museum"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/storyteller-creator-first-commit/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "488811f4ce237cc61e494abf3b9630d98dff92a28c6280b86b4559901f284cdc",
+      "size": 3602,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/storyteller-creator-first-commit/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689f4d693e212e8ef339073a",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/storyteller-creator-first-commit",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

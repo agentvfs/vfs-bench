@@ -1,0 +1,107 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "role": "workspace",
+      "sha256": "e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "size": 482,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/22599296d6abd312ecc8cc8ae4560e84bc5a1ca3291c967944836543c1670228",
+      "role": "workspace_config",
+      "sha256": "22599296d6abd312ecc8cc8ae4560e84bc5a1ca3291c967944836543c1670228",
+      "size": 1355,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/20bc0bd7227cd685808162f2a9cae541570bb8e4bf56a001e8da8f32c3e34a81",
+      "role": "parity",
+      "sha256": "20bc0bd7227cd685808162f2a9cae541570bb8e4bf56a001e8da8f32c3e34a81",
+      "size": 1798,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/f562d6634d94f56514d2095dc599579a486d5523a8429b07633457cd90a64c69",
+      "role": "verifier",
+      "sha256": "f562d6634d94f56514d2095dc599579a486d5523a8429b07633457cd90a64c69",
+      "size": 209,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "filesystem_read_file",
+    "filesystem_read_text_file",
+    "filesystem_read_media_file",
+    "filesystem_read_multiple_files",
+    "filesystem_list_directory",
+    "filesystem_list_directory_with_sizes",
+    "filesystem_search_files",
+    "filesystem_directory_tree",
+    "filesystem_list_allowed_directories",
+    "filesystem_get_file_info",
+    "mcp-code-executor_execute_code",
+    "mcp-code-executor_read_code_file",
+    "mcp-code-executor_check_installed_packages",
+    "mcp-code-executor_get_environment_config"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "fantasy-sports-average",
+  "schema_version": 1,
+  "servers": [
+    "filesystem",
+    "mcp-code-executor"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/fantasy-sports-average/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "5046b69c98b3bf5fc378cb1ade79e4d3bb5e669865c4869cd897e2597ad64d81",
+      "size": 938,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/fantasy-sports-average/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689cd6f8522029b7ad7b2026",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/fantasy-sports-average",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}
