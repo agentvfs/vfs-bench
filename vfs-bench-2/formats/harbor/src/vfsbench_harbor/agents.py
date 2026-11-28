@@ -21,6 +21,11 @@ put every tool call of the agent into the trial's workspace:
   built-in tool turned off (``--tools ""``), so nothing it does reaches the
   host.
 
+Each runs in the environment's ``agent_run`` block, so the shell commands
+it ran are its (``agent_history``): the MCP shell tool and codex-exec run
+each line through the workspace's shell, which records it; a read or an
+edit is not a command.
+
 Each CLI reaches its model through the trial's gateway (gateway.py), its
 HTTPS proxy, which tells the model the run's date, as the workspace and
 services have it, in place of the host's.
@@ -320,7 +325,7 @@ class Codex(HarborCodex):
             '[[environments]]\nid = "mirage"\n'
             f"url = {json.dumps(mirage.codex_exec_url)}\n")
         try:
-            async with _fresh_state(mirage):
+            async with _fresh_state(mirage), mirage.agent_run():
                 await super().run(instruction, host, context)
         finally:
             await gateway.close()
@@ -381,7 +386,7 @@ class ClaudeCode(HarborClaudeCode):
             }))
         self._mcp_config = str(config)
         try:
-            async with _fresh_state(mirage):
+            async with _fresh_state(mirage), mirage.agent_run():
                 await super().run(instruction, host, context)
         finally:
             await gateway.close()

@@ -2,8 +2,10 @@
 
 The trajectory and the tool CLIs' dispatches are the trial's files; each
 service's audit is fetched from the trial's run of its fake, at its
-upstream port; the gws fake's tables are exported as JSON. No SQLite
-connection is used here.
+upstream port; the gws fake's tables are exported as JSON; for a task that
+lists upstream's shell tool (``shell`` in the manifest), the shell commands
+the agent ran are read from the workspace's history
+(``MirageEnvironment.agent_history``). No SQLite connection is used here.
 """
 import json
 from pathlib import Path
@@ -47,6 +49,9 @@ async def freeze(verifier, definition, stage, budget):
                 "tables": GWS_TABLES
             }})
         state = exported["gws"]
+    history = None
+    if definition.get("shell"):
+        history = await verifier.environment.agent_history()
     inputs = {
         "task": verifier.task_id,
         "audit": audits,
@@ -66,6 +71,11 @@ async def freeze(verifier, definition, stage, budget):
             target = stage / "seed.json"
             budget.copy(tests / "gws_seed.json", target)
             frozen["files"]["/input/gws_seed.json"] = str(target)
+        if history is not None:
+            target = stage / "history.json"
+            budget.write_json(target, history)
+            target.chmod(0o400)
+            frozen["files"]["/input/history.json"] = str(target)
         target = stage / "inputs.json"
         budget.write_json(target, inputs)
         target.chmod(0o400)
