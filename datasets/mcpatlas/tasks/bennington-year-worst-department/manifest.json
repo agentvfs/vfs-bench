@@ -1,0 +1,113 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/9d49f28c71f6b999c6d64ce3df112b1cbf19977e6469038a90f27ce889087ce1",
+      "role": "workspace",
+      "sha256": "9d49f28c71f6b999c6d64ce3df112b1cbf19977e6469038a90f27ce889087ce1",
+      "size": 1613,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/31a1f096ec551ff70c8313212eed12d95c908c35ca4d09f739ec7d6382f78943",
+      "role": "workspace_config",
+      "sha256": "31a1f096ec551ff70c8313212eed12d95c908c35ca4d09f739ec7d6382f78943",
+      "size": 2849,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/5878c127ba7319176d057897311e9698fde51098cc9b749e9fc2b15eccd4548e",
+      "role": "parity",
+      "sha256": "5878c127ba7319176d057897311e9698fde51098cc9b749e9fc2b15eccd4548e",
+      "size": 3860,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/9273b690ece652d024bbe9c92ad3793ec8ba161164f51f70fe558ad22745bd53",
+      "role": "verifier",
+      "sha256": "9273b690ece652d024bbe9c92ad3793ec8ba161164f51f70fe558ad22745bd53",
+      "size": 419,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "airtable_get_record",
+    "airtable_list_tables",
+    "airtable_list_bases",
+    "airtable_list_records",
+    "airtable_search_records",
+    "exa_web_search_exa",
+    "e2b-server_run_code",
+    "cli-mcp-server_show_security_rules",
+    "cli-mcp-server_run_command",
+    "weather-data_weather_history",
+    "weather-data_weather_astronomy",
+    "weather-data_weather_search",
+    "weather_find_weather_stations",
+    "wikipedia_search_wikipedia",
+    "wikipedia_get_article"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "bennington-year-worst-department",
+  "schema_version": 1,
+  "servers": [
+    "airtable",
+    "exa",
+    "e2b-server",
+    "cli-mcp-server",
+    "weather-data",
+    "weather",
+    "wikipedia"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/bennington-year-worst-department/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "7f38363a75b83b5abc73532b34c4bc51c3f88c3fd18892efef02c76449e472e9",
+      "size": 4611,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/bennington-year-worst-department/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "688fb11183792b921381bd0d",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/bennington-year-worst-department",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

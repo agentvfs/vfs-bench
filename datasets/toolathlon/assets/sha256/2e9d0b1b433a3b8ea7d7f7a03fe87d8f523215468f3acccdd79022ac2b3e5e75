@@ -1,0 +1,13 @@
+{
+  "project": "mcp-bench0606",
+  "tables": [
+    {
+      "dataset": "machine_operating",
+      "table": "live_sensor",
+      "csv": "preprocess/live_sensor_data.csv",
+      "types": {
+        "timestamp": "STRING"
+      }
+    }
+  ]
+}

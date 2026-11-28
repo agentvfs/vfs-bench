@@ -1,0 +1,37 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact. Every google-cloud projection ends in `grep .`, so an arm whose reply carries no such line fails the case instead of agreeing on nothing.",
+  "cases": [
+    {
+      "name": "google_cloud_run_query",
+      "why": "the same statement returns the same answer through either arm",
+      "mcp": {
+        "server": "google-cloud",
+        "tool": "bigquery_run_query",
+        "args": {
+          "query": "SELECT 1 AS n"
+        },
+        "pipe": "sed -n \"s/^Row 1: {'n': \\([0-9]*\\)}/\\1/p\" | grep ."
+      },
+      "mirage": {
+        "command": "google-cloud bigquery-run-query '{\"query\":\"SELECT 1 AS n\"}'",
+        "pipe": "sed -n \"s/^Row 1: {'n': \\([0-9]*\\)}/\\1/p\" | grep ."
+      }
+    },
+    {
+      "name": "read_pdf_pages",
+      "why": "The pinned upstream handler reads the same task fixture through MCP and the workspace CLI.",
+      "mcp": {
+        "server": "pdf-tools",
+        "tool": "read_pdf_pages",
+        "args": {
+          "pdf_file_path": "${AGENT_WORKSPACE}/futuregadget_pricing.pdf",
+          "start_page": 1,
+          "end_page": 1
+        }
+      },
+      "mirage": {
+        "command": "pdf-tools read-pdf-pages '{\"pdf_file_path\": \"/workspace/futuregadget_pricing.pdf\", \"start_page\": 1, \"end_page\": 1}'"
+      }
+    }
+  ]
+}

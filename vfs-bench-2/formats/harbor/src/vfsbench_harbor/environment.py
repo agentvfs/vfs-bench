@@ -22,6 +22,7 @@ through the daemon's codex-exec or MCP endpoint (agents.py).
 """
 import asyncio
 import atexit
+import contextlib
 import json
 import os
 import re
@@ -78,6 +79,29 @@ def _boot_slot() -> asyncio.Semaphore:
     if _boots is None:
         _boots = asyncio.Semaphore(BOOTS)
     return _boots
+
+
+def agent_commands(events: list[dict], spans: list) -> list[dict]:
+    """The ``command`` entries of a workspace's history whose time is in
+    one of ``spans`` (each a start and an end in milliseconds, the end
+    None while the block runs), and the ``result`` entries that answer
+    them, in the history's order."""
+    now = time.time() * 1000
+
+    def within(at: float) -> bool:
+        return any(start <= at <= (now if end is None else end)
+                   for start, end in spans)
+
+    kept = {
+        e.get("id")
+        for e in events
+        if e.get("type") == "command" and within(e.get("timestamp", 0))
+    }
+    return [
+        e for e in events
+        if (e.get("type") == "command" and e.get("id") in kept) or (
+            e.get("type") == "result" and e.get("parent") in kept)
+    ]
 
 
 # Harbor's oracle runs a task's solution file as one line; the workspace's
@@ -186,7 +210,8 @@ async def _boot_job_daemon(node: str, workers: int, dataset: Path,
                     f"the job's Mirage daemon exited ({process.returncode}):"
                     f"\n{(home / 'daemon.log').read_text()[-4000:]}")
             try:
-                if (await client.get(f"{url}/v1/ready")).status_code == 200:
+                ready = await client.get(f"{url}/v1/daemon/ready")
+                if ready.status_code == 200:
                     return url, process
             except httpx.TransportError:
                 pass
@@ -313,6 +338,20 @@ def _snapshot(view: Path, live: Path) -> None:
     os.replace(temp, view)
 
 
+async def _msb(*argv: str, check: bool = False) -> None:
+    """Run ``msb`` (microsandbox's CLI); ``check`` raises on a failure."""
+    process = await asyncio.create_subprocess_exec(
+        "msb",
+        *argv,
+        stdin=asyncio.subprocess.DEVNULL,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.STDOUT)
+    out, _ = await process.communicate()
+    if check and process.returncode:
+        raise RuntimeError(f"msb {' '.join(argv)} exited "
+                           f"{process.returncode}:\n{out.decode()}")
+
+
 class MirageEnvironment(BaseEnvironment):
     """A trial's environment as a workspace on a Mirage daemon.
 
@@ -342,6 +381,11 @@ class MirageEnvironment(BaseEnvironment):
         self._routes: dict[str, str] = {}
         self._env: dict[str, str] = {}
         self._runs: list[fakes.Run] = []
+        # When an agent ran (`agent_run`), in the daemon's milliseconds.
+        self._agent_spans: list[list[float | None]] = []
+        # The trial's microsandbox sandboxes, restored from the snapshots
+        # its config's `machines` name (_open_machines).
+        self._sandboxes: list[str] = []
         self._url = ""
         # The run's epoch and when the trial started, in ms, which together
         # are its clock: None where the task has no fakes, and the host's.
@@ -493,6 +537,35 @@ class MirageEnvironment(BaseEnvironment):
             raise
         return dict(zip(blocks, opened))
 
+    async def _open_machines(self, machines: dict[str, dict]) -> dict:
+        """The config's ``machines``, each microsandbox entry that names a
+        ``snapshot`` given a sandbox restored from it, this trial's alone.
+
+        Mirage runs programs in a sandbox it is given and leaves creating
+        one to the caller, and a sandbox shows one workspace's mounts, so
+        each trial gets its own, with no network and the task's CPUs and
+        memory.
+        """
+        opened = {}
+        for name, entry in machines.items():
+            entry = dict(entry)
+            snapshot = entry.pop("snapshot", None)
+            if snapshot is not None:
+                if entry.get("provider") != "microsandbox":
+                    raise ValueError(f"machine {name!r}: a snapshot is a "
+                                     "microsandbox entry's")
+                sandbox = f"{self._workspace_id}-{name}"[-128:]
+                argv = ["restore", "--no-net", "--name", sandbox]
+                if self.task_env_config.cpus:
+                    argv += ["--cpus", str(self.task_env_config.cpus)]
+                if self.task_env_config.memory_mb:
+                    argv += ["--memory", f"{self.task_env_config.memory_mb}M"]
+                await _msb(*argv, snapshot, check=True)
+                self._sandboxes.append(sandbox)
+                entry["sandbox"] = sandbox
+            opened[name] = entry
+        return opened
+
     async def _plan(self, runs: dict[str, dict]) -> dict:
         """Lay out the workspace and read the plan ``mirage.ts`` writes."""
         planners = _planners.get(self._node)
@@ -618,6 +691,8 @@ class MirageEnvironment(BaseEnvironment):
         # The workspace's clock starts at the trial's time (Mirage's
         # system_time): `date`, file times and the runtimes read it.
         config = dict(plan["config"])
+        if config.get("machines"):
+            config["machines"] = await self._open_machines(config["machines"])
         if self._workers is not None:
             # The trial's runs alone, each at a port of its own, and each
             # upstream port on localhost routed to its run's.
@@ -665,19 +740,25 @@ class MirageEnvironment(BaseEnvironment):
                 try:
                     try:
                         # The workspace's history (each line, its output and
-                        # when it ran) outlives it, in the trial's mirage/.
+                        # when it ran) outlives it, in the trial's mirage/:
+                        # its logs' JSONL export, one entry a line.
                         history = await self._client.get(
-                            f"/v1/workspaces/{self._workspace_id}/history")
+                            f"/v1/workspaces/{self._workspace_id}/logs",
+                            params={"format": "jsonl"})
                         if history.status_code == 200:
                             (self._run_dir / "history.json").write_text(
-                                history.text)
+                                json.dumps([
+                                    json.loads(line)
+                                    for line in history.text.splitlines()
+                                    if line
+                                ]))
                     finally:
-                        # Closed whether or not its history was saved: a
+                        # Deleted whether or not its history was saved: a
                         # shared daemon outlives the trial.
-                        await self._client.post(
-                            f"/v1/workspaces/{self._workspace_id}/close")
+                        await self._client.delete(
+                            f"/v1/workspaces/{self._workspace_id}")
                         if self._daemon_url is None and self._workers is None:
-                            await self._client.post("/v1/shutdown")
+                            await self._client.post("/v1/daemon/shutdown")
                 except httpx.TransportError:
                     pass
                 finally:
@@ -700,6 +781,11 @@ class MirageEnvironment(BaseEnvironment):
                 except httpx.HTTPError:
                     pass
             self._runs = []
+            # The trial's sandboxes, once its workspace no longer runs
+            # programs in them.
+            for sandbox in self._sandboxes:
+                await _msb("remove", "--force", sandbox)
+            self._sandboxes = []
         if delete:
             if self._layout is not None:
                 await asyncio.wait([self._layout])
@@ -744,8 +830,9 @@ class MirageEnvironment(BaseEnvironment):
         assert self._client is not None, "the environment is not started"
         oracle = ORACLE.fullmatch(command)
         if oracle:
-            done = await self.exec(
-                self._host(oracle[1]).read_text(), cwd, env, timeout_sec)
+            async with self.agent_run():
+                done = await self.exec(
+                    self._host(oracle[1]).read_text(), cwd, env, timeout_sec)
             log = self._host(oracle[2], write=True)
             log.parent.mkdir(parents=True, exist_ok=True)
             log.write_text(done.stdout + done.stderr)
@@ -777,6 +864,41 @@ class MirageEnvironment(BaseEnvironment):
         return ExecResult(stdout=result["stdout"],
                           stderr=result["stderr"],
                           return_code=result["exit_code"])
+
+    @contextlib.asynccontextmanager
+    async def agent_run(self):
+        """The block an agent runs in. The workspace's history records
+        every command run in it, whoever ran it: the agent's (a host
+        agent's shell tool, an oracle's solution) and the commands Harbor
+        runs around the agent (``chmod`` of the solution, ``test -d`` of
+        the artifacts) and the workspace's own ``run`` lines. The commands
+        run in such a block are the agent's (``agent_history``): a host
+        agent's run (agents.py) and an oracle's solution (``exec``) are
+        blocks; an agent that runs its commands through ``exec`` itself
+        (Harbor's Terminus) marks none, so none of its commands count. A
+        solution runs as typed, each of its lines a command, after the
+        exports ``exec`` puts ahead of it, which are the block's first
+        command. A block is a span of the host's clock, matched against the
+        history's stamps, the daemon's: one clock on one host, and a
+        ``daemon_url`` daemon's must agree with the host's."""
+        span: list[float | None] = [time.time() * 1000, None]
+        self._agent_spans.append(span)
+        try:
+            yield
+        finally:
+            span[1] = time.time() * 1000
+
+    async def agent_history(self) -> list[dict]:
+        """The commands an agent ran, from the workspace's history
+        (``GET /history``: every session's, each line a ``command`` entry
+        with its ``id`` and a ``result`` entry naming it as ``parent``,
+        with its exit code, stdout and stderr): those run in an
+        ``agent_run`` block, with their results, in the history's order."""
+        assert self._client is not None, "the environment is not started"
+        reply = await self._client.get(
+            f"/v1/workspaces/{self._workspace_id}/history")
+        reply.raise_for_status()
+        return agent_commands(reply.json(), self._agent_spans)
 
     def _refresh_state(self,
                        *,
@@ -851,7 +973,8 @@ class MirageEnvironment(BaseEnvironment):
             },
             "clis": {
                 "grade": {
-                    "cli": "grade"
+                    "cli": "grade",
+                    "machine": "in_process"
                 }
             },
             "max_memory": 2 * size + 32 * 1024 * 1024,
@@ -873,7 +996,7 @@ class MirageEnvironment(BaseEnvironment):
                                       "cwd": "/"
                                   }), timeout_sec)
         finally:
-            await self._client.post(f"/v1/workspaces/{workspace}/close")
+            await self._client.delete(f"/v1/workspaces/{workspace}")
         if reply.status_code >= 300:
             raise RuntimeError(f"the grade workspace's shell failed "
                                f"({reply.status_code}): {reply.text}")

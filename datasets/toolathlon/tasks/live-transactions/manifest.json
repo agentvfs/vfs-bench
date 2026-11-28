@@ -1,0 +1,283 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/0726a998a5ebf283e2598adfeda5ffef6e06451a0dd44771f565b441798199ed",
+      "role": "service_config",
+      "sha256": "0726a998a5ebf283e2598adfeda5ffef6e06451a0dd44771f565b441798199ed",
+      "size": 1525,
+      "target": "shared/bigquery.json"
+    },
+    {
+      "path": "assets/sha256/26e0bcc6686a72d7b722f4542712c060e1883c030a2bb2fde72a7a4db2541c96",
+      "role": "service_config",
+      "sha256": "26e0bcc6686a72d7b722f4542712c060e1883c030a2bb2fde72a7a4db2541c96",
+      "size": 128,
+      "target": "shared/logging.json"
+    },
+    {
+      "path": "assets/sha256/93935b4518b7a5395b99d77fa87ba9d60b9f30e470983636620133d265041400",
+      "role": "service_config",
+      "sha256": "93935b4518b7a5395b99d77fa87ba9d60b9f30e470983636620133d265041400",
+      "size": 124,
+      "target": "shared/storage.json"
+    },
+    {
+      "path": "assets/sha256/ba9a3bd47682f4ef68971ddb4657e78f77a164bde975fe15ab8201f1dfeb4909",
+      "role": "seed_manifest",
+      "sha256": "ba9a3bd47682f4ef68971ddb4657e78f77a164bde975fe15ab8201f1dfeb4909",
+      "size": 306,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/0f6fad2faec8803408ec07d351129bee9b365fd184286c09ca553433a2ee9d76",
+      "role": "parity_test",
+      "sha256": "0f6fad2faec8803408ec07d351129bee9b365fd184286c09ca553433a2ee9d76",
+      "size": 2272,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/1cd21b5a81984ce6c173ed814d4456736160917393c48978c74da7dd64fa985b",
+      "role": "workspace_config",
+      "sha256": "1cd21b5a81984ce6c173ed814d4456736160917393c48978c74da7dd64fa985b",
+      "size": 382,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "live-transactions",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/live-transactions/shared/task.md",
+      "role": "instruction",
+      "sha256": "0977a113863a4a6030b03b9c70b72607cf3cbad95f85b8214e394b273e779424",
+      "size": 1116,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/docs/task_cn.md",
+      "role": "upstream_source",
+      "sha256": "ceaf37742e4798315085ec1f5aa45b70f7bf0aea1fe50b7ea96015b8b369ef59",
+      "size": 806,
+      "target": "upstream/docs/task_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/docs/task_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "96c3a05191cba96908be33176b37a718076022e1be2b4673f6c2474d20940908",
+      "size": 26595,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/groundtruth_workspace/T8492XJ3_investigation_report.json",
+      "role": "verifier_input",
+      "sha256": "514f65ec53ab89ade6a3fad487695ec6de4f399a1c6c6bb8507bd0c3aab4181b",
+      "size": 9557,
+      "target": "upstream/groundtruth_workspace/T8492XJ3_investigation_report.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/groundtruth_workspace/T8492XJ3_investigation_report.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/groundtruth_workspace/bucket_name.txt",
+      "role": "verifier_input",
+      "sha256": "c5ba431fdd11f818be7780a8b258895eda2a4d7900b1332c109b2b56f5c0b5a7",
+      "size": 45,
+      "target": "upstream/groundtruth_workspace/bucket_name.txt",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/groundtruth_workspace/bucket_name.txt"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/groundtruth_workspace/log_bucket_name.txt",
+      "role": "verifier_input",
+      "sha256": "c778d550665cc27f7eff4a2005aa2caa3748701a911573de9af271ae7093531d",
+      "size": 29,
+      "target": "upstream/groundtruth_workspace/log_bucket_name.txt",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/groundtruth_workspace/log_bucket_name.txt"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/preprocess/construct_data.py",
+      "role": "preprocessor_source",
+      "sha256": "a303e80d7680d61a74b6b13bf11503d2d5d0a218f79169c469c983446057a32f",
+      "size": 43185,
+      "target": "upstream/preprocess/construct_data.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/preprocess/construct_data.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/preprocess/live_transactions_dataset.json",
+      "role": "preprocessor_source",
+      "sha256": "90ee2eadb36c53c8d8ba1b14e2fcf7251a1c772beb04f220a056aad9300c2c01",
+      "size": 26641640,
+      "target": "upstream/preprocess/live_transactions_dataset.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/preprocess/live_transactions_dataset.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "351b178af821b478516d4ef9fabcafdaf0211f56b9f8059fd31c427a63814b85",
+      "size": 16708,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/preprocess/transactions_analytics/accounts.csv",
+      "role": "preprocessor_source",
+      "sha256": "dff0e4b4d2109f45b752608a7eef2403f149c4e7c6408dc7f067c1297e32d38d",
+      "size": 572612,
+      "target": "upstream/preprocess/transactions_analytics/accounts.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/preprocess/transactions_analytics/accounts.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/preprocess/transactions_analytics/blacklist.csv",
+      "role": "preprocessor_source",
+      "sha256": "cc99047b7cec9b945fcd900f1c2e0521f9863b50407c3b0ac8517759b5b4f4a9",
+      "size": 1479,
+      "target": "upstream/preprocess/transactions_analytics/blacklist.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/preprocess/transactions_analytics/blacklist.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/preprocess/transactions_analytics/cards.csv",
+      "role": "preprocessor_source",
+      "sha256": "557c02d9aa0e70006fd8859889cb9d06646a883929fc2401e8dec59c32dd47bd",
+      "size": 724670,
+      "target": "upstream/preprocess/transactions_analytics/cards.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/preprocess/transactions_analytics/cards.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/preprocess/transactions_analytics/devices.csv",
+      "role": "preprocessor_source",
+      "sha256": "88fd204ef09cd2d08c1d0036c5279c87ddb871e0b56283f81ffb4013d0697c2a",
+      "size": 1252983,
+      "target": "upstream/preprocess/transactions_analytics/devices.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/preprocess/transactions_analytics/devices.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/preprocess/transactions_analytics/fraud_alerts.csv",
+      "role": "preprocessor_source",
+      "sha256": "c9c3e81625083713fa7cbfc176fa4086263df0a1f7c704a330779e4aaf4e20ed",
+      "size": 4535,
+      "target": "upstream/preprocess/transactions_analytics/fraud_alerts.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/preprocess/transactions_analytics/fraud_alerts.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/preprocess/transactions_analytics/live_transactions.csv",
+      "role": "preprocessor_source",
+      "sha256": "6ffd4cbcb4f5a76f8c2dc1274e8d1c8a1034be4770012331ce0e2cb402758d09",
+      "size": 2749758,
+      "target": "upstream/preprocess/transactions_analytics/live_transactions.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/preprocess/transactions_analytics/live_transactions.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/preprocess/transactions_analytics/locations.csv",
+      "role": "preprocessor_source",
+      "sha256": "c29a3ac72ffd7874f87b4be942cfb7ad4c7fb28dfff4151458a29898cbb01e53",
+      "size": 573,
+      "target": "upstream/preprocess/transactions_analytics/locations.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/preprocess/transactions_analytics/locations.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/preprocess/transactions_analytics/merchants.csv",
+      "role": "preprocessor_source",
+      "sha256": "8a03240fbd4cea024cf78927ba99fd67dd28adc8d43f27c529c4d785ebf75f4c",
+      "size": 713045,
+      "target": "upstream/preprocess/transactions_analytics/merchants.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/preprocess/transactions_analytics/merchants.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/preprocess/transactions_analytics/risk_scores.csv",
+      "role": "preprocessor_source",
+      "sha256": "0d56fab458ca889298267af95dca6ec04392fec0a69f99ca261e33e341e72e65",
+      "size": 7655,
+      "target": "upstream/preprocess/transactions_analytics/risk_scores.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/preprocess/transactions_analytics/risk_scores.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/preprocess/transactions_analytics/users.csv",
+      "role": "preprocessor_source",
+      "sha256": "fdb47465c6845fb8da65f2ca77fc5978d1e35527e5fd16490ae3ba486df8c9cd",
+      "size": 779571,
+      "target": "upstream/preprocess/transactions_analytics/users.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/preprocess/transactions_analytics/users.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/task_config.json",
+      "role": "upstream_config",
+      "sha256": "9dac72af921b6fcb329cbba85e220f4142b156652e2c83e0578c2a38b15f4b14",
+      "size": 227,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/live-transactions/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "cd599b2ca579f6205a9acb3d1fda3b69fd4ce056d90d734f8c7a0920578e5102",
+      "size": 734,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/live-transactions/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/live-transactions/README.md",
+      "role": "documentation",
+      "sha256": "9be28362cd502bfcf687e2cba57fb90fa2797a896ab4e4bc44b892ab5d16e6cf",
+      "size": 2661,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/live-transactions/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/live-transactions/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "0e1be0082a52be4e39649527c9fe0a51503f4259ad682da3cfcdda00cc796657",
+      "size": 11196,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/live-transactions/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/live-transactions",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/live-transactions",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "google-cloud",
+      "filesystem"
+    ]
+  }
+}

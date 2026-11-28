@@ -1,0 +1,193 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/bb770d780d319f5175f6a123292bdfd7ccdac26ab64f3dc44ad528d37caf3f3f",
+      "role": "parity_test",
+      "sha256": "bb770d780d319f5175f6a123292bdfd7ccdac26ab64f3dc44ad528d37caf3f3f",
+      "size": 562,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/08e82b4f5420063f08192be0a234917f7c26450fb2c836859b7661ff3afa9189",
+      "role": "workspace_config",
+      "sha256": "08e82b4f5420063f08192be0a234917f7c26450fb2c836859b7661ff3afa9189",
+      "size": 745,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "excel-data-transformation",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/excel-data-transformation/RESTRUCTURE_SUMMARY.md",
+      "role": "upstream_source",
+      "sha256": "8df9021a7433d699ad95a70c52178438072e35cb57fef6d04950dd71883e1e7e",
+      "size": 3994,
+      "target": "upstream/RESTRUCTURE_SUMMARY.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-data-transformation/RESTRUCTURE_SUMMARY.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/excel-data-transformation/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-data-transformation/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/excel-data-transformation/shared/task.md",
+      "role": "instruction",
+      "sha256": "5cb5ead96d1560c54fa15b50903096d99e3c40b2c1685d2d99a3b4a529d77d43",
+      "size": 590,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-data-transformation/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/excel-data-transformation/evaluation/README.md",
+      "role": "verifier_source",
+      "sha256": "b2fdd3ce24d9d07d9a72c5efed22bba4c53277b943c3888619d298b78ef9982e",
+      "size": 3337,
+      "target": "upstream/evaluation/README.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-data-transformation/evaluation/README.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/excel-data-transformation/evaluation/check_local_improved.py",
+      "role": "verifier_source",
+      "sha256": "1ffefb745180924570d8b392213e11a8179a8d9fd1a52e98107c1deab62704bf",
+      "size": 8889,
+      "target": "upstream/evaluation/check_local_improved.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-data-transformation/evaluation/check_local_improved.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/excel-data-transformation/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "575a77c1b8225a98f4735bb7e7adfedfd84bba45565d7ffd180c6c99c7dcebb5",
+      "size": 1513,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-data-transformation/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/excel-data-transformation/groundtruth_workspace/Processed.xlsx",
+      "role": "verifier_input",
+      "sha256": "353a26c23340e694928f3c38ae033d8ff4d54ee41fc906ea7a8938cc4ed3d506",
+      "size": 18048,
+      "target": "upstream/groundtruth_workspace/Processed.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-data-transformation/groundtruth_workspace/Processed.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/excel-data-transformation/initial_workspace/Format_Example.xlsx",
+      "role": "initial_workspace",
+      "sha256": "a419bcc43fd3ebc0c5596c293dad07ad11bec2ee58b62224e952a8fe2de4519b",
+      "size": 9259,
+      "target": "upstream/initial_workspace/Format_Example.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-data-transformation/initial_workspace/Format_Example.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/excel-data-transformation/initial_workspace/Household_Appliances.xlsx",
+      "role": "initial_workspace",
+      "sha256": "0db0a07d8b32c96b42f9441f78acf27333f4d719fc8d488c08c316a51e92defe",
+      "size": 21674,
+      "target": "upstream/initial_workspace/Household_Appliances.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-data-transformation/initial_workspace/Household_Appliances.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/excel-data-transformation/task_config.json",
+      "role": "upstream_config",
+      "sha256": "158206408da1b8bfac9fff9a50e906a78461485abb6e26e5e3edf5163182d7ca",
+      "size": 377,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-data-transformation/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/excel-data-transformation/unit_test/perfect_workspace/Processed.xlsx",
+      "role": "verifier_source",
+      "sha256": "30adca892f8965d7ef36b5eb4262bb9a2290912fa735ffcaa014ae99089ab259",
+      "size": 18089,
+      "target": "upstream/unit_test/perfect_workspace/Processed.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-data-transformation/unit_test/perfect_workspace/Processed.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/excel-data-transformation/unit_test/run_tests.py",
+      "role": "verifier_source",
+      "sha256": "7e17ce0241945bef8ef553c87b3f2db2c994db4a464dee767d5fb765fe50b6e4",
+      "size": 5787,
+      "target": "upstream/unit_test/run_tests.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-data-transformation/unit_test/run_tests.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/excel-data-transformation/unit_test/test_components.py",
+      "role": "verifier_source",
+      "sha256": "2120c7e62040cc70cae11dfe92dd22dc0b5d832eca397a9845e8ac6162cd05a9",
+      "size": 11833,
+      "target": "upstream/unit_test/test_components.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-data-transformation/unit_test/test_components.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/excel-data-transformation/unit_test/test_end_to_end.py",
+      "role": "verifier_source",
+      "sha256": "a72875eeac1bcef9999140e81bb12f9c35ac2fe03aee43766ba899bb002ed4b2",
+      "size": 2791,
+      "target": "upstream/unit_test/test_end_to_end.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/excel-data-transformation/unit_test/test_end_to_end.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/excel-data-transformation/README.md",
+      "role": "documentation",
+      "sha256": "f30e33769edb22f6432a6a0b0fda695dfdeeb684b35eae03c05762f8b2dbcab6",
+      "size": 892,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/excel-data-transformation/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/excel-data-transformation/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "d0cfb79e89765d2eaeea7b1a01d67822dfbdd906341eb80750ad3ccc26495627",
+      "size": 5358,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/excel-data-transformation/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/excel-data-transformation",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/excel-data-transformation",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "python_execute",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "excel",
+      "filesystem",
+      "terminal"
+    ]
+  }
+}

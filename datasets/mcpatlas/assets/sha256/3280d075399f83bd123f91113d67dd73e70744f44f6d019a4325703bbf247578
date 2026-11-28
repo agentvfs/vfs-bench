@@ -1,0 +1,103 @@
+{
+  "note": "Both arms read one tree at one path -- the MCP arm's servers read the image's own /data in the run's container, and the mirage /data mount is a copy of it taken out of the same image -- and one GitHub, live, on one token. The repositories under repos/ are the clones upstream's image makes, at upstream's commits.",
+  "cases": [
+    {
+      "name": "git_log",
+      "why": "the local clone has the same history on both arms, the last 2024 commit at its head",
+      "mcp": {
+        "server": "git",
+        "tool": "git_log",
+        "args": {
+          "repo_path": "/data/repos/storyteller",
+          "max_count": 3
+        },
+        "pipe": "sed -n \"s/^Commit: '\\(.*\\)'$/\\1/p\""
+      },
+      "mirage": {
+        "command": "git -C /data/repos/storyteller log -n 3 --format=%H"
+      }
+    },
+    {
+      "name": "git_status",
+      "why": "both arms find the clone detached at upstream's commit",
+      "mcp": {
+        "server": "git",
+        "tool": "git_status",
+        "args": {
+          "repo_path": "/data/repos/storyteller"
+        },
+        "pipe": "grep -o 'HEAD detached at [0-9a-f]*'"
+      },
+      "mirage": {
+        "command": "git -C /data/repos/storyteller status",
+        "pipe": "grep -o 'HEAD detached at [0-9a-f]*'"
+      }
+    },
+    {
+      "name": "get_commit",
+      "why": "GitHub names the same files for the merge on both arms",
+      "mcp": {
+        "server": "github",
+        "tool": "get_commit",
+        "args": {
+          "owner": "lgrammel",
+          "repo": "storyteller",
+          "sha": "0865ef487b8100848fcab25af80e60bffb4f42da"
+        },
+        "pipe": "sed -n 's/^- \\[.\\] \\(.*\\) (+[0-9]* -[0-9]*)$/\\1/p'"
+      },
+      "mirage": {
+        "command": "gh api repos/lgrammel/storyteller/commits/0865ef487b8100848fcab25af80e60bffb4f42da --jq '.files[].filename'"
+      }
+    },
+    {
+      "name": "list_directory",
+      "why": "both arms see the same checkout",
+      "mcp": {
+        "server": "desktop-commander",
+        "tool": "list_directory",
+        "args": {
+          "path": "/data/repos/storyteller"
+        },
+        "pipe": "sed -n 's/^\\[FILE\\] //p; s/^\\[DIR\\] //p' | sort"
+      },
+      "mirage": {
+        "command": "ls -a /data/repos/storyteller",
+        "pipe": "grep -vx '\\.\\.\\?' | sort"
+      }
+    },
+    {
+      "name": "read_file",
+      "why": "the same README, read through either arm",
+      "mcp": {
+        "server": "desktop-commander",
+        "tool": "read_file",
+        "args": {
+          "path": "/data/repos/storyteller/README.md",
+          "length": 3
+        },
+        "pipe": "tail -n +3"
+      },
+      "mirage": {
+        "command": "head -3 /data/repos/storyteller/README.md"
+      }
+    },
+    {
+      "name": "search_files",
+      "why": "a name search over the tree finds the same paths",
+      "mcp": {
+        "server": "desktop-commander",
+        "tool": "search_files",
+        "args": {
+          "path": "/data/repos/storyteller/src",
+          "pattern": "storyteller"
+        },
+        "pipe": "sort"
+      },
+      "mirage": {
+        "command": "find /data/repos/storyteller/src -iname '*storyteller*'",
+        "pipe": "sort"
+      }
+    }
+  ]
+}

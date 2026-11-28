@@ -1,0 +1,40 @@
+mode: EXEC
+
+# The character type upstream's servers run under: started with no locale,
+# their Python coerces it to C.UTF-8 (PEP 538) and what they run inherits
+# it, so grep, sed and expr match whole characters there as here.
+env:
+  LC_CTYPE: C.UTF-8
+
+# pyodide, as every other task here: it is real CPython, so `csv` and the
+# rest of the standard library are present. The MCP arm reaches Python
+# through the `mcp-code-executor` server instead, on a uv venv carrying
+# pandas, numpy and scipy -- so neither arm is short of an interpreter, and
+# what differs is only how it is reached.
+runtimes:
+  - pyodide
+  - workspace
+
+mounts:
+  # A shell without scratch space is not a shell: agents write a heredoc to
+  # /tmp and read it back a line later.
+  /tmp:
+    vfs: ram
+
+  # The fixture. Named /data because that is where Atlas puts it, so the two
+  # arms are told the same path as well as given the same bytes.
+  /data:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}
+
+# Every command runs under `whole_mount.py`, which refuses a walk of a
+# whole mount and a `cat` of a whole table, asked before the line runs, to
+# refuse it whole, and before each command.
+profiles:
+  default:
+    policy:
+      pre_execute:
+        - {script: ../../whole_mount.py, runtime: monty}
+      pre_command:
+        - {script: ../../whole_mount.py, runtime: monty}

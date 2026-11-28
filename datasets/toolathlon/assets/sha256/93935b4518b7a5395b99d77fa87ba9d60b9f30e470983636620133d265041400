@@ -1,0 +1,8 @@
+{
+  "project": "mcp-bench0606",
+  "buckets": [
+    {
+      "name_file": "groundtruth_workspace/bucket_name.txt"
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/34f31bd829e2bdbab09629e76a24272651a4b2c732413266dc8b4931736b4804",
+      "role": "workspace",
+      "sha256": "34f31bd829e2bdbab09629e76a24272651a4b2c732413266dc8b4931736b4804",
+      "size": 1279,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/1243bea5a1046ab137dee7333cdb7b4b7b425e0b6d76e9a872834ee05243eb61",
+      "role": "workspace_config",
+      "sha256": "1243bea5a1046ab137dee7333cdb7b4b7b425e0b6d76e9a872834ee05243eb61",
+      "size": 3749,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/757226aa5d7f5f5633e708fd68cc8c3f1bff35ffaa03590687cf4e914db6ec2f",
+      "role": "parity",
+      "sha256": "757226aa5d7f5f5633e708fd68cc8c3f1bff35ffaa03590687cf4e914db6ec2f",
+      "size": 4462,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/92a04629d812da39ee3d3a710361cc53b825a4846b937936d567585a7807b600",
+      "role": "verifier",
+      "sha256": "92a04629d812da39ee3d3a710361cc53b825a4846b937936d567585a7807b600",
+      "size": 436,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "wikipedia_search_wikipedia",
+    "airtable_get_record",
+    "mongodb_list-databases",
+    "mongodb_collection-schema",
+    "mongodb_aggregate",
+    "mongodb_list-collections",
+    "context7_resolve-library-id",
+    "context7_get-library-docs",
+    "git_git_status",
+    "git_git_diff_unstaged",
+    "git_git_diff_staged",
+    "git_git_diff",
+    "git_git_log",
+    "git_git_show"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "political-summit-top-post",
+  "schema_version": 1,
+  "servers": [
+    "wikipedia",
+    "airtable",
+    "mongodb",
+    "context7",
+    "git"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/political-summit-top-post/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "969565072add5c43c256f35a9ba6b5b8292474253ddc3d7c80786c959f01cb6a",
+      "size": 3350,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/political-summit-top-post/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "688fb11183792b921381bd10",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/political-summit-top-post",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+ "note": "Both arms read one tree at one path -- the MCP arm's servers read the image's own /data in the run's container, and the mirage /data mount is a copy of it taken out of the same image. Notion is the fake both arms read, seeded per run from Atlas's export. Slack is the fake both arms read, seeded per run from Atlas's export.",
+ "cases": [
+  {
+   "name": "read_graph",
+   "why": "the memory CLI is the MCP arm's memory server over the same graph file",
+   "mcp": {
+    "server": "memory",
+    "tool": "read_graph",
+    "args": {},
+    "pipe": "jq -r '.entities[].name' | sort"
+   },
+   "mirage": {
+    "command": "memory read-graph '{}'",
+    "pipe": "jq -r '.entities[].name' | sort"
+   }
+  },
+  {
+   "name": "search_nodes",
+   "why": "the memory CLI is the MCP arm's memory server over the same graph file",
+   "mcp": {
+    "server": "memory",
+    "tool": "search_nodes",
+    "args": {
+     "query": "Alice"
+    }
+   },
+   "mirage": {
+    "command": "memory search-nodes '{\"query\":\"Alice\"}'"
+   }
+  },
+  {
+   "name": "channels_list",
+   "why": "both arms list the same six channels of the same workspace",
+   "mcp": {
+    "server": "slack",
+    "tool": "channels_list",
+    "args": {
+     "channel_types": "public_channel,private_channel"
+    },
+    "pipe": "sed 1d | cut -d, -f1 | sort"
+   },
+   "mirage": {
+    "command": "slack channels-list '{\"channel_types\": \"public_channel,private_channel\"}'",
+    "pipe": "sed 1d | cut -d, -f1 | sort"
+   }
+  },
+  {
+   "name": "users",
+   "why": "the same members, whose emails the answer reads",
+   "mcp": {
+    "server": "notion",
+    "tool": "API-get-users",
+    "args": {},
+    "pipe": "jq -r '.results[] | select(.type == \"person\") | .person.email' | sort"
+   },
+   "mirage": {
+    "command": "notion get-users '{}'",
+    "pipe": "jq -r '.results[] | select(.type == \"person\") | .person.email' | sort"
+   }
+  }
+ ]
+}

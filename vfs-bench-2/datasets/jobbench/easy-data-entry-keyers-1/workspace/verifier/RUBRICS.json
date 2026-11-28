@@ -1,0 +1,111 @@
+{
+  "rubrics": [
+    {
+      "rubric": "Does the capture include exactly the eight real records in packet order while excluding non-record pages?",
+      "weight": 10,
+      "criterion": [
+        "The capture contains 8 rows total.",
+        "Rows 1-2 come from `charlottesville_sample_1_regular_bill.pdf`, rows 3-4 come from `charlottesville_sample_2_dunning_bill.pdf`, rows 5-7 come from `charlottesville_sample_3_regular_bill_data.pdf`, and row 8 comes from `charlottesville_sample_4_dunning_bill_data.pdf`.",
+        "The response does not create rows for `charlottesville_sample_1_regular_bill.pdf` pages 2 and 4 or `charlottesville_sample_2_dunning_bill.pdf` pages 2 and 4.",
+        "The response does not create rows for `charlottesville_sample_3_regular_bill_data.pdf` page 10 or `charlottesville_sample_4_dunning_bill_data.pdf` page 2."
+      ]
+    },
+    {
+      "rubric": "Are `source_file`, `record_type`, `record_sequence`, and `page_reference` assigned correctly for each captured record?",
+      "weight": 8,
+      "criterion": [
+        "The two rows from `charlottesville_sample_1_regular_bill.pdf` use `record_type` `regular_bill_rendered`, `record_sequence` values `1` and `2`, and page references `1` and `3`.",
+        "The two rows from `charlottesville_sample_2_dunning_bill.pdf` use `record_type` `dunning_notice_rendered`, `record_sequence` values `1` and `2`, and page references `1` and `3`.",
+        "The three rows from `charlottesville_sample_3_regular_bill_data.pdf` use `record_type` `regular_bill_data`, `record_sequence` values `1`, `2`, and `3`, and page references `1-3`, `4-6`, and `7-9`.",
+        "The row from `charlottesville_sample_4_dunning_bill_data.pdf` uses `record_type` `dunning_notice_data`, `record_sequence` `1`, and page reference `1`."
+      ]
+    },
+    {
+      "rubric": "Does the second rendered regular-bill row capture the gas-and-water HIGH ST E bill correctly?",
+      "weight": 10,
+      "criterion": [
+        "The row is tied to `charlottesville_sample_1_regular_bill.pdf` page 3 and captures account `1001556`, bill date `12/08/2021`, billing period `11/02/2021` to `12/01/2021`, and service address `HIGH ST E`.",
+        "The row captures `previous_balance` `306.50`, `payment_date` `12/03/2021`, `payment_amount` `306.50`, and `beginning_balance` `0.00`.",
+        "The row captures `gas_charge` `1,232.95`, `water_charge` `33.53`, `sewer_charge` `47.80`, `utility_tax_city` `98.76`, and `current_charges` `1,413.04`.",
+        "The row captures `total_balance_due` `1,413.04`, `pay_this_amount` `1,413.04`, `due_date` `01/03/2022`, and leaves `past_due_amount` blank."
+      ]
+    },
+    {
+      "rubric": "Does the first rendered dunning-notice row capture the E MAIN ST notice correctly?",
+      "weight": 9,
+      "criterion": [
+        "The row is tied to `charlottesville_sample_2_dunning_bill.pdf` page 1 and captures account `1000017`, notice date `12/01/2021`, and service address `E MAIN ST`.",
+        "The row captures `past_due_amount` `176.76` and `total_balance_due` `373.10`.",
+        "The row captures `cutoff_or_action_date` `12/11/2021`.",
+        "The row captures `micr_or_ocr_line` `1000000010000170000000000176760` and leaves regular-bill charge fields blank."
+      ]
+    },
+    {
+      "rubric": "Does the second rendered dunning-notice row capture the GARRETT ST notice correctly?",
+      "weight": 9,
+      "criterion": [
+        "The row is tied to `charlottesville_sample_2_dunning_bill.pdf` page 3 and captures account `1110267`, notice date `12/01/2021`, and service address `GARRETT ST`.",
+        "The row captures `past_due_amount` `113.63` and `total_balance_due` `3,781.43`.",
+        "The row captures `cutoff_or_action_date` `12/11/2021`.",
+        "The row captures `micr_or_ocr_line` `1000000011102670000000000113636` and leaves regular-bill charge fields blank."
+      ]
+    },
+    {
+      "rubric": "Does the second backend regular-bill data row capture the 1000438 record correctly?",
+      "weight": 10,
+      "criterion": [
+        "The row is tied to `charlottesville_sample_3_regular_bill_data.pdf` pages `4-6` and captures account `1000438`, bill date `11/01/2021`, billing period `09/23/2021` to `10/25/2021`, and service address `605 E MAIN ST`.",
+        "The row captures `previous_balance` `95.07`, `payment_date` `10/25/21`, `payment_amount` `95.07`, and `beginning_balance` `0.00`.",
+        "The row captures `gas_charge` `32.80`, `water_charge` `26.31`, `sewer_charge` `36.90`, `utility_tax_city` `4.64`, and `current_charges` `100.65`.",
+        "The row captures `total_balance_due` `100.65`, `pay_this_amount` `100.65`, `due_date` `11/29/2021`, and leaves `past_due_amount` blank."
+      ]
+    },
+    {
+      "rubric": "Are account numbers and MICR/OCR lines internally consistent wherever a payment stub or print-file line is present?",
+      "weight": 8,
+      "criterion": [
+        "The first rendered regular-bill row pairs account `1001325` with MICR line `1000000010013250000000002476698`.",
+        "The second rendered regular-bill row pairs account `1001556` with MICR line `1000000010015560000000001413048`.",
+        "The first rendered dunning-notice row and the backend dunning row both use MICR line `1000000010000170000000000176760` with account `1000017`.",
+        "The second rendered dunning-notice row pairs account `1110267` with MICR line `1000000011102670000000000113636`."
+      ]
+    },
+    {
+      "rubric": "Are `review_flag` values limited to actual ambiguity or cross-file inconsistency?",
+      "weight": 8,
+      "criterion": [
+        "The rendered dunning-notice row for account `1000017` is flagged `yes` because the rendered notice address `E MAIN ST` conflicts with backend `605 E MAIN ST`.",
+        "At least one rendered row with visibly truncated or obscured header information is flagged `yes`.",
+        "Clear backend rows are not all marked `yes` by default."
+      ]
+    },
+    {
+      "rubric": "Does the QC log correctly describe the sample3 record segmentation and excluded final page?",
+      "weight": 7,
+      "criterion": [
+        "The QC log states that `charlottesville_sample_3_regular_bill_data.pdf` contains three keyed backend bill records.",
+        "The QC log identifies the record page spans as `1-3`, `4-6`, and `7-9`.",
+        "The QC log notes that page 10 is blank or otherwise not a new record."
+      ]
+    },
+    {
+      "rubric": "Does the QC log document the rendered/backend match for the first dunning notice and the address discrepancy?",
+      "weight": 9,
+      "criterion": [
+        "The QC log identifies `charlottesville_sample_2_dunning_bill.pdf` page 1 and `charlottesville_sample_4_dunning_bill_data.pdf` page 1 as the matching rendered and backend records.",
+        "The QC log cites their shared notice date `12/01/2021` and past-due amount `176.76`.",
+        "The QC log cites their shared total balance due `373.10` or shared MICR line `1000000010000170000000000176760`.",
+        "The QC log explicitly notes the service-address discrepancy between rendered `E MAIN ST` and backend `605 E MAIN ST`."
+      ]
+    },
+    {
+      "rubric": "Does the QC log avoid inventing unsupported rendered-to-backend matches for the regular-bill samples?",
+      "weight": 8,
+      "criterion": [
+        "The QC log states that the rendered regular bills are dated `12/08/2021` and use service address `HIGH ST E`.",
+        "The QC log states that the backend regular-bill data records are three separate `605 E MAIN ST` records dated `11/01/2021`, `11/01/2021`, and `11/22/2021`.",
+        "The QC log does not claim a one-to-one rendered-to-backend match for the regular-bill samples."
+      ]
+    }
+  ]
+}

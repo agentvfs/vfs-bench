@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "dataset": "complexmcp",
+  "id": "liquidate-short-news-flight",
+  "seed": 114514,
+  "system_time": "2026-04-01T09:28:14Z",
+  "python_runtime": "monty",
+  "cli_format": "mirage-mcp",
+  "apps": [
+    "LightSystem",
+    "LightTalk",
+    "LightFlight",
+    "LightStock",
+    "LightNews"
+  ],
+  "assets": [
+    {
+      "target": "workspace/tools.json",
+      "role": "tools",
+      "path": "assets/sha256/45ceaed8c7b8997216ef67f3fb6d0657d54ac379a09f96f1e1d7b9c8359d28f4",
+      "sha256": "45ceaed8c7b8997216ef67f3fb6d0657d54ac379a09f96f1e1d7b9c8359d28f4",
+      "size": 158232
+    },
+    {
+      "target": "workspace/instructions.md",
+      "role": "instructions",
+      "path": "assets/sha256/8d0beff99539cc887da3ae6e28bd2d6a67929ad4becf3fe35ba5bc429b72068a",
+      "sha256": "8d0beff99539cc887da3ae6e28bd2d6a67929ad4becf3fe35ba5bc429b72068a",
+      "size": 65743
+    },
+    {
+      "target": "verifier/expected.json",
+      "role": "expected",
+      "path": "assets/sha256/3fec9b2d21eaffa06e541bd9dc5ed2d9b033f8e4c338e62d0b49676cef41ecb8",
+      "sha256": "3fec9b2d21eaffa06e541bd9dc5ed2d9b033f8e4c338e62d0b49676cef41ecb8",
+      "size": 65512
+    },
+    {
+      "target": "software/LightFlight/corpus/airports.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/3e5d7c80dcc6f69c3020549ab1c8e207fde70eff2f03c2890a9161fa6bbf5f75",
+      "sha256": "3e5d7c80dcc6f69c3020549ab1c8e207fde70eff2f03c2890a9161fa6bbf5f75",
+      "size": 15084
+    },
+    {
+      "target": "software/LightNews/corpus/events-happenings.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/a614594ab1cf31c944feae64a74d3917c77d8fb92ea521fc1bf01c22ee260b5a",
+      "sha256": "a614594ab1cf31c944feae64a74d3917c77d8fb92ea521fc1bf01c22ee260b5a",
+      "size": 56338
+    },
+    {
+      "target": "software/LightNews/corpus/local-business.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/dcc7a95c773d3577e2488daa9fe53cc0019d95f73735cd393b0b9133c8bef731",
+      "sha256": "dcc7a95c773d3577e2488daa9fe53cc0019d95f73735cd393b0b9133c8bef731",
+      "size": 33150
+    },
+    {
+      "target": "software/LightNews/corpus/public-safety.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/5a0b7c40271a76ddb69dbe6bc8bb26afc040e7300242109a67a913d3a3c837af",
+      "sha256": "5a0b7c40271a76ddb69dbe6bc8bb26afc040e7300242109a67a913d3a3c837af",
+      "size": 34936
+    },
+    {
+      "target": "software/LightNews/corpus/school-kids.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/9025aa3c4a4521dbeb89d14f0536acf9f9a1a36372d4a469ac2dbcd782fe1dd3",
+      "sha256": "9025aa3c4a4521dbeb89d14f0536acf9f9a1a36372d4a469ac2dbcd782fe1dd3",
+      "size": 31791
+    },
+    {
+      "target": "software/LightNews/corpus/sports.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/feeb39f60395892ebab2e45886a057caae83423451f2758ef70df03959f513e2",
+      "sha256": "feeb39f60395892ebab2e45886a057caae83423451f2758ef70df03959f513e2",
+      "size": 36970
+    },
+    {
+      "target": "software/LightNews/corpus/town-updates.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/d16257df0776884133289376611190a7e3234253013c1cd8f75b013633b7ee5b",
+      "sha256": "d16257df0776884133289376611190a7e3234253013c1cd8f75b013633b7ee5b",
+      "size": 21394
+    },
+    {
+      "target": "software/LightStock/corpus/stock.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/5694d03c9291ac8a3da5f6752fff61d3687c9488acd86fc2fd9a5b07d6dc6e25",
+      "sha256": "5694d03c9291ac8a3da5f6752fff61d3687c9488acd86fc2fd9a5b07d6dc6e25",
+      "size": 22678
+    },
+    {
+      "target": "software/LightTalk/corpus/contact.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/099ea613408c2ac6ce9c75f9723812dab05356acaad8abe728a5ab00c0bd2863",
+      "sha256": "099ea613408c2ac6ce9c75f9723812dab05356acaad8abe728a5ab00c0bd2863",
+      "size": 6785
+    },
+    {
+      "target": "software/LightTalk/corpus/message.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/f5291cf497927d67e5e2721437c09b5711f0453bf09bc08736fa7e8bc13d0272",
+      "sha256": "f5291cf497927d67e5e2721437c09b5711f0453bf09bc08736fa7e8bc13d0272",
+      "size": 18514
+    },
+    {
+      "target": "software/LightTalk/corpus/moment.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/7e2fc988d4af1ef1a78844ef873cd6fcfdf7a28e29148145e7f16081ae2e517d",
+      "sha256": "7e2fc988d4af1ef1a78844ef873cd6fcfdf7a28e29148145e7f16081ae2e517d",
+      "size": 39181
+    }
+  ],
+  "upstream_revision": "7c01f92e38be6e0c193d5c6c9a55baa92fb628cb",
+  "row_sha256": "2ce65f8213ac630c4af712fe9d47fcb530abcb6d975366c61aa9d1188a41362b"
+}

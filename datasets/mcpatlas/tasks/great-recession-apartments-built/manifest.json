@@ -1,0 +1,113 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/1871e854839543909dfca81ec2201d129749634fe177c054d166d5b9eca99fc2",
+      "role": "workspace",
+      "sha256": "1871e854839543909dfca81ec2201d129749634fe177c054d166d5b9eca99fc2",
+      "size": 2020,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/f0f3944cd9463d8f1d87e578806f3decea16f6981f111f7f5eb51f7ed3610b36",
+      "role": "workspace_config",
+      "sha256": "f0f3944cd9463d8f1d87e578806f3decea16f6981f111f7f5eb51f7ed3610b36",
+      "size": 2751,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/83da76afa91e901d44c01ffbc35f870b637e92417099fdb64f252468342913c8",
+      "role": "parity",
+      "sha256": "83da76afa91e901d44c01ffbc35f870b637e92417099fdb64f252468342913c8",
+      "size": 2343,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/98b0aae17fb6596df511321f6a1781c7d1b3b891baa16a703a6f8d1037e7cce8",
+      "role": "verifier",
+      "sha256": "98b0aae17fb6596df511321f6a1781c7d1b3b891baa16a703a6f8d1037e7cce8",
+      "size": 501,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "notion_API-post-database-query",
+    "notion_API-post-search",
+    "notion_API-get-block-children",
+    "notion_API-retrieve-a-block",
+    "oxylabs_google_search_scraper",
+    "oxylabs_universal_scraper",
+    "mcp-code-executor_execute_code",
+    "cli-mcp-server_run_command",
+    "cli-mcp-server_show_security_rules",
+    "context7_resolve-library-id",
+    "context7_get-library-docs",
+    "e2b-server_run_code",
+    "fetch_fetch",
+    "memory_read_graph"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "great-recession-apartments-built",
+  "schema_version": 1,
+  "servers": [
+    "notion",
+    "oxylabs",
+    "mcp-code-executor",
+    "cli-mcp-server",
+    "context7",
+    "e2b-server",
+    "fetch",
+    "memory"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/great-recession-apartments-built/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "61809e6353e679168c4cb67c55b8ddee257eb0916eba84affac09a860f9f8fa4",
+      "size": 5135,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/great-recession-apartments-built/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689cd6f8522029b7ad7b200a",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/great-recession-apartments-built",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

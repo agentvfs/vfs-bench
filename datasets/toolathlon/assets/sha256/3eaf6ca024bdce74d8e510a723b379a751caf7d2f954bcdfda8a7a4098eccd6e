@@ -1,0 +1,40 @@
+mode: EXEC
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace
+runtimes:
+  - name: pyodide
+    config:
+      lockFileUrl: ${TOOLATHLON_PYTHON}/pyodide-lock.json
+      packageBaseUrl: ${TOOLATHLON_PYTHON}/
+      packages:
+        - openpyxl
+        - xlsxwriter
+        - pypdf2
+        - pymupdf
+        - pandas
+        - numpy
+        - pyarrow
+        - pillow
+        - lxml
+        - python-docx
+        - python-pptx
+        - pytesseract
+        - olefile
+  - workspace
+clis:
+  google-cloud:
+    cli: ../../../../cli/toolathlon/travel-video.mjs:GOOGLE_CLOUD
+    config:
+      apiBase: ${GOOGLE_CLOUD_CLI_URL}
+      timeoutMs: 30000
+mounts:
+  /tmp:
+    vfs: ram
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}

@@ -1,0 +1,85 @@
+{
+  "rubrics": [
+    {
+      "rubric": "Does the advisor memo accurately describe the S&P 500 path across 2022-2024?",
+      "weight": 9,
+      "criterion": [
+        "It states that the S&P 500 began the period near 4796.56 on 2022-01-03 and ended near 5881.63 on 2024-12-31, so it finished above its starting level.",
+        "It identifies the major 2022 drawdown, including either the low near 3577.03 on 2022-10-12 or the year-end level near 3839.50 after an approximately 20 percent 2022 decline.",
+        "It recognizes the strong recovery in 2023 and 2024, with gains of roughly 24.7 percent in 2023 and 24.0 percent in 2024."
+      ]
+    },
+    {
+      "rubric": "Does the memo accurately describe how equity volatility changed over the period?",
+      "weight": 8,
+      "criterion": [
+        "It identifies 2022 as the highest-stress volatility year in the file, with the VIX averaging about 25.64 and frequently running above 20.",
+        "It notes that volatility eased in 2023, including the move from about 22.90 at the start of 2023 to about 12.45 at year-end.",
+        "It recognizes that 2024 was mostly calmer but still had a material stress event, including the spike to about 38.57 on 2024-08-05 before ending the year near 17.35."
+      ]
+    },
+    {
+      "rubric": "Does the memo correctly explain the 2-year Treasury yield reset and why it matters?",
+      "weight": 10,
+      "criterion": [
+        "It states that the 2-year Treasury yield began near 0.78 in early 2022 and ended 2024 near 4.25, showing a large upward reset.",
+        "It notes that the series moved above 4 percent late in 2022 and stayed elevated through most of 2023 and 2024.",
+        "It identifies the peak near 5.19 in October 2023 or otherwise correctly states that the high point occurred in 2023."
+      ]
+    },
+    {
+      "rubric": "Does the memo correctly summarize the change in market-implied inflation expectations?",
+      "weight": 8,
+      "criterion": [
+        "It identifies that the 5-year breakeven inflation series began near 2.95 in early 2022 and peaked near 3.59 in March 2022.",
+        "It notes that the series then moved down materially, ending 2022 near 2.33 and 2023 near 2.12.",
+        "It recognizes that the series ended 2024 around 2.38, meaning inflation expectations normalized relative to the 2022 spike but remained positive."
+      ]
+    },
+    {
+      "rubric": "Does the analysis combine the four series into one coherent planning narrative?",
+      "weight": 8,
+      "criterion": [
+        "It connects the 2022 equity drawdown and elevated VIX to a more stressful planning backdrop than the one visible by the end of 2024.",
+        "It links higher 2-year yields to improved return potential for cash or short-duration holdings.",
+        "It links lower breakeven inflation versus the 2022 peak to a less stressed inflation backdrop than during the inflation shock."
+      ]
+    },
+    {
+      "rubric": "Does the memo translate the market evidence into implications for a household nearing retirement in 2027?",
+      "weight": 10,
+      "criterion": [
+        "It explicitly discusses sequence-of-returns risk or the risk of entering retirement after both a sharp drawdown and a strong rebound.",
+        "It explains why dependable liquidity, reserves, or near-term spending assets matter for a near-retirement household.",
+        "It frames the implications for a moderate long-term allocation rather than giving a generic market recap."
+      ]
+    },
+    {
+      "rubric": "Does the memo give a required overall backdrop label and support it with balanced evidence?",
+      "weight": 7,
+      "criterion": [
+        "It closes with exactly one of the required labels: favorable, neutral, or stressed.",
+        "It cites at least one supportive factor from the files, such as higher equity levels, lower average volatility than 2022, elevated short-term yields, or more normalized inflation expectations.",
+        "It also cites at least one caution, such as sequence risk, the 2024 VIX spike, or the risk of overreacting to the recent equity rally."
+      ]
+    },
+    {
+      "rubric": "Does the response stay retrospective instead of drifting into market forecasting?",
+      "weight": 8,
+      "criterion": [
+        "It bases its reasoning on changes observed during 2022-2024 rather than on directional forecasts for 2025 markets.",
+        "It does not recommend aggressive tactical trades based on an unsupported market call.",
+        "It frames revisit conditions as monitoring triggers rather than as predictions presented as facts."
+      ]
+    },
+    {
+      "rubric": "Does the response include the required memo and recommendation table structure?",
+      "weight": 6,
+      "criterion": [
+        "It includes a distinct advisor memo in prose.",
+        "It includes a distinct recommendation table with exactly three actions.",
+        "The three actions cover equity rebalancing or risk discipline, cash reserves or short-duration fixed income, and inflation-sensitive planning assumptions."
+      ]
+    }
+  ]
+}

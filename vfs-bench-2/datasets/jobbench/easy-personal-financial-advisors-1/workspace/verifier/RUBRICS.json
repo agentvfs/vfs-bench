@@ -1,0 +1,76 @@
+{
+  "rubrics": [
+    {
+      "rubric": "Does the response provide exactly the two required deliverables: an internal memo and a decision table for the January 2024 review cycle?",
+      "weight": 10,
+      "criterion": [
+        "The response includes one internal memo rather than a client-facing letter.",
+        "The response includes one decision table covering the required asset categories.",
+        "The response does not add extra deliverables beyond the memo and the table."
+      ]
+    },
+    {
+      "rubric": "Does the memo correctly describe the early-2020 cash and nominal Treasury baseline?",
+      "weight": 8,
+      "criterion": [
+        "It states or clearly conveys that SOFR was about 1.54% on 2020-01-02.",
+        "It states or clearly conveys that nominal Treasury yields were about 1.56% at 1 year, 1.67% at 5 years, and 1.88% at 10 years on 01/02/2020.",
+        "It describes the early-2020 nominal curve as upward sloping rather than inverted."
+      ]
+    },
+    {
+      "rubric": "Does the memo correctly describe the year-end-2023 cash and nominal Treasury baseline?",
+      "weight": 9,
+      "criterion": [
+        "It states or clearly conveys that SOFR was about 5.38% on 2023-12-29.",
+        "It states or clearly conveys that nominal Treasury yields were about 5.26% at 6 months, 4.79% at 1 year, 4.23% at 2 years, and 3.84% to 3.88% from 5 to 10 years on 12/29/2023.",
+        "It describes the year-end-2023 nominal curve as inverted, with front-end yields above intermediate and long maturities."
+      ]
+    },
+    {
+      "rubric": "Does the memo correctly explain how the cash-versus-extension tradeoff changed between early 2020 and year-end 2023?",
+      "weight": 9,
+      "criterion": [
+        "It notes that on 2020-01-02 extending from cash into 2-year to 10-year nominal Treasuries added about 4 to 34 basis points of yield.",
+        "It notes that on 2023-12-29 cash yielded about 115 to 154 basis points more than 2-year to 10-year nominal Treasuries.",
+        "It uses that contrast to explain that extension improved duration locking in late 2023 but did not improve current yield versus cash."
+      ]
+    },
+    {
+      "rubric": "Does the memo correctly describe the change in TIPS real yields between early 2020 and year-end 2023?",
+      "weight": 9,
+      "criterion": [
+        "It states or clearly conveys that early-2020 TIPS real yields were near zero or negative, including about -0.05% at 5 years and 0.08% at 10 years on 01/02/2020.",
+        "It states or clearly conveys that TIPS real yields were strongly positive by 12/29/2023, at about 1.72% for the 5-year, 7-year, and 10-year maturities.",
+        "It interprets late-2023 TIPS as a materially stronger real-yield entry point than the early-2020 starting point."
+      ]
+    },
+    {
+      "rubric": "Does the memo correctly use market-implied inflation compensation when comparing TIPS with nominal Treasuries?",
+      "weight": 7,
+      "criterion": [
+        "It states or clearly conveys that the 10-year breakeven inflation rate was about 1.80% on 2020-01-02 and about 2.16% on 2023-12-29.",
+        "It explains that a same-maturity nominal Treasury only outperforms TIPS if realized inflation ends up below the breakeven inflation rate.",
+        "It does not confuse breakeven inflation with trailing CPI inflation."
+      ]
+    },
+    {
+      "rubric": "Does the memo give appropriate guidance for retirees funding spending needs two to seven years out with nominal Treasuries?",
+      "weight": 10,
+      "criterion": [
+        "It explicitly addresses the two-to-seven-year spending bucket.",
+        "It explains that short-to-intermediate nominal Treasuries can help lock in multi-year funding rates and reduce reinvestment risk.",
+        "It does not justify that recommendation by claiming those maturities offered a higher current yield than cash at year-end 2023."
+      ]
+    },
+    {
+      "rubric": "Is the cash reserve / money market row aligned with the data and task intent?",
+      "weight": 8,
+      "criterion": [
+        "The row preserves cash for true reserve holdings or spending due within about 12 months.",
+        "The row identifies near-term withdrawals, emergency reserves, or other immediate-liquidity needs as the best-fit use cases.",
+        "The row's justification cites the late-2023 cash advantage over 2-year to 10-year nominal Treasuries, such as SOFR around 5.38%."
+      ]
+    }
+  ]
+}

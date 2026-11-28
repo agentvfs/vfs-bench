@@ -1,0 +1,115 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/34f31bd829e2bdbab09629e76a24272651a4b2c732413266dc8b4931736b4804",
+      "role": "workspace",
+      "sha256": "34f31bd829e2bdbab09629e76a24272651a4b2c732413266dc8b4931736b4804",
+      "size": 1279,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/170f79fdbd25a6e152f2bead22f501e9f880170f0abf9177301d932f56f8bed6",
+      "role": "workspace_config",
+      "sha256": "170f79fdbd25a6e152f2bead22f501e9f880170f0abf9177301d932f56f8bed6",
+      "size": 3988,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/ff7485958f354f7b706e7a0f8ddc80f9c1c203bcb3f0ebed2b9f8832dc62bcbf",
+      "role": "parity",
+      "sha256": "ff7485958f354f7b706e7a0f8ddc80f9c1c203bcb3f0ebed2b9f8832dc62bcbf",
+      "size": 2728,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/27ea5a34ffa1513036b0699922f43b1ce0821e2a3fa735fa521545a3a52331b8",
+      "role": "verifier",
+      "sha256": "27ea5a34ffa1513036b0699922f43b1ce0821e2a3fa735fa521545a3a52331b8",
+      "size": 388,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "mongodb_list-collections",
+    "mongodb_list-databases",
+    "mongodb_collection-schema",
+    "mongodb_find",
+    "wikipedia_get_article",
+    "e2b-server_run_code",
+    "pubmed_search_pubmed_advanced",
+    "pubmed_search_pubmed_key_words",
+    "weather_get_weather_forecast",
+    "git_git_status",
+    "clinicaltrialsgov-mcp-server_clinicaltrials_analyze_trends",
+    "pubmed_get_pubmed_article_metadata",
+    "pubmed_download_pubmed_pdf",
+    "wikipedia_get_links",
+    "mongodb_aggregate",
+    "context7_resolve-library-id"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "first-fps-action-purchases",
+  "schema_version": 1,
+  "servers": [
+    "mongodb",
+    "wikipedia",
+    "e2b-server",
+    "pubmed",
+    "weather",
+    "git",
+    "clinicaltrialsgov-mcp-server",
+    "context7"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/first-fps-action-purchases/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "9778ab134a5e0139b4c662f3648d4a989177129b584431b1d2905a842313d7a8",
+      "size": 5708,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/first-fps-action-purchases/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "688fb11183792b921381bd55",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/first-fps-action-purchases",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

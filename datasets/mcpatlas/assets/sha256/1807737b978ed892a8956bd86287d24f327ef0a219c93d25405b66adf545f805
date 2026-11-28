@@ -1,0 +1,85 @@
+{
+  "note": "Both arms read one tree at one path -- the MCP arm's servers read the image's own /data in the run's container, and the mirage /data mount is a copy of it taken out of the same image. The calendar is the Google Workspace fake both arms read, seeded per run from Atlas's export.",
+  "cases": [
+    {
+      "name": "row_count",
+      "why": "the same file has the same length, so a mean taken over it has the same denominator",
+      "mcp": {
+        "server": "filesystem",
+        "tool": "get_file_info",
+        "args": {
+          "path": "/data/fantasy sports.csv"
+        },
+        "pipe": "sed -n 's/^size: //p'"
+      },
+      "mirage": {
+        "command": "wc -c < '/data/fantasy sports.csv'",
+        "pipe": "tr -d ' '"
+      }
+    },
+    {
+      "name": "list_directory",
+      "why": "both arms see the same tree -- the eight CSVs and the repos/ directory",
+      "mcp": {
+        "server": "filesystem",
+        "tool": "list_directory",
+        "args": {
+          "path": "/data"
+        },
+        "pipe": "sed -n 's/^\\[FILE\\] //p; s/^\\[DIR\\] //p' | sort"
+      },
+      "mirage": {
+        "command": "ls /data",
+        "pipe": "sort"
+      }
+    },
+    {
+      "name": "consumption",
+      "why": "the same survey rows, by age group",
+      "mcp": {
+        "server": "filesystem",
+        "tool": "read_file",
+        "args": {
+          "path": "/data/food and beverage consumption.csv"
+        },
+        "pipe": "grep '18-24'"
+      },
+      "mirage": {
+        "command": "grep '18-24' '/data/food and beverage consumption.csv'"
+      }
+    },
+    {
+      "name": "meal",
+      "why": "the same meal on the day of the fourth",
+      "mcp": {
+        "server": "filesystem",
+        "tool": "read_text_file",
+        "args": {
+          "path": "/data/food and beverage consumption.csv"
+        },
+        "pipe": "grep '17 Jun 2023'"
+      },
+      "mirage": {
+        "command": "grep '17 Jun 2023' '/data/food and beverage consumption.csv'"
+      }
+    },
+    {
+      "name": "list_events",
+      "why": "both arms find the same events on July 15, 2025, New York time",
+      "mcp": {
+        "server": "google-workspace",
+        "tool": "list_events",
+        "args": {
+          "timeMin": "2025-07-15T04:00:00Z",
+          "timeMax": "2025-07-16T04:00:00Z",
+          "maxResults": 50
+        },
+        "pipe": "jq -r '.[].id' | sort"
+      },
+      "mirage": {
+        "command": "ls /calendar/primary/2025-07-15",
+        "pipe": "sed 's/__.*//' | sort"
+      }
+    }
+  ]
+}

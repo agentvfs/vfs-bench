@@ -1,0 +1,22 @@
+mode: EXEC
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace
+runtimes:
+  - workspace
+clis:
+  google-cloud:
+    cli: ../../../../cli/toolathlon/travel-video.mjs:GOOGLE_CLOUD
+    config:
+      apiBase: ${GOOGLE_CLOUD_CLI_URL}
+      timeoutMs: 30000
+mounts:
+  /tmp:
+    vfs: ram
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}

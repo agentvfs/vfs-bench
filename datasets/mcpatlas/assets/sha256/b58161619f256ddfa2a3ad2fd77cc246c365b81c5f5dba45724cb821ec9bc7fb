@@ -1,0 +1,70 @@
+{
+  "note": "Both arms read one tree at one path -- the MCP arm's servers read the image's own /data in the run's container, and the mirage /data mount is a copy of it taken out of the same image -- and one Notion and one Slack, the fakes this run starts, seeded from Atlas's exports. Live services Atlas enables beside the task have no reply case: `map` checks that each CLI is the server's own tool, schema for schema, and a live reply is not the same twice.",
+  "cases": [
+    {
+      "name": "list_directory",
+      "why": "both arms see the same tree -- the eight CSVs and the repos/ directory",
+      "mcp": {
+        "server": "filesystem",
+        "tool": "list_directory",
+        "args": {
+          "path": "/data"
+        },
+        "pipe": "sed -n 's/^\\[FILE\\] //p; s/^\\[DIR\\] //p' | sort"
+      },
+      "mirage": {
+        "command": "ls /data",
+        "pipe": "sort"
+      }
+    },
+    {
+      "name": "channels_list",
+      "why": "both arms list the same six channels of the same workspace",
+      "mcp": {
+        "server": "slack",
+        "tool": "channels_list",
+        "args": {
+          "channel_types": "public_channel,private_channel"
+        },
+        "pipe": "sed 1d | cut -d, -f1 | sort"
+      },
+      "mirage": {
+        "command": "ls /slack/channels",
+        "pipe": "sed 's/.*__//' | sort"
+      }
+    },
+    {
+      "name": "conversations_history",
+      "why": "both arms read every message of #movie-suggestions, joins and leaves included, at the same timestamps",
+      "mcp": {
+        "server": "slack",
+        "tool": "conversations_history",
+        "args": {
+          "channel_id": "C093FF10B5J",
+          "limit": "100",
+          "include_activity_messages": true
+        },
+        "pipe": "grep -o '17[0-9]\\{8\\}\\.[0-9]\\{6\\}' | sort"
+      },
+      "mirage": {
+        "command": "cat /slack/channels/movie-suggestions__C093FF10B5J/*/chat.jsonl",
+        "pipe": "jq -r .ts | sort"
+      }
+    },
+    {
+      "name": "movies",
+      "why": "the same ratings",
+      "mcp": {
+        "server": "filesystem",
+        "tool": "read_text_file",
+        "args": {
+          "path": "/data/Top Movies.csv"
+        },
+        "pipe": "grep 'Reservoir Dogs\\|The Matrix\\|Fight Club'"
+      },
+      "mirage": {
+        "command": "grep 'Reservoir Dogs\\|The Matrix\\|Fight Club' '/data/Top Movies.csv'"
+      }
+    }
+  ]
+}

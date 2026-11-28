@@ -1,0 +1,112 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/9d49f28c71f6b999c6d64ce3df112b1cbf19977e6469038a90f27ce889087ce1",
+      "role": "workspace",
+      "sha256": "9d49f28c71f6b999c6d64ce3df112b1cbf19977e6469038a90f27ce889087ce1",
+      "size": 1613,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/968d863e8b30203e41551dbc9160524d1eeb5221ef75067a4fd154c421755b05",
+      "role": "workspace_config",
+      "sha256": "968d863e8b30203e41551dbc9160524d1eeb5221ef75067a4fd154c421755b05",
+      "size": 2779,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/ff9ae21b2384e894deac98cfe7f0f09e7dd994e60c06c10b842e3b678e7cde69",
+      "role": "parity",
+      "sha256": "ff9ae21b2384e894deac98cfe7f0f09e7dd994e60c06c10b842e3b678e7cde69",
+      "size": 4355,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/70daa9ca688995e4520d361027279768a4afcf083bf14923543400e4de97d3bb",
+      "role": "verifier",
+      "sha256": "70daa9ca688995e4520d361027279768a4afcf083bf14923543400e4de97d3bb",
+      "size": 297,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "airtable_list_bases",
+    "airtable_list_tables",
+    "airtable_list_records",
+    "calculator_calculate",
+    "git_git_status",
+    "git_git_log",
+    "git_git_show",
+    "filesystem_read_file",
+    "filesystem_list_directory",
+    "filesystem_list_allowed_directories",
+    "github_search_repositories",
+    "github_list_commits",
+    "github_get_repository",
+    "exa_web_search_exa",
+    "airtable_search_records"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "periodic-table-year-expenses",
+  "schema_version": 1,
+  "servers": [
+    "airtable",
+    "calculator",
+    "git",
+    "filesystem",
+    "github",
+    "exa"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/periodic-table-year-expenses/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "ca05888c3d1f4e4dbceea77d806d2cd60646bd408bb4f4ca8005c5643ed5eaf3",
+      "size": 2380,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/periodic-table-year-expenses/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689bd255c0422b257e7dfcae",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/periodic-table-year-expenses",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

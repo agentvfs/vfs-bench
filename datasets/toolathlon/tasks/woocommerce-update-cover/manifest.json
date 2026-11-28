@@ -1,0 +1,214 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/42e291c303e3ee27b4a20d782ea98455423ad5cfd35787d4a89d4e377fa52443",
+      "role": "seed_manifest",
+      "sha256": "42e291c303e3ee27b4a20d782ea98455423ad5cfd35787d4a89d4e377fa52443",
+      "size": 68,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/aea998a04255edbd81402b808b3f459a8996673888d955538f9536cc245ac3ba",
+      "role": "parity_test",
+      "sha256": "aea998a04255edbd81402b808b3f459a8996673888d955538f9536cc245ac3ba",
+      "size": 2809,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/a039138bf878503427e36e9ba72f64e177dc21179a6bae5eeec73d86f1fbef87",
+      "role": "workspace_documentation",
+      "sha256": "a039138bf878503427e36e9ba72f64e177dc21179a6bae5eeec73d86f1fbef87",
+      "size": 731,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/f37c960297709b48e0c5a6085e02185041b3911044930999cc1bf17ec7e9c92c",
+      "role": "workspace_config",
+      "sha256": "f37c960297709b48e0c5a6085e02185041b3911044930999cc1bf17ec7e9c92c",
+      "size": 974,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "woocommerce-update-cover",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-update-cover/README.md",
+      "role": "upstream_source",
+      "sha256": "8ac9b06aa9b730cf76971f618baf1dc39a1f2e4cadc31ae717489b0cbbf221d5",
+      "size": 2496,
+      "target": "upstream/README.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-update-cover/README.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-update-cover/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-update-cover/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-update-cover/shared/task.md",
+      "role": "instruction",
+      "sha256": "86c314b45767d11971fa7de6f92ab97074db653a85a073e2d8eb3022744e987d",
+      "size": 153,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-update-cover/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-update-cover/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "aaf9fc1be66dfdbf5588894113e172a3164921a5b19ebf1860444b6e299fe209",
+      "size": 10375,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-update-cover/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-update-cover/groundtruth_workspace/expected_results.json",
+      "role": "verifier_input",
+      "sha256": "c0d2c7843dc2e8af114c5aa2b09bf538d18fb3fc664ebc5429ed2b7893cea191",
+      "size": 2830,
+      "target": "upstream/groundtruth_workspace/expected_results.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-update-cover/groundtruth_workspace/expected_results.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-update-cover/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "3ef6208cd42e60c95a1773f0b5fdf8f75c62945b1db47708dd9abe05936ebf8a",
+      "size": 6092,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-update-cover/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-update-cover/preprocess/setup_test_products.py",
+      "role": "preprocessor_source",
+      "sha256": "acf48abe1eedd6789a7af9aca0ae9bc2069cf7db72594ee5e837b3b3365fe013",
+      "size": 50764,
+      "target": "upstream/preprocess/setup_test_products.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-update-cover/preprocess/setup_test_products.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-update-cover/preprocess/woocommerce_client.py",
+      "role": "preprocessor_source",
+      "sha256": "45340017e3555e06fe94570a76df214b7cb6d2048817e9639e1962780704a65f",
+      "size": 39694,
+      "target": "upstream/preprocess/woocommerce_client.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-update-cover/preprocess/woocommerce_client.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-update-cover/task_config.json",
+      "role": "upstream_config",
+      "sha256": "0681b43e1e6e1a934f3e5ec722e7d1d6f257356e6529716d57f22a2cc930b2c3",
+      "size": 500,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-update-cover/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-update-cover/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "d58819197067fc68e9be7898bc667f875d6f8ebb1ba98c2dd4399ce796062123",
+      "size": 365,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-update-cover/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-update-cover/README.md",
+      "role": "documentation",
+      "sha256": "830fa94d1d368c5ff824a036987b64ca1800ce9804227230344431af05f0b2c1",
+      "size": 2771,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-update-cover/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-update-cover/shared/fixtures/woocommerce/api.json.gz",
+      "role": "fixture_source",
+      "sha256": "4b07da391621e67e07293bf7251d2c2cf7f69a75175687247341cdeaace75b04",
+      "size": 12010,
+      "target": "shared/fixtures/woocommerce/api.json.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-update-cover/shared/fixtures/woocommerce/api.json.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-update-cover/shared/fixtures/woocommerce/database.sql.gz",
+      "role": "fixture_source",
+      "sha256": "76f5a5be9a8f1418f93dd850c79e91448cfa3a2d0f7b69d0466f80efe34444cd",
+      "size": 92693,
+      "target": "shared/fixtures/woocommerce/database.sql.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-update-cover/shared/fixtures/woocommerce/database.sql.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-update-cover/shared/fixtures/woocommerce/groundtruth.tar.gz",
+      "role": "verifier_input",
+      "sha256": "cd009c90c6f0991be6fa3b4738798a7253adc2481a8d432eefdc78c89ffe2f03",
+      "size": 809,
+      "target": "shared/fixtures/woocommerce/groundtruth.tar.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-update-cover/shared/fixtures/woocommerce/groundtruth.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-update-cover/shared/fixtures/woocommerce/source.json",
+      "role": "fixture_source",
+      "sha256": "adc1eb08821b2e13387e847e06edd1924699ab2326005e9e3ad833db0c500647",
+      "size": 16634,
+      "target": "shared/fixtures/woocommerce/source.json",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-update-cover/shared/fixtures/woocommerce/source.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-update-cover/shared/fixtures/woocommerce/uploads.tar.gz",
+      "role": "fixture_source",
+      "sha256": "97039b95a631103729c4e14eb6a81fdb03e7b4e1e65166d3f6f48f9a3b65c35c",
+      "size": 28343,
+      "target": "shared/fixtures/woocommerce/uploads.tar.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-update-cover/shared/fixtures/woocommerce/uploads.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-update-cover/shared/fixtures/woocommerce/workspace.tar.gz",
+      "role": "fixture_source",
+      "sha256": "fb77c1363b1141e77dd66bf762b18a89a360b4c647aeb468175ea08de9970a4f",
+      "size": 106,
+      "target": "shared/fixtures/woocommerce/workspace.tar.gz",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-update-cover/shared/fixtures/woocommerce/workspace.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-update-cover/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "1f78576181fa658fc03cf3fbc4d7558852f3be252313607b4eea126b2f52584e",
+      "size": 18558,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-update-cover/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/woocommerce-update-cover",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-update-cover",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "python_execute",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "woocommerce"
+    ]
+  }
+}

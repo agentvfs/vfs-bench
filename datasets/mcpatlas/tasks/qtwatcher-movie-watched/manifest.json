@@ -1,0 +1,111 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/48bf42078c2e9759e2229f4b929fb7b0ce471e497a1801434e54c4d1ad3f8b5e",
+      "role": "workspace",
+      "sha256": "48bf42078c2e9759e2229f4b929fb7b0ce471e497a1801434e54c4d1ad3f8b5e",
+      "size": 1139,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/95ab71c7a0608c8096001cd5cd54b1b7b71ac26072b0bbf204e850e3bb9d3210",
+      "role": "workspace_config",
+      "sha256": "95ab71c7a0608c8096001cd5cd54b1b7b71ac26072b0bbf204e850e3bb9d3210",
+      "size": 2446,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/7f492f9367cae97f48df23f062add595b3936f2924eb62f8125ec431c43eaaac",
+      "role": "parity",
+      "sha256": "7f492f9367cae97f48df23f062add595b3936f2924eb62f8125ec431c43eaaac",
+      "size": 2709,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/f579c60b2e4371a08bf2b773aa77332336c9a25869e060250d308e332d180858",
+      "role": "verifier",
+      "sha256": "f579c60b2e4371a08bf2b773aa77332336c9a25869e060250d308e332d180858",
+      "size": 199,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "slack_channels_list",
+    "slack_conversations_history",
+    "slack_conversations_search_messages",
+    "filesystem_read_text_file",
+    "filesystem_read_multiple_files",
+    "filesystem_list_directory",
+    "filesystem_list_allowed_directories",
+    "filesystem_get_file_info",
+    "oxylabs_universal_scraper",
+    "oxylabs_amazon_search_scraper",
+    "filesystem_search_files",
+    "slack_conversations_replies",
+    "fetch_fetch",
+    "memory_search_nodes",
+    "memory_read_graph"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "qtwatcher-movie-watched",
+  "schema_version": 1,
+  "servers": [
+    "slack",
+    "filesystem",
+    "oxylabs",
+    "fetch",
+    "memory"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/qtwatcher-movie-watched/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "a786214cd60eb9588b8b291d47693e736d5cbefab092527e47caaad69d0ca7dd",
+      "size": 4631,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/qtwatcher-movie-watched/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689cd6f8522029b7ad7b1ff7",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/qtwatcher-movie-watched",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

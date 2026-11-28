@@ -1,0 +1,111 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "role": "workspace",
+      "sha256": "e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "size": 482,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/71aa675adc09145f5c583d941c49c0e21b3c2a8f0c31046248f080be1240ab79",
+      "role": "workspace_config",
+      "sha256": "71aa675adc09145f5c583d941c49c0e21b3c2a8f0c31046248f080be1240ab79",
+      "size": 2471,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/c89efbaceb4586f7f3ed6650abfac091b05e6e0e57aa6f1420e4c674bcd4e11b",
+      "role": "parity",
+      "sha256": "c89efbaceb4586f7f3ed6650abfac091b05e6e0e57aa6f1420e4c674bcd4e11b",
+      "size": 2891,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/cc78c118bd76bc1411a6bcdf6b6ac2f2772bb463a0b3a318bbddcf05ffcf2cc6",
+      "role": "verifier",
+      "sha256": "cc78c118bd76bc1411a6bcdf6b6ac2f2772bb463a0b3a318bbddcf05ffcf2cc6",
+      "size": 450,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "notion_API-get-users",
+    "notion_API-post-database-query",
+    "notion_API-post-search",
+    "memory_read_graph",
+    "filesystem_read_file",
+    "filesystem_list_allowed_directories",
+    "filesystem_list_directory",
+    "oxylabs_universal_scraper",
+    "oxylabs_google_search_scraper",
+    "oxylabs_amazon_search_scraper",
+    "github_search_repositories",
+    "github_search_code",
+    "github_search_users",
+    "filesystem_read_text_file",
+    "filesystem_get_file_info"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "riverside-park-family-apartments",
+  "schema_version": 1,
+  "servers": [
+    "notion",
+    "memory",
+    "filesystem",
+    "oxylabs",
+    "github"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/riverside-park-family-apartments/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "4a44f6976ddaa2f71b9c2181ded198876f51be6bac32a3beebaa2a3cf342495e",
+      "size": 3884,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/riverside-park-family-apartments/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689cd6f8522029b7ad7b1fdd",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/riverside-park-family-apartments",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

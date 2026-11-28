@@ -1,0 +1,183 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/66a6797c17e4f9fc2d59a8271368b7499013a3266a8a6365677579132c60fc98",
+      "role": "fixture_script",
+      "sha256": "66a6797c17e4f9fc2d59a8271368b7499013a3266a8a6365677579132c60fc98",
+      "size": 3852,
+      "target": "shared/seed_mock.py"
+    },
+    {
+      "path": "assets/sha256/cc25493d69fd78bd71caaaeeae3b050c92a079c66161331904494c2360694bcf",
+      "role": "seed_manifest",
+      "sha256": "cc25493d69fd78bd71caaaeeae3b050c92a079c66161331904494c2360694bcf",
+      "size": 213,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/bdfcb057f078666e025bf139f66d921e20065e0556e284294736c73a130c89b1",
+      "role": "parity_test",
+      "sha256": "bdfcb057f078666e025bf139f66d921e20065e0556e284294736c73a130c89b1",
+      "size": 580,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/129e35ef85ec1fb02c2338a4ca392b544e01f9704d84942f6cc388f762ddf536",
+      "role": "workspace_documentation",
+      "sha256": "129e35ef85ec1fb02c2338a4ca392b544e01f9704d84942f6cc388f762ddf536",
+      "size": 1861,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/03bc8f64f201cd52c8a3c39ee6188a95ee38c208ad747553067b7d7ceeafe08a",
+      "role": "workspace_config",
+      "sha256": "03bc8f64f201cd52c8a3c39ee6188a95ee38c208ad747553067b7d7ceeafe08a",
+      "size": 1022,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "music-analysis",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/music-analysis/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/music-analysis/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/music-analysis/shared/task.md",
+      "role": "instruction",
+      "sha256": "46324cc083be94abd43056fc1420139fc430695a6d4263c6ce5167a0379fdc4e",
+      "size": 979,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/music-analysis/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/music-analysis/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "cb012cc671e5bbb1074f37ae37a6ff4f546d15fe1a1937436e2d9a0e5a691f62",
+      "size": 5935,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/music-analysis/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/music-analysis/groundtruth_workspace/Billboard Pop Chart by Year.xlsx",
+      "role": "verifier_input",
+      "sha256": "732a839f1f6bdff5f41fc489a02a6f8f97cdc88a1e54fc193ae2bcdeb84dd05a",
+      "size": 5318881,
+      "target": "upstream/groundtruth_workspace/Billboard Pop Chart by Year.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/music-analysis/groundtruth_workspace/Billboard%20Pop%20Chart%20by%20Year.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/music-analysis/groundtruth_workspace/README.md",
+      "role": "verifier_input",
+      "sha256": "50f8a55800d868fc38da120cec0ebd9669977c61501e5dcc9644bd838f74ed34",
+      "size": 1347,
+      "target": "upstream/groundtruth_workspace/README.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/music-analysis/groundtruth_workspace/README.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/music-analysis/groundtruth_workspace/analyze_music.py",
+      "role": "verifier_input",
+      "sha256": "e6bb91ca0c1bdfb5c77c170ee02fcae5e3a3ce838c1a7dd60e22288072abba04",
+      "size": 7529,
+      "target": "upstream/groundtruth_workspace/analyze_music.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/music-analysis/groundtruth_workspace/analyze_music.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/music-analysis/groundtruth_workspace/music_analysis_result.xlsx",
+      "role": "verifier_input",
+      "sha256": "81dd5118f47fa11c943dff54d623d7782586ff90b68ae45983b6e1db152648d8",
+      "size": 59892,
+      "target": "upstream/groundtruth_workspace/music_analysis_result.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/music-analysis/groundtruth_workspace/music_analysis_result.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/music-analysis/initial_workspace/music_analysis_result_example.xlsx",
+      "role": "initial_workspace",
+      "sha256": "213950dd69d1181eb4c71b54f6b39faaa23f0f87b218c4109ed413c22c8a973c",
+      "size": 4866,
+      "target": "upstream/initial_workspace/music_analysis_result_example.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/music-analysis/initial_workspace/music_analysis_result_example.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/music-analysis/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "146bc91ea3c96d0149fd42ddc27c4da395c7762e96e35fd925a23d276bcea2de",
+      "size": 1505,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/music-analysis/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/music-analysis/task_config.json",
+      "role": "upstream_config",
+      "sha256": "8091263e41407822508efb36f114940a68daecd2ab2cc4d521d41df437183cc0",
+      "size": 257,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/music-analysis/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/music-analysis/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "e10a1b691fc9a2fddb160d064a2e1359fbc3f325d131ea91fad466aab1a3d03e",
+      "size": 301,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/music-analysis/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/music-analysis/README.md",
+      "role": "documentation",
+      "sha256": "c37973d77fcecbc0c0f9412dbfb6d690b358cd83efc1c3579ae36fa0be717f44",
+      "size": 2620,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/music-analysis/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/music-analysis/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "c07188547a592b385422ce9d445d5a608cf358b4a09c9cec475525cc3b1ddb7a",
+      "size": 17000,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/music-analysis/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/music-analysis",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/music-analysis",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "python_execute",
+      "claim_done",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "excel",
+      "google_sheet",
+      "terminal"
+    ]
+  }
+}

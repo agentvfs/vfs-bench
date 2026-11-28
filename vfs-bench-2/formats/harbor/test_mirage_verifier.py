@@ -15,6 +15,7 @@ from datetime import datetime
 from pathlib import Path
 from unittest.mock import AsyncMock, Mock, patch
 
+from harbor.environments.base import ExecResult
 from harbor.models.task.task import Task
 from harbor.models.trial.paths import TrialPaths
 from vfsbench_harbor import MirageEnvironment, MirageVerifier
@@ -326,6 +327,25 @@ class MirageVerifierTests(unittest.IsolatedAsyncioTestCase):
                     await self.verifier.verify()
             self.verifier._run.assert_not_called()
             self.assertFalse(self.paths.reward_text_path.exists())
+
+    async def test_a_resolving_link_in_the_workspace_exists(self):
+        """A link ``ln -s`` made lives in the workspace's namespace, so the
+        workspace says whether it is there; a removed one is absent."""
+        self.env.snapshot_verifier_states = AsyncMock(return_value={})
+        self.env.exec = AsyncMock(return_value=ExecResult(
+            stdout="/workspace/corpus\n", stderr="", return_code=0))
+        definition = {
+            "inputs": [],
+            "links": ["/workspace/corpus", "/workspace/removed"],
+            "trees": [],
+            "native_state": {}
+        }
+        frozen = await self.verifier.freeze(definition, self.root)
+        self.assertIn("/workspace/corpus", frozen["existingPaths"])
+        self.assertNotIn("/workspace/removed", frozen["existingPaths"])
+        probe = self.env.exec.await_args.args[0]
+        self.assertIn("[ -L", probe)
+        self.assertIn("/workspace/removed", probe)
 
     async def test_staging_yields_and_stops_before_temporary_cleanup(self):
         loop = asyncio.get_running_loop()

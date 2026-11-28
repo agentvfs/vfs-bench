@@ -1,0 +1,309 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/2e9d0b1b433a3b8ea7d7f7a03fe87d8f523215468f3acccdd79022ac2b3e5e75",
+      "role": "service_config",
+      "sha256": "2e9d0b1b433a3b8ea7d7f7a03fe87d8f523215468f3acccdd79022ac2b3e5e75",
+      "size": 235,
+      "target": "shared/bigquery.json"
+    },
+    {
+      "path": "assets/sha256/93935b4518b7a5395b99d77fa87ba9d60b9f30e470983636620133d265041400",
+      "role": "service_config",
+      "sha256": "93935b4518b7a5395b99d77fa87ba9d60b9f30e470983636620133d265041400",
+      "size": 124,
+      "target": "shared/storage.json"
+    },
+    {
+      "path": "assets/sha256/e8f918b473a1a378f6fa38bf6b93b66788194d15a731dd8b344083744f5fd999",
+      "role": "seed_manifest",
+      "sha256": "e8f918b473a1a378f6fa38bf6b93b66788194d15a731dd8b344083744f5fd999",
+      "size": 226,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/031b4238a5c63c44d6356547af89de25a78412f65223300cd4279125be2332d1",
+      "role": "parity_test",
+      "sha256": "031b4238a5c63c44d6356547af89de25a78412f65223300cd4279125be2332d1",
+      "size": 3538,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/7f825d63320dbd67370587ca48a17d24f4bced094f388c4c4116c6d5eb2f8c16",
+      "role": "parity_test",
+      "sha256": "7f825d63320dbd67370587ca48a17d24f4bced094f388c4c4116c6d5eb2f8c16",
+      "size": 7,
+      "target": "tests/parity.txt"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/5ac2fef5b69941e66b0983b9cdc9821e5438819bb3e31c7fc596251e3dca943f",
+      "role": "workspace_config",
+      "sha256": "5ac2fef5b69941e66b0983b9cdc9821e5438819bb3e31c7fc596251e3dca943f",
+      "size": 881,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "machine-operating",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/machine-operating/shared/task.md",
+      "role": "instruction",
+      "sha256": "5612f03a8a8d9cc241b9b3e19db4b043a6ca187f6482da738e99487d78ee68b6",
+      "size": 1044,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "a0c8615a5fa40f44b0966542fc088b68f5fdb98abcaccc0e54f3af27744bf275",
+      "size": 28676,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/evaluation/test_evaluation.py",
+      "role": "verifier_source",
+      "sha256": "2d387d4c947063fee3a5cc6b37d1ef34ccb2d0f47aa4cc44fa80450b4f21c5a6",
+      "size": 4752,
+      "target": "upstream/evaluation/test_evaluation.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/evaluation/test_evaluation.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/groundtruth_workspace/anomaly_report.csv",
+      "role": "verifier_input",
+      "sha256": "e70e685ee6fb2ea6974b17134ced771b1f21b599783054ee4856a013e4f2be44",
+      "size": 20231,
+      "target": "upstream/groundtruth_workspace/anomaly_report.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/groundtruth_workspace/anomaly_report.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/groundtruth_workspace/bucket_name.txt",
+      "role": "verifier_input",
+      "sha256": "680722a7090cedf975deb184890e59169cd06c60a9ee6a0bf7fc011f405ec14b",
+      "size": 33,
+      "target": "upstream/groundtruth_workspace/bucket_name.txt",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/groundtruth_workspace/bucket_name.txt"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/initial_workspace/machine_operating_parameters.xlsx",
+      "role": "initial_workspace",
+      "sha256": "59f700c7630bc45994264a8a96ccff43cab25e1560550b8b51ffcd4e62af1c03",
+      "size": 21038,
+      "target": "upstream/initial_workspace/machine_operating_parameters.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/initial_workspace/machine_operating_parameters.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/preprocess/README.md",
+      "role": "preprocessor_source",
+      "sha256": "6115f121b63f75e856148af4ccab51e42e86b289d3d223d7250c7dc8567c6347",
+      "size": 226,
+      "target": "upstream/preprocess/README.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/preprocess/README.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/preprocess/USAGE_GUIDE.md",
+      "role": "preprocessor_source",
+      "sha256": "e41469b24d58deca64de818ecfa81c27c336ee7ebc3a7dc52741ea5c916aba8b",
+      "size": 8291,
+      "target": "upstream/preprocess/USAGE_GUIDE.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/preprocess/USAGE_GUIDE.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/preprocess/anomaly_detection.py",
+      "role": "preprocessor_source",
+      "sha256": "a5911cd7c6610e179b11d1ac8bdce4b9d1dfde98250a1317be82cfb80fdb4dd5",
+      "size": 18005,
+      "target": "upstream/preprocess/anomaly_detection.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/preprocess/anomaly_detection.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/preprocess/calculate_groundtruth.py",
+      "role": "preprocessor_source",
+      "sha256": "aa3a733de12988655d57509ee28a8f211e6c26f4e58205a28e64503a11c2a169",
+      "size": 5651,
+      "target": "upstream/preprocess/calculate_groundtruth.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/preprocess/calculate_groundtruth.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/preprocess/construct_data.py",
+      "role": "preprocessor_source",
+      "sha256": "66c06c82d88d3d2b318452022a5413a22b214c1f92abb1c08566770918187f74",
+      "size": 31438,
+      "target": "upstream/preprocess/construct_data.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/preprocess/construct_data.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/preprocess/data_generation_stats.json",
+      "role": "preprocessor_source",
+      "sha256": "839dd2379eaf7332f33466cdf840242b70443ef61fb56d40112fbd9d1a84d89a",
+      "size": 748,
+      "target": "upstream/preprocess/data_generation_stats.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/preprocess/data_generation_stats.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/preprocess/demo_anomaly_detection.py",
+      "role": "preprocessor_source",
+      "sha256": "e019a8ddeb12eb3bcd68fa2e6b361859f07b1db6e8f3c89b04f6f33ac251f100",
+      "size": 4268,
+      "target": "upstream/preprocess/demo_anomaly_detection.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/preprocess/demo_anomaly_detection.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/preprocess/demo_large_scale.py",
+      "role": "preprocessor_source",
+      "sha256": "51eccdb95d41ff28b2cf6cdcd426cf288f09724e874249dfb343ade6b02870c3",
+      "size": 3730,
+      "target": "upstream/preprocess/demo_large_scale.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/preprocess/demo_large_scale.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/preprocess/live_sensor_data.csv",
+      "role": "preprocessor_source",
+      "sha256": "7dfdb6b003c242397dc08089c958c91399579ed692144646756cb703c0340074",
+      "size": 69625,
+      "target": "upstream/preprocess/live_sensor_data.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/preprocess/live_sensor_data.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/preprocess/machine_operating/live_sensor.csv",
+      "role": "preprocessor_source",
+      "sha256": "08c21c1a0d39e720d25711c9983b1cfcc04b3553be5c5f9bb1dcd19512518ac4",
+      "size": 14598439,
+      "target": "upstream/preprocess/machine_operating/live_sensor.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/preprocess/machine_operating/live_sensor.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/preprocess/machine_operating/training_set_v1_data_generation_stats.json",
+      "role": "preprocessor_source",
+      "sha256": "1b90ffe251478f7753dcd7e9202f765c8da7164f4e3a267c8d9c8ea51b56f744",
+      "size": 1642,
+      "target": "upstream/preprocess/machine_operating/training_set_v1_data_generation_stats.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/preprocess/machine_operating/training_set_v1_data_generation_stats.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/preprocess/machine_operating/training_set_v1_machine_operating_parameters.xlsx",
+      "role": "preprocessor_source",
+      "sha256": "59f700c7630bc45994264a8a96ccff43cab25e1560550b8b51ffcd4e62af1c03",
+      "size": 21038,
+      "target": "upstream/preprocess/machine_operating/training_set_v1_machine_operating_parameters.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/preprocess/machine_operating/training_set_v1_machine_operating_parameters.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/preprocess/machine_operating_parameters.xlsx",
+      "role": "preprocessor_source",
+      "sha256": "d71fac1b73757d8ae81e22a6882cff33f9cce0e51a510ed4f26ad2be16599789",
+      "size": 8434,
+      "target": "upstream/preprocess/machine_operating_parameters.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/preprocess/machine_operating_parameters.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "89fc3356e1d876b47ccc890e0d5c89b3c11649a40fbb004ac2f5d11379f575e4",
+      "size": 11760,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/preprocess/run.sh",
+      "role": "preprocessor_source",
+      "sha256": "6f42bb172e5a952e36fbce9e943da4c331690c59fa0e8afd986998db2342de43",
+      "size": 342,
+      "target": "upstream/preprocess/run.sh",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/preprocess/run.sh"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/preprocess/verify_data.py",
+      "role": "preprocessor_source",
+      "sha256": "f9b45d9047753eb27a48b47fb6bd18cba5ecd02f8fb25c85b2940a5b52d7c9eb",
+      "size": 4735,
+      "target": "upstream/preprocess/verify_data.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/preprocess/verify_data.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/task_config.json",
+      "role": "upstream_config",
+      "sha256": "184628553c5a68911bc91c84caf85d0826873841d1921511e055450d9f03b062",
+      "size": 226,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/machine-operating/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "94041c733f6ab4d944af7c75dad4e9748271b8f70beae89c14b1b682de7d0cd5",
+      "size": 628,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/machine-operating/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/machine-operating/README.md",
+      "role": "documentation",
+      "sha256": "33ac1d8dc077b348fc62b34f53d53c987182b335b6b0df5bed9ccccfec74875d",
+      "size": 6698,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/machine-operating/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/machine-operating/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "d9832917415e87a9043bc7a525c993c1b6e7c6b9edf4361d3d586db9239ba95c",
+      "size": 15794,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/machine-operating/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/machine-operating",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/machine-operating",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "python_execute",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history",
+      "claim_done"
+    ],
+    "needed_mcp_servers": [
+      "google-cloud",
+      "filesystem",
+      "excel"
+    ]
+  }
+}

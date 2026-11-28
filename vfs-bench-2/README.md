@@ -25,14 +25,19 @@ wrapper. The plan and its status are tracked in the roadmap issue,
 
 | Dataset | Upstream | Tasks | Graders |
 |---|---|---:|---|
-| [LiveClawBench](datasets/liveclawbench/README.md) | Mosi-AI/LiveClawBench | 70 | TypeScript |
+| [LiveClawBench](datasets/liveclawbench/README.md) | Mosi-AI/LiveClawBench | 75 | TypeScript |
 | [AutomationBench](datasets/automationbench/README.md) | zapier/AutomationBench v1.0.6 | 600 | Monty |
-| [Claw-Eval](datasets/claweval/README.md) | claw-eval/claw-eval | 126 | TypeScript, built from upstream's |
+| [Claw-Eval](datasets/claweval/README.md) | claw-eval/claw-eval | 127 | TypeScript, built from upstream's |
 | [ComplexMCP](datasets/complexmcp/README.md) | ATH-MaaS/complex-mcp | 47 | Monty |
 | [DataSpace](datasets/dataspace/README.md) | HKUSTDial/DataSpace | 46 | Monty |
 | [EnterpriseOps-Gym](datasets/enterpriseops/README.md) | ServiceNow/EnterpriseOps-Gym | 103 | TypeScript |
 | [ERPBench-100](datasets/erpbench/README.md) | blobfishai/erp-agent-simulation | 100 | TypeScript |
 | [Gaia2](datasets/gaia2/README.md) | Meta's ARE, gaia2-cli | 460 | Monty |
+| [JobBench](datasets/jobbench/README.md) | JobBench/job-bench | 16 | TypeScript |
+
+## Python package and V1 datasets
+
+The repository root contains the `vfsbench` Python package and the Toolathlon and MCP-Atlas release folders. [Python, CLI and Harbor usage](../docs/vfsbench.md) · [Dataset storage and migration](../docs/datasets.md)
 
 ## Setup
 
@@ -144,6 +149,7 @@ vfs-bench-2/
   workspace/
   formats/
     harbor/
+    agentenv/
   datasets/
     <dataset>/
       download.py
@@ -151,6 +157,7 @@ vfs-bench-2/
       mocks/
       graders/
       harbor/
+      agentenv/
       tests/
       <task>/
         workspace/
@@ -164,6 +171,9 @@ vfs-bench-2/
 - `formats/harbor/`: the Harbor wrapper, `vfsbench_harbor`:
   `MirageEnvironment`, `MirageVerifier`, and the Codex and Claude Code
   agents.
+- `formats/agentenv/`: the [agent-env](formats/agentenv/README.md)
+  sandbox provider and environment, `vfsbench_agentenv`, over the same
+  `workspace/`.
 - `datasets/<dataset>/`: one benchmark, its mocks and graders, and its
   tasks. A task's own grader is its `grader.ts`, where it has one;
   `graders/` holds what the dataset's graders share and the entry that
@@ -171,7 +181,8 @@ vfs-bench-2/
   `download.py` downloads upstream at a pinned commit into `state/`,
   `convert.py` writes the tasks from it (`--check` compares them), and
   `harbor/` holds the dataset's Harbor job configs (`job.yaml` for every
-  task, `oracle.yaml` where only some have a solution).
+  task, `oracle.yaml` where only some have a solution). `agentenv/`, where
+  there is one, is its agent-env bundle.
   `datasets/layout.py` says what goes where in a task.
 
 ## Tests
@@ -181,6 +192,7 @@ pnpm typecheck
 pnpm test
 uv run --project formats/harbor python -I formats/harbor/test_environment.py
 uv run --project formats/harbor python -I formats/harbor/test_mirage_verifier.py
+uv run --project formats/agentenv python -I formats/agentenv/test_agentenv.py
 uv run --project datasets/<dataset> python -I datasets/<dataset>/convert.py --check
 ```
 

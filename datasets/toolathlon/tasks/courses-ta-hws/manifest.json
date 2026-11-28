@@ -1,0 +1,194 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/08e82b4f5420063f08192be0a234917f7c26450fb2c836859b7661ff3afa9189",
+      "role": "workspace_config",
+      "sha256": "08e82b4f5420063f08192be0a234917f7c26450fb2c836859b7661ff3afa9189",
+      "size": 745,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "courses-ta-hws",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/courses-ta-hws/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/courses-ta-hws/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/courses-ta-hws/docs/agent_system_prompt_cn.md",
+      "role": "upstream_source",
+      "sha256": "9f877a46421284317d4655c8a7016aaff6a84843c3577ba1c0c31113697708a1",
+      "size": 336,
+      "target": "upstream/docs/agent_system_prompt_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/courses-ta-hws/docs/agent_system_prompt_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/courses-ta-hws/shared/task.md",
+      "role": "instruction",
+      "sha256": "fc623253ea11b3d31f5a90f611421acfcab0b5adc07037d9c4a168ed35b69ea7",
+      "size": 775,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/courses-ta-hws/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/courses-ta-hws/docs/task_cn.md",
+      "role": "upstream_source",
+      "sha256": "b514ed220695da0d009c409c90cf352248a3b3b7c243d0a7a91276eaa8932c3a",
+      "size": 601,
+      "target": "upstream/docs/task_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/courses-ta-hws/docs/task_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/courses-ta-hws/docs/user_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "f653505561d80a29fea19766759f9a8719dac246b97066605481eb8a3b1a76dd",
+      "size": 147,
+      "target": "upstream/docs/user_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/courses-ta-hws/docs/user_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/courses-ta-hws/evaluation/__init__.py",
+      "role": "verifier_source",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "target": "upstream/evaluation/__init__.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/courses-ta-hws/evaluation/__init__.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/courses-ta-hws/evaluation/check_local.py",
+      "role": "verifier_source",
+      "sha256": "76a80820c9f2099ddef26652d05d9178f4417acf81b3614547bf82ae53918d2c",
+      "size": 12510,
+      "target": "upstream/evaluation/check_local.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/courses-ta-hws/evaluation/check_local.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/courses-ta-hws/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "7e9f3702b0c8e2c41f746f18fddcd3a50a61996ba45acf3bbacd32023ca0a442",
+      "size": 1234,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/courses-ta-hws/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/courses-ta-hws/evaluation/main_cn.py",
+      "role": "verifier_source",
+      "sha256": "ec464473abd07436af57c0690426c36dfa060b7f06405734d42f4334a66853cc",
+      "size": 1225,
+      "target": "upstream/evaluation/main_cn.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/courses-ta-hws/evaluation/main_cn.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/courses-ta-hws/groundtruth_workspace/expected_mapping.json",
+      "role": "verifier_input",
+      "sha256": "430bbfc7bd99c252db212712971ed9b1bf26ebf2faf7a2d86c2bdd7ce3d8006c",
+      "size": 30092,
+      "target": "upstream/groundtruth_workspace/expected_mapping.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/courses-ta-hws/groundtruth_workspace/expected_mapping.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/courses-ta-hws/groundtruth_workspace_cn/expected_mapping.json",
+      "role": "verifier_input",
+      "sha256": "d4906e9e445e9faa4d2f60fcbde2c3fca465c851e56d66ad063e119e9b0bafc4",
+      "size": 27845,
+      "target": "upstream/groundtruth_workspace_cn/expected_mapping.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/courses-ta-hws/groundtruth_workspace_cn/expected_mapping.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/courses-ta-hws/initial_workspace/files.tar.gz",
+      "role": "initial_workspace",
+      "sha256": "7663565fec4793c8669d3b0cd617f2eaf902225cb5fe9a830e1104482e310cb7",
+      "size": 27283,
+      "target": "upstream/initial_workspace/files.tar.gz",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/courses-ta-hws/initial_workspace/files.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/courses-ta-hws/initial_workspace_cn/files.tar.gz",
+      "role": "upstream_source",
+      "sha256": "27d891d4d026db1ef3df306247286f34dc30bfbfe5e5873ecc164bb1291122f3",
+      "size": 35056,
+      "target": "upstream/initial_workspace_cn/files.tar.gz",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/courses-ta-hws/initial_workspace_cn/files.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/courses-ta-hws/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "068fe111f2143341a905d969997b695d90e0babf37f95fde4aa6a68f8e70aad1",
+      "size": 1390,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/courses-ta-hws/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/courses-ta-hws/task_config.json",
+      "role": "upstream_config",
+      "sha256": "fbd1167c9d9eea9498a508dfe47fc391ad9d727a5a836347d8e92eeeaa170ce5",
+      "size": 236,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/courses-ta-hws/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/courses-ta-hws/README.md",
+      "role": "documentation",
+      "sha256": "7f3ddafecf3c5d29a973f1560405cbce71f3b9ddea28959087f257db19dbb50b",
+      "size": 902,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/courses-ta-hws/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/courses-ta-hws/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "d0cfb79e89765d2eaeea7b1a01d67822dfbdd906341eb80750ad3ccc26495627",
+      "size": 5358,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/courses-ta-hws/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/courses-ta-hws",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/courses-ta-hws",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "python_execute",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "terminal",
+      "excel",
+      "filesystem"
+    ]
+  }
+}

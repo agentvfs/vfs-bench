@@ -1,0 +1,115 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "role": "workspace",
+      "sha256": "e236e9f68d6f43053bd2772324341bdce6aef58fafe3319c887e030999be06c6",
+      "size": 482,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/4577c3269c93c2afb20f49d15beae933fd65300a4cc3e9b2b1341008cd246d6b",
+      "role": "workspace_config",
+      "sha256": "4577c3269c93c2afb20f49d15beae933fd65300a4cc3e9b2b1341008cd246d6b",
+      "size": 2630,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/cde0d48a854b5078b0642efbc7cb1c9dc829a7b957a430ba9c4e3b1b5ac0517d",
+      "role": "parity",
+      "sha256": "cde0d48a854b5078b0642efbc7cb1c9dc829a7b957a430ba9c4e3b1b5ac0517d",
+      "size": 1670,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/55163f9513745b0741b6f2962c74ec342c7f9a19cfaf3bb29c4b34d7e80e3c2e",
+      "role": "verifier",
+      "sha256": "55163f9513745b0741b6f2962c74ec342c7f9a19cfaf3bb29c4b34d7e80e3c2e",
+      "size": 174,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "arxiv_search_papers",
+    "memory_read_graph",
+    "memory_search_nodes",
+    "memory_open_nodes",
+    "pubmed_search_pubmed_key_words",
+    "pubmed_search_pubmed_advanced",
+    "pubmed_get_pubmed_article_metadata",
+    "pubmed_download_pubmed_pdf",
+    "weather_find_weather_stations",
+    "filesystem_read_file",
+    "filesystem_list_directory",
+    "filesystem_list_allowed_directories",
+    "context7_resolve-library-id",
+    "context7_get-library-docs",
+    "github_search_repositories",
+    "e2b-server_run_code"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "maldoff-paper-lowest-salary",
+  "schema_version": 1,
+  "servers": [
+    "arxiv",
+    "memory",
+    "pubmed",
+    "weather",
+    "filesystem",
+    "context7",
+    "github",
+    "e2b-server"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/maldoff-paper-lowest-salary/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "cad9d0bb86413e8b0185089d6b543355441df4e2e7b070260e1c3da4f2996588",
+      "size": 4452,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/maldoff-paper-lowest-salary/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689f4d693e212e8ef3390736",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/maldoff-paper-lowest-salary",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

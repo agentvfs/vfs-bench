@@ -1,0 +1,4 @@
+{
+  "project": "mcp-bench0606",
+  "preprocess": "tasks.finalpool.game-statistics.preprocess.main"
+}

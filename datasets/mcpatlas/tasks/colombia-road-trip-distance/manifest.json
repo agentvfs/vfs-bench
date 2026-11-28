@@ -1,0 +1,112 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/fb28987aa3dc830b5e7bcbe1784592e07c5e2166a3777a9f5d521eadb40c546d",
+      "role": "workspace",
+      "sha256": "fb28987aa3dc830b5e7bcbe1784592e07c5e2166a3777a9f5d521eadb40c546d",
+      "size": 499,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/bb329ad19b618a7c30be0e30d16d2c2a55df089f6044ddd32d1ff1ae7dc03e3b",
+      "role": "workspace_config",
+      "sha256": "bb329ad19b618a7c30be0e30d16d2c2a55df089f6044ddd32d1ff1ae7dc03e3b",
+      "size": 3537,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/dd2e4bd3ced0e92650ee3172eb82ac32124b88b1f1f851fb140770821ef39176",
+      "role": "parity",
+      "sha256": "dd2e4bd3ced0e92650ee3172eb82ac32124b88b1f1f851fb140770821ef39176",
+      "size": 449,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/5eea2d7622148cf95b947e8825eacfba701216ac5d08a67ba6246eb790da4595",
+      "role": "verifier",
+      "sha256": "5eea2d7622148cf95b947e8825eacfba701216ac5d08a67ba6246eb790da4595",
+      "size": 292,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "wikipedia_search_wikipedia",
+    "wikipedia_get_article",
+    "wikipedia_extract_key_facts",
+    "osm-mcp-server_geocode_address",
+    "osm-mcp-server_reverse_geocode",
+    "osm-mcp-server_get_route_directions",
+    "weather_get_current_weather",
+    "weather_get_weather_forecast",
+    "weather_get_hourly_forecast",
+    "context7_resolve-library-id",
+    "context7_get-library-docs",
+    "github_search_repositories",
+    "git_git_diff_unstaged",
+    "e2b-server_run_code"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "colombia-road-trip-distance",
+  "schema_version": 1,
+  "servers": [
+    "wikipedia",
+    "osm-mcp-server",
+    "weather",
+    "context7",
+    "github",
+    "git",
+    "e2b-server"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/colombia-road-trip-distance/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "526287faeb0c208340799d0c90d439e5a474a2adf12468be9faa574529c176df",
+      "size": 5074,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/colombia-road-trip-distance/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "688fb11183792b921381bd66",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/colombia-road-trip-distance",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

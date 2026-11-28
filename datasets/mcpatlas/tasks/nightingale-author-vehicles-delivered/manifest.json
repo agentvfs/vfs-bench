@@ -1,0 +1,120 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/a0c73f6826972a81b3e8f0d871c796f87243a3c48a02af891b26d88e2099251d",
+      "role": "workspace",
+      "sha256": "a0c73f6826972a81b3e8f0d871c796f87243a3c48a02af891b26d88e2099251d",
+      "size": 1630,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/5bb906b743a37d3f134c7dd6d3a24ec4b98df509ceee26db8de74e9bc910fcb2",
+      "role": "workspace_config",
+      "sha256": "5bb906b743a37d3f134c7dd6d3a24ec4b98df509ceee26db8de74e9bc910fcb2",
+      "size": 3957,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/d81cb447fb9f44c7c93bf8a4ad04aac3852b97624ddeafeb3d0938a5862a817d",
+      "role": "parity",
+      "sha256": "d81cb447fb9f44c7c93bf8a4ad04aac3852b97624ddeafeb3d0938a5862a817d",
+      "size": 4384,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/971ebb66d4e470a6cd038d24388f822d11852e24445270b6dfb5b609e68afcd0",
+      "role": "verifier",
+      "sha256": "971ebb66d4e470a6cd038d24388f822d11852e24445270b6dfb5b609e68afcd0",
+      "size": 191,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "airtable_list_bases",
+    "airtable_list_tables",
+    "airtable_list_records",
+    "airtable_search_records",
+    "open-library_get_book_by_title",
+    "open-library_get_authors_by_name",
+    "open-library_get_author_info",
+    "git_git_status",
+    "git_git_diff_unstaged",
+    "git_git_diff_staged",
+    "git_git_diff",
+    "git_git_log",
+    "github_search_code",
+    "github_search_repositories",
+    "github_search_users",
+    "github_get_issue",
+    "github_search_issues",
+    "context7_resolve-library-id",
+    "context7_get-library-docs",
+    "weather_find_weather_stations",
+    "weather-data_weather_history",
+    "weather-data_weather_astronomy"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "nightingale-author-vehicles-delivered",
+  "schema_version": 1,
+  "servers": [
+    "airtable",
+    "open-library",
+    "git",
+    "github",
+    "context7",
+    "weather",
+    "weather-data"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/nightingale-author-vehicles-delivered/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "34725b699e5fa21800a4c20565f7c8078aa09a8a0bf4d6bdce377a8905c63aca",
+      "size": 4677,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/nightingale-author-vehicles-delivered/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "68952adeba1c2ad4e6a5db91",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/nightingale-author-vehicles-delivered",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

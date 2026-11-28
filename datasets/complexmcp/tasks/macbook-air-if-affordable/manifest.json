@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "dataset": "complexmcp",
+  "id": "macbook-air-if-affordable",
+  "seed": 8,
+  "system_time": "2026-03-30T01:03:06Z",
+  "python_runtime": "monty",
+  "cli_format": "mirage-mcp",
+  "apps": [
+    "LightSystem",
+    "LightShop"
+  ],
+  "assets": [
+    {
+      "target": "workspace/tools.json",
+      "role": "tools",
+      "path": "assets/sha256/45ceaed8c7b8997216ef67f3fb6d0657d54ac379a09f96f1e1d7b9c8359d28f4",
+      "sha256": "45ceaed8c7b8997216ef67f3fb6d0657d54ac379a09f96f1e1d7b9c8359d28f4",
+      "size": 158232
+    },
+    {
+      "target": "workspace/instructions.md",
+      "role": "instructions",
+      "path": "assets/sha256/8d0beff99539cc887da3ae6e28bd2d6a67929ad4becf3fe35ba5bc429b72068a",
+      "sha256": "8d0beff99539cc887da3ae6e28bd2d6a67929ad4becf3fe35ba5bc429b72068a",
+      "size": 65743
+    },
+    {
+      "target": "verifier/expected.json",
+      "role": "expected",
+      "path": "assets/sha256/31bdfd23aff5d84d076f8c208bc270e3977b1ccb371642ff6e87545d63e11d5d",
+      "sha256": "31bdfd23aff5d84d076f8c208bc270e3977b1ccb371642ff6e87545d63e11d5d",
+      "size": 132286
+    },
+    {
+      "target": "software/LightShop/corpus/shop.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/3ba885f586414b7ca31c6d80bc4aa843781e3781ae52829777569fcf632d5b2d",
+      "sha256": "3ba885f586414b7ca31c6d80bc4aa843781e3781ae52829777569fcf632d5b2d",
+      "size": 69234
+    }
+  ],
+  "upstream_revision": "7c01f92e38be6e0c193d5c6c9a55baa92fb628cb",
+  "row_sha256": "a79a6deeccd5742c2d58b6c8c019c02a2df097c5915e48e536011510da00b811"
+}

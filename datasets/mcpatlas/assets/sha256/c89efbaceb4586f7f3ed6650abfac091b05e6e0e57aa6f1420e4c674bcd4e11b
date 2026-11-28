@@ -1,0 +1,80 @@
+{
+  "note": "Both arms read one tree at one path -- the MCP arm's servers read the image's own /data in the run's container, and the mirage /data mount is a copy of it taken out of the same image -- and one Notion and one Slack, the fakes this run starts, seeded from Atlas's exports. Live services Atlas enables beside the task have no reply case: `map` checks that each CLI is the server's own tool, schema for schema, and a live reply is not the same twice.",
+  "cases": [
+    {
+      "name": "list_directory",
+      "why": "both arms see the same tree -- the eight CSVs and the repos/ directory",
+      "mcp": {
+        "server": "filesystem",
+        "tool": "list_directory",
+        "args": {
+          "path": "/data"
+        },
+        "pipe": "sed -n 's/^\\[FILE\\] //p; s/^\\[DIR\\] //p' | sort"
+      },
+      "mirage": {
+        "command": "ls /data",
+        "pipe": "sort"
+      }
+    },
+    {
+      "name": "read_graph",
+      "why": "the memory CLI is the MCP arm's memory server over the same graph file",
+      "mcp": {
+        "server": "memory",
+        "tool": "read_graph",
+        "args": {},
+        "pipe": "jq -r '.entities[].name' | sort"
+      },
+      "mirage": {
+        "command": "memory read-graph '{}'",
+        "pipe": "jq -r '.entities[].name' | sort"
+      }
+    },
+    {
+      "name": "cheapest",
+      "why": "the same cheapest furnished four-bedroom apartments on the third floor or below",
+      "mcp": {
+        "server": "notion",
+        "tool": "API-post-database-query",
+        "args": {
+          "database_id": "21b97551-844e-8090-b48d-d33c1c2be7f8",
+          "filter": {
+            "and": [
+              {
+                "property": "Bedrooms",
+                "number": {
+                  "equals": 4
+                }
+              },
+              {
+                "property": "Floor",
+                "number": {
+                  "less_than_or_equal_to": 3
+                }
+              },
+              {
+                "property": "FurnishingStatus",
+                "select": {
+                  "equals": "Furnished"
+                }
+              }
+            ]
+          },
+          "page_size": 3,
+          "sorts": [
+            {
+              "property": "MonthlyRent",
+              "direction": "ascending"
+            }
+          ]
+        },
+        "pipe": "jq -r '.results[].id'"
+      },
+      "mirage": {
+        "command": "notion post-database-query '{\"database_id\": \"21b97551-844e-8090-b48d-d33c1c2be7f8\", \"filter\": {\"and\": [{\"property\": \"Bedrooms\", \"number\": {\"equals\": 4}}, {\"property\": \"Floor\", \"number\": {\"less_than_or_equal_to\": 3}}, {\"property\": \"FurnishingStatus\", \"select\": {\"equals\": \"Furnished\"}}]}, \"page_size\": 3, \"sorts\": [{\"property\": \"MonthlyRent\", \"direction\": \"ascending\"}]}'",
+        "pipe": "jq -r '.results[].id'"
+      }
+    }
+  ]
+}

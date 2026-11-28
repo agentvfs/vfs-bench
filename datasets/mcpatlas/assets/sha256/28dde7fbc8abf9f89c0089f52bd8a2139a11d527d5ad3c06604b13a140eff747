@@ -1,0 +1,115 @@
+{
+  "note": "Both arms read one tree at one path -- the MCP arm's servers read the image's own /data in the run's container, and the mirage /data mount is a copy of it taken out of the same image. Notion is the fake both arms read, seeded per run from Atlas's export. The calendar is the Google Workspace fake both arms read, seeded per run from Atlas's export.",
+  "cases": [
+    {
+      "name": "read_graph",
+      "why": "the memory CLI is the MCP arm's memory server over the same graph file",
+      "mcp": {
+        "server": "memory",
+        "tool": "read_graph",
+        "args": {},
+        "pipe": "jq -r '.entities[].name' | sort"
+      },
+      "mirage": {
+        "command": "memory read-graph '{}'",
+        "pipe": "jq -r '.entities[].name' | sort"
+      }
+    },
+    {
+      "name": "search_nodes",
+      "why": "the memory CLI is the MCP arm's memory server over the same graph file",
+      "mcp": {
+        "server": "memory",
+        "tool": "search_nodes",
+        "args": {
+          "query": "Alice"
+        }
+      },
+      "mirage": {
+        "command": "memory search-nodes '{\"query\":\"Alice\"}'"
+      }
+    },
+    {
+      "name": "list_directory",
+      "why": "both arms see the same tree -- the eight CSVs and the repos/ directory",
+      "mcp": {
+        "server": "filesystem",
+        "tool": "list_directory",
+        "args": {
+          "path": "/data"
+        },
+        "pipe": "sed -n 's/^\\[FILE\\] //p; s/^\\[DIR\\] //p' | sort"
+      },
+      "mirage": {
+        "command": "ls /data",
+        "pipe": "sort"
+      }
+    },
+    {
+      "name": "consumption",
+      "why": "the same survey rows, by age group",
+      "mcp": {
+        "server": "filesystem",
+        "tool": "read_file",
+        "args": {
+          "path": "/data/food and beverage consumption.csv"
+        },
+        "pipe": "grep '18-24'"
+      },
+      "mirage": {
+        "command": "grep '18-24' '/data/food and beverage consumption.csv'"
+      }
+    },
+    {
+      "name": "may_requests",
+      "why": "the same service requests in May 2017",
+      "mcp": {
+        "server": "notion",
+        "tool": "API-post-database-query",
+        "args": {
+          "database_id": "21b97551-844e-808d-a0c5-ed2d08f39729",
+          "filter": {
+            "and": [
+              {
+                "property": "InteractionDate",
+                "date": {
+                  "on_or_after": "2017-05-01"
+                }
+              },
+              {
+                "property": "InteractionDate",
+                "date": {
+                  "before": "2017-06-01"
+                }
+              }
+            ]
+          },
+          "page_size": 20
+        },
+        "pipe": "jq -r '.results[].id'"
+      },
+      "mirage": {
+        "command": "notion post-database-query '{\"database_id\": \"21b97551-844e-808d-a0c5-ed2d08f39729\", \"filter\": {\"and\": [{\"property\": \"InteractionDate\", \"date\": {\"on_or_after\": \"2017-05-01\"}}, {\"property\": \"InteractionDate\", \"date\": {\"before\": \"2017-06-01\"}}]}, \"page_size\": 20}'",
+        "pipe": "jq -r '.results[].id'"
+      }
+    },
+    {
+      "name": "list_events",
+      "why": "both arms find the same events on July 15, 2025, New York time",
+      "mcp": {
+        "server": "google-workspace",
+        "tool": "list_events",
+        "args": {
+          "timeMin": "2025-07-15T04:00:00Z",
+          "timeMax": "2025-07-16T04:00:00Z",
+          "maxResults": 50
+        },
+        "pipe": "jq -r '.[].id' | sort"
+      },
+      "mirage": {
+        "command": "ls /calendar/primary/2025-07-15",
+        "pipe": "sed 's/__.*//' | sort"
+      }
+    }
+  ]
+}

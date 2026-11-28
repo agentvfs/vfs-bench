@@ -1,0 +1,10 @@
+{
+  "id": "toolathlon_notion-personal-website",
+  "fixtures": [
+    {
+      "id": "notion/notion-personal-website",
+      "kind": "script",
+      "run": "shared/seed_notion.py"
+    }
+  ]
+}

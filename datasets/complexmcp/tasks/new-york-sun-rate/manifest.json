@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "dataset": "complexmcp",
+  "id": "new-york-sun-rate",
+  "seed": 11,
+  "system_time": "2026-06-25T16:28:58Z",
+  "python_runtime": "monty",
+  "cli_format": "mirage-mcp",
+  "apps": [
+    "LightSystem",
+    "LightTalk",
+    "LightWeather"
+  ],
+  "assets": [
+    {
+      "target": "workspace/tools.json",
+      "role": "tools",
+      "path": "assets/sha256/45ceaed8c7b8997216ef67f3fb6d0657d54ac379a09f96f1e1d7b9c8359d28f4",
+      "sha256": "45ceaed8c7b8997216ef67f3fb6d0657d54ac379a09f96f1e1d7b9c8359d28f4",
+      "size": 158232
+    },
+    {
+      "target": "workspace/instructions.md",
+      "role": "instructions",
+      "path": "assets/sha256/8d0beff99539cc887da3ae6e28bd2d6a67929ad4becf3fe35ba5bc429b72068a",
+      "sha256": "8d0beff99539cc887da3ae6e28bd2d6a67929ad4becf3fe35ba5bc429b72068a",
+      "size": 65743
+    },
+    {
+      "target": "verifier/expected.json",
+      "role": "expected",
+      "path": "assets/sha256/af1908ee09eb8603d17b8b472c76cd9adc189baed19420ddaa948601805d900d",
+      "sha256": "af1908ee09eb8603d17b8b472c76cd9adc189baed19420ddaa948601805d900d",
+      "size": 98392
+    },
+    {
+      "target": "software/LightTalk/corpus/contact.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/099ea613408c2ac6ce9c75f9723812dab05356acaad8abe728a5ab00c0bd2863",
+      "sha256": "099ea613408c2ac6ce9c75f9723812dab05356acaad8abe728a5ab00c0bd2863",
+      "size": 6785
+    },
+    {
+      "target": "software/LightTalk/corpus/message.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/f5291cf497927d67e5e2721437c09b5711f0453bf09bc08736fa7e8bc13d0272",
+      "sha256": "f5291cf497927d67e5e2721437c09b5711f0453bf09bc08736fa7e8bc13d0272",
+      "size": 18514
+    },
+    {
+      "target": "software/LightTalk/corpus/moment.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/7e2fc988d4af1ef1a78844ef873cd6fcfdf7a28e29148145e7f16081ae2e517d",
+      "sha256": "7e2fc988d4af1ef1a78844ef873cd6fcfdf7a28e29148145e7f16081ae2e517d",
+      "size": 39181
+    },
+    {
+      "target": "software/LightWeather/corpus/weather.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/59affbe16a20faef6a1173ae351b8b7c8efa58b7e550dca82d904b6ce1be8d90",
+      "sha256": "59affbe16a20faef6a1173ae351b8b7c8efa58b7e550dca82d904b6ce1be8d90",
+      "size": 18873
+    }
+  ],
+  "upstream_revision": "7c01f92e38be6e0c193d5c6c9a55baa92fb628cb",
+  "row_sha256": "fe5d864a6e5611e4bf5caf7ff760bc8fdaefb2e735031921d5bbe54171a4785c"
+}

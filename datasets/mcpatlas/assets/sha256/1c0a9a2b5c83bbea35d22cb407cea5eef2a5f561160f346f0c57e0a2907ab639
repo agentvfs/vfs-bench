@@ -1,0 +1,74 @@
+{
+  "note": "Both arms read one tree at one path -- the MCP arm's servers read the image's own /data in the run's container, and the mirage /data mount is a copy of it taken out of the same image -- and one Notion and one Slack, the fakes this run starts, seeded from Atlas's exports. Live services Atlas enables beside the task have no reply case: `map` checks that each CLI is the server's own tool, schema for schema, and a live reply is not the same twice.",
+  "cases": [
+    {
+      "name": "channels_list",
+      "why": "both arms list the same six channels of the same workspace",
+      "mcp": {
+        "server": "slack",
+        "tool": "channels_list",
+        "args": {
+          "channel_types": "public_channel,private_channel"
+        },
+        "pipe": "sed 1d | cut -d, -f1 | sort"
+      },
+      "mirage": {
+        "command": "ls /slack/channels",
+        "pipe": "sed 's/.*__//' | sort"
+      }
+    },
+    {
+      "name": "read_graph",
+      "why": "the memory CLI is the MCP arm's memory server over the same graph file",
+      "mcp": {
+        "server": "memory",
+        "tool": "read_graph",
+        "args": {},
+        "pipe": "jq -r '.entities[].name' | sort"
+      },
+      "mirage": {
+        "command": "memory read-graph '{}'",
+        "pipe": "jq -r '.entities[].name' | sort"
+      }
+    },
+    {
+      "name": "parking",
+      "why": "the same furnished apartments with parking and three or more bedrooms",
+      "mcp": {
+        "server": "notion",
+        "tool": "API-post-database-query",
+        "args": {
+          "database_id": "21b97551-844e-8090-b48d-d33c1c2be7f8",
+          "filter": {
+            "and": [
+              {
+                "property": "ParkingAvailable",
+                "checkbox": {
+                  "equals": true
+                }
+              },
+              {
+                "property": "Bedrooms",
+                "number": {
+                  "greater_than_or_equal_to": 3
+                }
+              },
+              {
+                "property": "FurnishingStatus",
+                "select": {
+                  "equals": "Furnished"
+                }
+              }
+            ]
+          },
+          "page_size": 10
+        },
+        "pipe": "jq -r '.results[].id'"
+      },
+      "mirage": {
+        "command": "notion post-database-query '{\"database_id\": \"21b97551-844e-8090-b48d-d33c1c2be7f8\", \"filter\": {\"and\": [{\"property\": \"ParkingAvailable\", \"checkbox\": {\"equals\": true}}, {\"property\": \"Bedrooms\", \"number\": {\"greater_than_or_equal_to\": 3}}, {\"property\": \"FurnishingStatus\", \"select\": {\"equals\": \"Furnished\"}}]}, \"page_size\": 10}'",
+        "pipe": "jq -r '.results[].id'"
+      }
+    }
+  ]
+}

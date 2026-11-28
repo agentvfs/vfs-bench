@@ -1,0 +1,111 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/1871e854839543909dfca81ec2201d129749634fe177c054d166d5b9eca99fc2",
+      "role": "workspace",
+      "sha256": "1871e854839543909dfca81ec2201d129749634fe177c054d166d5b9eca99fc2",
+      "size": 2020,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/2da05d128e29f5989c8be44fa70edae9f14fccd5e83e4f11076342c5d63357b5",
+      "role": "workspace_config",
+      "sha256": "2da05d128e29f5989c8be44fa70edae9f14fccd5e83e4f11076342c5d63357b5",
+      "size": 2628,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/bfa39cfc6ba16b0c930627c4266d5dafc24e7822c8dff240756825b9154fc4e8",
+      "role": "parity",
+      "sha256": "bfa39cfc6ba16b0c930627c4266d5dafc24e7822c8dff240756825b9154fc4e8",
+      "size": 3704,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/09cf6a9835c3857628a4d36c6ad65e68770209eff6865c9919acf9a2b157eae8",
+      "role": "verifier",
+      "sha256": "09cf6a9835c3857628a4d36c6ad65e68770209eff6865c9919acf9a2b157eae8",
+      "size": 286,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "notion_API-get-users",
+    "notion_API-get-user",
+    "notion_API-get-self",
+    "notion_API-post-database-query",
+    "notion_API-post-search",
+    "notion_API-get-block-children",
+    "notion_API-retrieve-a-block",
+    "notion_API-retrieve-a-page",
+    "notion_API-retrieve-a-database",
+    "notion_API-retrieve-a-page-property",
+    "notion_API-retrieve-a-comment",
+    "oxylabs_universal_scraper",
+    "oxylabs_google_search_scraper",
+    "oxylabs_amazon_search_scraper",
+    "fetch_fetch",
+    "mcp-server-code-runner_run-code"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "spain-world-cup-apartment-rent",
+  "schema_version": 1,
+  "servers": [
+    "notion",
+    "oxylabs",
+    "fetch",
+    "mcp-server-code-runner"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/spain-world-cup-apartment-rent/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "824675151743724cbb881da68d8eaeb1516658923b3e37cffb49d2b601792937",
+      "size": 5945,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/spain-world-cup-apartment-rent/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "68824c643e6ff020bc33990b",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/spain-world-cup-apartment-rent",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

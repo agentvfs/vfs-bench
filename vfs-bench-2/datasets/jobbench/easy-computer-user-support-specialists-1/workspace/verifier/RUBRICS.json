@@ -1,0 +1,85 @@
+{
+  "rubrics": [
+    {
+      "rubric": "Does the submission include both requested deliverables for the Iowa mailing-support scenario?",
+      "weight": 5,
+      "criterion": [
+        "The submission includes a support note aimed at the outreach manager.",
+        "The submission includes a quick-start guide aimed at staff who will use the Iowa relationship file in a spreadsheet.",
+        "Both deliverables stay focused on the Iowa congressional-mailing workflow."
+      ]
+    },
+    {
+      "rubric": "Does the support note recommend the correct relationship file for Iowa-only mailing work?",
+      "weight": 9,
+      "criterion": [
+        "The note identifies `tab20_cd11820_zcta520_natl.txt` as the national file and `tab20_cd11820_zcta520_st19.txt` as the Iowa-only file.",
+        "The note states that `tab20_cd11820_zcta520_st19.txt` should be the default file for routine Iowa congressional-mailing work.",
+        "The note states that the national file is only needed when the work extends beyond Iowa or requires national scope."
+      ]
+    },
+    {
+      "rubric": "Does the support note accurately explain why the national relationship file is harder to use in a spreadsheet?",
+      "weight": 8,
+      "criterion": [
+        "The note explains that `tab20_cd11820_zcta520_natl.txt` is much larger than the Iowa file.",
+        "The note gives a size comparison consistent with the reference files, such as about 40,289 lines versus 1,095 lines.",
+        "The note ties that size difference to usability for Iowa-only spreadsheet work."
+      ]
+    },
+    {
+      "rubric": "Does the support note correctly explain the root cause of the spreadsheet-opening problem?",
+      "weight": 8,
+      "criterion": [
+        "The note states that the relationship files are pipe-delimited text files rather than ready-to-use spreadsheet workbooks.",
+        "The note explains that opening the file without specifying the `|` delimiter can leave the fields unusable in a spreadsheet view.",
+        "The note recommends importing the text file with delimiter settings instead of treating it as a preformatted spreadsheet."
+      ]
+    },
+    {
+      "rubric": "Does the support note correctly explain why repeated Iowa ZCTA rows can be valid?",
+      "weight": 10,
+      "criterion": [
+        "The note explains that each row represents a congressional-district and ZCTA intersection, not a promise that each ZCTA appears only once.",
+        "The note states that the same `GEOID_ZCTA5_20` can legitimately appear on multiple rows when it intersects more than one congressional district.",
+        "The note identifies `AREALAND_PART` or `AREAWATER_PART` as intersection-level fields that show the portion of the ZCTA inside a district."
+      ]
+    },
+    {
+      "rubric": "Does the support note give the correct operational rule for ZCTAs that intersect more than one congressional district?",
+      "weight": 10,
+      "criterion": [
+        "The note states that a ZCTA with more than one row in the Iowa file is split across multiple districts.",
+        "The note says staff should not assign a split ZCTA to a single congressional district by default.",
+        "The note instructs staff to perform additional review before using a split ZCTA in a district-specific mailing list, such as address-level verification or another finer-grain check."
+      ]
+    },
+    {
+      "rubric": "Does the support note directly correct the misconception that repeated rows make the file unreliable?",
+      "weight": 8,
+      "criterion": [
+        "The note explicitly says that repeated Iowa ZCTA rows are not, by themselves, evidence of a bad file.",
+        "The note warns users not to delete or deduplicate repeated ZCTA rows before checking district assignments.",
+        "The note explains that removing repeated rows can discard valid district-coverage information."
+      ]
+    },
+    {
+      "rubric": "Does the support note use at least one real Iowa example to show why repeated ZCTA rows can be valid?",
+      "weight": 7,
+      "criterion": [
+        "The note includes at least one actual Iowa ZCTA example from `tab20_cd11820_zcta520_st19.txt`.",
+        "If the example is `50106`, it correctly identifies districts `1901`, `1902`, and `1904`; if the example is `50320`, it correctly identifies districts `1901` and `1903`.",
+        "The example is used to show that one ZCTA can legitimately map to multiple district rows."
+      ]
+    },
+    {
+      "rubric": "Does the support note include the requested compact Iowa district table with correct land area and urban population percentage values for Districts 1 through 4?",
+      "weight": 10,
+      "criterion": [
+        "The table includes Iowa Congressional Districts 1, 2, 3, and 4.",
+        "District 1 is shown as 10,844.74 square miles and 62.12% urban population, and District 2 is shown as 12,902.71 square miles and 60.40% urban population.",
+        "District 3 is shown as 10,672.89 square miles and 77.63% urban population, and District 4 is shown as 21,433.08 square miles and 52.46% urban population."
+      ]
+    }
+  ]
+}

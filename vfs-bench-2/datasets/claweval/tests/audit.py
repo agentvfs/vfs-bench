@@ -1,7 +1,8 @@
 """Differential check of the TypeScript port against upstream's graders.
 
 Each case is a trial's frozen inputs: the trajectory, the tool CLIs'
-dispatches, each service's audit and the gws run's tables. The reference
+dispatches, each service's audit, the gws run's tables and, for a task
+that lists upstream's shell tool, the agent's shell commands. The reference
 (reference.py: upstream's Python under CPython) grades it with a scripted
 judge and records the judge's tape; the port grades it replaying that
 tape, so its every judge request must be the reference's, byte for byte.
@@ -409,6 +410,31 @@ def case(task, index, empty=False, solution=None):
                     tables["Event"].remove(victim)
                 else:
                     victim["status"] = "cancelled"
+    history = None
+    if any(t["name"] == "Bash" for t in tools):
+        history = []
+        for i in range(0 if empty else rng.randint(0, 5)):
+            at = 1772442000000 + i * 1000
+            history.append({
+                "type": "command",
+                "session": "s",
+                "timestamp": at,
+                "cwd": "/",
+                "id": f"exec_{i}",
+                "command": text(rng, vocab, rng.randint(1, 4))
+            })
+            if rng.random() < 0.85:
+                history.append({
+                    "type": "result",
+                    "session": "s",
+                    "timestamp": at + 10,
+                    "cwd": "/",
+                    "parent": f"exec_{i}",
+                    "duration_ms": 10,
+                    "exit_code": rng.choice([0, 0, 1, 127]),
+                    "stdout": text(rng, vocab, rng.randint(0, 6)),
+                    "stderr": text(rng, vocab, rng.randint(0, 2))
+                })
     trajectory = None if empty and index % 2 else json.dumps(
         {
             "schema_version":
@@ -437,6 +463,8 @@ def case(task, index, empty=False, solution=None):
                   for d in dispatches) + ("\n" if dispatches else ""),
         "seed":
         seed_file.read_text() if seed_file.exists() else None,
+        "history":
+        None if history is None else json.dumps(history, ensure_ascii=False),
     }
 
 
@@ -523,6 +551,7 @@ def recorded(trial):
         "trajectory": files.get("/input/trajectory.json"),
         "dispatches": files.get("/input/dispatches.jsonl"),
         "seed": files.get("/input/gws_seed.json"),
+        "history": files.get("/input/history.json"),
     }
     tape = json.loads((verifier / "judge-recording.json").read_text())
 

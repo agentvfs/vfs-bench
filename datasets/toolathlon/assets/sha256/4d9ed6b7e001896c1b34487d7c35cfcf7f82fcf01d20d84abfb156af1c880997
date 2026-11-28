@@ -1,0 +1,131 @@
+{
+  "cases": [
+    {
+      "name": "list_folders",
+      "why": "both arms see the one folder the seeder made",
+      "note": "by name: a mount path carries no folder id, so the ids are compared through list_spreadsheets instead",
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "list_folders",
+        "args": {},
+        "jq": ".name"
+      },
+      "mirage": {
+        "command": "ls /gd"
+      }
+    },
+    {
+      "name": "list_spreadsheets",
+      "why": "the spreadsheet in the scoped folder is the same file with the same id",
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "list_spreadsheets",
+        "args": {},
+        "jq": "{id,title}"
+      },
+      "mirage": {
+        "command": "cat '/gd/NHL-B2B-Analysis/NHL 2425 Schedule.gsheet.json'",
+        "jq": "{id:.spreadsheetId,title:.properties.title}"
+      }
+    },
+    {
+      "name": "list_sheets",
+      "why": "the tab list is the same, in the same order",
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "list_sheets",
+        "args": {
+          "spreadsheet_id": "f0002"
+        }
+      },
+      "mirage": {
+        "command": "cat '/gd/NHL-B2B-Analysis/NHL 2425 Schedule.gsheet.json' | jq -r '.sheets[].properties.title'"
+      }
+    },
+    {
+      "name": "get_sheet_data",
+      "why": "the cells read back identically through the tool and through the mount",
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "get_sheet_data",
+        "args": {
+          "spreadsheet_id": "f0002",
+          "sheet": "Sheet1",
+          "range": "A1:C3"
+        },
+        "jq": ".valueRanges[0].values"
+      },
+      "mirage": {
+        "command": "cat '/gd/NHL-B2B-Analysis/NHL 2425 Schedule.gsheet.json'",
+        "jq": "[.sheets[0].data[0].rowData[0:3][] | [.values[0:3][].formattedValue]]"
+      }
+    },
+    {
+      "name": "create_spreadsheet",
+      "why": "a create through either arm leaves the same Drive behind",
+      "mutates": [
+        "gws"
+      ],
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "create_spreadsheet",
+        "args": {
+          "title": "Parity Check"
+        },
+        "jq": "{id:.spreadsheetId,title:.title}"
+      },
+      "mirage": {
+        "command": "google-sheet create-spreadsheet '{\"title\":\"Parity Check\"}'",
+        "jq": "{id:.spreadsheetId,title:.title}"
+      }
+    },
+    {
+      "name": "update_cells",
+      "why": "a write through either arm lands in the same cells",
+      "mutates": [
+        "gws"
+      ],
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "update_cells",
+        "args": {
+          "spreadsheet_id": "f0002",
+          "sheet": "Sheet1",
+          "range": "H1:I2",
+          "data": [
+            [
+              "parity",
+              "check"
+            ],
+            [
+              "second",
+              "row"
+            ]
+          ]
+        }
+      },
+      "mirage": {
+        "command": "google-sheet update-cells '{\"spreadsheet_id\":\"f0002\",\"sheet\":\"Sheet1\",\"range\":\"H1:I2\",\"data\":[[\"parity\",\"check\"],[\"second\",\"row\"]]}'"
+      }
+    },
+    {
+      "name": "add_rows",
+      "why": "a structural change leaves the same grid on both arms",
+      "mutates": [
+        "gws"
+      ],
+      "mcp": {
+        "server": "google_sheet",
+        "tool": "add_rows",
+        "args": {
+          "spreadsheet_id": "f0002",
+          "sheet": "Sheet1",
+          "count": 3
+        }
+      },
+      "mirage": {
+        "command": "google-sheet add-rows '{\"spreadsheet_id\":\"f0002\",\"sheet\":\"Sheet1\",\"count\":3}'"
+      }
+    }
+  ]
+}

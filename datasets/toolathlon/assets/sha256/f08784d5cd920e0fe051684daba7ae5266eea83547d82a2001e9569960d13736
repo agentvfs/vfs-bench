@@ -1,0 +1,10 @@
+{
+  "id": "toolathlon_git-repo",
+  "fixtures": [
+    {
+      "id": "github/git-repo",
+      "kind": "script",
+      "run": "shared/seed_github.py"
+    }
+  ]
+}

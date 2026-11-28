@@ -1,0 +1,151 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/ac24bd8299fe85af89aa3f6e47408d5d9e28adc09c1ca70b042212046dabc559",
+      "role": "service_config",
+      "sha256": "ac24bd8299fe85af89aa3f6e47408d5d9e28adc09c1ca70b042212046dabc559",
+      "size": 35,
+      "target": "shared/wandb.json"
+    },
+    {
+      "path": "assets/sha256/a56e4d3753ecdd4170f78e241cc07744abf61960793746385a6126dc5a9c30ee",
+      "role": "seed_manifest",
+      "sha256": "a56e4d3753ecdd4170f78e241cc07744abf61960793746385a6126dc5a9c30ee",
+      "size": 65,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/81ad8b4228347217bde7456609dc1315510d453b466d3e3543051bd3e356440c",
+      "role": "parity_test",
+      "sha256": "81ad8b4228347217bde7456609dc1315510d453b466d3e3543051bd3e356440c",
+      "size": 8052,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/c1952f2f1e4cea2c726cb58bbf64536c78d52f63fd1a983ceb354e88ba7a7705",
+      "role": "workspace_documentation",
+      "sha256": "c1952f2f1e4cea2c726cb58bbf64536c78d52f63fd1a983ceb354e88ba7a7705",
+      "size": 523,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/759e17c3d8bec7241f6bbdbbb1251b24614ba7ea1a6cbc8544324ca99705d931",
+      "role": "workspace_config",
+      "sha256": "759e17c3d8bec7241f6bbdbbb1251b24614ba7ea1a6cbc8544324ca99705d931",
+      "size": 1036,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "wandb-shortest-length",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/wandb-shortest-length/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/wandb-shortest-length/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/wandb-shortest-length/shared/task.md",
+      "role": "instruction",
+      "sha256": "7e5de0e7faf205626398aee54141d5875c838f23462636c05fed9832ee93d8a4",
+      "size": 416,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/wandb-shortest-length/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/wandb-shortest-length/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "3cdca8a2ade6a1d74b449e06303f14e08d364a6c5e81d827b38b30821c9219da",
+      "size": 5313,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/wandb-shortest-length/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/wandb-shortest-length/groundtruth_workspace/shortest_length_experiment.csv",
+      "role": "verifier_input",
+      "sha256": "0b6353049595f6750e6cdfb19f09bcd0afcaad4f6f8dd2384f002977aca0c6fd",
+      "size": 234,
+      "target": "upstream/groundtruth_workspace/shortest_length_experiment.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/wandb-shortest-length/groundtruth_workspace/shortest_length_experiment.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/wandb-shortest-length/initial_workspace/shortest_length_experiment.csv",
+      "role": "initial_workspace",
+      "sha256": "e570ffc393a9f730f5e5b498915fd49db3d9603f3b4c7c2c55c49d9f75a3309d",
+      "size": 65,
+      "target": "upstream/initial_workspace/shortest_length_experiment.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/wandb-shortest-length/initial_workspace/shortest_length_experiment.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/wandb-shortest-length/task_config.json",
+      "role": "upstream_config",
+      "sha256": "639c6067117b4071e4748ca3c5d5444039cf8290d465952d2222a2df3980f083",
+      "size": 227,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/wandb-shortest-length/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/wandb-shortest-length/README.md",
+      "role": "documentation",
+      "sha256": "0f4be1be8f907c69017762987e2f4e7c4ddb27f8cc85e6ddf12d484656274a42",
+      "size": 545,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/wandb-shortest-length/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/wandb-shortest-length/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "3f1113b5e201d73173ce35b53b7e0dcb7a0a27af54f6baf69735597ebf996eef",
+      "size": 53075,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/wandb-shortest-length/vfs/SKILL.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/shared/fixtures/wandb/deepscaler-1.5b.json",
+      "role": "fixture_source",
+      "sha256": "b93d374fb6191b122aabd3be2e5da7f073ab3ea310416f3182a2ebf250f2a1ab",
+      "size": 29559239,
+      "target": "suite_shared/fixtures/wandb/deepscaler-1.5b.json",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/shared/fixtures/wandb/deepscaler-1.5b.json"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/wandb-shortest-length",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/wandb-shortest-length",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "wandb",
+      "filesystem",
+      "terminal",
+      "excel"
+    ]
+  }
+}

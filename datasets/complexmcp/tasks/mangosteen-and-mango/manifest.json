@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "dataset": "complexmcp",
+  "id": "mangosteen-and-mango",
+  "seed": 8,
+  "system_time": "2026-03-30T01:03:06Z",
+  "python_runtime": "monty",
+  "cli_format": "mirage-mcp",
+  "apps": [
+    "LightSystem",
+    "LightShop"
+  ],
+  "assets": [
+    {
+      "target": "workspace/tools.json",
+      "role": "tools",
+      "path": "assets/sha256/45ceaed8c7b8997216ef67f3fb6d0657d54ac379a09f96f1e1d7b9c8359d28f4",
+      "sha256": "45ceaed8c7b8997216ef67f3fb6d0657d54ac379a09f96f1e1d7b9c8359d28f4",
+      "size": 158232
+    },
+    {
+      "target": "workspace/instructions.md",
+      "role": "instructions",
+      "path": "assets/sha256/8d0beff99539cc887da3ae6e28bd2d6a67929ad4becf3fe35ba5bc429b72068a",
+      "sha256": "8d0beff99539cc887da3ae6e28bd2d6a67929ad4becf3fe35ba5bc429b72068a",
+      "size": 65743
+    },
+    {
+      "target": "verifier/expected.json",
+      "role": "expected",
+      "path": "assets/sha256/2644e24f27ad83a50d510765d3eb1706dfcfae14426bf5b1eb5815f3462f245e",
+      "sha256": "2644e24f27ad83a50d510765d3eb1706dfcfae14426bf5b1eb5815f3462f245e",
+      "size": 132318
+    },
+    {
+      "target": "software/LightShop/corpus/shop.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/3ba885f586414b7ca31c6d80bc4aa843781e3781ae52829777569fcf632d5b2d",
+      "sha256": "3ba885f586414b7ca31c6d80bc4aa843781e3781ae52829777569fcf632d5b2d",
+      "size": 69234
+    }
+  ],
+  "upstream_revision": "7c01f92e38be6e0c193d5c6c9a55baa92fb628cb",
+  "row_sha256": "e6224bdcb01d5a3c34da58fb19b57e84c54ceaeb202ae48b79c179832338f314"
+}
