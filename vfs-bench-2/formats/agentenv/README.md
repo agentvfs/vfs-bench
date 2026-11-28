@@ -2,8 +2,8 @@
 
 vfs-bench-2 tasks under [agent-env](https://github.com/scaleapi/agentenv-framework)
 (`agentenv-framework` 0.9.1634), beside [Harbor](../harbor/README.md). A task's
-terminal is its Mirage workspace instead of a Docker container. Only ComplexMCP
-has a bundle so far.
+terminal is its Mirage workspace instead of a Docker container: Mirage's Python
+`Workspace`, in the env's own process. Only ComplexMCP has a bundle so far.
 
 ## How we integrate
 
@@ -12,13 +12,31 @@ We follow agent-env's terminal-task pattern
 and plug Mirage in through two of its classes:
 
 - `sandbox.py`: a `SandboxProvider`, registered as `mirage`. Each sandbox is one
-  task's Mirage workspace (its fakes, a daemon and the workspace). An env's
-  Dockerfile names the task's `workspace.yaml`, and the provider opens that
-  instead of building an image.
-- `server.py`: the env's `AgentEnvEnvironment`.
-  - The agent's one tool is `shell`, on the task's workspace.
-  - The verifier's `computer-exec/v1` `run` goes to a grade workspace on the same
-    daemon, over the task's frozen state.
+  task's env server and its runs on the shared fakes. An env's Dockerfile
+  names the task's `workspace.yaml`, and the provider opens that instead of
+  building an image.
+- `fakes.py`: the fakes a run's tasks share, one per service, as Harbor's job
+  shares them. Each task is a run of its own on each: its own SQLite file, and
+  a port that reaches that run alone.
+- `server.py`: the env's `AgentEnvEnvironment`, holding the task's workspace.
+  - The agent's one tool is `shell`, a line in that workspace.
+  - The verifier's `computer-exec/v1` `run` goes to a grade workspace over the
+    task's frozen state, whose `grade` runs the task's grader in node.
+  - `urn:mirage:workspace/v1` `snapshot` answers the task's environment as one
+    JSON document: its Mirage workspace (Mirage's own snapshot), its runs on
+    the fakes (the kit's `GET /_kit/runs/<run>/snapshot`), the tools' dispatch
+    log, the last reserved tool-call ID and its clock. A clone is a new env
+    of the task loaded with another's snapshot. During `load`, shell and grade
+    requests wait. A failed load restores the previous state. If a service
+    also fails during rollback, reset the environment before using it again.
+- `tools.py`: the task's tools as CLIs, as `workspace/cli.ts` makes them for
+  Harbor's TypeScript Mirage. The agent sees the same `SKILL.md`, help and
+  output on either.
+
+The TypeScript daemon's `preload.ts` becomes the workspace's own config: its
+`network` (the task's fake runs alone, upstream's ports routed to them) and its
+`system_time`. `python3` is CPython's WASI build, where the TypeScript Mirage
+runs Pyodide.
 
 Each task runs agent-env's own steps:
 
@@ -26,14 +44,16 @@ Each task runs agent-env's own steps:
 sequenceDiagram
     participant Run as agent-env run
     participant Provider as mirage sandbox provider
+    participant Fakes as shared fakes (fakes.py)
     participant Env as env server (server.py)
-    participant Mirage as Mirage daemon
+    participant Mirage as Mirage workspace (in server.py)
     participant Agent as agent (Docker)
 
     Run->>Provider: deploy_env (sandbox_type mirage)
     Provider->>Provider: read LABEL workspace= from the Dockerfile
-    Provider->>Env: start, data/add the task
-    Env->>Mirage: open fakes and the task's workspace
+    Provider->>Fakes: start each fake once, open the task's runs
+    Provider->>Env: start, data/add the task and its runs
+    Env->>Mirage: open the task's workspace
     Run->>Agent: deploy_agent, prompt_agent
     Agent->>Env: shell (MCP)
     Env->>Mirage: run the line in the workspace
@@ -43,6 +63,7 @@ sequenceDiagram
     Run->>Env: data/get logs/verifier/reward.txt
     Run->>Provider: teardown (terminate_sandbox)
     Provider->>Env: data/reset (saves history), stop
+    Provider->>Fakes: drop the task's runs
 ```
 
 A task in `datasets/<dataset>/agentenv/` (written by `bundle.py`):
@@ -61,10 +82,14 @@ and its reward file is `logs/verifier/reward.txt`.
 ## Install
 
 You need Node 24.15 or later (or name a binary with `VFSBENCH_NODE`), uv, and
-the Mirage submodule built, as for Harbor. From `vfs-bench-2/`:
+the Mirage submodule built, as for Harbor. The sync builds Mirage's Python
+package from the submodule, which needs `cargo` on `PATH`. From `vfs-bench-2/`:
 
 ```sh
+# Fetch the pinned ComplexMCP corpus and generate the private grader inputs.
+uv run --project datasets/complexmcp python -I datasets/complexmcp/download.py
 uv sync --project formats/agentenv
+python3 -I formats/agentenv/python.py   # python3's CPython WASI build, into state/cpython-wasi
 ```
 
 An agent also needs Docker running, for the agent's own container, and
@@ -84,6 +109,10 @@ uv run --project formats/agentenv agent-env run datasets/complexmcp/agentenv \
 # Each task's solution/solve.sh, then its test (no agent, no Docker).
 uv run --project formats/agentenv python -I formats/agentenv/oracle.py complexmcp [-n 4]
 
+# The same, and a clone of each solved env tested too, and the env loaded back
+# to its start.
+uv run --project formats/agentenv python -I formats/agentenv/oracle.py complexmcp --clone
+
 # Write or check a bundle, and the tests.
 uv run --project formats/agentenv python -I formats/agentenv/bundle.py complexmcp [--check]
 uv run --project formats/agentenv python -I formats/agentenv/test_agentenv.py
@@ -93,32 +122,29 @@ A task's files are under `state/agentenv/<task>-<id>/`:
 
 - `verifier/logs/verifier/grade.json` and `reward.txt`
 - `history.jsonl`
-- the daemon's and the fakes' logs
+
+The fakes' logs, which a run's tasks share, are under
+`state/agentenv/fakes-<pid>/`.
 
 ## Memory
 
-One ComplexMCP task (`unblock-relatives`), private memory by macOS `footprint`:
+ComplexMCP tasks held open, each after its solution, private memory by macOS
+`footprint`:
 
-| Part | Memory |
-|---|---|
-| 15 fakes, each four processes: the fake (81 MB), its launcher (45 MB), tsx (32 MB), esbuild (13 MB) | 2.5 GB |
-| Mirage TS daemon, idle | 0.33 GB |
-| The daemon's first workspace, once: its wasm modules load, then V8 optimizes them at the first `VFS.md` | 0.1 GB |
-| The task workspace | 3 MB |
-| The grade workspace | 7 MB |
-| `server.py` | 0.1 GB |
-| **One task** | **3 GB** |
-
-agent-env runs four tasks at a time, about 12 GB.
-
-Mirage's two daemons on the same pin, each workspace a RAM mount that runs a line:
-
-| Daemon | Idle | First workspace | Each after |
+| Tasks | Env servers, Mirage in each | Fakes | Total |
 |---|---|---|---|
-| TS, from source (as here) | 334 MB | +27 MB | +3 MB |
-| TS, built `dist/` | 291 MB | +27 MB | +2 MB |
-| Python | 120 MB | +1 MB | +0.2 MB |
+| 1 | 0.14 GB | 2.55 GB | 2.8 GB |
+| 10 | 1.53 GB | 3.33 GB | 5.1 GB |
+| 47 | 7.29 GB | 4.31 GB | 12 GB |
 
-The TS daemon loads all of Mirage at startup (2,476 modules). The Python one
-imports what it uses (1,170 of its 2,407 modules). These tasks need the TS
-daemon, since `workspace/` (the CLIs, `preload.ts`, `grade.ts`) is TypeScript.
+The fakes are one set for the run: 15 services, four processes each (the fake,
+81 MB; its launcher, 45 MB; tsx, 32 MB; esbuild, 13 MB). Each task adds its env
+server, about 0.15 GB (agent-env and Mirage loaded, and its workspaces; 71 MB
+more once its `python3` first runs), and its runs on the fakes, about 40 MB.
+agent-env holds a task's sandbox until the run ends, so ten tasks a run take
+about 5 GB.
+
+On Harbor's TypeScript daemon, a task's server and Mirage took 0.54 GB instead
+of 0.15 GB: the daemon 334 MB idle, as it loads all of Mirage at startup (2,476
+modules), and 0.1 GB more at its first workspace, where its wasm modules load
+and V8 optimizes them.

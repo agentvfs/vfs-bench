@@ -3,11 +3,13 @@
 An env's image is its folder's Dockerfile, whose ``LABEL workspace=`` names
 the task's ``workspace/workspace.yaml`` under ``vfs-bench-2/``.
 ``prepare_image`` reads that from the image's build context in place of a
-build, and ``create_sandbox(image_name, port, env)`` opens the workspace: a
+build, and ``create_sandbox(image_name, port, env)`` opens the workspace:
+the task's runs on the fakes this process shares (``fakes.py``), and a
 process of ``vfsbench_agentenv.server`` on this machine with that task
-loaded, ``tunnel_urls[port]`` its URL. No image is built or run. ``exec``
-runs on the workspace's shell, and ``terminate`` closes it (``data/reset``,
-saving its history) and stops the server.
+loaded over them, ``tunnel_urls[port]`` its URL. No image is built or run.
+``exec`` runs on the workspace's shell, and ``terminate`` closes it
+(``data/reset``, saving its history), stops the server and drops the
+runs.
 """
 import asyncio
 import base64
@@ -29,16 +31,18 @@ from agentenv_protocol import DataPart
 from agentenv_protocol import client as protocol
 from mcp import ClientSession
 from mcp.client.streamable_http import streamablehttp_client
-from vfsbench_agentenv.server import DATASETS, ROOT, RUNS, _free_port
+from vfsbench_agentenv import fakes
+from vfsbench_agentenv.server import DATASETS, ROOT, RUNS, _free_port, run_id
 
 CARD = "/.well-known/agent-env.json"
 LOAD_TIMEOUT = 600
 
 LABEL = re.compile(r"^LABEL\s+workspace=(\S+)\s*$", re.MULTILINE)
 
-# The servers this process started, by sandbox id; the workspace.yaml each
-# prepared image names, by image name.
+# The servers this process started and their tasks' runs, by sandbox id;
+# the workspace.yaml each prepared image names, by image name.
 _SERVERS: dict[str, asyncio.subprocess.Process] = {}
+_RUNS: dict[str, list[fakes.Run]] = {}
 _WORKSPACES: dict[str, str] = {}
 
 
@@ -156,26 +160,39 @@ class MirageSandboxProvider(SandboxProvider):
         own = _free_port()
         url = f"http://127.0.0.1:{own}"
         RUNS.mkdir(parents=True, exist_ok=True)
-        with (RUNS /
-              f"server-{task.replace('/', '-')}-{own}.log").open("ab") as log:
-            # Its stdin stays open: it exits when this process does.
-            process = await asyncio.create_subprocess_exec(
-                sys.executable,
-                "-m",
-                "vfsbench_agentenv.server",
-                env={
-                    **os.environ,
-                    **env, "MCP_HOST": "127.0.0.1",
-                    "MCP_PORT": str(own)
-                },
-                stdin=asyncio.subprocess.PIPE,
-                stdout=log,
-                stderr=log)
+        run = run_id(task)
+        runs = await fakes.open_task(task, run)
+        try:
+            with (RUNS / f"server-{task.replace('/', '-')}-{own}.log"
+                  ).open("ab") as log:
+                # Its stdin stays open: it exits when this process does.
+                process = await asyncio.create_subprocess_exec(
+                    sys.executable,
+                    "-m",
+                    "vfsbench_agentenv.server",
+                    env={
+                        **os.environ,
+                        **env, "MCP_HOST": "127.0.0.1",
+                        "MCP_PORT": str(own)
+                    },
+                    stdin=asyncio.subprocess.PIPE,
+                    stdout=log,
+                    stderr=log)
+        except BaseException:
+            await fakes.close_task(runs)
+            raise
         sandbox_id = f"mirage-{process.pid}-{own}"
         _SERVERS[sandbox_id] = process
+        _RUNS[sandbox_id] = runs
         try:
             await _card(url, process)
-            await protocol.add_data(url, [DataPart(data={"task": task})],
+            await protocol.add_data(url, [
+                DataPart(data={
+                    "task": task,
+                    "run": run,
+                    "fakes": fakes.views(task, runs)
+                })
+            ],
                                     timeout=LOAD_TIMEOUT)
         except BaseException:
             await _stop(sandbox_id)
@@ -218,22 +235,29 @@ async def _card(url: str, process: asyncio.subprocess.Process) -> None:
 
 
 async def _stop(sandbox_id: str) -> None:
-    """Close the workspace, saving its history, then stop its server."""
+    """Close the workspace, saving its history, stop its server, then drop
+    its runs."""
     pid, own = _parse(sandbox_id)
-    try:
-        await protocol.reset_data(f"http://127.0.0.1:{own}", timeout=60)
-    except Exception:
-        pass
-    process = _SERVERS.pop(sandbox_id, None)
-    if process is None:
+    process = _SERVERS.get(sandbox_id)
+    if process is None or process.returncode is None:
         try:
-            os.kill(pid, signal.SIGTERM)
-        except ProcessLookupError:
+            await protocol.reset_data(f"http://127.0.0.1:{own}", timeout=60)
+        except Exception:
             pass
-        return
-    if process.returncode is None:
-        process.terminate()
-        try:
-            await asyncio.wait_for(process.wait(), 30)
-        except TimeoutError:
-            process.kill()
+        if process is None:
+            try:
+                os.kill(pid, signal.SIGTERM)
+            except ProcessLookupError:
+                pass
+        elif process.returncode is None:
+            process.terminate()
+            try:
+                await asyncio.wait_for(process.wait(), 30)
+            except TimeoutError:
+                process.kill()
+                await process.wait()
+    # A failed deletion leaves the runs and the exited process handle
+    # available for retry. Repeating DELETE for an absent run succeeds.
+    await fakes.close_task(_RUNS.get(sandbox_id, []))
+    _RUNS.pop(sandbox_id, None)
+    _SERVERS.pop(sandbox_id, None)
