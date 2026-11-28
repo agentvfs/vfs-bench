@@ -86,6 +86,8 @@ the Mirage submodule built, as for Harbor. The sync builds Mirage's Python
 package from the submodule, which needs `cargo` on `PATH`. From `vfs-bench-2/`:
 
 ```sh
+# Fetch the pinned ComplexMCP corpus and generate the private grader inputs.
+uv run --project datasets/complexmcp python -I datasets/complexmcp/download.py
 uv sync --project formats/agentenv
 python3 -I formats/agentenv/python.py   # python3's CPython WASI build, into state/cpython-wasi
 ```
