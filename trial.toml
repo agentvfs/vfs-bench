@@ -1,8 +1,0 @@
-[trial]
-environment = "suite"
-cpus = 1
-memory = "2G"
-timeout_sec = 120
-
-[verifier]
-name = "suite"

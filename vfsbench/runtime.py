@@ -20,6 +20,7 @@ from .verifier import (AgentResult, CommandEvent, TrialReport, TrialTrace,
 
 if TYPE_CHECKING:
     from mirage.commands.cli.types import CLI
+    from mirage.config import WorkspaceConfig
     from mirage.vfs.base import BaseVFS
     from mirage.workspace.workspace import Workspace
 
@@ -34,7 +35,7 @@ class TrialConfig:
     auto_build_snapshot: bool = True
     cpus: int = 1
     memory: str = "2G"
-    timeout_sec: int = 120
+    timeout_sec: int | None = None
     work_dir: Path | None = None
     workspace_yaml: Path | None = None
     environment: str = "suite"
@@ -56,10 +57,11 @@ class TrialConfig:
             snapshot_name(self.python_packages)
         if type(self.auto_build_snapshot) is not bool:
             raise ValueError("auto_build_snapshot must be a boolean")
-        for name in ("cpus", "timeout_sec"):
-            value = getattr(self, name)
-            if type(value) is not int or value <= 0:
-                raise ValueError(f"{name} must be a positive integer")
+        if type(self.cpus) is not int or self.cpus <= 0:
+            raise ValueError("cpus must be a positive integer")
+        if self.timeout_sec is not None and (type(self.timeout_sec) is not int
+                                             or self.timeout_sec <= 0):
+            raise ValueError("timeout_sec must be a positive integer")
         if not re.fullmatch(r"[1-9][0-9]*[KMG]?", self.memory):
             raise ValueError("memory must be an msb size, for example '2G'")
         if not isinstance(self.suite_options, dict):
@@ -93,6 +95,41 @@ class TrialConfig:
         return cls(**trial,
                    suite_options=values.get("suite_options", {}),
                    verifier=VerifierConfig(**values.get("verifier", {})))
+
+
+def is_workspace_file(path: Path) -> bool:
+    return path.suffix.lower() in {".yaml", ".yml", ".json"}
+
+
+def resolve_config(
+    config: TrialConfig | WorkspaceConfig | str | Path | None,
+    workspace: WorkspaceConfig | str | Path | None = None
+) -> tuple[TrialConfig, WorkspaceConfig | Path | None]:
+    """Resolve controller settings and the native Mirage workspace source."""
+    if isinstance(config, (str, Path)):
+        config = Path(config).expanduser()
+        if not is_workspace_file(config):
+            config = TrialConfig.from_toml(config)
+    if config is None or isinstance(config, TrialConfig):
+        runtime = config or TrialConfig()
+    else:
+        if workspace is not None:
+            raise ValueError(
+                "Two Mirage workspace configurations were supplied")
+        workspace = config
+        runtime = TrialConfig()
+    if isinstance(workspace, (str, Path)):
+        workspace = Path(workspace).expanduser()
+        runtime = replace(runtime, workspace_yaml=workspace)
+    elif workspace is not None:
+        from mirage.config import WorkspaceConfig
+
+        if not isinstance(workspace, WorkspaceConfig):
+            raise TypeError(
+                "Expected a Mirage WorkspaceConfig or workspace file")
+    else:
+        workspace = runtime.workspace_yaml
+    return runtime, workspace
 
 
 @dataclass
@@ -205,7 +242,7 @@ class VerifierGuest:
                 dest = Path(directory, *relative.parts)
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 dest.write_bytes(contents)
-            async with asyncio.timeout(self.config.timeout_sec):
+            async with asyncio.timeout(self.config.timeout_sec or 120):
                 await _msb("copy", "--quiet", directory,
                            f"{self.name}:/grading")
                 return await _msb_result("exec", "--workdir", "/grading",
@@ -224,10 +261,11 @@ def _prepare(suite: str):
     return prepare
 
 
-def _workspace_config(prepared: TrialEnvironment,
-                      run_dir: Path,
-                      name: str,
-                      workspace_yaml: Path | None = None) -> dict:
+def _workspace_config(
+        prepared: TrialEnvironment,
+        run_dir: Path,
+        name: str,
+        workspace: WorkspaceConfig | str | Path | None = None) -> dict:
     values = dict(prepared.workspace)
     mounts = dict(values.get("mounts", {}))
     if prepared.instructions:
@@ -272,11 +310,14 @@ def _workspace_config(prepared: TrialEnvironment,
                       **(values.get("machines") or {}),
                       **machines
                   })
-    if workspace_yaml is not None:
-        from mirage.config import load_config
+    if workspace is not None:
+        from mirage.config import WorkspaceConfig, load_config
+        from mirage.types import Limit
 
-        overlay = load_config(Path(workspace_yaml).expanduser()).model_dump(
-            exclude_unset=True, by_alias=True)
+        spec = workspace if isinstance(workspace,
+                                       WorkspaceConfig) else load_config(
+                                           Path(workspace).expanduser())
+        overlay = spec.model_dump(exclude_unset=True, by_alias=True)
         reserved = {
             "machines": set(values["machines"]),
             "clis": set(values.get("clis") or {}) | prepared.clis.keys(),
@@ -291,16 +332,21 @@ def _workspace_config(prepared: TrialEnvironment,
                     path.is_relative_to(p) or p.is_relative_to(path)
                     for p in protected)):
                 raise ValueError(
-                    f"Workspace YAML conflicts with trial mounts: {prefix}")
+                    f"Workspace config conflicts with trial mounts: {prefix}")
         for key in ("system_time", "network"):
             if key in prepared.workspace and key in overlay and overlay[
                     key] != values[key]:
-                raise ValueError(f"Workspace YAML replaces trial {key}")
+                raise ValueError(f"Workspace config replaces trial {key}")
         for key, names in reserved.items():
             if conflicts := names.intersection(overlay.get(key) or {}):
-                raise ValueError(
-                    f"Workspace YAML replaces trial {key}: {sorted(conflicts)}"
-                )
+                raise ValueError(f"Workspace config replaces trial {key}: "
+                                 f"{sorted(conflicts)}")
+        # A partial override inherits the task's other limits for this command.
+        for command, limit in (spec.command_limits or {}).items():
+            if command in (values.get("command_limits") or {}):
+                base = Limit.model_validate(values["command_limits"][command])
+                overlay["command_limits"][command] = Limit.layered(
+                    (limit, base)).model_dump(exclude_unset=True)
         for key in (*reserved, "mounts", "profiles", "secrets",
                     "command_limits"):
             if additions := overlay.pop(key, None):
@@ -330,11 +376,13 @@ class Trial:
     def __init__(self,
                  task: Task,
                  *,
-                 config: TrialConfig | None = None,
+                 config: TrialConfig | WorkspaceConfig | str | Path
+                 | None = None,
+                 workspace: WorkspaceConfig | str | Path | None = None,
                  verifier: Verifier | None = None,
                  environment: EnvironmentFactory | None = None):
         self.task = task
-        self.config = config if config is not None else TrialConfig()
+        self.config, self._workspace_source = resolve_config(config, workspace)
         if task._dataset.local_files_only:
             self.config = replace(self.config, auto_build_snapshot=False)
         if verifier is not None and self.config.verifier.name != "suite":
@@ -465,7 +513,7 @@ class Trial:
                 name = f"vfsbench-{self.id}"
                 spec = WorkspaceConfig.model_validate(
                     _workspace_config(prepared, run, name,
-                                      self.config.workspace_yaml))
+                                      self._workspace_source))
                 # Register cleanup before restore, which can allocate the VM
                 # and then fail.
                 if prepared.python:
@@ -532,9 +580,7 @@ class Trial:
             self._require_recording()
             started = datetime.now(UTC).isoformat()
             try:
-                async with asyncio.timeout(
-                        self.config.timeout_sec if timeout_sec is
-                        None else timeout_sec):
+                async with asyncio.timeout(timeout_sec):
                     result = await self.workspace.shell(command,
                                                         cwd=cwd,
                                                         env=env)

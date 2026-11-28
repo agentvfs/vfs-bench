@@ -13,6 +13,8 @@ from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING, Self, overload
 
 if TYPE_CHECKING:
+    from mirage.config import WorkspaceConfig
+
     from .runtime import EnvironmentFactory, Trial, TrialConfig
     from .verifier import Verifier
 
@@ -62,7 +64,8 @@ class Task:
 
     def open(self,
              *,
-             config: TrialConfig | None = None,
+             config: TrialConfig | WorkspaceConfig | str | Path | None = None,
+             workspace: WorkspaceConfig | str | Path | None = None,
              verifier: Verifier | None = None,
              environment: EnvironmentFactory | None = None) -> Trial:
         """Create an attempt. Entering its async context starts the services
@@ -71,6 +74,7 @@ class Task:
 
         return Trial(self,
                      config=config,
+                     workspace=workspace,
                      verifier=verifier,
                      environment=environment)
 

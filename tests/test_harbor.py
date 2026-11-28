@@ -23,13 +23,18 @@ class HarborTests(unittest.IsolatedAsyncioTestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             task = "wandb-best-score"
+            workspace = root / "workspace.yaml"
+            workspace.write_text("mounts: {/scratch: {vfs: ram}}\n")
             programmatic = export("toolathlon",
                                   root / "api",
+                                  config=workspace,
                                   task_ids=[task],
                                   concurrency=2)
             main([
                 "harbor", "export", "toolathlon", "--output",
-                str(root / "cli"), "--task", task, "--concurrency", "2"
+                str(root / "cli"), "--task", task, "--concurrency", "2",
+                "--config",
+                str(workspace)
             ])
             self.assertEqual(programmatic.read_bytes(),
                              (root / "cli/job.json").read_bytes())
@@ -39,10 +44,31 @@ class HarborTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(job["environment"]["import_path"],
                              "vfsbench.harbor:MirageEnvironment")
             self.assertEqual(job["n_concurrent_trials"], 2)
+            self.assertEqual(job["environment"]["kwargs"]["workspace_yaml"],
+                             "../workspace.yaml")
             self.assertNotIn("local_files_only", job["environment"]["kwargs"])
             self.assertEqual(
                 {item.name
                  for item in (root / "cli/tasks").iterdir()}, {task})
+
+    def test_export_embeds_a_native_workspace_config(self):
+        from mirage.config import WorkspaceConfig
+
+        workspace = WorkspaceConfig(
+            mounts={},
+            max_memory="64MB",
+            command_limits={"@line": {
+                "timeout_seconds": 7
+            }})
+        with tempfile.TemporaryDirectory() as directory:
+            path = export("toolathlon",
+                          Path(directory) / "job",
+                          config=workspace,
+                          task_ids=["wandb-best-score"])
+            kwargs = json.loads(path.read_bytes())["environment"]["kwargs"]
+            spec = WorkspaceConfig.model_validate(kwargs["workspace_config"])
+            self.assertEqual(spec, workspace)
+            self.assertEqual(spec.model_fields_set, workspace.model_fields_set)
 
     def test_export_ported_toolathlon_tasks(self):
         from vfsbench.suites.toolathlon import SUPPORTED

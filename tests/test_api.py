@@ -14,6 +14,59 @@ from vfsbench.verifier import SuiteVerifier
 
 class RunTests(unittest.TestCase):
 
+    def test_mirage_workspace_limits_in_python_and_cli(self):
+        from mirage.config import load_config
+        from mirage.errors.types import QuotaExceededError
+        from vfsbench import Toolathlon
+
+        async def evaluate(view):
+            return {"reward": 0}
+
+        @asynccontextmanager
+        async def environment(task, config, directory):
+            yield TrialEnvironment({}, SuiteVerifier(evaluate), python=False)
+
+        with tempfile.TemporaryDirectory() as temp, patch(
+                "vfsbench.runtime._prepare", return_value=environment):
+            root = Path(temp)
+            path = root / "workspace.yaml"
+            path.write_text(
+                'mounts: {/scratch: {vfs: ram, mode: write}}\n'
+                'max_memory: 2MB\n'
+                'command_limits: {"@line": {timeout_seconds: 0.1}}\n')
+            native = load_config(path)
+            task = Toolathlon()["wandb-best-score"]
+
+            async def check():
+                async with task.open(config=native) as trial:
+                    with self.assertRaises(QuotaExceededError):
+                        await trial.workspace.vfs.write(
+                            "/scratch/large", bytes(3 * 1024 * 1024))
+                    result = await trial.exec("sleep 2")
+                    self.assertEqual(result.return_code, 124)
+                    self.assertIn("timed out", result.stderr)
+                    self.assertEqual(trial.trace.commands[-1].return_code, 124)
+                    self.assertEqual((await trial.exec("echo ready")).stdout,
+                                     "ready\n")
+                return await run("toolathlon",
+                                 task=task.id,
+                                 config=native,
+                                 command="sleep 2")
+
+            report = asyncio.run(check())
+            self.assertEqual(report.trace.commands[-1].return_code, 124)
+            self.assertEqual(report.verification.reward, 0)
+            output = root / "report"
+            with redirect_stdout(io.StringIO()):
+                code = main([
+                    "run", "toolathlon", "--task", task.id, "--config",
+                    str(path), "--output",
+                    str(output), "shell", "-c", "sleep 2", "--json"
+                ])
+            self.assertEqual(code, 124)
+            saved = json.loads((output / "trial.json").read_bytes())
+            self.assertEqual(saved["verification"]["reward"], 0)
+
     def test_cli_and_application_use_same_live_verifier_and_report(self):
 
         @asynccontextmanager

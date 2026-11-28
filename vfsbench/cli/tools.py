@@ -1,4 +1,3 @@
-import asyncio
 import json
 from functools import partial
 
@@ -26,8 +25,7 @@ async def _call(service, name, schema, call, accessor, paths, texts, ctx):
             raise ValueError(problem.message)
     except ValueError as exc:
         return None, IOResult(exit_code=2, stderr=f"{exc}\n".encode())
-    async with asyncio.timeout(60):
-        text, code = await call(name, args)
+    text, code = await call(name, args)
     return text.encode(), IOResult(exit_code=code)
 
 

@@ -13,6 +13,29 @@ from vfsbench.verifier import AgentResult, SuiteVerifier, VerificationResult
 
 class LifecycleTests(unittest.IsolatedAsyncioTestCase):
 
+    def test_partial_mirage_command_limit_inherits_task_fields(self):
+        from mirage.config import WorkspaceConfig
+        from vfsbench.runtime import _workspace_config
+
+        task = TrialEnvironment({
+            "command_limits": {
+                "cat": {
+                    "max_lines": 3,
+                    "timeout_seconds": 5
+                }
+            }
+        })
+        workspace = WorkspaceConfig(
+            mounts={}, command_limits={"cat": {
+                "timeout_seconds": 1
+            }})
+        with tempfile.TemporaryDirectory() as directory:
+            spec = _workspace_config(task, Path(directory), "test", workspace)
+            self.assertEqual(spec["command_limits"]["cat"], {
+                "max_lines": 3,
+                "timeout_seconds": 1
+            })
+
     def test_config_paths_and_sections(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "trial.toml"

@@ -3,36 +3,30 @@ from __future__ import annotations
 import asyncio
 import json
 from collections.abc import Awaitable, Callable, Iterable
-from dataclasses import replace
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from .dataset import Dataset, load_dataset
-from .runtime import TrialConfig
+from .runtime import TrialConfig, resolve_config
 from .suites import execution_status
 from .verifier import TrialReport
 
 if TYPE_CHECKING:
+    from mirage.config import WorkspaceConfig
     from mirage.workspace.workspace import Workspace
-
-
-def _config(config: TrialConfig | str | Path | None) -> TrialConfig:
-    if isinstance(config, (str, Path)):
-        return TrialConfig.from_toml(config)
-    return config if config is not None else TrialConfig()
 
 
 def status(release: str | Path | Dataset,
            *,
            task_ids: Iterable[str] | None = None,
            revision: str | None = None,
-           config: TrialConfig | str | Path | None = None,
+           config: TrialConfig | WorkspaceConfig | str | Path | None = None,
            local_files_only: bool = False) -> dict[str, tuple[str, str]]:
     """Map task IDs to their adapter status and service requirements."""
     dataset = load_dataset(release,
                            revision=revision,
                            local_files_only=local_files_only)
-    runtime = _config(config)
+    runtime, _ = resolve_config(config)
     tasks = dataset if task_ids is None else (dataset[key] for key in task_ids)
     return {task.id: execution_status(task, runtime) for task in tasks}
 
@@ -43,7 +37,7 @@ async def run(release: str | Path | Dataset,
               action: Callable[[Workspace], Awaitable[object]] | None = None,
               command: str | None = None,
               revision: str | None = None,
-              config: TrialConfig | str | Path | None = None,
+              config: TrialConfig | WorkspaceConfig | str | Path | None = None,
               workspace_yaml: str | Path | None = None,
               output: str | Path | None = None,
               local_files_only: bool = False) -> TrialReport:
@@ -58,20 +52,17 @@ async def run(release: str | Path | Dataset,
                                       release,
                                       revision=revision,
                                       local_files_only=local_files_only)
-    runtime = _config(config)
-    if workspace_yaml is not None:
-        runtime = replace(runtime, workspace_yaml=Path(workspace_yaml))
-    trial = dataset[task].open(config=runtime)
+    trial = dataset[task].open(config=config, workspace=workspace_yaml)
     directory = Path(output) if output is not None else None
     if directory is not None:
         directory.mkdir(parents=True, exist_ok=False)
     try:
         async with trial:
-            if action is not None:
-                async with asyncio.timeout(trial.config.timeout_sec):
+            async with asyncio.timeout(trial.config.timeout_sec):
+                if action is not None:
                     await action(trial.workspace)
-            elif command is not None:
-                await trial.exec(command)
+                elif command is not None:
+                    await trial.exec(command)
             await trial.verify()
     finally:
         if directory is not None:

@@ -35,7 +35,8 @@ def main(argv=None):
             "release",
             help="checkout suite name, release directory, or Hub dataset ID")
         cmd.add_argument("--revision", help="Hub revision to resolve and pin")
-        cmd.add_argument("--config", help="trial configuration TOML")
+        cmd.add_argument("--config",
+                         help="Mirage workspace YAML/JSON or trial TOML")
         cmd.add_argument("--local-files-only",
                          "--offline",
                          action="store_true",

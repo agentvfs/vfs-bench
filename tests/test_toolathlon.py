@@ -46,7 +46,7 @@ class GoogleWorkspaceMockTest(unittest.IsolatedAsyncioTestCase):
                 root = Path(temp)
                 path = root / "workspace.yaml"
                 path.write_text(setting)
-                with self.assertRaisesRegex(ValueError, "Workspace YAML"):
+                with self.assertRaisesRegex(ValueError, "Workspace config"):
                     _workspace_config(env, root, "test", path)
 
     async def test_concurrent_processes_keep_output_private(self):

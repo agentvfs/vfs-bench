@@ -36,8 +36,8 @@ Use `--output run1` before `shell` or `workspace` to save the controller's repor
 | Operation | CLI | Python |
 | --- | --- | --- |
 | Select a Hub revision | `--revision COMMIT` | `revision=commit` |
-| Apply lifecycle and verifier settings | `--config trial.toml` | `config="trial.toml"` |
-| Load Mirage workspace YAML | `--workspace-yaml workspace.yaml` | `workspace_yaml="workspace.yaml"` |
+| Load Mirage workspace settings | `--config workspace.yaml` | `config="workspace.yaml"` or `config=WorkspaceConfig(...)` |
+| Select guest provisioning or a verifier | `--config trial.toml` | `config=TrialConfig(...)` |
 | Save the report to a new directory | `--output run1` | `output="run1"` |
 | Inspect service requirements | `vfsbench status toolathlon --task wandb-best-score` | `status("toolathlon", task_ids=["wandb-best-score"])` |
 
@@ -45,18 +45,22 @@ Use `--output run1` before `shell` or `workspace` to save the controller's repor
 
 Toolathlon ships its workspace defaults in the Python package. Each of the 38 task IDs selects its built-in Mirage commands and whether the agent has a CPython guest. The suite adapter binds the live service endpoints, custom commands and filesystems for each trial. Opening a task in Python, from the CLI, or through Harbor applies those settings automatically. [Toolathlon workspace definitions](../vfsbench/suites/toolathlon_workspace.py)
 
-Pass the same Mirage workspace file to a Python run, a CLI run or a Harbor job. For example, save this as `workspace.yaml` to give each trial a writable RAM mount.
+Pass the same Mirage workspace file to a Python run, a CLI run or a Harbor job. This example gives the trial a writable RAM mount and gives each shell line a 30-second deadline. The 64 MB workspace budget covers RAM-backed files and command working memory. A mock server running in its own process allocates memory separately.
 
 ```yaml
 mounts:
   /scratch:
     vfs: ram
     mode: write
+max_memory: 64MB
+command_limits:
+  "@line":
+    timeout_seconds: 30
 ```
 
 ```sh
-vfsbench run complexmcp --task good-morning-paisley --workspace-yaml workspace.yaml workspace vfs readdir /scratch
-vfsbench harbor export complexmcp --task good-morning-paisley --workspace-yaml workspace.yaml --output job
+vfsbench run complexmcp --task good-morning-paisley --config workspace.yaml workspace vfs readdir /scratch
+vfsbench harbor export complexmcp --task good-morning-paisley --config workspace.yaml --output job
 ```
 
 ```python
@@ -68,10 +72,23 @@ async def inspect(ws):
     print(await result.stdout_str())
 
 report = await run("complexmcp", task="good-morning-paisley",
-                   workspace_yaml="workspace.yaml", action=inspect)
+                   config="workspace.yaml", action=inspect)
 ```
 
-For an open trial, pass `TrialConfig(workspace_yaml=Path("workspace.yaml"))` to `task.open(config=...)`. You can also set `workspace_yaml = "workspace.yaml"` under `[trial]` in TOML. Paths there resolve relative to the TOML file. An explicit run or export option takes precedence. Harbor reads the referenced file when it starts a trial.
+In a script or notebook, pass Mirage's own configuration object directly.
+
+```python
+from mirage.config import WorkspaceConfig
+from vfsbench import Toolathlon
+
+workspace = WorkspaceConfig(
+    mounts={}, max_memory="64MB", command_limits={"@line": {"timeout_seconds": 30}}
+)
+async with Toolathlon()["wandb-best-score"].open(config=workspace) as trial:
+    result = await trial.workspace.shell("ls /wandb")
+```
+
+`task.open`, `run`, and `harbor.export` accept either form. Harbor references a workspace file by path and embeds an in-memory configuration in the exported job. If you also use a controller TOML, pass `--config trial.toml --workspace-yaml workspace.yaml`, or set `workspace_yaml` under `[trial]` relative to the TOML file.
 
 Mirage loads and validates the YAML. Use `mounts: {}` when configuring only profiles, limits or environment variables. The application can add a scratch mount, another CLI, or resource limits. Task-owned mount trees, CLI names, machine names, environment variables, and any task-specified clock and mock network settings are reserved.
 
@@ -142,7 +159,7 @@ The verifier gets a read-only view of one attempt.
 
 A Python runner can capture a structured return value with `trial.record_result(AgentResult(output=value))` and an agent trajectory with `trial.record_agent_trace(trajectory)`. Both are optional. Mirage records native shell output, exit codes, and VFS calls in `trial.trace.workspace_events`. Calls made through the Harbor adapter or the existing `trial.exec()` helper also populate `trial.trace.commands`. A verifier can grade an attempt entirely from service state. It can include selected observations in `VerificationResult.details` so they survive teardown. The full mock database lives only for the duration of the trial. A verifier exception propagates and is recorded separately from a benchmark reward.
 
-For a reusable verifier selected by TOML, register the verifier class in your installed project's `[project.entry-points."vfsbench.verifiers"]`. The entry point name goes in `[verifier].name`, and `[verifier.options]` contains its constructor arguments. The included trial configuration uses `name = "suite"`. The `[trial]` section controls the snapshot, CPU count, memory, command timeout and optional staging parent directory. Suite-specific service settings go in `[suite_options]`. [Example configuration](../trial.toml)
+For a reusable verifier selected by TOML, register the verifier class in your installed project's `[project.entry-points."vfsbench.verifiers"]`. The entry point name goes in `[verifier].name`, and `[verifier.options]` contains its constructor arguments. The optional `[trial]` section configures the guest snapshot, vCPUs and guest RAM passed to `msb restore`. Its optional `timeout_sec` sets a controller deadline for the entire `run` action and for a private grader guest invocation. Grader guest invocations default to 120 seconds. Mirage enforces workspace command limits. Suite-specific service settings go in `[suite_options]`.
 
 ### Own a service's lifecycle
 

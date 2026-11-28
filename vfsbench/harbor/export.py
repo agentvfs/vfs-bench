@@ -7,9 +7,14 @@ import os
 import re
 import tempfile
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from vfsbench.dataset import Dataset, load_dataset
+from vfsbench.runtime import TrialConfig, is_workspace_file, resolve_config
 from vfsbench.suites import execution_status
+
+if TYPE_CHECKING:
+    from mirage.config import WorkspaceConfig
 
 
 def manifest_hash(manifest: dict) -> str:
@@ -19,7 +24,7 @@ def manifest_hash(manifest: dict) -> str:
 
 def export(dataset: Dataset | str | Path,
            output: str | Path,
-           config: str | Path | None = None,
+           config: WorkspaceConfig | str | Path | None = None,
            *,
            workspace_yaml: str | Path | None = None,
            task_ids=None,
@@ -35,18 +40,24 @@ def export(dataset: Dataset | str | Path,
     if output.exists():
         raise FileExistsError(
             f"Choose a new directory for the Harbor export: {output}")
-    from vfsbench.runtime import TrialConfig
-
     options = {"local_files_only": True} if dataset.local_files_only else {}
-    if config is None:
-        runtime = TrialConfig()
-    else:
-        config = Path(config).resolve(strict=True)
-        runtime = TrialConfig.from_toml(config)
+    if isinstance(config, (str, Path)):
+        config = Path(config).expanduser().resolve(strict=True)
+    elif isinstance(config, TrialConfig):
+        raise TypeError("Pass controller settings to Harbor as a TOML file")
+    runtime, workspace = resolve_config(config, workspace_yaml)
+    if isinstance(config, Path) and not is_workspace_file(config):
         options["trial_config"] = os.path.relpath(config, output)
-    if workspace_yaml is not None:
+        # The adapter loads a TOML-relative workspace path when the job starts.
+        if workspace_yaml is None:
+            workspace = None
+    if isinstance(workspace, Path):
         options["workspace_yaml"] = os.path.relpath(
-            Path(workspace_yaml).expanduser().resolve(strict=True), output)
+            workspace.resolve(strict=True), output)
+    elif workspace is not None:
+        options["workspace_config"] = workspace.model_dump(mode="json",
+                                                           by_alias=True,
+                                                           exclude_unset=True)
     if dataset.repo_id:
         options.update(repo_id=dataset.repo_id, revision=dataset.revision)
     else:
@@ -156,7 +167,7 @@ def main(argv=None):
                         help="Mirage workspace configuration file")
     create.add_argument("--config",
                         type=Path,
-                        help="operator trial TOML (defaults to TrialConfig)")
+                        help="Mirage workspace YAML/JSON or trial TOML")
     create.add_argument("--output",
                         type=Path,
                         required=True,
