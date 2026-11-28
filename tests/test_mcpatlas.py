@@ -168,7 +168,7 @@ class AtlasTests(unittest.IsolatedAsyncioTestCase):
     async def test_real_git_and_github_task(self):
         config = TrialConfig(snapshot="unused",
                              suite_options={"atlas_live_github": True})
-        async with suite()["serpent-repo-first-pr-branch"].open(
+        async with suite()["serpent-repo-first-pr-branch"].start(
                 config=config) as trial:
             commit = await trial.exec(
                 "git -C /data/repos/snake-game log -1 --format=%H")
@@ -194,7 +194,7 @@ class AtlasTests(unittest.IsolatedAsyncioTestCase):
     async def test_offline_calendar_and_scoped_tools(self):
         config = TrialConfig(
             snapshot=os.environ["VFSBENCH_TEST_ATLAS_SNAPSHOT"])
-        async with suite()["florida-keys-meal-spending"].open(
+        async with suite()["florida-keys-meal-spending"].start(
                 config=config) as trial:
             query = {
                 "timeMin": "2025-07-15T04:00:00Z",
@@ -239,8 +239,8 @@ class AtlasTests(unittest.IsolatedAsyncioTestCase):
             self.assertTrue((await view.service_state("calendar"))["items"])
             return {"reward": 0}
 
-        async with task.open(config=config,
-                             verifier=SuiteVerifier(evaluate)) as first:
+        async with task.start(config=config,
+                              verifier=SuiteVerifier(evaluate)) as first:
             row = json.dumps({
                 "type": "entity",
                 "name": sample,
@@ -251,8 +251,8 @@ class AtlasTests(unittest.IsolatedAsyncioTestCase):
                 f"""printf '\\n%s\\n' '{row}' >> '{graph}'""")
             self.assertEqual(addition.return_code, 0, addition.stderr)
             await first.verify()
-        async with task.open(config=config,
-                             verifier=SuiteVerifier(evaluate)) as second:
+        async with task.start(config=config,
+                              verifier=SuiteVerifier(evaluate)) as second:
             await second.verify()
         self.assertIn(sample, {e["name"] for e in readings[0]["entities"]})
         self.assertNotIn(sample, {e["name"] for e in readings[1]["entities"]})
@@ -293,8 +293,8 @@ server.run()
                     }
                 })
             task = suite()["age-group-consumption-boss-email"]
-            async with task.open(config=config,
-                                 verifier=SuiteVerifier(evaluate)) as trial:
+            async with task.start(config=config,
+                                  verifier=SuiteVerifier(evaluate)) as trial:
                 self.assertEqual(
                     (await trial.exec("notion get-users '{}'")).stdout.strip(),
                     "public response")

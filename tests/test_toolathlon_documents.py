@@ -35,7 +35,7 @@ class DocumentTrials(unittest.IsolatedAsyncioTestCase):
 
     async def test_interview_report(self):
         task = self.suite["interview-report"]
-        async with task.open(config=self.config) as trial:
+        async with task.start(config=self.config) as trial:
             result = await trial.exec(
                 """word get-document-text """
                 """'{"filename":"/workspace/Candidates_resumes.docx"}'""")
@@ -44,7 +44,7 @@ class DocumentTrials(unittest.IsolatedAsyncioTestCase):
             self.assertNotEqual(
                 (await trial.exec("python3 --version")).return_code, 0)
             self.assertEqual((await trial.verify()).reward, 0)
-        async with task.open(config=self.config) as trial:
+        async with task.start(config=self.config) as trial:
             result = await trial.exec(
                 """word create-document """
                 """'{"filename":"/workspace/Created.docx"}'""")
@@ -64,7 +64,7 @@ class DocumentTrials(unittest.IsolatedAsyncioTestCase):
 
     async def test_ppt_analysis(self):
         task = self.suite["ppt-analysis"]
-        async with task.open(config=self.config) as trial:
+        async with task.start(config=self.config) as trial:
             self.assertEqual(
                 (await trial.service_state("pptx"))["total_presentations"], 0)
             result = await trial.exec(
@@ -82,7 +82,7 @@ class DocumentTrials(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(result.return_code, 0, result.stderr)
             self.assertIn("PDF file information", result.stdout)
             self.assertEqual((await trial.verify()).reward, 0)
-        async with task.open(config=self.config) as trial:
+        async with task.start(config=self.config) as trial:
             self.assertEqual(
                 (await trial.service_state("pptx"))["total_presentations"], 0)
             # The format fixture contains the lecture's actual reference code.

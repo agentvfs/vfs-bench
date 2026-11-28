@@ -88,7 +88,7 @@ class MirageEnvironment(BaseEnvironment):
         self.descriptor = json.loads(
             (self.environment_dir / "vfsbench.json").read_bytes())
 
-    def _open_trial(self):
+    def _make_trial(self):
         config = (TrialConfig.from_toml(self.trial_config)
                   if self.trial_config else TrialConfig())
         cpus, memory = self._effective_cpus, self._effective_memory_mb
@@ -107,14 +107,22 @@ class MirageEnvironment(BaseEnvironment):
         if manifest_hash(task.manifest) != self.descriptor["manifest_sha256"]:
             raise ValueError(
                 f"Release manifest changed since export for {task.id}")
-        return task.open(config=config, workspace=self.workspace_source)
+        return task.start(config=config,
+                          workspace=self.workspace_source,
+                          instructions_file=self.descriptor.get(
+                              "instructions_file", True))
 
     async def start(self, force_build=False):
         if self.trial is not None:
             raise RuntimeError("Trial already started")
-        self.trial = await asyncio.to_thread(self._open_trial)
+        self.trial = await asyncio.to_thread(self._make_trial)
         try:
             await self.trial.start()
+            if "instructions_file" not in self.descriptor:
+                # Older Harbor exports reference this path in instruction.md.
+                await self._mkdir(PurePosixPath("/vfsbench"))
+                await self.files.symlink("/vfsbench/INSTRUCTIONS.md",
+                                         "/INSTRUCTIONS.md")
             for directory in (EnvironmentPaths.agent_dir,
                               EnvironmentPaths.artifacts_dir,
                               EnvironmentPaths.user_agent_dir):

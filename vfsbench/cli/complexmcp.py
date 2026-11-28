@@ -1,10 +1,37 @@
 import json
 from functools import partial
 
+from mcp.types import CallToolResult, TextContent
+from mirage.accessor.base import Accessor
+from mirage.commands.cli.mcp import MCPSource, MCPTool, build_cli
 from mirage.commands.cli.types import CLI, CLIHandler
 from mirage.commands.spec.flag_view import FlagView
 from mirage.commands.spec.types import Argument, CommandSpec
 from mirage.io.types import IOResult
+
+
+class ComplexMCPAccessor(Accessor):
+
+    def __init__(self, service, invoke):
+        self.service = service
+        self.invoke = invoke
+
+    async def call_tool(self, name, arguments):
+        text = await self.invoke(self.service, name, arguments)
+        return CallToolResult(content=[TextContent(type="text", text=text)])
+
+
+def service_cli(service, invoke):
+    tools = tuple(
+        MCPTool(name=tool["name"],
+                description=tool["description"] or "",
+                input_schema=tool["parameters"],
+                annotations={}) for tool in service["tools"])
+    cli = build_cli(MCPSource(title=service["description"], tools=tools))
+    return CLI(
+        spec=cli.spec,
+        handlers=cli.handlers,
+        accessor=lambda config: ComplexMCPAccessor(service["name"], invoke))
 
 
 def _shape(schema):
@@ -49,7 +76,8 @@ def _value(flags, name, schema):
     return raw if kind == "string" else json.loads(raw)
 
 
-async def _call(mock, service, name, properties, accessor, paths, texts, ctx):
+async def _call(invoke, service, name, properties, accessor, paths, texts,
+                ctx):
     flags = FlagView(ctx.flags, ctx.spec)
     try:
         args = {
@@ -58,12 +86,12 @@ async def _call(mock, service, name, properties, accessor, paths, texts, ctx):
         }
     except ValueError as exc:
         return None, IOResult(exit_code=2, stderr=f"{exc}\n".encode())
-    output = await mock.request("call", service=service, tool=name, args=args)
+    output = await invoke(service, name, args)
     return (output if output.endswith("\n") else output +
             "\n").encode(), IOResult()
 
 
-def service_cli(service, mock):
+def legacy_flag_cli(service, invoke):
     commands, handlers = [], {}
     for tool in service["tools"]:
         schema = tool["parameters"]
@@ -75,7 +103,7 @@ def service_cli(service, mock):
                         arguments=tuple(
                             _argument(k, s, k in schema.get("required", ()))
                             for k, s in properties.items())))
-        handlers[verb] = CLIHandler(fn=partial(_call, mock, service["name"],
+        handlers[verb] = CLIHandler(fn=partial(_call, invoke, service["name"],
                                                tool["name"], properties),
                                     write=True)
     return CLI(spec=CommandSpec(name=service["name"],

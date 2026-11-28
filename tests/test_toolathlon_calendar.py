@@ -37,7 +37,7 @@ class CalendarTrials(unittest.IsolatedAsyncioTestCase):
 
     async def test_conference_deadline(self):
         task = self.suite["set-conf-cr-ddl"]
-        async with task.open(config=self.config) as trial:
+        async with task.start(config=self.config) as trial:
             state = await trial.service_state("mail")
             self.assertEqual(len(state["swright"]["INBOX"]), 18)
             self.assertIn("INBOX", (await trial.exec("ls /mail")).stdout)
@@ -71,7 +71,7 @@ class CalendarTrials(unittest.IsolatedAsyncioTestCase):
                     event if verb == "delete-event" else "Updated draft",
                     result.stdout)
             self.assertEqual((await trial.verify()).reward, 0)
-        async with task.open(config=self.config) as trial:
+        async with task.start(config=self.config) as trial:
             await self.create_event(trial, "COML camera-ready reminder",
                                     "2025-09-26T20:59:00-12:00",
                                     "2025-09-26T21:15:00-12:00")
@@ -79,7 +79,7 @@ class CalendarTrials(unittest.IsolatedAsyncioTestCase):
 
     async def test_interviews(self):
         task = self.suite["student-interview"]
-        async with task.open(config=self.config) as trial:
+        async with task.start(config=self.config) as trial:
             self.assertEqual(
                 len((await
                      trial.service_state("mail"))["susan_reyes"]["INBOX"]), 99)
@@ -93,7 +93,7 @@ class CalendarTrials(unittest.IsolatedAsyncioTestCase):
                  for e in before["events"]},
                 {"Academic Committee Meeting", "PhD Dissertation Defense"})
             self.assertEqual((await trial.verify()).reward, 0)
-        async with task.open(config=self.config) as trial:
+        async with task.start(config=self.config) as trial:
             for student, start, end in (("Nicholas Martinez", "08:00",
                                          "09:30"), ("Stephanie Rogers",
                                                     "10:00", "11:30"),

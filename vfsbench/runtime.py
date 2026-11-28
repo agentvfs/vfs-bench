@@ -9,6 +9,7 @@ from contextlib import AbstractAsyncContextManager, AsyncExitStack
 from copy import deepcopy
 from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
+from functools import partial
 from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING, Self
 from uuid import uuid4
@@ -23,6 +24,8 @@ if TYPE_CHECKING:
     from mirage.config import WorkspaceConfig
     from mirage.vfs.base import BaseVFS
     from mirage.workspace.workspace import Workspace
+
+    from .server import MockServer
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -39,6 +42,7 @@ class TrialConfig:
     work_dir: Path | None = None
     workspace_yaml: Path | None = None
     environment: str = "suite"
+    server_url: str | None = None
     suite_options: dict = field(default_factory=dict)
     verifier: VerifierConfig = field(default_factory=VerifierConfig)
 
@@ -146,6 +150,7 @@ class TrialEnvironment:
                                       Awaitable]] = field(default_factory=dict)
     clis: dict[str, CLI] = field(default_factory=dict)
     mounts: dict[str, BaseVFS] = field(default_factory=dict)
+    server: MockServer | None = None
 
 
 EnvironmentFactory = Callable[[Task, TrialConfig, Path],
@@ -249,11 +254,12 @@ class VerifierGuest:
                                          "--no-stdin", self.name, "--", *argv)
 
 
-def _prepare(suite: str):
+def _prepare(suite: str, run_id: str):
     if suite == "mcpatlas":
         from .suites.mcpatlas import prepare
     elif suite == "complexmcp":
         from .suites.complexmcp import prepare
+        return partial(prepare, run_id=run_id)
     elif suite == "toolathlon":
         from .suites.toolathlon import prepare
     else:
@@ -268,19 +274,7 @@ def _workspace_config(
         workspace: WorkspaceConfig | str | Path | None = None) -> dict:
     values = dict(prepared.workspace)
     mounts = dict(values.get("mounts", {}))
-    if prepared.instructions:
-        root = run_dir / "instructions"
-        root.mkdir()
-        (root / "INSTRUCTIONS.md").write_text(prepared.instructions,
-                                              encoding="utf-8")
-        mounts["/vfsbench"] = {
-            "vfs": "disk",
-            "mode": "read",
-            "config": {
-                "root": str(root)
-            }
-        }
-    for directory in ("workspace", "tmp", "logs"):
+    for directory in ("workspace", "tmp"):
         if f"/{directory}" not in mounts:
             root = run_dir / directory
             root.mkdir(exist_ok=True)
@@ -379,9 +373,11 @@ class Trial:
                  config: TrialConfig | WorkspaceConfig | str | Path
                  | None = None,
                  workspace: WorkspaceConfig | str | Path | None = None,
+                 instructions_file: bool = False,
                  verifier: Verifier | None = None,
                  environment: EnvironmentFactory | None = None):
         self.task = task
+        self._instructions_file = instructions_file
         self.config, self._workspace_source = resolve_config(config, workspace)
         if task._dataset.local_files_only:
             self.config = replace(self.config, auto_build_snapshot=False)
@@ -399,6 +395,7 @@ class Trial:
         self._lock = asyncio.Lock()
         self.run_dir: Path | None = None
         self._suite: str | None = None
+        self._guest_snapshot: str | None = None
         self._started_at: str | None = None
         self._closed_at: str | None = None
         self._commands: list[CommandEvent] = []
@@ -415,6 +412,13 @@ class Trial:
         if self._workspace is None:
             raise RuntimeError("The trial is not running")
         return self._workspace
+
+    @property
+    def server(self) -> MockServer:
+        """The running trial's mock controller. Its run ID is trial.id."""
+        if self._prepared is None or self._prepared.server is None:
+            raise RuntimeError("This trial has no running mock server")
+        return self._prepared.server
 
     @property
     def instructions(self) -> str:
@@ -435,9 +439,9 @@ class Trial:
     def report(self) -> TrialReport:
         ds = self.task._dataset
         return TrialReport(self.id, self.task.id, self._suite, ds.repo_id,
-                           ds.revision, self.config.guest_snapshot,
-                           self._started_at, self._closed_at, self.trace,
-                           self.result, deepcopy(self._verification),
+                           ds.revision, self._guest_snapshot, self._started_at,
+                           self._closed_at, self.trace, self.result,
+                           deepcopy(self._verification),
                            self._verification_error, self._startup_error)
 
     def _require_recording(self):
@@ -506,7 +510,7 @@ class Trial:
             if prepare is None:
                 name = self.config.environment
                 prepare = _prepare(
-                    self._suite
+                    self._suite, self.id
                 ) if name == "suite" else _installed_environment(name)
             verifier = self._verifier
             if verifier is None:
@@ -524,6 +528,7 @@ class Trial:
             # Register cleanup before restore, which can allocate the VM
             # and then fail.
             if prepared.python:
+                self._guest_snapshot = self.config.guest_snapshot
                 stack.push_async_callback(_remove_guest, name)
                 await _restore_guest(self.config, name)
             spec = await resolve_secrets(spec)
@@ -541,6 +546,16 @@ class Trial:
                 workspace.register_cli(command, cli)
             if prepared.install is not None:
                 await prepared.install(workspace)
+            if self._instructions_file:
+                from mirage.vfs.document.document import DocumentVFS
+
+                if await workspace.vfs.exists("/INSTRUCTIONS.md"):
+                    raise FileExistsError("/INSTRUCTIONS.md")
+                guide = prepared.instructions
+                workspace.add_mount(
+                    "/INSTRUCTIONS.md",
+                    DocumentVFS("INSTRUCTIONS.md", lambda: guide,
+                                "instructions"))
             await workspace.vfs_md("/VFS.md")
             await workspace.skill_md("/SKILL.md")
             self._stack = stack.pop_all()
@@ -551,6 +566,10 @@ class Trial:
             self._started_at = datetime.now(UTC).isoformat()
 
     async def close(self) -> None:
+        # A command or a verifier can be waiting for this worker under _lock.
+        if (self._lock.locked() and not self._closed and self._prepared
+                and self._prepared.server):
+            await self._prepared.server.stop(self.id)
         async with self._lock:
             self._closed = True
             if self._stack is None:
@@ -568,6 +587,9 @@ class Trial:
                 self._environment = None
                 self._verifier = None
                 self._closed_at = datetime.now(UTC).isoformat()
+
+    def __await__(self):
+        return self.start().__await__()
 
     async def __aenter__(self) -> Self:
         return await self.start()

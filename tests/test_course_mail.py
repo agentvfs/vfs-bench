@@ -14,11 +14,11 @@ class CourseAssistantTest(unittest.IsolatedAsyncioTestCase):
         task = Toolathlon(
             cache_dir=os.getenv("VFSBENCH_TEST_CACHE"))["course-assistant"]
         config = TrialConfig(snapshot=os.environ["VFSBENCH_TEST_SNAPSHOT"])
-        async with task.open(config=config) as trial:
+        async with task.start(config=config) as trial:
             state = await trial.service_state("mail")
             self.assertEqual(len(state["virginia_diaz"]["INBOX"]), 13)
             self.assertEqual((await trial.verify()).reward, 0)
-        async with task.open(config=config) as trial:
+        async with task.start(config=config) as trial:
             inbox = await trial.exec("ls /mail")
             self.assertIn("INBOX", inbox.stdout, inbox.stderr)
             check = await trial.exec(

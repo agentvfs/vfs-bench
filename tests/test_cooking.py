@@ -15,7 +15,7 @@ class HowToCookTests(unittest.IsolatedAsyncioTestCase):
         for name in ("dietary-health", "cooking-guidance"):
             task = suite[name]
             with self.subTest(task=name):
-                async with task.open(config=config) as trial:
+                async with task.start(config=config) as trial:
                     result = await trial.exec(
                         "howtocook getRecipeById '{\"query\": \"西红柿炒鸡蛋\"}'")
                     self.assertEqual(result.return_code, 0, result.stderr)
@@ -26,14 +26,14 @@ class HowToCookTests(unittest.IsolatedAsyncioTestCase):
                              trial.service_state("howtocook"))["recipes"]),
                         322)
                 if name == "dietary-health":
-                    async with task.open(config=config) as trial:
+                    async with task.start(config=config) as trial:
                         reference = task.file(
                             "upstream/groundtruth_workspace/analysis.md")
                         await trial.workspace.vfs.write(
                             "/workspace/analysis.md", reference.read_bytes())
                         self.assertEqual((await trial.verify()).reward, 1)
                 else:
-                    async with task.open(config=config) as trial:
+                    async with task.start(config=config) as trial:
                         dishes = []
                         for dish in ("瘦肉土豆片", "冬瓜酿肉", "蒸水蛋"):
                             recipe = await trial.exec(

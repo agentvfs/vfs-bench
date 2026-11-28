@@ -2,7 +2,7 @@
 // one trial's clock and mutable sessions. Only "call" is bound to agent CLIs.
 import { randomBytes } from 'node:crypto'
 import { createInterface } from 'node:readline'
-import { loads, toJson } from '../../../vfs-bench-2/workspace/py.ts'
+import { dumps, loads, toJson } from '../../../vfs-bench-2/workspace/py.ts'
 import { APPS, login, type AppName } from '../../../vfs-bench-2/datasets/complexmcp/mocks/complexmcp/world.ts'
 import { call, clientError } from '../../../vfs-bench-2/datasets/complexmcp/mocks/complexmcp/tool.ts'
 import { tools as math } from '../../../vfs-bench-2/datasets/complexmcp/mocks/complexmcp/plain/math.ts'
@@ -25,11 +25,14 @@ function state() {
 }
 
 async function dispatch(req: any) {
-  if (req.op === 'init') {
-    const data = await login(req.seed, req.apps)
+  if (req.op === 'snapshot') {
+    return dumps(Object.fromEntries(Array.from(sessions, ([name, session]) => [name, APPS[name].save(session)])))
+  }
+  if (req.op === 'init' || req.op === 'load') {
+    const data = req.op === 'init' ? await login(req.seed, req.apps) : loads<Record<AppName, any>>(req.snapshot)
     const clock = APPS.LightSystem.load(data.LightSystem, undefined!)
     sessions.set('LightSystem', clock)
-    for (const name of req.apps as AppName[]) {
+    for (const name of Object.keys(data) as AppName[]) {
       if (name !== 'LightSystem') sessions.set(name, APPS[name].load(data[name], clock.os()))
     }
     return state()

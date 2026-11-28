@@ -21,7 +21,7 @@ class NotionTrials(unittest.IsolatedAsyncioTestCase):
             snapshot=os.environ["VFSBENCH_TEST_SNAPSHOT"])
 
     async def test_unchanged_and_populated_page(self):
-        async with self.task.open(config=self.config) as trial:
+        async with self.task.start(config=self.config) as trial:
             state = await trial.service_state("notion")
             self.assertEqual(len(state["blocks"]), 8)
             search = await trial.exec("notion post-search")
@@ -34,7 +34,7 @@ class NotionTrials(unittest.IsolatedAsyncioTestCase):
             self.assertIn("Brisbane", word.stdout)
             self.assertEqual((await trial.verify()).reward, 0)
 
-        async with self.task.open(config=self.config) as trial:
+        async with self.task.start(config=self.config) as trial:
             state = await trial.service_state("notion")
             headings = [
                 block for block in state["blocks"]

@@ -48,7 +48,7 @@ class PhDApplicationTests(unittest.IsolatedAsyncioTestCase):
         config = TrialConfig(snapshot=os.environ["VFSBENCH_TEST_SNAPSHOT"])
         for pages in (0, 2, 3):
             with self.subTest(award_pages=pages):
-                async with task.open(config=config) as trial:
+                async with task.start(config=config) as trial:
                     if pages:
                         await self._send(trial, pages)
                     self.assertEqual((await trial.verify()).reward,

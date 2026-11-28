@@ -62,21 +62,24 @@ class Task:
     _row: dict = field(repr=False)
     _dataset: Dataset = field(repr=False)
 
-    def open(self,
-             *,
-             config: TrialConfig | WorkspaceConfig | str | Path | None = None,
-             workspace: WorkspaceConfig | str | Path | None = None,
-             verifier: Verifier | None = None,
-             environment: EnvironmentFactory | None = None) -> Trial:
-        """Create an attempt. Entering its async context starts the services
-        and workspace."""
+    def start(self,
+              *,
+              config: TrialConfig | WorkspaceConfig | str | Path | None = None,
+              workspace: WorkspaceConfig | str | Path | None = None,
+              instructions_file: bool = False,
+              verifier: Verifier | None = None,
+              environment: EnvironmentFactory | None = None) -> Trial:
+        """Start a fresh trial when awaited or entered with `async with`."""
         from .runtime import Trial
 
         return Trial(self,
                      config=config,
                      workspace=workspace,
+                     instructions_file=instructions_file,
                      verifier=verifier,
                      environment=environment)
+
+    open = start  # Compatibility with earlier vfsbench releases.
 
     @property
     def instruction(self) -> str:

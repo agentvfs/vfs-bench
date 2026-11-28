@@ -30,6 +30,7 @@ def export(dataset: Dataset | str | Path,
            task_ids=None,
            local_files_only: bool = False,
            available: bool = False,
+           instructions_file: bool = True,
            revision: str | None = None,
            concurrency: int | None = None) -> Path:
     """Write a new job directory. Run Harbor from this directory."""
@@ -90,8 +91,9 @@ def export(dataset: Dataset | str | Path,
             environment.mkdir()
             manifest = task.manifest
             instruction = task.instruction + (
-                "\n\nRead /vfsbench/INSTRUCTIONS.md for the workspace and "
-                "tool instructions.")
+                "\n\nRead /INSTRUCTIONS.md for the workspace and tool guide."
+                if instructions_file else
+                "\n\nRead /SKILL.md for commands and /VFS.md for mounts.")
             suite_verifier = runtime.verifier.name == "suite"
             if manifest["dataset"] == "mcpatlas" and suite_verifier:
                 instruction += (
@@ -105,6 +107,7 @@ def export(dataset: Dataset | str | Path,
                 json.dumps(
                     {
                         "id": task.id,
+                        "instructions_file": instructions_file,
                         "manifest_sha256": manifest_hash(manifest),
                     },
                     indent=2) + "\n")
@@ -165,6 +168,10 @@ def main(argv=None):
     create.add_argument("--workspace-yaml",
                         type=Path,
                         help="Mirage workspace configuration file")
+    create.add_argument("--instructions-file",
+                        action=argparse.BooleanOptionalAction,
+                        default=True,
+                        help="Expose the public guide at /INSTRUCTIONS.md")
     create.add_argument("--config",
                         type=Path,
                         help="Mirage workspace YAML/JSON or trial TOML")
@@ -185,6 +192,7 @@ def main(argv=None):
                      args.output,
                      args.config,
                      workspace_yaml=args.workspace_yaml,
+                     instructions_file=args.instructions_file,
                      task_ids=args.task,
                      revision=args.revision,
                      local_files_only=args.local_files_only,
