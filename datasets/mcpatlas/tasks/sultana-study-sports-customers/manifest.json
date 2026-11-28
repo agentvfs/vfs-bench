@@ -1,0 +1,110 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/67adda8699370a2465fb1630b908a8effa329ef6944e5165fd65e6f9cc7dcb69",
+      "role": "workspace",
+      "sha256": "67adda8699370a2465fb1630b908a8effa329ef6944e5165fd65e6f9cc7dcb69",
+      "size": 1262,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/11ec5a5debab695cc78bd5ecb7b347b6fb5e9cdda17c12608e739738bcfe5036",
+      "role": "workspace_config",
+      "sha256": "11ec5a5debab695cc78bd5ecb7b347b6fb5e9cdda17c12608e739738bcfe5036",
+      "size": 2342,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/22b9fee4ef90da124de95f1fd0ec747871ac82d9793f26bee0dc430bc9878a42",
+      "role": "parity",
+      "sha256": "22b9fee4ef90da124de95f1fd0ec747871ac82d9793f26bee0dc430bc9878a42",
+      "size": 2960,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/1a6b36b9dc7f6681dd4a20912b588d736775991b9bd54775f4ad318ca86f57c2",
+      "role": "verifier",
+      "sha256": "1a6b36b9dc7f6681dd4a20912b588d736775991b9bd54775f4ad318ca86f57c2",
+      "size": 184,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "mongodb_list-collections",
+    "mongodb_list-databases",
+    "mongodb_collection-indexes",
+    "mongodb_collection-schema",
+    "mongodb_collection-storage-size",
+    "mongodb_count",
+    "clinicaltrialsgov-mcp-server_clinicaltrials_list_studies",
+    "clinicaltrialsgov-mcp-server_clinicaltrials_get_study",
+    "pubmed_search_pubmed_key_words",
+    "pubmed_search_pubmed_advanced",
+    "pubmed_get_pubmed_article_metadata",
+    "pubmed_download_pubmed_pdf",
+    "desktop-commander_get_config",
+    "desktop-commander_read_file",
+    "mongodb_aggregate"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "sultana-study-sports-customers",
+  "schema_version": 1,
+  "servers": [
+    "mongodb",
+    "clinicaltrialsgov-mcp-server",
+    "pubmed",
+    "desktop-commander"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/sultana-study-sports-customers/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "768b5bc8c74e6775844b891c5e2b404cbf5f1e49c331e7373bbbd6facb27575e",
+      "size": 4639,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/sultana-study-sports-customers/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689a373e148a49f91233e001",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/sultana-study-sports-customers",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

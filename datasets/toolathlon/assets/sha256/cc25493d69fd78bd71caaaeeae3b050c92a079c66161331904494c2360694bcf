@@ -1,0 +1,13 @@
+{
+  "id": "toolathlon_music-analysis",
+  "fixtures": [
+    {
+      "id": "drive/billboard-chart",
+      "kind": "script",
+      "run": "shared/seed_mock.py",
+      "with": [
+        "openpyxl"
+      ]
+    }
+  ]
+}

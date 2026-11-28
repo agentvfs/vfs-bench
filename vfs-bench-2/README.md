@@ -27,13 +27,17 @@ wrapper. The plan and its status are tracked in the roadmap issue,
 |---|---|---:|---|
 | [LiveClawBench](datasets/liveclawbench/README.md) | Mosi-AI/LiveClawBench | 75 | TypeScript |
 | [AutomationBench](datasets/automationbench/README.md) | zapier/AutomationBench v1.0.6 | 600 | Monty |
-| [Claw-Eval](datasets/claweval/README.md) | claw-eval/claw-eval | 126 | TypeScript, built from upstream's |
+| [Claw-Eval](datasets/claweval/README.md) | claw-eval/claw-eval | 127 | TypeScript, built from upstream's |
 | [ComplexMCP](datasets/complexmcp/README.md) | ATH-MaaS/complex-mcp | 47 | Monty |
 | [DataSpace](datasets/dataspace/README.md) | HKUSTDial/DataSpace | 46 | Monty |
 | [EnterpriseOps-Gym](datasets/enterpriseops/README.md) | ServiceNow/EnterpriseOps-Gym | 103 | TypeScript |
 | [ERPBench-100](datasets/erpbench/README.md) | blobfishai/erp-agent-simulation | 100 | TypeScript |
 | [Gaia2](datasets/gaia2/README.md) | Meta's ARE, gaia2-cli | 460 | Monty |
 | [JobBench](datasets/jobbench/README.md) | JobBench/job-bench | 16 | TypeScript |
+
+## Python package and V1 datasets
+
+The repository root contains the `vfsbench` Python package and the Toolathlon and MCP-Atlas release folders. [Python, CLI and Harbor usage](../docs/vfsbench.md) · [Dataset storage and migration](../docs/datasets.md)
 
 ## Setup
 

@@ -1,0 +1,137 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/384a9da6114bdda8dbfb6454bf7852618f46bcb9313dd6d0ca0511a8710043ba",
+      "role": "workspace_config",
+      "sha256": "384a9da6114bdda8dbfb6454bf7852618f46bcb9313dd6d0ca0511a8710043ba",
+      "size": 636,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "privacy-desensitization",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/privacy-desensitization/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/privacy-desensitization/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/privacy-desensitization/shared/task.md",
+      "role": "instruction",
+      "sha256": "456a273683c9a1a5f051d15c60e2f45c2098c77de3fc2e482da43e3bc3b4cb9b",
+      "size": 952,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/privacy-desensitization/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/privacy-desensitization/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "b1745d04562ecebf243051481548fc682e1fd78cc9571ac14b21f373a2ae84e7",
+      "size": 3280,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/privacy-desensitization/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/privacy-desensitization/groundtruth_workspace/gt_files.tar.gz",
+      "role": "verifier_input",
+      "sha256": "d163924afc70bd2f31999f0b6938c2b92877c477f8fcc6a9f9014caffba4ffd7",
+      "size": 8245,
+      "target": "upstream/groundtruth_workspace/gt_files.tar.gz",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/privacy-desensitization/groundtruth_workspace/gt_files.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/privacy-desensitization/initial_workspace/files.tar.gz",
+      "role": "initial_workspace",
+      "sha256": "af057d4105b298cbb0e47644854929db0850901736f3f536159ae42a0fc3ee73",
+      "size": 9706,
+      "target": "upstream/initial_workspace/files.tar.gz",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/privacy-desensitization/initial_workspace/files.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/privacy-desensitization/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "8dc47049481652d63914980ea005221ba4b4b4011ad78ef47a8fee5d03e92d38",
+      "size": 2826,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/privacy-desensitization/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/privacy-desensitization/readme.md",
+      "role": "upstream_source",
+      "sha256": "974c24984051f53b0a06a42a6e633cce7b9133023daad25412fa506f11460891",
+      "size": 266,
+      "target": "upstream/readme.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/privacy-desensitization/readme.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/privacy-desensitization/task_config.json",
+      "role": "upstream_config",
+      "sha256": "e7fb0f05cd8c5460ed228c673cf7216d6549784dc90fb1ec7ed90747db4a3d7b",
+      "size": 223,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/privacy-desensitization/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/privacy-desensitization/README.md",
+      "role": "documentation",
+      "sha256": "16557a23b0f33bd3f45d29333bc4c7cdc142cd399c6c5a0967088d861e052e8c",
+      "size": 517,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/privacy-desensitization/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/privacy-desensitization/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "38ed6663cb5d02a7d972330bec5f5690a61fcc7ac45ff0971dd4c19182153590",
+      "size": 910,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/privacy-desensitization/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/privacy-desensitization",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/privacy-desensitization",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "python_execute",
+      "claim_done",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "filesystem",
+      "terminal"
+    ]
+  }
+}

@@ -1,0 +1,202 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/d9334faed60ed1292dd315639772a7169bb6fc26d0bc3ae998805e3ef5365354",
+      "role": "seed_manifest",
+      "sha256": "d9334faed60ed1292dd315639772a7169bb6fc26d0bc3ae998805e3ef5365354",
+      "size": 67,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/fbcd063d70fd8765514a136b0375bf4d464a02e1616aa575bb711db6c04351e9",
+      "role": "parity_test",
+      "sha256": "fbcd063d70fd8765514a136b0375bf4d464a02e1616aa575bb711db6c04351e9",
+      "size": 4186,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/bebad911f48a4d0a1829cc03e7f548989cde6bceccb090bbb433df235f8776ab",
+      "role": "workspace_documentation",
+      "sha256": "bebad911f48a4d0a1829cc03e7f548989cde6bceccb090bbb433df235f8776ab",
+      "size": 1128,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/fa50e062ec01ffeda84fd7abab38f7a8e2126a85fd6660ee85908f13d6597923",
+      "role": "workspace_config",
+      "sha256": "fa50e062ec01ffeda84fd7abab38f7a8e2126a85fd6660ee85908f13d6597923",
+      "size": 1541,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "woocommerce-new-welcome",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-new-welcome/README.md",
+      "role": "upstream_source",
+      "sha256": "83d98f058fdf4932793a31f8349de094019843d33c02c09f305dcc511a4ce369",
+      "size": 4007,
+      "target": "upstream/README.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-new-welcome/README.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-new-welcome/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-new-welcome/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-new-welcome/shared/task.md",
+      "role": "instruction",
+      "sha256": "f5d509fd6c03ef3c1bab6356348715a2a94653af4bd9389b30e8a1fb3ce70f80",
+      "size": 383,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-new-welcome/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-new-welcome/emails_config.json",
+      "role": "upstream_source",
+      "sha256": "a499fee83275172286867222a7971716a88d170d58a245994a7b977348c219a0",
+      "size": 268,
+      "target": "upstream/emails_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-new-welcome/emails_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-new-welcome/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "4db84c88c3d0cb2bf8f24e9b51d6782b13ad08f3c3226c3bc6affdeeb8805ebf",
+      "size": 24277,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-new-welcome/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-new-welcome/initial_workspace/welcome_email_template.md",
+      "role": "initial_workspace",
+      "sha256": "242a390f6b69d2bcf6fd8c70e1553952a3e9b75d2a0d9420885ab63586902a9c",
+      "size": 1048,
+      "target": "upstream/initial_workspace/welcome_email_template.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-new-welcome/initial_workspace/welcome_email_template.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-new-welcome/preprocess/customers_data.json",
+      "role": "preprocessor_source",
+      "sha256": "7c9576e4a7d867fd4d3359932f8a3c4961413a5ceaf10ec3a92f7bea47e98bd0",
+      "size": 20001,
+      "target": "upstream/preprocess/customers_data.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-new-welcome/preprocess/customers_data.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-new-welcome/preprocess/generated_orders.json",
+      "role": "preprocessor_source",
+      "sha256": "5cbf698cc14b3b9b7800b280b1fa4b121b109331aabf0ec15bb2d369dce3ee4f",
+      "size": 12841,
+      "target": "upstream/preprocess/generated_orders.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-new-welcome/preprocess/generated_orders.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-new-welcome/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "44a8e6b8fa4823dba479c98ac584a498808eaa13d318215778b26a2c69c39a70",
+      "size": 25415,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-new-welcome/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-new-welcome/preprocess/woocommerce_data.json",
+      "role": "preprocessor_source",
+      "sha256": "a33b122f0e62ab08c10f07d585c216ce6bf87d13e5cfc85e0d347df22fb61028",
+      "size": 17637,
+      "target": "upstream/preprocess/woocommerce_data.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-new-welcome/preprocess/woocommerce_data.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-new-welcome/preprocess/woocommerce_orders.json",
+      "role": "preprocessor_source",
+      "sha256": "f125c5c617e580aa482754a1a4acab6ad024c295dcd36fd5579c75a1121a488d",
+      "size": 15162,
+      "target": "upstream/preprocess/woocommerce_orders.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-new-welcome/preprocess/woocommerce_orders.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-new-welcome/task_config.json",
+      "role": "upstream_config",
+      "sha256": "fc408e7f87d4d6dd2d0b2bd91cff26c29777590c9b7e8945ce6320c99ae9974d",
+      "size": 262,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-new-welcome/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/woocommerce-new-welcome/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "2fa899f3c659183eaeb9297ba68965ad430979306291e93113642a5687704ab9",
+      "size": 597,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/woocommerce-new-welcome/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-new-welcome/README.md",
+      "role": "documentation",
+      "sha256": "e30365b3f7874852a64165983f337ddb7633938a2bf7037f70e89213e2c0d956",
+      "size": 1987,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-new-welcome/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-new-welcome/shared/emails_config.json",
+      "role": "fixture_source",
+      "sha256": "a499fee83275172286867222a7971716a88d170d58a245994a7b977348c219a0",
+      "size": 268,
+      "target": "shared/emails_config.json",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-new-welcome/shared/emails_config.json"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-new-welcome/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "4ba5df71ae8726bde53dd8a5328b22cfb4a058ab5b923b632fda1405c8e0d37e",
+      "size": 35322,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/woocommerce-new-welcome/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/woocommerce-new-welcome",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/woocommerce-new-welcome",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "python_execute",
+      "claim_done",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "woocommerce",
+      "filesystem",
+      "terminal",
+      "google-cloud",
+      "emails"
+    ]
+  }
+}

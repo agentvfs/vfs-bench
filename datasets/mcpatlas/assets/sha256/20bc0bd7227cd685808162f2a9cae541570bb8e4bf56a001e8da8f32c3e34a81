@@ -1,0 +1,53 @@
+{
+  "note": "Both arms read one tree at one path -- the filesystem server reads the image's own /data in the run's container, and the mirage /data mount is a copy of it taken out of the same image -- so this compares two clients over one tree rather than two copies of it. The MCP server returns a file's bytes with a header line; the shell returns the bytes.",
+  "cases": [
+    {
+      "name": "list_directory",
+      "why": "both arms see the same tree -- the eight CSVs and the repos/ directory upstream's image also puts under /data -- which is the whole of the search this task is",
+      "mcp": {
+        "server": "filesystem",
+        "tool": "list_directory",
+        "args": {
+          "path": "/data"
+        },
+        "pipe": "sed -n 's/^\\[FILE\\] //p; s/^\\[DIR\\] //p' | sort"
+      },
+      "mirage": {
+        "command": "ls /data",
+        "pipe": "sort"
+      }
+    },
+    {
+      "name": "read_header",
+      "why": "the same file yields the same column names, so the two arms agree on which column holds the score",
+      "mcp": {
+        "server": "filesystem",
+        "tool": "read_text_file",
+        "args": {
+          "path": "/data/fantasy sports.csv",
+          "head": 1
+        },
+        "pipe": "tail -1"
+      },
+      "mirage": {
+        "command": "head -1 '/data/fantasy sports.csv'"
+      }
+    },
+    {
+      "name": "row_count",
+      "why": "the same file has the same length, so a mean taken over it has the same denominator",
+      "mcp": {
+        "server": "filesystem",
+        "tool": "get_file_info",
+        "args": {
+          "path": "/data/fantasy sports.csv"
+        },
+        "pipe": "sed -n 's/^size: //p'"
+      },
+      "mirage": {
+        "command": "wc -c < '/data/fantasy sports.csv'",
+        "pipe": "tr -d ' '"
+      }
+    }
+  ]
+}

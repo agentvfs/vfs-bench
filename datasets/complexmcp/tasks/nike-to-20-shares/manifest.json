@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "dataset": "complexmcp",
+  "id": "nike-to-20-shares",
+  "seed": 41,
+  "system_time": "2026-05-28T23:22:12Z",
+  "python_runtime": "monty",
+  "cli_format": "mirage-mcp",
+  "apps": [
+    "LightSystem",
+    "LightStock"
+  ],
+  "assets": [
+    {
+      "target": "workspace/tools.json",
+      "role": "tools",
+      "path": "assets/sha256/45ceaed8c7b8997216ef67f3fb6d0657d54ac379a09f96f1e1d7b9c8359d28f4",
+      "sha256": "45ceaed8c7b8997216ef67f3fb6d0657d54ac379a09f96f1e1d7b9c8359d28f4",
+      "size": 158232
+    },
+    {
+      "target": "workspace/instructions.md",
+      "role": "instructions",
+      "path": "assets/sha256/8d0beff99539cc887da3ae6e28bd2d6a67929ad4becf3fe35ba5bc429b72068a",
+      "sha256": "8d0beff99539cc887da3ae6e28bd2d6a67929ad4becf3fe35ba5bc429b72068a",
+      "size": 65743
+    },
+    {
+      "target": "verifier/expected.json",
+      "role": "expected",
+      "path": "assets/sha256/9dfc8b14b59d0e9c786b413029f43d55025a33a7723bd54f287b50dea81f626a",
+      "sha256": "9dfc8b14b59d0e9c786b413029f43d55025a33a7723bd54f287b50dea81f626a",
+      "size": 1143
+    },
+    {
+      "target": "software/LightStock/corpus/stock.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/5694d03c9291ac8a3da5f6752fff61d3687c9488acd86fc2fd9a5b07d6dc6e25",
+      "sha256": "5694d03c9291ac8a3da5f6752fff61d3687c9488acd86fc2fd9a5b07d6dc6e25",
+      "size": 22678
+    }
+  ],
+  "upstream_revision": "7c01f92e38be6e0c193d5c6c9a55baa92fb628cb",
+  "row_sha256": "bee5c6294152bc6af977c77b95f760498c36d37efe49b11c5a631127fa265503"
+}

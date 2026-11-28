@@ -1,0 +1,117 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/08063d75287b8d731ae23132f7569b28a360d5fc4cc0d8685da3ad31fcd29b6f",
+      "role": "workspace",
+      "sha256": "08063d75287b8d731ae23132f7569b28a360d5fc4cc0d8685da3ad31fcd29b6f",
+      "size": 2367,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/759ea9c0aa10d9e8c604840e386d0a52e40c877293e7bb321e91013a440c2d1f",
+      "role": "workspace_config",
+      "sha256": "759ea9c0aa10d9e8c604840e386d0a52e40c877293e7bb321e91013a440c2d1f",
+      "size": 3050,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/a9635d454be403ee1adf06c83dba081f4746af7fe5219816649f587f738d9b17",
+      "role": "parity",
+      "sha256": "a9635d454be403ee1adf06c83dba081f4746af7fe5219816649f587f738d9b17",
+      "size": 5103,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/25b4a6ec2f9eeab65ea687eec4f03630b1667cf42850faf795c29fc79eeb26c3",
+      "role": "verifier",
+      "sha256": "25b4a6ec2f9eeab65ea687eec4f03630b1667cf42850faf795c29fc79eeb26c3",
+      "size": 323,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "airtable_list_bases",
+    "airtable_list_tables",
+    "airtable_list_records",
+    "airtable_search_records",
+    "airtable_get_record",
+    "mongodb_list-collections",
+    "mongodb_list-databases",
+    "mongodb_collection-indexes",
+    "mongodb_collection-schema",
+    "mongodb_find",
+    "mongodb_collection-storage-size",
+    "mongodb_count",
+    "mongodb_explain",
+    "mongodb_aggregate",
+    "mongodb_db-stats",
+    "wikipedia_search_wikipedia",
+    "wikipedia_extract_key_facts",
+    "exa_web_search_exa",
+    "e2b-server_run_code",
+    "pubmed_search_pubmed_key_words"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "customer-ten-sales-turnover",
+  "schema_version": 1,
+  "servers": [
+    "airtable",
+    "mongodb",
+    "wikipedia",
+    "exa",
+    "e2b-server",
+    "pubmed"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/customer-ten-sales-turnover/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "7b086ca82d65a85ab275a68704bfcea434fe6a50f721af3ea507547d790c1a16",
+      "size": 5813,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/customer-ten-sales-turnover/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "6890e7fd2516f66b0a628e6f",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/customer-ten-sales-turnover",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

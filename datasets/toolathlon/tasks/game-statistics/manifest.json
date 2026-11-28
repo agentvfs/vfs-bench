@@ -1,0 +1,174 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/098c5e5ecc57f41003196ffabe69e4d0f3ea0136523727d23ac77b9e3fe769ce",
+      "role": "service_config",
+      "sha256": "098c5e5ecc57f41003196ffabe69e4d0f3ea0136523727d23ac77b9e3fe769ce",
+      "size": 100,
+      "target": "shared/bigquery.json"
+    },
+    {
+      "path": "assets/sha256/9210e22b051873cfac57cee0268471fe410f163a3751f3b45b0e4d5890e69c3e",
+      "role": "seed_manifest",
+      "sha256": "9210e22b051873cfac57cee0268471fe410f163a3751f3b45b0e4d5890e69c3e",
+      "size": 132,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/8ee4a3ed5efa16a4389a1a40d4212d3edc9970824495fef86aeb149d700d4c11",
+      "role": "parity_test",
+      "sha256": "8ee4a3ed5efa16a4389a1a40d4212d3edc9970824495fef86aeb149d700d4c11",
+      "size": 1022,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/c217e90b544fb1ec23fc3d2aa254cec3ce31719419beaa3409738c8ca56449bb",
+      "role": "workspace_config",
+      "sha256": "c217e90b544fb1ec23fc3d2aa254cec3ce31719419beaa3409738c8ca56449bb",
+      "size": 792,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "game-statistics",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/game-statistics/README.md",
+      "role": "upstream_source",
+      "sha256": "83252d471cb12c64eb7fd5c76847909c2b1174f4b8136ce5b5f36ac729272646",
+      "size": 2310,
+      "target": "upstream/README.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/game-statistics/README.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/game-statistics/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/game-statistics/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/game-statistics/docs/agent_system_prompt_cn.md",
+      "role": "upstream_source",
+      "sha256": "41b87c72dacccc71e8ed04ee1fc32b79895730bcd8171d131ae6edf870c01816",
+      "size": 337,
+      "target": "upstream/docs/agent_system_prompt_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/game-statistics/docs/agent_system_prompt_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/game-statistics/shared/task.md",
+      "role": "instruction",
+      "sha256": "a8cd1d862e2ac7d799f6b25762ce5d3582e7fc6e6675e9d33b9aebce820d2c99",
+      "size": 711,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/game-statistics/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/game-statistics/docs/task_cn.md",
+      "role": "upstream_source",
+      "sha256": "c9d20a17363c2fc5c6d57e53f578cc29e7b6cf04ef1ecf1c60d6dddf39952064",
+      "size": 594,
+      "target": "upstream/docs/task_cn.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/game-statistics/docs/task_cn.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/game-statistics/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "037a5d7061c7ee5302a70eda1c3fbe5efbec8445b08c6bc0a90ddb701f95834b",
+      "size": 21350,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/game-statistics/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/game-statistics/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "504de30d2c721fbf05a34c949b29e80f5154885edfc8bd9bb6357b42181aaf2f",
+      "size": 22903,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/game-statistics/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/game-statistics/task_config.json",
+      "role": "upstream_config",
+      "sha256": "4e905a36339b0f61a5a7bb9c3ecffdbfeaccab3a5e7d33b027fdbc10b742e41a",
+      "size": 225,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/game-statistics/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/game-statistics/test_enhanced_evaluation.py",
+      "role": "verifier_source",
+      "sha256": "7b7891d52fdc18422b744f1f2b603fad7f232f15ae4cc95969cc6d064f015cc8",
+      "size": 16436,
+      "target": "upstream/test_enhanced_evaluation.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/game-statistics/test_enhanced_evaluation.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/game-statistics/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "9230107601e0a48ec4178e0d8ac1f034a98d985a945ab06268e46cd807f0c7b7",
+      "size": 204,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/game-statistics/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/game-statistics/README.md",
+      "role": "documentation",
+      "sha256": "044fc88173d2aab7d4d4eb2cacaec374f2a976cf9a3bfd2b584a52d5fb721777",
+      "size": 4811,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/game-statistics/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/game-statistics/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "e49efb233e646ec99ea4274e6acf786e135922e9ec051808affb139be46977e9",
+      "size": 11440,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/game-statistics/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/game-statistics",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/game-statistics",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "python_execute",
+      "claim_done",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "google-cloud",
+      "terminal"
+    ]
+  }
+}

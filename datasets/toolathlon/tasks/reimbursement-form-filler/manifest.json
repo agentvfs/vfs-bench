@@ -1,0 +1,178 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/e8c4110ce9b6a8f4fff6bfaf28a011f0a67c9ecc2aea716419d51aa747df7551",
+      "role": "parity_test",
+      "sha256": "e8c4110ce9b6a8f4fff6bfaf28a011f0a67c9ecc2aea716419d51aa747df7551",
+      "size": 544,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/2e2b09a082c26c0c888e19170ce920f49cfd983142e2a55c349412b2116c7ecf",
+      "role": "workspace_config",
+      "sha256": "2e2b09a082c26c0c888e19170ce920f49cfd983142e2a55c349412b2116c7ecf",
+      "size": 860,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "reimbursement-form-filler",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/reimbursement-form-filler/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/reimbursement-form-filler/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/reimbursement-form-filler/shared/task.md",
+      "role": "instruction",
+      "sha256": "f781ea3a6fe307d33ee543fc5b37007be32ba2cb0b1f5e2c57e73cf3eae77424",
+      "size": 757,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/reimbursement-form-filler/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/reimbursement-form-filler/evaluation/__init__.py",
+      "role": "verifier_source",
+      "sha256": "b9ad0c987a0c01fd00fc3b95c35ae2ec3a2da7f81b91a33e5839f9e54d7566c5",
+      "size": 50,
+      "target": "upstream/evaluation/__init__.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/reimbursement-form-filler/evaluation/__init__.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/reimbursement-form-filler/evaluation/check_local.py",
+      "role": "verifier_source",
+      "sha256": "f7ea084dba14c0930737df3bdc7b8e97e9aa026123ebb677010c9450b61be9c8",
+      "size": 6707,
+      "target": "upstream/evaluation/check_local.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/reimbursement-form-filler/evaluation/check_local.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/reimbursement-form-filler/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "9a2a6e303f160007574850e2f7cf82781a4751cb894e103781a4ba857a2d04b5",
+      "size": 1403,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/reimbursement-form-filler/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/reimbursement-form-filler/groundtruth_workspace/department_expenses.xlsx",
+      "role": "verifier_input",
+      "sha256": "eeaddba9ad417789a5a966980e7ed92499cb3df4f6e232958348abce6f2ef897",
+      "size": 10184,
+      "target": "upstream/groundtruth_workspace/department_expenses.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/reimbursement-form-filler/groundtruth_workspace/department_expenses.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/reimbursement-form-filler/initial_workspace/Bill_Format.xlsx",
+      "role": "initial_workspace",
+      "sha256": "8f944e3ee1e601092757ab44c1b6de6ed70952850f1a3898abacff74781526dd",
+      "size": 9254,
+      "target": "upstream/initial_workspace/Bill_Format.xlsx",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/reimbursement-form-filler/initial_workspace/Bill_Format.xlsx"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/reimbursement-form-filler/initial_workspace/bills/bills.tar.gz",
+      "role": "initial_workspace",
+      "sha256": "a054ee6d628e7121718ea8c6e8ebe60a4d0ecfe083eccc5136725d1aa5205645",
+      "size": 23068,
+      "target": "upstream/initial_workspace/bills/bills.tar.gz",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/reimbursement-form-filler/initial_workspace/bills/bills.tar.gz"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/reimbursement-form-filler/initial_workspace/requirement.txt",
+      "role": "initial_workspace",
+      "sha256": "cfd8ca0740b5f6d078f066b7f24fb9e44bb16bb07db99945ac2c298be9d95b4b",
+      "size": 299,
+      "target": "upstream/initial_workspace/requirement.txt",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/reimbursement-form-filler/initial_workspace/requirement.txt"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/reimbursement-form-filler/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "d126ff7ce87d70f30ec352c109be1b0f31fc8fb41bf3f8df31a4894b5c035c6c",
+      "size": 2150,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/reimbursement-form-filler/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/reimbursement-form-filler/task_config.json",
+      "role": "upstream_config",
+      "sha256": "d07c60fc7514d844cf842f5ae8d61fe1a2f03a06087d2363903990ecc09c1c6d",
+      "size": 253,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/reimbursement-form-filler/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/reimbursement-form-filler/test_check_local.py",
+      "role": "verifier_source",
+      "sha256": "6dc711ce146c9b52f856aa0e9dfe9161c8f8edb0dc7ac0bb9a453c5f2b19e13b",
+      "size": 6740,
+      "target": "upstream/test_check_local.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/reimbursement-form-filler/test_check_local.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/reimbursement-form-filler/README.md",
+      "role": "documentation",
+      "sha256": "83ddc843ee1f40ef3c06980e72237a88125f81d2fae885436e7a440ef5e117bd",
+      "size": 489,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/reimbursement-form-filler/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/reimbursement-form-filler/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "513f8cbbba0cd5b18d37d05a90cdbbbc70dbdc1accab43b54fb2f05828638070",
+      "size": 8892,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/reimbursement-form-filler/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/reimbursement-form-filler",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/reimbursement-form-filler",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "python_execute",
+      "claim_done",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "filesystem",
+      "excel",
+      "pdf-tools",
+      "terminal"
+    ]
+  }
+}

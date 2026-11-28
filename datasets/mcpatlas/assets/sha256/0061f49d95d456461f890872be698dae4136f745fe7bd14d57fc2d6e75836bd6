@@ -1,0 +1,71 @@
+mode: EXEC
+
+# The character type upstream's servers run under: started with no locale,
+# their Python coerces it to C.UTF-8 (PEP 538) and what they run inherits
+# it, so grep, sed and expr match whole characters there as here.
+env:
+  LC_CTYPE: C.UTF-8
+
+# No Python. None of the fifteen tools Atlas enables runs code on this
+# machine, so an interpreter here would be a capability the other arm was
+# never given.
+runtimes:
+  - workspace
+
+clis:
+  # Airtable as the MCP arm has it: its own server, on the fake this run seeds
+  # from the base Atlas shares, listing only the tools Atlas enables,
+  # `airtable <tool>` for its `airtable_<tool>`. timeoutMs is that arm's
+  # per-call bound, upstream's `toolCallTimeoutMs`.
+  airtable:
+    cli: ../../../../cli/mcpatlas/tools.mjs:AIRTABLE
+    config:
+      apiBase: ${AIRTABLE_CLI_URL}
+      timeoutMs: 60000
+
+  # The three servers no mount or native CLI can speak for. Each is the server
+  # the MCP arm runs, on the same workspace, listing only the tools Atlas
+  # enables. timeoutMs is that arm's per-call bound, which is upstream's: its
+  # harness gives each tool call `toolCallTimeoutMs`, 60 seconds by default.
+  weather:
+    cli: ../../../../cli/mcpatlas/tools.mjs:WEATHER
+    config:
+      apiBase: ${WEATHER_CLI_URL}
+      timeoutMs: 60000
+
+  met-museum:
+    cli: ../../../../cli/mcpatlas/tools.mjs:MET_MUSEUM
+    config:
+      apiBase: ${MET_MUSEUM_CLI_URL}
+      timeoutMs: 60000
+
+  pubmed:
+    cli: ../../../../cli/mcpatlas/tools.mjs:PUBMED
+    config:
+      apiBase: ${PUBMED_CLI_URL}
+      timeoutMs: 60000
+
+mounts:
+  # A shell without scratch space is not a shell: agents write a heredoc to
+  # /tmp and read it back a line later.
+  /tmp:
+    vfs: ram
+
+  # The base, read-only, as every Airtable tool Atlas enables here reads.
+  /airtable:
+    vfs: airtable
+    mode: READ
+    config:
+      token: ${AIRTABLE_API_KEY}
+      baseUrl: ${AIRTABLE_URL}/v0
+
+# Every command runs under `whole_mount.py`, which refuses a walk of a
+# whole mount and a `cat` of a whole table, asked before the line runs, to
+# refuse it whole, and before each command.
+profiles:
+  default:
+    policy:
+      pre_execute:
+        - {script: ../../whole_mount.py, runtime: monty}
+      pre_command:
+        - {script: ../../whole_mount.py, runtime: monty}

@@ -1,0 +1,74 @@
+mode: EXEC
+
+# The character type upstream's servers run under: started with no locale,
+# their Python coerces it to C.UTF-8 (PEP 538) and what they run inherits
+# it, so grep, sed and expr match whole characters there as here.
+env:
+  LC_CTYPE: C.UTF-8
+
+# No Python. None of the thirteen tools Atlas enables runs code on this
+# machine, so an interpreter here would be a capability the other arm was
+# never given.
+runtimes:
+  - workspace
+
+clis:
+  # Notion and Slack as the MCP arm has them: their own servers, on the fakes
+  # this run seeds from Atlas's export, listing only the tools Atlas enables,
+  # `<server> <tool>` for its `<server>_<tool>`, less Notion's `API-`.
+  # timeoutMs is that arm's per-call bound, upstream's `toolCallTimeoutMs`.
+  notion:
+    cli: ../../../../cli/mcpatlas/tools.mjs:NOTION
+    config:
+      apiBase: ${NOTION_CLI_URL}
+      timeoutMs: 60000
+
+  slack:
+    cli: ../../../../cli/mcpatlas/tools.mjs:SLACK
+    config:
+      apiBase: ${SLACK_CLI_URL}
+      timeoutMs: 60000
+
+  # The one server no mount or native CLI can speak for: the MCP arm's own, on
+  # the same workspace, listing only the tools Atlas enables. timeoutMs is
+  # that arm's per-call bound, which is upstream's: its harness gives each
+  # tool call `toolCallTimeoutMs`, 60 seconds by default.
+  memory:
+    cli: ../../../../cli/mcpatlas/tools.mjs:MEMORY
+    config:
+      apiBase: ${MEMORY_CLI_URL}
+      timeoutMs: 60000
+
+mounts:
+  # A shell without scratch space is not a shell: agents write a heredoc to
+  # /tmp and read it back a line later.
+  /tmp:
+    vfs: ram
+
+  # The two workspaces, read-only, as every Notion and Slack tool Atlas
+  # enables here reads.
+  /notion:
+    vfs: notion
+    mode: READ
+    config:
+      apiKey: atlas
+      baseUrl: ${NOTION_URL}/v1
+
+  /slack:
+    vfs: slack
+    mode: READ
+    config:
+      token: xoxp-atlas
+      baseUrl: ${SLACK_URL}/api
+
+# Every command runs under `whole_mount.py`, which refuses a walk of a
+# whole mount, a `cat` of a whole table, and a `notion` search or query that
+# asks for everything, asked before the line runs, to refuse it whole, and
+# before each command.
+profiles:
+  default:
+    policy:
+      pre_execute:
+        - {script: ../../whole_mount.py, runtime: monty}
+      pre_command:
+        - {script: ../../whole_mount.py, runtime: monty}

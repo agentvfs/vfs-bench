@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "dataset": "complexmcp",
+  "id": "sony-headphones-star",
+  "seed": 7,
+  "system_time": "2026-05-06T18:20:24Z",
+  "python_runtime": "monty",
+  "cli_format": "mirage-mcp",
+  "apps": [
+    "LightSystem",
+    "LightShop"
+  ],
+  "assets": [
+    {
+      "target": "workspace/tools.json",
+      "role": "tools",
+      "path": "assets/sha256/45ceaed8c7b8997216ef67f3fb6d0657d54ac379a09f96f1e1d7b9c8359d28f4",
+      "sha256": "45ceaed8c7b8997216ef67f3fb6d0657d54ac379a09f96f1e1d7b9c8359d28f4",
+      "size": 158232
+    },
+    {
+      "target": "workspace/instructions.md",
+      "role": "instructions",
+      "path": "assets/sha256/8d0beff99539cc887da3ae6e28bd2d6a67929ad4becf3fe35ba5bc429b72068a",
+      "sha256": "8d0beff99539cc887da3ae6e28bd2d6a67929ad4becf3fe35ba5bc429b72068a",
+      "size": 65743
+    },
+    {
+      "target": "verifier/expected.json",
+      "role": "expected",
+      "path": "assets/sha256/1ef0797ba219c15b75b7771f4717b1e2133483591d822215fc6abf8f4b54ed34",
+      "sha256": "1ef0797ba219c15b75b7771f4717b1e2133483591d822215fc6abf8f4b54ed34",
+      "size": 242225
+    },
+    {
+      "target": "software/LightShop/corpus/shop.yaml",
+      "role": "corpus",
+      "path": "assets/sha256/3ba885f586414b7ca31c6d80bc4aa843781e3781ae52829777569fcf632d5b2d",
+      "sha256": "3ba885f586414b7ca31c6d80bc4aa843781e3781ae52829777569fcf632d5b2d",
+      "size": 69234
+    }
+  ],
+  "upstream_revision": "7c01f92e38be6e0c193d5c6c9a55baa92fb628cb",
+  "row_sha256": "fa8a0abb1c1d3e4f39ef9330cae8220c779abe9ad3acf25516518b019eb5d60f"
+}

@@ -1,0 +1,112 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/9d49f28c71f6b999c6d64ce3df112b1cbf19977e6469038a90f27ce889087ce1",
+      "role": "workspace",
+      "sha256": "9d49f28c71f6b999c6d64ce3df112b1cbf19977e6469038a90f27ce889087ce1",
+      "size": 1613,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/e23d85a1aa95fbf86cde5664dbe250570b4e78473c9158d5d0619bb0ec4e92c5",
+      "role": "workspace_config",
+      "sha256": "e23d85a1aa95fbf86cde5664dbe250570b4e78473c9158d5d0619bb0ec4e92c5",
+      "size": 2792,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/56ff306872ea9bc62fd3f772e11cc592a9d467f36ca0e8f22adf7527c8ed32e2",
+      "role": "parity",
+      "sha256": "56ff306872ea9bc62fd3f772e11cc592a9d467f36ca0e8f22adf7527c8ed32e2",
+      "size": 3927,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/47781a9f8a3aab39a56f7c3a93c3bb5f4178a5a35e75e954b0277cfa5f2068ea",
+      "role": "verifier",
+      "sha256": "47781a9f8a3aab39a56f7c3a93c3bb5f4178a5a35e75e954b0277cfa5f2068ea",
+      "size": 186,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "cli-mcp-server_show_security_rules",
+    "cli-mcp-server_run_command",
+    "airtable_list_tables",
+    "airtable_list_bases",
+    "airtable_get_record",
+    "airtable_search_records",
+    "airtable_list_records",
+    "github_search_repositories",
+    "weather-data_weather_search",
+    "weather-data_weather_astronomy",
+    "weather-data_weather_history",
+    "weather_find_weather_stations",
+    "met-museum_list-departments",
+    "met-museum_search-museum-objects",
+    "met-museum_get-museum-object"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "f150-attrition-page-time",
+  "schema_version": 1,
+  "servers": [
+    "cli-mcp-server",
+    "airtable",
+    "github",
+    "weather-data",
+    "weather",
+    "met-museum"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/f150-attrition-page-time/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "30f154339b144eabb5beedc58799e22e5150b4f7c319424edcbd989faea9fc6e",
+      "size": 4591,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/f150-attrition-page-time/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689af4e653c3905e7b5b258a",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/f150-attrition-page-time",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

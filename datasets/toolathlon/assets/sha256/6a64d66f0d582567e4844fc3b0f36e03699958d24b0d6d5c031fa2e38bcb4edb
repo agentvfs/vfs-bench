@@ -1,0 +1,20 @@
+{
+  "cases": [
+    {
+      "name": "read_pdf_pages",
+      "why": "The pinned upstream handler reads the same task fixture through MCP and the workspace CLI.",
+      "mcp": {
+        "server": "pdf-tools",
+        "tool": "read_pdf_pages",
+        "args": {
+          "pdf_file_path": "${AGENT_WORKSPACE}/2212.09748v2.pdf",
+          "start_page": 1,
+          "end_page": 1
+        }
+      },
+      "mirage": {
+        "command": "pdf-tools read-pdf-pages '{\"pdf_file_path\": \"/workspace/2212.09748v2.pdf\", \"start_page\": 1, \"end_page\": 1}'"
+      }
+    }
+  ]
+}

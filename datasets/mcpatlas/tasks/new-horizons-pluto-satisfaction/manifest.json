@@ -1,0 +1,119 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/90f7ceb38a588c81921e546997fe30941ee6631506fdda204e6776825c78f5e1",
+      "role": "workspace",
+      "sha256": "90f7ceb38a588c81921e546997fe30941ee6631506fdda204e6776825c78f5e1",
+      "size": 2287,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/9d9842db2013f1b0ce9ecfb5c4ec6363ca169db5af4d165665b0bb5c94e70672",
+      "role": "workspace_config",
+      "sha256": "9d9842db2013f1b0ce9ecfb5c4ec6363ca169db5af4d165665b0bb5c94e70672",
+      "size": 5038,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/ec089e136f8cc2f6d630c2a1d56dda89d229f4ea504a1c9745d746f966be9730",
+      "role": "parity",
+      "sha256": "ec089e136f8cc2f6d630c2a1d56dda89d229f4ea504a1c9745d746f966be9730",
+      "size": 4122,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/d2c237916d3682dca000d27d910b0830b714b35b4299cc22bd90cab6aa33c7e2",
+      "role": "verifier",
+      "sha256": "d2c237916d3682dca000d27d910b0830b714b35b4299cc22bd90cab6aa33c7e2",
+      "size": 748,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "exa_web_search_exa",
+    "calculator_calculate",
+    "arxiv_search_papers",
+    "airtable_list_records",
+    "airtable_list_tables",
+    "github_search_repositories",
+    "github_search_code",
+    "git_git_diff",
+    "pubmed_search_pubmed_advanced",
+    "weather-data_weather_history",
+    "national-parks_getParkDetails",
+    "met-museum_search-museum-objects",
+    "met-museum_list-departments",
+    "airtable_list_bases",
+    "airtable_search_records",
+    "slack_conversations_history",
+    "slack_conversations_add_message"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "new-horizons-pluto-satisfaction",
+  "schema_version": 1,
+  "servers": [
+    "exa",
+    "calculator",
+    "arxiv",
+    "airtable",
+    "github",
+    "git",
+    "pubmed",
+    "weather-data",
+    "national-parks",
+    "met-museum",
+    "slack"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/new-horizons-pluto-satisfaction/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "00f939f1a59f7559fe29c34b47dbaf3649c040322012b2ca42ae14083f68118c",
+      "size": 5765,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/new-horizons-pluto-satisfaction/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689bd255c0422b257e7dfca8",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/new-horizons-pluto-satisfaction",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

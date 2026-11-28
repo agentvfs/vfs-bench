@@ -1,0 +1,21 @@
+mode: EXEC
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace
+runtimes:
+  - workspace
+clis:
+  word:
+    cli: ../../../../cli/toolathlon/documents.mjs:WORD
+    config:
+      apiBase: ${WORD_CLI_URL}
+mounts:
+  /tmp:
+    vfs: ram
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}

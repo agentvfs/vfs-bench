@@ -1,0 +1,51 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "notion_retrieve_page",
+      "why": "the same page reads back the same through either arm",
+      "mcp": {
+        "server": "notion",
+        "tool": "API-retrieve-a-page",
+        "args": {
+          "page_id": "27ad10a4-8436-80cb-a4d9-d9e160cb05ea"
+        },
+        "jq": "{id, object, archived, parent}"
+      },
+      "mirage": {
+        "command": "notion retrieve-a-page '{\"page_id\":\"27ad10a4-8436-80cb-a4d9-d9e160cb05ea\"}'",
+        "jq": "{id, object, archived, parent}"
+      }
+    },
+    {
+      "name": "notion_search",
+      "why": "both arms enumerate the same objects",
+      "mcp": {
+        "server": "notion",
+        "tool": "API-post-search",
+        "args": {},
+        "jq": "[.results[].id] | sort | .[]",
+        "raw": true
+      },
+      "mirage": {
+        "command": "notion post-search",
+        "jq": "[.results[].id] | sort | .[]",
+        "raw": true
+      }
+    },
+    {
+      "name": "get_document_text",
+      "why": "The pinned upstream handler reads the same task fixture through MCP and the workspace CLI.",
+      "mcp": {
+        "server": "word",
+        "tool": "get_document_text",
+        "args": {
+          "filename": "${AGENT_WORKSPACE}/colley_whisson.docx"
+        }
+      },
+      "mirage": {
+        "command": "word get-document-text '{\"filename\": \"/workspace/colley_whisson.docx\"}'"
+      }
+    }
+  ]
+}

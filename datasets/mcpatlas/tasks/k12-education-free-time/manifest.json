@@ -1,0 +1,108 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/ff9aaba884b02309fdceaf2a2071164fc285deca65f169d488684d0d5e7fc78a",
+      "role": "workspace",
+      "sha256": "ff9aaba884b02309fdceaf2a2071164fc285deca65f169d488684d0d5e7fc78a",
+      "size": 1273,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/6f7c600987fe939a1f81e9a0f2a4148850f795bb401c6369f041255e2d50e36b",
+      "role": "workspace_config",
+      "sha256": "6f7c600987fe939a1f81e9a0f2a4148850f795bb401c6369f041255e2d50e36b",
+      "size": 2383,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/0a3ef5c16b177c0acd9f8080069cb06c994286deb151d193bfed0049de6c74c5",
+      "role": "parity",
+      "sha256": "0a3ef5c16b177c0acd9f8080069cb06c994286deb151d193bfed0049de6c74c5",
+      "size": 2833,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/3b9f4dcdbac5c1803d02f42789b61761983f5bf8b6336e5be98db62b152870be",
+      "role": "verifier",
+      "sha256": "3b9f4dcdbac5c1803d02f42789b61761983f5bf8b6336e5be98db62b152870be",
+      "size": 348,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "pubmed_search_pubmed_key_words",
+    "pubmed_search_pubmed_advanced",
+    "pubmed_get_pubmed_article_metadata",
+    "pubmed_download_pubmed_pdf",
+    "memory_read_graph",
+    "memory_search_nodes",
+    "memory_open_nodes",
+    "google-workspace_list_events",
+    "filesystem_read_file",
+    "filesystem_read_media_file",
+    "filesystem_read_text_file",
+    "filesystem_read_multiple_files",
+    "filesystem_list_directory"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "k12-education-free-time",
+  "schema_version": 1,
+  "servers": [
+    "pubmed",
+    "memory",
+    "google-workspace",
+    "filesystem"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/k12-education-free-time/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "0fa0c336b16150b3b739e032c8d59173876237da0cc8e6d8001a044ceabf1965",
+      "size": 2639,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/k12-education-free-time/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689af4e653c3905e7b5b259c",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/k12-education-free-time",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

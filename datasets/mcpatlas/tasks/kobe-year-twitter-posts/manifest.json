@@ -1,0 +1,114 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/a057fac5097daf453db7e68a26b0c4f54c7ab292154b52e3f442be1096111c62",
+      "role": "workspace",
+      "sha256": "a057fac5097daf453db7e68a26b0c4f54c7ab292154b52e3f442be1096111c62",
+      "size": 1236,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/5117745597b3587fff37bc98d150531008c02165c48bc4fba4e1ea59f6d45c04",
+      "role": "workspace_config",
+      "sha256": "5117745597b3587fff37bc98d150531008c02165c48bc4fba4e1ea59f6d45c04",
+      "size": 2770,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/3eb6f5ac8a219e8787e52128503e9b7fddccb952513a0fd9590cc591a2f47576",
+      "role": "parity",
+      "sha256": "3eb6f5ac8a219e8787e52128503e9b7fddccb952513a0fd9590cc591a2f47576",
+      "size": 3316,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/01dc9f105b35feaaa45b982611bf97072b068e7392c45e140ca437c6b79c0bc6",
+      "role": "verifier",
+      "sha256": "01dc9f105b35feaaa45b982611bf97072b068e7392c45e140ca437c6b79c0bc6",
+      "size": 173,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "mongodb_list-databases",
+    "mongodb_list-collections",
+    "mongodb_find",
+    "mongodb_count",
+    "wikipedia_search_wikipedia",
+    "wikipedia_get_article",
+    "memory_read_graph",
+    "memory_search_nodes",
+    "memory_open_nodes",
+    "pubmed_search_pubmed_key_words",
+    "pubmed_search_pubmed_advanced",
+    "pubmed_get_pubmed_article_metadata",
+    "weather_find_weather_stations",
+    "github_search_users",
+    "github_search_code",
+    "fetch_fetch"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "kobe-year-twitter-posts",
+  "schema_version": 1,
+  "servers": [
+    "mongodb",
+    "wikipedia",
+    "memory",
+    "pubmed",
+    "weather",
+    "github",
+    "fetch"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/kobe-year-twitter-posts/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "c6062d20766b6273fddaa997e7d7db9e2331bcfff4e28969d8b273f9f118ada9",
+      "size": 4587,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/kobe-year-twitter-posts/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "68a398aa2f58036e8d45edf6",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/kobe-year-twitter-posts",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

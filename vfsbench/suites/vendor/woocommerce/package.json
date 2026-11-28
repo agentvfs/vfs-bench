@@ -1,0 +1,7 @@
+{
+  "name": "vfs-bench-woocommerce-mcp",
+  "private": true,
+  "dependencies": {
+    "@lockon0927/woocommerce-mcp": "^1.0.6"
+  }
+}

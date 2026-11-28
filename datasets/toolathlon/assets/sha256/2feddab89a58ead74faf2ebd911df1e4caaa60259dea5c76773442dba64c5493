@@ -1,0 +1,19 @@
+{
+  "cases": [
+    {
+      "name": "get_workbook_metadata",
+      "why": "The pinned upstream handler reads the same task fixture through MCP and the workspace CLI.",
+      "mcp": {
+        "server": "excel",
+        "tool": "get_workbook_metadata",
+        "args": {
+          "filepath": "${AGENT_WORKSPACE}/Market_Data.xlsx",
+          "include_ranges": true
+        }
+      },
+      "mirage": {
+        "command": "excel get-workbook-metadata '{\"filepath\": \"/workspace/Market_Data.xlsx\", \"include_ranges\": true}'"
+      }
+    }
+  ]
+}

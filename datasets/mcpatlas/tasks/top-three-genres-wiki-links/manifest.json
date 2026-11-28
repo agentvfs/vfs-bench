@@ -1,0 +1,111 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/a057fac5097daf453db7e68a26b0c4f54c7ab292154b52e3f442be1096111c62",
+      "role": "workspace",
+      "sha256": "a057fac5097daf453db7e68a26b0c4f54c7ab292154b52e3f442be1096111c62",
+      "size": 1236,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/792e406ce7365fff65355e1451c080027002348541a7244be119c7c80bd8304a",
+      "role": "workspace_config",
+      "sha256": "792e406ce7365fff65355e1451c080027002348541a7244be119c7c80bd8304a",
+      "size": 2327,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/91ad59bb5b9239c3c1216880adf62d143c114a62bf12a32ebc8de015d63546b1",
+      "role": "parity",
+      "sha256": "91ad59bb5b9239c3c1216880adf62d143c114a62bf12a32ebc8de015d63546b1",
+      "size": 2363,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/3e6a1ebc2c4d38bfcb5d505d8c80351a40141dd7b283ffac803c6b9509eb38a3",
+      "role": "verifier",
+      "sha256": "3e6a1ebc2c4d38bfcb5d505d8c80351a40141dd7b283ffac803c6b9509eb38a3",
+      "size": 630,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "mongodb_list-collections",
+    "mongodb_list-databases",
+    "mongodb_aggregate",
+    "mongodb_count",
+    "mongodb_db-stats",
+    "mongodb_collection-storage-size",
+    "mongodb_find",
+    "mongodb_collection-schema",
+    "mongodb_collection-indexes",
+    "exa_web_search_exa",
+    "cli-mcp-server_show_security_rules",
+    "e2b-server_run_code",
+    "national-parks_findParks",
+    "national-parks_getParkDetails",
+    "national-parks_getVisitorCenters"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "top-three-genres-wiki-links",
+  "schema_version": 1,
+  "servers": [
+    "mongodb",
+    "exa",
+    "cli-mcp-server",
+    "e2b-server",
+    "national-parks"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/top-three-genres-wiki-links/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "7aca5409e40b4ee305d303fc5424c79564c0821ad292bc133171034c1cabd560",
+      "size": 4363,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/top-three-genres-wiki-links/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "68925f01db31fe35560e3ec5",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/top-three-genres-wiki-links",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

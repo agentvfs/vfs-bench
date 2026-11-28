@@ -1,0 +1,51 @@
+{
+  "note": "Both arms read one tree at one path -- the MCP arm's servers read the image's own /data in the run's container, and the mirage /data mount is a copy of it taken out of the same image. GitHub is mirage's GitHub fake on both arms, and it holds nothing. Airtable is the fake both arms read, seeded per run with the base Atlas shares in place of an export.",
+  "cases": [
+    {
+      "name": "list_bases",
+      "why": "the same one base",
+      "mcp": {
+        "server": "airtable",
+        "tool": "list_bases",
+        "args": {},
+        "pipe": "jq -r '.[] | .id + \" \" + .name + \" \" + .permissionLevel' | grep ."
+      },
+      "mirage": {
+        "command": "airtable list-bases '{}'",
+        "pipe": "jq -r '.[] | .id + \" \" + .name + \" \" + .permissionLevel' | grep ."
+      }
+    },
+    {
+      "name": "list_tables",
+      "why": "the same nine tables, and the same fields in the one the answer reads",
+      "mcp": {
+        "server": "airtable",
+        "tool": "list_tables",
+        "args": {
+          "base_id": "appIF9byLfQwdHqE2"
+        },
+        "pipe": "jq -r '(.[] | .id + \" \" + .name), (.[] | select(.name == \"Turnover Retention\") | .fields[] | .id + \" \" + .name + \" \" + .type)' | grep ."
+      },
+      "mirage": {
+        "command": "airtable list-tables '{\"base_id\": \"appIF9byLfQwdHqE2\"}'",
+        "pipe": "jq -r '(.[] | .id + \" \" + .name), (.[] | select(.name == \"Turnover Retention\") | .fields[] | .id + \" \" + .name + \" \" + .type)' | grep ."
+      }
+    },
+    {
+      "name": "read_file",
+      "why": "the same README, read through either arm",
+      "mcp": {
+        "server": "desktop-commander",
+        "tool": "read_file",
+        "args": {
+          "path": "/data/repos/storyteller/README.md",
+          "length": 3
+        },
+        "pipe": "tail -n +3"
+      },
+      "mirage": {
+        "command": "head -3 /data/repos/storyteller/README.md"
+      }
+    }
+  ]
+}

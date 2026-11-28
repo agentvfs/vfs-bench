@@ -1,0 +1,102 @@
+{
+  "note": "Both arms read one tree at one path -- the MCP arm's servers read the image's own /data in the run's container, and the mirage /data mount is a copy of it taken out of the same image. The calendar is the Google Workspace fake both arms read, seeded per run from Atlas's export.",
+  "cases": [
+    {
+      "name": "list_events",
+      "why": "both arms find the same events on July 15, 2025, New York time",
+      "mcp": {
+        "server": "google-workspace",
+        "tool": "list_events",
+        "args": {
+          "timeMin": "2025-07-15T04:00:00Z",
+          "timeMax": "2025-07-16T04:00:00Z",
+          "maxResults": 50
+        },
+        "pipe": "jq -r '.[].id' | sort"
+      },
+      "mirage": {
+        "command": "ls /calendar/primary/2025-07-15",
+        "pipe": "sed 's/__.*//' | sort"
+      }
+    },
+    {
+      "name": "meal",
+      "why": "the same meal on the day of the fourth",
+      "mcp": {
+        "server": "filesystem",
+        "tool": "read_text_file",
+        "args": {
+          "path": "/data/food and beverage consumption.csv"
+        },
+        "pipe": "grep '17 Jun 2023'"
+      },
+      "mirage": {
+        "command": "grep '17 Jun 2023' '/data/food and beverage consumption.csv'"
+      }
+    },
+    {
+      "name": "fetch",
+      "why": "the fetch CLI is the MCP arm's fetch server, reading the same page live",
+      "mcp": {
+        "server": "fetch",
+        "tool": "fetch",
+        "args": {
+          "url": "https://raw.githubusercontent.com/theonion/fartscroll.js/master/README.md",
+          "max_length": 400
+        }
+      },
+      "mirage": {
+        "command": "fetch fetch '{\"url\":\"https://raw.githubusercontent.com/theonion/fartscroll.js/master/README.md\",\"max_length\":400}'"
+      }
+    },
+    {
+      "name": "list_directory",
+      "why": "both arms see the same checkout",
+      "mcp": {
+        "server": "desktop-commander",
+        "tool": "list_directory",
+        "args": {
+          "path": "/data/repos/storyteller"
+        },
+        "pipe": "sed -n 's/^\\[FILE\\] //p; s/^\\[DIR\\] //p' | sort"
+      },
+      "mirage": {
+        "command": "ls -a /data/repos/storyteller",
+        "pipe": "grep -vx '\\.\\.\\?' | sort"
+      }
+    },
+    {
+      "name": "read_file",
+      "why": "the same README, read through either arm",
+      "mcp": {
+        "server": "desktop-commander",
+        "tool": "read_file",
+        "args": {
+          "path": "/data/repos/storyteller/README.md",
+          "length": 3
+        },
+        "pipe": "tail -n +3"
+      },
+      "mirage": {
+        "command": "head -3 /data/repos/storyteller/README.md"
+      }
+    },
+    {
+      "name": "search_files",
+      "why": "a name search over the tree finds the same paths",
+      "mcp": {
+        "server": "desktop-commander",
+        "tool": "search_files",
+        "args": {
+          "path": "/data/repos/storyteller/src",
+          "pattern": "storyteller"
+        },
+        "pipe": "sort"
+      },
+      "mirage": {
+        "command": "find /data/repos/storyteller/src -iname '*storyteller*'",
+        "pipe": "sort"
+      }
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+mode: EXEC
+runtimes:
+  - name: pyodide
+    config:
+      lockFileUrl: ${TOOLATHLON_PYTHON}/pyodide-lock.json
+      packageBaseUrl: ${TOOLATHLON_PYTHON}/
+      packages:
+        - openpyxl
+        - xlsxwriter
+        - pypdf2
+        - pymupdf
+        - pandas
+        - numpy
+        - pyarrow
+        - pillow
+        - lxml
+        - python-docx
+        - python-pptx
+        - pytesseract
+        - olefile
+  - workspace
+mounts:
+  /tmp:
+    vfs: ram
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace
+clis:
+  git:
+    cli: git

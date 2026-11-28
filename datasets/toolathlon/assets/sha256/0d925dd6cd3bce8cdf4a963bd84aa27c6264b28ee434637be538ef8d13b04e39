@@ -1,0 +1,10 @@
+{
+  "id": "toolathlon_sync-todo-to-readme",
+  "fixtures": [
+    {
+      "id": "github/sync-todo-to-readme",
+      "kind": "script",
+      "run": "shared/seed_github.py"
+    }
+  ]
+}

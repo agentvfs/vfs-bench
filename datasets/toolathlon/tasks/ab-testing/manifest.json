@@ -1,0 +1,388 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/3273ce850c19252d7f6b623da865665bc2d55ce5a0d0549983d70c7221c1ab89",
+      "role": "service_config",
+      "sha256": "3273ce850c19252d7f6b623da865665bc2d55ce5a0d0549983d70c7221c1ab89",
+      "size": 2225,
+      "target": "shared/bigquery.json"
+    },
+    {
+      "path": "assets/sha256/26e0bcc6686a72d7b722f4542712c060e1883c030a2bb2fde72a7a4db2541c96",
+      "role": "service_config",
+      "sha256": "26e0bcc6686a72d7b722f4542712c060e1883c030a2bb2fde72a7a4db2541c96",
+      "size": 128,
+      "target": "shared/logging.json"
+    },
+    {
+      "path": "assets/sha256/3944f6a18e974f817358d8d3a117638368c8590c5ad099cf051b6267a49f9c70",
+      "role": "service_config",
+      "sha256": "3944f6a18e974f817358d8d3a117638368c8590c5ad099cf051b6267a49f9c70",
+      "size": 102,
+      "target": "shared/storage.json"
+    },
+    {
+      "path": "assets/sha256/01ebed810819b909d0e528a14b0e94b8bc33af1a89433a2c4a627920afc5d321",
+      "role": "seed_manifest",
+      "sha256": "01ebed810819b909d0e528a14b0e94b8bc33af1a89433a2c4a627920afc5d321",
+      "size": 276,
+      "target": "task.json"
+    },
+    {
+      "path": "assets/sha256/a86d97a507e3c348c3b272ce8a095a89dd17d18386ebc3efbaed2423e1479941",
+      "role": "parity_test",
+      "sha256": "a86d97a507e3c348c3b272ce8a095a89dd17d18386ebc3efbaed2423e1479941",
+      "size": 2445,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "role": "workspace_documentation",
+      "sha256": "2cb00d3ddbee5f846d67ef7eb38dd1d3d218d2ebc4df9e17a62ff1d7a8fb2075",
+      "size": 449,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/3eaf6ca024bdce74d8e510a723b379a751caf7d2f954bcdfda8a7a4098eccd6e",
+      "role": "workspace_config",
+      "sha256": "3eaf6ca024bdce74d8e510a723b379a751caf7d2f954bcdfda8a7a4098eccd6e",
+      "size": 772,
+      "target": "vfs/workspace.yaml"
+    }
+  ],
+  "dataset": "toolathlon",
+  "grader": {
+    "id": "toolathlon",
+    "source": "upstream/evaluation/main.py"
+  },
+  "id": "ab-testing",
+  "schema_version": 1,
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/docs/agent_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "dd10d7cac47b0c35a7f43e894c0c014d059970202d54f7c8578e367f76b0ebad",
+      "size": 499,
+      "target": "upstream/docs/agent_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/docs/agent_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/ab-testing/shared/task.md",
+      "role": "instruction",
+      "sha256": "2ff2b8a48313ab50c32782ea9560161bac9afc515e921eac9bd4bd3cb7864ac2",
+      "size": 973,
+      "target": "shared/task.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/docs/task.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/docs/user_system_prompt.md",
+      "role": "upstream_source",
+      "sha256": "78dd46b5d7e79c3eb4de93e81de3b062234cafe6240f4710f769650b5f4c5ff2",
+      "size": 13,
+      "target": "upstream/docs/user_system_prompt.md",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/docs/user_system_prompt.md"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/evaluation/list_storage_buckets.py",
+      "role": "verifier_source",
+      "sha256": "ab62c9afa2eb4a17484e9fa4cc3dfa01783b8078fecc36c6b66c67e80a632d3e",
+      "size": 3019,
+      "target": "upstream/evaluation/list_storage_buckets.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/evaluation/list_storage_buckets.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/evaluation/main.py",
+      "role": "verifier_source",
+      "sha256": "3bad26b61448f1f0c91808435e3239c3f7a6735ab865f0c27523fb6312a9b9ad",
+      "size": 14138,
+      "target": "upstream/evaluation/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/evaluation/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_Appliances.csv",
+      "role": "upstream_source",
+      "sha256": "f4314145b031cb335d8c3ea385495543fb537341ddbbd2181effc5f86e7351cd",
+      "size": 10677,
+      "target": "upstream/files/ab_Appliances.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_Appliances.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_Automotive.csv",
+      "role": "upstream_source",
+      "sha256": "a851215ff243f0c17f3c01852b8f798a7fd36abb8bb9a854b7c7425770bb3501",
+      "size": 11445,
+      "target": "upstream/files/ab_Automotive.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_Automotive.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_Baby.csv",
+      "role": "upstream_source",
+      "sha256": "eb811f21f0f8e59006c6dbffde5ed65e6dfe1371a19cf2b9667413d8186cb0df",
+      "size": 10626,
+      "target": "upstream/files/ab_Baby.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_Baby.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_Beauty.csv",
+      "role": "upstream_source",
+      "sha256": "3c5e47277d9f8896cb5cb5c384dc34e153ce17e65a561a81a130449b440dd101",
+      "size": 10495,
+      "target": "upstream/files/ab_Beauty.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_Beauty.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_Books.csv",
+      "role": "upstream_source",
+      "sha256": "8357303508acb49644e612a8f44bfbf6d59b9dc203f29075fce12f7127a416e7",
+      "size": 10721,
+      "target": "upstream/files/ab_Books.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_Books.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_Clothing.csv",
+      "role": "upstream_source",
+      "sha256": "3cfda2d1b8bc8c0efc72634be0f3c5913f752947824d9c32b6284ec4e26ad00c",
+      "size": 10939,
+      "target": "upstream/files/ab_Clothing.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_Clothing.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_Education.csv",
+      "role": "upstream_source",
+      "sha256": "821733b664a642a529a0750addced3a0885e8137608a8f1e8476132dcb1343d3",
+      "size": 11104,
+      "target": "upstream/files/ab_Education.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_Education.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_Electronics.csv",
+      "role": "upstream_source",
+      "sha256": "da66739711f6d2d13cab8298edf8f47d2282c0b425e34f35e4cc84f886364d1a",
+      "size": 10866,
+      "target": "upstream/files/ab_Electronics.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_Electronics.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_Food.csv",
+      "role": "upstream_source",
+      "sha256": "7242708f4626cf899484a8b2564d59bde361971cad6c98075852d289766ee333",
+      "size": 10962,
+      "target": "upstream/files/ab_Food.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_Food.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_FreshFood.csv",
+      "role": "upstream_source",
+      "sha256": "e23de08e80ddc5c71aa12c5cdb4bbc783e6812e6905a2f06fa56172a6c3f5113",
+      "size": 10963,
+      "target": "upstream/files/ab_FreshFood.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_FreshFood.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_Gaming.csv",
+      "role": "upstream_source",
+      "sha256": "035d75aa39f1a81af271390dda029df690ff256dc0dffa18a13e5fd8786bc875",
+      "size": 11114,
+      "target": "upstream/files/ab_Gaming.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_Gaming.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_Health.csv",
+      "role": "upstream_source",
+      "sha256": "d5ac3b8351307322fb85d75712b5239df259d82d4116e2a82a096bfc36816855",
+      "size": 11034,
+      "target": "upstream/files/ab_Health.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_Health.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_Home.csv",
+      "role": "upstream_source",
+      "sha256": "1ecc2d084047750c2e265e24f9e2fea4d30dc1158279c42ce604645389597496",
+      "size": 10833,
+      "target": "upstream/files/ab_Home.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_Home.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_Hospitality.csv",
+      "role": "upstream_source",
+      "sha256": "75c9cd59ed68e3d41ce8f2117fdbd51fb9ff1d4842d6d797ee7146ab72f2be71",
+      "size": 10700,
+      "target": "upstream/files/ab_Hospitality.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_Hospitality.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_Music.csv",
+      "role": "upstream_source",
+      "sha256": "f53ddca8a082a6bdf6e39c866b93e283eacc2e49b3015013307155186806ee4a",
+      "size": 11232,
+      "target": "upstream/files/ab_Music.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_Music.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_Office.csv",
+      "role": "upstream_source",
+      "sha256": "66315a0a86b83a7dc3da9f5731aad21d3f0408e9bf3049f96008dec4a4908a9d",
+      "size": 10756,
+      "target": "upstream/files/ab_Office.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_Office.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_Outdoor.csv",
+      "role": "upstream_source",
+      "sha256": "f8f6ab5fe42e8a7d476a5dd0f1fec648e8ca2407994fe64a3390b507664ab126",
+      "size": 10716,
+      "target": "upstream/files/ab_Outdoor.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_Outdoor.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_Pets.csv",
+      "role": "upstream_source",
+      "sha256": "a940dfe3c9324bfb1c2d465655b5ff65abaec9c3666e11cc2b7aacc520002fac",
+      "size": 11205,
+      "target": "upstream/files/ab_Pets.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_Pets.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_Sports.csv",
+      "role": "upstream_source",
+      "sha256": "f04a64494f3373985ce2e16ed784a5cfbe2d9362ba5277e9dfd4775154b2cc03",
+      "size": 10977,
+      "target": "upstream/files/ab_Sports.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_Sports.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/files/ab_Travel.csv",
+      "role": "upstream_source",
+      "sha256": "b85fd13ff4dc63808b50e6e9f01048e887405de91a354aeb86ff84961196857e",
+      "size": 11217,
+      "target": "upstream/files/ab_Travel.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/files/ab_Travel.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/groundtruth_workspace/expected_ratio.csv",
+      "role": "verifier_input",
+      "sha256": "360e2ccfb8de551ff5d6d5fd5c0136efd488b0a89f2d489a42a006c168f39d34",
+      "size": 562,
+      "target": "upstream/groundtruth_workspace/expected_ratio.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/groundtruth_workspace/expected_ratio.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/groundtruth_workspace/log_bucket_name.txt",
+      "role": "verifier_input",
+      "sha256": "f772da549ea1699510f5d365f8d57e8280b127bfa2428cb5af4ff5f915271158",
+      "size": 31,
+      "target": "upstream/groundtruth_workspace/log_bucket_name.txt",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/groundtruth_workspace/log_bucket_name.txt"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/initial_workspace/record.csv",
+      "role": "initial_workspace",
+      "sha256": "f27ebb12c66aa387b39da5b9aad16b66cf3178895b57ba7e724d3d9003d58ea7",
+      "size": 268,
+      "target": "upstream/initial_workspace/record.csv",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/initial_workspace/record.csv"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/preprocess/ggcloud_clean_bucket.py",
+      "role": "preprocessor_source",
+      "sha256": "ec9abe8b20bce13398c684b836503f14634a0d3532f99485a81a15e2aaaa02c7",
+      "size": 6921,
+      "target": "upstream/preprocess/ggcloud_clean_bucket.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/preprocess/ggcloud_clean_bucket.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/preprocess/ggcloud_clean_dataset.py",
+      "role": "preprocessor_source",
+      "sha256": "76efd899d6d009624c07c67abd3660ed471984588b0623bd664aad5f56a581e1",
+      "size": 7206,
+      "target": "upstream/preprocess/ggcloud_clean_dataset.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/preprocess/ggcloud_clean_dataset.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/preprocess/ggcloud_clean_log.py",
+      "role": "preprocessor_source",
+      "sha256": "d933d12a283e8b4dcf69605ac4c9fc9653055355865bfecb5bfa79aaced59107",
+      "size": 11199,
+      "target": "upstream/preprocess/ggcloud_clean_log.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/preprocess/ggcloud_clean_log.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/preprocess/ggcloud_upload.py",
+      "role": "preprocessor_source",
+      "sha256": "e8551fc3052965d92b992ef5f166aafd3d1301720ee0a96f9d66fe26c0594321",
+      "size": 2910,
+      "target": "upstream/preprocess/ggcloud_upload.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/preprocess/ggcloud_upload.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/preprocess/main.py",
+      "role": "preprocessor_source",
+      "sha256": "3316caf02ec7b9181d18f170fcb3e1f583a699001ca614156149351cf5abdfc9",
+      "size": 2065,
+      "target": "upstream/preprocess/main.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/preprocess/main.py"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/task_config.json",
+      "role": "upstream_config",
+      "sha256": "0aa31c181ad711e85d229afc2a19e644525d8c1810cca098b8b85fad31c9a66a",
+      "size": 227,
+      "target": "upstream/task_config.json",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/task_config.json"
+    },
+    {
+      "path": "vfs-bench-1/submodule/Toolathlon/tasks/finalpool/ab-testing/token_key_session.py",
+      "role": "upstream_source",
+      "sha256": "4be488b11ec1a9936a972ea0916b0fe36d8559bf09debeb7b5f70c28d0782403",
+      "size": 654,
+      "target": "upstream/token_key_session.py",
+      "url": "https://raw.githubusercontent.com/hkust-nlp/Toolathlon/9be8d8fe07a497b18ee61e3f2ae694e9797f39eb/tasks/finalpool/ab-testing/token_key_session.py"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/ab-testing/README.md",
+      "role": "documentation",
+      "sha256": "d746c168de0e7a3f0d733f06194d2e6e5da7caf5f5915ae4c8a76100622b2b0b",
+      "size": 3604,
+      "target": "README.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/ab-testing/README.md"
+    },
+    {
+      "path": "vfs-bench-1/task/toolathlon/ab-testing/vfs/SKILL.md",
+      "role": "workspace_documentation",
+      "sha256": "f44964aef90b38908490bb49b0d169fb2bac3ab266c15ed9dbe85cfd88128cf7",
+      "size": 11368,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/toolathlon/ab-testing/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "shared_runtime": {
+      "path": "vfs-bench-1",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    },
+    "upstream": {
+      "path": "tasks/finalpool/ab-testing",
+      "repo": "hkust-nlp/Toolathlon",
+      "revision": "9be8d8fe07a497b18ee61e3f2ae694e9797f39eb"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/toolathlon/ab-testing",
+      "repo": "agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392"
+    }
+  },
+  "upstream_tools": {
+    "needed_local_tools": [
+      "claim_done",
+      "python_execute",
+      "handle_overlong_tool_outputs",
+      "manage_context",
+      "history"
+    ],
+    "needed_mcp_servers": [
+      "google-cloud",
+      "filesystem"
+    ]
+  }
+}

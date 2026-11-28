@@ -1,0 +1,112 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/f038e3b18432eef0c6a7e9f17fc79c206c16a374d38c26a2b70d858b38cfca01",
+      "role": "workspace",
+      "sha256": "f038e3b18432eef0c6a7e9f17fc79c206c16a374d38c26a2b70d858b38cfca01",
+      "size": 2393,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/63edd37e98ebe3a1a3877fe09d798aa5695d007a6d387d263b69549de9cdc35f",
+      "role": "workspace_config",
+      "sha256": "63edd37e98ebe3a1a3877fe09d798aa5695d007a6d387d263b69549de9cdc35f",
+      "size": 3125,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/059106a80d4da9e5f9b52bd751ad2f4de7a56038796d4045d55fcc0e621234a7",
+      "role": "parity",
+      "sha256": "059106a80d4da9e5f9b52bd751ad2f4de7a56038796d4045d55fcc0e621234a7",
+      "size": 5083,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/f6df25853391a9d802e2fadb3808f7f9aef4b7f76e50c945697b77bf58cd1767",
+      "role": "verifier",
+      "sha256": "f6df25853391a9d802e2fadb3808f7f9aef4b7f76e50c945697b77bf58cd1767",
+      "size": 2158,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "weather_get_weather_forecast",
+    "weather_get_hourly_forecast",
+    "cli-mcp-server_run_command",
+    "exa_web_search_exa",
+    "weather_get_current_weather",
+    "airtable_list_bases",
+    "airtable_list_tables",
+    "airtable_list_records",
+    "airtable_search_records",
+    "cli-mcp-server_show_security_rules",
+    "e2b-server_run_code",
+    "mongodb_list-collections",
+    "mongodb_list-databases",
+    "mongodb_aggregate",
+    "mongodb_collection-schema"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "lithuania-centennial-staff-turnover",
+  "schema_version": 1,
+  "servers": [
+    "weather",
+    "cli-mcp-server",
+    "exa",
+    "airtable",
+    "e2b-server",
+    "mongodb"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/lithuania-centennial-staff-turnover/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "2d6a44b1771e44c3a4946505eebc55f81b3b2b4eadc63eb3cae41af3f0611722",
+      "size": 4442,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/lithuania-centennial-staff-turnover/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "688fb11183792b921381bd1e",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/lithuania-centennial-staff-turnover",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

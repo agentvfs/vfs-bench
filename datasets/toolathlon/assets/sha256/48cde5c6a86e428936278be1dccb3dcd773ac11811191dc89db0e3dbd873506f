@@ -1,0 +1,14 @@
+{
+  "id": "toolathlon_set-conf-cr-ddl",
+  "fixtures": [
+    {
+      "id": "mail/swright@mcp.com",
+      "kind": "mail"
+    },
+    {
+      "id": "inbox+calendar/set-conf-cr-ddl",
+      "kind": "script",
+      "run": "shared/seed_db.py"
+    }
+  ]
+}

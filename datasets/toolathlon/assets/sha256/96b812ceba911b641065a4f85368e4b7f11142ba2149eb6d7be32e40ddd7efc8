@@ -1,0 +1,14 @@
+{
+  "id": "toolathlon_student-interview",
+  "fixtures": [
+    {
+      "id": "mail/susan_reyes@mcp.com",
+      "kind": "mail"
+    },
+    {
+      "id": "inbox+calendar/student-interview",
+      "kind": "script",
+      "run": "shared/seed_db.py"
+    }
+  ]
+}

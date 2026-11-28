@@ -1,0 +1,26 @@
+mode: EXEC
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace
+runtimes:
+  - workspace
+clis:
+  gh:
+    cli: gh
+    config:
+      token: fake-token
+      baseUrl: ${GITHUB_URL}
+  pdf-tools:
+    cli: ../../../../cli/toolathlon/documents.mjs:PDF
+    config:
+      apiBase: ${PDF_TOOLS_CLI_URL}
+mounts:
+  /tmp:
+    vfs: ram
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}

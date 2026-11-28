@@ -1,0 +1,17 @@
+{
+  "id": "toolathlon_live-transactions",
+  "fixtures": [
+    {
+      "id": "bq/transactions_analytics",
+      "kind": "bigquery"
+    },
+    {
+      "id": "gcs/mcp-fraud-investigation-archive",
+      "kind": "storage"
+    },
+    {
+      "id": "logging/Trading_Logging",
+      "kind": "logging"
+    }
+  ]
+}

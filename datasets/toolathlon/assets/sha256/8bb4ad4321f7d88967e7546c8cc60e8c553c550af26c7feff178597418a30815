@@ -1,0 +1,22 @@
+mode: EXEC
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace
+runtimes:
+  - workspace
+clis:
+  howtocook:
+    cli: ../../../../cli/toolathlon/travel-video.mjs:HOWTOCOOK
+    config:
+      apiBase: ${HOWTOCOOK_CLI_URL}
+      timeoutMs: 1000000
+mounts:
+  /tmp:
+    vfs: ram
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}

@@ -1,0 +1,110 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/a0c73f6826972a81b3e8f0d871c796f87243a3c48a02af891b26d88e2099251d",
+      "role": "workspace",
+      "sha256": "a0c73f6826972a81b3e8f0d871c796f87243a3c48a02af891b26d88e2099251d",
+      "size": 1630,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/38e9d0d942818d1d3708e73d31cb4d448c2ffaa0369b10eaef6b138d897f2f01",
+      "role": "workspace_config",
+      "sha256": "38e9d0d942818d1d3708e73d31cb4d448c2ffaa0369b10eaef6b138d897f2f01",
+      "size": 3389,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/a0eafa848432469fbc2355db585d16cee53bb67a0548c98e5ab2081925a8da04",
+      "role": "parity",
+      "sha256": "a0eafa848432469fbc2355db585d16cee53bb67a0548c98e5ab2081925a8da04",
+      "size": 4031,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/63f515a7ad36d40ecb4a7207e89b179cb711d154dcc3d512fc571941b3b98394",
+      "role": "verifier",
+      "sha256": "63f515a7ad36d40ecb4a7207e89b179cb711d154dcc3d512fc571941b3b98394",
+      "size": 924,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "pubmed_search_pubmed_advanced",
+    "pubmed_search_pubmed_key_words",
+    "git_git_show",
+    "git_git_log",
+    "git_git_diff",
+    "airtable_get_record",
+    "airtable_list_bases",
+    "airtable_list_tables",
+    "airtable_list_records",
+    "airtable_search_records",
+    "open-library_get_book_by_title",
+    "open-library_get_book_by_id",
+    "open-library_get_authors_by_name",
+    "open-library_get_author_info",
+    "git_git_diff_unstaged"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "joyce-cadmus-customer-interaction",
+  "schema_version": 1,
+  "servers": [
+    "pubmed",
+    "git",
+    "airtable",
+    "open-library"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/joyce-cadmus-customer-interaction/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "a1e1a103c09c266381ff12de331d5f1091da068cd0c940bbf3273304c2c643a8",
+      "size": 3441,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/joyce-cadmus-customer-interaction/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "68952adeba1c2ad4e6a5db36",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/joyce-cadmus-customer-interaction",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

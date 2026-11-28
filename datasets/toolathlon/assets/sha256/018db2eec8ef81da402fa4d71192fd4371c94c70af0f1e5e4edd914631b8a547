@@ -1,0 +1,59 @@
+mode: EXEC
+runtimes:
+  - name: pyodide
+    config:
+      lockFileUrl: ${TOOLATHLON_PYTHON}/pyodide-lock.json
+      packageBaseUrl: ${TOOLATHLON_PYTHON}/
+      packages:
+        - openpyxl
+        - xlsxwriter
+        - pypdf2
+        - pymupdf
+        - pandas
+        - numpy
+        - pyarrow
+        - pillow
+        - lxml
+        - python-docx
+        - python-pptx
+        - pytesseract
+        - olefile
+  - workspace
+clis:
+  gh:
+    cli: gh
+    config:
+      token: fake-token
+      baseUrl: ${GITHUB_URL}
+      repo: integ-user/LUFFY
+  git:
+    cli: git
+mounts:
+  /tmp:
+    vfs: ram
+  /repo/main:
+    vfs: github
+    config:
+      token: fake-token
+      owner: integ-user
+      repo: LUFFY
+      ref: main
+      baseUrl: ${GITHUB_URL}
+  /repo/dev:
+    vfs: github
+    config:
+      token: fake-token
+      owner: integ-user
+      repo: LUFFY
+      ref: dev
+      baseUrl: ${GITHUB_URL}
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace

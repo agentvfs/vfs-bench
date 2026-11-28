@@ -1,0 +1,37 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "gh_search_repositories",
+      "why": "a search finds the same repositories",
+      "mcp": {
+        "server": "github",
+        "tool": "search_repositories",
+        "args": {
+          "query": "mixture_of_recursions"
+        },
+        "jq": "{total_count, names: [.items[].full_name] | sort}"
+      },
+      "mirage": {
+        "command": "gh api 'search/repositories?q=mixture_of_recursions'",
+        "jq": "{total_count, names: [.items[].full_name] | sort}"
+      }
+    },
+    {
+      "name": "read_pdf_pages",
+      "why": "The pinned upstream handler reads the same task fixture through MCP and the workspace CLI.",
+      "mcp": {
+        "server": "pdf-tools",
+        "tool": "read_pdf_pages",
+        "args": {
+          "pdf_file_path": "${AGENT_WORKSPACE}/paper.pdf",
+          "start_page": 1,
+          "end_page": 1
+        }
+      },
+      "mirage": {
+        "command": "pdf-tools read-pdf-pages '{\"pdf_file_path\": \"/workspace/paper.pdf\", \"start_page\": 1, \"end_page\": 1}'"
+      }
+    }
+  ]
+}

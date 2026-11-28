@@ -1,0 +1,112 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/7c75244fed300c3e1472b2b72657567d3ac0356fa5e99496eaf75a3f3bf735a9",
+      "role": "workspace",
+      "sha256": "7c75244fed300c3e1472b2b72657567d3ac0356fa5e99496eaf75a3f3bf735a9",
+      "size": 1113,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/2690b528bf61d8d05ba5136f645bafce3b5208bda991c5604e2ba2687a92aa79",
+      "role": "workspace_config",
+      "sha256": "2690b528bf61d8d05ba5136f645bafce3b5208bda991c5604e2ba2687a92aa79",
+      "size": 2584,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/c89bfc9294a0f68cb1609226d79ed9f26bd93d26ec8f4e6187778d573251192b",
+      "role": "parity",
+      "sha256": "c89bfc9294a0f68cb1609226d79ed9f26bd93d26ec8f4e6187778d573251192b",
+      "size": 3202,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/df91bc7a6d26cfc3b42e949d39a30f2393b1b12736e687b391f47d068abf6880",
+      "role": "verifier",
+      "sha256": "df91bc7a6d26cfc3b42e949d39a30f2393b1b12736e687b391f47d068abf6880",
+      "size": 2657,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "notion_API-post-search",
+    "notion_API-post-database-query",
+    "notion_API-retrieve-a-database",
+    "notion_API-retrieve-a-block",
+    "notion_API-retrieve-a-page",
+    "arxiv_search_papers",
+    "fetch_fetch",
+    "memory_read_graph",
+    "memory_search_nodes",
+    "slack_channels_list",
+    "slack_conversations_history",
+    "slack_conversations_replies",
+    "slack_conversations_search_messages",
+    "whois_whois_domain",
+    "whois_whois_tld"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "castleman-ad-paper-campaign-date",
+  "schema_version": 1,
+  "servers": [
+    "notion",
+    "arxiv",
+    "fetch",
+    "memory",
+    "slack",
+    "whois"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/castleman-ad-paper-campaign-date/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "bf74c07e63340bfc6861fc78343aa0fb61d5c5b643cbe1b85328df67c3aad004",
+      "size": 5386,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/castleman-ad-paper-campaign-date/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689cd6f8522029b7ad7b2024",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/castleman-ad-paper-campaign-date",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

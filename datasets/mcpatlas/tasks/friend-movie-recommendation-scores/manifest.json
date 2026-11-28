@@ -1,0 +1,113 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/3bd33d102a7560803e4c5724d8716adc9f1a35fe60ac6c78a8e65a274646a692",
+      "role": "workspace",
+      "sha256": "3bd33d102a7560803e4c5724d8716adc9f1a35fe60ac6c78a8e65a274646a692",
+      "size": 2270,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/2b395984e96affade07786e818b39a3a937ff568a0f3c8dccf83d5f52ef43c9b",
+      "role": "workspace_config",
+      "sha256": "2b395984e96affade07786e818b39a3a937ff568a0f3c8dccf83d5f52ef43c9b",
+      "size": 3121,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/9bfa609e4ff31a2a44a489156c4be6e67047928d6080a5c84e9722b1b265b95e",
+      "role": "parity",
+      "sha256": "9bfa609e4ff31a2a44a489156c4be6e67047928d6080a5c84e9722b1b265b95e",
+      "size": 3220,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/07ac5fdaa2d3493199128f9d3d1664459d8abe184f56c29b011b4c3d17f45bc2",
+      "role": "verifier",
+      "sha256": "07ac5fdaa2d3493199128f9d3d1664459d8abe184f56c29b011b4c3d17f45bc2",
+      "size": 355,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "filesystem_read_file",
+    "filesystem_list_directory",
+    "filesystem_list_allowed_directories",
+    "slack_channels_list",
+    "slack_conversations_add_message",
+    "slack_conversations_history",
+    "mcp-code-executor_execute_code",
+    "airtable_list_bases",
+    "airtable_list_tables",
+    "airtable_list_records",
+    "airtable_search_records",
+    "exa_web_search_exa",
+    "github_search_repositories",
+    "github_search_code",
+    "github_search_users",
+    "filesystem_read_text_file"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "friend-movie-recommendation-scores",
+  "schema_version": 1,
+  "servers": [
+    "filesystem",
+    "slack",
+    "mcp-code-executor",
+    "airtable",
+    "exa",
+    "github"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/friend-movie-recommendation-scores/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "d98a8738fc3b6faf7e9c78a4af837307bd6651228d479e21cec0c28182d4be42",
+      "size": 3120,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/friend-movie-recommendation-scores/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689bd255c0422b257e7dfcce",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/friend-movie-recommendation-scores",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

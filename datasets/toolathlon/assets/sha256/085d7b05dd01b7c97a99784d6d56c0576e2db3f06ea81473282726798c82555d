@@ -1,0 +1,109 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "emails_get_folders",
+      "why": "both arms list the same IMAP folders",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_folders",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-folders"
+      }
+    },
+    {
+      "name": "emails_get_emails",
+      "why": "the same messages, in the same order, through either arm",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_emails",
+        "args": {
+          "folder": "INBOX"
+        }
+      },
+      "mirage": {
+        "command": "emails get-emails '{\"folder\":\"INBOX\"}'"
+      }
+    },
+    {
+      "name": "emails_get_unread_count",
+      "why": "the unread count agrees",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_unread_count",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-unread-count"
+      }
+    },
+    {
+      "name": "emails_get_mailbox_stats",
+      "why": "the mailbox statistics agree",
+      "mcp": {
+        "server": "emails",
+        "tool": "get_mailbox_stats",
+        "args": {}
+      },
+      "mirage": {
+        "command": "emails get-mailbox-stats"
+      }
+    },
+    {
+      "name": "emails_search_emails",
+      "why": "a search returns the same hits",
+      "mcp": {
+        "server": "emails",
+        "tool": "search_emails",
+        "args": {
+          "query": "the",
+          "folder": "INBOX"
+        }
+      },
+      "mirage": {
+        "command": "emails search-emails '{\"query\":\"the\",\"folder\":\"INBOX\"}'"
+      }
+    },
+    {
+      "name": "google_calendar_list_events",
+      "why": "the same events in the same order",
+      "mcp": {
+        "server": "google_calendar",
+        "tool": "list_events",
+        "args": {
+          "timeMin": "2000-01-01T00:00:00Z",
+          "timeMax": "2100-01-01T00:00:00Z"
+        }
+      },
+      "mirage": {
+        "command": "google-calendar list-events '{\"timeMin\":\"2000-01-01T00:00:00Z\",\"timeMax\":\"2100-01-01T00:00:00Z\"}'"
+      }
+    },
+    {
+      "name": "google_calendar_create_event",
+      "why": "an event created through either arm comes back in the same shape; ids are minted per create",
+      "mcp": {
+        "server": "google_calendar",
+        "tool": "create_event",
+        "args": {
+          "summary": "Parity Check",
+          "start": "2030-01-01T10:00:00Z",
+          "end": "2030-01-01T11:00:00Z"
+        }
+      },
+      "mirage": {
+        "command": "google-calendar create-event '{\"summary\":\"Parity Check\",\"start\":\"2030-01-01T10:00:00Z\",\"end\":\"2030-01-01T11:00:00Z\"}'"
+      },
+      "ignore": [
+        "id",
+        "htmlLink",
+        "iCalUID",
+        "created",
+        "updated",
+        "etag"
+      ]
+    }
+  ]
+}

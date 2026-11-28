@@ -1,0 +1,116 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/9d49f28c71f6b999c6d64ce3df112b1cbf19977e6469038a90f27ce889087ce1",
+      "role": "workspace",
+      "sha256": "9d49f28c71f6b999c6d64ce3df112b1cbf19977e6469038a90f27ce889087ce1",
+      "size": 1613,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/1f2609dedb303195057772513e09721f9923ae352edf2a58a5f5229664ca18e3",
+      "role": "workspace_config",
+      "sha256": "1f2609dedb303195057772513e09721f9923ae352edf2a58a5f5229664ca18e3",
+      "size": 2484,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/84c530227d59c39ef5fd5509265f68d5eb429805121dff3c3b1b2e311e800967",
+      "role": "parity",
+      "sha256": "84c530227d59c39ef5fd5509265f68d5eb429805121dff3c3b1b2e311e800967",
+      "size": 4314,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/82a1de03cabe1db68626e457518664f46d60044039a2eeb5c6f57e48e3297d68",
+      "role": "verifier",
+      "sha256": "82a1de03cabe1db68626e457518664f46d60044039a2eeb5c6f57e48e3297d68",
+      "size": 264,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "airtable_list_bases",
+    "airtable_list_tables",
+    "airtable_list_records",
+    "airtable_search_records",
+    "airtable_get_record",
+    "calculator_calculate",
+    "exa_web_search_exa",
+    "filesystem_read_file",
+    "filesystem_read_text_file",
+    "filesystem_read_media_file",
+    "filesystem_read_multiple_files",
+    "filesystem_list_directory",
+    "filesystem_list_directory_with_sizes",
+    "filesystem_directory_tree",
+    "filesystem_search_files",
+    "filesystem_get_file_info",
+    "filesystem_list_allowed_directories",
+    "memory_read_graph",
+    "memory_search_nodes",
+    "memory_open_nodes"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "employee-expense-crime-suspect",
+  "schema_version": 1,
+  "servers": [
+    "airtable",
+    "calculator",
+    "exa",
+    "filesystem",
+    "memory"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/employee-expense-crime-suspect/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "830317a5dc2aa783dd1e25a69bb510d2d608fedddd167e287bafa97d76f32ef1",
+      "size": 3084,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/employee-expense-crime-suspect/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "689bd255c0422b257e7dfd05",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/employee-expense-crime-suspect",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}

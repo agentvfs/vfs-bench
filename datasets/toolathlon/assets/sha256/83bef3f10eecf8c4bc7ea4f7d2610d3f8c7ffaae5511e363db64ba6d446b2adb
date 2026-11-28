@@ -1,0 +1,13 @@
+{
+  "id": "toolathlon_nhl-b2b-analysis",
+  "fixtures": [
+    {
+      "id": "drive/nhl-schedule",
+      "kind": "script",
+      "run": "shared/seed_mock.py",
+      "with": [
+        "openpyxl"
+      ]
+    }
+  ]
+}

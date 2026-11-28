@@ -1,0 +1,49 @@
+mode: EXEC
+runtimes:
+  - name: pyodide
+    config:
+      lockFileUrl: ${TOOLATHLON_PYTHON}/pyodide-lock.json
+      packageBaseUrl: ${TOOLATHLON_PYTHON}/
+      packages:
+        - openpyxl
+        - xlsxwriter
+        - pypdf2
+        - pymupdf
+        - pandas
+        - numpy
+        - pyarrow
+        - pillow
+        - lxml
+        - python-docx
+        - python-pptx
+        - pytesseract
+        - olefile
+  - workspace
+mounts:
+  /tmp:
+    vfs: ram
+  /wandb:
+    vfs: wandb
+    config:
+      entities:
+        - mluo
+      apiKey: ${WANDB_API_KEY}
+      baseUrl: ${WANDB_BASE_URL}
+  /workspace:
+    vfs: disk
+    config:
+      root: ${AGENT_WORKSPACE}
+env:
+  HOME: /workspace
+  LC_CTYPE: C.UTF-8
+profiles:
+  default:
+    cwd: /workspace
+clis:
+  wandb:
+    cli: ../../../../cli/toolathlon/travel-video.mjs:WANDB
+    config:
+      apiBase: ${WANDB_CLI_URL}
+      timeoutMs: 10000
+  git:
+    cli: git

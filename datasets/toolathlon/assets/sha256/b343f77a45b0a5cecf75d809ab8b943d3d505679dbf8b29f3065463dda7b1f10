@@ -1,0 +1,62 @@
+{
+  "note": "Tool-command cases call the same pinned handler down both arms, over the same fixture, so the replies are compared whole; a bespoke CLI answers in its own shape and is projected onto the same fact.",
+  "cases": [
+    {
+      "name": "woocommerce_products_list",
+      "why": "the same first page of products",
+      "mcp": {
+        "server": "woocommerce",
+        "tool": "woo_products_list",
+        "args": {
+          "perPage": 5
+        },
+        "pipe": "grep -E '^ {4}\"(id|name|status|price)\": '"
+      },
+      "mirage": {
+        "command": "woocommerce products-list '{\"perPage\":5}' | grep -E '^ {4}\"(id|name|status|price)\": '"
+      }
+    },
+    {
+      "name": "woocommerce_products_categories_list",
+      "why": "the same categories",
+      "mcp": {
+        "server": "woocommerce",
+        "tool": "woo_products_categories_list",
+        "args": {}
+      },
+      "mirage": {
+        "command": "woocommerce products-categories-list"
+      }
+    },
+    {
+      "name": "woocommerce_orders_list",
+      "why": "the same first page of orders",
+      "mcp": {
+        "server": "woocommerce",
+        "tool": "woo_orders_list",
+        "args": {
+          "perPage": 5
+        },
+        "jq": "[.[] | {id, status, total}]"
+      },
+      "mirage": {
+        "command": "woocommerce orders-list '{\"perPage\":5}' | jq -c '[.[] | {id, status, total}]'"
+      }
+    },
+    {
+      "name": "woocommerce_customers_list",
+      "why": "the same first page of customers",
+      "mcp": {
+        "server": "woocommerce",
+        "tool": "woo_customers_list",
+        "args": {
+          "perPage": 5
+        },
+        "jq": "[.[] | {id, email}]"
+      },
+      "mirage": {
+        "command": "woocommerce customers-list '{\"perPage\":5}' | jq -c '[.[] | {id, email}]'"
+      }
+    }
+  ]
+}

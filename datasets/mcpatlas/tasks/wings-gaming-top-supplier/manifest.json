@@ -1,0 +1,114 @@
+{
+  "assets": [
+    {
+      "path": "assets/sha256/1f0da1f9766cd59a2655082db64806fbfcbfc736379199cb0eb070862ae06508",
+      "role": "workspace",
+      "sha256": "1f0da1f9766cd59a2655082db64806fbfcbfc736379199cb0eb070862ae06508",
+      "size": 1587,
+      "target": "vfs/VFS.md"
+    },
+    {
+      "path": "assets/sha256/89d1711960fde739bd439e77f930fcab3dd7a0bfbc92e34995711e8a60abbf9d",
+      "role": "workspace_config",
+      "sha256": "89d1711960fde739bd439e77f930fcab3dd7a0bfbc92e34995711e8a60abbf9d",
+      "size": 3114,
+      "target": "vfs/workspace.yaml"
+    },
+    {
+      "path": "assets/sha256/7412e646419c46052e2aa797659a62892983164b17a6bc526f8abfdc7588394b",
+      "role": "parity",
+      "sha256": "7412e646419c46052e2aa797659a62892983164b17a6bc526f8abfdc7588394b",
+      "size": 3621,
+      "target": "tests/parity.json"
+    },
+    {
+      "path": "assets/sha256/46ef5f0a78011fb6392fd1537f66fbfe21a4a9ff6000a56419b8115a82af4b95",
+      "role": "verifier",
+      "sha256": "46ef5f0a78011fb6392fd1537f66fbfe21a4a9ff6000a56419b8115a82af4b95",
+      "size": 334,
+      "target": "verifier/claims.json"
+    }
+  ],
+  "dataset": "mcpatlas",
+  "enabled_tools": [
+    "airtable_list_bases",
+    "airtable_list_tables",
+    "airtable_search_records",
+    "exa_web_search_exa",
+    "airtable_list_records",
+    "weather-data_weather_history",
+    "weather-data_weather_alerts",
+    "national-parks_getParkDetails",
+    "national-parks_findParks",
+    "mongodb_list-collections",
+    "mongodb_list-databases",
+    "google-maps_maps_geocode",
+    "pubmed_get_pubmed_article_metadata",
+    "pubmed_search_pubmed_advanced",
+    "weather_get_current_weather"
+  ],
+  "grader": {
+    "adapter": "vfs-bench-1/task/mcpatlas/script/grade_task.py",
+    "adapter_source": "vfs_bench",
+    "claims": "verifier/claims.json",
+    "id": "mcpatlas.claim-coverage",
+    "input": "final_answer",
+    "judge": "google/gemini-3.1-pro-preview",
+    "pass_threshold": 0.75,
+    "scorer": "services/scoring/score_claims.py",
+    "scorer_source": "atlas"
+  },
+  "id": "wings-gaming-top-supplier",
+  "schema_version": 1,
+  "servers": [
+    "airtable",
+    "exa",
+    "weather-data",
+    "national-parks",
+    "mongodb",
+    "google-maps",
+    "pubmed",
+    "weather"
+  ],
+  "source_assets": [
+    {
+      "path": "vfs-bench-1/task/mcpatlas/wings-gaming-top-supplier/vfs/SKILL.md",
+      "role": "workspace",
+      "sha256": "96e1278944422e52a9e1f3b3b58660c522560be7f6a4cd76d122bde53b9dcaa7",
+      "size": 5120,
+      "target": "vfs/SKILL.md",
+      "url": "https://raw.githubusercontent.com/agentvfs/vfs-bench/3f45f90f620c8096dd85bbe854b757eae1231392/vfs-bench-1/task/mcpatlas/wings-gaming-top-supplier/vfs/SKILL.md"
+    }
+  ],
+  "sources": {
+    "atlas": {
+      "exports": "data_exports",
+      "repo": "https://github.com/scaleapi/mcp-atlas",
+      "revision": "f24ba3fb0bfa484c86acb28431fad6d7282455f9",
+      "server_config": "services/agent-environment/src/agent_environment/mcp_server_template.json"
+    },
+    "environment": {
+      "image": "ghcr.io/scaleapi/mcp-atlas@sha256:24e6ed3534916afe2c6825382da159a30e23516ef612be5d074fd96a74f9184c",
+      "path": "/data"
+    },
+    "mirage": {
+      "repo": "https://github.com/strukto-ai/mirage",
+      "revision": "ccfaa92485fe0bcbbdf5ff393b6e7e5ab1388f53"
+    },
+    "row": {
+      "TASK": "68925f01db31fe35560e3ec1",
+      "file": "MCP-Atlas.parquet",
+      "repo_id": "ScaleAI/MCP-Atlas",
+      "revision": "8c563b55d7c967755f474299848049834d624617"
+    },
+    "vfs_bench": {
+      "path": "vfs-bench-1/task/mcpatlas/wings-gaming-top-supplier",
+      "repo": "https://github.com/agentvfs/vfs-bench",
+      "revision": "3f45f90f620c8096dd85bbe854b757eae1231392",
+      "seed": "vfs-bench-1/task/mcpatlas/script/seed_task.py",
+      "service_seeds": "vfs-bench-1/server/seed/atlas_exports.py",
+      "services": "vfs-bench-1/task/mcpatlas/__init__.py",
+      "setup": "vfs-bench-1/server/mcp/setup_mcpatlas.py"
+    }
+  }
+}
